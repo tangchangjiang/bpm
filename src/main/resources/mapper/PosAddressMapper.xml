@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.PosAddressMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.PosAddress">
+        <result column="pos_address_id" property="posAddressId" jdbcType="DECIMAL"/>
+        <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="city_id" property="cityId" jdbcType="DECIMAL"/>
+        <result column="district_id" property="districtId" jdbcType="DECIMAL"/>
+        <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
+        <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR"/>
+        <result column="postcode" property="postcode" jdbcType="VARCHAR"/>
+        <result column="contact" property="contact" jdbcType="VARCHAR"/>
+        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
+        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
+        <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR"/>
+        <result column="country" property="country" jdbcType="VARCHAR"/>
+        <result column="region" property="region" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="district" property="district" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="findDetailedAddressById" resultType="org.o2.ext.metadata.domain.entity.PosAddress">
+        SELECT
+            da.pos_address_id,
+            da.country_id,
+            da.region_id,
+            da.city_id,
+            da.district_id,
+            da.street_name,
+            da.phone_number,
+            da.postcode,
+            da.contact,
+            da.mobile_phone,
+            da.OBJECT_VERSION_NUMBER,
+            (
+                SELECT
+                    t.country_name
+                FROM
+                    o2md_country t
+                WHERE
+                    t.country_id = da.country_id
+            ) AS country,
+            (
+                SELECT
+                    t.region_name
+                FROM
+                    o2md_region t
+                WHERE
+                    t.region_id = da.region_id
+            ) AS region,
+            (
+                SELECT
+                    t.region_name
+                FROM
+                    o2md_region t
+                WHERE
+                    t.region_id = da.city_id
+            ) AS city,
+            (
+                SELECT
+                    t.region_name
+                FROM
+                    o2md_region t
+                WHERE
+                    t.region_id = da.district_id
+            ) AS district
+        FROM
+            o2md_pos_address da
+        WHERE
+            da.pos_address_id = #{posAddressId}
+    </select>
+</mapper>

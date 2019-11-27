@@ -1,0 +1,130 @@
+package org.o2.metadata.app.service.impl;
+
+import org.o2.boot.metadata.app.bo.FreightBO;
+import org.o2.boot.metadata.app.bo.FreightDetailBO;
+import org.o2.boot.metadata.app.bo.FreightTemplateBO;
+import org.o2.ext.metadata.domain.entity.Carrier;
+import org.o2.ext.metadata.domain.entity.FreightTemplate;
+import org.o2.ext.metadata.domain.entity.FreightTemplateDetail;
+import org.o2.ext.metadata.domain.entity.Region;
+import org.o2.ext.metadata.domain.repository.CarrierRepository;
+import org.o2.ext.metadata.domain.repository.FreightTemplateRepository;
+import org.o2.ext.metadata.domain.repository.RegionRepository;
+import org.o2.ext.metadata.domain.vo.FreightTemplateVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 运费模板redis缓存操作抽象类
+ *
+ * @author peng.xu@hand-china.com 2019-06-19
+ */
+public abstract class AbstractFreightCacheOperation {
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractFreightCacheOperation.class);
+
+    protected CarrierRepository carrierRepository;
+
+    protected RegionRepository regionRepository;
+
+    protected FreightTemplateRepository freightTemplateRepository;
+
+    /**
+     * 将运费模板明细实体列表，转换为运费模板明细缓存操作对象列表
+     *
+     * @param freightTemplateDetailList 运费模板明细实体列表
+     * @return 运费模板明细缓存操作对象列表
+     */
+    protected List<FreightDetailBO> convertToFreightDetailBO(List<FreightTemplateDetail> freightTemplateDetailList) {
+        List<FreightDetailBO> freightDetailBOList = new ArrayList<>();
+
+        for (FreightTemplateDetail detail : freightTemplateDetailList) {
+            FreightDetailBO bo = new FreightDetailBO();
+
+            if (detail.getCarrierId() != null) {
+                Carrier carrier = carrierRepository.selectByPrimaryKey(detail.getCarrierId());
+                bo.setCarrierCode(carrier != null ? carrier.getCarrierCode() : null);
+            }
+            if (detail.getRegionId() != null) {
+                Region region = regionRepository.selectByPrimaryKey(detail.getRegionId());
+                bo.setRegionCode(region != null ? region.getRegionCode() : null);
+            }
+            if (detail.getTemplateId() != null) {
+                FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(detail.getTemplateId());
+                bo.setTemplateCode(template != null ? template.getTemplateCode() : null);
+            }
+            bo.setIsDefault(detail.getIsDefault());
+            bo.setTemplateDetailId(detail.getTemplateDetailId());
+            bo.setFirstPieceWeight(detail.getFirstPieceWeight());
+            bo.setFirstPrice(detail.getFirstPrice());
+            bo.setNextPieceWeight(detail.getNextPieceWeight());
+            bo.setNextPrice(detail.getNextPrice());
+
+//            LOG.info("detail.getCarrierId()={}", detail.getCarrierId());
+//            LOG.info("detail.getRegionId()={}", detail.getRegionId());
+//            LOG.info("detail.getTemplateId()={}", detail.getTemplateId());
+//            LOG.info("detail.getIsDefault()={}", detail.getIsDefault());
+//            LOG.info("detail.getTemplateDetailId()={}", detail.getTemplateDetailId());
+//            LOG.info("detail.getFirstPieceWeight()={}",detail.getFirstPieceWeight());
+//            LOG.info("detail.getFirstPrice()={}",detail.getFirstPrice());
+//            LOG.info("detail.getNextPieceWeight()={}",detail.getNextPieceWeight());
+//            LOG.info("detail.getNextPrice()={}",detail.getNextPrice());
+
+            freightDetailBOList.add(bo);
+        }
+
+        LOG.info("freightDetailBOList.size()={}", freightDetailBOList.size());
+
+        return freightDetailBOList;
+    }
+
+    /**
+     * 将运费模板实体列表(不包含运费模板明细信息)，转换为运费模板缓存操作对象列表
+     *
+     * @param freightTemplate 运费模板实体列表(不包含运费模板明细信息)
+     * @return 运费模板缓存操作对象列表
+     */
+    protected FreightBO convertToFreightBO(FreightTemplate freightTemplate) {
+        FreightBO freightBO = new FreightBO();
+        freightBO.setTemplateId(freightTemplate.getTemplateId());
+        if (freightTemplate.getTemplateId() != null) {
+            FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(freightTemplate.getTemplateId());
+            freightBO.setTemplateCode(template != null ? template.getTemplateCode() : null);
+        }
+        freightBO.setTemplateName(freightTemplate.getTemplateName());
+        freightBO.setValuationTypeCode(freightTemplate.getValuationTypeCode());
+        freightBO.setValuationUomCode(freightTemplate.getValuationUomCode());
+        freightBO.setIsFree(freightTemplate.getIsFree());
+
+        return freightBO;
+    }
+
+    /**
+     * 将运费模板实体列表(包含运费模板明细信息)，转换为运费模板缓存操作对象列表
+     *
+     * @param freightTemplateVO 运费模板实体列表(包含运费模板明细信息)
+     * @return 运费模板缓存操作对象列表
+     */
+    protected FreightTemplateBO convertToFreightTemplateBO(FreightTemplateVO freightTemplateVO) {
+        FreightBO freightBO = convertToFreightBO(freightTemplateVO);
+
+        List<FreightTemplateDetail> list = new ArrayList<>();
+        if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateVO.getDefaultFreightTemplateDetails());
+        }
+        if (freightTemplateVO.getRegionFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateVO.getRegionFreightTemplateDetails());
+        }
+        List<FreightDetailBO> freightDetailBOList = convertToFreightDetailBO(list);
+
+        FreightTemplateBO freightTemplateBO = new FreightTemplateBO();
+        freightTemplateBO.setFreightBO(freightBO);
+        freightTemplateBO.setFreightDetailBOList(freightDetailBOList);
+
+        LOG.info("freightTemplateBO.getFreightDetailBOList().size()={}", freightTemplateBO.getFreightDetailBOList().size());
+
+        return freightTemplateBO;
+    }
+}

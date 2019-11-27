@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.CarrierDeliveryRangeMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.CarrierDeliveryRange">
+        <id column="delivery_range_id" property="deliveryRangeId" jdbcType="DECIMAL"/>
+        <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="city_id" property="cityId" jdbcType="DECIMAL"/>
+        <result column="district_id" property="districtId" jdbcType="DECIMAL"/>
+        <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="list" resultType="org.o2.ext.metadata.domain.entity.CarrierDeliveryRange">
+        SELECT
+        rel.delivery_range_id,
+        rel.carrier_id,
+        rel.OBJECT_VERSION_NUMBER,
+        c.carrier_name,
+        rel.country_id,
+        (
+        SELECT
+        t.country_name
+        FROM
+        o2md_country t
+        WHERE
+        t.country_id = rel.country_id
+        ) AS country_name,
+        r.region_name,
+        (
+        SELECT
+        t.region_name
+        FROM
+        o2md_region t
+        WHERE
+        t.region_id = rel.city_id
+        ) AS city_name,
+        (
+        SELECT
+        t.region_name
+        FROM
+        o2md_region t
+        WHERE
+        t.region_id = rel.district_id
+        ) AS district_name
+        FROM
+        o2md_carrier_delivery_range rel
+        JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id
+        JOIN o2md_region r on rel.region_id = r.region_id
+        <where>
+            1=1
+            <if test="deliveryRangeId != null">
+                and rel.delivery_range_id = #{deliveryRangeId}
+            </if>
+            <if test="carrierId != null">
+                and rel.carrier_id = #{carrierId}
+            </if>
+        </where>
+        order by r.region_code
+    </select>
+</mapper>

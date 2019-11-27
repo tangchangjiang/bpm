@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.OnlineShopRelPosMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.OnlineShopRelPos">
+        <result column="online_shop_rel_pos_id" property="onlineShopRelPosId" jdbcType="DECIMAL"/>
+        <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="is_active" property="isActive" jdbcType="DECIMAL"/>
+        <result column="is_active" property="isInvCalculated" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="RelWithPosResultMap" type="org.o2.ext.metadata.domain.entity.OnlineShopRelPos"
+               extends="BaseResultMap">
+        <association property="pos" columnPrefix="pos_"
+                     resultMap="org.o2.ext.metadata.infra.mapper.PosMapper.BaseResultMap"/>
+    </resultMap>
+
+    <resultMap id="RelationshipVOMap" type="org.o2.ext.metadata.domain.vo.OnlineShopRelPosVO">
+        <result column="online_shop_rel_pos_id" property="onlineShopRelPosId" jdbcType="DECIMAL"/>
+        <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="is_active" property="isActive" jdbcType="DECIMAL"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_status_code" property="posStatus" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posType" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="listShopPosRelsByOption" resultMap="RelationshipVOMap">
+        select
+        srp.online_shop_rel_pos_id,
+        srp.online_shop_id,
+        srp.pos_id,
+        srp.is_active,
+        srp.OBJECT_VERSION_NUMBER,
+        p.pos_code,
+        p.pos_name,
+        p.pos_type_code,
+        p.pos_status_code,
+        srp.is_inv_calculated
+        from o2md_online_shop_rel_pos srp
+        join o2md_pos p on srp.pos_id = p.pos_id
+        <where>
+            srp.online_shop_id = #{onlineShopId}
+            <if test="posCode != null and posCode != ''">
+                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+                and p.pos_code like #{posCodeLike}
+            </if>
+            <if test="posName != null and posName != ''">
+                <bind name="posNameLike" value="'%' + posName + '%'"/>
+                and p.pos_name like #{posNameLike}
+            </if>
+        </where>
+        order by p.pos_code asc
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.AddressMappingMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.AddressMapping">
+        <result column="address_mapping_id" property="addressMappingId" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="address_type_code" property="addressTypeCode" jdbcType="VARCHAR"/>
+        <result column="platform_type_code" property="platformTypeCode" jdbcType="VARCHAR"/>
+        <result column="address_mapping_ex_code" property="addressMappingExCode" jdbcType="VARCHAR"/>
+        <result column="address_mapping_ex_name" property="addressMappingExName" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="findAddressMappingByCondition" resultType="org.o2.ext.metadata.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.region_id,
+        ad.address_type_code,
+        ad.platform_type_code,
+        ad.address_mapping_ex_code,
+        ad.address_mapping_ex_name,
+        ad.is_active,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id,
+        c.level_path
+        FROM
+        o2md_address_mapping ad
+        left join o2md_region c ON ad.region_id = c.region_id
+        left join o2md_country co on c.country_id = co.country_id
+        WHERE
+        1=1
+        <if test="addressMapping.platformTypeCode!=null and addressMapping.platformTypeCode!=''">
+            AND ad.platform_type_code = #{addressMapping.platformTypeCode}
+        </if>
+        <if test="addressMapping.addressMappingExName!=null and addressMapping.addressMappingExName!=''">
+            AND ad.address_mapping_ex_name LIKE concat("%",concat(#{addressMapping.addressMappingExName}),"%")
+        </if>
+        <if test="addressMapping.regionName!=null and addressMapping.regionName!=''">
+            AND c.region_name LIKE concat("%",concat(#{addressMapping.regionName}),"%")
+        </if>
+        <if test="countryCode!=null and countryCode!=''">
+            AND co.country_code = #{countryCode}
+        </if>
+
+    </select>
+    <select id="findAddressMappingById" resultType="org.o2.ext.metadata.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.address_type_code,
+        ad.platform_type_code,
+        ad.address_mapping_ex_code,
+        ad.address_mapping_ex_name,
+        ad.is_active,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_id,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id
+        FROM
+        o2md_region c LEFT JOIN o2md_address_mapping ad
+        ON ad.region_id = c.region_id
+        WHERE
+        1=1
+        AND c.region_id = #{id}
+        AND ad.platform_type_code=#{type}
+    </select>
+    <select id="findAddressMappingByCode" resultType="org.o2.ext.metadata.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.address_type_code,
+        ad.platform_type_code,
+        ad.address_mapping_ex_code,
+        ad.address_mapping_ex_name,
+        ad.is_active,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_id,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id
+        FROM
+        o2md_region c LEFT JOIN o2md_address_mapping ad
+        ON ad.region_id = c.region_id
+        WHERE
+        1=1
+        AND c.region_code = #{regionCode}
+        AND ad.platform_type_code=#{platformTypeCode}
+    </select>
+</mapper>

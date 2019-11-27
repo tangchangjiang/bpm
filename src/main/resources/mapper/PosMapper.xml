@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.PosMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.Pos">
+        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
+        <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
+        <result column="open_date" property="openDate" jdbcType="DATE"/>
+        <result column="carrier_assign" property="carrierAssign" jdbcType="VARCHAR"/>
+        <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
+        <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
+        <result column="is_enable_picked_up" property="enablePickedUp" jdbcType="DECIMAL"/>
+        <result column="is_enable_expressed" property="enableExpressed" jdbcType="DECIMAL"/>
+        <result column="score" property="score" jdbcType="DECIMAL"/>
+        <result column="notice" property="notice" jdbcType="VARCHAR"/>
+        <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="PosVOMap" type="org.o2.ext.metadata.domain.vo.PosVO">
+        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
+        <result column="is_enable_picked_up" property="enablePickedUp" jdbcType="DECIMAL"/>
+        <result column="is_enable_expressed" property="enableExpressed" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionId" jdbcType="BIGINT"/>
+        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
+        <result column="city_id" property="cityId" jdbcType="BIGINT"/>
+        <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+        <result column="district_name" property="districtName" jdbcType="VARCHAR"/>
+        <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="PosResultMap" type="org.o2.ext.metadata.domain.entity.Pos" extends="BaseResultMap">
+        <association property="address" columnPrefix="address_"
+                     resultMap="org.o2.ext.metadata.infra.mapper.PosAddressMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
+        select
+        pos.pos_id,
+        pos.pos_code,
+        pos.pos_name,
+        pos.pos_status_code,
+        pos.pos_type_code,
+        pos.is_enable_picked_up,
+        pos.is_enable_expressed,
+        pos.OBJECT_VERSION_NUMBER,
+        address.region_id,
+        region.region_name region_name,
+        address.city_id,
+        city.region_name city_name,
+        address.district_id,
+        district.region_name district_name,
+        address.street_name
+        from o2md_pos pos
+        left join o2md_pos_address address on pos.address_id = address.pos_address_id
+        LEFT JOIN o2md_region region on region.region_id = address.region_id
+        LEFT JOIN o2md_region city on city.region_id = address.city_id
+        LEFT JOIN o2md_region district on district.region_id= address.district_id
+        <where>
+            1=1
+            <if test="posCode != null and posCode != ''">
+                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+                and pos.pos_code like #{posCodeLike}
+            </if>
+            <if test="posName != null and posName != ''">
+                <bind name="posNameLike" value="'%' + posName + '%'"/>
+                and pos.pos_name like #{posNameLike}
+            </if>
+            <if test="posStatusCode != null and posStatusCode != ''">
+                and pos.pos_status_code = #{posStatusCode}
+            </if>
+            <if test="posTypeCode != null and posTypeCode != ''">
+                and pos.pos_type_code = #{posTypeCode}
+            </if>
+            <if test="enablePickedUp != null">
+                and pos.is_enable_picked_up = #{enablePickedUp}
+            </if>
+            <if test="enableExpressed != null">
+                and pos.is_enable_expressed = #{enableExpressed}
+            </if>
+            <if test="regionId != null and regionId != ''">
+                and address.region_id = #{regionId}
+            </if>
+            <if test="cityId != null and cityId != ''">
+                and address.city_Id = #{cityId}
+            </if>
+            <if test="districtId != null and districtId != ''">
+                and address.district_Id = #{districtId}
+            </if>
+        </where>
+        order by pos.pos_code ASC
+    </select>
+
+    <select id="listUnbindPosList" resultMap="BaseResultMap">
+        select
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_type_code
+        from o2md_pos p
+        where not exists(
+        select 1 from o2md_online_shop_rel_pos srp where srp.pos_id = p.pos_id and srp.online_shop_id = #{onlineShopId}
+        )
+        <if test="posCode != null">
+            <bind name="posCodeLike" value="posCode + '%'"/>
+            and p.pos_code LIKE #{posCodeLike}
+        </if>
+        <if test="posName != null">
+            <bind name="posNameLike" value="'%' + posName + '%'"/>
+            and p.pos_name LIKE #{posNameLike}
+        </if>
+        order by p.pos_code asc
+    </select>
+    <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">
+        SELECT
+            p.pos_id,
+            p.pos_code,
+            p.pos_name,
+            p.pos_status_code,
+            p.pos_type_code,
+            p.business_type_code,
+            p.open_date,
+            p.carrier_assign,
+            p.address_id,
+            p.business_time,
+            p.is_enable_picked_up,
+            p.is_enable_expressed,
+            p.score,
+            p.notice,
+            p.OBJECT_VERSION_NUMBER,
+            p.CREATION_DATE,
+            p.CREATED_BY,
+            p.LAST_UPDATED_BY,
+            p.LAST_UPDATE_DATE,
+            c.carrier_name
+        FROM
+            o2md_pos AS p
+                LEFT JOIN o2md_carrier c ON p.carrier_assign = c.carrier_id
+        where p.pos_id = #{posId}
+    </select>
+</mapper>

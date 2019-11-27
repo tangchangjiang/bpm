@@ -1,0 +1,51 @@
+package org.o2.metadata.app.service.impl;
+
+import org.o2.ext.metadata.app.service.CarrierMappingService;
+import org.o2.ext.metadata.domain.entity.CarrierMapping;
+import org.o2.ext.metadata.domain.repository.CarrierMappingRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 承运商匹配表应用服务默认实现
+ *
+ * @author tingting.wang@hand-china.com 2019-3-25
+ */
+@Service
+public class CarrierMappingServiceImpl implements CarrierMappingService {
+
+    private final CarrierMappingRepository carrierMappingRepository;
+
+    public CarrierMappingServiceImpl(final CarrierMappingRepository carrierMappingRepository) {
+        this.carrierMappingRepository = carrierMappingRepository;
+    }
+
+    @Override
+    public Map<String, Object> insertAll(final List<CarrierMapping> carrierMappings) {
+        final Map<String, Object> resultMap = new HashMap<>(1);
+        int j = 0;
+        for (int i = 0; i < carrierMappings.size(); i++) {
+            final CarrierMapping carrierMapping = carrierMappings.get(i);
+            // 非空字段校验
+            carrierMapping.baseValidate();
+            // 平台和承运商编码是否重复
+            final boolean exist = carrierMapping.exist(carrierMappingRepository);
+            if (exist) {
+                j++;
+            } else {
+                if (carrierMapping.getCarrierMappingId() != null) {
+                    carrierMappingRepository.updateByPrimaryKey(carrierMapping);
+                } else {
+                    carrierMappingRepository.insertSelective(carrierMapping);
+                }
+            }
+        }
+        if (j > 0) {
+            resultMap.put("平台和承运商编码不可重复", carrierMappings.size() - j);
+        }
+        return resultMap;
+    }
+}

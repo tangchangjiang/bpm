@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.NeighboringRegionMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.NeighboringRegion">
+        <result column="neighboring_region_id" property="neighboringRegionId" jdbcType="DECIMAL"/>
+        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
+        <result column="source_region_id" property="sourceRegionId" jdbcType="BIGINT"/>
+        <result column="target_region_id" property="targetRegionId" jdbcType="BIGINT"/>
+        <result column="source_region_name" property="sourceRegionName" jdbcType="VARCHAR"/>
+        <result column="target_region_name" property="targetRegionName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="findNeighboringRegions" resultMap="BaseResultMap"
+            parameterType="org.o2.ext.metadata.domain.entity.NeighboringRegion">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        n.neighboring_region_id,
+        n.pos_type_code,
+
+        n.source_country_id,
+        n.source_region_id,
+        (SELECT
+        t.region_name
+        FROM
+        o2md_region_tl t
+        WHERE
+        t.region_id = n.source_region_id
+        AND t.lang = #{lang}
+        ) AS "source_region_name",
+
+        n.target_country_id,
+        n.target_region_id,
+        (SELECT
+        t.region_name
+        FROM
+        o2md_region_tl t
+        WHERE
+        t.region_id = n.target_region_id
+        AND t.lang = #{lang}
+        ) AS "target_region_name",
+
+        n.OBJECT_VERSION_NUMBER,
+        sc.country_code source_country_code,
+        sc.country_name source_country_name,
+        tc.country_code target_country_code,
+        tc.country_name target_country_name
+        FROM
+        o2md_neighboring_region n
+        left join o2md_country sc on n.source_country_id = sc.country_id
+        left join o2md_country tc on n.target_country_id = tc.country_id
+        WHERE
+        1 = 1
+        <if test="posTypeCode!=null and posTypeCode!=''">
+            AND pos_type_code = #{posTypeCode}
+        </if>
+        <if test="sourceRegionId!=null and sourceRegionId!=''">
+            AND source_region_id = #{sourceRegionId}
+        </if>
+        <if test="targetRegionId!=null and targetRegionId!=''">
+            AND target_region_id = #{targetRegionId}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.ext.metadata.infra.mapper.OnlineShopMapper">
+    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.OnlineShop">
+        <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
+        <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
+        <result column="platform_shop_code" property="platformShopCode" jdbcType="VARCHAR"/>
+        <result column="platform_type_code" property="platformTypeCode" jdbcType="VARCHAR"/>
+        <result column="is_sourced" property="sourced" jdbcType="DECIMAL"/>
+        <result column="is_enable_picked_up" property="enablePickedUp" jdbcType="DECIMAL"/>
+        <result column="is_enable_returned" property="enableReturned" jdbcType="DECIMAL"/>
+        <result column="is_enable_exchanged" property="enableExchanged" jdbcType="DECIMAL"/>
+        <result column="is_active" property="isActive" jdbcType="DECIMAL"/>
+        <result column="is_order_split" property="orderSplit" jdbcType="DECIMAL"/>
+        <result column="associated_catalog_code" property="associatedCatalogCode" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="findByCondition" resultType="org.o2.ext.metadata.domain.entity.OnlineShop">
+        SELECT
+        online_shop_id,
+        online_shop_name,
+        online_shop_code,
+        platform_shop_code,
+        platform_type_code,
+        is_sourced,
+        is_enable_picked_up,
+        is_enable_returned,
+        is_enable_exchanged,
+        is_active,
+        is_order_split,
+        associated_catalog_code,
+        OBJECT_VERSION_NUMBER,
+        CREATION_DATE,
+        CREATED_BY,
+        LAST_UPDATED_BY,
+        LAST_UPDATE_DATE
+        FROM
+        o2md_online_shop
+        <where>
+            <if test="onlineShopCode != null">
+                <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
+                AND online_shop_code LIKE #{onlineShopCodeLike}
+            </if>
+            <if test="onlineShopName != null">
+                <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
+                AND online_shop_name LIKE #{onlineShopNameLike}
+            </if>
+            <if test="isActive != null">
+                AND is_active = #{isActive}
+            </if>
+            <if test="platformShopCode != null">
+                <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
+                AND platform_shop_code LIKE #{platformShopCodeLike}
+            </if>
+            <if test="platformTypeCode != null">
+                AND platform_type_code = #{platformTypeCode}
+            </if>
+        </where>
+        ORDER BY online_shop_code
+    </select>
+</mapper>
