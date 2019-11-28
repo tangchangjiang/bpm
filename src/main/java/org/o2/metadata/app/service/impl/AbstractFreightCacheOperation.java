@@ -1,8 +1,8 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.boot.metadata.app.bo.FreightBO;
-import org.o2.boot.metadata.app.bo.FreightDetailBO;
-import org.o2.boot.metadata.app.bo.FreightTemplateBO;
+import org.o2.metadata.app.bo.FreightBO;
+import org.o2.metadata.app.bo.FreightDetailBO;
+import org.o2.metadata.app.bo.FreightTemplateBO;
 import org.o2.metadata.domain.entity.Carrier;
 import org.o2.metadata.domain.entity.FreightTemplate;
 import org.o2.metadata.domain.entity.FreightTemplateDetail;

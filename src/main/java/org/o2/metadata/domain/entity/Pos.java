@@ -14,9 +14,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.base.BaseConstants;
-import org.o2.boot.metadata.constants.MetadataConstants;
 import org.o2.metadata.domain.repository.PosRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.constants.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 

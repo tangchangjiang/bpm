@@ -7,9 +7,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.boot.metadata.constants.MetadataConstants;
 import org.o2.metadata.domain.repository.NeighboringRegionRepository;
-
+import org.o2.metadata.infra.constants.MetadataConstants;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;

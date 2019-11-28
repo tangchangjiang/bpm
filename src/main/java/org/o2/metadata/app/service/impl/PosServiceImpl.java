@@ -4,7 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
-import org.o2.boot.metadata.app.PosCacheService;
+import org.o2.metadata.app.service.PosCacheService;
 import org.o2.metadata.app.service.PosService;
 import org.o2.metadata.domain.entity.Pos;
 import org.o2.metadata.domain.entity.PosAddress;
