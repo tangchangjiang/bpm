@@ -29,10 +29,10 @@ public class AreaRegionDTO implements Serializable, Comparable {
     @Transient
     private String areaMeaning;
 
-    private List<RegionDTO> regionDTOList;
+    private List<RegionDTO> regionList;
 
     public AreaRegionDTO() {
-        this.regionDTOList = new ArrayList<>();
+        this.regionList = new ArrayList<>();
     }
 
     @Override

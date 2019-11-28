@@ -18,9 +18,6 @@ import org.o2.metadata.domain.entity.Carrier;
 import org.o2.metadata.domain.entity.FreightTemplate;
 import org.o2.metadata.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.domain.vo.FreightTemplateVO;
-import org.o2.metadata.domain.entity.Carrier;
-import org.o2.metadata.domain.entity.FreightTemplate;
-import org.o2.metadata.domain.repository.FreightTemplateRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,8 +90,8 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "更新运费模板redis缓存")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/refresh-cache")
-    public ResponseEntity<?> refreshCache(@RequestBody final Long templateID) {
-        freightTemplateService.refreshCache(templateID);
+    public ResponseEntity<?> refreshCache(@RequestBody final Long templateId) {
+        freightTemplateService.refreshCache(templateId);
         return Results.success();
     }
 }

@@ -46,10 +46,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
         }
-        final List<RegionTreeChildVO> regionTreeChildVOList = addressMappingMapper.findAddressMappingByCondition(condition, countryCode);
+        final List<RegionTreeChildVO> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(condition, countryCode);
 
         //根据parent id 分组
-        final Map<Long, List<RegionTreeChildVO>> collect = regionTreeChildVOList.stream().peek(node -> {
+        final Map<Long, List<RegionTreeChildVO>> collect = regionTreeChildList.stream().peek(node -> {
             // 将parent id 为null 的替换成-1
             if (node.getParentRegionId() == null) {
                 node.setParentRegionId(-1L);
@@ -62,24 +62,22 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         getParent(collect, tree, condition.getCatalogCode());
         sortList(tree);
         return tree;
-
-        //return processRegionData(regionTreeChildVOList, condition.getCatalogCode());
     }
 
 
     /**
      * 从获取的list，处理数据，形成树状结构
-     * @param regionTreeChildVOList meaning
+     * @param regionTreeChildList meaning
      * @return the return
      * @throws RuntimeException exception description
      */
-    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildVOList, final String platformTypeCode) {
+    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String platformTypeCode) {
         // 省市区三级,用map存储，提高效率，key=regionCode，value=children
         final Map<String, List<RegionTreeChildVO>> map = new HashMap<>(16);
         final List<RegionTreeChildVO> tree = new ArrayList<>();
-        LOG.info("regionTreeChildVOList.size:" + regionTreeChildVOList.size());
+        LOG.info("regionTreeChildList.size:" + regionTreeChildList.size());
         //按照levelPath进行分组，获得省市区
-        for (final RegionTreeChildVO regionTreeChildVO : regionTreeChildVOList) {
+        for (final RegionTreeChildVO regionTreeChildVO : regionTreeChildList) {
             final String[] regionPaths = regionTreeChildVO.getLevelPath().split(BasicDataConstants.Constants.ADDRESS_SPLIT_REGEX);
             LOG.info("regionPaths:" + regionPaths);
             LOG.info("regionPaths.length:" + regionPaths.length);

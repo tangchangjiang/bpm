@@ -302,8 +302,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @param resultVO
      */
     private void saveFreightCache(FreightTemplateVO resultVO) {
-        FreightTemplateBO freightTemplateBO = convertToFreightTemplateBO(resultVO);
-        freightCacheService.saveFreight(freightTemplateBO);
+        FreightTemplateBO freightTemplate = convertToFreightTemplate(resultVO);
+        freightCacheService.saveFreight(freightTemplate);
     }
 
     /**
@@ -314,11 +314,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private void batchSaveFreightCache(List<FreightTemplate> freightTemplateList) {
         if (freightTemplateList != null && freightTemplateList.size() > 0) {
             for (FreightTemplate freightTemplate : freightTemplateList) {
-                FreightBO freightBO = convertToFreightBO(freightTemplate);
-                FreightTemplateBO freightTemplateBO = new FreightTemplateBO();
-                freightTemplateBO.setFreightBO(freightBO);
+                FreightBO freight = convertToFreight(freightTemplate);
+                FreightTemplateBO template = new FreightTemplateBO();
+                template.setFreightBO(freight);
 
-                freightCacheService.saveFreight(freightTemplateBO);
+                freightCacheService.saveFreight(template);
             }
         }
 
@@ -331,10 +331,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @param freightTemplateDetailList
      */
     private void deleteFreightCache(FreightTemplate freightTemplate, List<FreightTemplateDetail> freightTemplateDetailList) {
-        FreightTemplateBO freightTemplateBO = new FreightTemplateBO();
-        freightTemplateBO.setFreightBO(convertToFreightBO(freightTemplate));
-        freightTemplateBO.setFreightDetailBOList(convertToFreightDetailBO(freightTemplateDetailList));
+        FreightTemplateBO template = new FreightTemplateBO();
+        template.setFreightBO(convertToFreight(freightTemplate));
+        template.setFreightDetailBOList(convertToFreightDetail(freightTemplateDetailList));
 
-        freightCacheService.deleteFreight(freightTemplateBO);
+        freightCacheService.deleteFreight(template);
     }
 }

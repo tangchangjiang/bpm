@@ -40,11 +40,11 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     @Override
     public List<AreaRegionDTO> listAreaRegion(final String countryIdOrCode, final Integer enabledFlag) {
         //取出所有省份
-        final List<RegionVO> regionVOList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag);
+        final List<RegionVO> regionList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag);
         final Map<String, List<RegionDTO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionDTO> list;
-        for (final RegionVO regionVO : regionVOList) {
+        for (final RegionVO regionVO : regionList) {
             key = regionVO.getAreaCode() == null ? "$OTHER_AREA$" : regionVO.getAreaCode();
             if (regionMap.containsKey(key)) {
                 list = regionMap.get(key);
@@ -54,16 +54,16 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
             }
             list.add(new RegionDTO(regionVO.getRegionId(), regionVO.getRegionCode(), regionVO.getRegionName()));
         }
-        final List<AreaRegionDTO> areaRegionDTOList = new ArrayList<>(regionMap.size());
+        final List<AreaRegionDTO> areaRegionList = new ArrayList<>(regionMap.size());
         for (final String areaCode : regionMap.keySet()) {
             final AreaRegionDTO areaRegionDTO = new AreaRegionDTO();
             areaRegionDTO.setAreaCode(areaCode);
-            areaRegionDTO.setRegionDTOList(regionMap.get(areaCode));
-            areaRegionDTOList.add(areaRegionDTO);
+            areaRegionDTO.setRegionList(regionMap.get(areaCode));
+            areaRegionList.add(areaRegionDTO);
         }
         // 排序
-        areaRegionDTOList.sort(null);
-        return areaRegionDTOList;
+        areaRegionList.sort(null);
+        return areaRegionList;
     }
 
     @Override

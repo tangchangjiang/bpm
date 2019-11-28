@@ -216,8 +216,8 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
      * @param freightTemplateDetailList 待更新缓存的运费模板明细列表
      */
     private void saveFreightDetailCache(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightDetailBO> freightDetailBOList = convertToFreightDetailBO(freightTemplateDetailList);
-        freightCacheService.saveFreightDetails(freightDetailBOList);
+        List<FreightDetailBO> freightDetailList = convertToFreightDetail(freightTemplateDetailList);
+        freightCacheService.saveFreightDetails(freightDetailList);
     }
 
     /**
@@ -226,7 +226,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
      * @param freightTemplateDetailList 待删除缓存的运费模板明细列表
      */
     private void deleteFreightDetailCache(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightDetailBO> freightDetailBOList = convertToFreightDetailBO(freightTemplateDetailList);
-        freightCacheService.deleteFreightDetails(freightDetailBOList);
+        List<FreightDetailBO> freightDetailList = convertToFreightDetail(freightTemplateDetailList);
+        freightCacheService.deleteFreightDetails(freightDetailList);
     }
 }

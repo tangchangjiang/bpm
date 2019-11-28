@@ -37,8 +37,8 @@ public abstract class AbstractFreightCacheOperation {
      * @param freightTemplateDetailList 运费模板明细实体列表
      * @return 运费模板明细缓存操作对象列表
      */
-    protected List<FreightDetailBO> convertToFreightDetailBO(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightDetailBO> freightDetailBOList = new ArrayList<>();
+    protected List<FreightDetailBO> convertToFreightDetail(List<FreightTemplateDetail> freightTemplateDetailList) {
+        List<FreightDetailBO> freightDetailList = new ArrayList<>();
 
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
             FreightDetailBO bo = new FreightDetailBO();
@@ -62,12 +62,12 @@ public abstract class AbstractFreightCacheOperation {
             bo.setNextPieceWeight(detail.getNextPieceWeight());
             bo.setNextPrice(detail.getNextPrice());
 
-            freightDetailBOList.add(bo);
+            freightDetailList.add(bo);
         }
 
-        LOG.info("freightDetailBOList.size()={}", freightDetailBOList.size());
+        LOG.info("freightDetailBOList.size()={}", freightDetailList.size());
 
-        return freightDetailBOList;
+        return freightDetailList;
     }
 
     /**
@@ -76,19 +76,19 @@ public abstract class AbstractFreightCacheOperation {
      * @param freightTemplate 运费模板实体列表(不包含运费模板明细信息)
      * @return 运费模板缓存操作对象列表
      */
-    protected FreightBO convertToFreightBO(FreightTemplate freightTemplate) {
-        FreightBO freightBO = new FreightBO();
-        freightBO.setTemplateId(freightTemplate.getTemplateId());
+    protected FreightBO convertToFreight(FreightTemplate freightTemplate) {
+        FreightBO freight = new FreightBO();
+        freight.setTemplateId(freightTemplate.getTemplateId());
         if (freightTemplate.getTemplateId() != null) {
             FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(freightTemplate.getTemplateId());
-            freightBO.setTemplateCode(template != null ? template.getTemplateCode() : null);
+            freight.setTemplateCode(template != null ? template.getTemplateCode() : null);
         }
-        freightBO.setTemplateName(freightTemplate.getTemplateName());
-        freightBO.setValuationTypeCode(freightTemplate.getValuationTypeCode());
-        freightBO.setValuationUomCode(freightTemplate.getValuationUomCode());
-        freightBO.setIsFree(freightTemplate.getIsFree());
+        freight.setTemplateName(freightTemplate.getTemplateName());
+        freight.setValuationTypeCode(freightTemplate.getValuationTypeCode());
+        freight.setValuationUomCode(freightTemplate.getValuationUomCode());
+        freight.setIsFree(freightTemplate.getIsFree());
 
-        return freightBO;
+        return freight;
     }
 
     /**
@@ -97,8 +97,8 @@ public abstract class AbstractFreightCacheOperation {
      * @param freightTemplateVO 运费模板实体列表(包含运费模板明细信息)
      * @return 运费模板缓存操作对象列表
      */
-    protected FreightTemplateBO convertToFreightTemplateBO(FreightTemplateVO freightTemplateVO) {
-        FreightBO freightBO = convertToFreightBO(freightTemplateVO);
+    protected FreightTemplateBO convertToFreightTemplate(FreightTemplateVO freightTemplateVO) {
+        FreightBO freight = convertToFreight(freightTemplateVO);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
         if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
@@ -107,14 +107,14 @@ public abstract class AbstractFreightCacheOperation {
         if (freightTemplateVO.getRegionFreightTemplateDetails() != null) {
             list.addAll(freightTemplateVO.getRegionFreightTemplateDetails());
         }
-        List<FreightDetailBO> freightDetailBOList = convertToFreightDetailBO(list);
+        List<FreightDetailBO> freightDetailList = convertToFreightDetail(list);
 
-        FreightTemplateBO freightTemplateBO = new FreightTemplateBO();
-        freightTemplateBO.setFreightBO(freightBO);
-        freightTemplateBO.setFreightDetailBOList(freightDetailBOList);
+        FreightTemplateBO template = new FreightTemplateBO();
+        template.setFreightBO(freight);
+        template.setFreightDetailBOList(freightDetailList);
 
-        LOG.info("freightTemplateBO.getFreightDetailBOList().size()={}", freightTemplateBO.getFreightDetailBOList().size());
+        LOG.info("freightTemplateBO.getFreightDetailBOList().size()={}", template.getFreightDetailBOList().size());
 
-        return freightTemplateBO;
+        return template;
     }
 }
