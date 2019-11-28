@@ -2,8 +2,8 @@ package org.o2.metadata.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.vo.PosVO;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.vo.PosVO;
 
 import java.util.List;
 

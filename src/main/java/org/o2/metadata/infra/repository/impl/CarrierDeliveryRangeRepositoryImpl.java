@@ -1,9 +1,9 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.CarrierDeliveryRange;
-import org.o2.ext.metadata.domain.repository.CarrierDeliveryRangeRepository;
-import org.o2.ext.metadata.infra.mapper.CarrierDeliveryRangeMapper;
+import org.o2.metadata.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.infra.mapper.CarrierDeliveryRangeMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

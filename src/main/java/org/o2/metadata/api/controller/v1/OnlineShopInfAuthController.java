@@ -11,10 +11,10 @@ import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.OnlineShopInfAuthService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.OnlineShopInfAuth;
-import org.o2.ext.metadata.domain.repository.OnlineShopInfAuthRepository;
+import org.o2.metadata.app.service.OnlineShopInfAuthService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.OnlineShopInfAuth;
+import org.o2.metadata.domain.repository.OnlineShopInfAuthRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -26,7 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController("onlineShopInfAuthController.v1")
 @RequestMapping("/v1/online-shop-inf-auths")
-@Api(tags = EnableMetadataClientConsole.ONLINE_SHOP_INF_AUTH)
+@Api(tags = EnableMetadata.ONLINE_SHOP_INF_AUTH)
 public class OnlineShopInfAuthController extends BaseController {
 
     private final OnlineShopInfAuthRepository onlineShopInfAuthRepository;

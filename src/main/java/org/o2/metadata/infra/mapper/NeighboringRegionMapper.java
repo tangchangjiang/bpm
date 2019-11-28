@@ -2,7 +2,7 @@ package org.o2.metadata.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.ext.metadata.domain.entity.NeighboringRegion;
+import org.o2.metadata.domain.entity.NeighboringRegion;
 
 import java.util.List;
 

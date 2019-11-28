@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.ext.metadata.domain.repository.FreightTemplateDetailRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -40,7 +40,7 @@ public class FreightTemplateDetail extends AuditDomain {
     public static final String FIELD_FIRST_PRICE = "firstPrice";
     public static final String FIELD_NEXT_PIECE_WEIGHT = "nextPieceWeight";
     public static final String FIELD_NEXT_PRICE = "nextPrice";
-    public static final String FIELD_IS_DEFAULT = "isDefault";
+    public static final String FIELD_IS_DEFAULT = "defaultFlag";
     public static final String FIELD_TEMPLATE_ID = "templateId";
 
     //

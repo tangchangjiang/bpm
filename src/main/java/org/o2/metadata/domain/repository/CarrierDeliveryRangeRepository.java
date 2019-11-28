@@ -1,7 +1,7 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.domain.entity.CarrierDeliveryRange;
 
 import java.util.List;
 

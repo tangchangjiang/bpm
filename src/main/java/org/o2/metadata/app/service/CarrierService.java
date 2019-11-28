@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.ext.metadata.domain.entity.Carrier;
+import org.o2.metadata.domain.entity.Carrier;
 
 import java.util.List;
 

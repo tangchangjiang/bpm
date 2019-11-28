@@ -3,10 +3,10 @@ package org.o2.metadata.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.hzero.core.base.BaseConstants;
-import org.o2.ext.metadata.app.service.CountryService;
-import org.o2.ext.metadata.domain.entity.Country;
-import org.o2.ext.metadata.domain.repository.CountryRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.app.service.CountryService;
+import org.o2.metadata.domain.entity.Country;
+import org.o2.metadata.domain.repository.CountryRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

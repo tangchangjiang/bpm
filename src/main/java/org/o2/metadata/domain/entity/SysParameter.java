@@ -9,8 +9,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections.CollectionUtils;
-import org.o2.ext.metadata.domain.repository.SysParameterSettingRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.SysParameterSettingRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,25 +30,25 @@ import java.util.List;
 @ApiModel("系统参数设置")
 @VersionAudit
 @ModifyAudit
-@Table(name = "o2md_sys_parameter_setting")
-public class SysParameterSetting extends AuditDomain {
+@Table(name = "o2md_sys_parameter")
+public class SysParameter extends AuditDomain {
 
-    public static final String FIELD_PARAMETER_SETTING_ID = "parameterSettingId";
+    public static final String FIELD_PARAMETER_SETTING_ID = "parameterId";
     public static final String FIELD_PARAMETER_CODE = "parameterCode";
     public static final String FIELD_PARAMETER_DESC = "parameterDesc";
     public static final String FIELD_PARAMETER_VALUE = "parameterValue";
-    public static final String FIELD_IS_ACTIVE = "isActive";
+    public static final String FIELD_IS_ACTIVE = "activeFlag";
 
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
     public void validateParameterCode(final SysParameterSettingRepository sysParameterSettingRepository) {
-        final SysParameterSetting entity = new SysParameterSetting();
+        final SysParameter entity = new SysParameter();
         entity.setParameterCode(this.parameterCode);
-        final List<SysParameterSetting> list = sysParameterSettingRepository.select(entity);
+        final List<SysParameter> list = sysParameterSettingRepository.select(entity);
         if (CollectionUtils.isNotEmpty(list)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "SysParameterSetting(" + this.parameterCode + ")");
+            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "SysParameter(" + this.parameterCode + ")");
         }
     }
     //
@@ -58,7 +58,7 @@ public class SysParameterSetting extends AuditDomain {
     @ApiModelProperty("表ID，主键，供其他表做外键")
     @Id
     @GeneratedValue
-    private Long parameterSettingId;
+    private Long parameterId;
 
     @ApiModelProperty(value = "键值")
     @NotBlank
@@ -66,7 +66,7 @@ public class SysParameterSetting extends AuditDomain {
 
     @ApiModelProperty(value = "是否激活")
     @NotNull
-    private Integer isActive;
+    private Integer activeFlag;
 
     @ApiModelProperty(value = "参数编码")
     @NotBlank
@@ -82,4 +82,7 @@ public class SysParameterSetting extends AuditDomain {
     @ApiModelProperty(value = "最后更新人")
     @Transient
     private String lastUpdateByName;
+
+    @ApiModelProperty(value = "组织ID")
+    private Long organizationId;
 }

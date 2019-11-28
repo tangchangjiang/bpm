@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.ext.metadata.domain.repository.OnlineShopRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.OnlineShopRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -35,9 +35,9 @@ public class OnlineShop extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_NAME = "onlineShopName";
     public static final String FIELD_ONLINE_SHOP_CODE = "onlineShopCode";
     public static final String FIELD_PLATFORM_SHOP_CODE = "platformShopCode";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "platformTypeCode";
-    public static final String FIELD_SOURCED = "sourced";
-    public static final String FIELD_IS_ACTIVE = "isActive";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_SOURCED = "sourcedFlag";
+    public static final String FIELD_IS_ACTIVE = "activeFlag";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -51,7 +51,7 @@ public class OnlineShop extends AuditDomain {
         onlineShop.setOnlineShopCode(this.onlineShopCode);
         onlineShop.setOnlineShopName(this.onlineShopName);
         onlineShop.setPlatformShopCode(this.platformShopCode);
-        onlineShop.setPlatformTypeCode(this.platformTypeCode);
+        onlineShop.setCatalogVersionCode(this.catalogVersionCode);
         return shopRepository.selectCount(onlineShop) > 0;
     }
 
@@ -68,23 +68,23 @@ public class OnlineShop extends AuditDomain {
      * 按默认值初始化
      */
     public void initDefaultProperties() {
-        if (this.getSourced() == null) {
-            this.setSourced(0);
+        if (this.getSourcedFlag() == null) {
+            this.setSourcedFlag(0);
         }
-        if (this.getIsActive() == null) {
-            this.setIsActive(0);
+        if (this.getActiveFlag() == null) {
+            this.setActiveFlag(0);
         }
-        if (this.getEnableExchanged() == null) {
-            this.setEnableExchanged(0);
+        if (this.getExchangedFlag() == null) {
+            this.setExchangedFlag(0);
         }
-        if (this.getEnableReturned() == null) {
-            this.setEnableReturned(0);
+        if (this.getReturnedFlag() == null) {
+            this.setReturnedFlag(0);
         }
-        if (this.getEnablePickedUp() == null) {
-            this.setEnablePickedUp(0);
+        if (this.getPickedUpFlag() == null) {
+            this.setPickedUpFlag(0);
         }
-        if (this.getOrderSplit() == null) {
-            this.setOrderSplit(0);
+        if (this.getEnableSplitFlag() == null) {
+            this.setEnableSplitFlag(0);
         }
     }
 
@@ -116,54 +116,55 @@ public class OnlineShop extends AuditDomain {
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
     @NotBlank
     @Size(max = 255)
-    private String platformTypeCode;
+    private String catalogVersionCode;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
-    @Column(name = "is_sourced")
+    @Column(name = "sourced_flag")
     @NotNull
     @Range(min = 0, max = 1)
-    private Integer sourced;
+    private Integer sourcedFlag;
 
     @ApiModelProperty(value = "是否支持自提", hidden = true)
     @Range(min = 0, max = 1)
     @NotNull
-    @Column(name = "is_enable_picked_up")
-    private Integer enablePickedUp;
+    @Column(name = "picked_up_flag")
+    private Integer pickedUpFlag;
 
     @ApiModelProperty(value = "是否支持到店退", hidden = true)
     @Range(min = 0, max = 1)
     @NotNull
-    @Column(name = "is_enable_returned")
-    private Integer enableReturned;
+    @Column(name = "returned_flag")
+    private Integer returnedFlag;
 
     @ApiModelProperty(value = "是否有换货权限", hidden = true)
     @Range(min = 0, max = 1)
     @NotNull
-    @Column(name = "is_enable_exchanged")
-    private Integer enableExchanged;
+    @Column(name = "exchanged_flag")
+    private Integer exchangedFlag;
 
     @ApiModelProperty(value = "是否有效")
     @Range(min = 0, max = 1)
     @NotNull
-    @Column(name = "is_active")
-    private Integer isActive;
+    @Column(name = "active_flag")
+    private Integer activeFlag;
 
     @ApiModelProperty(value = "是否拆分平台订单", hidden = true)
     @Range(min = 0, max = 1)
     @NotNull
-    @Column(name = "is_order_split")
-    private Integer orderSplit;
+    @Column(name = "enable_split_flag")
+    private Integer enableSplitFlag;
 
-    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
-    @Size(max = 255)
-    @LovValue(lovCode = "O2PCM.PLATFORM_CATALOG")
-    private String associatedCatalogCode;
-
-    //
-    // 非数据库字段
-    // ------------------------------------------------------------------------------
+    @ApiModelProperty(value = "组织ID")
+    private Long organizationId;
 
     @ApiModelProperty(value = "归属电商平台含义")
     @Transient
-    private String platformTypeMeaning;
+    private String catalogVersionCodeMeaning;
+
+//    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
+//    @Size(max = 255)
+//    @LovValue(lovCode = "O2PCM.PLATFORM_CATALOG")
+//    private String associatedCatalogCode;
+
+
 }

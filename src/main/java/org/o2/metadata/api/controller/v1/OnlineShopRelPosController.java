@@ -13,14 +13,14 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.OnlineShopRelPosService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.OnlineShopRelPos;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.repository.OnlineShopRelPosRepository;
-import org.o2.ext.metadata.domain.repository.PosRepository;
-import org.o2.ext.metadata.domain.vo.OnlineShopRelPosVO;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.app.service.OnlineShopRelPosService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.OnlineShopRelPos;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.repository.OnlineShopRelPosRepository;
+import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.domain.vo.OnlineShopRelPosVO;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ import java.util.List;
 
 @RestController("onlineShopRelPosController.v1")
 @RequestMapping("/v1")
-@Api(tags = EnableMetadataClientConsole.ONLINE_SHOP_POS_REL)
+@Api(tags = EnableMetadata.ONLINE_SHOP_POS_REL)
 public class OnlineShopRelPosController extends BaseController {
 
     private final OnlineShopRelPosService onlineShopRelPosService;

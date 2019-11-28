@@ -1,10 +1,10 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.OnlineShopRelPos;
-import org.o2.ext.metadata.domain.repository.OnlineShopRelPosRepository;
-import org.o2.ext.metadata.domain.vo.OnlineShopRelPosVO;
-import org.o2.ext.metadata.infra.mapper.OnlineShopRelPosMapper;
+import org.o2.metadata.domain.entity.OnlineShopRelPos;
+import org.o2.metadata.domain.repository.OnlineShopRelPosRepository;
+import org.o2.metadata.domain.vo.OnlineShopRelPosVO;
+import org.o2.metadata.infra.mapper.OnlineShopRelPosMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 

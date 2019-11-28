@@ -1,8 +1,8 @@
 package org.o2.metadata.infra.repository.impl;
 
-import org.o2.ext.metadata.domain.repository.PlatformUomRepository;
-import org.o2.ext.metadata.domain.vo.PlatformUomVO;
-import org.o2.ext.metadata.infra.mapper.PlatformUomMapper;
+import org.o2.metadata.domain.repository.PlatformUomRepository;
+import org.o2.metadata.domain.vo.PlatformUomVO;
+import org.o2.metadata.infra.mapper.PlatformUomMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

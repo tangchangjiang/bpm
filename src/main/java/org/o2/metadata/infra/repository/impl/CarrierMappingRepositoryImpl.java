@@ -1,10 +1,10 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.CarrierMapping;
-import org.o2.ext.metadata.domain.repository.CarrierMappingRepository;
-import org.o2.ext.metadata.domain.vo.CarrierMappingVO;
-import org.o2.ext.metadata.infra.mapper.CarrierMappingMapper;
+import org.o2.metadata.domain.entity.CarrierMapping;
+import org.o2.metadata.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.domain.vo.CarrierMappingVO;
+import org.o2.metadata.infra.mapper.CarrierMappingMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

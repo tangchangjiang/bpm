@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.o2.boot.metadata.constants.MetadataConstants;
-import org.o2.ext.metadata.app.service.OnlineShopRelPosService;
-import org.o2.ext.metadata.domain.entity.OnlineShop;
-import org.o2.ext.metadata.domain.entity.OnlineShopRelPos;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.repository.OnlineShopRelPosRepository;
-import org.o2.ext.metadata.domain.repository.OnlineShopRepository;
-import org.o2.ext.metadata.domain.repository.PosRepository;
+import org.o2.metadata.app.service.OnlineShopRelPosService;
+import org.o2.metadata.domain.entity.OnlineShop;
+import org.o2.metadata.domain.entity.OnlineShopRelPos;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.repository.OnlineShopRelPosRepository;
+import org.o2.metadata.domain.repository.OnlineShopRepository;
+import org.o2.metadata.domain.repository.PosRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
         relationships.forEach(relationship -> {
             Assert.isTrue(!relationship.exist(onlineShopRelPosRepository), BaseConstants.ErrorCode.DATA_EXISTS);
             relationship.baseValidate(onlineShopRepository, posRepository);
-            relationship.setIsInvCalculated(getIsInvCalculated(relationship));
+            relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         return onlineShopRelPosRepository.batchInsertSelective(relationships);
     }
@@ -61,7 +61,7 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
         relationships.forEach(relationship -> {
             Assert.isTrue(relationship.exist(onlineShopRelPosRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             relationship.baseValidate(onlineShopRepository, posRepository);
-            relationship.setIsInvCalculated(getIsInvCalculated(relationship));
+            relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         return onlineShopRelPosRepository.batchUpdateByPrimaryKey(relationships);
     }
@@ -110,10 +110,10 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
         int oldValue;
         int newValue;
         for (final OnlineShopRelPos relPos : onlineShopRelPosList) {
-            oldValue = relPos.getIsInvCalculated();
+            oldValue = relPos.getBusinessActiveFlag();
             newValue = getIsInvCalculated(relPos);
             if (oldValue != newValue) {
-                relPos.setIsInvCalculated(newValue);
+                relPos.setBusinessActiveFlag(newValue);
                 toUpdateList.add(relPos);
             }
         }
@@ -157,11 +157,11 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
      * @return 判断结果
      */
     private int getIsInvCalculated(final OnlineShopRelPos onlineShopRelPos, final OnlineShop onlineShop, final Pos pos) {
-        if (onlineShopRelPos == null || Flag.NO.equals(onlineShopRelPos.getIsActive())) {
+        if (onlineShopRelPos == null || Flag.NO.equals(onlineShopRelPos.getActiveFlag())) {
             return 0;
         }
 
-        if (onlineShop == null || Flag.NO.equals(onlineShop.getIsActive())) {
+        if (onlineShop == null || Flag.NO.equals(onlineShop.getActiveFlag())) {
             return 0;
         }
 

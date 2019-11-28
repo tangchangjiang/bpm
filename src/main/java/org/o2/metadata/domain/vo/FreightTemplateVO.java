@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.ext.metadata.domain.entity.FreightTemplate;
-import org.o2.ext.metadata.domain.entity.FreightTemplateDetail;
+import org.o2.metadata.domain.entity.FreightTemplate;
+import org.o2.metadata.domain.entity.FreightTemplateDetail;
 import org.springframework.cglib.beans.BeanCopier;
 
 import javax.persistence.Transient;

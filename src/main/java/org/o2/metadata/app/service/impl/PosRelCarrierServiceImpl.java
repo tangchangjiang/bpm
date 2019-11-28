@@ -2,9 +2,9 @@ package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.PosRelCarrierService;
-import org.o2.ext.metadata.domain.entity.PosRelCarrier;
-import org.o2.ext.metadata.domain.repository.PosRelCarrierRepository;
+import org.o2.metadata.app.service.PosRelCarrierService;
+import org.o2.metadata.domain.entity.PosRelCarrier;
+import org.o2.metadata.domain.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -53,7 +53,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
                 insertList.add(posRelCarrier);
             }
             map.put(key, i);
-            if (posRelCarrier.getIsDefault() == 1) {
+            if (posRelCarrier.getDefaultFlag() == 1) {
                 updateIndex = i;
             }
         }

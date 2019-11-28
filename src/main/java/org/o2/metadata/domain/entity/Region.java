@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.util.Regexs;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

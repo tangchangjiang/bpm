@@ -1,13 +1,13 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.entity.PostTime;
-import org.o2.ext.metadata.domain.repository.PosRepository;
-import org.o2.ext.metadata.domain.vo.PosVO;
-import org.o2.ext.metadata.infra.mapper.PosAddressMapper;
-import org.o2.ext.metadata.infra.mapper.PosMapper;
-import org.o2.ext.metadata.infra.mapper.PostTimeMapper;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.entity.PostTime;
+import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.domain.vo.PosVO;
+import org.o2.metadata.infra.mapper.PosAddressMapper;
+import org.o2.metadata.infra.mapper.PosMapper;
+import org.o2.metadata.infra.mapper.PostTimeMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

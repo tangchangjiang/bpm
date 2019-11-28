@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.ext.metadata.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;

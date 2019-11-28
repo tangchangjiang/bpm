@@ -9,8 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.ext.metadata.domain.repository.FreightTemplateRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.FreightTemplateRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;

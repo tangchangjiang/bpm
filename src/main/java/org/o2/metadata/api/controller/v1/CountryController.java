@@ -11,12 +11,12 @@ import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.CountryService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.Country;
-import org.o2.ext.metadata.domain.entity.Region;
-import org.o2.ext.metadata.domain.repository.CountryRepository;
-import org.o2.ext.metadata.domain.repository.RegionRepository;
+import org.o2.metadata.app.service.CountryService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.Country;
+import org.o2.metadata.domain.entity.Region;
+import org.o2.metadata.domain.repository.CountryRepository;
+import org.o2.metadata.domain.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ import java.util.List;
 
 @RestController("countryController.v1")
 @RequestMapping("/v1/countries")
-@Api(tags = EnableMetadataClientConsole.COUNTRY)
+@Api(tags = EnableMetadata.COUNTRY)
 public class CountryController extends BaseController {
 
     private final CountryService countryService;

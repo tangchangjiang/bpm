@@ -1,8 +1,8 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.OnlineShop;
-import org.o2.ext.metadata.domain.entity.OnlineShopInfAuth;
+import org.o2.metadata.domain.entity.OnlineShop;
+import org.o2.metadata.domain.entity.OnlineShopInfAuth;
 
 import java.util.List;
 

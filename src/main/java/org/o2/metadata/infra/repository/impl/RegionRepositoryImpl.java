@@ -1,10 +1,10 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.Region;
-import org.o2.ext.metadata.domain.repository.RegionRepository;
-import org.o2.ext.metadata.domain.vo.RegionVO;
-import org.o2.ext.metadata.infra.mapper.RegionMapper;
+import org.o2.metadata.domain.entity.Region;
+import org.o2.metadata.domain.repository.RegionRepository;
+import org.o2.metadata.domain.vo.RegionVO;
+import org.o2.metadata.infra.mapper.RegionMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

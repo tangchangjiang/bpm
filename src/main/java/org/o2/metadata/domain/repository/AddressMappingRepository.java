@@ -1,7 +1,7 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.AddressMapping;
+import org.o2.metadata.domain.entity.AddressMapping;
 
 /**
  * 地址匹配资源库

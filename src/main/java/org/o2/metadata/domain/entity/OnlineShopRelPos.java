@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.o2.ext.metadata.domain.repository.OnlineShopRelPosRepository;
-import org.o2.ext.metadata.domain.repository.OnlineShopRepository;
-import org.o2.ext.metadata.domain.repository.PosRepository;
+import org.o2.metadata.domain.repository.OnlineShopRelPosRepository;
+import org.o2.metadata.domain.repository.OnlineShopRepository;
+import org.o2.metadata.domain.repository.PosRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public class OnlineShopRelPos extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_REL_POS_ID = "onlineShopRelPosId";
     public static final String FIELD_ONLINE_SHOP_ID = "onlineShopId";
     public static final String FIELD_POS_ID = "posId";
-    public static final String FIELD_IS_ACTIVE = "isActive";
+    public static final String FIELD_IS_ACTIVE = "activeFlag";
     public static final String FIELD_IS_INV_CALCULATED = "is_inv_calculated";
 
 
@@ -74,12 +74,12 @@ public class OnlineShopRelPos extends AuditDomain {
 
     @ApiModelProperty(value = "是否有效", required = true)
     @NotNull
-    @Column(name = "is_active")
-    private Integer isActive;
+    @Column(name = "active_flag")
+    private Integer activeFlag;
 
     @ApiModelProperty(value = "是否计算库存", required = true)
-    @Column(name = "is_inv_calculated")
-    private Integer isInvCalculated;
+    @Column(name = "business_active_flag")
+    private Integer businessActiveFlag;
 
     //
     // 非数据库字段

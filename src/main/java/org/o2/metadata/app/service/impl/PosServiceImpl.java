@@ -5,14 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.o2.boot.metadata.app.PosCacheService;
-import org.o2.ext.metadata.app.service.PosService;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.entity.PosAddress;
-import org.o2.ext.metadata.domain.entity.Region;
-import org.o2.ext.metadata.domain.repository.PosAddressRepository;
-import org.o2.ext.metadata.domain.repository.PosRepository;
-import org.o2.ext.metadata.domain.repository.PostTimeRepository;
-import org.o2.ext.metadata.domain.repository.RegionRepository;
+import org.o2.metadata.app.service.PosService;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.entity.PosAddress;
+import org.o2.metadata.domain.entity.Region;
+import org.o2.metadata.domain.repository.PosAddressRepository;
+import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.domain.repository.PostTimeRepository;
+import org.o2.metadata.domain.repository.RegionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -123,13 +123,13 @@ public class PosServiceImpl implements PosService {
     @Override
     public Pos getPosWithPropertiesInRedisByPosId(final Long posId) {
         final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(posId);
-        if (pos.getEnableExpressed().equals(Flag.YES)) {
+        if (pos.getExpressedFlag().equals(Flag.YES)) {
             final String expressValue = posCacheService.getExpressLimit(pos.getPosCode());
             if (StringUtils.isNotBlank(expressValue)) {
                 pos.setExpressLimitQuantity(Long.parseLong(expressValue));
             }
         }
-        if (pos.getEnablePickedUp().equals(Flag.YES)) {
+        if (pos.getPickedUpFlag().equals(Flag.YES)) {
             final String pickUpValue = posCacheService.getPickUpLimit(pos.getPosCode());
             if (StringUtils.isNotBlank(pickUpValue)) {
                 pos.setPickUpLimitQuantity(Long.parseLong(pickUpValue));
@@ -148,11 +148,11 @@ public class PosServiceImpl implements PosService {
         final String pickUpValue = posCacheService.getPickUpLimit(pos.getPosCode());
 
         final String newExpress = String.valueOf(pos.getExpressLimitQuantity());
-        if (pos.getEnableExpressed().equals(Flag.YES) && !newExpress.equals(expressValue)) {
+        if (pos.getExpressedFlag().equals(Flag.YES) && !newExpress.equals(expressValue)) {
             posCacheService.saveExpressQuantity(pos.getPosCode(), newExpress);
         }
         final String newPickUp = String.valueOf(pos.getPickUpLimitQuantity());
-        if (pos.getEnablePickedUp().equals(Flag.YES) && !newPickUp.equals(pickUpValue)) {
+        if (pos.getPickedUpFlag().equals(Flag.YES) && !newPickUp.equals(pickUpValue)) {
             posCacheService.savePickUpQuantity(pos.getPosCode(), newPickUp);
         }
     }

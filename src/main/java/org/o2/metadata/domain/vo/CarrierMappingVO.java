@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.ext.metadata.domain.entity.CarrierMapping;
+import org.o2.metadata.domain.entity.CarrierMapping;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25

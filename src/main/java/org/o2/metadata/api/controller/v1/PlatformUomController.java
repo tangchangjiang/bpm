@@ -6,8 +6,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
-import org.o2.ext.metadata.app.service.PlatformUomService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
+import org.o2.metadata.app.service.PlatformUomService;
+import org.o2.metadata.config.EnableMetadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController("platformUomController.v1")
 @RequestMapping("/v1/platform-uom")
-@Api(tags = EnableMetadataClientConsole.PLATFORM_UOM)
+@Api(tags = EnableMetadata.PLATFORM_UOM)
 public class PlatformUomController extends BaseController {
 
     private PlatformUomService platformUomService;

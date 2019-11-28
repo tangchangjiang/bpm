@@ -1,9 +1,9 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.ext.metadata.domain.entity.Carrier;
-import org.o2.ext.metadata.domain.repository.CarrierRepository;
-import org.o2.ext.metadata.infra.mapper.CarrierMapper;
+import org.o2.metadata.domain.entity.Carrier;
+import org.o2.metadata.domain.repository.CarrierRepository;
+import org.o2.metadata.infra.mapper.CarrierMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

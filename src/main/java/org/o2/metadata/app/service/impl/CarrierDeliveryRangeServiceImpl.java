@@ -2,9 +2,9 @@ package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.CarrierDeliveryRangeService;
-import org.o2.ext.metadata.domain.entity.CarrierDeliveryRange;
-import org.o2.ext.metadata.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.app.service.CarrierDeliveryRangeService;
+import org.o2.metadata.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

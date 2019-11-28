@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
 import org.o2.boot.metadata.constants.MetadataConstants;
-import org.o2.ext.metadata.domain.entity.OnlineShopRelPos;
+import org.o2.metadata.domain.entity.OnlineShopRelPos;
 
 /**
  * 网店关联服务点列表视图对象

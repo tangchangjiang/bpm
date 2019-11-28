@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.O2CoreConstants;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;

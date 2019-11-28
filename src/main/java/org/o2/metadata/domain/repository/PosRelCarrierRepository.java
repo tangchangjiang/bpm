@@ -2,7 +2,7 @@ package org.o2.metadata.domain.repository;
 
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.PosRelCarrier;
+import org.o2.metadata.domain.entity.PosRelCarrier;
 
 import java.util.List;
 

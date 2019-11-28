@@ -15,8 +15,8 @@ import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.base.BaseConstants;
 import org.o2.boot.metadata.constants.MetadataConstants;
-import org.o2.ext.metadata.domain.repository.PosRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 
@@ -51,8 +51,8 @@ public class Pos extends AuditDomain {
     public static final String FIELD_CARRIER_ASSIGN = "carrierAssign";
     public static final String FIELD_ADDRESS_ID = "posAddressId";
     public static final String FIELD_BUSINESS_TIME = "businessTime";
-    public static final String FIELD_ENABLE_PICKED_UP = "enablePickedUp";
-    public static final String FIELD_ENABLE_EXPRESSED = "enableExpressed";
+    public static final String FIELD_ENABLE_PICKED_UP = "pickedUpFlag";
+    public static final String FIELD_ENABLE_EXPRESSED = "expressedFlag";
     public static final String FIELD_SCORE = "score";
     public static final String FIELD_NOTICE = "notice";
 
@@ -87,10 +87,10 @@ public class Pos extends AuditDomain {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
         }
 
-        if (this.enablePickedUp == 0) {
+        if (this.pickedUpFlag == 0) {
             Assert.isNull(this.pickUpLimitQuantity, "limit should be null when picked up is not enabled");
         }
-        if (this.enableExpressed == 0) {
+        if (this.expressedFlag == 0) {
             Assert.isNull(this.expressLimitQuantity, "limit should be null when expressed is not enabled");
         }
 
@@ -152,10 +152,6 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "开店日期")
     private LocalDate openDate;
 
-    @ApiModelProperty(value = "默认承运商.code")
-    @Size(max = 255)
-    private String carrierAssign;
-
     @ApiModelProperty(value = "详细地址")
     private Long addressId;
 
@@ -167,7 +163,7 @@ public class Pos extends AuditDomain {
     @NotNull
     @Column(name = "is_enable_picked_up")
     @Range(min = 0, max = 1)
-    private Integer enablePickedUp;
+    private Integer pickedUpFlag;
 
     @Transient
     @ApiModelProperty(value = "门店自提接单量")
@@ -175,9 +171,9 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "门店快递发货")
     @NotNull
-    @Column(name = "is_enable_expressed")
+    @Column(name = "expressed_flag")
     @Range(min = 0, max = 1)
-    private Integer enableExpressed;
+    private Integer expressedFlag;
 
     @ApiModelProperty(value = "门店评分")
     private Long score;
@@ -218,4 +214,10 @@ public class Pos extends AuditDomain {
     @Transient
     private String carrierName;
 
+    @ApiModelProperty(value = "组织ID", hidden = true)
+    private Long organizationId;
+
+    @ApiModelProperty(value = "默认承运商.code")
+    @Size(max = 255)
+    private String carrierAssign;
 }

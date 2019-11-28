@@ -2,9 +2,9 @@ package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.CarrierService;
-import org.o2.ext.metadata.domain.entity.Carrier;
-import org.o2.ext.metadata.domain.repository.CarrierRepository;
+import org.o2.metadata.app.service.CarrierService;
+import org.o2.metadata.domain.entity.Carrier;
+import org.o2.metadata.domain.repository.CarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

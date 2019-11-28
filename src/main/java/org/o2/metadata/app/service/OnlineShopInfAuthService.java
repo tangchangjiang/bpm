@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.ext.metadata.domain.entity.OnlineShopInfAuth;
+import org.o2.metadata.domain.entity.OnlineShopInfAuth;
 
 /**
  * 网店接口表应用服务

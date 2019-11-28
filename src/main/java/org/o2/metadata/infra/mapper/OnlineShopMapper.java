@@ -1,7 +1,7 @@
 package org.o2.metadata.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
-import org.o2.ext.metadata.domain.entity.OnlineShop;
+import org.o2.metadata.domain.entity.OnlineShop;
 
 import java.util.List;
 

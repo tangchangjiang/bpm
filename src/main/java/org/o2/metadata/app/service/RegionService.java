@@ -1,7 +1,7 @@
 package org.o2.metadata.app.service;
 
-import org.o2.ext.metadata.api.dto.AreaRegionDTO;
-import org.o2.ext.metadata.domain.entity.Region;
+import org.o2.metadata.api.dto.AreaRegionDTO;
+import org.o2.metadata.domain.entity.Region;
 
 import java.util.List;
 

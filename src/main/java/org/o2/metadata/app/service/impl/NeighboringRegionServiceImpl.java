@@ -1,8 +1,8 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.ext.metadata.app.service.NeighboringRegionService;
-import org.o2.ext.metadata.domain.entity.NeighboringRegion;
-import org.o2.ext.metadata.domain.repository.NeighboringRegionRepository;
+import org.o2.metadata.app.service.NeighboringRegionService;
+import org.o2.metadata.domain.entity.NeighboringRegion;
+import org.o2.metadata.domain.repository.NeighboringRegionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

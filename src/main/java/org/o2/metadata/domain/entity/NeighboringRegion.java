@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.boot.metadata.constants.MetadataConstants;
-import org.o2.ext.metadata.domain.repository.NeighboringRegionRepository;
+import org.o2.metadata.domain.repository.NeighboringRegionRepository;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -48,8 +48,8 @@ public class NeighboringRegion extends AuditDomain {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {return true;}
+        if (o == null || getClass() != o.getClass()) {return false;}
         final NeighboringRegion that = (NeighboringRegion) o;
         return posTypeCode.equals(that.posTypeCode) &&
                 sourceRegionId.equals(that.sourceRegionId) &&

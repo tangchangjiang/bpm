@@ -12,7 +12,7 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
-import org.o2.ext.metadata.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.domain.repository.CarrierMappingRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -35,7 +35,7 @@ import javax.validation.constraints.NotBlank;
 public class CarrierMapping extends AuditDomain {
 
     public static final String FIELD_CARRIER_MAPPING_ID = "carrierMappingId";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "platformTypeCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_PLATFORM_CARRIER_CODE = "platformCarrierCode";
     public static final String FIELD_PLATFORM_CARRIER_NAME = "platformCarrierName";
@@ -49,8 +49,8 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.carrierMappingId) {
             sqls.andNotEqualTo(CarrierMapping.FIELD_CARRIER_MAPPING_ID, this.getCarrierMappingId());
         }
-        if (StringUtils.isNotBlank(this.platformTypeCode)) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getPlatformTypeCode());
+        if (StringUtils.isNotBlank(this.catalogCode)) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogCode());
         }
         if (null != this.carrierId) {
             sqls.andEqualTo(CarrierMapping.FIELD_CARRIER_ID, this.getCarrierId());
@@ -60,7 +60,7 @@ public class CarrierMapping extends AuditDomain {
     }
 
     public void baseValidate() {
-        Assert.notNull(this.platformTypeCode, "平台类型不能为空");
+        Assert.notNull(this.catalogCode, "平台类型不能为空");
         Assert.notNull(this.carrierId, "承运商id不能为空");
         Assert.notNull(this.platformCarrierCode, "平台承运商编码不能为空");
     }
@@ -79,7 +79,7 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "归属电商平台,值集O2MD.PLATFORM_TYPE")
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
     @NotBlank
-    private String platformTypeCode;
+    private String catalogCode;
 
     @ApiModelProperty(value = "承运商id")
     @NotBlank

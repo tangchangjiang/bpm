@@ -1,7 +1,7 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.NeighboringRegion;
+import org.o2.metadata.domain.entity.NeighboringRegion;
 
 import java.util.List;
 

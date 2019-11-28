@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.o2.ext.metadata.domain.entity.Region;
+import org.o2.metadata.domain.entity.Region;
 
 import javax.persistence.Transient;
 

@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.mapper;
 
-import org.o2.ext.metadata.domain.vo.PlatformUomVO;
+import org.o2.metadata.domain.vo.PlatformUomVO;
 
 import java.util.List;
 

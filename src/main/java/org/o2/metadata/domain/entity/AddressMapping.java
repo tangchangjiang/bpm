@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.ext.metadata.domain.repository.AddressMappingRepository;
+import org.o2.metadata.domain.repository.AddressMappingRepository;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,10 +35,10 @@ public class AddressMapping extends AuditDomain {
     public static final String FIELD_ADDRESS_MAPPING_ID = "addressMappingId";
     public static final String FIELD_REGION_ID = "regionId";
     public static final String FIELD_ADDRESS_TYPE_CODE = "addressTypeCode";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "platformTypeCode";
-    public static final String FIELD_ADDRESS_MAPPING_EX_CODE = "addressMappingExCode";
-    public static final String FIELD_ADDRESS_MAPPING_EX_NAME = "addressMappingExName";
-    public static final String FIELD_IS_ACTIVE = "isActive";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_ADDRESS_MAPPING_EX_CODE = "externalCode";
+    public static final String FIELD_ADDRESS_MAPPING_EX_NAME = "externalName";
+    public static final String FIELD_IS_ACTIVE = "activeFlag";
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public class AddressMapping extends AuditDomain {
             return addressMappingRepository.existsWithPrimaryKey(this);
         } else {
             final AddressMapping addressMapping = new AddressMapping();
-            addressMapping.setPlatformTypeCode(this.platformTypeCode);
+            addressMapping.setCatalogCode(this.catalogCode);
             addressMapping.setRegionId(this.regionId);
             return addressMappingRepository.selectCount(addressMapping) > 0;
         }
@@ -72,16 +72,16 @@ public class AddressMapping extends AuditDomain {
 
     @ApiModelProperty(value = "归属电商平台类型,值集:O2MD.PLATFORM_TYPE")
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
-    private String platformTypeCode;
+    private String catalogCode;
 
     @ApiModelProperty(value = "外部区域代码")
-    private String addressMappingExCode;
+    private String externalCode;
 
     @ApiModelProperty(value = "外部区域名称")
-    private String addressMappingExName;
+    private String externalName;
 
     @ApiModelProperty(value = "是否启用")
-    private Integer isActive;
+    private Integer activeFlag;
 
     //
     // 非数据库字段

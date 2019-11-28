@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.ext.metadata.domain.entity.PosRelCarrier;
+import org.o2.metadata.domain.entity.PosRelCarrier;
 
 import java.util.List;
 

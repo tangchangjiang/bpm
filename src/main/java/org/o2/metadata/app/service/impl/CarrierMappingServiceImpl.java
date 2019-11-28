@@ -1,8 +1,8 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.ext.metadata.app.service.CarrierMappingService;
-import org.o2.ext.metadata.domain.entity.CarrierMapping;
-import org.o2.ext.metadata.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.app.service.CarrierMappingService;
+import org.o2.metadata.domain.entity.CarrierMapping;
+import org.o2.metadata.domain.repository.CarrierMappingRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

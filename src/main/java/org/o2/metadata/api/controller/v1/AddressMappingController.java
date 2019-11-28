@@ -10,17 +10,17 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.AddressMappingService;
-import org.o2.ext.metadata.app.service.RegionService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.AddressMapping;
-import org.o2.ext.metadata.domain.entity.Country;
-import org.o2.ext.metadata.domain.entity.Region;
-import org.o2.ext.metadata.domain.repository.AddressMappingRepository;
-import org.o2.ext.metadata.domain.repository.CountryRepository;
-import org.o2.ext.metadata.domain.repository.RegionRepository;
-import org.o2.ext.metadata.domain.vo.RegionTreeChildVO;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.app.service.AddressMappingService;
+import org.o2.metadata.app.service.RegionService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.AddressMapping;
+import org.o2.metadata.domain.entity.Country;
+import org.o2.metadata.domain.entity.Region;
+import org.o2.metadata.domain.repository.AddressMappingRepository;
+import org.o2.metadata.domain.repository.CountryRepository;
+import org.o2.metadata.domain.repository.RegionRepository;
+import org.o2.metadata.domain.vo.RegionTreeChildVO;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 @RestController("addressMappingController.v1")
 @RequestMapping("/v1/address-mappings")
-@Api(tags = EnableMetadataClientConsole.ADDRESS_MAPPING)
+@Api(tags = EnableMetadata.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     @Autowired
     private AddressMappingRepository addressMappingRepository;

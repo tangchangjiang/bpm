@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="org.o2.ext.metadata.infra.mapper.SysParameterSettingMapper">
-    <resultMap id="BaseResultMap" type="org.o2.ext.metadata.domain.entity.SysParameterSetting">
-        <result column="parameter_setting_id" property="parameterSettingId" jdbcType="DECIMAL"></result>
+<mapper namespace="org.o2.metadata.infra.mapper.SysParameterMapper">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.domain.entity.SysParameter">
+        <result column="parameter_id" property="parameterId" jdbcType="DECIMAL"></result>
         <result column="parameter_code" property="parameterCode" jdbcType="VARCHAR"></result>
         <result column="parameter_desc" property="parameterDesc" jdbcType="VARCHAR"></result>
         <result column="parameter_value" property="parameterValue" jdbcType="VARCHAR"></result>
-        <result column="is_active" property="isActive" jdbcType="DECIMAL"></result>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"></result>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -18,11 +18,11 @@
 
     <select id="listSysParameterSetting" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
-        sys.parameter_setting_id,
+        sys.parameter_id,
         sys.parameter_code,
         sys.parameter_desc,
         sys.parameter_value,
-        sys.is_active,
+        sys.active_flag,
         sys.LAST_UPDATED_BY,
         sys.LAST_UPDATE_DATE,
         sys.OBJECT_VERSION_NUMBER,

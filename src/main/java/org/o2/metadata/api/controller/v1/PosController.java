@@ -12,12 +12,12 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.OnlineShopRelPosService;
-import org.o2.ext.metadata.app.service.PosService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.repository.PosRepository;
-import org.o2.ext.metadata.domain.vo.PosVO;
+import org.o2.metadata.app.service.OnlineShopRelPosService;
+import org.o2.metadata.app.service.PosService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.domain.vo.PosVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController("posController.v1")
 @RequestMapping("/v1/poses")
-@Api(tags = EnableMetadataClientConsole.POS)
+@Api(tags = EnableMetadata.POS)
 public class PosController extends BaseController {
     private final PosRepository posRepository;
     private final PosService posService;

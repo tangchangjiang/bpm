@@ -8,10 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.ext.metadata.domain.repository.CarrierRepository;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.domain.repository.CarrierRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -71,8 +70,8 @@ public class Carrier extends AuditDomain {
 
     @ApiModelProperty(value = "是否有效")
     @NotNull
-    @Column(name = "is_active")
-    private Integer isActive;
+    @Column(name = "active_flag")
+    private Integer activeFlag;
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -80,4 +79,7 @@ public class Carrier extends AuditDomain {
     @ApiModelProperty(value = "承运商类型含义", hidden = true)
     @Transient
     private String carrierTypeMeaning;
+
+    @ApiModelProperty(value = "组织ID")
+    private Long organizationId;
 }

@@ -1,8 +1,8 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.CarrierMapping;
-import org.o2.ext.metadata.domain.vo.CarrierMappingVO;
+import org.o2.metadata.domain.entity.CarrierMapping;
+import org.o2.metadata.domain.vo.CarrierMappingVO;
 
 import java.util.List;
 

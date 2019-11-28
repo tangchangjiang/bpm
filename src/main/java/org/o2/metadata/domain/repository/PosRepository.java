@@ -2,9 +2,8 @@ package org.o2.metadata.domain.repository;
 
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.Pos;
-import org.o2.ext.metadata.domain.vo.PosVO;
-
+import org.o2.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.vo.PosVO;
 import java.util.List;
 
 /**

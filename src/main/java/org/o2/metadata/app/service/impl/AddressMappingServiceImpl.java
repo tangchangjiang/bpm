@@ -1,13 +1,13 @@
 package org.o2.metadata.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
-import org.o2.ext.metadata.app.service.AddressMappingService;
-import org.o2.ext.metadata.domain.entity.AddressMapping;
-import org.o2.ext.metadata.domain.entity.Region;
-import org.o2.ext.metadata.domain.vo.RegionTreeChildVO;
-import org.o2.ext.metadata.infra.constants.BasicDataConstants;
-import org.o2.ext.metadata.infra.mapper.AddressMappingMapper;
-import org.o2.ext.metadata.infra.mapper.RegionMapper;
+import org.o2.metadata.app.service.AddressMappingService;
+import org.o2.metadata.domain.entity.AddressMapping;
+import org.o2.metadata.domain.entity.Region;
+import org.o2.metadata.domain.vo.RegionTreeChildVO;
+import org.o2.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.mapper.AddressMappingMapper;
+import org.o2.metadata.infra.mapper.RegionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      */
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMapping condition, final String countryCode) {
-        if (condition.getPlatformTypeCode() == null || "".equals(condition.getPlatformTypeCode())) {
+        if (condition.getCatalogCode() == null || "".equals(condition.getCatalogCode())) {
             throw new CommonException("platformType is null");
         }
         if (countryCode == null || "".equals(countryCode)) {
@@ -59,11 +59,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final List<RegionTreeChildVO> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, condition.getPlatformTypeCode());
+        getParent(collect, tree, condition.getCatalogCode());
         sortList(tree);
         return tree;
 
-        //return processRegionData(regionTreeChildVOList, condition.getPlatformTypeCode());
+        //return processRegionData(regionTreeChildVOList, condition.getCatalogCode());
     }
 
     // 从获取的list，处理数据，形成树状结构
@@ -165,7 +165,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                 parent.setRegionName(region.getRegionName());
             } else {
                 for (final RegionTreeChildVO treeChild : parents) {
-                    if (type.equals(treeChild.getPlatformTypeCode())) {
+                    if (type.equals(treeChild.getCatalogCode())) {
                         parent = treeChild;
                     }
                 }

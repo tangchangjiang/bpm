@@ -2,7 +2,7 @@ package org.o2.metadata.domain.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.PosAddress;
+import org.o2.metadata.domain.entity.PosAddress;
 
 /**
  * 详细地址资源库

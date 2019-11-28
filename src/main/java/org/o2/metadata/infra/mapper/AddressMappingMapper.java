@@ -2,8 +2,8 @@ package org.o2.metadata.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.ext.metadata.domain.entity.AddressMapping;
-import org.o2.ext.metadata.domain.vo.RegionTreeChildVO;
+import org.o2.metadata.domain.entity.AddressMapping;
+import org.o2.metadata.domain.vo.RegionTreeChildVO;
 
 import java.util.List;
 
@@ -37,5 +37,5 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @param platformTypeCode 平台类型
      * @return 查询结果集
      */
-    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "platformTypeCode") String platformTypeCode);
+    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String platformTypeCode);
 }

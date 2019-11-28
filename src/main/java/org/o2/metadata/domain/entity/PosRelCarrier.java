@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.ext.metadata.domain.repository.PosRelCarrierRepository;
+import org.o2.metadata.domain.repository.PosRelCarrierRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -34,8 +34,8 @@ public class PosRelCarrier extends AuditDomain {
     public static final String FIELD_POS_REL_CARRIER_ID = "posRelCarrierId";
     public static final String FIELD_POS_ID = "posId";
     public static final String FIELD_CARRIER_ID = "carrierId";
-    public static final String FIELD_IS_ACTIVE = "isActive";
-    public static final String FIELD_IS_DEFAULT = "isDefault";
+    public static final String FIELD_IS_ACTIVE = "activeFlag";
+    public static final String FIELD_IS_DEFAULT = "defaultFlag";
     public static final String FIELD_PRIORITY = "priority";
 
     //
@@ -55,9 +55,9 @@ public class PosRelCarrier extends AuditDomain {
     public void baseValidate() {
         Assert.notNull(this.carrierId, "承运商ID不能为空");
         Assert.notNull(this.posId, "服务点ID不能为空");
-        Assert.notNull(this.isActive, "状态不能为空");
+        Assert.notNull(this.activeFlag, "状态不能为空");
         Assert.notNull(this.priority, "优先级不能为空");
-        Assert.notNull(this.isDefault, "默认值不能为空");
+        Assert.notNull(this.defaultFlag, "默认值不能为空");
     }
     //
     // 数据库字段
@@ -76,11 +76,11 @@ public class PosRelCarrier extends AuditDomain {
 
     @ApiModelProperty(value = "是否激活")
     @NotNull
-    private Integer isActive;
+    private Integer activeFlag;
 
     @ApiModelProperty(value = "是否默认值")
     @NotNull
-    private Integer isDefault;
+    private Integer defaultFlag;
 
     @ApiModelProperty(value = "优先级")
     private Integer priority;

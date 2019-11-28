@@ -1,8 +1,8 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.ext.metadata.app.service.PlatformUomService;
-import org.o2.ext.metadata.domain.repository.PlatformUomRepository;
-import org.o2.ext.metadata.domain.vo.PlatformUomVO;
+import org.o2.metadata.app.service.PlatformUomService;
+import org.o2.metadata.domain.repository.PlatformUomRepository;
+import org.o2.metadata.domain.vo.PlatformUomVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

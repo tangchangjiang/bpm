@@ -1,7 +1,7 @@
 package org.o2.metadata.app.service;
 
 
-import org.o2.ext.metadata.domain.entity.Pos;
+import org.o2.metadata.domain.entity.Pos;
 
 /**
  * 服务点信息应用服务

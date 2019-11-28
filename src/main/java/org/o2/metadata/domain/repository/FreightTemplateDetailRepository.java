@@ -1,7 +1,7 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.FreightTemplateDetail;
+import org.o2.metadata.domain.entity.FreightTemplateDetail;
 
 import java.util.List;
 

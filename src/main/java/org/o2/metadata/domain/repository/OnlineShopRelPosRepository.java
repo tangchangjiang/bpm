@@ -1,8 +1,8 @@
 package org.o2.metadata.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.ext.metadata.domain.entity.OnlineShopRelPos;
-import org.o2.ext.metadata.domain.vo.OnlineShopRelPosVO;
+import org.o2.metadata.domain.entity.OnlineShopRelPos;
+import org.o2.metadata.domain.vo.OnlineShopRelPosVO;
 
 import java.util.List;
 

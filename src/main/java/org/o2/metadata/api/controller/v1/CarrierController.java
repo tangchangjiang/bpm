@@ -13,13 +13,13 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.ext.metadata.app.service.CarrierDeliveryRangeService;
-import org.o2.ext.metadata.app.service.CarrierService;
-import org.o2.ext.metadata.config.EnableMetadataClientConsole;
-import org.o2.ext.metadata.domain.entity.Carrier;
-import org.o2.ext.metadata.domain.entity.CarrierDeliveryRange;
-import org.o2.ext.metadata.domain.repository.CarrierDeliveryRangeRepository;
-import org.o2.ext.metadata.domain.repository.CarrierRepository;
+import org.o2.metadata.app.service.CarrierDeliveryRangeService;
+import org.o2.metadata.app.service.CarrierService;
+import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.domain.entity.Carrier;
+import org.o2.metadata.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.domain.repository.CarrierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RestController("carrierController.v1")
 @RequestMapping("/v1/carriers")
-@Api(tags = EnableMetadataClientConsole.CARRIER)
+@Api(tags = EnableMetadata.CARRIER)
 public class CarrierController extends BaseController {
     @Autowired
     private CarrierRepository carrierRepository;
