@@ -128,4 +128,15 @@ public interface BasicDataConstants {
         String LOV_CODE = "HPFM.UOM";
     }
 
+
+    /**
+     * 归属电商平台类型
+     */
+    interface Catalog {
+        String TM = "TM";
+        String JD = "JD";
+        String OW = "OW";
+
+        String LOV_CODE = "O2MD.CATALOG";
+    }
 }

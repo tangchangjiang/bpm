@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.core.O2CoreConstants;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
 
@@ -51,7 +50,7 @@ public class OnlineShop extends AuditDomain {
         onlineShop.setOnlineShopCode(this.onlineShopCode);
         onlineShop.setOnlineShopName(this.onlineShopName);
         onlineShop.setPlatformShopCode(this.platformShopCode);
-        onlineShop.setCatalogVersionCode(this.catalogVersionCode);
+        onlineShop.setCatalogCode(this.catalogCode);
         return shopRepository.selectCount(onlineShop) > 0;
     }
 
@@ -112,10 +111,13 @@ public class OnlineShop extends AuditDomain {
     @Size(max = 255)
     private String platformShopCode;
 
-    @ApiModelProperty(value = "归属电商平台类型,值集:O2MD.PLATFORM_TYPE")
-    @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
+    @ApiModelProperty(value = "归属电商平台类型,值集:O2MD.CATALOG")
+    @LovValue(lovCode = BasicDataConstants.Catalog.LOV_CODE)
     @NotBlank
     @Size(max = 255)
+    private String catalogCode;
+
+    @ApiModelProperty(value = "是否支持到店退", hidden = true)
     private String catalogVersionCode;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
@@ -159,7 +161,7 @@ public class OnlineShop extends AuditDomain {
 
     @ApiModelProperty(value = "归属电商平台含义")
     @Transient
-    private String catalogVersionCodeMeaning;
+    private String catalogCodeMeaning;
 
 //    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
 //    @Size(max = 255)

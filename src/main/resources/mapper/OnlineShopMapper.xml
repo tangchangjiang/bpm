@@ -6,7 +6,7 @@
         <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
         <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
         <result column="platform_shop_code" property="platformShopCode" jdbcType="VARCHAR"/>
-        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
+        <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="sourced_flag" property="sourcedFlag" jdbcType="DECIMAL"/>
         <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
         <result column="returned_flag" property="returnedFlag" jdbcType="DECIMAL"/>
@@ -19,6 +19,7 @@
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="organization_id" property="organizationId" jdbcType="DECIMAL"/>
+        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="findByCondition" resultType="org.o2.metadata.domain.entity.OnlineShop">
@@ -27,7 +28,7 @@
         online_shop_name,
         online_shop_code,
         platform_shop_code,
-        catalog_version_code,
+        catalog_code,
         sourced_flag,
         picked_up_flag,
         returned_flag,
@@ -57,8 +58,8 @@
                 <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
                 AND platform_shop_code LIKE #{platformShopCodeLike}
             </if>
-            <if test="catalogVersionCode != null">
-                AND catalog_version_code = #{catalogVersionCode}
+            <if test="catalogCode != null">
+                AND catalog_code = #{catalogCode}
             </if>
         </where>
         ORDER BY online_shop_code
