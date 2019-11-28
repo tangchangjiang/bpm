@@ -19,5 +19,11 @@ public interface CarrierDeliveryRangeRepository extends BaseRepository<CarrierDe
      */
     List<CarrierDeliveryRange> list(CarrierDeliveryRange carrierDeliveryRange);
 
+    /**
+     * 承运商送达范围明细获取
+     * @param deliveryRangeId meaning
+     * @return the return
+     * @throws RuntimeException exception description
+     */
     CarrierDeliveryRange detail(Long deliveryRangeId);
 }

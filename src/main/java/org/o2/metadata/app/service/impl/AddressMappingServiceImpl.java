@@ -66,10 +66,16 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         //return processRegionData(regionTreeChildVOList, condition.getCatalogCode());
     }
 
-    // 从获取的list，处理数据，形成树状结构
+
+    /**
+     * 从获取的list，处理数据，形成树状结构
+     * @param regionTreeChildVOList meaning
+     * @return the return
+     * @throws RuntimeException exception description
+     */
     private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildVOList, final String platformTypeCode) {
         // 省市区三级,用map存储，提高效率，key=regionCode，value=children
-        final Map<String, List<RegionTreeChildVO>> map = new HashMap<>();
+        final Map<String, List<RegionTreeChildVO>> map = new HashMap<>(16);
         final List<RegionTreeChildVO> tree = new ArrayList<>();
         LOG.info("regionTreeChildVOList.size:" + regionTreeChildVOList.size());
         //按照levelPath进行分组，获得省市区

@@ -62,16 +62,6 @@ public abstract class AbstractFreightCacheOperation {
             bo.setNextPieceWeight(detail.getNextPieceWeight());
             bo.setNextPrice(detail.getNextPrice());
 
-//            LOG.info("detail.getCarrierId()={}", detail.getCarrierId());
-//            LOG.info("detail.getRegionId()={}", detail.getRegionId());
-//            LOG.info("detail.getTemplateId()={}", detail.getTemplateId());
-//            LOG.info("detail.getDefaultFlag()={}", detail.getDefaultFlag());
-//            LOG.info("detail.getTemplateDetailId()={}", detail.getTemplateDetailId());
-//            LOG.info("detail.getFirstPieceWeight()={}",detail.getFirstPieceWeight());
-//            LOG.info("detail.getFirstPrice()={}",detail.getFirstPrice());
-//            LOG.info("detail.getNextPieceWeight()={}",detail.getNextPieceWeight());
-//            LOG.info("detail.getNextPrice()={}",detail.getNextPrice());
-
             freightDetailBOList.add(bo);
         }
 

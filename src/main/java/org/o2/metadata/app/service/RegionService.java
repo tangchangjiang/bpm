@@ -54,8 +54,10 @@ public interface RegionService {
     List<Region> disableOrEnable(Region region);
 
     /**
-     * @param regionCode
-     * @return
+     * 通过编码获取地址信息
+     * @param regionCode 地址编码
+     * @return the return
+     * @throws RuntimeException exception description
      */
     Region getRegionByCode(String regionCode);
 }

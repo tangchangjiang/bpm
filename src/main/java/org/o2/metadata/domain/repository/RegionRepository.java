@@ -26,6 +26,7 @@ public interface RegionRepository extends BaseRepository<Region> {
      *
      * @param countryIdOrCode 国家ID或CODE
      * @param enabledFlag     筛选条件
+     * @param parentRegionId  级联父节点ID
      * @return 地区列表
      */
     List<RegionVO> listChildren(String countryIdOrCode, Long parentRegionId, Integer enabledFlag);

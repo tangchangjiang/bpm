@@ -129,7 +129,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             final List<FreightTemplateDetail> detailList = freightTemplateDetailRepository.queryFreightTemplateDetailByTemplateId(freightTemplate.getTemplateId());
-            // SecurityTokenHelper.validToken(detailList);
+
             freightTemplateDetailRepository.batchDeleteByPrimaryKey(detailList);
 
             // 清除缓存

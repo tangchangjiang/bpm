@@ -41,7 +41,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     public List<AreaRegionDTO> listAreaRegion(final String countryIdOrCode, final Integer enabledFlag) {
         //取出所有省份
         final List<RegionVO> regionVOList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag);
-        final Map<String, List<RegionDTO>> regionMap = new HashMap<>();
+        final Map<String, List<RegionDTO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionDTO> list;
         for (final RegionVO regionVO : regionVOList) {

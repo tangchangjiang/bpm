@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
 
 import java.util.*;
 
-//import org.o2.boot.inv.trigger.app.service.ShopRelPosTriggerService;
+
 
 /**
  * 网店关联服务点应用服务默认实现
@@ -27,10 +27,11 @@ import java.util.*;
  */
 @Service
 public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
+
     private final OnlineShopRelPosRepository onlineShopRelPosRepository;
     private final OnlineShopRepository onlineShopRepository;
     private final PosRepository posRepository;
-//    private final ShopRelPosTriggerService shopRelPosTriggerService;
+
 
     private static final Logger LOG = LoggerFactory.getLogger(OnlineShopRelPosServiceImpl.class);
 
@@ -121,7 +122,7 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
 
         //触发网店计算库存
         if (onlineShop != null) {
-//            shopRelPosTriggerService.triggerByShopRelPos(onlineShopCode);
+
         } else {
             final Set<String> toUpdateCodeSet = new HashSet<>(toUpdateList.size());
             OnlineShop shop;
@@ -130,7 +131,6 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
                 if (shop != null) {
                     toUpdateCodeSet.add(shop.getOnlineShopCode());
                 }
-//                shopRelPosTriggerService.triggerByShopRelPos(new ArrayList<>(toUpdateCodeSet));
             }
         }
         return onlineShopRelPosList;

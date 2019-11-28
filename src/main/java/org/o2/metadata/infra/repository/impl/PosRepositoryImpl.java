@@ -37,7 +37,7 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     @Override
     public Pos getPosWithAddressAndPostTimeByPosId(final Long posId) {
         final Pos pos = posMapper.getPosWithCarrierNameById(posId);
-        //Assert.notNull(pos.getAddressId(), "pos must contains a address id");
+
         if (pos.getAddressId() != null) {
             pos.setAddress(posAddressMapper.selectByPrimaryKey(pos.getAddressId()));
         }

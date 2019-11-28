@@ -17,6 +17,7 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * 根据条件查询地址匹配
      *
      * @param addressMapping 地址匹配
+     * @param countryCode 国家编码
      * @return 结果集
      */
     List<RegionTreeChildVO> findAddressMappingByCondition(AddressMapping addressMapping, String countryCode);

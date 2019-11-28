@@ -36,7 +36,6 @@ public class PosAddress extends AuditDomain {
     public static final String FIELD_STREET_NAME = "streetName";
     public static final String FIELD_PHONE_NUMBER = "phoneNumber";
     public static final String FIELD_POSTCODE = "postcode";
-    //public static final String FIELD_CODE_DEC16 = "codeDec16";
     public static final String FIELD_CONTACT = "contact";
     public static final String FIELD_MOBILE_PHONE = "mobilePhone";
     public static final String FIELD_LONGITUDE = "longitude";
