@@ -65,7 +65,7 @@ public abstract class AbstractFreightCacheOperation {
             freightDetailList.add(bo);
         }
 
-        LOG.info("freightDetailBOList.size()={}", freightDetailList.size());
+        LOG.info("freightDetailList.size()={}", freightDetailList.size());
 
         return freightDetailList;
     }
@@ -110,10 +110,10 @@ public abstract class AbstractFreightCacheOperation {
         List<FreightDetailBO> freightDetailList = convertToFreightDetail(list);
 
         FreightTemplateBO template = new FreightTemplateBO();
-        template.setFreightBO(freight);
-        template.setFreightDetailBOList(freightDetailList);
+        template.setFreight(freight);
+        template.setFreightDetailList(freightDetailList);
 
-        LOG.info("freightTemplateBO.getFreightDetailBOList().size()={}", template.getFreightDetailBOList().size());
+        LOG.info("freightTemplateBO.getFreightDetailList().size()={}", template.getFreightDetailList().size());
 
         return template;
     }

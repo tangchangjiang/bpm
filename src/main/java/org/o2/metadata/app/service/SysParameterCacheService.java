@@ -12,9 +12,9 @@ public interface SysParameterCacheService {
     /**
      * 保存系统参数缓存
      *
-     * @param sysParameterBO 系统参数业务实体
+     * @param sysParameter 系统参数业务实体
      */
-    void saveSysParameter(SysParameterBO sysParameterBO);
+    void saveSysParameter(SysParameterBO sysParameter);
 
     /**
      * 删除系统参数缓存

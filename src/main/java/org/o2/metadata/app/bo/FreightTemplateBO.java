@@ -15,10 +15,10 @@ public class FreightTemplateBO {
     /**
      * 运费模板
      */
-    private FreightBO freightBO;
+    private FreightBO freight;
 
     /**
      * 运费模板明细列表
      */
-    private List<FreightDetailBO> freightDetailBOList;
+    private List<FreightDetailBO> freightDetailList;
 }

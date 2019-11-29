@@ -21,12 +21,12 @@ public class SysParameterCacheServiceImpl implements SysParameterCacheService {
     }
 
     @Override
-    public void saveSysParameter(final SysParameterBO sysParameterBo) {
-        if (sysParameterBo == null) {
+    public void saveSysParameter(final SysParameterBO sysParameter) {
+        if (sysParameter == null) {
             return;
         }
-        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(sysParameterBo.getParameterCode());
-        this.redisCacheClient.opsForValue().set(cacheKey, FastJsonHelper.objectToString(sysParameterBo));
+        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(sysParameter.getParameterCode());
+        this.redisCacheClient.opsForValue().set(cacheKey, FastJsonHelper.objectToString(sysParameter));
     }
 
     @Override

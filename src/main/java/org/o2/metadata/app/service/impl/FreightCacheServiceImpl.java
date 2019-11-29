@@ -34,51 +34,51 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     }
 
     @Override
-    public void saveFreight(final FreightTemplateBO freightTemplateBO) {
-        final FreightBO freightBO = freightTemplateBO.getFreightBO();
-        final List<FreightDetailBO> freightDetailBOList = freightTemplateBO.getFreightDetailBOList();
+    public void saveFreight(final FreightTemplateBO freightTemplate) {
+        final FreightBO freight = freightTemplate.getFreight();
+        final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
 
-        final String freightCode = freightBO.getTemplateCode();
-        final String freightStr = FastJsonHelper.objectToString(freightBO);
+        final String freightCode = freight.getTemplateCode();
+        final String freightStr = FastJsonHelper.objectToString(freight);
         final String freightKey = getFreightCacheKey(freightCode);
         this.redisCacheClient.opsForValue().set(freightKey, freightStr);
 
-        saveFreightDetails(freightDetailBOList);
+        saveFreightDetails(freightDetailList);
     }
 
     @Override
-    public void saveFreightDetails(final List<FreightDetailBO> freightDetailBOList) {
-        if (freightDetailBOList != null && freightDetailBOList.size() > 0) {
-            final String freightCode = freightDetailBOList.get(0).getTemplateCode();
+    public void saveFreightDetails(final List<FreightDetailBO> freightDetailList) {
+        if (freightDetailList != null && freightDetailList.size() > 0) {
+            final String freightCode = freightDetailList.get(0).getTemplateCode();
             final String freightDetailKey = getFreightDetailCacheKey(freightCode);
 
-            final Map<String, String> freightDetailMap = convertToFreightDetailMap(freightDetailBOList);
-            final Map<String, String> freightPriceMap = convertToFreightPriceMap(freightDetailBOList);
+            final Map<String, String> freightDetailMap = convertToFreightDetailMap(freightDetailList);
+            final Map<String, String> freightPriceMap = convertToFreightPriceMap(freightDetailList);
 
             executeSaveFreightDetailScript(freightDetailKey, freightDetailMap, freightPriceMap);
         }
     }
 
     @Override
-    public void deleteFreight(final FreightTemplateBO freightTemplateBO) {
-        final FreightBO freightBO = freightTemplateBO.getFreightBO();
-        final List<FreightDetailBO> freightDetailBOList = freightTemplateBO.getFreightDetailBOList();
+    public void deleteFreight(final FreightTemplateBO freightTemplate) {
+        final FreightBO freight = freightTemplate.getFreight();
+        final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
 
-        deleteFreightDetails(freightDetailBOList);
+        deleteFreightDetails(freightDetailList);
 
-        final String freightCode = freightBO.getTemplateCode();
+        final String freightCode = freight.getTemplateCode();
         final String freightKey = getFreightCacheKey(freightCode);
 
         this.redisCacheClient.delete(freightKey);
     }
 
     @Override
-    public void deleteFreightDetails(final List<FreightDetailBO> freightDetailBOList) {
-        if (freightDetailBOList != null && freightDetailBOList.size() > 0) {
-            final String freightCode = freightDetailBOList.get(0).getTemplateCode();
+    public void deleteFreightDetails(final List<FreightDetailBO> freightDetailList) {
+        if (freightDetailList != null && freightDetailList.size() > 0) {
+            final String freightCode = freightDetailList.get(0).getTemplateCode();
             final String freightDetailKey = getFreightDetailCacheKey(freightCode);
 
-            final List<String> tmpDetailIdList = getTemplateDetailId(freightDetailBOList);
+            final List<String> tmpDetailIdList = getTemplateDetailId(freightDetailList);
 
             executeDeleteFreightDetailScript(freightDetailKey, tmpDetailIdList);
         }
@@ -145,10 +145,10 @@ public class FreightCacheServiceImpl implements FreightCacheService {
             if (StringUtils.isBlank(var)) {
                 continue;
             }
-            final FreightDetailBO freightDetailBO = FastJsonHelper.stringToObject(var, FreightDetailBO.class);
+            final FreightDetailBO freightDetail = FastJsonHelper.stringToObject(var, FreightDetailBO.class);
 
-            if (freightDetailBO.getIsDefault() != null && freightDetailBO.getIsDefault() == 1) {
-                return freightDetailBO;
+            if (freightDetail.getIsDefault() != null && freightDetail.getIsDefault() == 1) {
+                return freightDetail;
             }
         }
 
@@ -190,14 +190,14 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     /**
      * 将运费模板明细列表转换成Map(key为运费模板明细ID, value为运费模板明细json字符串)
      *
-     * @param freightDetailBOList 运费模板明细列表
+     * @param freightDetailList 运费模板明细列表
      * @return Map
      */
-    private Map<String, String> convertToFreightDetailMap(final List<FreightDetailBO> freightDetailBOList) {
-        final Map<String, String> freightDetailMap = new HashMap<>(freightDetailBOList.size());
-        for (FreightDetailBO freightDetailBO : freightDetailBOList) {
+    private Map<String, String> convertToFreightDetailMap(final List<FreightDetailBO> freightDetailList) {
+        final Map<String, String> freightDetailMap = new HashMap<>(freightDetailList.size());
+        for (FreightDetailBO freightDetail : freightDetailList) {
             freightDetailMap.put
-                    (freightDetailBO.getTemplateDetailId().toString(), FastJsonHelper.objectToString(freightDetailBO));
+                    (freightDetail.getTemplateDetailId().toString(), FastJsonHelper.objectToString(freightDetail));
         }
 
         return freightDetailMap;
@@ -206,13 +206,13 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     /**
      * 获取运费模板明细列表的所有ID
      *
-     * @param freightDetailBOList 运费模板明细列表
+     * @param freightDetailList 运费模板明细列表
      * @return 运费模板明细ID列表
      */
-    private List<String> getTemplateDetailId(final List<FreightDetailBO> freightDetailBOList) {
+    private List<String> getTemplateDetailId(final List<FreightDetailBO> freightDetailList) {
         final List<String> tmpDetailIdList = new ArrayList<>();
-        for (FreightDetailBO freightDetailBO : freightDetailBOList) {
-            tmpDetailIdList.add(freightDetailBO.getTemplateDetailId().toString());
+        for (FreightDetailBO freightDetail : freightDetailList) {
+            tmpDetailIdList.add(freightDetail.getTemplateDetailId().toString());
         }
 
         return tmpDetailIdList;
@@ -221,25 +221,25 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     /**
      * 将运费模板明细列表转换成Map(key为运费价格行redis key, value为运费价格行json字符串)
      *
-     * @param freightDetailBOList 运费模板明细列表
+     * @param freightDetailList 运费模板明细列表
      * @return 结果
      */
-    private Map<String, String> convertToFreightPriceMap(final List<FreightDetailBO> freightDetailBOList) {
+    private Map<String, String> convertToFreightPriceMap(final List<FreightDetailBO> freightDetailList) {
         final Map<String, String> freightPriceMap = new HashMap<>(16);
-        for (FreightDetailBO freightDetailBO : freightDetailBOList) {
-            final FreightPriceBO priceBO = new FreightPriceBO();
-            priceBO.setFirstPieceWeight(freightDetailBO.getFirstPieceWeight());
-            priceBO.setFirstPrice(freightDetailBO.getFirstPrice());
-            priceBO.setNextPieceWeight(freightDetailBO.getNextPieceWeight());
-            priceBO.setNextPrice(freightDetailBO.getNextPrice());
+        for (FreightDetailBO freightDetail : freightDetailList) {
+            final FreightPriceBO price = new FreightPriceBO();
+            price.setFirstPieceWeight(freightDetail.getFirstPieceWeight());
+            price.setFirstPrice(freightDetail.getFirstPrice());
+            price.setNextPieceWeight(freightDetail.getNextPieceWeight());
+            price.setNextPrice(freightDetail.getNextPrice());
 
             final String freightPriceKey = getFreightPriceKey
-                    (freightDetailBO.getTemplateCode(), freightDetailBO.getCarrierCode(), freightDetailBO.getRegionCode());
-            final String freightPriceStr = FastJsonHelper.objectToString(priceBO);
+                    (freightDetail.getTemplateCode(), freightDetail.getCarrierCode(), freightDetail.getRegionCode());
+            final String freightPriceStr = FastJsonHelper.objectToString(price);
             freightPriceMap.put(freightPriceKey, freightPriceStr);
 
-            if (freightDetailBO.getIsDefault() != null && freightDetailBO.getIsDefault() == 1) {
-                final String defaultPriceKey = getFreightPriceKey(freightDetailBO.getTemplateCode(), DEFAULT_CARRIER, DEFAULT_REGION);
+            if (freightDetail.getIsDefault() != null && freightDetail.getIsDefault() == 1) {
+                final String defaultPriceKey = getFreightPriceKey(freightDetail.getTemplateCode(), DEFAULT_CARRIER, DEFAULT_REGION);
                 freightPriceMap.put(defaultPriceKey, freightPriceStr);
             }
         }

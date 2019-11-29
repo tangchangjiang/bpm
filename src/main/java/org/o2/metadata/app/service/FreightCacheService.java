@@ -18,30 +18,30 @@ public interface FreightCacheService {
     /**
      * 更新运费模板redis缓存
      *
-     * @param freightTemplateBO 运费模板传输对象(包含运费模板和明细)
+     * @param freightTemplate 运费模板传输对象(包含运费模板和明细)
      */
-    void saveFreight(FreightTemplateBO freightTemplateBO);
+    void saveFreight(FreightTemplateBO freightTemplate);
 
     /**
      * 更新运费模板明细redis缓存
      *
-     * @param freightDetailBOList 运费模板明细列表
+     * @param freightDetailList 运费模板明细列表
      */
-    void saveFreightDetails(List<FreightDetailBO> freightDetailBOList);
+    void saveFreightDetails(List<FreightDetailBO> freightDetailList);
 
     /**
      * 清除运费模板redis缓存
      *
-     * @param freightTemplateBO  运费模板传输对象(包含运费模板和明细)
+     * @param freightTemplate  运费模板传输对象(包含运费模板和明细)
      */
-    void deleteFreight(FreightTemplateBO freightTemplateBO);
+    void deleteFreight(FreightTemplateBO freightTemplate);
 
     /**
      * 清除运费模板明细redis缓存
      *
-     * @param freightDetailBOList 运费模板明细列表
+     * @param freightDetailList 运费模板明细列表
      */
-    void deleteFreightDetails(List<FreightDetailBO> freightDetailBOList);
+    void deleteFreightDetails(List<FreightDetailBO> freightDetailList);
 
     /**
      * 获取运费模板价格行缓存信息
