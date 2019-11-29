@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections.CollectionUtils;
-import org.o2.metadata.domain.repository.SysParameterSettingRepository;
+import org.o2.metadata.domain.repository.SysParameterRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
 
 import javax.persistence.GeneratedValue;
@@ -43,10 +43,10 @@ public class SysParameter extends AuditDomain {
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
-    public void validateParameterCode(final SysParameterSettingRepository sysParameterSettingRepository) {
+    public void validateParameterCode(final SysParameterRepository sysParameterRepository) {
         final SysParameter entity = new SysParameter();
         entity.setParameterCode(this.parameterCode);
-        final List<SysParameter> list = sysParameterSettingRepository.select(entity);
+        final List<SysParameter> list = sysParameterRepository.select(entity);
         if (CollectionUtils.isNotEmpty(list)) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "SysParameter(" + this.parameterCode + ")");
         }

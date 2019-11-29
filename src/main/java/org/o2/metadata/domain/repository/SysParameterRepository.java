@@ -9,7 +9,7 @@ import org.o2.metadata.domain.entity.SysParameter;
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
-public interface SysParameterSettingRepository extends BaseRepository<SysParameter> {
+public interface SysParameterRepository extends BaseRepository<SysParameter> {
 
     /**
      * 根据条件查询系统参数设置

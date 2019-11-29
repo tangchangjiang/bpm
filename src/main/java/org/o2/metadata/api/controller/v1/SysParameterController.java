@@ -15,7 +15,7 @@ import org.o2.metadata.app.bo.SysParameterBO;
 import org.o2.metadata.app.service.SysParameterCacheService;
 import org.o2.metadata.config.EnableMetadata;
 import org.o2.metadata.domain.entity.SysParameter;
-import org.o2.metadata.domain.repository.SysParameterSettingRepository;
+import org.o2.metadata.domain.repository.SysParameterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +31,10 @@ import java.util.List;
 @RestController("sysParameterSettingController.v1")
 @RequestMapping("/v1/sys-parameter-settings")
 @Api(tags = EnableMetadata.SYS_PARAMETER_SETTING)
-public class SysParameterSettingController extends BaseController {
+public class SysParameterController extends BaseController {
 
     @Autowired
-    private SysParameterSettingRepository sysParameterSettingRepository;
+    private SysParameterRepository sysParameterRepository;
 
     @Autowired
     private SysParameterCacheService sysParameterCacheService;
@@ -47,7 +47,7 @@ public class SysParameterSettingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     public ResponseEntity<?> list(final String parameterCode, final String parameterDesc, final PageRequest pageRequest) {
-        final Page<SysParameter> list = sysParameterSettingRepository.listSysParameterSetting(pageRequest.getPage(),
+        final Page<SysParameter> list = sysParameterRepository.listSysParameterSetting(pageRequest.getPage(),
                 pageRequest.getSize(), parameterCode, parameterDesc);
         return Results.success(list);
     }
@@ -56,7 +56,7 @@ public class SysParameterSettingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{parameterId}")
     public ResponseEntity<?> detail(@PathVariable final Long parameterSettingId) {
-        final SysParameter sysParameter = sysParameterSettingRepository.selectByPrimaryKey(parameterSettingId);
+        final SysParameter sysParameter = sysParameterRepository.selectByPrimaryKey(parameterSettingId);
         return Results.success(sysParameter);
     }
 
@@ -67,7 +67,7 @@ public class SysParameterSettingController extends BaseController {
         final SysParameter sysParameter = new SysParameter();
         sysParameter.setParameterCode(parameterCode);
         sysParameter.setActiveFlag(1);
-        final List<SysParameter> list = sysParameterSettingRepository.select(sysParameter);
+        final List<SysParameter> list = sysParameterRepository.select(sysParameter);
         if (list.size() > 0) {
             return Results.success(list.get(0).getParameterValue());
         } else {
@@ -81,7 +81,7 @@ public class SysParameterSettingController extends BaseController {
     public ResponseEntity<?> update(@RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
         if (sysParameter.getParameterId() != null) {
-            sysParameterSettingRepository.updateByPrimaryKeySelective(sysParameter);
+            sysParameterRepository.updateByPrimaryKeySelective(sysParameter);
             sysParameterCacheService.saveSysParameter(convert(sysParameter));
         }
         return Results.success(sysParameter);
@@ -92,9 +92,9 @@ public class SysParameterSettingController extends BaseController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody final SysParameter sysParameter) {
         //校验唯一
-        sysParameter.validateParameterCode(sysParameterSettingRepository);
+        sysParameter.validateParameterCode(sysParameterRepository);
         sysParameter.setParameterId(null);
-        sysParameterSettingRepository.insertSelective(sysParameter);
+        sysParameterRepository.insertSelective(sysParameter);
         sysParameterCacheService.saveSysParameter(convert(sysParameter));
 
         return Results.success(sysParameter);
@@ -105,7 +105,7 @@ public class SysParameterSettingController extends BaseController {
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
-        sysParameterSettingRepository.deleteByPrimaryKey(sysParameter);
+        sysParameterRepository.deleteByPrimaryKey(sysParameter);
         sysParameterCacheService.deleteSysParameter(sysParameter.getParameterCode());
         return Results.success();
     }
