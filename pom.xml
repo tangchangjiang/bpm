@@ -39,6 +39,11 @@
             <artifactId>o2-starter-data-redis</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.o2.context</groupId>
+            <artifactId>o2-context-metadata</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-mybatis-mapper</artifactId>
         </dependency>
@@ -97,6 +102,16 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
@@ -108,6 +123,5 @@
             <artifactId>ojdbc7</artifactId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 </project>

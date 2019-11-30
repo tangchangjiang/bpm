@@ -14,7 +14,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.app.service.OnlineShopRelPosService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.OnlineShop;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
@@ -32,7 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController("onlineShopController.v1")
 @RequestMapping("/v1/online-shops")
-@Api(tags = EnableMetadata.ONLINE_SHOP)
+@Api(tags = MetadataSwagger.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopRelPosService onlineShopRelPosService;

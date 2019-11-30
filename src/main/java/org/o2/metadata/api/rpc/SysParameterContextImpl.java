@@ -1,27 +1,32 @@
-package org.o2.metadata.app.service.impl;
+package org.o2.metadata.api.rpc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.Service;
 import org.hzero.core.base.BaseConstants;
+import org.o2.context.metadata.MetadataContext;
+import org.o2.context.metadata.api.ISysParameterContext;
+import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.app.bo.SysParameterBO;
-import org.o2.metadata.app.service.SysParameterCacheService;
 import org.o2.metadata.infra.constants.MetadataConstants;
+import org.springframework.stereotype.Component;
 
 /**
- * 系统参数默认缓存实现
+ * SysParameter RPC Provider
  *
- * @author mark.bao@hand-china.com 2019-05-30
+ * @author mark.bao@hand-china.com 2019/11/29
  */
-public class SysParameterCacheServiceImpl implements SysParameterCacheService {
+@Service(version = MetadataContext.PosContext.Version.DEF)
+@Component("sysParameterContext")
+public class SysParameterContextImpl implements ISysParameterContext {
     private final RedisCacheClient redisCacheClient;
 
-    public SysParameterCacheServiceImpl(final RedisCacheClient redisCacheClient) {
+    public SysParameterContextImpl(final RedisCacheClient redisCacheClient) {
         this.redisCacheClient = redisCacheClient;
     }
 
     @Override
-    public void saveSysParameter(final SysParameterBO sysParameter) {
+    public void saveSysParameter(final SysParameterVO sysParameter) {
         if (sysParameter == null) {
             return;
         }
@@ -39,7 +44,7 @@ public class SysParameterCacheServiceImpl implements SysParameterCacheService {
     }
 
     @Override
-    public SysParameterBO getSysParameter(final String code) {
+    public SysParameterVO getSysParameter(final String code) {
         if (StringUtils.isBlank(code)) {
             return null;
         }
@@ -48,26 +53,26 @@ public class SysParameterCacheServiceImpl implements SysParameterCacheService {
         if (StringUtils.isBlank(results)) {
             return null;
         }
-        return FastJsonHelper.stringToObject(results, SysParameterBO.class);
+        return FastJsonHelper.stringToObject(results, SysParameterVO.class);
     }
 
     @Override
     public String getSysParameterValue(final String code) {
-        final SysParameterBO sysParameterBo = getSysParameter(code);
-        if (sysParameterBo == null) {
+        final SysParameterVO sysParameterVO = getSysParameter(code);
+        if (sysParameterVO == null) {
             return null;
         } else {
-            return sysParameterBo.getParameterValue();
+            return sysParameterVO.getParameterValue();
         }
     }
 
     @Override
     public boolean isSysParameterActive(final String code) {
-        final SysParameterBO sysParameterBo = getSysParameter(code);
-        if (sysParameterBo == null) {
+        final SysParameterVO sysParameterVO = getSysParameter(code);
+        if (sysParameterVO == null) {
             return false;
         } else {
-            return BaseConstants.Flag.YES.equals(sysParameterBo.getIsActive());
+            return BaseConstants.Flag.YES.equals(sysParameterVO.getActiveFlag());
         }
     }
 }

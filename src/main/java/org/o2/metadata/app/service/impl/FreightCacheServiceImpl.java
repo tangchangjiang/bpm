@@ -12,6 +12,7 @@ import org.o2.metadata.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -20,7 +21,7 @@ import java.util.*;
  *
  * @author peng.xu@hand-china.com 2019-06-18
  */
-
+@Component("freightCacheService")
 public class FreightCacheServiceImpl implements FreightCacheService {
     private final static Logger LOG = LoggerFactory.getLogger(FreightCacheServiceImpl.class);
 

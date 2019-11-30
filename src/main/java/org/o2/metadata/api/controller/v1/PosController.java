@@ -14,7 +14,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.app.service.OnlineShopRelPosService;
 import org.o2.metadata.app.service.PosService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.Pos;
 import org.o2.metadata.domain.repository.PosRepository;
 import org.o2.metadata.domain.vo.PosVO;
@@ -33,7 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController("posController.v1")
 @RequestMapping("/v1/poses")
-@Api(tags = EnableMetadata.POS)
+@Api(tags = MetadataSwagger.POS)
 public class PosController extends BaseController {
     private final PosRepository posRepository;
     private final PosService posService;

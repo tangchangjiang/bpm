@@ -13,7 +13,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.app.service.PosRelCarrierService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.PosRelCarrier;
 import org.o2.metadata.domain.repository.PosRelCarrierRepository;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController("posRelCarrierController.v1")
 @RequestMapping("/v1/pos-rel-carriers")
-@Api(tags = EnableMetadata.POS_REL_CARRIER)
+@Api(tags = MetadataSwagger.POS_REL_CARRIER)
 public class PosRelCarrierController extends BaseController {
     private final PosRelCarrierRepository posRelCarrierRepository;
     private final PosRelCarrierService posRelCarrierService;

@@ -13,7 +13,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.app.service.FreightTemplateDetailService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.FreightTemplateDetail;
 import org.o2.metadata.domain.repository.FreightTemplateDetailRepository;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @RestController("freightTemplateDetailController.v1")
 @RequestMapping("/v1/freight-template-details")
-@Api(tags = EnableMetadata.FREIGHT_TEMPLATE_DETAIL)
+@Api(tags = MetadataSwagger.FREIGHT_TEMPLATE_DETAIL)
 public class FreightTemplateDetailController extends BaseController {
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
     private final FreightTemplateDetailService freightTemplateDetailService;

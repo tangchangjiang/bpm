@@ -1,27 +1,32 @@
-package org.o2.metadata.app.service.impl;
+package org.o2.metadata.api.rpc;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.dubbo.config.annotation.Service;
+import org.o2.context.metadata.MetadataContext;
+import org.o2.context.metadata.api.IPosContext;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.app.service.PosCacheService;
 import org.o2.metadata.infra.constants.MetadataConstants;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 门店缓存服务默认实现
+ * Pos RPC Provider
  *
- * @author mark.bao@hand-china.com 2019-04-16
+ * @author mark.bao@hand-china.com 2019/11/29
  */
-public class PosCacheServiceImpl implements PosCacheService {
+@Service(version = MetadataContext.PosContext.Version.DEF)
+@Component("posContext")
+public class PosContextImpl implements IPosContext {
     private final RedisCacheClient redisCacheClient;
 
-    public PosCacheServiceImpl(final RedisCacheClient redisCacheClient) {
+    public PosContextImpl(final RedisCacheClient redisCacheClient) {
         this.redisCacheClient = redisCacheClient;
     }
 

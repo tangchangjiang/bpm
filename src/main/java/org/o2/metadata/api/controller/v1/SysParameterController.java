@@ -11,9 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.app.bo.SysParameterBO;
-import org.o2.metadata.app.service.SysParameterCacheService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.context.metadata.api.ISysParameterContext;
+import org.o2.context.metadata.vo.SysParameterVO;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.SysParameter;
 import org.o2.metadata.domain.repository.SysParameterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ import java.util.List;
 
 @RestController("sysParameterSettingController.v1")
 @RequestMapping("/v1/sys-parameter-settings")
-@Api(tags = EnableMetadata.SYS_PARAMETER_SETTING)
+@Api(tags = MetadataSwagger.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
 
     @Autowired
     private SysParameterRepository sysParameterRepository;
 
     @Autowired
-    private SysParameterCacheService sysParameterCacheService;
+    private ISysParameterContext sysParameterContext;
 
     @ApiOperation(value = "系统参数设置列表")
     @ApiImplicitParams({
@@ -82,7 +82,7 @@ public class SysParameterController extends BaseController {
         SecurityTokenHelper.validToken(sysParameter);
         if (sysParameter.getParameterId() != null) {
             sysParameterRepository.updateByPrimaryKeySelective(sysParameter);
-            sysParameterCacheService.saveSysParameter(convert(sysParameter));
+            sysParameterContext.saveSysParameter(convert(sysParameter));
         }
         return Results.success(sysParameter);
     }
@@ -95,7 +95,7 @@ public class SysParameterController extends BaseController {
         sysParameter.validateParameterCode(sysParameterRepository);
         sysParameter.setParameterId(null);
         sysParameterRepository.insertSelective(sysParameter);
-        sysParameterCacheService.saveSysParameter(convert(sysParameter));
+        sysParameterContext.saveSysParameter(convert(sysParameter));
 
         return Results.success(sysParameter);
     }
@@ -106,15 +106,15 @@ public class SysParameterController extends BaseController {
     public ResponseEntity<?> delete(@RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameterRepository.deleteByPrimaryKey(sysParameter);
-        sysParameterCacheService.deleteSysParameter(sysParameter.getParameterCode());
+        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode());
         return Results.success();
     }
 
-    private SysParameterBO convert(final SysParameter sysParameter) {
-        final SysParameterBO sysParameterBo = new SysParameterBO();
-        sysParameterBo.setParameterCode(sysParameter.getParameterCode());
-        sysParameterBo.setParameterValue(sysParameter.getParameterValue());
-        sysParameterBo.setIsActive(sysParameter.getActiveFlag());
-        return sysParameterBo;
+    private SysParameterVO convert(final SysParameter sysParameter) {
+        final SysParameterVO sysParameterVO = new SysParameterVO();
+        sysParameterVO.setParameterCode(sysParameter.getParameterCode());
+        sysParameterVO.setParameterValue(sysParameter.getParameterValue());
+        sysParameterVO.setActiveFlag(sysParameter.getActiveFlag());
+        return sysParameterVO;
     }
 }

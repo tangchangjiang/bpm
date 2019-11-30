@@ -13,7 +13,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.app.service.FreightTemplateService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.Carrier;
 import org.o2.metadata.domain.entity.FreightTemplate;
 import org.o2.metadata.domain.repository.FreightTemplateRepository;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController("freightTemplateController.v1")
 @RequestMapping("/v1/freight-templates")
-@Api(tags = EnableMetadata.FREIGHT_TEMPLATE)
+@Api(tags = MetadataSwagger.FREIGHT_TEMPLATE)
 public class FreightTemplateController extends BaseController {
     private final FreightTemplateRepository freightTemplateRepository;
     private final FreightTemplateService freightTemplateService;
