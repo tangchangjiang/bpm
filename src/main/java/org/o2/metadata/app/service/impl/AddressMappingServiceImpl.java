@@ -40,7 +40,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      */
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMapping condition, final String countryCode) {
-        if (condition.getCatalogCode() == null || "".equals(condition.getCatalogCode())) {
+        if (condition.getCatalogId() == null || "".equals(condition.getCatalogId())) {
             throw new CommonException("platformType is null");
         }
         if (countryCode == null || "".equals(countryCode)) {
@@ -59,7 +59,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final List<RegionTreeChildVO> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, condition.getCatalogCode());
+        getParent(collect, tree, condition.getCatalogId());
         sortList(tree);
         return tree;
     }
@@ -169,7 +169,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                 parent.setRegionName(region.getRegionName());
             } else {
                 for (final RegionTreeChildVO treeChild : parents) {
-                    if (type.equals(treeChild.getCatalogCode())) {
+                    if (type.equals(treeChild.getCatalogId())) {
                         parent = treeChild;
                     }
                 }

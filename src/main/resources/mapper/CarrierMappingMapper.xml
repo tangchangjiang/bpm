@@ -4,10 +4,10 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.domain.entity.CarrierMapping">
         <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
-        <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
+        <result column="catalog_id" property="catalogId" jdbcType="VARCHAR"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
-        <result column="platform_carrier_code" property="platformCarrierCode" jdbcType="VARCHAR"/>
-        <result column="platform_carrier_Name" property="platformCarrierName" jdbcType="VARCHAR"/>
+        <result column="external_carrier_code" property="externalCarrierCode" jdbcType="VARCHAR"/>
+        <result column="external_carrier_Name" property="externalCarrierName" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -24,12 +24,12 @@
     <select id="listCarrierMappingByCondition" resultType="org.o2.metadata.domain.vo.CarrierMappingVO">
         SELECT
         cm.carrier_mapping_id,
-        cm.catalog_code,
+        cm.catalog_id,
         cm.carrier_id,
         c.carrier_code,
         c.carrier_name,
-        cm.platform_carrier_code,
-        cm.platform_carrier_name,
+        cm.external_carrier_code,
+        cm.external_carrier_Name,
         cm.object_version_number,
         cm.creation_date,
         cm.created_by,
@@ -40,16 +40,16 @@
         JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id
         where
         1 = 1
-        <if test="catalogCode!=null and catalogCode!=''">
-            AND cm.catalog_code = #{catalogCode}
+        <if test="catalogId!=null and catalogId!=''">
+            AND cm.catalog_id = #{catalogId}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
             AND c.carrier_code LIKE concat("%",concat(#{carrierCode}),"%")
         </if>
-        <if test="platformCarrierCode != null and platformCarrierCode != ''">
-            <bind name="platformCarrierCodeLike" value="'%' + platformCarrierCode + '%'"/>
-            and cm.platform_carrier_code like #{platformCarrierCodeLike}
+        <if test="externalCarrierCode != null and externalCarrierCode != ''">
+            <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
+            and cm.external_carrier_code like #{externalCarrierCodeLike}
         </if>
-        ORDER BY cm.catalog_code, c.carrier_code
+        ORDER BY cm.catalog_id, c.carrier_code
     </select>
 </mapper>

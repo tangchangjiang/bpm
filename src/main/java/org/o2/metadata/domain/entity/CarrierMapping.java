@@ -37,8 +37,8 @@ public class CarrierMapping extends AuditDomain {
     public static final String FIELD_CARRIER_MAPPING_ID = "carrierMappingId";
     public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
     public static final String FIELD_CARRIER_ID = "carrierId";
-    public static final String FIELD_PLATFORM_CARRIER_CODE = "platformCarrierCode";
-    public static final String FIELD_PLATFORM_CARRIER_NAME = "platformCarrierName";
+    public static final String FIELD_PLATFORM_CARRIER_CODE = "externalCarrierCode";
+    public static final String FIELD_PLATFORM_CARRIER_NAME = "externalCarrierName";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -49,8 +49,8 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.carrierMappingId) {
             sqls.andNotEqualTo(CarrierMapping.FIELD_CARRIER_MAPPING_ID, this.getCarrierMappingId());
         }
-        if (StringUtils.isNotBlank(this.catalogCode)) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogCode());
+        if (StringUtils.isNotBlank(this.catalogId)) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogId());
         }
         if (null != this.carrierId) {
             sqls.andEqualTo(CarrierMapping.FIELD_CARRIER_ID, this.getCarrierId());
@@ -60,9 +60,9 @@ public class CarrierMapping extends AuditDomain {
     }
 
     public void baseValidate() {
-        Assert.notNull(this.catalogCode, "平台类型不能为空");
+        Assert.notNull(this.catalogId, "平台类型不能为空");
         Assert.notNull(this.carrierId, "承运商id不能为空");
-        Assert.notNull(this.platformCarrierCode, "平台承运商编码不能为空");
+        Assert.notNull(this.externalCarrierCode, "平台承运商编码不能为空");
     }
 
     //
@@ -79,7 +79,7 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "归属电商平台,值集O2MD.PLATFORM_TYPE")
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
     @NotBlank
-    private String catalogCode;
+    private String catalogId;
 
     @ApiModelProperty(value = "承运商id")
     @NotBlank
@@ -87,11 +87,11 @@ public class CarrierMapping extends AuditDomain {
 
     @ApiModelProperty(value = "平台承运商编码")
     @NotBlank
-    private String platformCarrierCode;
+    private String externalCarrierCode;
 
     @ApiModelProperty(value = "平台承运商名称")
     @NotBlank
-    private String platformCarrierName;
+    private String externalCarrierName;
 
     //
     // 非数据库字段

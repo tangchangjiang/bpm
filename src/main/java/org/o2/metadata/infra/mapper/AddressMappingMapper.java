@@ -35,8 +35,8 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * 根据regionCode  platformTypeCode查询地址内部外部匹配数据
      *
      * @param regionCode       region_id 地区id
-     * @param platformTypeCode 平台类型
+     * @param catalogCode 平台类型
      * @return 查询结果集
      */
-    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogId") String platformTypeCode);
+    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String catalogCode);
 }
