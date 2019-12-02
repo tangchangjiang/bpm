@@ -35,7 +35,7 @@ import javax.validation.constraints.NotBlank;
 public class CarrierMapping extends AuditDomain {
 
     public static final String FIELD_CARRIER_MAPPING_ID = "carrierMappingId";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_PLATFORM_CARRIER_CODE = "platformCarrierCode";
     public static final String FIELD_PLATFORM_CARRIER_NAME = "platformCarrierName";
@@ -100,4 +100,7 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "归属电商平台含义")
     @Transient
     private String platformTypeMeaning;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }

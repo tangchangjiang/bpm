@@ -10,11 +10,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
-import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,7 +37,7 @@ public class OnlineShop extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_NAME = "onlineShopName";
     public static final String FIELD_ONLINE_SHOP_CODE = "onlineShopCode";
     public static final String FIELD_PLATFORM_SHOP_CODE = "platformShopCode";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
     public static final String FIELD_SOURCED = "sourcedFlag";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
 
@@ -51,7 +53,7 @@ public class OnlineShop extends AuditDomain {
         onlineShop.setOnlineShopCode(this.onlineShopCode);
         onlineShop.setOnlineShopName(this.onlineShopName);
         onlineShop.setPlatformShopCode(this.platformShopCode);
-        onlineShop.setCatalogCode(this.catalogCode);
+        onlineShop.setCatalogId(this.catalogId);
         onlineShop.setTenantId(this.tenantId);
         return shopRepository.selectCount(onlineShop) > 0;
     }
@@ -114,14 +116,11 @@ public class OnlineShop extends AuditDomain {
     @Size(max = 255)
     private String platformShopCode;
 
-    @ApiModelProperty(value = "归属电商平台类型,值集:O2MD.CATALOG")
-    @LovValue(lovCode = BasicDataConstants.Catalog.LOV_CODE)
     @NotBlank
     @Size(max = 255)
-    private String catalogCode;
+    private String catalogId;
 
-    @ApiModelProperty(value = "是否支持到店退", hidden = true)
-    private String catalogVersionCode;
+    private String catalogVersionId;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
     @Column(name = "sourced_flag")
@@ -162,9 +161,9 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
 
-    @ApiModelProperty(value = "归属电商平台含义")
-    @Transient
-    private String catalogCodeMeaning;
+//    @ApiModelProperty(value = "归属电商平台含义")
+//    @Transient
+//    private String catalogMeaning;
 
 //    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
 //    @Size(max = 255)

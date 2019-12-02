@@ -123,6 +123,9 @@ public class PostTime extends AuditDomain {
     @ApiModelProperty(value = "派单结束时间 格式 HH:mm:ss")
     private LocalTime distributeEndTime;
 
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------

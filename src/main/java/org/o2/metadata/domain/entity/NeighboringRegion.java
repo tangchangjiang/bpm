@@ -121,4 +121,7 @@ public class NeighboringRegion extends AuditDomain {
     @ApiModelProperty(hidden = true)
     @Transient
     private String targetCountryName;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }

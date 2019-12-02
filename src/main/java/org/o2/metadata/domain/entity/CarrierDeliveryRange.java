@@ -128,4 +128,7 @@ public class CarrierDeliveryRange extends AuditDomain {
     @ApiModelProperty(value = "承运商名称", hidden = true)
     @Transient
     private String carrierName;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }

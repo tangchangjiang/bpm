@@ -116,4 +116,7 @@ public class PosAddress extends AuditDomain {
     @ApiModelProperty(value = "区")
     @Transient
     private String district;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }

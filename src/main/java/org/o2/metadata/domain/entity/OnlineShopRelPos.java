@@ -92,4 +92,7 @@ public class OnlineShopRelPos extends AuditDomain {
     @ApiModelProperty(value = "服务点")
     @Transient
     private Pos pos;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }

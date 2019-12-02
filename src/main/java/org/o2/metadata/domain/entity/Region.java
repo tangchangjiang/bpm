@@ -90,5 +90,8 @@ public class Region extends AuditDomain {
     @ApiModelProperty(value = "大区名称")
     @Transient
     private String areaMeaning;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 }
 

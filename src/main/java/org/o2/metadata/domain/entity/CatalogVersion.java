@@ -6,8 +6,6 @@ import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -26,7 +24,7 @@ import javax.validation.constraints.NotNull;
 public class CatalogVersion extends AuditDomain {
 
     public static final String FIELD_CATALOG_VERSION_ID = "catalogVersionId";
-    public static final String FIELD_CATALOG_VERSION_CODE = "catalogVersionCode";
+    public static final String FIELD_CATALOG_VERSION_CODE = "catalogVersionId";
     public static final String FIELD_CATALOG_VERSION_NAME = "catalogVersionName";
     public static final String FIELD_CATALOG_VERSION_DESCRIPTION = "catalogVersionDescription";
     public static final String FIELD_CATALOG_ID = "catalogId";
@@ -46,10 +44,8 @@ public class CatalogVersion extends AuditDomain {
     @GeneratedValue
     private Long catalogVersionId;
     @ApiModelProperty(value = "版本目录编码",required = true)
-    @NotBlank
     private String catalogVersionCode;
     @ApiModelProperty(value = "版本目录名称",required = true)
-    @NotBlank
     private String catalogVersionName;
     @ApiModelProperty(value = "版本目录表述")
     private String catalogVersionDescription;

@@ -72,6 +72,9 @@ public class OnlineShopInfAuth extends AuditDomain {
     @ApiModelProperty(value = "商家编码")
     private String appAccount;
 
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------

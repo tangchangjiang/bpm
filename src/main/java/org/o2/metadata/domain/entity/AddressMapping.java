@@ -35,7 +35,7 @@ public class AddressMapping extends AuditDomain {
     public static final String FIELD_ADDRESS_MAPPING_ID = "addressMappingId";
     public static final String FIELD_REGION_ID = "regionId";
     public static final String FIELD_ADDRESS_TYPE_CODE = "addressTypeCode";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
     public static final String FIELD_ADDRESS_MAPPING_EX_CODE = "externalCode";
     public static final String FIELD_ADDRESS_MAPPING_EX_NAME = "externalName";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
@@ -102,6 +102,9 @@ public class AddressMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "地址类型含义", hidden = true)
     private String addressTypeMeaning;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 
     /**
      * 显示region的层级目录结构，只在详情里展示
