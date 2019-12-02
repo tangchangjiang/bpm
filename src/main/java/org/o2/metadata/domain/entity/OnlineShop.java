@@ -157,7 +157,7 @@ public class OnlineShop extends AuditDomain {
     private Integer enableSplitFlag;
 
     @ApiModelProperty(value = "组织ID")
-    private Long organizationId;
+    private Long tenantId;
 
     @ApiModelProperty(value = "归属电商平台含义")
     @Transient

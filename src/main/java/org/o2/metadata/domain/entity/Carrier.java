@@ -81,5 +81,5 @@ public class Carrier extends AuditDomain {
     private String carrierTypeMeaning;
 
     @ApiModelProperty(value = "组织ID")
-    private Long organizationId;
+    private Long tenantId;
 }

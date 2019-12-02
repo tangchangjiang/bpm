@@ -215,7 +215,7 @@ public class Pos extends AuditDomain {
     private String carrierName;
 
     @ApiModelProperty(value = "组织ID", hidden = true)
-    private Long organizationId;
+    private Long tenantId;
 
     @ApiModelProperty(value = "默认承运商.code")
     @Size(max = 255)

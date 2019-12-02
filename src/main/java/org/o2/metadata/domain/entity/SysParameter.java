@@ -84,5 +84,5 @@ public class SysParameter extends AuditDomain {
     private String lastUpdateByName;
 
     @ApiModelProperty(value = "组织ID")
-    private Long organizationId;
+    private Long tenantId;
 }
