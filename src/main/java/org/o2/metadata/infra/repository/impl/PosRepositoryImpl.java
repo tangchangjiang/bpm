@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.repository.impl;
 
+import com.google.common.base.Preconditions;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.domain.entity.Pos;
 import org.o2.metadata.domain.entity.PostTime;
@@ -30,7 +31,8 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public List<PosVO> listPosWithAddressByCondition(final PosVO pos) {
+    public List<PosVO> listPosWithAddressByCondition(PosVO pos) {
+        Preconditions.checkArgument(null != pos.getTenantId(), "pos must contains tenantId");
         return posMapper.listPosWithAddressByCondition(pos);
     }
 
@@ -56,9 +58,10 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public Pos getPosByCode(final String posCode) {
+    public Pos getPosByCode(Long organizationId ,final String posCode) {
         final Pos pos = new Pos();
         pos.setPosCode(posCode);
+        pos.setTenantId(organizationId);
         return posMapper.selectOne(pos);
     }
 }

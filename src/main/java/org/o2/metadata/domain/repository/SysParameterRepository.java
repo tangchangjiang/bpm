@@ -20,7 +20,7 @@ public interface SysParameterRepository extends BaseRepository<SysParameter> {
      * @param parameterDesc 参数描述
      * @return 结果集
      */
-    Page<SysParameter> listSysParameterSetting(int page, int size, String parameterCode, String parameterDesc);
+    Page<SysParameter> listSysParameterSetting(int page, int size, String parameterCode, String parameterDesc, Long organizationId);
 
     /**
      * 详细信息

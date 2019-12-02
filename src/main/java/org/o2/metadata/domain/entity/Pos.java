@@ -2,6 +2,8 @@ package org.o2.metadata.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -76,13 +78,15 @@ public class Pos extends AuditDomain {
     public void baseValidate(final PosRepository posRepository) {
         if (this.getPosId() != null) {
             final Pos record = posRepository.selectByPrimaryKey(this.posId);
+            Preconditions.checkArgument(null != this.tenantId, "pos tenantId must not be empty");
+            Assert.isTrue(Objects.equal(record.getTenantId(), this.tenantId), "pos tenantId must not be changed");
             Assert.isTrue(record.getPosCode().equals(this.posCode), "pos code must not be changed");
             Assert.isTrue(record.getPosTypeCode().equals(this.posTypeCode), "pos type code must not be changed");
         }
 
         Assert.notNull(this.getAddress(), "pos must contains an address");
         Assert.notNull(this.getAddress().getDistrictId(), "pos must contains an address");
-
+        Assert.notNull(this.tenantId, "pos must contains tenantId");
         if (MetadataConstants.PosType.WAREHOUSE.equalsIgnoreCase(this.posTypeCode)) {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
         }

@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.repository.impl;
 
+import com.google.common.base.Preconditions;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.domain.entity.OnlineShop;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
@@ -23,6 +24,7 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
 
     @Override
     public List<OnlineShop> selectByCondition(final OnlineShop condition) {
+        Preconditions.checkArgument(null != condition.getTenantId(),"tenantId should is not empty");
         return onlineShopMapper.findByCondition(condition);
     }
 }

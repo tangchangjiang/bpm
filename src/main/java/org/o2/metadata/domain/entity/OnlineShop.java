@@ -1,5 +1,6 @@
 package org.o2.metadata.domain.entity;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -51,10 +52,12 @@ public class OnlineShop extends AuditDomain {
         onlineShop.setOnlineShopName(this.onlineShopName);
         onlineShop.setPlatformShopCode(this.platformShopCode);
         onlineShop.setCatalogCode(this.catalogCode);
+        onlineShop.setTenantId(this.tenantId);
         return shopRepository.selectCount(onlineShop) > 0;
     }
 
     public void validate(final OnlineShopRepository onlineShopRepository) {
+        Preconditions.checkArgument(null != this.getTenantId(), "tenantId should is not empty");
         if (this.getOnlineShopId() != null) {
             final OnlineShop record = onlineShopRepository.selectByPrimaryKey(this.onlineShopId);
             if (!record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {

@@ -42,6 +42,9 @@
             <bind name="parameterDescLike" value="'%' + parameterDesc + '%'"/>
             and sys.parameter_desc like #{parameterDescLike}
         </if>
+        <if test="tenantId !=null ">
+            and sys.tenantId = #{tenantId}
+        </if>
         order by sys.parameter_code
     </select>
 </mapper>

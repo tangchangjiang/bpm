@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -31,7 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RestController("onlineShopController.v1")
-@RequestMapping("/v1/online-shops")
+@RequestMapping("/v1/{organizationId}/online-shops")
 @Api(tags = MetadataSwagger.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
@@ -54,14 +55,18 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity listAllActiveShops() {
-        return Results.success(onlineShopRepository.select(OnlineShop.FIELD_IS_ACTIVE, 1));
+    public ResponseEntity listAllActiveShops(@PathVariable Long organizationId) {
+        OnlineShop onlineShop = new OnlineShop();
+        onlineShop.setTenantId(organizationId);
+        onlineShop.setActiveFlag(1);
+        return Results.success(onlineShopRepository.select(onlineShop));
     }
 
     @ApiOperation("查询所有网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
     public ResponseEntity listAllShops(final OnlineShop onlineShop) {
+        Preconditions.checkArgument(null != onlineShop.getTenantId(), "tenantId should is not empty");
         return Results.success(onlineShopRepository.select(onlineShop));
     }
 
@@ -79,6 +84,7 @@ public class OnlineShopController extends BaseController {
     @PostMapping
     public ResponseEntity createOnlineShop(@ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
+        Preconditions.checkArgument(null != onlineShop.getTenantId(), "tenantId should is not empty");
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         if (onlineShop.exist(onlineShopRepository)) {

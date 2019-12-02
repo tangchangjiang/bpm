@@ -51,5 +51,5 @@ public interface PosRepository extends BaseRepository<Pos> {
      * @param posCode 服务点编码
      * @return 服务点信息
      */
-    Pos getPosByCode(String posCode);
+    Pos getPosByCode(Long organizationId,String posCode);
 }

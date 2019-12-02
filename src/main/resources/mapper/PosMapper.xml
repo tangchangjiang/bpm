@@ -88,6 +88,9 @@
             <if test="posStatusCode != null and posStatusCode != ''">
                 and pos.pos_status_code = #{posStatusCode}
             </if>
+            <if test="tenantId != null and tenantId != ''">
+                and pos.tenant_id = #{tenantId}
+            </if>
             <if test="posTypeCode != null and posTypeCode != ''">
                 and pos.pos_type_code = #{posTypeCode}
             </if>
