@@ -40,7 +40,10 @@ public class Carrier extends AuditDomain {
         if (this.getCarrierId() != null) {
             return carrierRepository.selectCount(this) > 0;
         }
-        final List<Carrier> list = carrierRepository.select(FIELD_CARRIER_CODE, this.carrierCode);
+        Carrier carrier = new Carrier();
+        carrier.setTenantId(this.tenantId);
+        carrier.setCarrierCode(this.carrierCode);
+        final List<Carrier> list = carrierRepository.select(carrier);
         return list.size() > 0;
     }
 

@@ -46,6 +46,9 @@
             <if test="carrierTypeCode != null and carrierTypeCode != ''">
                 and c.carrier_type_code = #{carrierTypeCode}
             </if>
+            <if test="tenantId != null and tenantId != ''">
+                and c.tenant_id = #{tenantId}
+            </if>
         </where>
         ORDER BY carrier_code
     </select>

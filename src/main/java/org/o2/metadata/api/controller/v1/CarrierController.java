@@ -33,7 +33,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("carrierController.v1")
-@RequestMapping("/v1/carriers")
+@RequestMapping("/v1/{organizationId}/carriers")
 @Api(tags = MetadataSwagger.CARRIER)
 public class CarrierController extends BaseController {
     @Autowired
@@ -50,8 +50,9 @@ public class CarrierController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/page-list")
-    public ResponseEntity<?> list(final Carrier carrier, @ApiIgnore @SortDefault(
+    public ResponseEntity<?> list(@PathVariable Long organizationId, final Carrier carrier, @ApiIgnore @SortDefault(
             value = Carrier.FIELD_CARRIER_NAME) final PageRequest pageRequest) {
+        carrier.setTenantId(organizationId);
         final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierRepository.listCarrier(carrier));
         return Results.success(list);
@@ -69,8 +70,9 @@ public class CarrierController extends BaseController {
     @ApiOperation(value = "批量新增或修改承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> batchMerge(@RequestBody final List<Carrier> carrierList) {
-        final List<Carrier> insertResult = carrierService.batchMerge(carrierList);
+    public ResponseEntity<?> batchMerge(@PathVariable Long organizationId,@RequestBody final List<Carrier> carrierList) {
+
+        final List<Carrier> insertResult = carrierService.batchMerge(organizationId,carrierList);
         return Results.success(insertResult);
     }
 

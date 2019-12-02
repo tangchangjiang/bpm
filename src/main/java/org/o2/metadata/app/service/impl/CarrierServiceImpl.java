@@ -33,12 +33,13 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public List<Carrier> batchMerge(final List<Carrier> carrierList) {
+    public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
         final Map<String, Object> map = new HashMap<>(carrierList.size());
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
         for (int i = 0; i < carrierList.size(); i++) {
-            final Carrier carrier = carrierList.get(i);
+            Carrier carrier = carrierList.get(i);
+            carrier.setTenantId(organizationId);
             carrier.validate();
             // 数据库查重
             Assert.isTrue(!carrier.exist(carrierRepository), "存在相同的承运商");
