@@ -29,7 +29,7 @@ import java.util.List;
  */
 
 @RestController("sysParameterSettingController.v1")
-@RequestMapping("/v1/{organizationId}/sys-parameter-settings")
+@RequestMapping("/v1/{tenantId}/sys-parameter-settings")
 @Api(tags = MetadataSwagger.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
 
@@ -46,9 +46,9 @@ public class SysParameterController extends BaseController {
     })
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable Long organizationId, final String parameterCode, final String parameterDesc, final PageRequest pageRequest) {
+    public ResponseEntity<?> list(@PathVariable Long tenantId, final String parameterCode, final String parameterDesc, final PageRequest pageRequest) {
         final Page<SysParameter> list = sysParameterRepository.listSysParameterSetting(pageRequest.getPage(),
-                pageRequest.getSize(), parameterCode, parameterDesc, organizationId);
+                pageRequest.getSize(), parameterCode, parameterDesc, tenantId);
         return Results.success(list);
     }
 
@@ -63,11 +63,11 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "根据code查询系统参数value,仅查有效数据")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/value")
-    public ResponseEntity<?> getValue(@PathVariable Long organizationId ,@RequestParam final String parameterCode) {
+    public ResponseEntity<?> getValue(@PathVariable Long tenantId ,@RequestParam final String parameterCode) {
         final SysParameter sysParameter = new SysParameter();
         sysParameter.setParameterCode(parameterCode);
         sysParameter.setActiveFlag(1);
-        sysParameter.setTenantId(organizationId);
+        sysParameter.setTenantId(tenantId);
         final List<SysParameter> list = sysParameterRepository.select(sysParameter);
         if (list.size() > 0) {
             return Results.success(list.get(0).getParameterValue());

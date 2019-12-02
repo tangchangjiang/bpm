@@ -22,8 +22,8 @@ public class SysParameterRepositoryImpl extends BaseRepositoryImpl<SysParameter>
     }
 
     @Override
-    public Page<SysParameter> listSysParameterSetting(final int page, final int size, final String parameterCode, final String parameterDesc, Long organizationId) {
-        return PageHelper.doPage(page, size, () -> sysParameterMapper.listSysParameterSetting(parameterCode, parameterDesc,organizationId));
+    public Page<SysParameter> listSysParameterSetting(final int page, final int size, final String parameterCode, final String parameterDesc, Long tenantId) {
+        return PageHelper.doPage(page, size, () -> sysParameterMapper.listSysParameterSetting(parameterCode, parameterDesc,tenantId));
     }
 
     @Override

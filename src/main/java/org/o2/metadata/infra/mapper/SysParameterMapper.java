@@ -18,9 +18,9 @@ public interface SysParameterMapper extends BaseMapper<SysParameter> {
      *
      * @param parameterCode 参数编码
      * @param parameterDesc 参数描述
-     * @param organizationId 租户ID
+     * @param tenantId 租户ID
      * @return 结果集
      */
-    List<SysParameter> listSysParameterSetting(@Param("parameterCode") String parameterCode, @Param("parameterDesc") String parameterDesc, @Param("tenantId") Long organizationId);
+    List<SysParameter> listSysParameterSetting(@Param("parameterCode") String parameterCode, @Param("parameterDesc") String parameterDesc, @Param("tenantId") Long tenantId);
 
 }

@@ -58,10 +58,10 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public Pos getPosByCode(Long organizationId ,final String posCode) {
+    public Pos getPosByCode(Long tenantId ,final String posCode) {
         final Pos pos = new Pos();
         pos.setPosCode(posCode);
-        pos.setTenantId(organizationId);
+        pos.setTenantId(tenantId);
         return posMapper.selectOne(pos);
     }
 }

@@ -32,7 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RestController("onlineShopController.v1")
-@RequestMapping("/v1/{organizationId}/online-shops")
+@RequestMapping("/v1/{tenantId}/online-shops")
 @Api(tags = MetadataSwagger.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
@@ -55,9 +55,9 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity listAllActiveShops(@PathVariable Long organizationId) {
+    public ResponseEntity listAllActiveShops(@PathVariable Long tenantId) {
         OnlineShop onlineShop = new OnlineShop();
-        onlineShop.setTenantId(organizationId);
+        onlineShop.setTenantId(tenantId);
         onlineShop.setActiveFlag(1);
         return Results.success(onlineShopRepository.select(onlineShop));
     }

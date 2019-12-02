@@ -33,7 +33,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("carrierController.v1")
-@RequestMapping("/v1/{organizationId}/carriers")
+@RequestMapping("/v1/{tenantId}/carriers")
 @Api(tags = MetadataSwagger.CARRIER)
 public class CarrierController extends BaseController {
     @Autowired

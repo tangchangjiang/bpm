@@ -32,7 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RestController("posController.v1")
-@RequestMapping("/v1/{organizationId}/poses")
+@RequestMapping("/v1/{tenantId}/poses")
 @Api(tags = MetadataSwagger.POS)
 public class PosController extends BaseController {
     private final PosRepository posRepository;
@@ -93,8 +93,8 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/by/{posCode}")
-    public ResponseEntity<Pos> detailByPosCode(@PathVariable Long organizationId,@PathVariable final String posCode) {
-        final Pos pos = posRepository.getPosByCode(organizationId,posCode);
+    public ResponseEntity<Pos> detailByPosCode(@PathVariable Long tenantId,@PathVariable final String posCode) {
+        final Pos pos = posRepository.getPosByCode(tenantId,posCode);
         return Results.success(pos);
     }
 
