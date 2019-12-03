@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -49,6 +50,8 @@ public class CarrierMappingController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(final CarrierMappingVO carrierMappingVO, @ApiIgnore final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != carrierMappingVO.getCatalogCode(), "catalogCode should is not empty");
+        Preconditions.checkArgument(null != carrierMappingVO.getTenantId(), "tenantId should is not empty");
         final Page<CarrierMappingVO> list = PageHelper.doPageAndSort(pageRequest,
                 () -> carrierMappingRepository.listCarrierMappingByCondition(carrierMappingVO));
         return Results.success(list);
@@ -65,7 +68,7 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "批量新增或修改承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final List<CarrierMapping> carrierMappings) {
+    public ResponseEntity<?> create(@RequestBody List<CarrierMapping> carrierMappings) {
         final Map<String, Object> resultMap = carrierMappingService.insertAll(carrierMappings);
         if (MapUtils.isEmpty(resultMap)) {
             return Results.success(Collections.EMPTY_LIST);

@@ -1,8 +1,12 @@
 package org.o2.metadata.app.service.impl;
 
+import com.google.common.base.Preconditions;
 import org.o2.metadata.app.service.CarrierMappingService;
 import org.o2.metadata.domain.entity.CarrierMapping;
+import org.o2.metadata.domain.entity.Catalog;
 import org.o2.metadata.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.infra.mapper.CatalogMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,6 +21,9 @@ import java.util.Map;
 @Service
 public class CarrierMappingServiceImpl implements CarrierMappingService {
 
+    @Autowired
+    private CatalogMapper catalogMapper;
+
     private final CarrierMappingRepository carrierMappingRepository;
 
     public CarrierMappingServiceImpl(final CarrierMappingRepository carrierMappingRepository) {
@@ -24,14 +31,17 @@ public class CarrierMappingServiceImpl implements CarrierMappingService {
     }
 
     @Override
-    public Map<String, Object> insertAll(final List<CarrierMapping> carrierMappings) {
+    public Map<String, Object> insertAll(List<CarrierMapping> carrierMappings) {
         final Map<String, Object> resultMap = new HashMap<>(1);
         int j = 0;
         for (int i = 0; i < carrierMappings.size(); i++) {
-            final CarrierMapping carrierMapping = carrierMappings.get(i);
+            CarrierMapping carrierMapping = carrierMappings.get(i);
             // 非空字段校验
             carrierMapping.baseValidate();
+            Catalog catalog = catalogMapper.selectOne(Catalog.builder().catalogCode(carrierMapping.getCatalogCode()).tenantId(carrierMapping.getTenantId()).build());
+            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + carrierMapping.getCatalogCode() + "or tenantId:" + carrierMapping.getTenantId());
             // 平台和承运商编码是否重复
+            carrierMapping.setCatalogId(catalog.getCatalogId());
             final boolean exist = carrierMapping.exist(carrierMappingRepository);
             if (exist) {
                 j++;

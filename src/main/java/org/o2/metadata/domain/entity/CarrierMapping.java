@@ -49,8 +49,8 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.carrierMappingId) {
             sqls.andNotEqualTo(CarrierMapping.FIELD_CARRIER_MAPPING_ID, this.getCarrierMappingId());
         }
-        if (StringUtils.isNotBlank(this.catalogId)) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogId());
+        if (StringUtils.isNotBlank(this.catalogCode)) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogCode());
         }
         if (null != this.carrierId) {
             sqls.andEqualTo(CarrierMapping.FIELD_CARRIER_ID, this.getCarrierId());
@@ -60,7 +60,8 @@ public class CarrierMapping extends AuditDomain {
     }
 
     public void baseValidate() {
-        Assert.notNull(this.catalogId, "平台类型不能为空");
+        Assert.notNull(this.catalogCode, "平台类型编码不能为空");
+        Assert.notNull(this.tenantId, "租户id不能为空");
         Assert.notNull(this.carrierId, "承运商id不能为空");
         Assert.notNull(this.externalCarrierCode, "平台承运商编码不能为空");
     }
@@ -79,7 +80,7 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "归属电商平台,值集O2MD.PLATFORM_TYPE")
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
     @NotBlank
-    private String catalogId;
+    private Long catalogId;
 
     @ApiModelProperty(value = "承运商id")
     @NotBlank
@@ -103,4 +104,8 @@ public class CarrierMapping extends AuditDomain {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    @Transient
+    @ApiModelProperty(value = "版本编码")
+    private String catalogCode;
 }
