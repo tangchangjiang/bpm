@@ -38,7 +38,7 @@
         FROM
         o2md_carrier_mapping cm
         JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id
-        LEFT JOIN o2md_catalog ca on ca.catalog_id = cm.catalog_id
+        JOIN o2md_catalog ca on ca.catalog_id = cm.catalog_id
         where
         1 = 1
         <!--<if test="catalogId!=null and catalogId!=''">-->

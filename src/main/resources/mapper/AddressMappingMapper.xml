@@ -36,7 +36,7 @@
         o2md_address_mapping ad
         left join o2md_region c ON ad.region_id = c.region_id
         left join o2md_country co on c.country_id = co.country_id
-        left join o2md_catalog ca on ca.catalog_id = ad.catalog_id
+        join o2md_catalog ca on ca.catalog_id = ad.catalog_id
         WHERE
         1=1
         <!--<if test="addressMapping.catalogId!=null and addressMapping.catalogId!=''">-->
@@ -107,7 +107,7 @@
     <select id="queryAddressByCondition" resultType="org.o2.metadata.domain.entity.AddressMapping">
         SELECT ad.*
         FROM o2md_address_mapping ad
-        left join o2md_catalog ca on ad.catalog_id = ca.catalog_id
+        join o2md_catalog ca on ad.catalog_id = ca.catalog_id
         WHERE 1=1
         <if test="catalogCode!=null and catalogCode!=''">
             AND ca.catalog_code = #{catalogCode}
