@@ -18,6 +18,7 @@ public interface SysParameterRepository extends BaseRepository<SysParameter> {
      * @param size          页大小
      * @param parameterCode 参数编码
      * @param parameterDesc 参数描述
+     * @param tenantId      租户ID
      * @return 结果集
      */
     Page<SysParameter> listSysParameterSetting(int page, int size, String parameterCode, String parameterDesc, Long tenantId);

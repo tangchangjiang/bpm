@@ -80,10 +80,7 @@ public class CatalogController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/catalogId-achieve")
     public ResponseEntity<?> achieveCatalogId(@RequestParam(value = "catalogCode") String catalogCode, @RequestParam(value = "tenantId") Long tenantId) {
-        Catalog catalogPro = new Catalog();
-        catalogPro.setCatalogCode(catalogCode);
-        catalogPro.setTenantId(tenantId);
-        Catalog catalog = catalogRepository.selectOne(catalogPro);
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogCode).tenantId(tenantId).build());
         Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + catalogCode + "or tenantId:" + tenantId);
         return Results.success(catalog.getCatalogId());
     }

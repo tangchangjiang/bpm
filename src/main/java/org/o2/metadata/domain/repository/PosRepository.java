@@ -49,6 +49,7 @@ public interface PosRepository extends BaseRepository<Pos> {
      * 根据服务点编码查询
      *
      * @param posCode 服务点编码
+     * @param tenantId 租户ID
      * @return 服务点信息
      */
     Pos getPosByCode(Long tenantId,String posCode);
