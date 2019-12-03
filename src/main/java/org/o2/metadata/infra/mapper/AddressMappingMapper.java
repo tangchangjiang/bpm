@@ -39,4 +39,14 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @return 查询结果集
      */
     RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String catalogCode);
+
+    /**
+     * 更据catalogCode和regionId查询地址匹配数量
+     * @param catalogCode meaning
+     * @param regionId meaning
+     * @param tenantId meaning
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<AddressMapping> queryAddressByCondition(@Param(value = "catalogCode") String catalogCode,@Param(value = "regionId") Long regionId,@Param(value = "regionId") Long tenantId);
 }

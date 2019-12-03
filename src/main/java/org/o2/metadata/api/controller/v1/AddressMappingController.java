@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
@@ -14,6 +15,7 @@ import org.o2.metadata.app.service.AddressMappingService;
 import org.o2.metadata.app.service.RegionService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.AddressMapping;
+import org.o2.metadata.domain.entity.Catalog;
 import org.o2.metadata.domain.entity.Country;
 import org.o2.metadata.domain.entity.Region;
 import org.o2.metadata.domain.repository.AddressMappingRepository;
@@ -21,6 +23,7 @@ import org.o2.metadata.domain.repository.CountryRepository;
 import org.o2.metadata.domain.repository.RegionRepository;
 import org.o2.metadata.domain.vo.RegionTreeChildVO;
 import org.o2.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.mapper.CatalogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -36,7 +39,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("addressMappingController.v1")
-@RequestMapping("/v1/address-mappings")
+@RequestMapping("/v1/{tenantId}/address-mappings")
 @Api(tags = MetadataSwagger.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     @Autowired
@@ -49,6 +52,8 @@ public class AddressMappingController extends BaseController {
     private RegionService regionService;
     @Autowired
     private CountryRepository countryRepository;
+    @Autowired
+    private CatalogMapper catalogMapper;
 
     @ApiOperation(value = "地址匹配列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -106,11 +111,16 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "创建地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> createAddressMapping(@RequestBody final AddressMapping addressMapping) {
+    public ResponseEntity<?> createAddressMapping(@RequestBody AddressMapping addressMapping) {
         if (addressMapping.exist(addressMappingRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
         try {
+            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), "catalogCode should is not empty");
+            Preconditions.checkArgument(null != addressMapping.getTenantId(), "tenantId should is not empty");
+            Catalog catalog = catalogMapper.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
+            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getCatalogCode() + "or tenantId:" + addressMapping.getTenantId());
+            addressMapping.setCatalogId(catalog.getCatalogId());
             addressMappingRepository.insertSelective(addressMapping);
             return Results.success(addressMapping);
         } catch (final DuplicateKeyException e) {

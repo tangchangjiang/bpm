@@ -47,10 +47,8 @@ public class AddressMapping extends AuditDomain {
         if (this.addressMappingId != null) {
             return addressMappingRepository.existsWithPrimaryKey(this);
         } else {
-            final AddressMapping addressMapping = new AddressMapping();
-            addressMapping.setCatalogId(this.catalogId);
-            addressMapping.setRegionId(this.regionId);
-            return addressMappingRepository.selectCount(addressMapping) > 0;
+            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.catalogCode,this.regionId,this.tenantId);
+            return addressMappings.size() > 0;
         }
     }
 
@@ -71,7 +69,7 @@ public class AddressMapping extends AuditDomain {
     private String addressTypeCode;
 
 
-    private String catalogId;
+    private Long catalogId;
 
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;
@@ -117,4 +115,8 @@ public class AddressMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(hidden = true)
     private List<String> regionPathNames = new ArrayList<>(4);
+
+    @ApiModelProperty(value = "版本编码")
+    @Transient
+    private String catalogCode;
 }

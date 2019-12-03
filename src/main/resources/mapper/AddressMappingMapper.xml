@@ -36,10 +36,14 @@
         o2md_address_mapping ad
         left join o2md_region c ON ad.region_id = c.region_id
         left join o2md_country co on c.country_id = co.country_id
+        left join o2md_catalog ca on ca.catalog_id = ad.catalog_id
         WHERE
         1=1
-        <if test="addressMapping.catalogId!=null and addressMapping.catalogId!=''">
-            AND ad.catalog_id = #{addressMapping.catalogId}
+        <!--<if test="addressMapping.catalogId!=null and addressMapping.catalogId!=''">-->
+            <!--AND ad.catalog_id = #{addressMapping.catalogId}-->
+        <!--</if>-->
+        <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
+            AND ca.catalog_code = #{addressMapping.catalogCode}
         </if>
         <if test="addressMapping.addressMappingExName!=null and addressMapping.addressMappingExName!=''">
             AND ad.external_name LIKE concat("%",concat(#{addressMapping.addressMappingExName}),"%")
@@ -98,4 +102,24 @@
         AND c.region_code = #{regionCode}
         AND ca.catalog_code=#{catalogCode}
     </select>
+
+    <!--更据catalogCode和regionId查询地址匹配数量-->
+    <select id="queryAddressByCondition" resultType="org.o2.metadata.domain.entity.AddressMapping">
+        SELECT ad.*
+        FROM o2md_address_mapping ad
+        left join o2md_catalog ca on ad.catalog_id = ca.catalog_id
+        WHERE 1=1
+        <if test="catalogCode!=null and catalogCode!=''">
+            AND ca.catalog_code = #{catalogCode}
+        </if>
+        <if test="regionId!=null ">
+            AND ad.region_id = #{regionId}
+        </if>
+        <if test="tenantId!=null ">
+            AND ca.tenant_id = #{tenantId}
+        </if>
+
+    </select>
+
+
 </mapper>
