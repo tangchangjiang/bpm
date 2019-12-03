@@ -27,6 +27,7 @@ public class MetadataSwagger {
     public static final String FREIGHT_TEMPLATE = "Freight Template";
     public static final String FREIGHT_TEMPLATE_DETAIL = "Freight Template Detail";
     public static final String PLATFORM_UOM = "Platform Uom";
+    public static final String CATALOG = "Catalog";
 
     @Autowired
     public MetadataSwagger(final Docket docket) {
