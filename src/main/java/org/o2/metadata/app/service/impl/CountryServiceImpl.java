@@ -55,7 +55,7 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     private void validateCountryCodeRepeat(final Country country) {
         // 验证国家Code是否重复
-        final List<Country> countryList = countryRepository.select(Country.FIELD_COUNTRY_CODE, country.getCountryCode());
+        final List<Country> countryList = countryRepository.select(Country.builder().countryCode(country.getCountryCode()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Country(" + country.getCountryCode() + ")");
         }
@@ -63,7 +63,7 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     private void validateCountryNameRepeat(final Country country) {
         // 验证国家名称是否重复
-        final List<Country> countryList = countryRepository.select(Country.FIELD_COUNTRY_NAME, country.getCountryName());
+        final List<Country> countryList = countryRepository.select(Country.builder().countryName(country.getCountryName()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_NAME, "Country(" + country.getCountryCode() + ")");
         }

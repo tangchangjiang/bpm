@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -34,7 +35,7 @@ import java.util.List;
  */
 
 @RestController("countryController.v1")
-@RequestMapping("/v1/countries")
+@RequestMapping("/v1/{tenantId}/countries")
 @Api(tags = MetadataSwagger.COUNTRY)
 public class CountryController extends BaseController {
 
@@ -57,6 +58,7 @@ public class CountryController extends BaseController {
     @CustomPageRequest
     public ResponseEntity<?> pageListCountries(final Country country,
                                                @ApiIgnore @SortDefault(value = Country.FIELD_COUNTRY_ID) final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> countryRepository.select(country)));
     }
 
@@ -65,6 +67,7 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
     public ResponseEntity<?> listAllCountries(final Country country) {
+        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
         return ResponseEntity.ok(countryRepository.select(country));
     }
 
@@ -73,6 +76,7 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
     public ResponseEntity<?> listValidCountries(final Country country) {
+        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
         country.setEnabledFlag(1);
         return ResponseEntity.ok(countryRepository.select(country));
     }
@@ -88,10 +92,8 @@ public class CountryController extends BaseController {
     @GetMapping("/query-by-code")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> getCountryByCode(@RequestParam final String countryCode) {
-        final Country country = new Country();
-        country.setCountryCode(countryCode);
-        return Results.success(countryRepository.selectOne(country));
+    public ResponseEntity<?> getCountryByCode(@RequestParam final String countryCode,@RequestParam(value = "tenantId") Long tenantId) {
+        return Results.success(countryRepository.selectOne(Country.builder().countryCode(countryCode).tenantId(tenantId).build()));
     }
 
     @ApiOperation("根据regionId查询国家")

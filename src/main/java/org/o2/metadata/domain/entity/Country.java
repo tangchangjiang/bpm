@@ -6,6 +6,7 @@ import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.core.util.Regexs;
@@ -19,6 +20,7 @@ import javax.validation.constraints.*;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = true)
 @VersionAudit
 @ModifyAudit
