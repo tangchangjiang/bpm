@@ -62,8 +62,8 @@
             <if test="onlineShopCode!=null and onlineShopCode!=''">
                 and os.online_shop_code = #{onlineShopCode}
             </if>
-            <if test="platformTypeCode!=null and platformTypeCode!=''">
-                and os.platform_type_code = #{platformTypeCode}
+            <if test="catalogCode!=null and catalogCode!=''">
+                and os.catalog_code = #{catalogCode}
             </if>
             <if test="onlineShopId!=null">
                 and osia.online_shop_id = #{onlineShopId}

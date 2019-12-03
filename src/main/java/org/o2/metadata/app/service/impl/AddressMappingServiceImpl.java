@@ -71,7 +71,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @return the return
      * @throws RuntimeException exception description
      */
-    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String platformTypeCode) {
+    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String catalogCode) {
         // 省市区三级,用map存储，提高效率，key=regionCode，value=children
         final Map<String, List<RegionTreeChildVO>> map = new HashMap<>(16);
         final List<RegionTreeChildVO> tree = new ArrayList<>();
@@ -90,7 +90,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                     if (i == regionPaths.length - 1) {
                         regionTree = regionTreeChildVO;
                     } else {
-                        regionTree = addressMappingMapper.findAddressMappingByCode(regionPaths[i], platformTypeCode);
+                        regionTree = addressMappingMapper.findAddressMappingByCode(regionPaths[i], catalogCode);
                     }
                     LOG.info("regionTree:" + regionTree);
                     // 父类是否包含

@@ -27,4 +27,15 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
         Preconditions.checkArgument(null != condition.getTenantId(),"tenantId should is not empty");
         return onlineShopMapper.findByCondition(condition);
     }
+
+    /**
+     * 校验网店是否已存在
+     * @param condition 查询条件
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    @Override
+    public List<OnlineShop> existenceDecide(OnlineShop condition) {
+        return onlineShopMapper.existenceDecide(condition);
+    }
 }

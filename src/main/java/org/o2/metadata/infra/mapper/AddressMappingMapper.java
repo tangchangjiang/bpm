@@ -32,7 +32,7 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     List<RegionTreeChildVO> findAddressMappingById(@Param(value = "id") Long id, @Param(value = "type") String type);
 
     /**
-     * 根据regionCode  platformTypeCode查询地址内部外部匹配数据
+     * 根据regionCode  catalogCode查询地址内部外部匹配数据
      *
      * @param regionCode       region_id 地区id
      * @param catalogCode 平台类型

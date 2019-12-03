@@ -18,4 +18,13 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @return list of onlineShop
      */
     List<OnlineShop> findByCondition(OnlineShop onlineShop);
+
+
+    /**
+     * 校验网店是否已存在
+     * @param condition 查询条件
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<OnlineShop> existenceDecide(OnlineShop condition);
 }

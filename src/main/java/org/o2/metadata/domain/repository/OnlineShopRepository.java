@@ -19,4 +19,13 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      * @return list of 网店
      */
     List<OnlineShop> selectByCondition(OnlineShop condition);
+
+
+    /**
+     * 校验网店是否已存在
+     * @param condition 查询条件
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<OnlineShop> existenceDecide(OnlineShop condition);
 }

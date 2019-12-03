@@ -13,13 +13,11 @@ import org.hibernate.validator.constraints.Range;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
 import org.o2.metadata.infra.constants.BasicDataConstants;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * 网店
@@ -53,9 +51,10 @@ public class OnlineShop extends AuditDomain {
         onlineShop.setOnlineShopCode(this.onlineShopCode);
         onlineShop.setOnlineShopName(this.onlineShopName);
         onlineShop.setPlatformShopCode(this.platformShopCode);
-        onlineShop.setCatalogId(this.catalogId);
+        onlineShop.setCatalogCode(this.catalogCode);
         onlineShop.setTenantId(this.tenantId);
-        return shopRepository.selectCount(onlineShop) > 0;
+        List<OnlineShop> onlineShops =  shopRepository.existenceDecide(onlineShop);
+        return onlineShops.size() > 0;
     }
 
     public void validate(final OnlineShopRepository onlineShopRepository) {
@@ -118,9 +117,9 @@ public class OnlineShop extends AuditDomain {
 
     @NotBlank
     @Size(max = 255)
-    private String catalogId;
+    private Long catalogId;
 
-    private String catalogVersionId;
+    private Long catalogVersionId;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
     @Column(name = "sourced_flag")
@@ -160,6 +159,9 @@ public class OnlineShop extends AuditDomain {
 
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
+
+    @Transient
+    private String catalogCode;
 
 //    @ApiModelProperty(value = "归属电商平台含义")
 //    @Transient

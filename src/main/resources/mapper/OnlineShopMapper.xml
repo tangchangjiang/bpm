@@ -24,44 +24,76 @@
 
     <select id="findByCondition" resultType="org.o2.metadata.domain.entity.OnlineShop">
         SELECT
-        online_shop_id,
-        online_shop_name,
-        online_shop_code,
-        platform_shop_code,
-        catalog_id,
-        sourced_flag,
-        picked_up_flag,
-        returned_flag,
-        exchanged_flag,
-        active_flag,
-        enable_split_flag,
-        OBJECT_VERSION_NUMBER,
-        CREATION_DATE,
-        CREATED_BY,
-        LAST_UPDATED_BY,
-        LAST_UPDATE_DATE
+        os.online_shop_id,
+        os.online_shop_name,
+        os.online_shop_code,
+        os.platform_shop_code,
+        os.catalog_id,
+        os.sourced_flag,
+        os.picked_up_flag,
+        os.returned_flag,
+        os.exchanged_flag,
+        os.active_flag,
+        os.enable_split_flag,
+        os.OBJECT_VERSION_NUMBER,
+        os.CREATION_DATE,
+        os.CREATED_BY,
+        os.LAST_UPDATED_BY,
+        os.LAST_UPDATE_DATE
         FROM
-        o2md_online_shop
+        o2md_online_shop os join o2md_catalog oc on os.catalog_id = oc.catalog_id
         <where>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
-                AND online_shop_code LIKE #{onlineShopCodeLike}
+                AND os.online_shop_code LIKE #{onlineShopCodeLike}
             </if>
             <if test="onlineShopName != null">
                 <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
-                AND online_shop_name LIKE #{onlineShopNameLike}
+                AND os.online_shop_name LIKE #{onlineShopNameLike}
             </if>
             <if test="activeFlag != null">
-                AND active_flag = #{activeFlag}
+                AND os.active_flag = #{activeFlag}
             </if>
             <if test="platformShopCode != null">
                 <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
-                AND platform_shop_code LIKE #{platformShopCodeLike}
+                AND os.platform_shop_code LIKE #{platformShopCodeLike}
             </if>
-            <if test="catalogId != null">
-                AND catalog_id = #{catalogId}
+            <!--<if test="catalogId != null">-->
+                <!--AND os.catalog_id = #{catalogId}-->
+            <!--</if>-->
+            <if test="catalogCode!=null and catalogCode!=''">
+                AND oc.catalog_code = #{catalogCode}
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                AND oc.tenant_id = #{tenantId}
             </if>
         </where>
-        ORDER BY online_shop_code
+        ORDER BY os.online_shop_code
     </select>
+
+
+    <select id="existenceDecide" resultType="org.o2.metadata.domain.entity.OnlineShop">
+        SELECT os.*
+        FROM
+        o2md_online_shop os join o2md_catalog oc on os.catalog_id = oc.catalog_id
+        <where>
+            <if test="onlineShopCode!=null and onlineShopCode!=''">
+                AND os.online_shop_code = #{onlineShopCode}
+            </if>
+            <if test="onlineShopName!=null and onlineShopName!=''">
+                AND os.online_shop_name = #{onlineShopName}
+            </if>
+            <if test="platformShopCode!=null and platformShopCode!=''">
+                AND os.platform_shop_code = #{platformShopCode}
+            </if>
+            <if test="catalogCode!=null and catalogCode!=''">
+                AND oc.catalog_code = #{catalogCode}
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                AND oc.tenant_id = #{tenantId}
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
+    </select>
+
 </mapper>
