@@ -1,5 +1,6 @@
 package org.o2.metadata.domain.entity;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.domain.repository.PosRelCarrierRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -53,6 +55,7 @@ public class PosRelCarrier extends AuditDomain {
     }
 
     public void baseValidate() {
+        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商ID不能为空");
         Assert.notNull(this.posId, "服务点ID不能为空");
         Assert.notNull(this.activeFlag, "状态不能为空");

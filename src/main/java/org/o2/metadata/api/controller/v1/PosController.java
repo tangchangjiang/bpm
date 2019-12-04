@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -18,6 +19,7 @@ import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.Pos;
 import org.o2.metadata.domain.repository.PosRepository;
 import org.o2.metadata.domain.vo.PosVO;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +75,7 @@ public class PosController extends BaseController {
     @PostMapping
     public ResponseEntity<Pos> create(@RequestBody final Pos pos) {
         this.validObject(pos);
+        Preconditions.checkArgument(null != pos.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         posService.create(pos);
         return Results.success(pos);
     }
@@ -85,7 +88,7 @@ public class PosController extends BaseController {
         this.validObject(pos);
         posService.update(pos);
         //触发网店关联服务点更新
-        onlineShopRelPosService.resetIsInvCalculated(null, pos.getPosCode());
+        onlineShopRelPosService.resetIsInvCalculated(null, pos.getPosCode(),pos.getTenantId());
         return Results.success(pos);
     }
 

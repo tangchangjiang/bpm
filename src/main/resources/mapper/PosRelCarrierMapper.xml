@@ -39,6 +39,9 @@
             <if test="carrierId != null">
                 and t.carrier_id = #{carrierId}
             </if>
+            <if test="tenantId != null">
+                and t.tenant_id = #{tenantId}
+            </if>
             <if test="carrierName != null and carrierName != ''">
                 <bind name="carrierNameLike" value="'%' + carrierName + '%'"/>
                 and c.carrier_name like #{carrierNameLike}

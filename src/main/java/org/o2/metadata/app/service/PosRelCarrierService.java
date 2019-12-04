@@ -13,8 +13,8 @@ public interface PosRelCarrierService {
     /**
      * 批量新增或更新服务点关联承运商
      *
-     * @param posRelCarrieies 服务点关联承运商
+     * @param posRelCarriers 服务点关联承运商
      * @return 结果集
      */
-    List<PosRelCarrier> batchMerge(List<PosRelCarrier> posRelCarrieies);
+    List<PosRelCarrier> batchMerge(List<PosRelCarrier> posRelCarriers);
 }

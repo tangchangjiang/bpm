@@ -2,7 +2,6 @@ package org.o2.metadata.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
@@ -78,8 +77,7 @@ public class Pos extends AuditDomain {
     public void baseValidate(final PosRepository posRepository) {
         if (this.getPosId() != null) {
             final Pos record = posRepository.selectByPrimaryKey(this.posId);
-            Preconditions.checkArgument(null != this.tenantId, "pos tenantId must not be empty");
-            Assert.isTrue(Objects.equal(record.getTenantId(), this.tenantId), "pos tenantId must not be changed");
+            Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
             Assert.isTrue(record.getPosCode().equals(this.posCode), "pos code must not be changed");
             Assert.isTrue(record.getPosTypeCode().equals(this.posTypeCode), "pos type code must not be changed");
         }

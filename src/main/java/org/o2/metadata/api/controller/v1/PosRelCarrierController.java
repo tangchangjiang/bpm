@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -16,6 +17,7 @@ import org.o2.metadata.app.service.PosRelCarrierService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.PosRelCarrier;
 import org.o2.metadata.domain.repository.PosRelCarrierRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -28,7 +30,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("posRelCarrierController.v1")
-@RequestMapping("/v1/pos-rel-carriers")
+@RequestMapping("/v1/{tenantId}/pos-rel-carriers")
 @Api(tags = MetadataSwagger.POS_REL_CARRIER)
 public class PosRelCarrierController extends BaseController {
     private final PosRelCarrierRepository posRelCarrierRepository;
@@ -45,6 +47,7 @@ public class PosRelCarrierController extends BaseController {
     @GetMapping
     public ResponseEntity<?> list(final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
             direction = Sort.Direction.ASC) final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != posRelCarrier.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<PosRelCarrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> posRelCarrierRepository.listCarrierWithPos(posRelCarrier));
         return Results.success(list);
@@ -61,8 +64,8 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量创建或更新服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
-        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(posRelCarrieies);
+    public ResponseEntity<?> create(@RequestBody final List<PosRelCarrier> posRelCarriers) {
+        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(posRelCarriers);
         return Results.success(resultList);
     }
 

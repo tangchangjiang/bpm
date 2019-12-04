@@ -27,13 +27,13 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
     }
 
     @Override
-    public List<PosRelCarrier> batchMerge(final List<PosRelCarrier> posRelCarrieies) {
-        final Map<String, Object> map = new HashMap<>(posRelCarrieies.size());
+    public List<PosRelCarrier> batchMerge(final List<PosRelCarrier> posRelCarriers) {
+        final Map<String, Object> map = new HashMap<>(posRelCarriers.size());
         final List<PosRelCarrier> updateList = new ArrayList<>();
         final List<PosRelCarrier> insertList = new ArrayList<>();
         Integer updateIndex = null;
-        for (int i = 0; i < posRelCarrieies.size(); i++) {
-            final PosRelCarrier posRelCarrier = posRelCarrieies.get(i);
+        for (int i = 0; i < posRelCarriers.size(); i++) {
+            final PosRelCarrier posRelCarrier = posRelCarriers.get(i);
             posRelCarrier.baseValidate();
             // 数据库查重
             final int isExist = posRelCarrierRepository.isExist(posRelCarrier);
@@ -65,7 +65,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
             resultList.addAll(posRelCarrierRepository.batchInsertSelective(insertList));
         }
         if (updateIndex != null) {
-            final PosRelCarrier posRelCarrier = posRelCarrieies.get(updateIndex);
+            final PosRelCarrier posRelCarrier = posRelCarriers.get(updateIndex);
             posRelCarrierRepository.updateIsDefault(posRelCarrier.getPosRelCarrierId(), posRelCarrier.getPosId());
         }
         return resultList;
