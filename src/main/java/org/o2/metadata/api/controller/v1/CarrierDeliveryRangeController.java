@@ -30,7 +30,7 @@ import java.util.List;
  */
 
 @RestController("carrierDeliveryRangeController.v1")
-@RequestMapping("/v1/carrier-delivery-ranges")
+@RequestMapping("/v1/{tenantId}/carrier-delivery-ranges")
 @Api(tags = MetadataSwagger.CARRIER_DELIVERY_RANGE)
 public class CarrierDeliveryRangeController extends BaseController {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;

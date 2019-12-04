@@ -41,10 +41,13 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMapping condition, final String countryCode) {
         if (condition.getCatalogCode() == null || "".equals(condition.getCatalogCode())) {
-            throw new CommonException("catalogCode is null");
+            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
+        }
+        if (null == condition.getTenantId()) {
+            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         }
         final List<RegionTreeChildVO> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(condition, countryCode);
 

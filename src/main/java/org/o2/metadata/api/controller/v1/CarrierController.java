@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -20,6 +21,7 @@ import org.o2.metadata.domain.entity.Carrier;
 import org.o2.metadata.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.domain.repository.CarrierRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +54,7 @@ public class CarrierController extends BaseController {
     @GetMapping("/page-list")
     public ResponseEntity<?> list(final Carrier carrier, @ApiIgnore @SortDefault(
             value = Carrier.FIELD_CARRIER_NAME) final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != carrier.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierRepository.listCarrier(carrier));
         return Results.success(list);

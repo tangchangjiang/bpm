@@ -19,6 +19,7 @@ import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.CarrierMapping;
 import org.o2.metadata.domain.repository.CarrierMappingRepository;
 import org.o2.metadata.domain.vo.CarrierMappingVO;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -50,8 +51,8 @@ public class CarrierMappingController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(final CarrierMappingVO carrierMappingVO, @ApiIgnore final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != carrierMappingVO.getCatalogCode(), "catalogCode should is not empty");
-        Preconditions.checkArgument(null != carrierMappingVO.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != carrierMappingVO.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+        Preconditions.checkArgument(null != carrierMappingVO.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<CarrierMappingVO> list = PageHelper.doPageAndSort(pageRequest,
                 () -> carrierMappingRepository.listCarrierMappingByCondition(carrierMappingVO));
         return Results.success(list);
@@ -93,7 +94,7 @@ public class CarrierMappingController extends BaseController {
     @DeleteMapping
     public ResponseEntity<?> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
         SecurityTokenHelper.validToken(carrierMappings);
-        carrierMappingRepository.batchDelete(carrierMappings);
+        carrierMappingRepository.batchDeleteByPrimaryKey(carrierMappings);
         return Results.success();
     }
 

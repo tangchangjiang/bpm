@@ -41,9 +41,6 @@
         JOIN o2md_catalog ca on ca.catalog_id = cm.catalog_id
         where
         1 = 1
-        <!--<if test="catalogId!=null and catalogId!=''">-->
-            <!--AND cm.catalog_id = #{catalogId}-->
-        <!--</if>-->
         <if test="catalogCode!=null and catalogCode!=''">
             AND ca.catalog_code = #{catalogCode}
         </if>

@@ -18,6 +18,7 @@ import org.o2.metadata.domain.entity.Country;
 import org.o2.metadata.domain.entity.Region;
 import org.o2.metadata.domain.repository.CountryRepository;
 import org.o2.metadata.domain.repository.RegionRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,7 @@ public class CountryController extends BaseController {
     @CustomPageRequest
     public ResponseEntity<?> pageListCountries(final Country country,
                                                @ApiIgnore @SortDefault(value = Country.FIELD_COUNTRY_ID) final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> countryRepository.select(country)));
     }
 
@@ -67,7 +68,7 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
     public ResponseEntity<?> listAllCountries(final Country country) {
-        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return ResponseEntity.ok(countryRepository.select(country));
     }
 
@@ -76,7 +77,7 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
     public ResponseEntity<?> listValidCountries(final Country country) {
-        Preconditions.checkArgument(null != country.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         country.setEnabledFlag(1);
         return ResponseEntity.ok(countryRepository.select(country));
     }
@@ -93,6 +94,7 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
     public ResponseEntity<?> getCountryByCode(@RequestParam final String countryCode,@RequestParam(value = "tenantId") Long tenantId) {
+        Preconditions.checkArgument(null != tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return Results.success(countryRepository.selectOne(Country.builder().countryCode(countryCode).tenantId(tenantId).build()));
     }
 

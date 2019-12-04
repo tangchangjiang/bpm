@@ -19,11 +19,11 @@ import org.o2.metadata.domain.entity.Catalog;
 import org.o2.metadata.domain.entity.Country;
 import org.o2.metadata.domain.entity.Region;
 import org.o2.metadata.domain.repository.AddressMappingRepository;
+import org.o2.metadata.domain.repository.CatalogRepository;
 import org.o2.metadata.domain.repository.CountryRepository;
 import org.o2.metadata.domain.repository.RegionRepository;
 import org.o2.metadata.domain.vo.RegionTreeChildVO;
 import org.o2.metadata.infra.constants.BasicDataConstants;
-import org.o2.metadata.infra.mapper.CatalogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -53,16 +53,17 @@ public class AddressMappingController extends BaseController {
     @Autowired
     private CountryRepository countryRepository;
     @Autowired
-    private CatalogMapper catalogMapper;
+    private CatalogRepository catalogRepository;
 
     @ApiOperation(value = "地址匹配列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
     public ResponseEntity<?> listAllAddressMappings(final AddressMapping condition, final String countryCode) {
+        Preconditions.checkArgument(null != condition.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         if (BasicDataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
-            final List<Country> countryList = countryRepository.select(Country.FIELD_ENABLED_FLAG, 1);
+            final List<Country> countryList = countryRepository.select(Country.builder().enabledFlag(1).tenantId(condition.getTenantId()).build());
             for (final Country country : countryList) {
                 final RegionTreeChildVO treeChildVO = new RegionTreeChildVO();
                 //负数，防止与regionId重复
@@ -116,9 +117,9 @@ public class AddressMappingController extends BaseController {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
         try {
-            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), "catalogCode should is not empty");
-            Preconditions.checkArgument(null != addressMapping.getTenantId(), "tenantId should is not empty");
-            Catalog catalog = catalogMapper.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
+            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+            Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
             Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getCatalogCode() + "or tenantId:" + addressMapping.getTenantId());
             addressMapping.setCatalogId(catalog.getCatalogId());
             addressMappingRepository.insertSelective(addressMapping);
@@ -132,6 +133,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<?> updateAddressMapping(@RequestBody final AddressMapping addressMapping) {
+        Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         SecurityTokenHelper.validToken(addressMapping);
         if (!addressMapping.exist(addressMappingRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
@@ -144,6 +146,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> deleteAddressMapping(@RequestBody final AddressMapping addressMapping) {
+        Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
         return Results.success();

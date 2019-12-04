@@ -1,5 +1,6 @@
 package org.o2.metadata.domain.entity;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -48,6 +49,7 @@ public class Carrier extends AuditDomain {
     }
 
     public void validate() {
+        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierCode, "承运商编码不能为空");
         Assert.notNull(this.carrierName, "承运商名称不能为空");
         Assert.notNull(this.carrierTypeCode, "承运商类型不能为空");

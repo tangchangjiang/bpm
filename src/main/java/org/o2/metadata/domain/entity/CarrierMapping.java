@@ -1,5 +1,6 @@
 package org.o2.metadata.domain.entity;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -13,6 +14,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
 import org.o2.metadata.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class CarrierMapping extends AuditDomain {
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_PLATFORM_CARRIER_CODE = "externalCarrierCode";
     public static final String FIELD_PLATFORM_CARRIER_NAME = "externalCarrierName";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -55,13 +58,16 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.carrierId) {
             sqls.andEqualTo(CarrierMapping.FIELD_CARRIER_ID, this.getCarrierId());
         }
+        if (null != this.tenantId) {
+            sqls.andEqualTo(CarrierMapping.FIELD_TENANT_ID, this.getTenantId());
+        }
         return carrierMappingRepository.selectCountByCondition(
                 Condition.builder(CarrierMapping.class).andWhere(sqls).build()) > 0;
     }
 
     public void baseValidate() {
-        Assert.notNull(this.catalogCode, "平台类型编码不能为空");
-        Assert.notNull(this.tenantId, "租户id不能为空");
+        Preconditions.checkArgument(null != this.catalogCode, BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商id不能为空");
         Assert.notNull(this.externalCarrierCode, "平台承运商编码不能为空");
     }

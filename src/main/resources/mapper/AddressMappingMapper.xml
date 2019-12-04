@@ -39,9 +39,9 @@
         join o2md_catalog ca on ca.catalog_id = ad.catalog_id
         WHERE
         1=1
-        <!--<if test="addressMapping.catalogId!=null and addressMapping.catalogId!=''">-->
-            <!--AND ad.catalog_id = #{addressMapping.catalogId}-->
-        <!--</if>-->
+        <if test="addressMapping.tenantId!=null and addressMapping.tenantId!=''">
+            AND ad.tenant_id = #{addressMapping.tenantId}
+        </if>
         <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
             AND ca.catalog_code = #{addressMapping.catalogCode}
         </if>

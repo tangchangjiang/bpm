@@ -27,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(tags = MetadataSwagger.CATALOG)
 @RestController("catalogController.v1")
-@RequestMapping("/v1/catalogs")
+@RequestMapping("/v1/{tenantId}/catalogs")
 public class CatalogController extends BaseController {
 
     @Autowired
