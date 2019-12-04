@@ -36,14 +36,13 @@
         o2md_address_mapping ad
         left join o2md_region c ON ad.region_id = c.region_id
         left join o2md_country co on c.country_id = co.country_id
-        join o2md_catalog ca on ca.catalog_id = ad.catalog_id
         WHERE
         1=1
         <if test="addressMapping.tenantId!=null and addressMapping.tenantId!=''">
             AND ad.tenant_id = #{addressMapping.tenantId}
         </if>
         <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
-            AND ca.catalog_code = #{addressMapping.catalogCode}
+            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
         </if>
         <if test="addressMapping.addressMappingExName!=null and addressMapping.addressMappingExName!=''">
             AND ad.external_name LIKE concat("%",concat(#{addressMapping.addressMappingExName}),"%")
@@ -72,7 +71,7 @@
         FROM
         o2md_region c LEFT JOIN o2md_address_mapping ad
         ON ad.region_id = c.region_id
-        LEFT JOIN o2md_catalog ca
+        JOIN o2md_catalog ca
         ON ca.catalog_id = ad.catalog_id
         WHERE
         1=1
@@ -95,7 +94,7 @@
         FROM
         o2md_region c LEFT JOIN o2md_address_mapping ad
         ON ad.region_id = c.region_id
-        LEFT JOIN o2md_catalog ca
+        JOIN o2md_catalog ca
         ON ca.catalog_id = ad.catalog_id
         WHERE
         1=1
@@ -107,10 +106,9 @@
     <select id="queryAddressByCondition" resultType="org.o2.metadata.domain.entity.AddressMapping">
         SELECT ad.*
         FROM o2md_address_mapping ad
-        join o2md_catalog ca on ad.catalog_id = ca.catalog_id
         WHERE 1=1
         <if test="catalogCode!=null and catalogCode!=''">
-            AND ca.catalog_code = #{catalogCode}
+            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
         </if>
         <if test="regionId!=null ">
             AND ad.region_id = #{regionId}

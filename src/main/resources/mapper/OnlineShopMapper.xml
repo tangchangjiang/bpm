@@ -41,7 +41,7 @@
         os.LAST_UPDATED_BY,
         os.LAST_UPDATE_DATE
         FROM
-        o2md_online_shop os join o2md_catalog oc on os.catalog_id = oc.catalog_id
+        o2md_online_shop os
         <where>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
@@ -58,11 +58,8 @@
                 <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
                 AND os.platform_shop_code LIKE #{platformShopCodeLike}
             </if>
-            <!--<if test="catalogId != null">-->
-                <!--AND os.catalog_id = #{catalogId}-->
-            <!--</if>-->
             <if test="catalogCode!=null and catalogCode!=''">
-                AND oc.catalog_code = #{catalogCode}
+                AND os.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
             </if>
             <if test="tenantId!=null and tenantId!=''">
                 AND oc.tenant_id = #{tenantId}

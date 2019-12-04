@@ -38,14 +38,13 @@
         FROM
         o2md_carrier_mapping cm
         JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id
-        JOIN o2md_catalog ca on ca.catalog_id = cm.catalog_id
         where
         1 = 1
         <if test="catalogCode!=null and catalogCode!=''">
-            AND ca.catalog_code = #{catalogCode}
+            AND cm.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
         </if>
         <if test="tenantId!=null and tenantId!=''">
-            AND ca.tenant_id = #{tenantId}
+            AND c.tenant_id = #{tenantId}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
             AND c.carrier_code LIKE concat("%",concat(#{carrierCode}),"%")

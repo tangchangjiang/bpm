@@ -30,7 +30,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("neighboringRegionController.v1")
-@RequestMapping("/v1/neighboring-regions")
+@RequestMapping("/v1/{tenantId}/neighboring-regions")
 @Api(tags = MetadataSwagger.NEIGHBORING_REGION)
 public class NeighboringRegionController extends BaseController {
     private final NeighboringRegionRepository neighboringRegionRepository;

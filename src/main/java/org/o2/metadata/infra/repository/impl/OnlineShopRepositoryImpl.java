@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.domain.entity.OnlineShop;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.o2.metadata.infra.mapper.OnlineShopMapper;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
 
     @Override
     public List<OnlineShop> selectByCondition(final OnlineShop condition) {
-        Preconditions.checkArgument(null != condition.getTenantId(),"tenantId should is not empty");
+        Preconditions.checkArgument(null != condition.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return onlineShopMapper.findByCondition(condition);
     }
 
