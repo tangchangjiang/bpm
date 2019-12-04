@@ -1,5 +1,6 @@
 package org.o2.metadata.domain.entity;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import org.o2.metadata.domain.repository.OnlineShopRelPosRepository;
 import org.o2.metadata.domain.repository.OnlineShopRepository;
 import org.o2.metadata.domain.repository.PosRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -54,6 +56,7 @@ public class OnlineShopRelPos extends AuditDomain {
         Assert.isTrue(posRepository.existsWithPrimaryKey(this.posId), "associate POS must exist");
         Assert.notNull(this.onlineShopId, "online shop id must not null");
         Assert.isTrue(shopRepository.existsWithPrimaryKey(this.onlineShopId), "associate online shop must exist");
+        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
     }
     //
     // 数据库字段

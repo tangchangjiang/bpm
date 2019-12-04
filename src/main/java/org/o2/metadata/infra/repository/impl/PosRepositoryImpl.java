@@ -53,8 +53,8 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public List<Pos> listUnbindPosList(final Long shopId, final String posCode, final String posName) {
-        return posMapper.listUnbindPosList(shopId, posCode, posName);
+    public List<Pos> listUnbindPosList(final Long shopId, final String posCode, final String posName,final Long tenantId) {
+        return posMapper.listUnbindPosList(shopId, posCode, posName,tenantId);
     }
 
     @Override

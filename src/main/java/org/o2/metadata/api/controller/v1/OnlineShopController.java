@@ -66,7 +66,7 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
     public ResponseEntity listAllShops(final OnlineShop onlineShop) {
-        Preconditions.checkArgument(null != onlineShop.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != onlineShop.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return Results.success(onlineShopRepository.select(onlineShop));
     }
 
@@ -84,7 +84,8 @@ public class OnlineShopController extends BaseController {
     @PostMapping
     public ResponseEntity createOnlineShop(@ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
-        Preconditions.checkArgument(null != onlineShop.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != onlineShop.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+        Preconditions.checkArgument(null != onlineShop.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         if (onlineShop.exist(onlineShopRepository)) {
@@ -112,7 +113,7 @@ public class OnlineShopController extends BaseController {
         }
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         //触发网店关联服务点更新
-        onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null);
+        onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null,onlineShop.getTenantId());
         return Results.success(result);
     }
 

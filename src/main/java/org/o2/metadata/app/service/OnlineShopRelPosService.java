@@ -48,8 +48,9 @@ public interface OnlineShopRelPosService {
      * </p>
      *
      * @param onlineShopCode 网店
-     * @param posCode        pos
+     * @param posCode       服务点
+     * @param tenantId      租户ID
      * @return 更新后的列表
      */
-    List<OnlineShopRelPos> resetIsInvCalculated(final String onlineShopCode, final String posCode);
+    List<OnlineShopRelPos> resetIsInvCalculated(final String onlineShopCode, final String posCode,final Long tenantId);
 }

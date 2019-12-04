@@ -30,6 +30,6 @@ public class OnlineShopRelPosRepositoryImpl extends BaseRepositoryImpl<OnlineSho
         final Optional<OnlineShopRelPosVO> posOptional = Optional.ofNullable(pos);
         return onlineShopRelPosMapper.listShopPosRelsByOption(onlineShopId,
                 posOptional.map(OnlineShopRelPosVO::getPosCode).orElse(null),
-                posOptional.map(OnlineShopRelPosVO::getPosName).orElse(null));
+                posOptional.map(OnlineShopRelPosVO::getPosName).orElse(null),pos.getTenantId());
     }
 }

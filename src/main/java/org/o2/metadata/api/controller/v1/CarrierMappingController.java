@@ -51,7 +51,6 @@ public class CarrierMappingController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(final CarrierMappingVO carrierMappingVO, @ApiIgnore final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != carrierMappingVO.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         Preconditions.checkArgument(null != carrierMappingVO.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<CarrierMappingVO> list = PageHelper.doPageAndSort(pageRequest,
                 () -> carrierMappingRepository.listCarrierMappingByCondition(carrierMappingVO));

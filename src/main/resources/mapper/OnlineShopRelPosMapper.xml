@@ -53,7 +53,6 @@
         from o2md_online_shop_rel_pos srp
         join o2md_pos p on srp.pos_id = p.pos_id
         <where>
-            srp.online_shop_id = #{onlineShopId}
             <if test="posCode != null and posCode != ''">
                 <bind name="posCodeLike" value="'%' + posCode + '%'"/>
                 and p.pos_code like #{posCodeLike}
@@ -62,6 +61,10 @@
                 <bind name="posNameLike" value="'%' + posName + '%'"/>
                 and p.pos_name like #{posNameLike}
             </if>
+            <if test="tenantId!=null">
+                AND p.tenant_id = #{tenantId}
+            </if>
+            AND srp.online_shop_id = #{onlineShopId}
         </where>
         order by p.pos_code asc
     </select>

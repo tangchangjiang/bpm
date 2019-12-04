@@ -58,7 +58,7 @@ public class OnlineShop extends AuditDomain {
     }
 
     public void validate(final OnlineShopRepository onlineShopRepository) {
-        Preconditions.checkArgument(null != this.getTenantId(), "tenantId should is not empty");
+        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         if (this.getOnlineShopId() != null) {
             final OnlineShop record = onlineShopRepository.selectByPrimaryKey(this.onlineShopId);
             if (!record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {

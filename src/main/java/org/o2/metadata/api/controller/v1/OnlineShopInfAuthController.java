@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -15,6 +16,7 @@ import org.o2.metadata.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.OnlineShopInfAuth;
 import org.o2.metadata.domain.repository.OnlineShopInfAuthRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -25,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("onlineShopInfAuthController.v1")
-@RequestMapping("/v1/online-shop-inf-auths")
+@RequestMapping("/v1/{tenantId}/online-shop-inf-auths")
 @Api(tags = MetadataSwagger.ONLINE_SHOP_INF_AUTH)
 public class OnlineShopInfAuthController extends BaseController {
 
@@ -43,6 +45,7 @@ public class OnlineShopInfAuthController extends BaseController {
     @GetMapping
     public ResponseEntity<?> list(final OnlineShopInfAuth onlineShopInfAuth, @ApiIgnore @SortDefault(value = OnlineShopInfAuth.FIELD_ONLINE_SHOP_INF_AUTH_ID,
             direction = Sort.Direction.DESC) final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<OnlineShopInfAuth> list = onlineShopInfAuthRepository.pageAndSort(pageRequest, onlineShopInfAuth);
         return Results.success(list);
     }
@@ -58,6 +61,7 @@ public class OnlineShopInfAuthController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<?> create(@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         onlineShopInfAuthRepository.insertSelective(onlineShopInfAuth);
         return Results.success(onlineShopInfAuth);
     }
@@ -66,6 +70,7 @@ public class OnlineShopInfAuthController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<?> updateOrInsert(@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         shopInfAuthService.updateOrInsert(onlineShopInfAuth);
         return Results.success(onlineShopInfAuth);
     }

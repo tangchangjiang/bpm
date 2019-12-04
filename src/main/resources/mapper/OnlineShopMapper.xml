@@ -86,7 +86,7 @@
             <if test="catalogCode!=null and catalogCode!=''">
                 AND oc.catalog_code = #{catalogCode}
             </if>
-            <if test="tenantId!=null and tenantId!=''">
+            <if test="tenantId!=null">
                 AND oc.tenant_id = #{tenantId}
             </if>
         </where>

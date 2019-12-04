@@ -131,6 +131,9 @@
             <bind name="posNameLike" value="'%' + posName + '%'"/>
             and p.pos_name LIKE #{posNameLike}
         </if>
+        <if test="tenantId != null ">
+            and p.tenant_id = #{tenantId}
+        </if>
         order by p.pos_code asc
     </select>
     <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">

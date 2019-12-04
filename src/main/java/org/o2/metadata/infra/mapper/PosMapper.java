@@ -34,7 +34,8 @@ public interface PosMapper extends BaseMapper<Pos> {
      */
     List<Pos> listUnbindPosList(@Param(value = "onlineShopId") Long onlineShopId,
                                 @Param(value = "posCode") String posCode,
-                                @Param(value = "posName") String posName);
+                                @Param(value = "posName") String posName,
+                                @Param(value = "tenantId") Long tenantId);
 
     /**
      * 主键查询

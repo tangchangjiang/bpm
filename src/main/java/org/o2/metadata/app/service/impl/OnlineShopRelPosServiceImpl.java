@@ -68,20 +68,26 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
     }
 
     @Override
-    public List<OnlineShopRelPos> resetIsInvCalculated(final String onlineShopCode, final String posCode) {
+    public List<OnlineShopRelPos> resetIsInvCalculated(final String onlineShopCode, final String posCode,final Long tenantId) {
         OnlineShop onlineShop = null;
         Pos pos = null;
 
         //分别获取OnlineShop和Pos
         if (StringUtils.isNotEmpty(onlineShopCode)) {
-            final List<OnlineShop> list = onlineShopRepository.select(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShopCode);
+            OnlineShop shop = new OnlineShop();
+            shop.setTenantId(tenantId);
+            shop.setOnlineShopCode(onlineShopCode);
+            final List<OnlineShop> list = onlineShopRepository.select(shop);
             if (list.size() == 1) {
                 onlineShop = list.get(0);
             }
         }
 
         if (StringUtils.isNotEmpty(posCode)) {
-            final List<Pos> list = posRepository.select(Pos.FIELD_POS_CODE, posCode);
+            Pos provisional = new Pos();
+            provisional.setTenantId(tenantId);
+            provisional.setPosCode(posCode);
+            final List<Pos> list = posRepository.select(provisional);
             if (list.size() == 1) {
                 pos = list.get(0);
             }

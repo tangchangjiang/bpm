@@ -41,9 +41,10 @@ public interface PosRepository extends BaseRepository<Pos> {
      * @param shopId  网店 id
      * @param posCode
      * @param posName
+     * @param tenantId
      * @return 服务点列表
      */
-    List<Pos> listUnbindPosList(Long shopId, String posCode, String posName);
+    List<Pos> listUnbindPosList(Long shopId, String posCode, String posName,Long tenantId);
 
     /**
      * 根据服务点编码查询

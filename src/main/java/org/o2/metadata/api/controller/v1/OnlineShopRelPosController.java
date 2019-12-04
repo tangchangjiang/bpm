@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 
 @RestController("onlineShopRelPosController.v1")
-@RequestMapping("/v1")
+@RequestMapping("/v1/{tenantId}")
 @Api(tags = MetadataSwagger.ONLINE_SHOP_POS_REL)
 public class OnlineShopRelPosController extends BaseController {
 
@@ -77,9 +78,10 @@ public class OnlineShopRelPosController extends BaseController {
     public ResponseEntity queryUnbindPoses(@PathVariable("onlineShopId") final Long onlineShopId,
                                            @RequestParam(required = false) final String posCode,
                                            @RequestParam(required = false) final String posName,
+                                           @RequestParam(required = false) final Long tenantId,
                                            @ApiIgnore final PageRequest pageRequest) {
         final Page<Pos> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> posRepository.listUnbindPosList(onlineShopId, posCode, posName));
+                () -> posRepository.listUnbindPosList(onlineShopId, posCode, posName,tenantId));
         return Results.success(posList);
     }
 
@@ -90,6 +92,7 @@ public class OnlineShopRelPosController extends BaseController {
     public ResponseEntity list(@PathVariable("onlineShopId") final Long onlineShopId,
                                final OnlineShopRelPosVO pos,
                                @ApiIgnore final PageRequest pageRequest) {
+        Preconditions.checkArgument(null != pos.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         final Page<OnlineShopRelPosVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> relationshipRepository.listShopPosRelsByOption(onlineShopId, pos));
         return Results.success(list);
@@ -101,7 +104,8 @@ public class OnlineShopRelPosController extends BaseController {
     @PostMapping("/online-shops/reset-is-inv-calculated")
     public ResponseEntity<?> resetIsInvCalculated(
             @RequestParam("onlineShopCode") final String onlineShopCode,
-            @RequestParam("posCode") final String posCode) {
+            @RequestParam("posCode") final String posCode,
+            @RequestParam("tenantId") final Long tenantId) {
         if (StringUtils.isEmpty(onlineShopCode) && StringUtils.isEmpty(posCode)) {
             return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_POS_CODE_IS_NULL), HttpStatus.OK);
         }
@@ -109,6 +113,6 @@ public class OnlineShopRelPosController extends BaseController {
         if (StringUtils.isNotEmpty(onlineShopCode) && StringUtils.isNotEmpty(posCode)) {
             return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_POS_CODE_IS_NULL), HttpStatus.OK);
         }
-        return Results.success(onlineShopRelPosService.resetIsInvCalculated(onlineShopCode, posCode));
+        return Results.success(onlineShopRelPosService.resetIsInvCalculated(onlineShopCode, posCode,tenantId));
     }
 }
