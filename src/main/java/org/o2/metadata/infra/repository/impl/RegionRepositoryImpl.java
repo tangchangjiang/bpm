@@ -24,8 +24,8 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
     }
 
     @Override
-    public List<Region> listRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag) {
-        final Set<Region> regionSet = regionMapper.selectRegion(countryIdOrCode, condition, enabledFlag);
+    public List<Region> listRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,Long tenantId) {
+        final Set<Region> regionSet = regionMapper.selectRegion(countryIdOrCode, condition, enabledFlag,tenantId);
         final Set<String> regionSetCodes = new HashSet<>();
         for (final Region r : regionSet) {
             regionSetCodes.add(r.getRegionCode());
@@ -49,18 +49,18 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
     }
 
     @Override
-    public List<RegionVO> listChildren(final String countryIdOrCode, final Long parentRegionId, final Integer enabledFlag) {
-        return regionMapper.listChildren(countryIdOrCode, parentRegionId, enabledFlag);
+    public List<RegionVO> listChildren(final String countryIdOrCode, final Long parentRegionId, final Integer enabledFlag,Long tenantId) {
+        return regionMapper.listChildren(countryIdOrCode, parentRegionId, enabledFlag,tenantId);
     }
 
     @Override
-    public List<Region> listRegionByLevelPath(final List<String> levelPathList) {
-        return regionMapper.listRegionByLevelPath(levelPathList);
+    public List<Region> listRegionByLevelPath(final List<String> levelPathList,Long tenantId) {
+        return regionMapper.listRegionByLevelPath(levelPathList,tenantId);
     }
 
     @Override
-    public List<Region> listRegionChildrenByLevelPath(final String levelPath) {
-        return regionMapper.listRegionChildrenByLevelPath(levelPath);
+    public List<Region> listRegionChildrenByLevelPath(final String levelPath,final Long tenantId) {
+        return regionMapper.listRegionChildrenByLevelPath(levelPath,tenantId);
     }
 }
 

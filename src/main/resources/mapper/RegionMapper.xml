@@ -47,17 +47,21 @@
         <if test="enabledFlag != null">
             and hr.enabled_flag = #{enabledFlag}
         </if>
+        <if test="tenantId != null">
+            and hr.tenant_id = #{tenantId}
+        </if>
         order by hr.region_code
     </select>
     <select id="listRegionByLevelPath" resultType="org.o2.metadata.domain.entity.Region">
         select
         region_id,
         enabled_flag
-        from o2md_region
-        where level_path in
+        from o2md_region re
+        where re.level_path in
         <foreach collection="levelPathList" item="item" open="(" close=")" separator=",">
             #{item}
         </foreach>
+        and re.tenant_id = #{tenantId}
     </select>
     <select id="listRegionChildrenByLevelPath" resultType="org.o2.metadata.domain.entity.Region">
         select
@@ -66,6 +70,7 @@
         from o2md_region
         <bind name="levelPath" value="levelPath + '%'"/>
         where level_path like #{levelPath}
+        and re.tenant_id = #{tenantId}
     </select>
     <select id="selectRegion" resultType="org.o2.metadata.domain.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
@@ -90,6 +95,9 @@
         </if>
         <if test="enabledFlag != null">
             AND hr.enabled_flag = #{enabledFlag}
+        </if>
+        <if test="tenantId != null">
+            AND hr.tenant_id = #{tenantId}
         </if>
     </select>
     <select id="selectRegionParent" resultType="org.o2.metadata.domain.entity.Region">

@@ -19,11 +19,13 @@ public interface RegionMapper extends BaseMapper<Region> {
      * @param countryIdOrCode
      * @param parentRegionId
      * @param enabledFlag
+     * @param tenantId
      * @return
      */
     List<RegionVO> listChildren(@Param("countryIdOrCode") String countryIdOrCode,
                                 @Param("parentRegionId") Long parentRegionId,
-                                @Param("enabledFlag") Integer enabledFlag);
+                                @Param("enabledFlag") Integer enabledFlag,
+                                @Param("tenantId") Long tenantId);
 
     /**
      * 查询地区树
@@ -31,11 +33,13 @@ public interface RegionMapper extends BaseMapper<Region> {
      * @param countryIdOrCode 国家ID或编码
      * @param condition       查询条件
      * @param enabledFlag     筛选条件
+     * @param tenantId        租户ID
      * @return 当前节点以及父级ID
      */
     Set<Region> selectRegion(@Param("countryIdOrCode") String countryIdOrCode,
                              @Param("condition") String condition,
-                             @Param("enabledFlag") Integer enabledFlag);
+                             @Param("enabledFlag") Integer enabledFlag,
+                             @Param("tenantId") Long tenantId);
 
     /**
      * 批量查询地区
@@ -51,17 +55,19 @@ public interface RegionMapper extends BaseMapper<Region> {
      * 根据 levelPath 查询地区列表
      *
      * @param levelPathList 等级路径列表
+     * @param tenantId 租户ID
      * @return 地区列表
      */
-    List<Region> listRegionByLevelPath(@Param("levelPathList") List<String> levelPathList);
+    List<Region> listRegionByLevelPath(@Param("levelPathList") List<String> levelPathList,@Param("tenantId") Long tenantId);
 
     /**
      * 查询地区以及子地区
      *
      * @param levelPath 等级路径
      * @return 地区以及子地区
+     * @param tenantId 租户ID
      */
-    List<Region> listRegionChildrenByLevelPath(@Param("levelPath") String levelPath);
+    List<Region> listRegionChildrenByLevelPath(@Param("levelPath") String levelPath,@Param("tenantId") Long tenantId);
 
     /**
      * 根据id 查询地区

@@ -15,9 +15,10 @@ public interface RegionService {
      * @param countryIdOrCode 国家ID或CODE
      * @param condition       查询条件
      * @param enabledFlag     筛选条件
+     * @param tenantId        租户ID
      * @return 当前节点以及父级ID
      */
-    List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag);
+    List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
 
     /**
@@ -25,9 +26,10 @@ public interface RegionService {
      *
      * @param countryIdOrCode
      * @param enabledFlag
+     * @param tenantId 租户ID
      * @return
      */
-    List<AreaRegionDTO> listAreaRegion(String countryIdOrCode, Integer enabledFlag);
+    List<AreaRegionDTO> listAreaRegion(String countryIdOrCode, Integer enabledFlag,Long tenantId);
 
     /**
      * 创建地区定义

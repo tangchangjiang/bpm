@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.SysParameter;
 import org.o2.metadata.domain.repository.SysParameterRepository;
+import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,7 @@ public class SysParameterController extends BaseController {
     })
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable Long tenantId, final String parameterCode, final String parameterDesc, final PageRequest pageRequest) {
+    public ResponseEntity<?> list(@RequestParam(value = "tenantId") Long tenantId, @RequestParam(value = "parameterCode",required = false) String parameterCode, @RequestParam(value = "parameterDesc" ,required = false) String parameterDesc, final PageRequest pageRequest) {
         final Page<SysParameter> list = sysParameterRepository.listSysParameterSetting(pageRequest.getPage(),
                 pageRequest.getSize(), parameterCode, parameterDesc, tenantId);
         return Results.success(list);
@@ -63,7 +65,7 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "根据code查询系统参数value,仅查有效数据")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/value")
-    public ResponseEntity<?> getValue(@PathVariable Long tenantId ,@RequestParam final String parameterCode) {
+    public ResponseEntity<?> getValue(@RequestParam(value = "tenantId") Long tenantId ,@RequestParam(value = "parameterCode") final String parameterCode) {
         final SysParameter sysParameter = new SysParameter();
         sysParameter.setParameterCode(parameterCode);
         sysParameter.setActiveFlag(1);
@@ -93,6 +95,7 @@ public class SysParameterController extends BaseController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody final SysParameter sysParameter) {
         //校验唯一
+        Preconditions.checkArgument(null != sysParameter.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         sysParameter.validateParameterCode(sysParameterRepository);
         sysParameter.setParameterId(null);
         sysParameterRepository.insertSelective(sysParameter);

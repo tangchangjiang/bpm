@@ -30,17 +30,17 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private RegionRepository regionRepository;
 
     @Override
-    public List<Region> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag) {
+    public List<Region> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
         return recursiveBuildRegionTree(
-                regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag).stream().collect(Collectors.groupingBy(
+                regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag,tenantId).stream().collect(Collectors.groupingBy(
                         item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId())),
                 ROOT_ID, new ArrayList<>());
     }
 
     @Override
-    public List<AreaRegionDTO> listAreaRegion(final String countryIdOrCode, final Integer enabledFlag) {
+    public List<AreaRegionDTO> listAreaRegion(final String countryIdOrCode, final Integer enabledFlag,final Long tenantId) {
         //取出所有省份
-        final List<RegionVO> regionList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag);
+        final List<RegionVO> regionList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag,tenantId);
         final Map<String, List<RegionDTO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionDTO> list;
@@ -111,14 +111,14 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         if (enableFlag == BaseConstants.Flag.YES && region.getLevelPath().contains(BasicDataConstants.Constants.ADDRESS_SPLIT)) {
             // 验证父级是否开启
             final List<Region> parentRegionList =
-                    regionRepository.listRegionByLevelPath(resolveParentLevelPath(region.getLevelPath()));
+                    regionRepository.listRegionByLevelPath(resolveParentLevelPath(region.getLevelPath()),region.getTenantId());
             for (final Region parent : parentRegionList) {
                 if (Objects.equals(BaseConstants.Flag.NO, parent.getEnabledFlag())) {
                     throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_PARENT_NOT_ENABLED);
                 }
             }
         }
-        final List<Region> regionList = regionRepository.listRegionChildrenByLevelPath(region.getLevelPath());
+        final List<Region> regionList = regionRepository.listRegionChildrenByLevelPath(region.getLevelPath(),region.getTenantId());
         for (final Region item : regionList) {
             item.setCountryId(null);
             item.setRegionCode(null);
