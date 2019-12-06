@@ -30,25 +30,25 @@ public class SysParameterContextImpl implements ISysParameterContext {
         if (sysParameter == null) {
             return;
         }
-        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(sysParameter.getParameterCode());
+        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(sysParameter.getParameterCode(),sysParameter.getTenantId());
         this.redisCacheClient.opsForValue().set(cacheKey, FastJsonHelper.objectToString(sysParameter));
     }
 
     @Override
-    public void deleteSysParameter(final String code) {
+    public void deleteSysParameter(final String code,Long tenantId) {
         if (StringUtils.isBlank(code)) {
             return;
         }
-        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(code);
+        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(code,tenantId);
         this.redisCacheClient.delete(cacheKey);
     }
 
     @Override
-    public SysParameterVO getSysParameter(final String code) {
+    public SysParameterVO getSysParameter(final String code,Long tenantId) {
         if (StringUtils.isBlank(code)) {
             return null;
         }
-        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(code);
+        final String cacheKey = MetadataConstants.SysParameterCache.sysParameterKey(code,tenantId);
         final String results = this.redisCacheClient.opsForValue().get(cacheKey);
         if (StringUtils.isBlank(results)) {
             return null;
@@ -57,8 +57,8 @@ public class SysParameterContextImpl implements ISysParameterContext {
     }
 
     @Override
-    public String getSysParameterValue(final String code) {
-        final SysParameterVO sysParameterVO = getSysParameter(code);
+    public String getSysParameterValue(final String code,Long tenantId) {
+        final SysParameterVO sysParameterVO = getSysParameter(code,tenantId);
         if (sysParameterVO == null) {
             return null;
         } else {
@@ -67,8 +67,8 @@ public class SysParameterContextImpl implements ISysParameterContext {
     }
 
     @Override
-    public boolean isSysParameterActive(final String code) {
-        final SysParameterVO sysParameterVO = getSysParameter(code);
+    public boolean isSysParameterActive(final String code,Long tenantId) {
+        final SysParameterVO sysParameterVO = getSysParameter(code,tenantId);
         if (sysParameterVO == null) {
             return false;
         } else {

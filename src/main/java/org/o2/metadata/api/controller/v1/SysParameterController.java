@@ -110,7 +110,7 @@ public class SysParameterController extends BaseController {
     public ResponseEntity<?> delete(@RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameterRepository.deleteByPrimaryKey(sysParameter);
-        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode());
+        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(),sysParameter.getTenantId());
         return Results.success();
     }
 
@@ -119,6 +119,7 @@ public class SysParameterController extends BaseController {
         sysParameterVO.setParameterCode(sysParameter.getParameterCode());
         sysParameterVO.setParameterValue(sysParameter.getParameterValue());
         sysParameterVO.setActiveFlag(sysParameter.getActiveFlag());
+        sysParameterVO.setTenantId(sysParameter.getTenantId());
         return sysParameterVO;
     }
 }

@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.constants;
 
+import com.google.common.base.Joiner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
@@ -21,6 +22,7 @@ public interface MetadataConstants {
 
         /**
          * 格式化的字符串
+         *
          * @param posCode 服务点编码
          * @return the return
          * @throws RuntimeException exception description
@@ -91,15 +93,19 @@ public interface MetadataConstants {
 
     interface SysParameterCache {
         String SYS_PARAMETER_KEY = "o2md:sys_parameter:%s";
+        String CACHE_SERVICE_NAME = "o2md";
+        String CACHE_MODULE_NAME = "sys_parameter";
 
         /**
          * 系统参数缓存 KEY
          *
          * @param sysParameterCode 系统参数编码
+         * @param tenantId         租户Id
          * @return 系统参数缓存 KEY
          */
-        static String sysParameterKey(final String sysParameterCode) {
-            return String.format(SYS_PARAMETER_KEY, sysParameterCode);
+        static String sysParameterKey(String sysParameterCode, Long tenantId) {
+            String tenantStr = null == tenantId ? null : tenantId.toString();
+            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME, sysParameterCode, tenantStr);
         }
     }
 }

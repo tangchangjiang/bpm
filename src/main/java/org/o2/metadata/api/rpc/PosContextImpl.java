@@ -31,58 +31,58 @@ public class PosContextImpl implements IPosContext {
     }
 
     @Override
-    public void saveExpressQuantity(final String posCode, final String expressQuantity) {
+    public void saveExpressQuantity(final String posCode, final String expressQuantity,Long tenantId) {
         executeScript(posCode, expressQuantity, EXPRESS_LIMIT_CACHE_LUA);
     }
 
     @Override
-    public void savePickUpQuantity(final String posCode, final String pickUpQuantity) {
+    public void savePickUpQuantity(final String posCode, final String pickUpQuantity,Long tenantId) {
         executeScript(posCode, pickUpQuantity, PICK_UP_LIMIT_CACHE_LUA);
     }
 
     @Override
-    public void updateExpressValue(final String posCode, final String increment) {
+    public void updateExpressValue(final String posCode, final String increment,Long tenantId) {
         executeScript(posCode, increment, EXPRESS_VALUE_CACHE_LUA);
     }
 
     @Override
-    public void updatePickUpValue(final String posCode, final String increment) {
+    public void updatePickUpValue(final String posCode, final String increment,Long tenantId) {
         executeScript(posCode, increment, PICK_UP_VALUE_CACHE_LUA);
     }
 
     @Override
-    public String getExpressLimit(final String posCode) {
-        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode)).get(MetadataConstants.PosCache.EXPRESS_LIMIT_QUANTITY);
+    public String getExpressLimit(final String posCode,Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode,tenantId)).get(MetadataConstants.PosCache.EXPRESS_LIMIT_QUANTITY);
     }
 
     @Override
-    public String getPickUpLimit(final String posCode) {
-        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode)).get(MetadataConstants.PosCache.PICK_UP_LIMIT_QUANTITY);
+    public String getPickUpLimit(final String posCode,Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode,tenantId)).get(MetadataConstants.PosCache.PICK_UP_LIMIT_QUANTITY);
     }
 
     @Override
-    public String getExpressValue(final String posCode) {
-        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode)).get(MetadataConstants.PosCache.EXPRESS_LIMIT_VALUE);
+    public String getExpressValue(final String posCode,Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode,tenantId)).get(MetadataConstants.PosCache.EXPRESS_LIMIT_VALUE);
     }
 
     @Override
-    public String getPickUpValue(final String posCode) {
-        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode)).get(MetadataConstants.PosCache.PICK_UP_LIMIT_VALUE);
+    public String getPickUpValue(final String posCode,Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(posCacheKey(posCode,tenantId)).get(MetadataConstants.PosCache.PICK_UP_LIMIT_VALUE);
     }
 
     @Override
-    public String posCacheKey(final String posCode) {
+    public String posCacheKey(final String posCode,Long tenantId) {
         return String.format(MetadataConstants.PosCache.POS_INFO_KEY, posCode);
     }
 
     @Override
-    public boolean isPosExpressLimit(final String posCode) {
+    public boolean isPosExpressLimit(final String posCode,Long tenantId) {
         final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.EXPRESS_LIMIT_COLLECTION).isMember(posCode);
         return result != null && result;
     }
 
     @Override
-    public boolean isPosPickUpLimit(final String posCode) {
+    public boolean isPosPickUpLimit(final String posCode,Long tenantId) {
         final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.PICK_UP_LIMIT_COLLECTION).isMember(posCode);
         return result != null && result;
     }
@@ -108,12 +108,12 @@ public class PosContextImpl implements IPosContext {
     }
 
     @Override
-    public void resetPosExpressLimit(final String posCode) {
+    public void resetPosExpressLimit(final String posCode,Long tenantId) {
         executeScript(posCode, EXPRESS_VALUE_CACHE_RESET_LUA);
     }
 
     @Override
-    public void resetPosPickUpLimit(final String posCode) {
+    public void resetPosPickUpLimit(final String posCode,Long tenantId) {
         executeScript(posCode, PICK_UP_VALUE_CACHE_RESET_LUA);
     }
 

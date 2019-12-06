@@ -124,13 +124,13 @@ public class PosServiceImpl implements PosService {
     public Pos getPosWithPropertiesInRedisByPosId(final Long posId) {
         final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(posId);
         if (pos.getExpressedFlag().equals(Flag.YES)) {
-            final String expressValue = this.posContext.getExpressLimit(pos.getPosCode());
+            final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(),pos.getTenantId());
             if (StringUtils.isNotBlank(expressValue)) {
                 pos.setExpressLimitQuantity(Long.parseLong(expressValue));
             }
         }
         if (pos.getPickedUpFlag().equals(Flag.YES)) {
-            final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode());
+            final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(),pos.getTenantId());
             if (StringUtils.isNotBlank(pickUpValue)) {
                 pos.setPickUpLimitQuantity(Long.parseLong(pickUpValue));
             }
@@ -144,16 +144,16 @@ public class PosServiceImpl implements PosService {
      * @param pos Pos
      */
     private void syncLimitToRedis(final Pos pos) {
-        final String expressValue = this.posContext.getExpressLimit(pos.getPosCode());
-        final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode());
+        final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(),pos.getTenantId());
+        final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(),pos.getTenantId());
 
         final String newExpress = String.valueOf(pos.getExpressLimitQuantity());
         if (pos.getExpressedFlag().equals(Flag.YES) && !newExpress.equals(expressValue)) {
-            this.posContext.saveExpressQuantity(pos.getPosCode(), newExpress);
+            this.posContext.saveExpressQuantity(pos.getPosCode(), newExpress,pos.getTenantId());
         }
         final String newPickUp = String.valueOf(pos.getPickUpLimitQuantity());
         if (pos.getPickedUpFlag().equals(Flag.YES) && !newPickUp.equals(pickUpValue)) {
-            this.posContext.savePickUpQuantity(pos.getPosCode(), newPickUp);
+            this.posContext.savePickUpQuantity(pos.getPosCode(), newPickUp,pos.getTenantId());
         }
     }
 }
