@@ -14,15 +14,17 @@ public interface CarrierService {
      * 更新承运商
      *
      * @param carrierList 承运商
+     * @param organizationId 租户ID
      * @return 承运商集合
      */
-    List<Carrier> batchUpdate(List<Carrier> carrierList);
+    List<Carrier> batchUpdate(Long organizationId,List<Carrier> carrierList);
 
     /**
      * 更新承运商
      *
      * @param carrierList    承运商
+     * @param organizationId    租户ID
      * @return 承运商集合
      */
-    List<Carrier> batchMerge(List<Carrier> carrierList);
+    List<Carrier> batchMerge(Long organizationId,List<Carrier> carrierList);
 }

@@ -14,9 +14,9 @@ public interface CarrierMappingService {
 
     /**
      * 批量插入数据
-     *
+     * @param organizationId 租户ID
      * @param carrierMappings 原数据
      * @return
      */
-    Map<String, Object> insertAll(List<CarrierMapping> carrierMappings);
+    Map<String, Object> insertAll(Long organizationId,List<CarrierMapping> carrierMappings);
 }

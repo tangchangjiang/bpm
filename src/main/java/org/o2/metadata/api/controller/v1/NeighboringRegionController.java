@@ -9,6 +9,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -57,8 +58,8 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "创建临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final List<NeighboringRegion> neighboringRegion) {
-        return Results.success(neighboringRegionService.batchInsert(neighboringRegion));
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
+        return Results.success(neighboringRegionService.batchInsert(organizationId,neighboringRegion));
     }
 
     @ApiOperation(value = "批量删除临近省")

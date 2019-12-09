@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -9,6 +8,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -16,7 +16,6 @@ import org.o2.metadata.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.OnlineShopInfAuth;
 import org.o2.metadata.domain.repository.OnlineShopInfAuthRepository;
-import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -43,9 +42,9 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "网店接口表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(final OnlineShopInfAuth onlineShopInfAuth, @ApiIgnore @SortDefault(value = OnlineShopInfAuth.FIELD_ONLINE_SHOP_INF_AUTH_ID,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShopInfAuth onlineShopInfAuth, @ApiIgnore @SortDefault(value = OnlineShopInfAuth.FIELD_ONLINE_SHOP_INF_AUTH_ID,
             direction = Sort.Direction.DESC) final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        onlineShopInfAuth.setTenantId(organizationId);
         final Page<OnlineShopInfAuth> list = onlineShopInfAuthRepository.pageAndSort(pageRequest, onlineShopInfAuth);
         return Results.success(list);
     }
@@ -60,8 +59,8 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "创建网店接口表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
-        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+        onlineShopInfAuth.setTenantId(organizationId);
         onlineShopInfAuthRepository.insertSelective(onlineShopInfAuth);
         return Results.success(onlineShopInfAuth);
     }
@@ -69,8 +68,8 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "新建或修改网店接口表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateOrInsert(@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
-        Preconditions.checkArgument(null != onlineShopInfAuth.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> updateOrInsert(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+        onlineShopInfAuth.setTenantId(organizationId);
         shopInfAuthService.updateOrInsert(onlineShopInfAuth);
         return Results.success(onlineShopInfAuth);
     }
@@ -78,8 +77,9 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "删除网店接口表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
         SecurityTokenHelper.validToken(onlineShopInfAuth);
+        onlineShopInfAuth.setTenantId(organizationId);
         onlineShopInfAuthRepository.deleteByPrimaryKey(onlineShopInfAuth);
         return Results.success();
     }

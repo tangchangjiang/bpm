@@ -44,8 +44,9 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<Country> batchDisableCountry(final List<Country> countryList) {
+    public List<Country> batchDisableCountry(Long organizationId,final List<Country> countryList) {
         for (final Country country : countryList) {
+            country.setTenantId(organizationId);
             country.setCountryCode(null);
             country.setCountryName(null);
             country.setEnabledFlag(BaseConstants.Flag.NO);

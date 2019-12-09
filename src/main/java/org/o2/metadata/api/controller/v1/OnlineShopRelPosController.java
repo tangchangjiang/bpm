@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -8,6 +7,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
@@ -55,19 +55,19 @@ public class OnlineShopRelPosController extends BaseController {
     @ApiOperation(value = "批量创建网店关联服务点关系")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-pos/batch-create")
-    public ResponseEntity<List<OnlineShopRelPos>> create(@RequestBody final List<OnlineShopRelPos> onlineShopRelPosList) {
+    public ResponseEntity<List<OnlineShopRelPos>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<OnlineShopRelPos> onlineShopRelPosList) {
         this.validList(onlineShopRelPosList);
-        final List<OnlineShopRelPos> relationShips = onlineShopRelPosService.batchInsertSelective(onlineShopRelPosList);
+        final List<OnlineShopRelPos> relationShips = onlineShopRelPosService.batchInsertSelective(organizationId,onlineShopRelPosList);
         return Results.success(relationShips);
     }
 
     @ApiOperation("批量更新网点关联服务点状态")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-pos/batch-update")
-    public ResponseEntity<List<OnlineShopRelPos>> batchUpdateActived(@RequestBody final List<OnlineShopRelPos> onlineShopRelPoses) {
+    public ResponseEntity<List<OnlineShopRelPos>> batchUpdateActived(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<OnlineShopRelPos> onlineShopRelPoses) {
         this.validList(onlineShopRelPoses);
         SecurityTokenHelper.validToken(onlineShopRelPoses);
-        final List<OnlineShopRelPos> relationships = onlineShopRelPosService.batchUpdateByPrimaryKey(onlineShopRelPoses);
+        final List<OnlineShopRelPos> relationships = onlineShopRelPosService.batchUpdateByPrimaryKey(organizationId,onlineShopRelPoses);
         return Results.success(relationships);
     }
 
@@ -75,13 +75,13 @@ public class OnlineShopRelPosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/unbind-poses")
-    public ResponseEntity queryUnbindPoses(@PathVariable("onlineShopId") final Long onlineShopId,
+    public ResponseEntity queryUnbindPoses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                           @PathVariable("onlineShopId") final Long onlineShopId,
                                            @RequestParam(required = false) final String posCode,
                                            @RequestParam(required = false) final String posName,
-                                           @RequestParam(required = false) final Long tenantId,
                                            @ApiIgnore final PageRequest pageRequest) {
         final Page<Pos> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> posRepository.listUnbindPosList(onlineShopId, posCode, posName,tenantId));
+                () -> posRepository.listUnbindPosList(onlineShopId, posCode, posName,organizationId));
         return Results.success(posList);
     }
 
@@ -89,10 +89,11 @@ public class OnlineShopRelPosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/shop-pos-relationships")
-    public ResponseEntity list(@PathVariable("onlineShopId") final Long onlineShopId,
+    public ResponseEntity list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                               @PathVariable("onlineShopId") final Long onlineShopId,
                                final OnlineShopRelPosVO pos,
                                @ApiIgnore final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != pos.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        pos.setTenantId(organizationId);
         final Page<OnlineShopRelPosVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> relationshipRepository.listShopPosRelsByOption(onlineShopId, pos));
         return Results.success(list);
@@ -103,9 +104,9 @@ public class OnlineShopRelPosController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @PostMapping("/online-shops/reset-is-inv-calculated")
     public ResponseEntity<?> resetIsInvCalculated(
+            @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
             @RequestParam("onlineShopCode") final String onlineShopCode,
-            @RequestParam("posCode") final String posCode,
-            @RequestParam("tenantId") final Long tenantId) {
+            @RequestParam("posCode") final String posCode) {
         if (StringUtils.isEmpty(onlineShopCode) && StringUtils.isEmpty(posCode)) {
             return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_POS_CODE_IS_NULL), HttpStatus.OK);
         }
@@ -113,6 +114,6 @@ public class OnlineShopRelPosController extends BaseController {
         if (StringUtils.isNotEmpty(onlineShopCode) && StringUtils.isNotEmpty(posCode)) {
             return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_POS_CODE_IS_NULL), HttpStatus.OK);
         }
-        return Results.success(onlineShopRelPosService.resetIsInvCalculated(onlineShopCode, posCode,tenantId));
+        return Results.success(onlineShopRelPosService.resetIsInvCalculated(onlineShopCode, posCode,organizationId));
     }
 }

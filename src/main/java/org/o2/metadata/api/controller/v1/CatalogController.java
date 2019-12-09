@@ -9,6 +9,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -36,8 +37,9 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "版本列表")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping
-    public ResponseEntity<?> list(Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        catalog.setTenantId(organizationId);
         Page<Catalog> list = catalogRepository.pageAndSort(pageRequest, catalog);
         return Results.success(list);
     }
@@ -53,7 +55,8 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "创建版本")
     @Permission(level = ResourceLevel.SITE)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Catalog catalog) {
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+        catalog.setTenantId(organizationId);
         catalogRepository.insertSelective(catalog);
         return Results.success(catalog);
     }
@@ -61,8 +64,9 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "修改版本")
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Catalog catalog) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         SecurityTokenHelper.validToken(catalog);
+        catalog.setTenantId(organizationId);
         catalogRepository.updateByPrimaryKeySelective(catalog);
         return Results.success(catalog);
     }
@@ -70,7 +74,8 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "删除版本")
     @Permission(level = ResourceLevel.SITE)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody Catalog catalog) {
+    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+        catalog.setTenantId(organizationId);
         SecurityTokenHelper.validToken(catalog);
         catalogRepository.deleteByPrimaryKey(catalog);
         return Results.success();
@@ -79,9 +84,9 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "更据版本编码获取版本主键")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/catalogId-achieve")
-    public ResponseEntity<?> achieveCatalogId(@RequestParam(value = "catalogCode") String catalogCode, @RequestParam(value = "tenantId") Long tenantId) {
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogCode).tenantId(tenantId).build());
-        Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + catalogCode + "or tenantId:" + tenantId);
+    public ResponseEntity<?> achieveCatalogId(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "catalogCode") String catalogCode) {
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogCode).tenantId(organizationId).build());
+        Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + catalogCode + "or organizationId:" + organizationId);
         return Results.success(catalog.getCatalogId());
     }
 

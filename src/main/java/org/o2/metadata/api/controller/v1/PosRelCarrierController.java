@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -10,6 +9,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -17,7 +17,6 @@ import org.o2.metadata.app.service.PosRelCarrierService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.PosRelCarrier;
 import org.o2.metadata.domain.repository.PosRelCarrierRepository;
-import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -45,9 +44,9 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "服务点关联承运商列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
             direction = Sort.Direction.ASC) final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != posRelCarrier.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        posRelCarrier.setTenantId(organizationId);
         final Page<PosRelCarrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> posRelCarrierRepository.listCarrierWithPos(posRelCarrier));
         return Results.success(list);
@@ -64,16 +63,17 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量创建或更新服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final List<PosRelCarrier> posRelCarriers) {
-        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(posRelCarriers);
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<PosRelCarrier> posRelCarriers) {
+        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(organizationId,posRelCarriers);
         return Results.success(resultList);
     }
 
     @ApiOperation(value = "修改服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody final PosRelCarrier posRelCarrier) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final PosRelCarrier posRelCarrier) {
         SecurityTokenHelper.validToken(posRelCarrier);
+        posRelCarrier.setTenantId(organizationId);
         posRelCarrierRepository.updateByPrimaryKeySelective(posRelCarrier);
         return Results.success(posRelCarrier);
     }

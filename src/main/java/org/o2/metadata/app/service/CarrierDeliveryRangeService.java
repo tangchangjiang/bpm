@@ -14,7 +14,8 @@ public interface CarrierDeliveryRangeService {
      * 批量新增或更新承运商送达范围
      *
      * @param carrierDeliveryRanges 承运商送达范围
+     * @param organizationId        租户ID
      * @return 结果集
      */
-    List<CarrierDeliveryRange> batchMerge(List<CarrierDeliveryRange> carrierDeliveryRanges);
+    List<CarrierDeliveryRange> batchMerge(Long organizationId, List<CarrierDeliveryRange> carrierDeliveryRanges);
 }

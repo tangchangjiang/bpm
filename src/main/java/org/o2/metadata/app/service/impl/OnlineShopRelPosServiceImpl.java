@@ -48,8 +48,9 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
     }
 
     @Override
-    public List<OnlineShopRelPos> batchInsertSelective(final List<OnlineShopRelPos> relationships) {
+    public List<OnlineShopRelPos> batchInsertSelective(Long organizationId,final List<OnlineShopRelPos> relationships) {
         relationships.forEach(relationship -> {
+            relationship.setTenantId(organizationId);
             Assert.isTrue(!relationship.exist(onlineShopRelPosRepository), BaseConstants.ErrorCode.DATA_EXISTS);
             relationship.baseValidate(onlineShopRepository, posRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
@@ -58,8 +59,9 @@ public class OnlineShopRelPosServiceImpl implements OnlineShopRelPosService {
     }
 
     @Override
-    public List<OnlineShopRelPos> batchUpdateByPrimaryKey(final List<OnlineShopRelPos> relationships) {
+    public List<OnlineShopRelPos> batchUpdateByPrimaryKey(Long organizationId,final List<OnlineShopRelPos> relationships) {
         relationships.forEach(relationship -> {
+            relationship.setTenantId(organizationId);
             Assert.isTrue(relationship.exist(onlineShopRelPosRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             relationship.baseValidate(onlineShopRepository, posRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));

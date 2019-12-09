@@ -27,12 +27,13 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
     }
 
     @Override
-    public List<CarrierDeliveryRange> batchMerge(final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public List<CarrierDeliveryRange> batchMerge(Long organizationId,final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         final Map<String, Object> map = new HashMap<>(carrierDeliveryRanges.size());
         final List<CarrierDeliveryRange> updateList = new ArrayList<>();
         final List<CarrierDeliveryRange> insertList = new ArrayList<>();
         for (int i = 0; i < carrierDeliveryRanges.size(); i++) {
             final CarrierDeliveryRange carrierDeliveryRange = carrierDeliveryRanges.get(i);
+            carrierDeliveryRange.setTenantId(organizationId);
             carrierDeliveryRange.baseValidate();
             // 数据库查重
             Assert.isTrue(!carrierDeliveryRange.exist(carrierDeliveryRangeRepository), "该省市区范围内已有承运商");

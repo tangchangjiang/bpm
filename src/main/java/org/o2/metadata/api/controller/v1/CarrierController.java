@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -9,6 +8,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -21,7 +21,6 @@ import org.o2.metadata.domain.entity.Carrier;
 import org.o2.metadata.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.domain.repository.CarrierRepository;
-import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,9 +51,9 @@ public class CarrierController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/page-list")
-    public ResponseEntity<?> list(final Carrier carrier, @ApiIgnore @SortDefault(
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final Carrier carrier, @ApiIgnore @SortDefault(
             value = Carrier.FIELD_CARRIER_NAME) final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != carrier.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        carrier.setTenantId(organizationId);
         final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierRepository.listCarrier(carrier));
         return Results.success(list);
@@ -72,27 +71,27 @@ public class CarrierController extends BaseController {
     @ApiOperation(value = "批量新增或修改承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> batchMerge(@RequestBody final List<Carrier> carrierList) {
-
-        final List<Carrier> insertResult = carrierService.batchMerge(carrierList);
+    public ResponseEntity<?> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
+        final List<Carrier> insertResult = carrierService.batchMerge(organizationId, carrierList);
         return Results.success(insertResult);
     }
 
     @ApiOperation(value = "批量修改承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> batchUpdate(@RequestBody final List<Carrier> carrierList) {
+    public ResponseEntity<?> batchUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
         SecurityTokenHelper.validToken(carrierList);
-        final List<Carrier> insertResult = carrierService.batchUpdate(carrierList);
+        final List<Carrier> insertResult = carrierService.batchUpdate(organizationId, carrierList);
         return Results.success(insertResult);
     }
 
     @ApiOperation(value = "批量删除承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<Carrier> carrierList) {
+    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
         SecurityTokenHelper.validToken(carrierList);
         for (final Carrier carrier : carrierList) {
+            carrier.setTenantId(organizationId);
             if (carrier.getCarrierId() != null) {
                 final List<CarrierDeliveryRange> list = carrierDeliveryRangeRepository.select(
                         CarrierDeliveryRange.FIELD_CARRIER_ID, carrier.getCarrierId());

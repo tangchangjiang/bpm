@@ -28,8 +28,9 @@ public interface CountryService {
      * 批量禁用国家定义
      *
      * @param countryList 国家定义信息列表
+     * @param organizationId 租户ID
      * @return 禁用后国家定义信息列表
      */
-    List<Country> batchDisableCountry(List<Country> countryList);
+    List<Country> batchDisableCountry(Long organizationId,List<Country> countryList);
 
 }

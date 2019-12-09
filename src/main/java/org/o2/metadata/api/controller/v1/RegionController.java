@@ -1,10 +1,10 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -14,7 +14,6 @@ import org.o2.metadata.app.service.RegionService;
 import org.o2.metadata.config.MetadataSwagger;
 import org.o2.metadata.domain.entity.Region;
 import org.o2.metadata.domain.repository.RegionRepository;
-import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,48 +40,48 @@ public class RegionController extends BaseController {
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> treeRegionWithParent(@RequestParam(value = "countryIdOrCode")final String countryIdOrCode,
-                                                  @RequestParam(value = "tenantId") final Long tenantId,
+    public ResponseEntity<?> treeRegionWithParent(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestParam(value = "countryIdOrCode")final String countryIdOrCode,
                                                   @RequestParam(required = false) final String condition,
                                                   @RequestParam(required = false) final Integer enabledFlag) {
-        return Results.success(regionService.treeRegionWithParent(countryIdOrCode, condition, enabledFlag,tenantId));
+        return Results.success(regionService.treeRegionWithParent(countryIdOrCode, condition, enabledFlag,organizationId));
     }
 
     @ApiOperation("查询国家/地区下的有效地区列表")
     @GetMapping("/valid")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> listValidRegions(@RequestParam(required = false,value = "countryIdOrCode") final String countryIdOrCode,
-                                              @RequestParam(required = false,value = "regionId") final Long regionId,
-                                              @RequestParam(value = "tenantId") final Long tenantId) {
+    public ResponseEntity<?> listValidRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                              @RequestParam(required = false,value = "countryIdOrCode") final String countryIdOrCode,
+                                              @RequestParam(required = false,value = "regionId") final Long regionId) {
         if (countryIdOrCode == null && regionId == null) {
             return Results.success(Collections.emptyList());
         }
-        return Results.success(regionRepository.listChildren(countryIdOrCode, regionId, 1,tenantId));
+        return Results.success(regionRepository.listChildren(countryIdOrCode, regionId, 1,organizationId));
     }
 
     @ApiOperation("查询国家/地区下的地区列表")
     @GetMapping("/all")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> listAllRegions(@RequestParam(required = false) final String countryIdOrCode,
+    public ResponseEntity<?> listAllRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            @RequestParam(required = false) final String countryIdOrCode,
                                             @RequestParam(required = false) final Long regionId,
-                                            @RequestParam(required = false) final Integer enabledFlag,
-                                            @RequestParam(value = "tenantId") final Long tenantId) {
+                                            @RequestParam(required = false) final Integer enabledFlag) {
         if (countryIdOrCode == null && regionId == null) {
             return Results.success(Collections.emptyList());
         }
-        return Results.success(regionRepository.listChildren(countryIdOrCode, regionId, enabledFlag,tenantId));
+        return Results.success(regionRepository.listChildren(countryIdOrCode, regionId, enabledFlag,organizationId));
     }
 
     @ApiOperation("查询大区下的省份")
     @GetMapping("/area")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> listAreaRegions(@RequestParam final String countryIdOrCode,
-                                             @RequestParam(required = false) final Integer enabledFlag,
-                                             @RequestParam(value = "tenantId") final Long tenantId) {
-        return Results.success(regionService.listAreaRegion(countryIdOrCode, enabledFlag,tenantId));
+    public ResponseEntity<?> listAreaRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                             @RequestParam final String countryIdOrCode,
+                                             @RequestParam(required = false) final Integer enabledFlag) {
+        return Results.success(regionService.listAreaRegion(countryIdOrCode, enabledFlag,organizationId));
     }
 
     @ApiOperation("根据ID查询指定地区")
@@ -97,38 +96,39 @@ public class RegionController extends BaseController {
     @GetMapping("/query-by-code")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> queryRegionByCode(@RequestParam final String regionCode,
-                                               @RequestParam(value = "tenantId") final Long tenantId) {
+    public ResponseEntity<?> queryRegionByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                               @RequestParam final String regionCode) {
         final Region region = new Region();
         region.setRegionCode(regionCode);
-        region.setTenantId(tenantId);
+        region.setTenantId(organizationId);
         return Results.success(regionRepository.selectOne(region));
     }
 
     @ApiOperation("新增地区定义")
     @PostMapping
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> createRegion(@RequestBody final Region region) {
+    public ResponseEntity<?> createRegion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Region region) {
         this.validObject(region);
-        Preconditions.checkArgument(null != region.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        region.setTenantId(organizationId);
         return Results.success(regionService.createRegion(region));
     }
 
     @ApiOperation("更新地区定义")
     @PutMapping
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> updateRegion(@RequestBody final Region region) {
+    public ResponseEntity<?> updateRegion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Region region) {
         SecurityTokenHelper.validToken(region);
         this.validObject(region);
+        region.setTenantId(organizationId);
         return ResponseEntity.ok(regionService.updateRegion(region));
     }
 
     @ApiOperation("禁用/启用地区定义，影响下级")
     @PatchMapping("/disable-or-enable")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> disableOrEnableRegion(@RequestBody final Region region) {
+    public ResponseEntity<?> disableOrEnableRegion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Region region) {
         SecurityTokenHelper.validToken(region);
-        Preconditions.checkArgument(null != region.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        region.setTenantId(organizationId);
         return ResponseEntity.ok(regionService.disableOrEnable(region));
     }
 }

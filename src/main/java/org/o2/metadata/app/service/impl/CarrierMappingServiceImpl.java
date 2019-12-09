@@ -31,11 +31,12 @@ public class CarrierMappingServiceImpl implements CarrierMappingService {
     }
 
     @Override
-    public Map<String, Object> insertAll(List<CarrierMapping> carrierMappings) {
+    public Map<String, Object> insertAll(Long organizationId,List<CarrierMapping> carrierMappings) {
         final Map<String, Object> resultMap = new HashMap<>(1);
         int j = 0;
         for (int i = 0; i < carrierMappings.size(); i++) {
             CarrierMapping carrierMapping = carrierMappings.get(i);
+            carrierMapping.setTenantId(organizationId);
             // 非空字段校验
             carrierMapping.baseValidate();
             Catalog catalog = catalogMapper.selectOne(Catalog.builder().catalogCode(carrierMapping.getCatalogCode()).tenantId(carrierMapping.getTenantId()).build());

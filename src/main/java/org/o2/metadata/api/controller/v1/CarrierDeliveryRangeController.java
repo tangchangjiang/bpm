@@ -9,6 +9,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -45,9 +46,10 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "承运商送达范围列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-list")
-    public ResponseEntity<?> list(final CarrierDeliveryRange carrierDeliveryRange,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierDeliveryRange carrierDeliveryRange,
                                   @ApiIgnore @SortDefault(value = CarrierDeliveryRange.FIELD_DELIVERY_RANGE_ID,
                                           direction = Sort.Direction.DESC) final PageRequest pageRequest) {
+        carrierDeliveryRange.setTenantId(organizationId);
         final Page<CarrierDeliveryRange> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierDeliveryRangeRepository.list(carrierDeliveryRange));
         return Results.success(list);
@@ -63,8 +65,8 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量创建或新增承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> batchMerge(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
-        final List<CarrierDeliveryRange> resultList = carrierDeliveryRangeService.batchMerge(carrierDeliveryRanges);
+    public ResponseEntity<?> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+        final List<CarrierDeliveryRange> resultList = carrierDeliveryRangeService.batchMerge(organizationId, carrierDeliveryRanges);
         return Results.success(resultList);
     }
 

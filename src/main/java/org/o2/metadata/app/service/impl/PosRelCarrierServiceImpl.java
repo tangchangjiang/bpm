@@ -27,13 +27,14 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
     }
 
     @Override
-    public List<PosRelCarrier> batchMerge(final List<PosRelCarrier> posRelCarriers) {
+    public List<PosRelCarrier> batchMerge(Long organizationId,final List<PosRelCarrier> posRelCarriers) {
         final Map<String, Object> map = new HashMap<>(posRelCarriers.size());
         final List<PosRelCarrier> updateList = new ArrayList<>();
         final List<PosRelCarrier> insertList = new ArrayList<>();
         Integer updateIndex = null;
         for (int i = 0; i < posRelCarriers.size(); i++) {
             final PosRelCarrier posRelCarrier = posRelCarriers.get(i);
+            posRelCarrier.setTenantId(organizationId);
             posRelCarrier.baseValidate();
             // 数据库查重
             final int isExist = posRelCarrierRepository.isExist(posRelCarrier);

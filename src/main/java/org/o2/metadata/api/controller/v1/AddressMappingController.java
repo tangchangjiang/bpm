@@ -6,6 +6,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -58,8 +59,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "地址匹配列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity<?> listAllAddressMappings(final AddressMapping condition, final String countryCode) {
-        Preconditions.checkArgument(null != condition.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final AddressMapping condition, final String countryCode) {
+        condition.setTenantId(organizationId);
         if (BasicDataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
@@ -112,7 +113,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "创建地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> createAddressMapping(@RequestBody AddressMapping addressMapping) {
+    public ResponseEntity<?> createAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody AddressMapping addressMapping) {
+        addressMapping.setTenantId(organizationId);
         if (addressMapping.exist(addressMappingRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
@@ -132,8 +134,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "修改地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateAddressMapping(@RequestBody final AddressMapping addressMapping) {
-        Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
+        addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         if (!addressMapping.exist(addressMappingRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
@@ -145,8 +147,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "删除地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> deleteAddressMapping(@RequestBody final AddressMapping addressMapping) {
-        Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
+        addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
         return Results.success();

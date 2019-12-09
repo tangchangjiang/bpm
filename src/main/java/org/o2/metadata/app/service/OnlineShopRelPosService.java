@@ -19,9 +19,10 @@ public interface OnlineShopRelPosService {
      * </p>
      *
      * @param relationships 待创建关联关系
+     * @param organizationId 租户ID
      * @return 成功后返回新列表
      */
-    List<OnlineShopRelPos> batchInsertSelective(List<OnlineShopRelPos> relationships);
+    List<OnlineShopRelPos> batchInsertSelective(Long organizationId,List<OnlineShopRelPos> relationships);
 
 
     /**
@@ -32,9 +33,10 @@ public interface OnlineShopRelPosService {
      * </p>
      *
      * @param relationships 待更新关联关系
+     * @param organizationId 租户ID
      * @return 更新后的列表
      */
-    List<OnlineShopRelPos> batchUpdateByPrimaryKey(List<OnlineShopRelPos> relationships);
+    List<OnlineShopRelPos> batchUpdateByPrimaryKey(Long organizationId,List<OnlineShopRelPos> relationships);
 
 
     /**

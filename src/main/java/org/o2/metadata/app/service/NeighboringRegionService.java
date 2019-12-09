@@ -15,9 +15,10 @@ public interface NeighboringRegionService {
      * 添加临近省
      *
      * @param neighboringRegions 临近省数据
+     * @param organizationId 租户ID
      * @return 临近省集合
      */
-    List<NeighboringRegion> batchInsert(List<NeighboringRegion> neighboringRegions);
+    List<NeighboringRegion> batchInsert(Long organizationId,List<NeighboringRegion> neighboringRegions);
 
     /**
      * 分页查询临近省

@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -9,6 +8,7 @@ import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -18,7 +18,6 @@ import org.o2.metadata.domain.entity.Country;
 import org.o2.metadata.domain.entity.Region;
 import org.o2.metadata.domain.repository.CountryRepository;
 import org.o2.metadata.domain.repository.RegionRepository;
-import org.o2.metadata.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +56,9 @@ public class CountryController extends BaseController {
     @GetMapping
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> pageListCountries(final Country country,
+    public ResponseEntity<?> pageListCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final Country country,
                                                @ApiIgnore @SortDefault(value = Country.FIELD_COUNTRY_ID) final PageRequest pageRequest) {
-        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        country.setTenantId(organizationId);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> countryRepository.select(country)));
     }
 
@@ -67,8 +66,8 @@ public class CountryController extends BaseController {
     @GetMapping("/all")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> listAllCountries(final Country country) {
-        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> listAllCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final Country country) {
+        country.setTenantId(organizationId);
         return ResponseEntity.ok(countryRepository.select(country));
     }
 
@@ -76,8 +75,8 @@ public class CountryController extends BaseController {
     @GetMapping("/valid")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> listValidCountries(final Country country) {
-        Preconditions.checkArgument(null != country.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity<?> listValidCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final Country country) {
+        country.setTenantId(organizationId);
         country.setEnabledFlag(1);
         return ResponseEntity.ok(countryRepository.select(country));
     }
@@ -93,9 +92,8 @@ public class CountryController extends BaseController {
     @GetMapping("/query-by-code")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> getCountryByCode(@RequestParam final String countryCode,@RequestParam(value = "tenantId") Long tenantId) {
-        Preconditions.checkArgument(null != tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-        return Results.success(countryRepository.selectOne(Country.builder().countryCode(countryCode).tenantId(tenantId).build()));
+    public ResponseEntity<?> getCountryByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestParam final String countryCode) {
+        return Results.success(countryRepository.selectOne(Country.builder().countryCode(countryCode).tenantId(organizationId).build()));
     }
 
     @ApiOperation("根据regionId查询国家")
@@ -116,7 +114,8 @@ public class CountryController extends BaseController {
     @ApiOperation("新增国家定义")
     @PostMapping
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> createCountry(@RequestBody final Country country) {
+    public ResponseEntity<?> createCountry(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Country country) {
+        country.setTenantId(organizationId);
         this.validObject(country);
         return ResponseEntity.status(HttpStatus.CREATED).body(countryService.createCountry(country));
     }
@@ -124,8 +123,9 @@ public class CountryController extends BaseController {
     @ApiOperation("更新国家定义")
     @PutMapping
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> updateCountry(@RequestBody final Country country) {
+    public ResponseEntity<?> updateCountry(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Country country) {
         SecurityTokenHelper.validToken(country);
+        country.setTenantId(organizationId);
         this.validObject(country);
         return ResponseEntity.ok(countryService.updateCountry(country));
     }
@@ -133,10 +133,10 @@ public class CountryController extends BaseController {
     @ApiOperation("批量禁用国家定义")
     @PatchMapping("/batch-disable")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity batchDisableCountry(@RequestBody final List<Country> countryList) {
+    public ResponseEntity batchDisableCountry(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<Country> countryList) {
         SecurityTokenHelper.validToken(countryList);
         if (!CollectionUtils.isEmpty(countryList)) {
-            return ResponseEntity.ok(countryService.batchDisableCountry(countryList));
+            return ResponseEntity.ok(countryService.batchDisableCountry(organizationId,countryList));
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -48,16 +48,17 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity listOnlineShopsByOptions(final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
+    public ResponseEntity listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
+        condition.setTenantId(organizationId);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectByCondition(condition)));
     }
 
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity listAllActiveShops(@PathVariable Long tenantId) {
+    public ResponseEntity listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         OnlineShop onlineShop = new OnlineShop();
-        onlineShop.setTenantId(tenantId);
+        onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
         return Results.success(onlineShopRepository.select(onlineShop));
     }
@@ -65,8 +66,8 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity listAllShops(final OnlineShop onlineShop) {
-        Preconditions.checkArgument(null != onlineShop.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+    public ResponseEntity listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop onlineShop) {
+        onlineShop.setTenantId(organizationId);
         return Results.success(onlineShopRepository.select(onlineShop));
     }
 
@@ -82,10 +83,10 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity createOnlineShop(@ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
         Preconditions.checkArgument(null != onlineShop.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
-        Preconditions.checkArgument(null != onlineShop.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         if (onlineShop.exist(onlineShopRepository)) {
@@ -103,8 +104,9 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity updateOnlineShop(@RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final OnlineShop onlineShop) {
         SecurityTokenHelper.validToken(onlineShop);
+        onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         onlineShop.validate(onlineShopRepository);
@@ -113,7 +115,7 @@ public class OnlineShopController extends BaseController {
         }
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         //触发网店关联服务点更新
-        onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null,onlineShop.getTenantId());
+        onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
         return Results.success(result);
     }
 
