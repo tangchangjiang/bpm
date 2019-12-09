@@ -10,7 +10,6 @@
         <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
         <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
         <result column="open_date" property="openDate" jdbcType="DATE"/>
-        <result column="carrier_assign" property="carrierAssign" jdbcType="VARCHAR"/>
         <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
         <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
         <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
@@ -145,7 +144,6 @@
             p.pos_type_code,
             p.business_type_code,
             p.open_date,
-            p.carrier_assign,
             p.address_id,
             p.business_time,
             p.picked_up_flag,
@@ -160,7 +158,6 @@
             c.carrier_name
         FROM
             o2md_pos AS p
-                LEFT JOIN o2md_carrier c ON p.carrier_assign = c.carrier_id
         where p.pos_id = #{posId}
     </select>
 </mapper>

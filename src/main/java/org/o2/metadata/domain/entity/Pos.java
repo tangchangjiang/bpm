@@ -49,7 +49,6 @@ public class Pos extends AuditDomain {
     public static final String FIELD_POS_TYPE_CODE = "posTypeCode";
     public static final String FIELD_BUSINESS_TYPE_CODE = "businessTypeCode";
     public static final String FIELD_OPEN_DATE = "openDate";
-    public static final String FIELD_CARRIER_ASSIGN = "carrierAssign";
     public static final String FIELD_ADDRESS_ID = "posAddressId";
     public static final String FIELD_BUSINESS_TIME = "businessTime";
     public static final String FIELD_ENABLE_PICKED_UP = "pickedUpFlag";
@@ -219,7 +218,4 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "组织ID", hidden = true)
     private Long tenantId;
 
-    @ApiModelProperty(value = "默认承运商.code")
-    @Size(max = 255)
-    private String carrierAssign;
 }
