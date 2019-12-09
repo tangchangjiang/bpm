@@ -32,22 +32,22 @@ public class PosContextImpl implements IPosContext {
 
     @Override
     public void saveExpressQuantity(final String posCode, final String expressQuantity,Long tenantId) {
-        executeScript(posCode, expressQuantity, EXPRESS_LIMIT_CACHE_LUA);
+        executeScript(posCode, expressQuantity,tenantId, EXPRESS_LIMIT_CACHE_LUA);
     }
 
     @Override
     public void savePickUpQuantity(final String posCode, final String pickUpQuantity,Long tenantId) {
-        executeScript(posCode, pickUpQuantity, PICK_UP_LIMIT_CACHE_LUA);
+        executeScript(posCode, pickUpQuantity,tenantId, PICK_UP_LIMIT_CACHE_LUA);
     }
 
     @Override
     public void updateExpressValue(final String posCode, final String increment,Long tenantId) {
-        executeScript(posCode, increment, EXPRESS_VALUE_CACHE_LUA);
+        executeScript(posCode, increment,tenantId, EXPRESS_VALUE_CACHE_LUA);
     }
 
     @Override
     public void updatePickUpValue(final String posCode, final String increment,Long tenantId) {
-        executeScript(posCode, increment, PICK_UP_VALUE_CACHE_LUA);
+        executeScript(posCode, increment,tenantId, PICK_UP_VALUE_CACHE_LUA);
     }
 
     @Override
@@ -109,24 +109,24 @@ public class PosContextImpl implements IPosContext {
 
     @Override
     public void resetPosExpressLimit(final String posCode,Long tenantId) {
-        executeScript(posCode, EXPRESS_VALUE_CACHE_RESET_LUA);
+        executeScript(posCode,tenantId, EXPRESS_VALUE_CACHE_RESET_LUA);
     }
 
     @Override
     public void resetPosPickUpLimit(final String posCode,Long tenantId) {
-        executeScript(posCode, PICK_UP_VALUE_CACHE_RESET_LUA);
+        executeScript(posCode,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
     }
 
-    private void executeScript(final String posCode, final String num, final ScriptSource scriptSource) {
+    private void executeScript(final String posCode, final String num,final Long tenantId,  final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), posCode, num);
+        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), posCode, num,tenantId);
     }
 
-    private void executeScript(final String posCode, final ScriptSource scriptSource) {
+    private void executeScript(final String posCode,final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), posCode);
+        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), posCode,tenantId);
     }
 
     private static final ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
