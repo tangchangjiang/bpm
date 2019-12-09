@@ -30,7 +30,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("posRelCarrierController.v1")
-@RequestMapping("/v1/{tenantId}/pos-rel-carriers")
+@RequestMapping("/v1/{organizationId}/pos-rel-carriers")
 @Api(tags = MetadataSwagger.POS_REL_CARRIER)
 public class PosRelCarrierController extends BaseController {
     private final PosRelCarrierRepository posRelCarrierRepository;

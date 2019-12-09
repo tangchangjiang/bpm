@@ -36,7 +36,7 @@ import java.util.List;
  */
 
 @RestController("onlineShopRelPosController.v1")
-@RequestMapping("/v1/{tenantId}")
+@RequestMapping("/v1/{organizationId}")
 @Api(tags = MetadataSwagger.ONLINE_SHOP_POS_REL)
 public class OnlineShopRelPosController extends BaseController {
 

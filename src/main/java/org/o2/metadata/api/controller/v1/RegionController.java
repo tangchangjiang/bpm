@@ -28,7 +28,7 @@ import java.util.Collections;
  */
 
 @RestController("regionController.v1")
-@RequestMapping("/v1/{tenantId}/regions")
+@RequestMapping("/v1/{organizationId}/regions")
 @Api(tags = MetadataSwagger.REGION)
 public class RegionController extends BaseController {
 

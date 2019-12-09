@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 @RestController("sysParameterSettingController.v1")
-@RequestMapping("/v1/{tenantId}/sys-parameter-settings")
+@RequestMapping("/v1/{organizationId}/sys-parameter-settings")
 @Api(tags = MetadataSwagger.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
 

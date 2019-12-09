@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author peng.xu@hand-china.com 2019-07-09
  */
 @RestController("platformUomController.v1")
-@RequestMapping("/v1/platform-uom")
+@RequestMapping("/v1/{organizationId}/platform-uom")
 @Api(tags = MetadataSwagger.PLATFORM_UOM)
 public class PlatformUomController extends BaseController {
 

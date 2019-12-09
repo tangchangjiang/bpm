@@ -34,7 +34,7 @@ import java.util.Map;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("carrierMappingController.v1")
-@RequestMapping("/v1/{tenantId}/carrier-mappings")
+@RequestMapping("/v1/{organizationId}/carrier-mappings")
 @Api(tags = MetadataSwagger.CARRIER_MAPPING)
 public class CarrierMappingController extends BaseController {
     private final CarrierMappingRepository carrierMappingRepository;

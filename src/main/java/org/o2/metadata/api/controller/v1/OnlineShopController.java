@@ -32,7 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RestController("onlineShopController.v1")
-@RequestMapping("/v1/{tenantId}/online-shops")
+@RequestMapping("/v1/{organizationId}/online-shops")
 @Api(tags = MetadataSwagger.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;

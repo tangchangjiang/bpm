@@ -39,7 +39,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("addressMappingController.v1")
-@RequestMapping("/v1/{tenantId}/address-mappings")
+@RequestMapping("/v1/{organizationId}/address-mappings")
 @Api(tags = MetadataSwagger.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     @Autowired

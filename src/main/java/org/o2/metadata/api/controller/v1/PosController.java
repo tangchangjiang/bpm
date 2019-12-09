@@ -34,7 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RestController("posController.v1")
-@RequestMapping("/v1/{tenantId}/poses")
+@RequestMapping("/v1/{organizationId}/poses")
 @Api(tags = MetadataSwagger.POS)
 public class PosController extends BaseController {
     private final PosRepository posRepository;

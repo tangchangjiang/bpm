@@ -27,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("onlineShopInfAuthController.v1")
-@RequestMapping("/v1/{tenantId}/online-shop-inf-auths")
+@RequestMapping("/v1/{organizationId}/online-shop-inf-auths")
 @Api(tags = MetadataSwagger.ONLINE_SHOP_INF_AUTH)
 public class OnlineShopInfAuthController extends BaseController {
 

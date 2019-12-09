@@ -25,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @RestController("detailedAddressController.v1")
-@RequestMapping("/v1/{tenantId}/pos-address")
+@RequestMapping("/v1/{organizationId}/pos-address")
 @Api(tags = MetadataSwagger.POS_ADDRESS)
 public class PosAddressController extends BaseController {
     private final PosAddressRepository posAddressRepository;

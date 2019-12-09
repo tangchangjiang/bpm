@@ -36,7 +36,7 @@ import java.util.List;
  */
 
 @RestController("countryController.v1")
-@RequestMapping("/v1/{tenantId}/countries")
+@RequestMapping("/v1/{organizationId}/countries")
 @Api(tags = MetadataSwagger.COUNTRY)
 public class CountryController extends BaseController {
 
