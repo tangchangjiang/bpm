@@ -30,6 +30,7 @@ public interface PosMapper extends BaseMapper<Pos> {
      * @param onlineShopId 网店 id
      * @param posCode
      * @param posName
+     * @param tenantId
      * @return 服务点列表
      */
     List<Pos> listUnbindPosList(@Param(value = "onlineShopId") Long onlineShopId,
