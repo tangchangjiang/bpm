@@ -50,6 +50,7 @@ public class SysParameter extends AuditDomain {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "SysParameter(" + this.parameterCode + ")");
         }
     }
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
