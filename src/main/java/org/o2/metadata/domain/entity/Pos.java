@@ -162,7 +162,7 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "门店自提")
     @NotNull
-    @Column(name = "is_enable_picked_up")
+    @Column(name = "picked_up_flag")
     @Range(min = 0, max = 1)
     private Integer pickedUpFlag;
 

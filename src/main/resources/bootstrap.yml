@@ -4,7 +4,7 @@ o2:
     path: /o2md/**
 
 server:
-  port: 9100
+  port: 9102
   undertow:
     # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接
     # 默认值为8，建议设置每个CPU核心一个线程
@@ -23,7 +23,7 @@ server:
     max-http-post-size: 10485760
 management:
   server:
-    port: 9101
+    port: 9103
   endpoints:
     web:
       exposure:
