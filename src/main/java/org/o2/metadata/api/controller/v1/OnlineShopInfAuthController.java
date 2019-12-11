@@ -51,9 +51,9 @@ public class OnlineShopInfAuthController extends BaseController {
 
     @ApiOperation(value = "网店接口表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{onlineShopInfAuthId}")
-    public ResponseEntity<?> detail(@PathVariable final Long onlineShopInfAuthId) {
-        return Results.success(onlineShopInfAuthRepository.listOnlineShopInfAuthByOption(onlineShopInfAuthId));
+    @GetMapping("/{onlineShopId}")
+    public ResponseEntity<?> detail(@PathVariable final Long onlineShopId) {
+        return Results.success(onlineShopInfAuthRepository.listOnlineShopInfAuthByOption(onlineShopId));
     }
 
     @ApiOperation(value = "创建网店接口表")
