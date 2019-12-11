@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.core.infra.mapper.RegionMapper">
+
+    <resultMap id="listOfRegionMap" type="org.o2.metadata.core.domain.entity.Region">
+        <id column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
+        <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
+        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
+        <result column="parent_region_id" property="parentRegionId" jdbcType="DECIMAL"/>
+        <result column="level_path" property="levelPath" jdbcType="VARCHAR"/>
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <select id="listChildren" resultType="org.o2.metadata.core.domain.vo.RegionVO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        hr.region_id,
+        hr.country_id,
+        hr.region_code,
+        hrt.region_name,
+        hr.parent_region_id,
+        hr.enabled_flag,
+        hr.area_code,
+        hr.object_version_number,
+        (select count(1) from o2md_region t where t.parent_region_id=hr.region_id) children_count
+        from o2md_region hr
+        join o2md_country oc on hr.country_id=oc.country_id
+        left join o2md_region_tl hrt on hrt.region_id = hr.region_id and hrt.lang = #{lang}
+        where
+        1=1
+        <if test="countryIdOrCode != null">
+            and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        </if>
+        <if test="parentRegionId != null">
+            and hr.parent_region_id = #{parentRegionId}
+        </if>
+        <if test="parentRegionId == null">
+            and hr.parent_region_id is null
+        </if>
+        <if test="enabledFlag != null">
+            and hr.enabled_flag = #{enabledFlag}
+        </if>
+        <if test="tenantId != null">
+            and hr.tenant_id = #{tenantId}
+        </if>
+        order by hr.region_code
+    </select>
+    <select id="listRegionByLevelPath" resultType="org.o2.metadata.core.domain.entity.Region">
+        select
+        region_id,
+        enabled_flag
+        from o2md_region re
+        where re.level_path in
+        <foreach collection="levelPathList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        and re.tenant_id = #{tenantId}
+    </select>
+    <select id="listRegionChildrenByLevelPath" resultType="org.o2.metadata.core.domain.entity.Region">
+        select
+        region_id,
+        object_version_number
+        from o2md_region
+        <bind name="levelPath" value="levelPath + '%'"/>
+        where level_path like #{levelPath}
+        and re.tenant_id = #{tenantId}
+    </select>
+    <select id="selectRegion" resultType="org.o2.metadata.core.domain.entity.Region">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        hr.region_id,
+        hr.country_id,
+        hr.region_code,
+        hrt.region_name,
+        hr.parent_region_id,
+        hr.enabled_flag,
+        hr.level_path,
+        hr.area_code,
+        hr.object_version_number
+        FROM o2md_region hr
+        join o2md_country oc on hr.country_id=oc.country_id
+        left JOIN o2md_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
+        WHERE 1=1
+        and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        <if test="condition != null and condition != ''">
+            <bind name="condition" value="'%' + condition + '%'"/>
+            AND (hr.region_code LIKE #{condition} OR hr.region_name LIKE #{condition})
+        </if>
+        <if test="enabledFlag != null">
+            AND hr.enabled_flag = #{enabledFlag}
+        </if>
+        <if test="tenantId != null">
+            AND hr.tenant_id = #{tenantId}
+        </if>
+    </select>
+    <select id="selectRegionParent" resultType="org.o2.metadata.core.domain.entity.Region">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        hr.region_id,
+        hr.country_id,
+        hr.region_code,
+        hrt.region_name,
+        hr.parent_region_id,
+        hr.enabled_flag,
+        hr.level_path,
+        hr.area_code,
+        hr.object_version_number
+        FROM o2md_region hr
+        left JOIN o2md_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
+        WHERE
+        hr.region_id IN
+        <foreach collection="parentRegionIdList" item="parentRegionId" separator="," open="(" close=")">
+            #{parentRegionId}
+        </foreach>
+        <if test="enabledFlag != null">
+            AND hr.enabled_flag = #{enabledFlag}
+        </if>
+    </select>
+    <select id="findRegionByPrimaryKey" resultType="org.o2.metadata.core.domain.entity.Region">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        b.creation_date,
+        b.created_by,
+        b.last_update_date,
+        b.last_updated_by,
+        b.object_version_number,
+        b.region_id,
+        b.country_id,
+        b.region_code,
+        t.region_name,
+        b.parent_region_id,
+        b.level_path,
+        b.enabled_flag,
+        b.area_code
+        FROM
+        o2md_region b
+        LEFT JOIN o2md_region_tl t ON (
+        b.region_id = t.region_id
+        AND t.lang = #{lang}
+        )
+        WHERE
+        b.region_id = #{regionId}
+    </select>
+</mapper>

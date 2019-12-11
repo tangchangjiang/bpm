@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.core.infra.mapper.AddressMappingMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.AddressMapping">
+        <result column="address_mapping_id" property="addressMappingId" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="address_type_code" property="addressTypeCode" jdbcType="VARCHAR"/>
+        <result column="catalog_id" property="catalogId" jdbcType="VARCHAR"/>
+        <result column="external_code" property="externalCode" jdbcType="VARCHAR"/>
+        <result column="external_name" property="externalName" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <select id="findAddressMappingByCondition" resultType="org.o2.metadata.core.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.region_id,
+        ad.address_type_code,
+        ad.catalog_id,
+        ad.external_code,
+        ad.external_name,
+        ad.active_flag,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id,
+        c.level_path
+        FROM
+        o2md_address_mapping ad
+        left join o2md_region c ON ad.region_id = c.region_id
+        left join o2md_country co on c.country_id = co.country_id
+        WHERE
+        1=1
+        <if test="addressMapping.tenantId!=null and addressMapping.tenantId!=''">
+            AND ad.tenant_id = #{addressMapping.tenantId}
+        </if>
+        <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
+            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
+        </if>
+        <if test="addressMapping.addressMappingExName!=null and addressMapping.addressMappingExName!=''">
+            AND ad.external_name LIKE concat("%",concat(#{addressMapping.addressMappingExName}),"%")
+        </if>
+        <if test="addressMapping.regionName!=null and addressMapping.regionName!=''">
+            AND c.region_name LIKE concat("%",concat(#{addressMapping.regionName}),"%")
+        </if>
+        <if test="countryCode!=null and countryCode!=''">
+            AND co.country_code = #{countryCode}
+        </if>
+
+    </select>
+    <select id="findAddressMappingById" resultType="org.o2.metadata.core.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.address_type_code,
+        ad.catalog_id,
+        ad.external_code,
+        ad.external_name,
+        ad.active_flag,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_id,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id
+        FROM
+        o2md_region c LEFT JOIN o2md_address_mapping ad
+        ON ad.region_id = c.region_id
+        JOIN o2md_catalog ca
+        ON ca.catalog_id = ad.catalog_id
+        WHERE
+        1=1
+        AND c.region_id = #{id}
+        AND ca.catalog_code=#{type}
+    </select>
+    <select id="findAddressMappingByCode" resultType="org.o2.metadata.core.domain.vo.RegionTreeChildVO">
+        SELECT
+        ad.address_mapping_id,
+        ad.address_type_code,
+        ad.catalog_id,
+        ad.external_code,
+        ad.external_name,
+        ad.active_flag,
+        ad.OBJECT_VERSION_NUMBER,
+        c.region_id,
+        c.region_code,
+        c.region_name,
+        c.parent_region_id
+        FROM
+        o2md_region c LEFT JOIN o2md_address_mapping ad
+        ON ad.region_id = c.region_id
+        JOIN o2md_catalog ca
+        ON ca.catalog_id = ad.catalog_id
+        WHERE
+        1=1
+        AND c.region_code = #{regionCode}
+        AND ca.catalog_code=#{catalogCode}
+    </select>
+
+    <!--更据catalogCode和regionId查询地址匹配数量-->
+    <select id="queryAddressByCondition" resultType="org.o2.metadata.core.domain.entity.AddressMapping">
+        SELECT ad.*
+        FROM o2md_address_mapping ad
+        WHERE 1=1
+        <if test="catalogCode!=null and catalogCode!=''">
+            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
+        </if>
+        <if test="regionId!=null ">
+            AND ad.region_id = #{regionId}
+        </if>
+        <if test="tenantId!=null ">
+            AND ca.tenant_id = #{tenantId}
+        </if>
+
+    </select>
+
+
+</mapper>
