@@ -22,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 承运商匹配表
@@ -85,11 +86,11 @@ public class CarrierMapping extends AuditDomain {
 
     @ApiModelProperty(value = "归属电商平台,值集O2MD.PLATFORM_TYPE")
     @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
-    @NotBlank
+    @NotNull
     private Long catalogId;
 
     @ApiModelProperty(value = "承运商id")
-    @NotBlank
+    @NotNull
     private Long carrierId;
 
     @ApiModelProperty(value = "平台承运商编码")

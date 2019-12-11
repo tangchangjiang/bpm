@@ -24,7 +24,6 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = true)
 @VersionAudit
 @ModifyAudit
-@MultiLanguage
 @Table(name = "o2md_country")
 public class Country extends AuditDomain {
 
