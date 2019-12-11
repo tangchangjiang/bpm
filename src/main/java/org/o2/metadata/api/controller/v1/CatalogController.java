@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -81,13 +80,5 @@ public class CatalogController extends BaseController {
         return Results.success();
     }
 
-    @ApiOperation(value = "更据版本编码获取版本主键")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/catalogId-achieve")
-    public ResponseEntity<?> achieveCatalogId(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "catalogCode") String catalogCode) {
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogCode).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + catalogCode + "or organizationId:" + organizationId);
-        return Results.success(catalog.getCatalogId());
-    }
 
 }
