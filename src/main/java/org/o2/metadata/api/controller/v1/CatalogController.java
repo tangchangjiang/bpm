@@ -1,6 +1,5 @@
 package org.o2.metadata.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -35,7 +34,7 @@ public class CatalogController extends BaseController {
     private CatalogRepository catalogRepository;
 
     @ApiOperation(value = "版本列表")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
@@ -45,7 +44,7 @@ public class CatalogController extends BaseController {
     }
 
     @ApiOperation(value = "版本明细")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{catalogId}")
     public ResponseEntity<?> detail(@PathVariable Long catalogId) {
         Catalog catalog = catalogRepository.selectByPrimaryKey(catalogId);
@@ -53,7 +52,7 @@ public class CatalogController extends BaseController {
     }
 
     @ApiOperation(value = "创建版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
@@ -62,7 +61,7 @@ public class CatalogController extends BaseController {
     }
 
     @ApiOperation(value = "修改版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         SecurityTokenHelper.validToken(catalog);
@@ -72,7 +71,7 @@ public class CatalogController extends BaseController {
     }
 
     @ApiOperation(value = "删除版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
@@ -81,13 +80,5 @@ public class CatalogController extends BaseController {
         return Results.success();
     }
 
-    @ApiOperation(value = "更据版本编码获取版本主键")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/catalogId-achieve")
-    public ResponseEntity<?> achieveCatalogId(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "catalogCode") String catalogCode) {
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogCode).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + catalogCode + "or organizationId:" + organizationId);
-        return Results.success(catalog.getCatalogId());
-    }
 
 }

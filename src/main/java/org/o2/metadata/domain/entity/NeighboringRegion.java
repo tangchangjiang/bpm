@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
@@ -74,19 +75,19 @@ public class NeighboringRegion extends AuditDomain {
     private String posTypeCode;
 
     @ApiModelProperty(value = "发货国家")
-    @NotBlank
+    @NotNull
     private Long sourceCountryId;
 
     @ApiModelProperty(value = "发货省")
-    @NotBlank
+    @NotNull
     private Long sourceRegionId;
 
     @ApiModelProperty(value = "收货国家")
-    @NotBlank
+    @NotNull
     private Long targetCountryId;
 
     @ApiModelProperty(value = "收货省")
-    @NotBlank
+    @NotNull
     private Long targetRegionId;
 
     //
