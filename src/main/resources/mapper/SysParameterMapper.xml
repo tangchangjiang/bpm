@@ -3,11 +3,11 @@
 
 <mapper namespace="org.o2.metadata.infra.mapper.SysParameterMapper">
     <resultMap id="BaseResultMap" type="org.o2.metadata.domain.entity.SysParameter">
-        <result column="parameter_id" property="parameterId" jdbcType="DECIMAL"></result>
-        <result column="parameter_code" property="parameterCode" jdbcType="VARCHAR"></result>
-        <result column="parameter_desc" property="parameterDesc" jdbcType="VARCHAR"></result>
-        <result column="parameter_value" property="parameterValue" jdbcType="VARCHAR"></result>
-        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"></result>
+        <result column="parameter_id" property="parameterId" jdbcType="DECIMAL"/>
+        <result column="parameter_code" property="parameterCode" jdbcType="VARCHAR"/>
+        <result column="parameter_desc" property="parameterDesc" jdbcType="VARCHAR"/>
+        <result column="parameter_value" property="parameterValue" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -27,7 +27,8 @@
         sys.LAST_UPDATED_BY,
         sys.LAST_UPDATE_DATE,
         sys.OBJECT_VERSION_NUMBER,
-        sys.last_update_date,
+        sys.CREATION_DATE,
+        sys.CREATED_BY,
         u.real_name LAST_UPDATE_BY_NAME
         FROM
         o2md_sys_parameter_setting sys
