@@ -154,8 +154,7 @@
             p.CREATION_DATE,
             p.CREATED_BY,
             p.LAST_UPDATED_BY,
-            p.LAST_UPDATE_DATE,
-            c.carrier_name
+            p.LAST_UPDATE_DATE
         FROM
             o2md_pos AS p
         where p.pos_id = #{posId}
