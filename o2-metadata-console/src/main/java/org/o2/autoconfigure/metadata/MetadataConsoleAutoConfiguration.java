@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @EnableO2Server
 @ComponentScan({
-        "org.o2.metadata.core.app",
+        "org.o2.metadata.core.config",
         "org.o2.metadata.core.domain",
         "org.o2.metadata.core.infra"
 })
