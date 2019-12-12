@@ -16,10 +16,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.o2.metadata.core.infra.constants.MetadataConstants.PosCacheCode.CACHE_SERVICE_NAME_POS;
-import static org.o2.metadata.core.infra.constants.MetadataConstants.SysParameterCache.CACHE_SERVICE_NAME;
-
 /**
  * Pos RPC Provider
  *
@@ -77,7 +73,7 @@ public class PosContextImpl implements IPosContext {
     @Override
     public String posCacheKey(final String posCode, Long tenantId) {
         String tenantStr = null == tenantId ? null : tenantId.toString();
-        return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_SERVICE_NAME_POS,tenantStr,posCode);
+        return Joiner.on(":").skipNulls().join(MetadataConstants.SysParameterCache.CACHE_MODULE_NAME_SYSPARAMETER,MetadataConstants.PosCacheCode.CACHE_SERVICE_NAME_POS,tenantStr,posCode);
     }
 
     @Override
