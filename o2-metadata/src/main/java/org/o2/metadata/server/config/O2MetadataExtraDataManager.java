@@ -1,4 +1,4 @@
-package org.o2.metadata.console.config;
+package org.o2.metadata.server.config;
 
 import io.choerodon.core.swagger.ChoerodonRouteData;
 import io.choerodon.swagger.annotation.ChoerodonExtraData;

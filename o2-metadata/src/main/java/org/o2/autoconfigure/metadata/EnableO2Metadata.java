@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import({MetadataConsoleAutoConfiguration.class})
-public @interface EnableO2MetadataConsole {
+@Import({MetadataAutoConfiguration.class})
+public @interface EnableO2Metadata {
 }

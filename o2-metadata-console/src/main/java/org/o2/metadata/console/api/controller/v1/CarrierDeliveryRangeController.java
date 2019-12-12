@@ -14,7 +14,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
-import org.o2.metadata.console.config.MetadataSwagger;
+import org.o2.metadata.console.config.MetadataConsoleSwagger;
 import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.core.domain.repository.CarrierDeliveryRangeRepository;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ import java.util.List;
 
 @RestController("carrierDeliveryRangeController.v1")
 @RequestMapping("/v1/{organizationId}/carrier-delivery-ranges")
-@Api(tags = MetadataSwagger.CARRIER_DELIVERY_RANGE)
+@Api(tags = MetadataConsoleSwagger.CARRIER_DELIVERY_RANGE)
 public class CarrierDeliveryRangeController extends BaseController {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final CarrierDeliveryRangeService carrierDeliveryRangeService;

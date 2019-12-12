@@ -16,7 +16,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.app.service.CarrierService;
-import org.o2.metadata.console.config.MetadataSwagger;
+import org.o2.metadata.console.config.MetadataConsoleSwagger;
 import org.o2.metadata.core.domain.entity.Carrier;
 import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.core.domain.repository.CarrierDeliveryRangeRepository;
@@ -35,7 +35,7 @@ import java.util.List;
  */
 @RestController("carrierController.v1")
 @RequestMapping("/v1/{organizationId}/carriers")
-@Api(tags = MetadataSwagger.CARRIER)
+@Api(tags = MetadataConsoleSwagger.CARRIER)
 public class CarrierController extends BaseController {
     @Autowired
     private CarrierRepository carrierRepository;
