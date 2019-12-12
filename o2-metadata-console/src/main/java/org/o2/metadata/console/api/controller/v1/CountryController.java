@@ -13,7 +13,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CountryService;
-import org.o2.metadata.console.config.MetadataSwagger;
+import org.o2.metadata.console.config.MetadataConsoleSwagger;
 import org.o2.metadata.core.domain.entity.Country;
 import org.o2.metadata.core.domain.entity.Region;
 import org.o2.metadata.core.domain.repository.CountryRepository;
@@ -36,7 +36,7 @@ import java.util.List;
 
 @RestController("countryController.v1")
 @RequestMapping("/v1/{organizationId}/countries")
-@Api(tags = MetadataSwagger.COUNTRY)
+@Api(tags = MetadataConsoleSwagger.COUNTRY)
 public class CountryController extends BaseController {
 
     private final CountryService countryService;

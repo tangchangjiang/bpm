@@ -10,7 +10,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.vo.SysParameterVO;
-import org.o2.metadata.console.config.MetadataSwagger;
+import org.o2.metadata.console.config.MetadataConsoleSwagger;
 import org.o2.metadata.core.domain.entity.SysParameter;
 import org.o2.metadata.core.domain.repository.SysParameterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController("sysParameterSettingController.v1")
 @RequestMapping("/v1/{organizationId}/sys-parameter-settings")
-@Api(tags = MetadataSwagger.SYS_PARAMETER_SETTING)
+@Api(tags = MetadataConsoleSwagger.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
 
     @Autowired

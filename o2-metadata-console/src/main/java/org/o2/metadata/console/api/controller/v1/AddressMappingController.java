@@ -14,7 +14,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.app.service.RegionService;
-import org.o2.metadata.console.config.MetadataSwagger;
+import org.o2.metadata.console.config.MetadataConsoleSwagger;
 import org.o2.metadata.core.domain.entity.AddressMapping;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.entity.Country;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 @RestController("addressMappingController.v1")
 @RequestMapping("/v1/{organizationId}/address-mappings")
-@Api(tags = MetadataSwagger.ADDRESS_MAPPING)
+@Api(tags = MetadataConsoleSwagger.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     @Autowired
     private AddressMappingRepository addressMappingRepository;
