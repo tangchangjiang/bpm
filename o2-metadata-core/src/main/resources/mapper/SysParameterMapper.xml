@@ -30,7 +30,7 @@
         sys.last_update_date,
         u.real_name LAST_UPDATE_BY_NAME
         FROM
-        o2md_sys_parameter_setting sys
+        o2md_sys_parameter sys
         left join iam_user u on sys.last_updated_by=u.id
         WHERE
         1=1
@@ -43,7 +43,7 @@
             and sys.parameter_desc like #{parameterDescLike}
         </if>
         <if test="tenantId !=null ">
-            and sys.tenantId = #{tenantId}
+            and sys.tenant_id = #{tenantId}
         </if>
         order by sys.parameter_code
     </select>
