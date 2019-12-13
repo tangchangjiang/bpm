@@ -99,7 +99,7 @@ public interface MetadataConstants {
     interface SysParameterCache {
         String SYS_PARAMETER_KEY = "o2md:sys_parameter:%s";
         String CACHE_SERVICE_NAME = "o2md";
-        String CACHE_MODULE_NAME_SYSPARAMETER = "sys_parameter";
+        String CACHE_MODULE_NAME_SYS_PARAMETER = "sys_parameter";
 
         /**
          * 系统参数缓存 KEY
@@ -110,7 +110,7 @@ public interface MetadataConstants {
          */
         static String sysParameterKey(String sysParameterCode, Long tenantId) {
             String tenantStr = null == tenantId ? null : tenantId.toString();
-            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYSPARAMETER,tenantStr,sysParameterCode);
+            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYS_PARAMETER,tenantStr,sysParameterCode);
         }
     }
 }

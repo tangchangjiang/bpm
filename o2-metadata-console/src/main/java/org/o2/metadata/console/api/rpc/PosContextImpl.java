@@ -8,6 +8,7 @@ import org.o2.context.metadata.api.IPosContext;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
@@ -73,8 +74,8 @@ public class PosContextImpl implements IPosContext {
     @Override
     public String posCacheKey(final String posCode, Long tenantId) {
         String tenantStr = null == tenantId ? null : tenantId.toString();
-        return Joiner.on(":").skipNulls().join(MetadataConstants.SysParameterCache.CACHE_MODULE_NAME_SYSPARAMETER,MetadataConstants.PosCacheCode.CACHE_SERVICE_NAME_POS,tenantStr,posCode);
-    }
+        return Joiner.on(":").skipNulls().join(MetadataConstants.SysParameterCache.CACHE_SERVICE_NAME,MetadataConstants.PosCacheCode.CACHE_SERVICE_NAME_POS,tenantStr,posCode);
+        }
 
     @Override
     public boolean isPosExpressLimit(final String posCode, Long tenantId) {

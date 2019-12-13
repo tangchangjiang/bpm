@@ -156,7 +156,8 @@
             p.CREATION_DATE,
             p.CREATED_BY,
             p.LAST_UPDATED_BY,
-            p.LAST_UPDATE_DATE
+            p.LAST_UPDATE_DATE,
+            p.tenant_id
         FROM
             o2md_pos AS p
         where p.pos_id = #{posId}
