@@ -15,7 +15,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopRelPosService;
-import org.o2.metadata.console.config.MetadataConsoleSwagger;
+import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.OnlineShopRelPos;
 import org.o2.metadata.core.domain.entity.Pos;
 import org.o2.metadata.core.domain.repository.OnlineShopRelPosRepository;
@@ -37,7 +37,7 @@ import java.util.List;
 
 @RestController("onlineShopRelPosController.v1")
 @RequestMapping("/v1/{organizationId}")
-@Api(tags = MetadataConsoleSwagger.ONLINE_SHOP_POS_REL)
+@Api(tags = EnableMetadataConsole.ONLINE_SHOP_POS_REL)
 public class OnlineShopRelPosController extends BaseController {
 
     private final OnlineShopRelPosService onlineShopRelPosService;

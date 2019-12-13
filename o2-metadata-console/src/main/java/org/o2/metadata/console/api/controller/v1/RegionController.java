@@ -11,7 +11,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.RegionService;
-import org.o2.metadata.console.config.MetadataConsoleSwagger;
+import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Region;
 import org.o2.metadata.core.domain.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.Collections;
 
 @RestController("regionController.v1")
 @RequestMapping("/v1/{organizationId}/regions")
-@Api(tags = MetadataConsoleSwagger.REGION)
+@Api(tags = EnableMetadataConsole.REGION)
 public class RegionController extends BaseController {
 
     @Autowired

@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.config.MetadataConsoleSwagger;
+import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.PosAddress;
 import org.o2.metadata.core.domain.repository.PosAddressRepository;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController("detailedAddressController.v1")
 @RequestMapping("/v1/{organizationId}/pos-address")
-@Api(tags = MetadataConsoleSwagger.POS_ADDRESS)
+@Api(tags = EnableMetadataConsole.POS_ADDRESS)
 public class PosAddressController extends BaseController {
     private final PosAddressRepository posAddressRepository;
 

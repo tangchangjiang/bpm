@@ -15,7 +15,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierMappingService;
-import org.o2.metadata.console.config.MetadataConsoleSwagger;
+import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.CarrierMapping;
 import org.o2.metadata.core.domain.repository.CarrierMappingRepository;
 import org.o2.metadata.core.domain.vo.CarrierMappingVO;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @RestController("carrierMappingController.v1")
 @RequestMapping("/v1/{organizationId}/carrier-mappings")
-@Api(tags = MetadataConsoleSwagger.CARRIER_MAPPING)
+@Api(tags = EnableMetadataConsole.CARRIER_MAPPING)
 public class CarrierMappingController extends BaseController {
     private final CarrierMappingRepository carrierMappingRepository;
     private final CarrierMappingService carrierMappingService;

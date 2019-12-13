@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.config.MetadataConsoleSwagger;
+import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
  *
  * @author jiu.yang@hand-china.com 2019-12-02 15:33:52
  */
-@Api(tags = MetadataConsoleSwagger.CATALOG)
+@Api(tags = EnableMetadataConsole.CATALOG)
 @RestController("catalogController.v1")
 @RequestMapping("/v1/{organizationId}/catalogs")
 public class CatalogController extends BaseController {
