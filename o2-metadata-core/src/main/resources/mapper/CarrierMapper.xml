@@ -27,7 +27,8 @@
         c.CREATED_BY,
         c.LAST_UPDATED_BY,
         c.LAST_UPDATE_DATE,
-        c.active_flag
+        c.active_flag,
+        c.tenant_id
         FROM
         o2md_carrier c
         <where>

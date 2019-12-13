@@ -69,7 +69,8 @@
         city.region_name city_name,
         address.district_id,
         district.region_name district_name,
-        address.street_name
+        address.street_name,
+        pos.business_type_code
         from o2md_pos pos
         left join o2md_pos_address address on pos.address_id = address.pos_address_id
         LEFT JOIN o2md_region region on region.region_id = address.region_id
