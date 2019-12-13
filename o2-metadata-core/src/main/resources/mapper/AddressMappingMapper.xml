@@ -42,10 +42,10 @@
             AND ad.tenant_id = #{addressMapping.tenantId}
         </if>
         <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
-            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
+            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{addressMapping.catalogCode}) AND ca.tenant_id = #{addressMapping.tenantId})
         </if>
-        <if test="addressMapping.addressMappingExName!=null and addressMapping.addressMappingExName!=''">
-            AND ad.external_name LIKE concat("%",concat(#{addressMapping.addressMappingExName}),"%")
+        <if test="addressMapping.externalName!=null and addressMapping.externalName!=''">
+            AND ad.external_name LIKE concat("%",concat(#{addressMapping.externalName}),"%")
         </if>
         <if test="addressMapping.regionName!=null and addressMapping.regionName!=''">
             AND c.region_name LIKE concat("%",concat(#{addressMapping.regionName}),"%")
