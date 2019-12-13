@@ -70,7 +70,7 @@
         from o2md_region
         <bind name="levelPath" value="levelPath + '%'"/>
         where level_path like #{levelPath}
-        and re.tenant_id = #{tenantId}
+        and tenant_id = #{tenantId}
     </select>
     <select id="selectRegion" resultType="org.o2.metadata.core.domain.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
