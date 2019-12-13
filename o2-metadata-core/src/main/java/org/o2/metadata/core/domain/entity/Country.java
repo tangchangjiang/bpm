@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.sun.istack.internal.NotNull;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
