@@ -34,7 +34,7 @@ public class OnlineShopRelPos extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_ID = "onlineShopId";
     public static final String FIELD_POS_ID = "posId";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
-    public static final String FIELD_IS_INV_CALCULATED = "is_inv_calculated";
+    public static final String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";
 
 
     //

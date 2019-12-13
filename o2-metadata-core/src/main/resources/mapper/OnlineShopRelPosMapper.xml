@@ -49,7 +49,7 @@
         p.pos_name,
         p.pos_type_code,
         p.pos_status_code,
-        srp.is_inv_calculated
+        srp.business_active_flag
         from o2md_online_shop_rel_pos srp
         join o2md_pos p on srp.pos_id = p.pos_id
         <where>

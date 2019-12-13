@@ -114,7 +114,6 @@ public class OnlineShop extends AuditDomain {
     @Size(max = 255)
     private String platformShopCode;
 
-    @NotNull
     private Long catalogId;
 
     private Long catalogVersionId;
