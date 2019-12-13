@@ -20,6 +20,9 @@
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="catalog_version_id" property="catalogVersionId" jdbcType="DECIMAL"/>
+        <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
+        <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <select id="findByCondition" resultType="org.o2.metadata.core.domain.entity.OnlineShop">
@@ -39,9 +42,12 @@
         os.CREATION_DATE,
         os.CREATED_BY,
         os.LAST_UPDATED_BY,
-        os.LAST_UPDATE_DATE
+        os.LAST_UPDATE_DATE,
+        oc.catalog_code,
+        oc.catalog_name
         FROM
         o2md_online_shop os
+        left join o2md_catalog oc on oc.catalog_id = os.catalog_id
         <where>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
