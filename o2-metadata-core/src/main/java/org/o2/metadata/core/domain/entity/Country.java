@@ -1,7 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
 import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,7 +48,6 @@ public class Country extends AuditDomain {
     @ApiModelProperty("国家名称")
     @NotBlank
     @Size(max = 120)
-    @MultiLanguageField
     private String countryName;
 
     @ApiModelProperty("是否启用")
