@@ -52,8 +52,8 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "系统参数设置明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{parameterId}")
-    public ResponseEntity<?> detail(@PathVariable final Long parameterSettingId) {
-        final SysParameter sysParameter = sysParameterRepository.selectByPrimaryKey(parameterSettingId);
+    public ResponseEntity<?> detail(@PathVariable final Long parameterId) {
+        final SysParameter sysParameter = sysParameterRepository.selectByPrimaryKey(parameterId);
         return Results.success(sysParameter);
     }
 
