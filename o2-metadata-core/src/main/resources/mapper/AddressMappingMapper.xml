@@ -105,16 +105,17 @@
     <!--更据catalogCode和regionId查询地址匹配数量-->
     <select id="queryAddressByCondition" resultType="org.o2.metadata.core.domain.entity.AddressMapping">
         SELECT ad.*
-        FROM o2md_address_mapping ad
+        FROM o2md_address_mapping ad JOIN o2md_catalog ca ON ca.catalog_id = ad.catalog_id
         WHERE 1=1
         <if test="catalogCode!=null and catalogCode!=''">
-            AND ad.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
+            AND ca.catalog_code = #{catalogCode}
+            AND ca.tenant_id = #{tenantId}
         </if>
         <if test="regionId!=null ">
             AND ad.region_id = #{regionId}
         </if>
         <if test="tenantId!=null ">
-            AND ca.tenant_id = #{tenantId}
+            AND ad.tenant_id = #{tenantId}
         </if>
 
     </select>

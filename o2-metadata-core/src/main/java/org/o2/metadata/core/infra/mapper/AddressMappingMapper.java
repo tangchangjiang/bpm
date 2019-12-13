@@ -47,5 +47,5 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<AddressMapping> queryAddressByCondition(@Param(value = "catalogCode") String catalogCode, @Param(value = "regionId") Long regionId, @Param(value = "regionId") Long tenantId);
+    List<AddressMapping> queryAddressByCondition(@Param(value = "catalogCode") String catalogCode, @Param(value = "regionId") Long regionId, @Param(value = "tenantId") Long tenantId);
 }
