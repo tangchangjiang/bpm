@@ -115,4 +115,8 @@ public class CarrierMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "版本编码")
     private String catalogCode;
+
+    @Transient
+    @ApiModelProperty(value = "版本名称")
+    private String catalogName;
 }

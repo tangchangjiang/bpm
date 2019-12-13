@@ -51,7 +51,6 @@ public class Country extends AuditDomain {
     private String countryName;
 
     @ApiModelProperty("是否启用")
-    @NotNull
     @Max(1)
     @Min(0)
     private Integer enabledFlag;
