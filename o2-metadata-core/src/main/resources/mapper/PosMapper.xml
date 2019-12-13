@@ -54,6 +54,7 @@
 
     <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
         select
+        pos.tenant_id,
         pos.pos_id,
         pos.pos_code,
         pos.pos_name,
