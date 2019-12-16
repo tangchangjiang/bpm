@@ -79,7 +79,10 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
     public ResponseEntity detail(@PathVariable final Long shopId) {
-        return Results.success(onlineShopRepository.selectByPrimaryKey(shopId));
+        OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogId(onlineShop.getCatalogId()).build());
+        onlineShop.setCatalogCode(catalog.getCatalogCode());
+        return Results.success(onlineShop);
     }
 
     @ApiOperation("创建网店信息")
