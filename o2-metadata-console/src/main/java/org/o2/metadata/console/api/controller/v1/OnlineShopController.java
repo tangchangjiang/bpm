@@ -16,7 +16,9 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopRelPosService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.entity.OnlineShop;
+import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.dao.DuplicateKeyException;
@@ -37,10 +39,11 @@ import springfox.documentation.annotations.ApiIgnore;
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopRelPosService onlineShopRelPosService;
-
-    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService) {
+    private final CatalogRepository catalogRepository;
+    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService,final CatalogRepository catalogRepository) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelPosService = onlineShopRelPosService;
+        this.catalogRepository = catalogRepository;
     }
 
     @ApiOperation(value = "按条件查询网店列表",
@@ -87,12 +90,14 @@ public class OnlineShopController extends BaseController {
         // 初始化部分值，否则通不过验证
         Preconditions.checkArgument(null != onlineShop.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         onlineShop.setTenantId(organizationId);
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(organizationId).build());
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         if (onlineShop.exist(onlineShopRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
         try {
+            onlineShop.setCatalogId(catalog.getCatalogId());
             return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
         } catch (final DuplicateKeyException e) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,

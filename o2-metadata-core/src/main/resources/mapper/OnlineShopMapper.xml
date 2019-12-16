@@ -44,7 +44,8 @@
         os.LAST_UPDATED_BY,
         os.LAST_UPDATE_DATE,
         oc.catalog_code,
-        oc.catalog_name
+        oc.catalog_name,
+        os.tenant_id
         FROM
         o2md_online_shop os
         left join o2md_catalog oc on oc.catalog_id = os.catalog_id
