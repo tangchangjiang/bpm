@@ -17,8 +17,10 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopRelPosService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Catalog;
+import org.o2.metadata.core.domain.entity.CatalogVersion;
 import org.o2.metadata.core.domain.entity.OnlineShop;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
+import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.dao.DuplicateKeyException;
@@ -40,10 +42,12 @@ public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopRelPosService onlineShopRelPosService;
     private final CatalogRepository catalogRepository;
-    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService,final CatalogRepository catalogRepository) {
+    private final CatalogVersionRepository catalogVersionRepository;
+    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService,final CatalogRepository catalogRepository,final CatalogVersionRepository catalogVersionRepository) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelPosService = onlineShopRelPosService;
         this.catalogRepository = catalogRepository;
+        this.catalogVersionRepository = catalogVersionRepository;
     }
 
     @ApiOperation(value = "按条件查询网店列表",
@@ -101,6 +105,9 @@ public class OnlineShopController extends BaseController {
         }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
+            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).tenantId(organizationId).build());
+            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogId && organizationId");
+            onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
             return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
         } catch (final DuplicateKeyException e) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,

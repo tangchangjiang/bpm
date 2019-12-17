@@ -5,6 +5,7 @@ import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotNull;
  * @author jiu.yang@hand-china.com 2019-12-02 15:33:52
  */
 @Data
+@Builder
 @ApiModel("版本目录")
 @VersionAudit
 @ModifyAudit
