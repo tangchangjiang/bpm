@@ -8,13 +8,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.o2.metadata.core.domain.repository.CarrierMappingRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
+import org.o2.metadata.core.domain.repository.CarrierMappingRepository;
+import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -38,7 +37,7 @@ import javax.validation.constraints.NotNull;
 public class CarrierMapping extends AuditDomain {
 
     public static final String FIELD_CARRIER_MAPPING_ID = "carrierMappingId";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_PLATFORM_CARRIER_CODE = "externalCarrierCode";
     public static final String FIELD_PLATFORM_CARRIER_NAME = "externalCarrierName";
@@ -53,14 +52,14 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.carrierMappingId) {
             sqls.andNotEqualTo(CarrierMapping.FIELD_CARRIER_MAPPING_ID, this.getCarrierMappingId());
         }
-        if (StringUtils.isNotBlank(this.catalogCode)) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogCode());
-        }
         if (null != this.carrierId) {
             sqls.andEqualTo(CarrierMapping.FIELD_CARRIER_ID, this.getCarrierId());
         }
         if (null != this.tenantId) {
             sqls.andEqualTo(CarrierMapping.FIELD_TENANT_ID, this.getTenantId());
+        }
+        if (null != this.externalCarrierCode) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CARRIER_CODE, this.getExternalCarrierCode());
         }
         return carrierMappingRepository.selectCountByCondition(
                 Condition.builder(CarrierMapping.class).andWhere(sqls).build()) > 0;
