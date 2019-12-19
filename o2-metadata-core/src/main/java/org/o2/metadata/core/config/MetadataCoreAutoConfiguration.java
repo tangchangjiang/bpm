@@ -1,5 +1,7 @@
 package org.o2.metadata.core.config;
 
+import org.hzero.core.message.MessageAccessor;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,8 +14,11 @@ import org.springframework.context.annotation.Configuration;
         "org.o2.metadata.core.infra"
 })
 @Configuration
-public class MetadataCoreAutoConfiguration {
+public class MetadataCoreAutoConfiguration implements InitializingBean {
 
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        MessageAccessor.addBasenames("classpath:messages/o2md_core");
+    }
 }
 
