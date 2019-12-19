@@ -42,6 +42,7 @@ public class CarrierMapping extends AuditDomain {
     public static final String FIELD_PLATFORM_CARRIER_CODE = "externalCarrierCode";
     public static final String FIELD_PLATFORM_CARRIER_NAME = "externalCarrierName";
     public static final String FIELD_TENANT_ID = "tenantId";
+    public static final String FIELD_CATALOG_ID = "catalogId";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -58,8 +59,8 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.tenantId) {
             sqls.andEqualTo(CarrierMapping.FIELD_TENANT_ID, this.getTenantId());
         }
-        if (null != this.externalCarrierCode) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CARRIER_CODE, this.getExternalCarrierCode());
+        if (null != this.catalogId) {
+            sqls.andEqualTo(CarrierMapping.FIELD_CATALOG_ID, this.getCatalogId());
         }
         return carrierMappingRepository.selectCountByCondition(
                 Condition.builder(CarrierMapping.class).andWhere(sqls).build()) > 0;
