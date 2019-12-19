@@ -123,11 +123,17 @@ public class OnlineShopController extends BaseController {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(organizationId).build());
         this.validObject(onlineShop);
         onlineShop.validate(onlineShopRepository);
         if (!onlineShop.exist(onlineShopRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
         }
+        onlineShop.setCatalogId(catalog.getCatalogId());
+        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).tenantId(organizationId).build());
+        Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogId && organizationId");
+        onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
+        onlineShop.setCatalogId(catalog.getCatalogId());
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         //触发网店关联服务点更新
         onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());

@@ -90,6 +90,9 @@ public class AddressMappingController extends BaseController {
     public ResponseEntity<?> detail(final Long addressMappingId, final String countryCode) {
         final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
         final Region region = regionRepository.selectByPrimaryKey(addressMapping.getRegionId());
+        final Catalog catalog = catalogRepository.selectByPrimaryKey(addressMapping.getCatalogId());
+        addressMapping.setCatalogCode(catalog.getCatalogCode());
+        addressMapping.setCatalogName(catalog.getCatalogName());
         if (region != null) {
             addressMapping.setRegionName(region.getRegionName());
             //通过路径path，获取
