@@ -3,6 +3,7 @@ package org.o2.metadata.core.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -27,6 +28,7 @@ import java.util.List;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_region")
+@MultiLanguage
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Region extends AuditDomain {
     public static final String FIELD_REGION_ID = "regionId";
@@ -88,6 +90,7 @@ public class Region extends AuditDomain {
     @Transient
     private String areaMeaning;
 
+    @MultiLanguageField
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 }
