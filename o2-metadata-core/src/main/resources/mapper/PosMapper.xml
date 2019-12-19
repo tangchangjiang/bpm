@@ -76,8 +76,15 @@
         LEFT JOIN o2md_region region on region.region_id = address.region_id
         LEFT JOIN o2md_region city on city.region_id = address.city_id
         LEFT JOIN o2md_region district on district.region_id= address.district_id
-        <where>
-            1=1
+        where 1=1
+            <choose>
+                <when test="tenantId != null">
+                    and pos.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND pos.tenant_id = 0
+                </otherwise>
+            </choose>
             <if test="posCode != null and posCode != ''">
                 <bind name="posCodeLike" value="'%' + posCode + '%'"/>
                 and pos.pos_code like #{posCodeLike}
@@ -88,9 +95,6 @@
             </if>
             <if test="posStatusCode != null and posStatusCode != ''">
                 and pos.pos_status_code = #{posStatusCode}
-            </if>
-            <if test="tenantId != null and tenantId != ''">
-                and pos.tenant_id = #{tenantId}
             </if>
             <if test="posTypeCode != null and posTypeCode != ''">
                 and pos.pos_type_code = #{posTypeCode}
@@ -110,7 +114,6 @@
             <if test="districtId != null and districtId != ''">
                 and address.district_Id = #{districtId}
             </if>
-        </where>
         order by pos.pos_code ASC
     </select>
 
@@ -124,6 +127,14 @@
         where not exists(
         select 1 from o2md_online_shop_rel_pos srp where srp.pos_id = p.pos_id and srp.online_shop_id = #{onlineShopId}
         )
+        <choose>
+            <when test="tenantId != null">
+                and p.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and p.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="posCode != null">
             <bind name="posCodeLike" value="posCode + '%'"/>
             and p.pos_code LIKE #{posCodeLike}
@@ -131,9 +142,6 @@
         <if test="posName != null">
             <bind name="posNameLike" value="'%' + posName + '%'"/>
             and p.pos_name LIKE #{posNameLike}
-        </if>
-        <if test="tenantId != null ">
-            and p.tenant_id = #{tenantId}
         </if>
         order by p.pos_code asc
     </select>

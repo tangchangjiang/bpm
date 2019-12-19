@@ -31,22 +31,25 @@
         FROM
         o2md_pos_rel_carrier t
         JOIN o2md_carrier c ON t.carrier_id = c.carrier_id
-        <where>
-            1=1
+        where 1=1
+        <choose>
+            <when test="tenantId != null">
+                and t.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND t.tenant_id = 0
+            </otherwise>
+        </choose>
             <if test="posId != null">
                 and t.pos_id = #{posId}
             </if>
             <if test="carrierId != null">
                 and t.carrier_id = #{carrierId}
             </if>
-            <if test="tenantId != null">
-                and t.tenant_id = #{tenantId}
-            </if>
             <if test="carrierName != null and carrierName != ''">
                 <bind name="carrierNameLike" value="'%' + carrierName + '%'"/>
                 and c.carrier_name like #{carrierNameLike}
             </if>
-        </where>
         ORDER BY priority
     </select>
 

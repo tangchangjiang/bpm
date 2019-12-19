@@ -35,6 +35,14 @@
         left join iam_user u on sys.last_updated_by=u.id
         WHERE
         1=1
+        <choose>
+            <when test="tenantId != null">
+                AND sys.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND sys.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="parameterCode !=null ">
             <bind name="parameterCodeLike" value="'%' + parameterCode + '%'"/>
             and sys.parameter_code like #{parameterCodeLike}
@@ -42,9 +50,6 @@
         <if test="parameterDesc !=null ">
             <bind name="parameterDescLike" value="'%' + parameterDesc + '%'"/>
             and sys.parameter_desc like #{parameterDescLike}
-        </if>
-        <if test="tenantId !=null ">
-            and sys.tenant_id = #{tenantId}
         </if>
         order by sys.parameter_code
     </select>

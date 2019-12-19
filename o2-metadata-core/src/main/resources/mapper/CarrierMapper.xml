@@ -31,8 +31,15 @@
         c.tenant_id
         FROM
         o2md_carrier c
-        <where>
-            1=1
+        where 1=1
+            <choose>
+                <when test="tenantId != null">
+                    and c.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND c.tenant_id = 0
+                </otherwise>
+            </choose>
             <if test="carrierId != null">
                 and c.carrier_id = #{carrierId}
             </if>
@@ -47,10 +54,6 @@
             <if test="carrierTypeCode != null and carrierTypeCode != ''">
                 and c.carrier_type_code = #{carrierTypeCode}
             </if>
-            <if test="tenantId != null and tenantId != ''">
-                and c.tenant_id = #{tenantId}
-            </if>
-        </where>
         ORDER BY carrier_code
     </select>
 

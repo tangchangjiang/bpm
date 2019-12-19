@@ -35,6 +35,14 @@
         left join o2md_region_tl hrt on hrt.region_id = hr.region_id and hrt.lang = #{lang}
         where
         1=1
+        <choose>
+            <when test="tenantId != null">
+                and hr.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND hr.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="countryIdOrCode != null">
             and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
         </if>
@@ -46,9 +54,6 @@
         </if>
         <if test="enabledFlag != null">
             and hr.enabled_flag = #{enabledFlag}
-        </if>
-        <if test="tenantId != null">
-            and hr.tenant_id = #{tenantId}
         </if>
         order by hr.region_code
     </select>
@@ -89,15 +94,20 @@
         left JOIN o2md_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
         WHERE 1=1
         and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        <choose>
+            <when test="tenantId != null">
+                AND hr.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND hr.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="condition != null and condition != ''">
             <bind name="condition" value="'%' + condition + '%'"/>
             AND (hr.region_code LIKE #{condition} OR hr.region_name LIKE #{condition})
         </if>
         <if test="enabledFlag != null">
             AND hr.enabled_flag = #{enabledFlag}
-        </if>
-        <if test="tenantId != null">
-            AND hr.tenant_id = #{tenantId}
         </if>
     </select>
     <select id="selectRegionParent" resultType="org.o2.metadata.core.domain.entity.Region">
