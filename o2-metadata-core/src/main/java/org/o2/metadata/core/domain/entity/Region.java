@@ -90,7 +90,6 @@ public class Region extends AuditDomain {
     @Transient
     private String areaMeaning;
 
-    @MultiLanguageField
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 }

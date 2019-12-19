@@ -46,16 +46,16 @@ public class CatalogVersion extends AuditDomain {
     @Id
     @GeneratedValue
     private Long catalogVersionId;
-    @ApiModelProperty(value = "版本目录编码",required = true)
+    @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
-    @ApiModelProperty(value = "版本目录名称",required = true)
+    @ApiModelProperty(value = "版本目录名称")
     private String catalogVersionName;
     @ApiModelProperty(value = "版本目录表述")
     private String catalogVersionDescription;
-    @ApiModelProperty(value = "版本ID",required = true)
+    @ApiModelProperty(value = "版本ID")
     @NotNull
     private Long catalogId;
-    @ApiModelProperty(value = "租户ID",required = true)
+    @ApiModelProperty(value = "租户ID")
     @NotNull
     private Long tenantId;
 

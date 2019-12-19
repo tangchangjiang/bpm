@@ -1,6 +1,8 @@
 package org.o2.metadata.core.domain.entity;
 
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -24,10 +26,11 @@ import javax.validation.constraints.NotNull;
 @ModifyAudit
 @Table(name = "o2md_catalog")
 @Builder
+@MultiLanguage
 public class Catalog extends AuditDomain {
 
     public static final String FIELD_CATALOG_ID = "catalogId";
-    public static final String FIELD_CATALOG_CODE = "catalogId";
+    public static final String FIELD_CATALOG_CODE = "catalogCode";
     public static final String FIELD_CATALOG_NAME = "catalogName";
     public static final String FIELD_CATALOG_DESCRIPTION = "catalogDescription";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -45,14 +48,18 @@ public class Catalog extends AuditDomain {
     @Id
     @GeneratedValue
     private Long catalogId;
-    @ApiModelProperty(value = "版本编码",required = true)
+
+    @ApiModelProperty(value = "版本编码")
     private String catalogCode;
-    @ApiModelProperty(value = "版本名称",required = true)
+
+    @ApiModelProperty(value = "版本名称")
+    @MultiLanguageField
     private String catalogName;
+
     @ApiModelProperty(value = "版本描述")
     private String catalogDescription;
-    @ApiModelProperty(value = "租户ID",required = true)
-    @NotNull
+
+    @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
 }
