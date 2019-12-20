@@ -6,7 +6,7 @@
         <result column="catalog_id" property="catalogId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
-        <result column="catalog_description" property="catalogDescription" jdbcType="VARCHAR"/>
+        <result column="catalog_remarks" property="catalogRemarks" jdbcType="VARCHAR"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="creation_date" property="creationDate" jdbcType="DATE"/>

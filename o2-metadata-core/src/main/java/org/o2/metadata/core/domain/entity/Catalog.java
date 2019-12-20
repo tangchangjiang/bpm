@@ -13,7 +13,6 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * 版本
@@ -57,7 +56,8 @@ public class Catalog extends AuditDomain {
     private String catalogName;
 
     @ApiModelProperty(value = "版本描述")
-    private String catalogDescription;
+    @MultiLanguageField
+    private String catalogRemarks;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
