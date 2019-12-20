@@ -2,6 +2,8 @@ package org.o2.metadata.core.domain.entity;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -29,6 +31,7 @@ import java.util.List;
 @ApiModel("系统参数设置")
 @VersionAudit
 @ModifyAudit
+@MultiLanguage
 @Table(name = "o2md_sys_parameter")
 public class SysParameter extends AuditDomain {
 
@@ -44,6 +47,7 @@ public class SysParameter extends AuditDomain {
 
     public void validateParameterCode(final SysParameterRepository sysParameterRepository) {
         final SysParameter entity = new SysParameter();
+        entity.setTenantId(this.tenantId);
         entity.setParameterCode(this.parameterCode);
         final List<SysParameter> list = sysParameterRepository.select(entity);
         if (CollectionUtils.isNotEmpty(list)) {
@@ -73,6 +77,7 @@ public class SysParameter extends AuditDomain {
     private String parameterCode;
 
     @ApiModelProperty(value = "参数说明")
+    @MultiLanguageField
     private String parameterDesc;
 
     //
