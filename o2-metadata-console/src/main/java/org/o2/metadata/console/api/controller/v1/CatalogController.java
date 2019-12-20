@@ -11,14 +11,21 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.hzero.export.annotation.ExcelExport;
+import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.core.api.dto.CatalogDTO;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 版本 管理 API
@@ -32,6 +39,9 @@ public class CatalogController extends BaseController {
 
     @Autowired
     private CatalogRepository catalogRepository;
+
+    @Autowired
+    private CatalogService catalogService;
 
     @ApiOperation(value = "版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -80,5 +90,13 @@ public class CatalogController extends BaseController {
         return Results.success();
     }
 
+    @ApiOperation(value = "版本导出Excel")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/export")
+    @ExcelExport(CatalogDTO.class)
+    public ResponseEntity<?> export(String catalogBatchRecordsIds, ExportParam exportParam, HttpServletResponse response) {
+        List<CatalogDTO> export = catalogService.export(catalogBatchRecordsIds);
+        return Results.success(export);
+    }
 
 }

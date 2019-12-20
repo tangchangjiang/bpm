@@ -161,6 +161,8 @@ public class OnlineShop extends AuditDomain {
     private String catalogCode;
     @Transient
     private String catalogName;
+    @Transient
+    private String catalogVersionCode;
 
 //    @ApiModelProperty(value = "归属电商平台含义")
 //    @Transient

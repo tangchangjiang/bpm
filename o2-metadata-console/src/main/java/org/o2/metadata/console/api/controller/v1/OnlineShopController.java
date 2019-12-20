@@ -85,6 +85,7 @@ public class OnlineShopController extends BaseController {
     public ResponseEntity detail(@PathVariable final Long shopId) {
         OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogId(onlineShop.getCatalogId()).build());
+        Preconditions.checkArgument(null!=catalog,"invalid field catalogId: "+onlineShop.getCatalogId() );
         onlineShop.setCatalogCode(catalog.getCatalogCode());
         return Results.success(onlineShop);
     }
@@ -105,8 +106,8 @@ public class OnlineShopController extends BaseController {
         }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
-            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).tenantId(organizationId).build());
-            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogId && organizationId");
+            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
+            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogVersionCode && organizationId");
             onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
             return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
         } catch (final DuplicateKeyException e) {

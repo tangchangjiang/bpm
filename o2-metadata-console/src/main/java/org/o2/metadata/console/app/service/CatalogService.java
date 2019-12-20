@@ -1,5 +1,9 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.core.api.dto.CatalogDTO;
+
+import java.util.List;
+
 /**
  * 版本应用服务
  *
@@ -7,4 +11,11 @@ package org.o2.metadata.console.app.service;
  */
 public interface CatalogService {
 
+    /**
+     * 版本Excel导出
+     * @param catalogBatchRecordsIds 版本主键字符拼接
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<CatalogDTO> export(String catalogBatchRecordsIds);
 }
