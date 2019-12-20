@@ -57,6 +57,14 @@
         left join o2md_country tc on n.target_country_id = tc.country_id
         WHERE
         1 = 1
+        <choose>
+            <when test="tenantId != null">
+                and n.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND n.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="posTypeCode!=null and posTypeCode!=''">
             AND pos_type_code = #{posTypeCode}
         </if>

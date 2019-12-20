@@ -41,6 +41,7 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
         return neighboringRegionRepository.findNeighboringRegions(
                 neighboringRegion.getPosTypeCode(),
                 neighboringRegion.getSourceRegionId(),
-                neighboringRegion.getTargetRegionId());
+                neighboringRegion.getTargetRegionId(),
+                neighboringRegion.getTenantId());
     }
 }

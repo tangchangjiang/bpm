@@ -47,9 +47,10 @@ public class NeighboringRegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(final NeighboringRegion neighboringRegion,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegion neighboringRegion,
                                   @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_ID,
                                           direction = Sort.Direction.ASC) final PageRequest pageRequest) {
+        neighboringRegion.setTenantId(organizationId);
         final Page<NeighboringRegion> result = PageHelper.doPageAndSort(pageRequest,
                 () -> neighboringRegionService.findNeighboringRegions(neighboringRegion));
         return Results.success(result);

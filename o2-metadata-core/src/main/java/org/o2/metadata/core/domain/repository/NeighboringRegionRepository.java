@@ -17,8 +17,9 @@ public interface NeighboringRegionRepository extends BaseRepository<NeighboringR
      * @param posTypeCode    服务点类型
      * @param sourceRegionId 发货省
      * @param targetRegionId 收货省
+     * @param tenantId 租户ID
      * @return 查询结果集
      */
-    List<NeighboringRegion> findNeighboringRegions(String posTypeCode, Long sourceRegionId, Long targetRegionId);
+    List<NeighboringRegion> findNeighboringRegions(String posTypeCode, Long sourceRegionId, Long targetRegionId,Long tenantId);
 
 }

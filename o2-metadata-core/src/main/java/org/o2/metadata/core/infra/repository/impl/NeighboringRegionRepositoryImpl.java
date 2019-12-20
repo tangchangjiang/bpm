@@ -24,7 +24,8 @@ public class NeighboringRegionRepositoryImpl extends BaseRepositoryImpl<Neighbor
     @Override
     public List<NeighboringRegion> findNeighboringRegions(final String posTypeCode,
                                                           final Long sourceRegionId,
-                                                          final Long targetRegionId) {
-        return neighboringRegionMapper.findNeighboringRegions(posTypeCode, sourceRegionId, targetRegionId);
+                                                          final Long targetRegionId,
+                                                          final Long tenantId) {
+        return neighboringRegionMapper.findNeighboringRegions(posTypeCode, sourceRegionId, targetRegionId,tenantId);
     }
 }
