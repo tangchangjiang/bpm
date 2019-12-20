@@ -32,7 +32,7 @@ public class CatalogVersionController extends BaseController {
     private CatalogVersionRepository catalogVersionRepository;
 
     @ApiOperation(value = "目录版本列表")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
@@ -42,7 +42,7 @@ public class CatalogVersionController extends BaseController {
     }
 
     @ApiOperation(value = "目录版本明细")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{catalogVersionId}")
     public ResponseEntity<?> detail(@PathVariable Long catalogVersionId) {
         CatalogVersion catalogVersion = catalogVersionRepository.selectByPrimaryKey(catalogVersionId);
@@ -50,7 +50,7 @@ public class CatalogVersionController extends BaseController {
     }
 
     @ApiOperation(value = "创建目录版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CatalogVersion catalogVersion) {
         catalogVersionRepository.insertSelective(catalogVersion);
@@ -58,7 +58,7 @@ public class CatalogVersionController extends BaseController {
     }
 
     @ApiOperation(value = "修改目录版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
@@ -68,7 +68,7 @@ public class CatalogVersionController extends BaseController {
     }
 
     @ApiOperation(value = "删除目录版本")
-    @Permission(level = ResourceLevel.SITE)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> remove(@RequestBody CatalogVersion catalogVersion) {
         SecurityTokenHelper.validToken(catalogVersion);

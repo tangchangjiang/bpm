@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 版本 资源库实现
@@ -29,7 +30,7 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogDTO> batchFindByIds(List<String> catalogIds) {
+    public List<CatalogDTO> batchFindByIds(Set<Long> catalogIds) {
 
         return catalogMapper.batchFindByIds(catalogIds);
     }

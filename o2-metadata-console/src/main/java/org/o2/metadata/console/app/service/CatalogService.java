@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import org.hzero.export.vo.ExportParam;
 import org.o2.metadata.core.api.dto.CatalogDTO;
 
 import java.util.List;
@@ -13,9 +14,9 @@ public interface CatalogService {
 
     /**
      * 版本Excel导出
-     * @param catalogBatchRecordsIds 版本主键字符拼接
+     * @param exportParam 版本主键字符拼接
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> export(String catalogBatchRecordsIds);
+    List<CatalogDTO> export(ExportParam exportParam);
 }

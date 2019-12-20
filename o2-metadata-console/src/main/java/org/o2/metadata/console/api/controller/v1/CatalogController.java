@@ -94,8 +94,8 @@ public class CatalogController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/export")
     @ExcelExport(CatalogDTO.class)
-    public ResponseEntity<?> export(String catalogBatchRecordsIds, ExportParam exportParam, HttpServletResponse response) {
-        List<CatalogDTO> export = catalogService.export(catalogBatchRecordsIds);
+    public ResponseEntity<?> export(ExportParam exportParam, HttpServletResponse response) {
+        List<CatalogDTO> export = catalogService.export(exportParam);
         return Results.success(export);
     }
 
