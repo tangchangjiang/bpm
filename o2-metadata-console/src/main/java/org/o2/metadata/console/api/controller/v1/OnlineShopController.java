@@ -85,6 +85,7 @@ public class OnlineShopController extends BaseController {
     public ResponseEntity detail(@PathVariable final Long shopId) {
         OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogId(onlineShop.getCatalogId()).build());
+        Preconditions.checkArgument(null!=catalog,"invalid field catalogId: "+onlineShop.getCatalogId() );
         onlineShop.setCatalogCode(catalog.getCatalogCode());
         return Results.success(onlineShop);
     }

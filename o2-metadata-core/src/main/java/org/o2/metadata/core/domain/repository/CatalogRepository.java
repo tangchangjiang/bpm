@@ -1,7 +1,10 @@
 package org.o2.metadata.core.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.core.api.dto.CatalogDTO;
 import org.o2.metadata.core.domain.entity.Catalog;
+
+import java.util.List;
 
 /**
  * 版本资源库
@@ -9,5 +12,12 @@ import org.o2.metadata.core.domain.entity.Catalog;
  * @author jiu.yang@hand-china.com 2019-12-02 15:33:52
  */
 public interface CatalogRepository extends BaseRepository<Catalog> {
-    
+
+    /**
+     * 更据版本目录主键集合批量查询ExcelDTO
+     * @param catalogIds 版本主键集合
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<CatalogDTO> batchFindByIds(List<String> catalogIds);
 }

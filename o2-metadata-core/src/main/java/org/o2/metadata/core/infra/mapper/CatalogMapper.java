@@ -1,7 +1,11 @@
 package org.o2.metadata.core.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.core.api.dto.CatalogDTO;
 import org.o2.metadata.core.domain.entity.Catalog;
+
+import java.util.List;
 
 /**
  * 版本Mapper
@@ -10,4 +14,11 @@ import org.o2.metadata.core.domain.entity.Catalog;
  */
 public interface CatalogMapper extends BaseMapper<Catalog> {
 
+    /**
+     * 更据版本目录主键集合批量查询ExcelDTO
+     * @param catalogIds 版本主键集合
+     * @return the return
+     * @throws RuntimeException exception description
+     */
+    List<CatalogDTO> batchFindByIds(@Param(value = "catalogIds") List<String> catalogIds);
 }

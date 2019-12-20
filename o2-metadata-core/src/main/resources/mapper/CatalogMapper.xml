@@ -14,6 +14,26 @@
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
-
     </resultMap>
+
+
+    <!--batchFindByIds-->
+    <select id="batchFindByIds" parameterType="java.lang.String" resultType="org.o2.metadata.core.api.dto.CatalogDTO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        c.catalog_code catalogCode,
+        t.catalog_remarks catalogRemarks,
+        t.catalog_name catalogName,
+        c.active_flag activeFlag
+        FROM
+        o2md_catalog c left join o2md_catalog_t1 t on c.catalog_id = t.catalog_id
+        WHERE
+        c.catalog_id IN
+        <foreach collection="catalogIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND t.lang =#{lang}
+    </select>
+
+
 </mapper>
