@@ -65,6 +65,14 @@
         WHERE
         t.pos_id = #{posId}
         AND t.carrier_id = #{carrierId}
+        <choose>
+            <when test="tenantId != null">
+                and t.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND t.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="posRelCarrierId != null">
             and t.pos_rel_carrier_id != #{posRelCarrierId}
         </if>
@@ -78,6 +86,14 @@
         WHERE
         t.pos_id = #{posId}
         AND t.priority = #{priority}
+        <choose>
+            <when test="tenantId != null">
+                and t.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND t.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="posRelCarrierId != null">
             and t.pos_rel_carrier_id != #{posRelCarrierId}
         </if>

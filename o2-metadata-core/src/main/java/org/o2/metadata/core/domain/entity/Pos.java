@@ -67,6 +67,7 @@ public class Pos extends AuditDomain {
 
         final Pos pos = new Pos();
         pos.setPosCode(this.posCode);
+        pos.setTenantId(this.tenantId);
         pos.setPosName(this.posName);
         pos.setPosTypeCode(this.posTypeCode);
         pos.setPosStatusCode(this.posStatusCode);
@@ -103,6 +104,7 @@ public class Pos extends AuditDomain {
     public void validatePosCode(final PosRepository posRepository) {
         final Pos pos = new Pos();
         pos.setPosCode(this.posCode);
+        pos.setTenantId(this.tenantId);
         final List<Pos> mayEmpty = posRepository.select(pos);
         if (CollectionUtils.isNotEmpty(mayEmpty)) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Pos(" + pos.getPosId() + ")");
