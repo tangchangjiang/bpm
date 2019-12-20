@@ -48,7 +48,7 @@
             AND ca.catalog_code = #{catalogCode}
             AND ca.tenant_id = #{tenantId}
         </if>
-        <if test="tenantId!=null and tenantId!=''">
+        <if test="tenantId!=null ">
             AND c.tenant_id = #{tenantId}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
