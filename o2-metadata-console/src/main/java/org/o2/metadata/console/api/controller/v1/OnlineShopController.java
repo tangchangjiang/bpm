@@ -106,8 +106,8 @@ public class OnlineShopController extends BaseController {
         }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
-            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).tenantId(organizationId).build());
-            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogId && organizationId");
+            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
+            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogVersionCode && organizationId");
             onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
             return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
         } catch (final DuplicateKeyException e) {
