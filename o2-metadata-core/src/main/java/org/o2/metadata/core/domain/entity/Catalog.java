@@ -59,6 +59,9 @@ public class Catalog extends AuditDomain {
     @MultiLanguageField
     private String catalogRemarks;
 
+    @ApiModelProperty(value = "是否有效")
+    private Integer activeFlag;
+
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 

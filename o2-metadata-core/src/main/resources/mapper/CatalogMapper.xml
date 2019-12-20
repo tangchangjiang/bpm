@@ -13,5 +13,7 @@
         <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+
     </resultMap>
 </mapper>
