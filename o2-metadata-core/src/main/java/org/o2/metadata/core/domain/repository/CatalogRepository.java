@@ -5,6 +5,7 @@ import org.o2.metadata.core.api.dto.CatalogDTO;
 import org.o2.metadata.core.domain.entity.Catalog;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 版本资源库
@@ -19,5 +20,5 @@ public interface CatalogRepository extends BaseRepository<Catalog> {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> batchFindByIds(List<String> catalogIds);
+    List<CatalogDTO> batchFindByIds(Set<Long> catalogIds);
 }

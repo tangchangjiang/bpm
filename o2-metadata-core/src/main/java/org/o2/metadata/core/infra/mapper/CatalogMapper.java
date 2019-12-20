@@ -6,6 +6,7 @@ import org.o2.metadata.core.api.dto.CatalogDTO;
 import org.o2.metadata.core.domain.entity.Catalog;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 版本Mapper
@@ -20,5 +21,5 @@ public interface CatalogMapper extends BaseMapper<Catalog> {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> batchFindByIds(@Param(value = "catalogIds") List<String> catalogIds);
+    List<CatalogDTO> batchFindByIds(@Param(value = "catalogIds") Set<Long> catalogIds);
 }
