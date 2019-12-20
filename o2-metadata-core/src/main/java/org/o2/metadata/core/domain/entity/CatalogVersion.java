@@ -58,5 +58,6 @@ public class CatalogVersion extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     @NotNull
     private Long tenantId;
-
+    @ApiModelProperty(value = "是否生效")
+    private Integer activeFlag;
 }
