@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.core.domain.entity.CatalogVersion;
@@ -24,7 +25,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author jiu.yang@hand-china.com 2019-12-19 16:32:58
  */
 @RestController("catalogVersionController.v1")
-@RequestMapping("/v1/catalog-versions")
+@RequestMapping("/v1/{organizationId}/catalog-versions")
 public class CatalogVersionController extends BaseController {
 
     @Autowired
@@ -33,8 +34,9 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.SITE)
     @GetMapping
-    public ResponseEntity<?> list(CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        catalogVersion.setTenantId(organizationId);
         Page<CatalogVersion> list = catalogVersionRepository.pageAndSort(pageRequest, catalogVersion);
         return Results.success(list);
     }
@@ -58,7 +60,8 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "修改目录版本")
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
+        catalogVersion.setTenantId(organizationId);
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.updateByPrimaryKeySelective(catalogVersion);
         return Results.success(catalogVersion);
