@@ -84,9 +84,8 @@ public class CarrierMapping extends AuditDomain {
     private Long carrierMappingId;
 
 
-    @ApiModelProperty(value = "归属电商平台,值集O2MD.PLATFORM_TYPE")
-    @LovValue(lovCode = O2CoreConstants.PlatformType.LOV_CODE)
-    @NotNull
+    @Transient
+    @ApiModelProperty(value = "版本ID")
     private Long catalogId;
 
     @ApiModelProperty(value = "承运商id")
@@ -112,7 +111,6 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
-    @Transient
     @ApiModelProperty(value = "版本编码")
     private String catalogCode;
 

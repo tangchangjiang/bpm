@@ -4,7 +4,7 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.CarrierMapping">
         <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
-        <result column="catalog_id" property="catalogId" jdbcType="VARCHAR"/>
+        <result column="catalog_code" property="catalogCode" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="external_carrier_code" property="externalCarrierCode" jdbcType="VARCHAR"/>
         <result column="external_carrier_Name" property="externalCarrierName" jdbcType="VARCHAR"/>
@@ -24,7 +24,7 @@
     <select id="listCarrierMappingByCondition" resultType="org.o2.metadata.core.domain.vo.CarrierMappingVO">
         SELECT
         cm.carrier_mapping_id,
-        cm.catalog_id,
+        cm.catalog_code,
         cm.carrier_id,
         c.carrier_code,
         c.carrier_name,
@@ -40,11 +40,10 @@
         FROM
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id
-        JOIN o2md_catalog ca on ca.catalog_id = cm.catalog_id
+        JOIN o2md_catalog ca on ca.catalog_code = cm.catalog_code
         where
         1 = 1
         <if test="catalogCode!=null and catalogCode!=''">
-            <!--AND cm.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})-->
             AND ca.catalog_code = #{catalogCode}
             AND ca.tenant_id = #{tenantId}
         </if>
@@ -58,6 +57,6 @@
             <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
             and cm.external_carrier_code like #{externalCarrierCodeLike}
         </if>
-        ORDER BY cm.catalog_id, c.carrier_code
+        ORDER BY cm.catalog_code, c.carrier_code
     </select>
 </mapper>
