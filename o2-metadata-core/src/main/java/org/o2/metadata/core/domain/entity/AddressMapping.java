@@ -67,7 +67,8 @@ public class AddressMapping extends AuditDomain {
     @LovValue(lovCode = O2CoreConstants.AddressType.LOV_CODE)
     private String addressTypeCode;
 
-
+    @ApiModelProperty(value = "版本ID")
+    @Transient
     private Long catalogId;
 
     @ApiModelProperty(value = "外部区域代码")
@@ -116,7 +117,6 @@ public class AddressMapping extends AuditDomain {
     private List<String> regionPathNames = new ArrayList<>(4);
 
     @ApiModelProperty(value = "版本编码")
-    @Transient
     private String catalogCode;
 
     @ApiModelProperty(value = "版本名称",required = true)

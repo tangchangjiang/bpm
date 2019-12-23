@@ -62,7 +62,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final List<RegionTreeChildVO> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, condition.getCatalogCode());
+        getParent(collect, tree, condition.getCatalogCode(),condition.getTenantId());
         sortList(tree);
         return tree;
     }
@@ -74,7 +74,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @return the return
      * @throws RuntimeException exception description
      */
-    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String catalogCode) {
+    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String catalogCode,Long tenantId) {
         // 省市区三级,用map存储，提高效率，key=regionCode，value=children
         final Map<String, List<RegionTreeChildVO>> map = new HashMap<>(16);
         final List<RegionTreeChildVO> tree = new ArrayList<>();
@@ -93,7 +93,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                     if (i == regionPaths.length - 1) {
                         regionTree = regionTreeChildVO;
                     } else {
-                        regionTree = addressMappingMapper.findAddressMappingByCode(regionPaths[i], catalogCode);
+                        regionTree = addressMappingMapper.findAddressMappingByCode(regionPaths[i], catalogCode,tenantId);
                     }
                     LOG.info("regionTree:" + regionTree);
                     // 父类是否包含
@@ -149,7 +149,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @param tree    树形返回数据
      * @param type    平台类型
      */
-    private void getParent(final Map<Long, List<RegionTreeChildVO>> collect, final List<RegionTreeChildVO> tree, final String type) {
+    private void getParent(final Map<Long, List<RegionTreeChildVO>> collect, final List<RegionTreeChildVO> tree, final String type,final Long tenantId) {
         final List<RegionTreeChildVO> result = new ArrayList<>();
 
         collect.keySet().forEach(key -> {
@@ -159,7 +159,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                 return;
             }
             //查询父节点
-            final List<RegionTreeChildVO> parents = addressMappingMapper.findAddressMappingById(key, type);
+            final List<RegionTreeChildVO> parents = addressMappingMapper.findAddressMappingById(key, type,tenantId);
             //处理不同平台同一数据
             RegionTreeChildVO parent = new RegionTreeChildVO();
             if (parents.size() == 1) {
@@ -198,7 +198,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             return node;
         }).collect(Collectors.groupingBy(RegionTreeChildVO::getParentRegionId));
         //递归调用
-        getParent(parentMap, tree, type);
+        getParent(parentMap, tree, type,tenantId);
     }
 
 

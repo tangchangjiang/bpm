@@ -26,9 +26,10 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      *
      * @param id   region_id 地区id
      * @param type 平台类型
+     * @param tenantId 租户ID
      * @return 查询结果集
      */
-    List<RegionTreeChildVO> findAddressMappingById(@Param(value = "id") Long id, @Param(value = "type") String type);
+    List<RegionTreeChildVO> findAddressMappingById(@Param(value = "id") Long id, @Param(value = "type") String type,@Param(value = "tenantId") Long tenantId);
 
     /**
      * 根据regionCode  catalogCode查询地址内部外部匹配数据
@@ -37,7 +38,7 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @param catalogCode 平台类型
      * @return 查询结果集
      */
-    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String catalogCode);
+    RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String catalogCode,@Param(value = "tenantId") Long tenantId);
 
     /**
      * 更据catalogCode和regionId查询地址匹配数量
