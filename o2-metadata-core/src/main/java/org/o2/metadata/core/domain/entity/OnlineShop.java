@@ -157,21 +157,21 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
 
+
+    //
+    // 数据库字段
+    // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "目录编码")
     @Transient
     private String catalogCode;
+    @ApiModelProperty(value = "目录名称")
     @Transient
     private String catalogName;
+    @ApiModelProperty(value = "版本目录编码")
     @Transient
     private String catalogVersionCode;
-
-//    @ApiModelProperty(value = "归属电商平台含义")
-//    @Transient
-//    private String catalogMeaning;
-
-//    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
-//    @Size(max = 255)
-//    @LovValue(lovCode = "O2PCM.PLATFORM_CATALOG")
-//    private String associatedCatalogCode;
-
-
+    @ApiModelProperty(value = "版本目录名称")
+    @Transient
+    private String catalogVersionName;
 }

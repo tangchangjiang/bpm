@@ -1,15 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.swagger.annotations.ApiParam;
-import org.hzero.core.util.Results;
-import org.hzero.core.base.BaseController;
-import org.o2.metadata.core.domain.entity.CatalogVersion;
-import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.hzero.mybatis.helper.SecurityTokenHelper;
-
+import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -17,6 +8,17 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseController;
+import org.hzero.core.util.Results;
+import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.core.domain.entity.Catalog;
+import org.o2.metadata.core.domain.entity.CatalogVersion;
+import org.o2.metadata.core.domain.repository.CatalogRepository;
+import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -30,6 +32,8 @@ public class CatalogVersionController extends BaseController {
 
     @Autowired
     private CatalogVersionRepository catalogVersionRepository;
+    @Autowired
+    private CatalogRepository catalogRepository;
 
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -37,6 +41,11 @@ public class CatalogVersionController extends BaseController {
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         catalogVersion.setTenantId(organizationId);
+        if (null != catalogVersion.getCatalogCode()) {
+            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogVersion.getCatalogCode()).tenantId(organizationId).build());
+            Preconditions.checkArgument(null != catalog, "illegal combination catalogCode && organizationId");
+            catalogVersion.setCatalogId(catalog.getCatalogId());
+        }
         Page<CatalogVersion> list = catalogVersionRepository.pageAndSort(pageRequest, catalogVersion);
         return Results.success(list);
     }
@@ -52,7 +61,8 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "创建目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
+        catalogVersion.setTenantId(organizationId);
         catalogVersionRepository.insertSelective(catalogVersion);
         return Results.success(catalogVersion);
     }

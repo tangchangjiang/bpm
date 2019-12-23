@@ -22,7 +22,8 @@
         <result column="catalog_version_id" property="catalogVersionId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
-
+        <result column="catalog_version_name" property="catalogVersionName" jdbcType="VARCHAR"/>
+        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="findByCondition" resultType="org.o2.metadata.core.domain.entity.OnlineShop">
@@ -45,10 +46,13 @@
         os.LAST_UPDATE_DATE,
         oc.catalog_code,
         oc.catalog_name,
-        os.tenant_id
+        os.tenant_id,
+        ocv.catalog_version_name,
+        ocv.catalog_version_code
         FROM
         o2md_online_shop os
         left join o2md_catalog oc on oc.catalog_id = os.catalog_id
+        left join o2_metadata.o2md_catalog_version ocv ON ocv.catalog_version_id = os.catalog_version_id
         <where>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
@@ -68,8 +72,8 @@
             <if test="catalogCode!=null and catalogCode!=''">
                 AND os.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
             </if>
-            <if test="tenantId!=null and tenantId!=''">
-                AND oc.tenant_id = #{tenantId}
+            <if test="tenantId != null">
+                AND os.tenant_id = #{tenantId}
             </if>
         </where>
         ORDER BY os.online_shop_code

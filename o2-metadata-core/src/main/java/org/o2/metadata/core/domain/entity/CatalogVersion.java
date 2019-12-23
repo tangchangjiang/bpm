@@ -1,6 +1,8 @@
 package org.o2.metadata.core.domain.entity;
 
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -11,6 +13,7 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,6 +26,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel("版本目录")
 @VersionAudit
 @ModifyAudit
+@MultiLanguage
 @Table(name = "o2md_catalog_version")
 public class CatalogVersion extends AuditDomain {
 
@@ -49,8 +53,10 @@ public class CatalogVersion extends AuditDomain {
     @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
     @ApiModelProperty(value = "版本目录名称")
+    @MultiLanguageField
     private String catalogVersionName;
     @ApiModelProperty(value = "版本目录表述")
+    @MultiLanguageField
     private String catalogVersionRemarks;
     @ApiModelProperty(value = "版本ID")
     @NotNull
@@ -60,4 +66,12 @@ public class CatalogVersion extends AuditDomain {
     private Long tenantId;
     @ApiModelProperty(value = "是否生效")
     private Integer activeFlag;
+
+    //
+    // 非数据库字段
+    // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "目录编码")
+    @Transient
+    private String catalogCode;
 }
