@@ -164,18 +164,9 @@ public class OnlineShop extends AuditDomain {
     @Transient
     private String catalogVersionCode;
 
-//    @ApiModelProperty(value = "归属电商平台含义")
-//    @Transient
-//    private String catalogMeaning;
-
-//    @ApiModelProperty(value = "关联目录，值集O2PCM.PLATFORM_CATALOG")
-//    @Size(max = 255)
-//    @LovValue(lovCode = "O2PCM.PLATFORM_CATALOG")
-//    private String associatedCatalogCode;
-
 
     //
-    // 非数据库字段
+    // 数据库字段
     // ------------------------------------------------------------------------------
 
     @ApiModelProperty(value = "版本目录名称")
