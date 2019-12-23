@@ -84,12 +84,14 @@ public class OnlineShopController extends BaseController {
     @GetMapping("/{shopId}")
     public ResponseEntity detail(@PathVariable final Long shopId) {
         OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogId(onlineShop.getCatalogId()).tenantId(onlineShop.getTenantId()).build());
+        Preconditions.checkArgument(null != onlineShop, "invalid field shopId: " + shopId);
+        Catalog catalog = catalogRepository.selectByPrimaryKey(onlineShop.getCatalogId());
         Preconditions.checkArgument(null != catalog, "invalid field catalogId: " + onlineShop.getCatalogId());
-        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(onlineShop.getCatalogId()).tenantId(onlineShop.getTenantId()).build());
-        Preconditions.checkArgument(null != catalogVersion, "invalid field catalogId: " + onlineShop.getCatalogId());
+        CatalogVersion catalogVersion = catalogVersionRepository.selectByPrimaryKey(onlineShop.getCatalogVersionId());
+        Preconditions.checkArgument(null != catalogVersion, "invalid field catalogVersionId " + onlineShop.getCatalogVersionId());
         onlineShop.setCatalogCode(catalog.getCatalogCode());
         onlineShop.setCatalogVersionName(catalogVersion.getCatalogVersionName());
+        onlineShop.setCatalogVersionCode(catalogVersion.getCatalogVersionCode());
         return Results.success(onlineShop);
     }
 

@@ -23,7 +23,7 @@
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
         <result column="catalog_version_name" property="catalogVersionName" jdbcType="VARCHAR"/>
-
+        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="findByCondition" resultType="org.o2.metadata.core.domain.entity.OnlineShop">
@@ -47,11 +47,12 @@
         oc.catalog_code,
         oc.catalog_name,
         os.tenant_id,
-        ocv.catalog_version_name
+        ocv.catalog_version_name,
+        ocv.catalog_version_code
         FROM
         o2md_online_shop os
         left join o2md_catalog oc on oc.catalog_id = os.catalog_id
-        left join o2md_catalog_version ocv on ocv.catalog_id = oc.catalog_id
+        left join o2_metadata.o2md_catalog_version ocv ON ocv.catalog_version_id = os.catalog_version_id
         <where>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>

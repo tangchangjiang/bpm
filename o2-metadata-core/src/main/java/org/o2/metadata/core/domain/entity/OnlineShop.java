@@ -157,18 +157,20 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
 
-    @Transient
-    private String catalogCode;
-    @Transient
-    private String catalogName;
-    @Transient
-    private String catalogVersionCode;
-
 
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
 
+    @ApiModelProperty(value = "目录编码")
+    @Transient
+    private String catalogCode;
+    @ApiModelProperty(value = "目录名称")
+    @Transient
+    private String catalogName;
+    @ApiModelProperty(value = "版本目录编码")
+    @Transient
+    private String catalogVersionCode;
     @ApiModelProperty(value = "版本目录名称")
     @Transient
     private String catalogVersionName;
