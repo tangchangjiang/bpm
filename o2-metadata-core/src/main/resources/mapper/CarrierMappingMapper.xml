@@ -40,15 +40,17 @@
         FROM
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id
-        JOIN o2md_catalog ca on ca.catalog_code = cm.catalog_code
-        where
-        1 = 1
+        where 1 = 1
+        <choose>
+            <when test="tenantId != null">
+                AND cm.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND cm.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="catalogCode!=null and catalogCode!=''">
-            AND ca.catalog_code = #{catalogCode}
-            AND ca.tenant_id = #{tenantId}
-        </if>
-        <if test="tenantId!=null ">
-            AND c.tenant_id = #{tenantId}
+            AND cm.catalog_code = #{catalogCode}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
             AND c.carrier_code LIKE concat("%",concat(#{carrierCode}),"%")
