@@ -36,14 +36,17 @@
         o2md_address_mapping ad
         left join o2md_region c ON ad.region_id = c.region_id
         left join o2md_country co on c.country_id = co.country_id
-        WHERE
-        1=1
-        <if test="addressMapping.tenantId!=null">
-            AND ad.tenant_id = #{addressMapping.tenantId}
-        </if>
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND ad.tenant_id = #{addressMapping.tenantId}
+            </when>
+            <otherwise>
+                AND ad.tenant_id = 0
+            </otherwise>
+        </choose>
         <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
-            AND ad.catalog_code in (SELECT ca.catalog_code FROM o2md_catalog ca WHERE (ca.catalog_code =
-            #{addressMapping.catalogCode}) AND ca.tenant_id = #{addressMapping.tenantId})
+            AND ad.catalog_code = #{addressMapping.catalogCode}
         </if>
         <if test="addressMapping.externalName!=null and addressMapping.externalName!=''">
             AND ad.external_name LIKE concat("%",concat(#{addressMapping.externalName}),"%")
