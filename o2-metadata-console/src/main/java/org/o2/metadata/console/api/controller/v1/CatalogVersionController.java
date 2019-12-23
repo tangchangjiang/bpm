@@ -52,7 +52,8 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "创建目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
+        catalogVersion.setTenantId(organizationId);
         catalogVersionRepository.insertSelective(catalogVersion);
         return Results.success(catalogVersion);
     }
