@@ -174,4 +174,11 @@ public class OnlineShop extends AuditDomain {
 //    private String associatedCatalogCode;
 
 
+    //
+    // 非数据库字段
+    // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "版本目录名称")
+    @Transient
+    private String catalogVersionName;
 }
