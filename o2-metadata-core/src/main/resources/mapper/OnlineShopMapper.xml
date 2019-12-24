@@ -6,6 +6,7 @@
         <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
         <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
         <result column="platform_shop_code" property="platformShopCode" jdbcType="VARCHAR"/>
+        <result column="catalog_id" property="catalogId" jdbcType="DECIMAL"/>
         <result column="sourced_flag" property="sourcedFlag" jdbcType="DECIMAL"/>
         <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
         <result column="returned_flag" property="returnedFlag" jdbcType="DECIMAL"/>
@@ -18,7 +19,10 @@
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="catalog_version_id" property="catalogVersionId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
+        <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
+        <result column="catalog_version_name" property="catalogVersionName" jdbcType="VARCHAR"/>
         <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -28,7 +32,7 @@
         os.online_shop_name,
         os.online_shop_code,
         os.platform_shop_code,
-        os.catalog_code,
+        os.catalog_id,
         os.sourced_flag,
         os.picked_up_flag,
         os.returned_flag,
@@ -40,24 +44,16 @@
         os.CREATED_BY,
         os.LAST_UPDATED_BY,
         os.LAST_UPDATE_DATE,
-        os.catalog_code,
+        oc.catalog_code,
+        oc.catalog_name,
         os.tenant_id,
-        os.catalog_version_code,
         ocv.catalog_version_name,
-        oc.catalog_name
+        ocv.catalog_version_code
         FROM
         o2md_online_shop os
-        join o2md_catalog oc on os.catalog_code = oc.catalog_code
-        join o2md_catalog_version ocv ocv.catalog_id = oc.catalog_id
+        left join o2md_catalog oc on oc.catalog_id = os.catalog_id
+        left join o2_metadata.o2md_catalog_version ocv ON ocv.catalog_version_id = os.catalog_version_id
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND os.tenant_id = 0
-                </otherwise>
-            </choose>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code LIKE #{onlineShopCodeLike}
@@ -74,10 +70,13 @@
                 AND os.platform_shop_code LIKE #{platformShopCodeLike}
             </if>
             <if test="catalogCode!=null and catalogCode!=''">
-                AND os.catalog_code = #{catalogCode}
+                AND os.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
             </if>
-            <if test="catalogVersionCode!=null and catalogVersionCode!=''">
-                AND os.catalog_version_code = #{catalogVersionCode}
+            <if test="catalogVersionCode !=null and catalogVersionCode !=''">
+                AND os.catalog_version_id in (SELECT ocv.catalog_version_id FROM o2md_catalog_version ocv WHERE (ocv.catalog_version_code = #{catalogVersionCode}) AND ocv.tenant_id = #{tenantId})
+            </if>
+            <if test="tenantId != null">
+                AND os.tenant_id = #{tenantId}
             </if>
         </where>
         ORDER BY os.online_shop_code
@@ -88,15 +87,9 @@
         SELECT os.*
         FROM
         o2md_online_shop os
+        join o2md_catalog oc on os.catalog_id = oc.catalog_id
+        join o2md_catalog_version ocv on ocv.catalog_version_id = os.catalog_version_id
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND os.tenant_id = 0
-                </otherwise>
-            </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">
                 AND os.online_shop_code = #{onlineShopCode}
             </if>
@@ -107,8 +100,19 @@
                 AND os.platform_shop_code = #{platformShopCode}
             </if>
             <if test="catalogCode!=null and catalogCode!=''">
-                AND os.catalog_code = #{catalogCode}
+                AND oc.catalog_code = #{catalogCode}
             </if>
+            <if test="catalogVersionCode!=null and catalogVersionCode!=''">
+                AND ocv.catalog_version_code = #{catalogVersionCode}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND oc.tenant_id = #{tenantId} and os.tenant_id = #{tenantId} and ocv.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND oc.tenant_id = 0 and os.tenant_id = 0 and ocv.tenant_id = 0
+                </otherwise>
+            </choose>
         </where>
         ORDER BY os.online_shop_code
     </select>
