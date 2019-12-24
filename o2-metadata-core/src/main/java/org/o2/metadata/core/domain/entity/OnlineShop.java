@@ -114,8 +114,12 @@ public class OnlineShop extends AuditDomain {
     @Size(max = 255)
     private String platformShopCode;
 
+    @Transient
+    @ApiModelProperty(value = "版本主键")
     private Long catalogId;
 
+    @Transient
+    @ApiModelProperty(value = "版本目录主键")
     private Long catalogVersionId;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
@@ -163,14 +167,15 @@ public class OnlineShop extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     @ApiModelProperty(value = "目录编码")
-    @Transient
     private String catalogCode;
+
     @ApiModelProperty(value = "目录名称")
     @Transient
     private String catalogName;
+
     @ApiModelProperty(value = "版本目录编码")
-    @Transient
     private String catalogVersionCode;
+
     @ApiModelProperty(value = "版本目录名称")
     @Transient
     private String catalogVersionName;
