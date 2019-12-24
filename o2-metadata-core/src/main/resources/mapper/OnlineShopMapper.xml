@@ -72,6 +72,9 @@
             <if test="catalogCode!=null and catalogCode!=''">
                 AND os.catalog_id in (SELECT ca.catalog_id FROM o2md_catalog ca WHERE (ca.catalog_code = #{catalogCode}) AND ca.tenant_id = #{tenantId})
             </if>
+            <if test="catalogVersionCode !=null and catalogVersionCode !=''">
+                AND os.catalog_version_id in (SELECT ocv.catalog_version_id FROM o2md_catalog_version ocv WHERE (ocv.catalog_version_code = #{catalogVersionCode}) AND ocv.tenant_id = #{tenantId})
+            </if>
             <if test="tenantId != null">
                 AND os.tenant_id = #{tenantId}
             </if>
