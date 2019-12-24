@@ -38,7 +38,7 @@
         left join o2md_country co on c.country_id = co.country_id
         WHERE 1=1
         <choose>
-            <when test="tenantId != null">
+            <when test="addressMapping.tenantId != null">
                 AND ad.tenant_id = #{addressMapping.tenantId}
             </when>
             <otherwise>
