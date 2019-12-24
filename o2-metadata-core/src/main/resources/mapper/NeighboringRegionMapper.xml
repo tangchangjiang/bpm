@@ -17,8 +17,7 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <select id="findNeighboringRegions" resultMap="BaseResultMap"
-            parameterType="org.o2.metadata.core.domain.entity.NeighboringRegion">
+    <select id="findNeighboringRegions" resultMap="BaseResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         n.neighboring_region_id,
