@@ -48,7 +48,7 @@
         FROM
         o2md_online_shop os
         join o2md_catalog oc on os.catalog_code = oc.catalog_code
-        join o2md_catalog_version ocv ocv.catalog_id = oc.catalog_id
+        join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code
         <where>
             <choose>
                 <when test="tenantId != null">
