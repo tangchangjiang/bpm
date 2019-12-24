@@ -47,7 +47,6 @@ public class OnlineShop extends AuditDomain {
             return shopRepository.existsWithPrimaryKey(this);
         }
         final OnlineShop onlineShop = new OnlineShop();
-        onlineShop.setOnlineShopCode(this.onlineShopCode);
         onlineShop.setCatalogVersionCode(this.catalogVersionCode);
         onlineShop.setTenantId(this.tenantId);
         List<OnlineShop> onlineShops =  shopRepository.existenceDecide(onlineShop);
