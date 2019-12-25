@@ -43,7 +43,8 @@ public class OnlineShopController extends BaseController {
     private final OnlineShopRelPosService onlineShopRelPosService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
-    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService,final CatalogRepository catalogRepository,final CatalogVersionRepository catalogVersionRepository) {
+
+    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService, final CatalogRepository catalogRepository, final CatalogVersionRepository catalogVersionRepository) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelPosService = onlineShopRelPosService;
         this.catalogRepository = catalogRepository;
@@ -85,10 +86,10 @@ public class OnlineShopController extends BaseController {
     public ResponseEntity detail(@PathVariable final Long shopId) {
         OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
         Preconditions.checkArgument(null != onlineShop, "invalid field shopId: " + shopId);
-        Catalog catalog = catalogRepository.selectByPrimaryKey(onlineShop.getCatalogId());
-        Preconditions.checkArgument(null != catalog, "invalid field catalogId: " + onlineShop.getCatalogId());
-        CatalogVersion catalogVersion = catalogVersionRepository.selectByPrimaryKey(onlineShop.getCatalogVersionId());
-        Preconditions.checkArgument(null != catalogVersion, "invalid field catalogVersionId " + onlineShop.getCatalogVersionId());
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
+        Preconditions.checkArgument(null != catalog, "invalid field catalogCode: " + onlineShop.getCatalogId());
+        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
+        Preconditions.checkArgument(null != catalogVersion, "invalid field catalogVersionCode " + onlineShop.getCatalogVersionId());
         onlineShop.setCatalogCode(catalog.getCatalogCode());
         onlineShop.setCatalogVersionName(catalogVersion.getCatalogVersionName());
         onlineShop.setCatalogVersionCode(catalogVersion.getCatalogVersionCode());
@@ -112,7 +113,7 @@ public class OnlineShopController extends BaseController {
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
             CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
-            Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogVersionCode && organizationId");
+            Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogVersionCode && organizationId");
             onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
             return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
         } catch (final DuplicateKeyException e) {
@@ -130,7 +131,7 @@ public class OnlineShopController extends BaseController {
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalog,"illegal combination catalogCode && organizationId");
+        Preconditions.checkArgument(null != catalog, "illegal combination catalogCode && organizationId");
         this.validObject(onlineShop);
         onlineShop.validate(onlineShopRepository);
         if (!onlineShop.exist(onlineShopRepository)) {
@@ -138,7 +139,7 @@ public class OnlineShopController extends BaseController {
         }
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalogVersion,"illegal combination catalogId && organizationId && catalogVersionCode");
+        Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
         onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
         onlineShop.setCatalogId(catalog.getCatalogId());
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);

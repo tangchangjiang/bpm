@@ -52,10 +52,10 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId} AND oc.tenant_id = #{tenantId} AND ocv.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND os.tenant_id = 0
+                    AND os.tenant_id = 0 AND oc.tenant_id = 0 AND ocv.tenant_id = 0
                 </otherwise>
             </choose>
             <if test="onlineShopCode != null">
@@ -108,6 +108,9 @@
             </if>
             <if test="catalogCode!=null and catalogCode!=''">
                 AND os.catalog_code = #{catalogCode}
+            </if>
+            <if test="catalogVersionCode!=null and catalogVersionCode!=''">
+                AND os.catalog_version_code = #{catalogVersionCode}
             </if>
         </where>
         ORDER BY os.online_shop_code

@@ -43,10 +43,10 @@
         where 1 = 1
         <choose>
             <when test="tenantId != null">
-                AND cm.tenant_id = #{tenantId} AND ca.tenant_id = #{tenantId}
+                AND c.tenant_id = #{tenantId} AND ca.tenant_id = #{tenantId} AND cm.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND cm.tenant_id = 0 AND ca.tenant_id = 0
+                AND c.tenant_id = 0 AND ca.tenant_id = 0 AND cm.tenant_id = 0
             </otherwise>
         </choose>
         <if test="catalogCode!=null and catalogCode!=''">
