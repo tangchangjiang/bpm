@@ -74,6 +74,7 @@ public class PosServiceImpl implements PosService {
                     return;
                 }
                 postTime.setPosId(pos.getPosId());
+                postTime.setTenantId(pos.getTenantId());
                 postTimeRepository.insert(postTime);
             });
         }
@@ -107,6 +108,7 @@ public class PosServiceImpl implements PosService {
                     return;
                 }
                 postTime.setPosId(pos.getPosId());
+                postTime.setTenantId(pos.getTenantId());
                 if (postTime.getPostTimeId() != null) {
                     postTimeRepository.updateByPrimaryKey(postTime);
                 } else {
