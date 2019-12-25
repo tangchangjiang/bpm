@@ -36,6 +36,7 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      *
      * @param regionCode       region_id 地区id
      * @param catalogCode 平台类型
+     * @param tenantId 租户ID
      * @return 查询结果集
      */
     RegionTreeChildVO findAddressMappingByCode(@Param(value = "regionCode") String regionCode, @Param(value = "catalogCode") String catalogCode,@Param(value = "tenantId") Long tenantId);

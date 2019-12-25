@@ -4,6 +4,11 @@ import lombok.Data;
 import org.hzero.export.annotation.ExcelColumn;
 import org.hzero.export.annotation.ExcelSheet;
 
+/**
+ * 版本数据实体
+ * @author jiu.yang@hand-china.com
+ * @date 2019/12/25 18:36
+ */
 @Data
 @ExcelSheet(zh = "版本数据")
 public class CatalogDTO {
