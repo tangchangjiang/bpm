@@ -90,7 +90,7 @@ public class AddressMappingController extends BaseController {
     public ResponseEntity<?> detail(final Long addressMappingId, final String countryCode) {
         final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
         final Region region = regionRepository.selectByPrimaryKey(addressMapping.getRegionId());
-        final Catalog catalog = catalogRepository.selectByPrimaryKey(addressMapping.getCatalogId());
+        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
         addressMapping.setCatalogCode(catalog.getCatalogCode());
         addressMapping.setCatalogName(catalog.getCatalogName());
         if (region != null) {
