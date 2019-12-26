@@ -61,6 +61,7 @@ public class PosServiceImpl implements PosService {
             if (region != null) {
                 address.setCountryId(region.getCountryId());
             }
+            address.setTenantId(pos.getTenantId());
             posAddressRepository.insertSelective(address);
             pos.setAddressId(address.getPosAddressId());
         }
