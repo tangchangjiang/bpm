@@ -18,7 +18,7 @@
 
 
     <!--batchFindByIds-->
-    <select id="batchFindByIds" parameterType="java.lang.Long" resultType="org.o2.metadata.core.api.dto.CatalogDTO">
+    <select id="batchFindByIds" parameterType="java.lang.Long" resultType="org.o2.metadata.core.domain.vo.CatalogVO">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         c.catalog_code catalogCode,

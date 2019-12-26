@@ -2,7 +2,7 @@ package org.o2.metadata.core.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.entity.Catalog;
 
 import java.util.List;
@@ -21,5 +21,5 @@ public interface CatalogMapper extends BaseMapper<Catalog> {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> batchFindByIds(@Param(value = "catalogIds") Set<Long> catalogIds);
+    List<CatalogVO> batchFindByIds(@Param(value = "catalogIds") Set<Long> catalogIds);
 }

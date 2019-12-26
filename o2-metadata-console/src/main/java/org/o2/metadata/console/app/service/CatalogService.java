@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.hzero.export.vo.ExportParam;
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface CatalogService {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> export(ExportParam exportParam);
+    List<CatalogVO> export(ExportParam exportParam);
 }

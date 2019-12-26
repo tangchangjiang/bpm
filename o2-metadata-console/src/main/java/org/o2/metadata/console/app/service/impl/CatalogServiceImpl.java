@@ -2,12 +2,11 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.hzero.export.vo.ExportParam;
 import org.o2.metadata.console.app.service.CatalogService;
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class CatalogServiceImpl implements CatalogService {
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogDTO> export(ExportParam exportParam) {
+    public List<CatalogVO> export(ExportParam exportParam) {
         Set<Long> catalogBatchIdList =  exportParam.getIds();
         return catalogRepository.batchFindByIds(catalogBatchIdList);
     }

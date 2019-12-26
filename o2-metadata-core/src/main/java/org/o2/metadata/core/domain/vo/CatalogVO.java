@@ -1,4 +1,4 @@
-package org.o2.metadata.core.api.dto;
+package org.o2.metadata.core.domain.vo;
 
 import lombok.Data;
 import org.hzero.export.annotation.ExcelColumn;
@@ -11,7 +11,7 @@ import org.hzero.export.annotation.ExcelSheet;
  */
 @Data
 @ExcelSheet(zh = "版本数据")
-public class CatalogDTO {
+public class CatalogVO {
 
     @ExcelColumn(zh = "版本编码")
     private String catalogCode;

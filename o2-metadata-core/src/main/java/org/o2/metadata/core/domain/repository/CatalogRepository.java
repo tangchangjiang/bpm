@@ -1,7 +1,7 @@
 package org.o2.metadata.core.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.entity.Catalog;
 
 import java.util.List;
@@ -20,5 +20,5 @@ public interface CatalogRepository extends BaseRepository<Catalog> {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogDTO> batchFindByIds(Set<Long> catalogIds);
+    List<CatalogVO> batchFindByIds(Set<Long> catalogIds);
 }

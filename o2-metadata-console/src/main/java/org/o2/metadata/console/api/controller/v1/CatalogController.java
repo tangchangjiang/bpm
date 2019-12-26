@@ -16,7 +16,7 @@ import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,9 +93,9 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "版本导出Excel")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/export")
-    @ExcelExport(CatalogDTO.class)
+    @ExcelExport(CatalogVO.class)
     public ResponseEntity<?> export(ExportParam exportParam, HttpServletResponse response) {
-        List<CatalogDTO> export = catalogService.export(exportParam);
+        List<CatalogVO> export = catalogService.export(exportParam);
         return Results.success(export);
     }
 

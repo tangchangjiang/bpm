@@ -1,6 +1,6 @@
 package org.o2.metadata.core.infra.repository.impl;
 
-import org.o2.metadata.core.api.dto.CatalogDTO;
+import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
@@ -30,7 +30,7 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogDTO> batchFindByIds(Set<Long> catalogIds) {
+    public List<CatalogVO> batchFindByIds(Set<Long> catalogIds) {
 
         return catalogMapper.batchFindByIds(catalogIds);
     }
