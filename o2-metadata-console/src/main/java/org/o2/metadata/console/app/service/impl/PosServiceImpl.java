@@ -97,6 +97,7 @@ public class PosServiceImpl implements PosService {
             final Long regionId = address.getRegionId();
             final Region region = regionRepository.selectByPrimaryKey(regionId);
             address.setCountryId(region.getCountryId());
+            address.setTenantId(pos.getTenantId());
             posAddressRepository.updateByPrimaryKey(address);
         }
 
