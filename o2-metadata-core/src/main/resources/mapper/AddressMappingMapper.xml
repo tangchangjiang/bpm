@@ -49,10 +49,10 @@
             AND ad.catalog_code = #{addressMapping.catalogCode}
         </if>
         <if test="addressMapping.externalName!=null and addressMapping.externalName!=''">
-            AND ad.external_name LIKE concat("%",concat(#{addressMapping.externalName}),"%")
+            AND ad.external_name LIKE concat('%',concat(#{addressMapping.externalName}),'%')
         </if>
         <if test="addressMapping.regionName!=null and addressMapping.regionName!=''">
-            AND c.region_name LIKE concat("%",concat(#{addressMapping.regionName}),"%")
+            AND c.region_name LIKE concat('%',concat(#{addressMapping.regionName}),'%')
         </if>
         <if test="countryCode!=null and countryCode!=''">
             AND co.country_code = #{countryCode}

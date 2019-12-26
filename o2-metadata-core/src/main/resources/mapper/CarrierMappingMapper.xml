@@ -53,7 +53,8 @@
             AND cm.catalog_code = #{catalogCode}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
-            AND c.carrier_code LIKE concat("%",concat(#{carrierCode}),"%")
+            <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
+            AND c.carrier_code LIKE #{carrierCode}
         </if>
         <if test="externalCarrierCode != null and externalCarrierCode != ''">
             <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
