@@ -91,6 +91,50 @@ public interface MetadataConstants {
         String LOV_CODE = "O2MD.POS_STATUS";
     }
 
+    /**
+     * 来源系统
+     */
+    interface SourceSystemCode{
+        /**
+         * O2
+         */
+        String O2 = "O2";
+        String LOV_CODE = "O2MD.SOURCE_SYSTEM";
+    }
+
+    /**
+     * 类型：PC/H5/WeChat/APP/TMALL/JD，值集O2VIP.CHANNEL_TYPE
+     */
+    interface ChannelTypeCode {
+
+        /**
+         * 电脑端
+         */
+        String PC = "PC";
+        /**
+         * 移动端H5
+         */
+        String H5 = "H5";
+        /**
+         * 微信
+         */
+        String WECHAT = "WeChat";
+        /**
+         * APP
+         */
+        String APP = "APP";
+        /**
+         * 天猫
+         */
+        String TMALL = "TMALL";
+        /**
+         * 京东
+         */
+        String JD = "JD";
+
+        String LOV_CODE = "O2MD.CHANNEL_TYPE";
+    }
+
 
 
     interface PosCacheCode {
