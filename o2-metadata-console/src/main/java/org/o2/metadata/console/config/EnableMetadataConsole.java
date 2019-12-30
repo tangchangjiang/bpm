@@ -1,6 +1,5 @@
 package org.o2.metadata.console.config;
 
-import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.metadata.console.api",
         "org.o2.metadata.console.app"
 })
-@EnableDubbo(scanBasePackages = "org.o2.metadata.console.api.rpc")
 public class EnableMetadataConsole {
     public static final String ADDRESS_MAPPING = "Address Mapping";
     public static final String CARRIER = "Carrier";
