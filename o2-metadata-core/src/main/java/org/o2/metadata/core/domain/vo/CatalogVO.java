@@ -5,19 +5,19 @@ import org.hzero.export.annotation.ExcelColumn;
 import org.hzero.export.annotation.ExcelSheet;
 
 /**
- * 版本数据实体
+ * 目录数据实体
  * @author jiu.yang@hand-china.com
  * @date 2019/12/25 18:36
  */
 @Data
-@ExcelSheet(zh = "版本数据")
+@ExcelSheet(zh = "目录数据")
 public class CatalogVO {
 
-    @ExcelColumn(zh = "版本编码")
+    @ExcelColumn(zh = "目录编码")
     private String catalogCode;
 
 
-    @ExcelColumn(zh = "版本描述")
+    @ExcelColumn(zh = "目录描述")
     private String catalogRemarks;
 
 
@@ -25,7 +25,7 @@ public class CatalogVO {
     private Integer activeFlag;
 
 
-    @ExcelColumn(zh = "版本名称")
+    @ExcelColumn(zh = "目录名称")
     private String catalogName;
 
 
