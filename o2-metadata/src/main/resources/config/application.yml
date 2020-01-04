@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: o2-metadata
+    hone-route:
+      name: o2md
+      path: /o2md/**
+
+server:
+  port: 9100
+  undertow:
+    # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接
+    # 默认值为8，建议设置每个CPU核心一个线程
+    io-threads: ${SERVER_UNDERTOW_IO_THREADS:4}
+    # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程
+    # 默认等于 io-threads*8，它的值设置取决于系统的负载，可适当调大该值
+    worker-threads: ${SERVER_UNDERTOW_WORKER_THREADS:128}
+    # 每块buffer的空间大小，越小空间被利用越充分
+    # 不要设置太大，以免影响其他应用，合适即可
+    buffer-size: ${SERVER_UNDERTOW_BUFFER_SIZE:1024}
+    # 是否分配的直接内存(NIO直接分配的堆外内存)
+    # 默认false
+    direct-buffers: true
+    # HTTP POST请求最大的大小
+    # 默认0，无限制，可设置10M
+    max-http-post-size: 10485760
+management:
+  server:
+    port: 9101
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+mybatis:
+  configuration:
+    # 数据库下划线转驼峰配置
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/*.xml
+
+o2:
+  redis:
+    cache:
+      host: ${O2_REDIS_HOST:192.168.12.237}
+      port: ${O2_REDIS_PORT:6379}
+      password: ${O2_REDIS_PASSWORD:1q2w3e4r5t}
+      timeout-millis: ${O2_REDIS_COMMAND_TIMEOUT_MILLIS:3000}
+      pool-min-idle: ${O2_REDIS_POOL_MIN_IDLE:4}
+      pool-max-idle: ${O2_REDIS_POOL_MAX_IDLE:8}
+      pool-max-wait-millis: ${O2_REDIS_POOL_MAX_WAIT_MILLIS:30000}
+
+hzero:
+  lov:
+    sql:
+      enabled: ${HZERO_LOV_SQL_ENABLED:true}
+    value:
+      enabled: ${HZERO_LOV_VALUE_ENABLED:true}
+  data:
+    permission:
+      db-owner: ${HZERO_DB_OWNER:}
+
+logging:
+  level:
+    org.apache.ibatis: ${LOG_LEVEL:debug}
+    io.choerodon: ${LOG_LEVEL:debug}
+    org.hzero.platform.infra.mapper: ${LOG_LEVEL:debug}

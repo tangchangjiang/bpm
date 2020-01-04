@@ -9,15 +9,13 @@ import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
-import org.springframework.stereotype.Component;
 
 /**
  * SysParameter RPC Provider
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-@Service(version = MetadataContext.PosContext.Version.DEF)
-@Component("sysParameterContext")
+@Service(version = MetadataContext.SysParameterContext.Version.DEF)
 public class SysParameterContextImpl implements ISysParameterContext {
     private final RedisCacheClient redisCacheClient;
 

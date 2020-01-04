@@ -1,6 +1,5 @@
 package org.o2.metadata.api.rpc;
 
-import com.google.common.base.Joiner;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.o2.context.metadata.MetadataContext;
@@ -11,7 +10,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +21,6 @@ import java.util.Set;
  * @author mark.bao@hand-china.com 2019/11/29
  */
 @Service(version = MetadataContext.PosContext.Version.DEF)
-@Component("posContext")
 public class PosContextImpl implements IPosContext {
     private final RedisCacheClient redisCacheClient;
 
@@ -72,20 +69,22 @@ public class PosContextImpl implements IPosContext {
     }
 
     @Override
-    public String posCacheKey(final String posCode, Long tenantId) {
-        String tenantStr = null == tenantId ? null : tenantId.toString();
-        return Joiner.on(":").skipNulls().join(MetadataConstants.SysParameterCache.CACHE_SERVICE_NAME, MetadataConstants.PosCacheCode.CACHE_SERVICE_NAME_POS, tenantStr, posCode);
+    public String posCacheKey(final String posCode, final Long tenantId) {
+        if (tenantId == null) {
+            return MetadataConstants.PosCache.posCacheKey(0, posCode);
+        }
+        return MetadataConstants.PosCache.posCacheKey(tenantId, posCode);
     }
 
     @Override
     public boolean isPosExpressLimit(final String posCode, Long tenantId) {
-        final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.EXPRESS_LIMIT_COLLECTION).isMember(getCacheKey(posCode, tenantId));
+        final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.EXPRESS_LIMIT_COLLECTION).isMember(posCacheKey(posCode, tenantId));
         return result != null && result;
     }
 
     @Override
     public boolean isPosPickUpLimit(final String posCode, Long tenantId) {
-        final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.PICK_UP_LIMIT_COLLECTION).isMember(getCacheKey(posCode, tenantId));
+        final Boolean result = this.redisCacheClient.boundSetOps(MetadataConstants.PosCache.PICK_UP_LIMIT_COLLECTION).isMember(posCacheKey(posCode, tenantId));
         return result != null && result;
     }
 
@@ -129,11 +128,6 @@ public class PosContextImpl implements IPosContext {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
         this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), posCode, String.valueOf(tenantId));
-    }
-
-    private String getCacheKey(final String posCode, final Long tenantId) {
-        String tenantStr = null == tenantId ? null : tenantId.toString();
-        return Joiner.on(":").skipNulls().join(tenantStr, posCode);
     }
 
     private static final ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =

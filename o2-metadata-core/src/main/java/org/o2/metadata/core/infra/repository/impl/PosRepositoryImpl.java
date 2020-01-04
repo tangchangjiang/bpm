@@ -24,7 +24,9 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     private final PosAddressMapper posAddressMapper;
     private final PostTimeMapper postTimeMapper;
 
-    public PosRepositoryImpl(final PosMapper posMapper, final PosAddressMapper posAddressMapper, final PostTimeMapper postTimeMapper) {
+    public PosRepositoryImpl(final PosMapper posMapper,
+                             final PosAddressMapper posAddressMapper,
+                             final PostTimeMapper postTimeMapper) {
         this.posMapper = posMapper;
         this.posAddressMapper = posAddressMapper;
         this.postTimeMapper = postTimeMapper;
@@ -53,12 +55,12 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public List<Pos> listUnbindPosList(final Long shopId, final String posCode, final String posName,final Long tenantId) {
-        return posMapper.listUnbindPosList(shopId, posCode, posName,tenantId);
+    public List<Pos> listUnbindPosList(final Long shopId, final String posCode, final String posName, final Long tenantId) {
+        return posMapper.listUnbindPosList(shopId, posCode, posName, tenantId);
     }
 
     @Override
-    public Pos getPosByCode(Long tenantId ,final String posCode) {
+    public Pos getPosByCode(Long tenantId, final String posCode) {
         final Pos pos = new Pos();
         pos.setPosCode(posCode);
         pos.setTenantId(tenantId);

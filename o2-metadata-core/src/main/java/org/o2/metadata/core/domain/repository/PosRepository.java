@@ -1,9 +1,10 @@
 package org.o2.metadata.core.domain.repository;
 
 
+import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.core.domain.entity.Pos;
 import org.o2.metadata.core.domain.vo.PosVO;
-import org.hzero.mybatis.base.BaseRepository;
+
 import java.util.List;
 
 /**
@@ -38,10 +39,10 @@ public interface PosRepository extends BaseRepository<Pos> {
     /**
      * 查询未与网店关联的服务点
      *
-     * @param shopId  网店 id
-     * @param posCode
-     * @param posName
-     * @param tenantId
+     * @param shopId   网店 id
+     * @param posCode  门店编码
+     * @param posName  门店名称
+     * @param tenantId 租户id
      * @return 服务点列表
      */
     List<Pos> listUnbindPosList(Long shopId, String posCode, String posName, Long tenantId);
@@ -49,7 +50,7 @@ public interface PosRepository extends BaseRepository<Pos> {
     /**
      * 根据服务点编码查询
      *
-     * @param posCode 服务点编码
+     * @param posCode  服务点编码
      * @param tenantId 租户ID
      * @return 服务点信息
      */
