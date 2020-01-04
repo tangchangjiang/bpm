@@ -1,9 +1,9 @@
 package org.o2.metadata.core.infra.repository.impl;
 
-import org.o2.metadata.core.domain.entity.AddressMapping;
-import org.o2.metadata.core.infra.mapper.AddressMappingMapper;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.core.domain.entity.AddressMapping;
 import org.o2.metadata.core.domain.repository.AddressMappingRepository;
+import org.o2.metadata.core.infra.mapper.AddressMappingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +19,7 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
 
     @Autowired
     private AddressMappingMapper addressMappingMapper;
+
     /**
      * 更据catalogCode和regionId查询地址匹配数量
      * @param catalogCode meaning

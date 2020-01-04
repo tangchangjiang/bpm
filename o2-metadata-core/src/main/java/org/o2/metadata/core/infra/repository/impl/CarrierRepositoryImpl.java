@@ -1,9 +1,9 @@
 package org.o2.metadata.core.infra.repository.impl;
 
-import org.o2.metadata.core.domain.entity.Carrier;
-import org.o2.metadata.core.infra.mapper.CarrierMapper;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.core.domain.entity.Carrier;
 import org.o2.metadata.core.domain.repository.CarrierRepository;
+import org.o2.metadata.core.infra.mapper.CarrierMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Component
 public class CarrierRepositoryImpl extends BaseRepositoryImpl<Carrier> implements CarrierRepository {
+
     private final CarrierMapper carrierMapper;
 
     public CarrierRepositoryImpl(final CarrierMapper carrierMapper) {

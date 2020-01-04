@@ -12,7 +12,7 @@ import org.springframework.scripting.support.ResourceScriptSource;
 public interface MetadataConstants {
 
     interface PosCache {
-        String POS_INFO_KEY = "o2md:pos:%s";
+        String POS_INFO_KEY = "o2md:pos:%d:%s";
         String PICK_UP_LIMIT_QUANTITY = "pick_up_limit_quantity";
         String EXPRESS_LIMIT_QUANTITY = "express_limit_quantity";
         String PICK_UP_LIMIT_VALUE = "pick_up_limit_value";
@@ -23,12 +23,13 @@ public interface MetadataConstants {
         /**
          * 格式化的字符串
          *
-         * @param posCode 服务点编码
+         * @param tenantId 租户ID
+         * @param posCode  服务点编码
          * @return the return
          * @throws RuntimeException exception description
          */
-        static String posCacheKey(final String posCode) {
-            return String.format(POS_INFO_KEY, posCode);
+        static String posCacheKey(final long tenantId, final String posCode) {
+            return String.format(POS_INFO_KEY, tenantId, posCode);
         }
     }
 
@@ -94,7 +95,7 @@ public interface MetadataConstants {
     /**
      * 来源系统
      */
-    interface SourceSystemCode{
+    interface SourceSystemCode {
         /**
          * O2
          */
@@ -136,10 +137,10 @@ public interface MetadataConstants {
     }
 
 
-
     interface PosCacheCode {
         String CACHE_SERVICE_NAME_POS = "pos";
     }
+
     interface SysParameterCache {
         String SYS_PARAMETER_KEY = "o2md:sys_parameter:%s";
         String CACHE_SERVICE_NAME = "o2md";
@@ -154,7 +155,7 @@ public interface MetadataConstants {
          */
         static String sysParameterKey(String sysParameterCode, Long tenantId) {
             String tenantStr = null == tenantId ? null : tenantId.toString();
-            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYS_PARAMETER,tenantStr,sysParameterCode);
+            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYS_PARAMETER, tenantStr, sysParameterCode);
         }
     }
 }
