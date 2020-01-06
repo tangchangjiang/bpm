@@ -5,9 +5,11 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.*;
+import org.apache.dubbo.config.annotation.Reference;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.metadata.console.config.EnableMetadataConsole;
@@ -33,7 +35,7 @@ public class SysParameterController extends BaseController {
     @Autowired
     private SysParameterRepository sysParameterRepository;
 
-    @Autowired
+    @Reference(version = MetadataContext.SysParameterContext.Version.DEF)
     private ISysParameterContext sysParameterContext;
 
     @ApiOperation(value = "系统参数设置列表")
@@ -43,7 +45,7 @@ public class SysParameterController extends BaseController {
     })
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "parameterCode",required = false) String parameterCode, @RequestParam(value = "parameterDesc" ,required = false) String parameterDesc, final PageRequest pageRequest) {
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "parameterCode", required = false) String parameterCode, @RequestParam(value = "parameterDesc", required = false) String parameterDesc, final PageRequest pageRequest) {
         final Page<SysParameter> list = sysParameterRepository.listSysParameterSetting(pageRequest.getPage(),
                 pageRequest.getSize(), parameterCode, parameterDesc, organizationId);
         return Results.success(list);
@@ -60,7 +62,7 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "根据code查询系统参数value,仅查有效数据")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/value")
-    public ResponseEntity<?> getValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId ,@RequestParam(value = "parameterCode") final String parameterCode) {
+    public ResponseEntity<?> getValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam(value = "parameterCode") final String parameterCode) {
         final SysParameter sysParameter = new SysParameter();
         sysParameter.setParameterCode(parameterCode);
         sysParameter.setActiveFlag(1);
@@ -76,7 +78,7 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "修改系统参数设置")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final SysParameter sysParameter) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameter.setTenantId(organizationId);
         if (sysParameter.getParameterId() != null) {
@@ -89,7 +91,7 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "新增系统参数设置")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final SysParameter sysParameter) {
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final SysParameter sysParameter) {
         //校验唯一
         sysParameter.setTenantId(organizationId);
         sysParameter.validateParameterCode(sysParameterRepository);
@@ -103,11 +105,11 @@ public class SysParameterController extends BaseController {
     @ApiOperation(value = "删除系统参数设置")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> delete(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final SysParameter sysParameter) {
+    public ResponseEntity<?> delete(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final SysParameter sysParameter) {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameter.setTenantId(organizationId);
         sysParameterRepository.deleteByPrimaryKey(sysParameter);
-        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(),sysParameter.getTenantId());
+        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(), sysParameter.getTenantId());
         return Results.success();
     }
 

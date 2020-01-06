@@ -2,8 +2,10 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.Reference;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
+import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.IPosContext;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.core.domain.entity.Pos;
@@ -34,19 +36,19 @@ public class PosServiceImpl implements PosService {
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
     private final RegionRepository regionRepository;
-    private final IPosContext posContext;
 
     public PosServiceImpl(final PosRepository posRepository,
                           final PostTimeRepository postTimeRepository,
                           final PosAddressRepository posAddressRepository,
-                          final RegionRepository regionRepository,
-                          final IPosContext posContext) {
+                          final RegionRepository regionRepository) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionRepository = regionRepository;
-        this.posContext = posContext;
     }
+
+    @Reference(version = MetadataContext.PosContext.Version.DEF)
+    private IPosContext posContext;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -128,13 +130,13 @@ public class PosServiceImpl implements PosService {
     public Pos getPosWithPropertiesInRedisByPosId(final Long posId) {
         final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(posId);
         if (pos.getExpressedFlag().equals(Flag.YES)) {
-            final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(),pos.getTenantId());
+            final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(), pos.getTenantId());
             if (StringUtils.isNotBlank(expressValue)) {
                 pos.setExpressLimitQuantity(Long.parseLong(expressValue));
             }
         }
         if (pos.getPickedUpFlag().equals(Flag.YES)) {
-            final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(),pos.getTenantId());
+            final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(), pos.getTenantId());
             if (StringUtils.isNotBlank(pickUpValue)) {
                 pos.setPickUpLimitQuantity(Long.parseLong(pickUpValue));
             }
@@ -148,16 +150,16 @@ public class PosServiceImpl implements PosService {
      * @param pos Pos
      */
     private void syncLimitToRedis(final Pos pos) {
-        final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(),pos.getTenantId());
-        final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(),pos.getTenantId());
+        final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(), pos.getTenantId());
+        final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(), pos.getTenantId());
 
         final String newExpress = String.valueOf(pos.getExpressLimitQuantity());
         if (pos.getExpressedFlag().equals(Flag.YES) && !newExpress.equals(expressValue)) {
-            this.posContext.saveExpressQuantity(pos.getPosCode(), newExpress,pos.getTenantId());
+            this.posContext.saveExpressQuantity(pos.getPosCode(), newExpress, pos.getTenantId());
         }
         final String newPickUp = String.valueOf(pos.getPickUpLimitQuantity());
         if (pos.getPickedUpFlag().equals(Flag.YES) && !newPickUp.equals(pickUpValue)) {
-            this.posContext.savePickUpQuantity(pos.getPosCode(), newPickUp,pos.getTenantId());
+            this.posContext.savePickUpQuantity(pos.getPosCode(), newPickUp, pos.getTenantId());
         }
     }
 }
