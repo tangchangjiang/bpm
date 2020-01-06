@@ -34,10 +34,10 @@
             <groupId>org.o2.metadata</groupId>
             <artifactId>o2-metadata-core</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.o2.context</groupId>
             <artifactId>o2-context-metadata</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.hzero.starter</groupId>

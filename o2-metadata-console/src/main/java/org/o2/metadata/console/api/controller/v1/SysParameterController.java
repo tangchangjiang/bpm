@@ -5,13 +5,9 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.*;
-import org.apache.dubbo.config.annotation.Reference;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.context.metadata.MetadataContext;
-import org.o2.context.metadata.api.ISysParameterContext;
-import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.SysParameter;
 import org.o2.metadata.core.domain.repository.SysParameterRepository;
@@ -35,8 +31,8 @@ public class SysParameterController extends BaseController {
     @Autowired
     private SysParameterRepository sysParameterRepository;
 
-    @Reference(version = MetadataContext.SysParameterContext.Version.DEF)
-    private ISysParameterContext sysParameterContext;
+    /*@Reference(version = MetadataContext.SysParameterContext.Version.DEF)
+    private ISysParameterContext sysParameterContext;*/
 
     @ApiOperation(value = "系统参数设置列表")
     @ApiImplicitParams({
@@ -83,7 +79,7 @@ public class SysParameterController extends BaseController {
         sysParameter.setTenantId(organizationId);
         if (sysParameter.getParameterId() != null) {
             sysParameterRepository.updateByPrimaryKeySelective(sysParameter);
-            sysParameterContext.saveSysParameter(convert(sysParameter));
+            //sysParameterContext.saveSysParameter(convert(sysParameter));
         }
         return Results.success(sysParameter);
     }
@@ -97,7 +93,7 @@ public class SysParameterController extends BaseController {
         sysParameter.validateParameterCode(sysParameterRepository);
         sysParameter.setParameterId(null);
         sysParameterRepository.insertSelective(sysParameter);
-        sysParameterContext.saveSysParameter(convert(sysParameter));
+        //sysParameterContext.saveSysParameter(convert(sysParameter));
 
         return Results.success(sysParameter);
     }
@@ -109,16 +105,16 @@ public class SysParameterController extends BaseController {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameter.setTenantId(organizationId);
         sysParameterRepository.deleteByPrimaryKey(sysParameter);
-        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(), sysParameter.getTenantId());
+        //sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(), sysParameter.getTenantId());
         return Results.success();
     }
 
-    private SysParameterVO convert(final SysParameter sysParameter) {
+    /*private SysParameterVO convert(final SysParameter sysParameter) {
         final SysParameterVO sysParameterVO = new SysParameterVO();
         sysParameterVO.setParameterCode(sysParameter.getParameterCode());
         sysParameterVO.setParameterValue(sysParameter.getParameterValue());
         sysParameterVO.setActiveFlag(sysParameter.getActiveFlag());
         sysParameterVO.setTenantId(sysParameter.getTenantId());
         return sysParameterVO;
-    }
+    }*/
 }
