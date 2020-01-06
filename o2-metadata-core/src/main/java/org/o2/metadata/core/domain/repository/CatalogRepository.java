@@ -21,4 +21,12 @@ public interface CatalogRepository extends BaseRepository<Catalog> {
      * @throws RuntimeException exception description
      */
     List<CatalogVO> batchFindByIds(Set<Long> catalogIds);
+    /**
+     * 查询目录
+     * @author yipeng.zhu@hand-china.com
+     * @date 2020-01-03
+     * @param catalog 目录查询条件
+     * @return  目录列表
+     */
+    List<Catalog> listCatalog(Catalog catalog);
 }

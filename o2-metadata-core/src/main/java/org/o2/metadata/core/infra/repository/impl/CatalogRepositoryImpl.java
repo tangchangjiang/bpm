@@ -34,4 +34,9 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
 
         return catalogMapper.batchFindByIds(catalogIds);
     }
+
+    @Override
+    public List<Catalog> listCatalog(Catalog catalog) {
+        return catalogMapper.listCatalog(catalog);
+    }
 }

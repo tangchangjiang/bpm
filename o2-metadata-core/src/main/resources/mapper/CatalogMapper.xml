@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.core.infra.mapper.CatalogMapper">
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.Catalog">
         <result column="catalog_id" property="catalogId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
@@ -34,6 +34,32 @@
         </foreach>
         AND t.lang =#{lang}
     </select>
+    <select id="listCatalog" resultType="org.o2.metadata.core.domain.entity.Catalog">
+        select c.catalog_id,
+        c.catalog_code,
+        c.catalog_name,
+        c.catalog_remarks,
+        c.active_flag
+        from o2md_catalog c
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND c.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND c.tenant_id = 0
+                </otherwise>
+            </choose>
 
-
+            <if test="catalogCode!=null and catalogCode!=''">
+                <bind name="catalogCode" value="'%' + catalogCode + '%'"/>
+                AND c.catalog_code LIKE #{catalogCode}
+            </if>
+            <if test="catalogName!=null and catalogName!=''">
+                <bind name="catalogName" value="'%' + catalogName + '%'"/>
+                AND c.catalog_name LIKE #{catalogName}
+            </if>
+            ORDER BY c.catalog_code
+        </where>
+    </select>
 </mapper>

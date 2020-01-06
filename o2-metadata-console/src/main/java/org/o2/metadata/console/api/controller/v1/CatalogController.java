@@ -2,6 +2,7 @@ package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
@@ -16,6 +17,7 @@ import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.core.domain.entity.Carrier;
 import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
@@ -49,7 +51,8 @@ public class CatalogController extends BaseController {
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         catalog.setTenantId(organizationId);
-        Page<Catalog> list = catalogRepository.pageAndSort(pageRequest, catalog);
+        final Page<Catalog> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+                () -> catalogRepository.listCatalog(catalog));
         return Results.success(list);
     }
 
