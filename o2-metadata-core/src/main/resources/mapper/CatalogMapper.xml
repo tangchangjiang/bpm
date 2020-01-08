@@ -39,7 +39,8 @@
         c.catalog_code,
         c.catalog_name,
         c.catalog_remarks,
-        c.active_flag
+        c.active_flag,
+        c.object_version_number
         from o2md_catalog c
         <where>
             <choose>
