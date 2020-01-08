@@ -28,14 +28,14 @@
         ad.external_name,
         ad.active_flag,
         ad.OBJECT_VERSION_NUMBER,
-        c.region_code,
-        c.region_name,
-        c.parent_region_id,
-        c.level_path
+        hr.region_code,
+        hr.region_name,
+        hr.parent_region_id,
+        hr.level_path
         FROM
         o2md_address_mapping ad
-        left join o2md_region c ON ad.region_id = c.region_id
-        left join o2md_country co on c.country_id = co.country_id
+        left join hpfm_region hr ON ad.region_id = hr.region_id
+        left join hpfm_country hc on hr.country_id = hc.country_id
         WHERE 1=1
         <choose>
             <when test="addressMapping.tenantId != null">
@@ -52,10 +52,10 @@
             AND ad.external_name LIKE concat('%',concat(#{addressMapping.externalName}),'%')
         </if>
         <if test="addressMapping.regionName!=null and addressMapping.regionName!=''">
-            AND c.region_name LIKE concat('%',concat(#{addressMapping.regionName}),'%')
+            AND hr.region_name LIKE concat('%',concat(#{addressMapping.regionName}),'%')
         </if>
         <if test="countryCode!=null and countryCode!=''">
-            AND co.country_code = #{countryCode}
+            AND hc.country_code = #{countryCode}
         </if>
 
     </select>
@@ -73,7 +73,7 @@
         c.region_name,
         c.parent_region_id
         FROM
-        o2md_region c LEFT JOIN o2md_address_mapping ad
+        hpfm_region c LEFT JOIN o2md_address_mapping ad
         ON ad.region_id = c.region_id
         WHERE 1=1
         <choose>
@@ -101,7 +101,7 @@
         c.region_name,
         c.parent_region_id
         FROM
-        o2md_region c LEFT JOIN o2md_address_mapping ad
+        hpfm_region c LEFT JOIN o2md_address_mapping ad
         ON ad.region_id = c.region_id
         WHERE 1=1
         <choose>

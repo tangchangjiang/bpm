@@ -28,7 +28,7 @@
         (SELECT
         t.region_name
         FROM
-        o2md_region_tl t
+        hpfm_region_tl t
         WHERE
         t.region_id = n.source_region_id
         AND t.lang = #{lang}
@@ -39,7 +39,7 @@
         (SELECT
         t.region_name
         FROM
-        o2md_region_tl t
+        hpfm_region_tl t
         WHERE
         t.region_id = n.target_region_id
         AND t.lang = #{lang}
@@ -52,8 +52,8 @@
         tc.country_name target_country_name
         FROM
         o2md_neighboring_region n
-        left join o2md_country sc on n.source_country_id = sc.country_id
-        left join o2md_country tc on n.target_country_id = tc.country_id
+        left join hpfm_country sc on n.source_country_id = sc.country_id
+        left join hpfm_country tc on n.target_country_id = tc.country_id
         WHERE
         1 = 1
         <choose>

@@ -28,7 +28,7 @@
         SELECT
         t.country_name
         FROM
-        o2md_country t
+        hpfm_country t
         WHERE
         t.country_id = rel.country_id
         ) AS country_name,
@@ -37,7 +37,7 @@
         SELECT
         t.region_name
         FROM
-        o2md_region t
+        hpfm_region t
         WHERE
         t.region_id = rel.city_id
         ) AS city_name,
@@ -45,14 +45,14 @@
         SELECT
         t.region_name
         FROM
-        o2md_region t
+        hpfm_region t
         WHERE
         t.region_id = rel.district_id
         ) AS district_name
         FROM
         o2md_carrier_delivery_range rel
         JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id
-        JOIN o2md_region r on rel.region_id = r.region_id
+        JOIN hpfm_region r on rel.region_id = r.region_id
         <where>
             1=1
             <if test="deliveryRangeId != null">

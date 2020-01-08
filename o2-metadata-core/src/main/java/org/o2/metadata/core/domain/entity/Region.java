@@ -27,7 +27,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @VersionAudit
 @ModifyAudit
-@Table(name = "o2md_region")
+@Table(name = "hpfm_region")
 @MultiLanguage
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Region extends AuditDomain {

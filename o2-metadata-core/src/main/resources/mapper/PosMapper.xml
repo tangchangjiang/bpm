@@ -73,9 +73,9 @@
         pos.business_type_code
         from o2md_pos pos
         left join o2md_pos_address address on pos.address_id = address.pos_address_id
-        LEFT JOIN o2md_region region on region.region_id = address.region_id
-        LEFT JOIN o2md_region city on city.region_id = address.city_id
-        LEFT JOIN o2md_region district on district.region_id= address.district_id
+        LEFT JOIN hpfm_region region on region.region_id = address.region_id
+        LEFT JOIN hpfm_region city on city.region_id = address.city_id
+        LEFT JOIN hpfm_region district on district.region_id= address.district_id
         where 1=1
             <choose>
                 <when test="tenantId != null">
