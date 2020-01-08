@@ -81,6 +81,7 @@ o2:
     protocol:
       name: dubbo
       port: 20000
+      serialization: kryo2
 
 hzero:
   lov:
