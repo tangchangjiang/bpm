@@ -77,11 +77,10 @@ o2:
       pool-max-wait-millis: ${O2_REDIS_POOL_MAX_WAIT_MILLIS:30000}
   dubbo:
     registry:
-      address: ${DUBBO_REDIS_REGISTRY_ADDRESS:redis://redis.hzero.org:6379?db.index=8&min.idle=4&max.active=16&max.total=16}
+      address: ${DUBBO_REDIS_REGISTRY_ADDRESS:redis://redis.hzero.org:6379?db.index=8&min.idle=4&max.idle=16&max.total=16}
     protocol:
       name: dubbo
       port: 20000
-      serialization: kryo2
 
 hzero:
   lov:

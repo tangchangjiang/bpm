@@ -2,11 +2,10 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.Reference;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
-import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.IPosContext;
+import org.o2.context.metadata.config.MetadataContextConsumer;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.core.domain.entity.Pos;
 import org.o2.metadata.core.domain.entity.PosAddress;
@@ -36,19 +35,19 @@ public class PosServiceImpl implements PosService {
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
     private final RegionRepository regionRepository;
+    private final IPosContext posContext;
 
     public PosServiceImpl(final PosRepository posRepository,
                           final PostTimeRepository postTimeRepository,
                           final PosAddressRepository posAddressRepository,
-                          final RegionRepository regionRepository) {
+                          final RegionRepository regionRepository,
+                          final MetadataContextConsumer metadataContextConsumer) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionRepository = regionRepository;
+        this.posContext = metadataContextConsumer.posContext();
     }
-
-    @Reference(version = MetadataContext.PosContext.Version.DEF)
-    private IPosContext posContext;
 
     @Override
     @Transactional(rollbackFor = Exception.class)

@@ -5,17 +5,15 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.*;
-import org.apache.dubbo.config.annotation.Reference;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.ISysParameterContext;
+import org.o2.context.metadata.config.MetadataContextConsumer;
 import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.SysParameter;
 import org.o2.metadata.core.domain.repository.SysParameterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +29,14 @@ import java.util.List;
 @RequestMapping("/v1/{organizationId}/sys-parameter-settings")
 @Api(tags = EnableMetadataConsole.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
+    private final SysParameterRepository sysParameterRepository;
+    private final ISysParameterContext sysParameterContext;
 
-    @Autowired
-    private SysParameterRepository sysParameterRepository;
-
-    @Reference(version = MetadataContext.SysParameterContext.Version.DEF)
-    private ISysParameterContext sysParameterContext;
+    public SysParameterController(final SysParameterRepository sysParameterRepository,
+                                  final MetadataContextConsumer metadataContextConsumer) {
+        this.sysParameterRepository = sysParameterRepository;
+        this.sysParameterContext = metadataContextConsumer.sysParameterContext();
+    }
 
     @ApiOperation(value = "系统参数设置列表")
     @ApiImplicitParams({

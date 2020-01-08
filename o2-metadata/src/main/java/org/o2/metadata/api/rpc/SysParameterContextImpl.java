@@ -1,9 +1,7 @@
 package org.o2.metadata.api.rpc;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.Service;
 import org.hzero.core.base.BaseConstants;
-import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.core.helper.FastJsonHelper;
@@ -15,7 +13,6 @@ import org.o2.metadata.core.infra.constants.MetadataConstants;
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-@Service(version = MetadataContext.SysParameterContext.Version.DEF, group = MetadataContext.SysParameterContext.GROUP)
 public class SysParameterContextImpl implements ISysParameterContext {
     private final RedisCacheClient redisCacheClient;
 

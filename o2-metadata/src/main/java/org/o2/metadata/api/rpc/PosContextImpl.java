@@ -1,8 +1,6 @@
 package org.o2.metadata.api.rpc;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.dubbo.config.annotation.Service;
-import org.o2.context.metadata.MetadataContext;
 import org.o2.context.metadata.api.IPosContext;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
@@ -20,7 +18,6 @@ import java.util.Set;
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-@Service(version = MetadataContext.PosContext.Version.DEF, group = MetadataContext.PosContext.GROUP)
 public class PosContextImpl implements IPosContext {
     private final RedisCacheClient redisCacheClient;
 
