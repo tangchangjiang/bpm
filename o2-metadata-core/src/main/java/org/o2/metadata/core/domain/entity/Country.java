@@ -25,7 +25,7 @@ import javax.validation.constraints.*;
 @VersionAudit
 @ModifyAudit
 @MultiLanguage
-@Table(name = "o2md_country")
+@Table(name = "hpfm_country")
 public class Country extends AuditDomain {
 
     public static final String FIELD_COUNTRY_ID = "countryId";

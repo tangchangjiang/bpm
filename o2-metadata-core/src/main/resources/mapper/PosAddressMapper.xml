@@ -43,7 +43,7 @@
                 SELECT
                     t.country_name
                 FROM
-                    o2md_country t
+                    hpfm_country t
                 WHERE
                     t.country_id = da.country_id
             ) AS country,
@@ -51,7 +51,7 @@
                 SELECT
                     t.region_name
                 FROM
-                    o2md_region t
+                    hpfm_region t
                 WHERE
                     t.region_id = da.region_id
             ) AS region,
@@ -59,7 +59,7 @@
                 SELECT
                     t.region_name
                 FROM
-                    o2md_region t
+                    hpfm_region t
                 WHERE
                     t.region_id = da.city_id
             ) AS city,
@@ -67,7 +67,7 @@
                 SELECT
                     t.region_name
                 FROM
-                    o2md_region t
+                    hpfm_region t
                 WHERE
                     t.region_id = da.district_id
             ) AS district
