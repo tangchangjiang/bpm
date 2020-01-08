@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @DubboComponentScan("org.o2.metadata.api.rpc")
 @Configuration
-public class MetadataAutoConfiguration {
+public class EnableMetadata {
 
     @Bean
     public IPosContext posContext(final RedisCacheClient redisCacheClient) {
