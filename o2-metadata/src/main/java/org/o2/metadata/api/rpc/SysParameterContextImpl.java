@@ -15,7 +15,7 @@ import org.o2.metadata.core.infra.constants.MetadataConstants;
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-@Service(version = MetadataContext.SysParameterContext.Version.DEF)
+@Service(version = MetadataContext.SysParameterContext.Version.DEF, group = MetadataContext.SysParameterContext.GROUP)
 public class SysParameterContextImpl implements ISysParameterContext {
     private final RedisCacheClient redisCacheClient;
 

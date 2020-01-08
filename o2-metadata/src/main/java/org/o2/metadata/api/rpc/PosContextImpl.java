@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-@Service(version = MetadataContext.PosContext.Version.DEF)
+@Service(version = MetadataContext.PosContext.Version.DEF, group = MetadataContext.PosContext.GROUP)
 public class PosContextImpl implements IPosContext {
     private final RedisCacheClient redisCacheClient;
 
