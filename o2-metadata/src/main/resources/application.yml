@@ -1,9 +1,9 @@
 spring:
   application:
-    name: o2-metadata
+    name: o2-metadata-5775
     hone-route:
-      name: o2md
-      path: /o2md/**
+      name: o2md-5775
+      path: /o2md-5775/**
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db.o2dev.org:3306/o2_metadata?useUnicode=true&characterEncoding=utf-8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8}
@@ -80,7 +80,7 @@ o2:
       address: ${DUBBO_REDIS_REGISTRY_ADDRESS:redis://redis.hzero.org:6379?db.index=8&min.idle=4&max.idle=16&max.total=16}
     protocol:
       name: dubbo
-      port: 20000
+      port: ${DUBBO_PROTOCOL_PORT:-1}
 
 hzero:
   lov:
