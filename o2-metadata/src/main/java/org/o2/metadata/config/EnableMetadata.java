@@ -34,9 +34,4 @@ public class EnableMetadata {
         metadataContextProvider.sysParameterContextService().export();
         return sysParameterContext;
     }
-
-    @Bean
-    public PublicLovController publicLovController(final CustomLovService customLovService){
-        return new PublicLovController(customLovService);
-    }
 }
