@@ -4,8 +4,10 @@ import org.o2.context.metadata.api.IPosContext;
 import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.config.MetadataContextProvider;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.api.controller.v1.PublicLovController;
 import org.o2.metadata.api.rpc.PosContextImpl;
 import org.o2.metadata.api.rpc.SysParameterContextImpl;
+import org.o2.metadata.core.infra.service.CustomLovService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,5 +33,10 @@ public class EnableMetadata {
         metadataContextProvider.sysParameterContextService().setRef(sysParameterContext);
         metadataContextProvider.sysParameterContextService().export();
         return sysParameterContext;
+    }
+
+    @Bean
+    public PublicLovController publicLovController(final CustomLovService customLovService){
+        return new PublicLovController(customLovService);
     }
 }
