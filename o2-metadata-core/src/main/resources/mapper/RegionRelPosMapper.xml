@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.core.infra.mapper.RegionRelPosMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.RegionRelPos">
+        <result column="region_rel_pos_id" property="regionRelPosId" jdbcType="DECIMAL"/>
+        <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR"/>
+        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="region_description" property="regionDescription" jdbcType="VARCHAR"/>
+        <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <result column="priority" property="priority" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="selectByStoreId" resultMap="BaseResultMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT DISTINCT
+        rrp.online_shop_id,
+        rrp.region_id,
+        rrp_tl.region_description,
+        <if test="regionId != null">
+            rrp.pos_id,
+            pos.pos_name,
+            pos.pos_code,
+            pos.pos_type_code,
+            rrp.active_flag,
+            rrp.priority,
+        </if>
+        rrp.area_code
+        FROM o2md_region_rel_pos rrp
+        LEFT JOIN o2md_region_rel_pos_tl rrp_tl ON rrp_tl.region_rel_pos_id=rrp.region_rel_pos_id AND rrp_tl.lang = #{lang}
+        <if test="regionId != null">
+            LEFT JOIN o2md_pos pos ON rrp.pos_id = pos.pos_id
+            LEFT JOIN o2md_pos_tl pos_tl ON pos_tl.pos_id = pos.pos_id AND rrp_tl.lang = #{lang}
+        </if>
+        <where>
+            <if test="onlineShopId != null">
+                AND rrp.online_shop_id = #{onlineShopId}
+            </if>
+            <if test="regionId != null">
+                AND rrp.region_id = #{regionId}
+            </if>
+            <if test="tenantId != null">
+                AND rrp.tenant_id = #{tenantId}
+            </if>
+        </where>
+        ORDER BY rrp.priority ASC
+    </select>
+
+</mapper>

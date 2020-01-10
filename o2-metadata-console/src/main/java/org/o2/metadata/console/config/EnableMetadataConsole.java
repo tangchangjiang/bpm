@@ -32,6 +32,7 @@ public class EnableMetadataConsole {
     public static final String FREIGHT_TEMPLATE_DETAIL = "Freight Template Detail";
     public static final String PLATFORM_UOM = "Platform Uom";
     public static final String CATALOG = "Catalog";
+    public static final String REGION_REL_POS = "Region POS Relationship";
 
     @Autowired
     public EnableMetadataConsole(final Docket docket) {
@@ -51,6 +52,7 @@ public class EnableMetadataConsole {
                 .tags(new Tag(EnableMetadataConsole.SYS_PARAMETER_SETTING, "系统参数配置管理"))
                 .tags(new Tag(EnableMetadataConsole.FREIGHT_TEMPLATE, "运费模板管理"))
                 .tags(new Tag(EnableMetadataConsole.FREIGHT_TEMPLATE_DETAIL, "运费模板明细管理"))
-                .tags(new Tag(EnableMetadataConsole.PLATFORM_UOM, "平台值集管理"));
+                .tags(new Tag(EnableMetadataConsole.PLATFORM_UOM, "平台值集管理"))
+                .tags(new Tag(EnableMetadataConsole.REGION_REL_POS, "区域关联服务点配置"));
     }
 }
