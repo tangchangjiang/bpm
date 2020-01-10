@@ -42,6 +42,7 @@ public class CustomLovServiceImpl implements CustomLovService {
             return Results.success(Collections.emptyMap());
         } else {
             queryMap.remove("tenantId");
+            queryMap.remove("lang");
             final Map<String, List<LovValueDTO>> result = new HashMap<>(queryMap.size());
             queryMap.forEach((key, value) -> {
                 result.put(key, this.queryLovValues(value, tenantId));
