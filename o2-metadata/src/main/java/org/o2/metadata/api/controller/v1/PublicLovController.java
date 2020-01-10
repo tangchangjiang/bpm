@@ -47,10 +47,6 @@ public class PublicLovController {
             paramType = "query",
             example = "CODE1=codeOne&CODE2=codeTwo",
             required = true
-    ), @ApiImplicitParam(
-            name = "tenantId",
-            value = "租户ID",
-            paramType = "query"
     )})
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchProduct(@RequestParam Map<String, String> queryMap,
                                                                        @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
