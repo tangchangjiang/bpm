@@ -35,8 +35,4 @@ public class EnableMetadata {
         return sysParameterContext;
     }
 
-    @Bean
-    public PublicLovController publicLovController(final CustomLovService customLovService){
-        return new PublicLovController(customLovService);
-    }
 }
