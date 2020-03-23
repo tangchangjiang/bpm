@@ -38,15 +38,15 @@
         ca.catalog_name
         FROM
         o2md_carrier c
-        JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id
-        join o2md_catalog  ca on ca.catalog_code = cm.catalog_code
+        JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
+        join o2md_catalog  ca on ca.catalog_code = cm.catalog_code AND ca.tenant_id = #{tenantId}
         where 1 = 1
         <choose>
             <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId} AND ca.tenant_id = #{tenantId} AND cm.tenant_id = #{tenantId}
+                AND c.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND c.tenant_id = 0 AND ca.tenant_id = 0 AND cm.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="catalogCode!=null and catalogCode!=''">

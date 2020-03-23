@@ -32,9 +32,17 @@
         ia.access_token as accessToken,
         ia.object_version_number
         FROM o2md_online_shop_inf_auth ia
-        JOIN o2md_online_shop os ON os.online_shop_id = ia.online_shop_id
-        WHERE
-        ia.online_shop_id = #{onlineShopId}
+        JOIN o2md_online_shop os ON os.online_shop_id = ia.online_shop_id and os.tenant_id = #{tenantId}
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                and ia.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        and  ia.online_shop_id = #{onlineShopId}
     </select>
 
     <select id="listInfAuthByOnlineShop" parameterType="org.o2.metadata.core.domain.entity.OnlineShop"
@@ -56,9 +64,16 @@
         osia.last_update_date
         FROM
         o2md_online_shop_inf_auth as osia
-        JOIN o2md_online_shop as os on osia.online_shop_id = os.online_shop_id
+        JOIN o2md_online_shop as os on osia.online_shop_id = os.online_shop_id and os.tenant_id = #{tenantId}
         <where>
-            1=1
+            <choose>
+                <when test="tenantId != null">
+                    and osia.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">
                 and os.online_shop_code = #{onlineShopCode}
             </if>

@@ -28,10 +28,10 @@ public interface PosService {
 
     /**
      * 查询服务点信息，并获取 redis 中的热数据
-     *
+     * @param organizationId Long
      * @param posId Long
      * @return Pos
      */
-    Pos getPosWithPropertiesInRedisByPosId(Long posId);
+    Pos getPosWithPropertiesInRedisByPosId(Long organizationId, Long posId);
 
 }

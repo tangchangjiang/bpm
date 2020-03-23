@@ -14,7 +14,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.app.service.OnlineShopRelPosService;
+import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.entity.CatalogVersion;
@@ -40,13 +40,13 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = EnableMetadataConsole.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
-    private final OnlineShopRelPosService onlineShopRelPosService;
+    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
 
-    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelPosService onlineShopRelPosService, final CatalogRepository catalogRepository, final CatalogVersionRepository catalogVersionRepository) {
+    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelWarehouseService onlineShopRelWarehouseService, final CatalogRepository catalogRepository, final CatalogVersionRepository catalogVersionRepository) {
         this.onlineShopRepository = onlineShopRepository;
-        this.onlineShopRelPosService = onlineShopRelPosService;
+        this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
     }
@@ -56,7 +56,7 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
+    public ResponseEntity<?> listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
         condition.setTenantId(organizationId);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectByCondition(condition)));
     }
@@ -64,7 +64,7 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<?> listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
@@ -74,7 +74,7 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop onlineShop) {
+    public ResponseEntity<?> listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop onlineShop) {
         onlineShop.setTenantId(organizationId);
         return Results.success(onlineShopRepository.select(onlineShop));
     }
@@ -83,7 +83,7 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
-    public ResponseEntity detail(@PathVariable final Long shopId) {
+    public ResponseEntity<?> detail(@PathVariable final Long shopId) {
         OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
         Preconditions.checkArgument(null != onlineShop, "invalid field shopId: " + shopId);
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
@@ -100,7 +100,7 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity<?> createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
         Preconditions.checkArgument(null != onlineShop.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         onlineShop.setTenantId(organizationId);
@@ -108,7 +108,7 @@ public class OnlineShopController extends BaseController {
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
         if (onlineShop.exist(onlineShopRepository)) {
-            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
+            return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_U_INDEX), HttpStatus.OK);
         }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
@@ -126,7 +126,7 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity<?> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final OnlineShop onlineShop) {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
@@ -143,8 +143,8 @@ public class OnlineShopController extends BaseController {
         onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
         onlineShop.setCatalogId(catalog.getCatalogId());
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        //触发网店关联服务点更新
-        onlineShopRelPosService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
+        //触发网店关联仓库更新
+        onlineShopRelWarehouseService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
         return Results.success(result);
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.o2.metadata.core.infra.mapper.OnlineShopRelPosMapper">
+<mapper namespace="org.o2.metadata.core.infra.mapper.OnlineShopRelWarehouseMapper">
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.OnlineShopRelPos">
         <result column="online_shop_rel_pos_id" property="onlineShopRelPosId" jdbcType="DECIMAL"/>
@@ -22,15 +22,16 @@
                      resultMap="org.o2.metadata.core.infra.mapper.PosMapper.BaseResultMap"/>
     </resultMap>
 
-    <resultMap id="RelationshipVOMap" type="org.o2.metadata.core.domain.vo.OnlineShopRelPosVO">
-        <result column="online_shop_rel_pos_id" property="onlineShopRelPosId" jdbcType="DECIMAL"/>
+    <resultMap id="RelationshipVOMap" type="org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO">
+        <result column="online_shop_rel_warehouse_id" property="onlineShopRelWarehouseId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="warehouse_id" property="warehouseId" jdbcType="DECIMAL"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
-        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
-        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
-        <result column="pos_status_code" property="posStatus" jdbcType="VARCHAR"/>
-        <result column="pos_type_code" property="posType" jdbcType="VARCHAR"/>
+        <result column="business_active_flag" property="businessActiveFlag" jdbcType="DECIMAL"/>
+        <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="warehouse_type_code" property="warehouseTypeCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -38,34 +39,38 @@
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <select id="listShopPosRelsByOption" resultMap="RelationshipVOMap">
-        select
-        srp.online_shop_rel_pos_id,
-        srp.online_shop_id,
-        srp.pos_id,
-        srp.active_flag,
-        srp.OBJECT_VERSION_NUMBER,
-        p.pos_code,
-        p.pos_name,
-        p.pos_type_code,
-        p.pos_status_code,
-        srp.business_active_flag
-        from o2md_online_shop_rel_pos srp
-        join o2md_pos p on srp.pos_id = p.pos_id
-        <where>
-            <if test="posCode != null and posCode != ''">
-                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
-                and p.pos_code like #{posCodeLike}
-            </if>
-            <if test="posName != null and posName != ''">
-                <bind name="posNameLike" value="'%' + posName + '%'"/>
-                and p.pos_name like #{posNameLike}
-            </if>
-            <if test="tenantId!=null">
-                AND p.tenant_id = #{tenantId}
-            </if>
-            AND srp.online_shop_id = #{onlineShopId}
-        </where>
-        order by p.pos_code asc
+    <select id="listShopWarehouseRelsByOption" resultMap="RelationshipVOMap">
+        SELECT
+            w.warehouse_id,
+            w.pos_id,
+            w.warehouse_code,
+            w.warehouse_name,
+            w.warehouse_type_code,
+            srw.object_version_number,
+            srw.online_shop_id,
+            srw.active_flag,
+            srw.business_active_flag,
+            srw.online_shop_rel_warehouse_id
+        FROM
+        o2md_warehouse w
+        JOIN o2md_online_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id
+        WHERE  srw.online_shop_id = #{onlineShopId}
+        <choose>
+            <when test="tenantId != null">
+                and w.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+        <if test="warehouseCode != null">
+            <bind name="warehouseCodeLike" value="warehouseCode + '%'"/>
+            and w.warehouse_code LIKE #{warehouseCodeLike}
+        </if>
+        <if test="warehouseName != null">
+            <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
+            and  w.warehouse_name LIKE #{warehouseNameLike}
+        </if>
+        order by w.warehouse_code asc
     </select>
 </mapper>

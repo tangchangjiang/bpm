@@ -96,10 +96,10 @@
         and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
         <choose>
             <when test="tenantId != null">
-                AND hr.tenant_id = #{tenantId}
+                AND hr.tenant_id = #{tenantId} AND oc.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND hr.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="condition != null and condition != ''">
@@ -124,8 +124,16 @@
         hr.object_version_number
         FROM hpfm_region hr
         left JOIN hpfm_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
-        WHERE
-        hr.region_id IN
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND hr.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        and hr.region_id IN
         <foreach collection="parentRegionIdList" item="parentRegionId" separator="," open="(" close=")">
             #{parentRegionId}
         </foreach>

@@ -39,10 +39,12 @@ public interface PosMapper extends BaseMapper<Pos> {
 
     /**
      * 主键查询
-     *
+     * @param tenantId
      * @param posId 服务点 id
      * @return 带详细地址和接派单时间的服务点信息
      */
-    Pos getPosWithCarrierNameById(Long posId);
+    Pos getPosWithCarrierNameById(Long tenantId,Long posId);
+
+    List<Pos> listPosByCondition(Pos pos);
 
 }

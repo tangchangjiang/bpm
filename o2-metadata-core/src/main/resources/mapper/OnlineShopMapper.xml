@@ -47,15 +47,15 @@
         oc.catalog_name
         FROM
         o2md_online_shop os
-        join o2md_catalog oc on os.catalog_code = oc.catalog_code
-        join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code
+        join o2md_catalog oc on os.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
+        join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code  AND ocv.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId} AND oc.tenant_id = #{tenantId} AND ocv.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND os.tenant_id = 0 AND oc.tenant_id = 0 AND ocv.tenant_id = 0
+                    AND 1 = 0
                 </otherwise>
             </choose>
             <if test="onlineShopCode != null">
@@ -94,7 +94,7 @@
                     AND os.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND os.tenant_id = 0
+                    AND 1 = 0
                 </otherwise>
             </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">

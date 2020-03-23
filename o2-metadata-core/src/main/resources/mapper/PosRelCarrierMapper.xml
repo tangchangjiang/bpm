@@ -30,14 +30,14 @@
         c.carrier_name
         FROM
         o2md_pos_rel_carrier t
-        JOIN o2md_carrier c ON t.carrier_id = c.carrier_id
+        JOIN o2md_carrier c ON t.carrier_id = c.carrier_id and c.tenant_id = #{tenantId}
         where 1=1
         <choose>
             <when test="tenantId != null">
                 and t.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND t.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
             <if test="posId != null">
@@ -70,7 +70,7 @@
                 and t.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND t.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="posRelCarrierId != null">
@@ -91,7 +91,7 @@
                 and t.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND t.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="posRelCarrierId != null">
@@ -109,7 +109,7 @@
 
     <update id="updateIsDefault" parameterType="java.lang.Long">
         UPDATE o2md_pos_rel_carrier t
-        SET t.default_flag = 0
+        SET t.default_flag = #{defaultFlag}
         ,t.OBJECT_VERSION_NUMBER=OBJECT_VERSION_NUMBER+1
         WHERE
             t.pos_rel_carrier_id != #{relId, jdbcType=DECIMAL}

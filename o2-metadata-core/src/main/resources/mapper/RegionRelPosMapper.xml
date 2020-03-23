@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.core.infra.mapper.RegionRelPosMapper">
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.RegionRelPos">
         <result column="region_rel_pos_id" property="regionRelPosId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
@@ -30,16 +30,19 @@
         rrp.region_id,
         rrp_tl.region_description,
         <if test="regionId != null">
+            rrp.region_rel_pos_id,
             rrp.pos_id,
             pos.pos_name,
             pos.pos_code,
             pos.pos_type_code,
             rrp.active_flag,
             rrp.priority,
+            rrp.object_version_number,
         </if>
         rrp.area_code
         FROM o2md_region_rel_pos rrp
-        LEFT JOIN o2md_region_rel_pos_tl rrp_tl ON rrp_tl.region_rel_pos_id=rrp.region_rel_pos_id AND rrp_tl.lang = #{lang}
+        LEFT JOIN o2md_region_rel_pos_tl rrp_tl ON rrp_tl.region_rel_pos_id=rrp.region_rel_pos_id AND rrp_tl.lang =
+        #{lang}
         <if test="regionId != null">
             LEFT JOIN o2md_pos pos ON rrp.pos_id = pos.pos_id
             LEFT JOIN o2md_pos_tl pos_tl ON pos_tl.pos_id = pos.pos_id AND rrp_tl.lang = #{lang}
@@ -50,12 +53,104 @@
             </if>
             <if test="regionId != null">
                 AND rrp.region_id = #{regionId}
+                <choose>
+                    <when test="tenantId != null">
+                        and pos.tenant_id = #{tenantId}
+                    </when>
+                    <otherwise>
+                        and 1 = 0
+                    </otherwise>
+                </choose>
             </if>
-            <if test="tenantId != null">
-                AND rrp.tenant_id = #{tenantId}
-            </if>
+            <choose>
+                <when test="tenantId != null">
+                    and rrp.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
         </where>
-        ORDER BY rrp.priority ASC
+        <if test="regionId != null">
+            ORDER BY rrp.priority ASC
+        </if>
+    </select>
+
+    <select id="selectUnbindRegionByStoreId" resultType="org.o2.metadata.core.domain.entity.Region">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        hr.region_id,
+        hr.country_id,
+        hr.region_code,
+        hrt.region_name,
+        hr.parent_region_id
+        FROM hpfm_region hr
+        left JOIN hpfm_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
+        where not exists(
+        select 1 from o2md_region_rel_pos rrp where rrp.region_id = hr.region_id and rrp.online_shop_id =
+        #{onlineStoreId}
+        <choose>
+            <when test="tenantId != null">
+                and rrp.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+        )
+        AND hr.enabled_flag = 1
+        <choose>
+            <when test="tenantId != null">
+                and hr.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+        order by hr.region_id
+    </select>
+
+    <select id="selectUnbindPosByRegionId" resultType="org.o2.metadata.core.domain.entity.Pos">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_status_code,
+        p.pos_type_code,
+        p.business_type_code
+        FROM
+        o2md_pos AS p
+        where not exists(
+        select 1 from o2md_region_rel_pos rrp where rrp.pos_id = p.pos_id and rrp.online_shop_id = #{onlineShopId} and
+        rrp.region_id = #{regionId}
+        <choose>
+            <when test="tenantId != null">
+                and rrp.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+        )
+        <choose>
+            <when test="tenantId != null">
+                and p.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+
+        <if test="posCode != null and posCode != ''">
+            <bind name="posCode" value="'%' + posCode + '%'"/>
+            and p.pos_code like #{posCode}
+        </if>
+        <if test="posName != null and posName != ''">
+            <bind name="posName" value="'%' + posName + '%'"/>
+            and p.pos_name like #{posName}
+        </if>
+        order by p.pos_id
     </select>
 
 </mapper>

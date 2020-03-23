@@ -20,6 +20,14 @@ public interface RegionService {
      */
     List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
+    /**
+     * 查询网店未关联地区
+     * @param organizationId 租户ID
+     * @param onlineStoreId 网店ID
+     * @return 地区树
+     */
+    List<Region> treeOnlineStoreUnbindRegion(Long organizationId, Long onlineStoreId);
+
 
     /**
      * 查询各个大区下的省份

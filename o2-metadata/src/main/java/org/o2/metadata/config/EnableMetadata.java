@@ -1,13 +1,11 @@
 package org.o2.metadata.config;
 
-import org.o2.context.metadata.api.IPosContext;
 import org.o2.context.metadata.api.ISysParameterContext;
+import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.context.metadata.config.MetadataContextProvider;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.api.controller.v1.PublicLovController;
-import org.o2.metadata.api.rpc.PosContextImpl;
 import org.o2.metadata.api.rpc.SysParameterContextImpl;
-import org.o2.metadata.core.infra.service.CustomLovService;
+import org.o2.metadata.api.rpc.WarehouseContextImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,21 +16,21 @@ import org.springframework.context.annotation.Configuration;
 public class EnableMetadata {
 
     @Bean
-    public IPosContext posContext(final RedisCacheClient redisCacheClient,
-                                  final MetadataContextProvider metadataContextProvider) {
-        final IPosContext posContext = new PosContextImpl(redisCacheClient);
-        metadataContextProvider.posContextService().setRef(posContext);
-        metadataContextProvider.posContextService().export();
-        return posContext;
-    }
-
-    @Bean
     public ISysParameterContext sysParameterContext(final RedisCacheClient redisCacheClient,
                                                     final MetadataContextProvider metadataContextProvider) {
         final ISysParameterContext sysParameterContext = new SysParameterContextImpl(redisCacheClient);
         metadataContextProvider.sysParameterContextService().setRef(sysParameterContext);
         metadataContextProvider.sysParameterContextService().export();
         return sysParameterContext;
+    }
+
+    @Bean
+    public IWarehouseContext warehouseContext(final RedisCacheClient redisCacheClient,
+                                              final MetadataContextProvider metadataContextProvider) {
+        final IWarehouseContext warehouseContext = new WarehouseContextImpl(redisCacheClient);
+        metadataContextProvider.warehouseContextService().setRef(warehouseContext);
+        metadataContextProvider.warehouseContextService().export();
+        return warehouseContext;
     }
 
 }

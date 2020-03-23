@@ -34,15 +34,15 @@
         hr.level_path
         FROM
         o2md_address_mapping ad
-        left join hpfm_region hr ON ad.region_id = hr.region_id
-        left join hpfm_country hc on hr.country_id = hc.country_id
+        left join hpfm_region hr ON ad.region_id = hr.region_id AND hr.tenant_id = #{addressMapping.tenantId}
+        left join hpfm_country hc on hr.country_id = hc.country_id AND hc.tenant_id = #{addressMapping.tenantId}
         WHERE 1=1
         <choose>
             <when test="addressMapping.tenantId != null">
                 AND ad.tenant_id = #{addressMapping.tenantId}
             </when>
             <otherwise>
-                AND ad.tenant_id = 0
+                AND 1 =0
             </otherwise>
         </choose>
         <if test="addressMapping.catalogCode!=null and addressMapping.catalogCode!=''">
@@ -73,15 +73,15 @@
         c.region_name,
         c.parent_region_id
         FROM
-        hpfm_region c LEFT JOIN o2md_address_mapping ad
-        ON ad.region_id = c.region_id
+        hpfm_region c
+        LEFT JOIN o2md_address_mapping ad ON ad.region_id = c.region_id AND ad.tenant_id = #{tenantId}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
-                AND ad.tenant_id = #{tenantId}
+                AND c.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND ad.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         AND c.region_id = #{id}
@@ -101,15 +101,15 @@
         c.region_name,
         c.parent_region_id
         FROM
-        hpfm_region c LEFT JOIN o2md_address_mapping ad
-        ON ad.region_id = c.region_id
+        hpfm_region c
+        LEFT JOIN o2md_address_mapping ad ON ad.region_id = c.region_id AND ad.tenant_id = #{tenantId}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
                 AND c.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND c.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         AND c.region_code = #{regionCode}

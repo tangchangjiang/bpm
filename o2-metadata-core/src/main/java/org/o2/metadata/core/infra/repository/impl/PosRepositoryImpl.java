@@ -39,8 +39,8 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public Pos getPosWithAddressAndPostTimeByPosId(final Long posId) {
-        final Pos pos = posMapper.getPosWithCarrierNameById(posId);
+    public Pos getPosWithAddressAndPostTimeByPosId(final Long tenantId,final Long posId) {
+        final Pos pos = posMapper.getPosWithCarrierNameById(tenantId,posId);
 
         if (pos.getAddressId() != null) {
             pos.setAddress(posAddressMapper.selectByPrimaryKey(pos.getAddressId()));
@@ -65,5 +65,10 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
         pos.setPosCode(posCode);
         pos.setTenantId(tenantId);
         return posMapper.selectOne(pos);
+    }
+
+    @Override
+    public List<Pos> listPosByCondition(Pos pos) {
+        return posMapper.listPosByCondition(pos);
     }
 }

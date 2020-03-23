@@ -27,8 +27,16 @@
         c.active_flag activeFlag
         FROM
         o2md_catalog c left join o2md_catalog_tl t on c.catalog_id = t.catalog_id
-        WHERE
-        c.catalog_id IN
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND c.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+         and c.catalog_id IN
         <foreach collection="catalogIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -48,7 +56,7 @@
                     AND c.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND c.tenant_id = 0
+                    AND 1 = 0
                 </otherwise>
             </choose>
 

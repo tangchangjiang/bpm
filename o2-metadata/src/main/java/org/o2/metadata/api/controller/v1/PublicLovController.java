@@ -35,38 +35,28 @@ public class PublicLovController {
     @ApiOperation("集值 - 查询")
     @Permission(permissionPublic = true)
     @GetMapping({"/search-by-code"})
-    public ResponseEntity<List<LovValueDTO>> searchProduct(@RequestParam @ApiParam(value = "值集编码", required = true) String lovCode,
+    public ResponseEntity<List<LovValueDTO>> searchLov(@RequestParam @ApiParam(value = "值集编码", required = true) String lovCode,
                                                            @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN")final String lang,
                                                            @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
-        if (null == DetailsHelper.getUserDetails()) {
+        try {
             DetailsHelper.getAnonymousDetails().setLanguage(lang);
-            final ResponseEntity<List<LovValueDTO>> responseEntity = customLovService.queryLovInfo(lovCode, organizationId);
-            DetailsHelper.getAnonymousDetails().setLanguage(BaseConstants.DEFAULT_LOCALE_STR);
-            return responseEntity;
-        } else {
             return customLovService.queryLovInfo(lovCode, organizationId);
+        } finally {
+            DetailsHelper.getAnonymousDetails().setLanguage(BaseConstants.DEFAULT_LOCALE_STR);
         }
     }
 
     @ApiOperation("集值 - 批量查询")
     @Permission(permissionPublic = true)
     @GetMapping({"/batch/search-by-code"})
-    @ApiImplicitParams({@ApiImplicitParam(
-            name = "queryMap",
-            value = "批量查询条件,形式:code=返回key",
-            paramType = "query",
-            example = "CODE1=codeOne&CODE2=codeTwo",
-            required = true
-    )})
-    public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchProduct(@RequestParam Map<String, String> queryMap,
+    public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchLov(@RequestParam Map<String, String> queryMap,
                                                                              @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN")final String lang,
                                                                              @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
-        if (null == DetailsHelper.getUserDetails()) {
+        try {
             DetailsHelper.getAnonymousDetails().setLanguage(lang);
-            final ResponseEntity<Map<String, List<LovValueDTO>>> responseEntity = customLovService.batchQueryLovInfo(queryMap, organizationId);
+            return customLovService.batchQueryLovInfo(queryMap, organizationId);
+        } finally {
             DetailsHelper.getAnonymousDetails().setLanguage(BaseConstants.DEFAULT_LOCALE_STR);
-            return responseEntity;
         }
-        return customLovService.batchQueryLovInfo(queryMap, organizationId);
     }
 }

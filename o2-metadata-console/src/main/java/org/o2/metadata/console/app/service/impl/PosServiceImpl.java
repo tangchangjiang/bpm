@@ -1,24 +1,17 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.core.base.BaseConstants.Flag;
-import org.o2.context.metadata.api.IPosContext;
-import org.o2.context.metadata.config.MetadataContextConsumer;
 import org.o2.metadata.console.app.service.PosService;
-import org.o2.metadata.core.domain.entity.Pos;
-import org.o2.metadata.core.domain.entity.PosAddress;
-import org.o2.metadata.core.domain.entity.Region;
-import org.o2.metadata.core.domain.repository.PosAddressRepository;
-import org.o2.metadata.core.domain.repository.PosRepository;
-import org.o2.metadata.core.domain.repository.PostTimeRepository;
-import org.o2.metadata.core.domain.repository.RegionRepository;
+import org.o2.metadata.core.domain.entity.*;
+import org.o2.metadata.core.domain.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 
 /**
@@ -35,18 +28,17 @@ public class PosServiceImpl implements PosService {
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
     private final RegionRepository regionRepository;
-    private final IPosContext posContext;
+    private final PosRelCarrierRepository posRelCarrierRepository;
+    private CarrierRepository carrierRepository;
 
-    public PosServiceImpl(final PosRepository posRepository,
-                          final PostTimeRepository postTimeRepository,
-                          final PosAddressRepository posAddressRepository,
-                          final RegionRepository regionRepository,
-                          final MetadataContextConsumer metadataContextConsumer) {
+
+    public PosServiceImpl(PosRepository posRepository, PostTimeRepository postTimeRepository, PosAddressRepository posAddressRepository, RegionRepository regionRepository, PosRelCarrierRepository posRelCarrierRepository, CarrierRepository carrierRepository) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionRepository = regionRepository;
-        this.posContext = metadataContextConsumer.posContext();
+        this.posRelCarrierRepository = posRelCarrierRepository;
+        this.carrierRepository = carrierRepository;
     }
 
     @Override
@@ -80,9 +72,7 @@ public class PosServiceImpl implements PosService {
                 postTimeRepository.insert(postTime);
             });
         }
-
-        // 更新 redis
-        syncLimitToRedis(pos);
+        updateCarryIsDefault(pos);
         return pos;
     }
 
@@ -90,8 +80,6 @@ public class PosServiceImpl implements PosService {
     @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
         pos.baseValidate(posRepository);
-
-        Assert.isTrue(pos.exist(posRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
 
         final PosAddress address;
         if ((address = pos.getAddress()) != null) {
@@ -119,46 +107,42 @@ public class PosServiceImpl implements PosService {
                 }
             });
         }
-        // 更新 redis
-        syncLimitToRedis(pos);
-
+        updateCarryIsDefault(pos);
         return pos;
     }
 
     @Override
-    public Pos getPosWithPropertiesInRedisByPosId(final Long posId) {
-        final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(posId);
-        if (pos.getExpressedFlag().equals(Flag.YES)) {
-            final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(), pos.getTenantId());
-            if (StringUtils.isNotBlank(expressValue)) {
-                pos.setExpressLimitQuantity(Long.parseLong(expressValue));
-            }
-        }
-        if (pos.getPickedUpFlag().equals(Flag.YES)) {
-            final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(), pos.getTenantId());
-            if (StringUtils.isNotBlank(pickUpValue)) {
-                pos.setPickUpLimitQuantity(Long.parseLong(pickUpValue));
-            }
+    public Pos getPosWithPropertiesInRedisByPosId(final Long organizationId,final Long posId) {
+        final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(organizationId,posId);
+        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,1);
+        if (CollectionUtils.isNotEmpty(posRelCarriers)) {
+            final Carrier carrier = carrierRepository.selectByPrimaryKey(posRelCarriers.get(0).getCarrierId());
+            pos.setCarrierId(carrier.getCarrierId());
+            pos.setCarrierName(carrier.getCarrierName());
         }
         return pos;
     }
 
-    /**
-     * 将最大接单量更新到 redis
-     *
-     * @param pos Pos
-     */
-    private void syncLimitToRedis(final Pos pos) {
-        final String expressValue = this.posContext.getExpressLimit(pos.getPosCode(), pos.getTenantId());
-        final String pickUpValue = this.posContext.getPickUpLimit(pos.getPosCode(), pos.getTenantId());
 
-        final String newExpress = String.valueOf(pos.getExpressLimitQuantity());
-        if (pos.getExpressedFlag().equals(Flag.YES) && !newExpress.equals(expressValue)) {
-            this.posContext.saveExpressQuantity(pos.getPosCode(), newExpress, pos.getTenantId());
-        }
-        final String newPickUp = String.valueOf(pos.getPickUpLimitQuantity());
-        if (pos.getPickedUpFlag().equals(Flag.YES) && !newPickUp.equals(pickUpValue)) {
-            this.posContext.savePickUpQuantity(pos.getPosCode(), newPickUp, pos.getTenantId());
+    /**
+     * 更新默认承运商
+     * @param pos pos
+     */
+    public void updateCarryIsDefault (Pos pos) {
+        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,null);
+        posRelCarriers.stream()
+                .filter( c -> c.getDefaultFlag() == 1)
+                .forEach(c -> {
+                    c.setDefaultFlag(0);
+                    posRelCarrierRepository.updateByPrimaryKeySelective(c);
+                } );
+
+        if (null != pos.getCarrierId()) {
+            posRelCarriers.stream()
+                    .filter( c -> c.getCarrierId().equals(pos.getCarrierId()))
+                    .forEach(c -> posRelCarrierRepository.updateIsDefault(c.getPosRelCarrierId(), c.getPosId(),1));
         }
     }
+
+
 }

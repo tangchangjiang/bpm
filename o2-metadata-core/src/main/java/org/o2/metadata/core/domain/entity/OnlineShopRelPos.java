@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.o2.metadata.core.domain.repository.OnlineShopRelPosRepository;
+import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
-import org.o2.metadata.core.domain.repository.PosRepository;
+import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
@@ -40,24 +40,24 @@ public class OnlineShopRelPos extends AuditDomain {
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
-
-    public boolean exist(final OnlineShopRelPosRepository relPosRepository) {
-        if (this.onlineShopRelPosId != null) {
-            return relPosRepository.existsWithPrimaryKey(this);
-        }
-        final OnlineShopRelPos rel = new OnlineShopRelPos();
-        rel.setPosId(this.posId);
-        rel.setOnlineShopId(this.onlineShopId);
-        return relPosRepository.selectCount(rel) > 0;
-    }
-
-    public void baseValidate(final OnlineShopRepository shopRepository, final PosRepository posRepository) {
-        Assert.notNull(this.posId, "pos id must not null");
-        Assert.isTrue(posRepository.existsWithPrimaryKey(this.posId), "associate POS must exist");
-        Assert.notNull(this.onlineShopId, "online shop id must not null");
-        Assert.isTrue(shopRepository.existsWithPrimaryKey(this.onlineShopId), "associate online shop must exist");
-        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-    }
+//
+//    public boolean exist(final OnlineShopRelWarehouseRepository relPosRepository) {
+//        if (this.onlineShopRelPosId != null) {
+//            return relPosRepository.existsWithPrimaryKey(this);
+//        }
+//        final OnlineShopRelPos rel = new OnlineShopRelPos();
+//        rel.setPosId(this.posId);
+//        rel.setOnlineShopId(this.onlineShopId);
+//        return relPosRepository.selectCount(rel) > 0;
+//    }
+//
+//    public void baseValidate(final OnlineShopRepository shopRepository, final WarehouseRepository warehouseRepository) {
+//        Assert.notNull(this.posId, "pos id must not null");
+//        Assert.isTrue(warehouseRepository.existsWithPrimaryKey(this.posId), "associate POS must exist");
+//        Assert.notNull(this.onlineShopId, "online shop id must not null");
+//        Assert.isTrue(shopRepository.existsWithPrimaryKey(this.onlineShopId), "associate online shop must exist");
+//        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+//    }
     //
     // 数据库字段
     // ------------------------------------------------------------------------------

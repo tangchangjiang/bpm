@@ -5,17 +5,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.core.domain.repository.PosRelCarrierRepository;
 import org.o2.metadata.core.domain.repository.PosRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.base.BaseConstants;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,7 +27,6 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,6 +40,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel("服务点信息")
+@MultiLanguage
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_pos")
@@ -51,9 +55,6 @@ public class Pos extends AuditDomain {
     public static final String FIELD_OPEN_DATE = "openDate";
     public static final String FIELD_ADDRESS_ID = "posAddressId";
     public static final String FIELD_BUSINESS_TIME = "businessTime";
-    public static final String FIELD_ENABLE_PICKED_UP = "pickedUpFlag";
-    public static final String FIELD_ENABLE_EXPRESSED = "expressedFlag";
-    public static final String FIELD_SCORE = "score";
     public static final String FIELD_NOTICE = "notice";
 
     //
@@ -89,12 +90,12 @@ public class Pos extends AuditDomain {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
         }
 
-        if (this.pickedUpFlag == 0) {
-            Assert.isNull(this.pickUpLimitQuantity, "limit should be null when picked up is not enabled");
-        }
-        if (this.expressedFlag == 0) {
-            Assert.isNull(this.expressLimitQuantity, "limit should be null when expressed is not enabled");
-        }
+//        if (this.pickedUpFlag == 0) {
+//            Assert.isNull(this.pickUpLimitQuantity, "limit should be null when picked up is not enabled");
+//        }
+//        if (this.expressedFlag == 0) {
+//            Assert.isNull(this.expressLimitQuantity, "limit should be null when expressed is not enabled");
+//        }
 
         if (CollectionUtils.isNotEmpty(this.postTimes)) {
             this.postTimes.forEach(PostTime::validate);
@@ -109,6 +110,18 @@ public class Pos extends AuditDomain {
         if (CollectionUtils.isNotEmpty(mayEmpty)) {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Pos(" + pos.getPosId() + ")");
         }
+    }
+
+    public List<PosRelCarrier> posRelCarrier (PosRelCarrierRepository posRelCarrierRepository, Integer defaultFlag) {
+        List<PosRelCarrier> posRelCarriers = posRelCarrierRepository.selectByCondition(
+                Condition.builder(PosRelCarrier.class)
+                        .andWhere(Sqls.custom()
+                                .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())
+                                .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, this.getTenantId())
+                                .andEqualTo(PosRelCarrier.FIELD_IS_DEFAULT, defaultFlag)
+                        ).build()
+        );
+        return posRelCarriers;
     }
 
     //
@@ -128,6 +141,7 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "服务点名称")
     @NotBlank
     @Size(max = 255)
+    @MultiLanguageField
     private String posName;
 
     @ApiModelProperty(value = "服务点状态")
@@ -162,26 +176,12 @@ public class Pos extends AuditDomain {
     @Size(max = 255)
     private String businessTime;
 
-    @ApiModelProperty(value = "门店自提")
-    @NotNull
-    @Column(name = "picked_up_flag")
-    @Range(min = 0, max = 1)
-    private Integer pickedUpFlag;
 
     @Transient
     @ApiModelProperty(value = "门店自提接单量")
     private Long pickUpLimitQuantity;
 
-    @ApiModelProperty(value = "门店快递发货")
-    @NotNull
-    @Column(name = "expressed_flag")
-    @Range(min = 0, max = 1)
-    private Integer expressedFlag;
-
-    @ApiModelProperty(value = "门店评分")
-    private Long score;
-
-    @ApiModelProperty(value = "门店公告")
+    @ApiModelProperty(value = "店铺公告信息")
     @Size(max = 255)
     private String notice;
 
@@ -216,6 +216,10 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "承运商名称", hidden = true)
     @Transient
     private String carrierName;
+
+    @ApiModelProperty(value = "承运商ID")
+    @Transient
+    private Long carrierId;
 
     @ApiModelProperty(value = "组织ID", hidden = true)
     private Long tenantId;

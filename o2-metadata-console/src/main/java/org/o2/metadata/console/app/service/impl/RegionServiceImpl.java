@@ -7,6 +7,7 @@ import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.core.domain.entity.Region;
+import org.o2.metadata.core.domain.repository.RegionRelPosRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
 import org.o2.metadata.core.domain.vo.RegionVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
@@ -26,13 +27,27 @@ import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 public class RegionServiceImpl extends BaseServiceImpl<Region> implements RegionService {
     private static final long ROOT_ID = -1L;
 
-    @Autowired
     private RegionRepository regionRepository;
+
+    private RegionRelPosRepository regionRelPosRepository;
+
+    public RegionServiceImpl(RegionRepository regionRepository, RegionRelPosRepository regionRelPosRepository) {
+        this.regionRepository = regionRepository;
+        this.regionRelPosRepository = regionRelPosRepository;
+    }
 
     @Override
     public List<Region> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
         return recursiveBuildRegionTree(
                 regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag,tenantId).stream().collect(Collectors.groupingBy(
+                        item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId())),
+                ROOT_ID, new ArrayList<>());
+    }
+
+    @Override
+    public List<Region> treeOnlineStoreUnbindRegion(Long organizationId, Long onlineStoreId) {
+        return recursiveBuildRegionTree(
+                regionRelPosRepository.listUnbindRegion(organizationId, onlineStoreId).stream().collect(Collectors.groupingBy(
                         item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId())),
                 ROOT_ID, new ArrayList<>());
     }

@@ -30,11 +30,11 @@ public interface PosRepository extends BaseRepository<Pos> {
 
     /**
      * 主键查询
-     *
+     * @param tenantId 租户id
      * @param posId 服务点 id
      * @return 带详细地址和接派单时间的服务点信息
      */
-    Pos getPosWithAddressAndPostTimeByPosId(Long posId);
+    Pos getPosWithAddressAndPostTimeByPosId(Long tenantId,Long posId);
 
     /**
      * 查询未与网店关联的服务点
@@ -55,4 +55,6 @@ public interface PosRepository extends BaseRepository<Pos> {
      * @return 服务点信息
      */
     Pos getPosByCode(Long tenantId, String posCode);
+
+    List<Pos> listPosByCondition(Pos pos);
 }

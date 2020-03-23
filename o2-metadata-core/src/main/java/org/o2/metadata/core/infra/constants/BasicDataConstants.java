@@ -17,8 +17,9 @@ public interface BasicDataConstants {
         String BASIC_DATA_ENTITY_CANNOT_UPDATE = "error.basic_data.entity_cannot_update";
         String BASIC_DATA_DUPLICATE_CODE = "error.basic_data.duplicate_entity_code";
         String BASIC_DATA_DUPLICATE_NAME = "error.basic_data.duplicate_entity_name";
+        String BASIC_DATA_DUPLICATE_U_INDEX = "error.basic_data.duplicate_u_index";
         String BASIC_DATA_DATE_RANGE_ERROR = "error.basic_data.start_is_later_than_end";
-        String BASIC_DATA_ONLINE_AND_POS_CODE_IS_NULL = "error.basic_data.online_and_pos_code_is_null";
+        String BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL = "error.basic_data.online_and_warehouse_code_is_null";
         String BASIC_DATA_PARENT_NOT_ENABLED = "error.basic_data.parent_disable";
 
         String BASIC_DATA_FREIGHT_ID_IS_NULL = "error.basic_data.freight_template.id.not_null";
@@ -38,6 +39,7 @@ public interface BasicDataConstants {
         String BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE = "error.basic_data.freight_template_detail.duplicate";
         String BASIC_DATA_TENANT_ID_IS_NULL =  "error.basic_data.tenantId.should.is.not.null";
         String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
+        String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
     }
 
     /**

@@ -14,6 +14,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.core.domain.entity.OnlineShop;
 import org.o2.metadata.core.domain.entity.OnlineShopInfAuth;
 import org.o2.metadata.core.domain.repository.OnlineShopInfAuthRepository;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +53,11 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "网店接口表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{onlineShopId}")
-    public ResponseEntity<?> detail(@PathVariable final Long onlineShopId) {
-        return Results.success(onlineShopInfAuthRepository.listOnlineShopInfAuthByOption(onlineShopId));
+    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@PathVariable final Long onlineShopId) {
+        OnlineShop query = new OnlineShop();
+        query.setTenantId(organizationId);
+        query.setOnlineShopId(onlineShopId);
+        return Results.success(onlineShopInfAuthRepository.listInfAuthByOnlineShop(query));
     }
 
     @ApiOperation(value = "创建网店接口表")

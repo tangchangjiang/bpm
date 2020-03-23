@@ -74,9 +74,6 @@ public class Region extends AuditDomain {
     @Min(0)
     private Integer enabledFlag;
 
-    @ApiModelProperty("大区，值集O2MD.AREA_CODE")
-    @LovValue(lovCode = BasicDataConstants.AreaCode.LOV_CODE)
-    private String areaCode;
 
     //
     // 非数据库字段
@@ -85,6 +82,12 @@ public class Region extends AuditDomain {
     @ApiModelProperty(value = "子类", hidden = true)
     @Transient
     private List<Region> children;
+
+
+    @Transient
+    @ApiModelProperty("大区，值集O2MD.AREA_CODE")
+    @LovValue(lovCode = BasicDataConstants.AreaCode.LOV_CODE)
+    private String areaCode;
 
     @ApiModelProperty(value = "大区名称")
     @Transient

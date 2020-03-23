@@ -1,9 +1,11 @@
 package org.o2.metadata.core.infra.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.boot.platform.lov.feign.LovFeignClient;
 import org.hzero.core.util.Results;
+import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.service.CustomLovService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +46,9 @@ public class CustomLovServiceImpl implements CustomLovService {
             queryMap.remove("tenantId");
             queryMap.remove("lang");
             final Map<String, List<LovValueDTO>> result = new HashMap<>(queryMap.size());
-            queryMap.forEach((key, value) -> {
-                result.put(key, this.queryLovValues(value, tenantId));
-            });
+            queryMap.forEach((key, value) ->
+                result.put(key, this.queryLovValues(value, tenantId))
+            );
             return Results.success(result);
         }
     }
@@ -65,10 +67,10 @@ public class CustomLovServiceImpl implements CustomLovService {
         }
         final Optional<LovValueDTO> lovValueDTO = lovLists.stream().filter(e -> lovCode.equals(e.getValue())).findAny();
         if (!lovValueDTO.isPresent()) {
-            log.error("Please Check Config : [{}]", publicLovMetaData);
-            return Collections.emptyList();
+            log.error("Please Check Config : [{}], Lov Code:[{}]", publicLovMetaData, lovCode);
+            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_LOV_PERMISSION_NOT_PASS);
         }
-        final List<LovValueDTO> lovValues = lovFeignClient.queryLovValue(lovCode, 1L);
+        final List<LovValueDTO> lovValues = lovFeignClient.queryLovValue(lovCode, tenantId);
         if (log.isDebugEnabled()) {
             log.debug("LovCode :[{}],Values:[{}]", lovCode, lovValues);
         }

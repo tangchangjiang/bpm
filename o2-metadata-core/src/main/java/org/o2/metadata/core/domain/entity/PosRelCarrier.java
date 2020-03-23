@@ -39,6 +39,7 @@ public class PosRelCarrier extends AuditDomain {
     public static final String FIELD_IS_ACTIVE = "activeFlag";
     public static final String FIELD_IS_DEFAULT = "defaultFlag";
     public static final String FIELD_PRIORITY = "priority";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -62,6 +63,7 @@ public class PosRelCarrier extends AuditDomain {
         Assert.notNull(this.priority, "优先级不能为空");
         Assert.notNull(this.defaultFlag, "默认值不能为空");
     }
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -101,4 +103,7 @@ public class PosRelCarrier extends AuditDomain {
     private Pos pos;
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+
+
 }

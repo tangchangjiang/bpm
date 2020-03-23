@@ -30,7 +30,7 @@
         FROM
         hpfm_country t
         WHERE
-        t.country_id = rel.country_id
+        t.country_id = rel.country_id and t.tenant_id = #{tenantId}
         ) AS country_name,
         r.region_name,
         (
@@ -39,7 +39,7 @@
         FROM
         hpfm_region t
         WHERE
-        t.region_id = rel.city_id
+        t.region_id = rel.city_id and t.tenant_id = #{tenantId}
         ) AS city_name,
         (
         SELECT
@@ -47,14 +47,21 @@
         FROM
         hpfm_region t
         WHERE
-        t.region_id = rel.district_id
+        t.region_id = rel.district_id and t.tenant_id = #{tenantId}
         ) AS district_name
         FROM
         o2md_carrier_delivery_range rel
-        JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id
-        JOIN hpfm_region r on rel.region_id = r.region_id
+        JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id  and c.tenant_id = #{tenantId}
+        JOIN hpfm_region r on rel.region_id = r.region_id and r.tenant_id = #{tenantId}
         <where>
-            1=1
+            <choose>
+                <when test="tenantId != null">
+                    AND rel.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 =0
+                </otherwise>
+            </choose>
             <if test="deliveryRangeId != null">
                 and rel.delivery_range_id = #{deliveryRangeId}
             </if>

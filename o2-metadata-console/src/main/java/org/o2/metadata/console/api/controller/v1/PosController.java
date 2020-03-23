@@ -13,14 +13,13 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.app.service.OnlineShopRelPosService;
+import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Pos;
 import org.o2.metadata.core.domain.repository.PosRepository;
 import org.o2.metadata.core.domain.vo.PosVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -36,24 +35,20 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/v1/{organizationId}/poses")
 @Api(tags = EnableMetadataConsole.POS)
 public class PosController extends BaseController {
+
     private final PosRepository posRepository;
     private final PosService posService;
-    private final OnlineShopRelPosService onlineShopRelPosService;
 
-    private static final Logger LOG = LoggerFactory.getLogger(PosController.class);
-
-    public PosController(final PosRepository posRepository, final PosService posService,
-                         final OnlineShopRelPosService onlineShopRelPosService) {
+    public PosController(final PosRepository posRepository, final PosService posService) {
         this.posRepository = posRepository;
         this.posService = posService;
-        this.onlineShopRelPosService = onlineShopRelPosService;
     }
 
     @ApiOperation(value = "服务点信息列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<Page<PosVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                             final PosVO pos,
                                             @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
@@ -66,17 +61,21 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{posId}")
-    public ResponseEntity<Pos> detail(@PathVariable final Long posId) {
-        final Pos pos = posService.getPosWithPropertiesInRedisByPosId(posId);
+    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                      @PathVariable final Long posId) {
+        final Pos pos = posService.getPosWithPropertiesInRedisByPosId(organizationId,posId);
         return Results.success(pos);
     }
 
     @ApiOperation(value = "创建服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<Pos> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
-        this.validObject(pos);
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
         pos.setTenantId(organizationId);
+        validObject(pos);
+        if (!UniqueHelper.valid(pos)) {
+            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
+        }
         posService.create(pos);
         return Results.success(pos);
     }
@@ -84,13 +83,13 @@ public class PosController extends BaseController {
     @ApiOperation(value = "修改服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<Pos> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
         SecurityTokenHelper.validToken(pos, true, true);
         this.validObject(pos);
         pos.setTenantId(organizationId);
         posService.update(pos);
         //触发网店关联服务点更新
-        onlineShopRelPosService.resetIsInvCalculated(null, pos.getPosCode(), pos.getTenantId());
+//        onlineShopRelPosService.resetIsInvCalculated(null, pos.getPosCode(), pos.getTenantId());
         return Results.success(pos);
     }
 
@@ -98,7 +97,7 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/by/{posCode}")
-    public ResponseEntity<Pos> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final String posCode) {
+    public ResponseEntity<?> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final String posCode) {
         final Pos pos = posRepository.getPosByCode(organizationId, posCode);
         return Results.success(pos);
     }

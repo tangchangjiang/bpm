@@ -52,8 +52,8 @@
         tc.country_name target_country_name
         FROM
         o2md_neighboring_region n
-        left join hpfm_country sc on n.source_country_id = sc.country_id
-        left join hpfm_country tc on n.target_country_id = tc.country_id
+        left join hpfm_country sc on n.source_country_id = sc.country_id and sc.tenant_id = #{tenantId}
+        left join hpfm_country tc on n.target_country_id = tc.country_id and tc.tenant_id = #{tenantId}
         WHERE
         1 = 1
         <choose>
@@ -61,7 +61,7 @@
                 and n.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND n.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="posTypeCode!=null and posTypeCode!=''">

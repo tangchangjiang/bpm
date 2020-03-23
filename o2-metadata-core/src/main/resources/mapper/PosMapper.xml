@@ -12,10 +12,6 @@
         <result column="open_date" property="openDate" jdbcType="DATE"/>
         <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
         <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
-        <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
-        <result column="expressed_flag" property="expressedFlag" jdbcType="DECIMAL"/>
-        <result column="score" property="score" jdbcType="DECIMAL"/>
-        <result column="notice" property="notice" jdbcType="VARCHAR"/>
         <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
@@ -31,8 +27,6 @@
         <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
         <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
         <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
-        <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
-        <result column="expressed_flag" property="expressedFlag" jdbcType="DECIMAL"/>
         <result column="region_id" property="regionId" jdbcType="BIGINT"/>
         <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
         <result column="city_id" property="cityId" jdbcType="BIGINT"/>
@@ -60,8 +54,6 @@
         pos.pos_name,
         pos.pos_status_code,
         pos.pos_type_code,
-        pos.picked_up_flag,
-        pos.expressed_flag,
         pos.OBJECT_VERSION_NUMBER,
         address.region_id,
         region.region_name region_name,
@@ -77,43 +69,38 @@
         LEFT JOIN hpfm_region city on city.region_id = address.city_id
         LEFT JOIN hpfm_region district on district.region_id= address.district_id
         where 1=1
-            <choose>
-                <when test="tenantId != null">
-                    and pos.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND pos.tenant_id = 0
-                </otherwise>
-            </choose>
-            <if test="posCode != null and posCode != ''">
-                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
-                and pos.pos_code like #{posCodeLike}
-            </if>
-            <if test="posName != null and posName != ''">
-                <bind name="posNameLike" value="'%' + posName + '%'"/>
-                and pos.pos_name like #{posNameLike}
-            </if>
-            <if test="posStatusCode != null and posStatusCode != ''">
-                and pos.pos_status_code = #{posStatusCode}
-            </if>
-            <if test="posTypeCode != null and posTypeCode != ''">
-                and pos.pos_type_code = #{posTypeCode}
-            </if>
-            <if test="pickedUpFlag != null">
-                and pos.picked_up_flag = #{pickedUpFlag}
-            </if>
-            <if test="expressedFlag != null">
-                and pos.expressed_flag = #{expressedFlag}
-            </if>
-            <if test="regionId != null and regionId != ''">
-                and address.region_id = #{regionId}
-            </if>
-            <if test="cityId != null and cityId != ''">
-                and address.city_Id = #{cityId}
-            </if>
-            <if test="districtId != null and districtId != ''">
-                and address.district_Id = #{districtId}
-            </if>
+        <choose>
+            <when test="tenantId != null">
+                and pos.tenant_id = #{tenantId} and region.tenant_id = #{tenantId} and city.tenant_id = #{tenantId} and
+                district.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="posCode != null and posCode != ''">
+            <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+            and pos.pos_code like #{posCodeLike}
+        </if>
+        <if test="posName != null and posName != ''">
+            <bind name="posNameLike" value="'%' + posName + '%'"/>
+            and pos.pos_name like #{posNameLike}
+        </if>
+        <if test="posStatusCode != null and posStatusCode != ''">
+            and pos.pos_status_code = #{posStatusCode}
+        </if>
+        <if test="posTypeCode != null and posTypeCode != ''">
+            and pos.pos_type_code = #{posTypeCode}
+        </if>
+        <if test="regionId != null and regionId != ''">
+            and address.region_id = #{regionId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and address.city_Id = #{cityId}
+        </if>
+        <if test="districtId != null and districtId != ''">
+            and address.district_Id = #{districtId}
+        </if>
         order by pos.pos_code ASC
     </select>
 
@@ -126,13 +113,14 @@
         from o2md_pos p
         where not exists(
         select 1 from o2md_online_shop_rel_pos srp where srp.pos_id = p.pos_id and srp.online_shop_id = #{onlineShopId}
+        and srp.tenant_id = #{tenantId}
         )
         <choose>
             <when test="tenantId != null">
                 and p.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                and p.tenant_id = 0
+                and 1 = 0
             </otherwise>
         </choose>
         <if test="posCode != null">
@@ -147,27 +135,69 @@
     </select>
     <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">
         SELECT
-            p.pos_id,
-            p.pos_code,
-            p.pos_name,
-            p.pos_status_code,
-            p.pos_type_code,
-            p.business_type_code,
-            p.open_date,
-            p.address_id,
-            p.business_time,
-            p.picked_up_flag,
-            p.expressed_flag,
-            p.score,
-            p.notice,
-            p.OBJECT_VERSION_NUMBER,
-            p.CREATION_DATE,
-            p.CREATED_BY,
-            p.LAST_UPDATED_BY,
-            p.LAST_UPDATE_DATE,
-            p.tenant_id
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_status_code,
+        p.pos_type_code,
+        p.business_type_code,
+        p.open_date,
+        p.address_id,
+        p.business_time,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE,
+        p.tenant_id,
+        p.notice
         FROM
-            o2md_pos AS p
+        o2md_pos AS p
         where p.pos_id = #{posId}
+        <choose>
+            <when test="tenantId != null">
+                AND p.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listPosByCondition" resultType="org.o2.metadata.core.domain.entity.Pos">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        p.tenant_id,
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_type_code,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE
+        FROM
+        o2md_pos p
+        LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang}
+        <where>
+            <if test="posCode != null and posCode != ''">
+                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+                and p.pos_code like #{posCodeLike}
+            </if>
+            <if test="posName != null and posName != ''">
+                <bind name="posNameLike" value="'%' + posName + '%'"/>
+                and ptl.pos_name like #{posNameLike}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND p.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY p.pos_code ASC
     </select>
 </mapper>

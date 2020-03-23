@@ -45,7 +45,7 @@
                 FROM
                     hpfm_country t
                 WHERE
-                    t.country_id = da.country_id
+                    t.country_id = da.country_id and t.tenant_id = #{tenantId}
             ) AS country,
             (
                 SELECT
@@ -53,7 +53,7 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.region_id
+                    t.region_id = da.region_id and t.tenant_id = #{tenantId}
             ) AS region,
             (
                 SELECT
@@ -61,7 +61,7 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.city_id
+                    t.region_id = da.city_id and t.tenant_id = #{tenantId}
             ) AS city,
             (
                 SELECT
@@ -69,11 +69,19 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.district_id
+                    t.region_id = da.district_id and t.tenant_id = #{tenantId}
             ) AS district
         FROM
             o2md_pos_address da
-        WHERE
-            da.pos_address_id = #{posAddressId}
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND da.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+           and  da.pos_address_id = #{posAddressId}
     </select>
 </mapper>

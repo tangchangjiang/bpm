@@ -22,7 +22,8 @@ public class EnableMetadataConsole {
     public static final String NEIGHBORING_REGION = "Neighboring Region";
     public static final String ONLINE_SHOP = "Online Shop";
     public static final String ONLINE_SHOP_INF_AUTH = "Online Shop API Auth";
-    public static final String ONLINE_SHOP_POS_REL = "Online Shop POS Relationship";
+    public static final String ONLINE_SHOP_WAREHOUSE_REL = "Online Shop Warehouse Relationship";
+    public static final String WAREHOUSE = "Warehouse Management";
     public static final String POS_ADDRESS = "Pos Address";
     public static final String POS = "POS (Point Of Service)";
     public static final String POS_REL_CARRIER = "Pos Rel Carrier";
@@ -44,7 +45,8 @@ public class EnableMetadataConsole {
                 .tags(new Tag(EnableMetadataConsole.NEIGHBORING_REGION, "临近省管理"))
                 .tags(new Tag(EnableMetadataConsole.ONLINE_SHOP, "网店信息管理"))
                 .tags(new Tag(EnableMetadataConsole.ONLINE_SHOP_INF_AUTH, "网店接口权限"))
-                .tags(new Tag(EnableMetadataConsole.ONLINE_SHOP_POS_REL, "网店关联服务点管理"))
+                .tags(new Tag(EnableMetadataConsole.ONLINE_SHOP_WAREHOUSE_REL, "网店关联仓库管理"))
+                .tags(new Tag(EnableMetadataConsole.WAREHOUSE, "仓库管理"))
                 .tags(new Tag(EnableMetadataConsole.POS_ADDRESS, "服务点地址管理"))
                 .tags(new Tag(EnableMetadataConsole.POS, "服务点信息管理"))
                 .tags(new Tag(EnableMetadataConsole.POS_REL_CARRIER, "服务点关联承运商管理"))

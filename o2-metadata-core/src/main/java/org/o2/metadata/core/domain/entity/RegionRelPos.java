@@ -6,6 +6,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.hzero.mybatis.annotation.Unique;
 import org.hzero.mybatis.common.query.JoinOn;
 import org.hzero.mybatis.common.query.JoinTable;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
@@ -51,6 +53,11 @@ public class RegionRelPos extends AuditDomain {
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
+    @JsonIgnore
+    public boolean isNew() {
+        return get_status() == RecordStatus.create;
+    }
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -60,29 +67,33 @@ public class RegionRelPos extends AuditDomain {
     @Id
     @GeneratedValue
     private Long regionRelPosId;
-    @ApiModelProperty(value = "网店id，关联o2md_online_shop.online_shop_id", required = true)
+    @ApiModelProperty(value = "网店id，关联o2md_online_shop.online_shop_id")
     @NotNull
+    @Unique
     private Long onlineShopId;
     @ApiModelProperty(value = "大区，值集O2MD.AREA_CODE")
     //todo 添加值集注解
     private String areaCode;
     @ApiModelProperty(value = "区域id，关联hpfm_region.region_id")
     @NotNull
+    @Unique
     private Long regionId;
-    @ApiModelProperty(value = "区域描述", required = true)
+    @ApiModelProperty(value = "区域描述")
     @NotBlank
     @MultiLanguageField
     private String regionDescription;
-    @ApiModelProperty(value = "服务点id,关联o2md_pos.pos_id", required = true)
+    @ApiModelProperty(value = "服务点id,关联o2md_pos.pos_id")
     @NotNull
     private Long posId;
-    @ApiModelProperty(value = "是否有效", required = true)
+    @ApiModelProperty(value = "是否有效")
     @NotNull
     private Integer activeFlag;
     @ApiModelProperty(value = "优先级")
-    private Long priority;
-    @ApiModelProperty(value = "租户ID", required = true)
+    @Unique
     @NotNull
+    private Long priority;
+    @ApiModelProperty(value = "租户ID")
+    @Unique
     private Long tenantId;
 
     //

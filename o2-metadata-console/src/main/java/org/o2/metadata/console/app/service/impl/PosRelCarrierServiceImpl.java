@@ -67,7 +67,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
         }
         if (updateIndex != null) {
             final PosRelCarrier posRelCarrier = posRelCarriers.get(updateIndex);
-            posRelCarrierRepository.updateIsDefault(posRelCarrier.getPosRelCarrierId(), posRelCarrier.getPosId());
+            posRelCarrierRepository.updateIsDefault(posRelCarrier.getPosRelCarrierId(), posRelCarrier.getPosId(),0);
         }
         return resultList;
     }

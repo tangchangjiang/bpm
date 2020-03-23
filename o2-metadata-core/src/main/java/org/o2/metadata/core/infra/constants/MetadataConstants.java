@@ -11,27 +11,55 @@ import org.springframework.scripting.support.ResourceScriptSource;
  */
 public interface MetadataConstants {
 
-    interface PosCache {
-        String POS_INFO_KEY = "o2md:pos:%d:%s";
-        String PICK_UP_LIMIT_QUANTITY = "pick_up_limit_quantity";
-        String EXPRESS_LIMIT_QUANTITY = "express_limit_quantity";
-        String PICK_UP_LIMIT_VALUE = "pick_up_limit_value";
+    interface OnlineShopRelWarehouse {
+        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2inv:shopRelwh:%s:%s:%s";
+        String FIELD_POS_CODE = "posCode";
+        String FIELD_WAREHOUSE_CODE = "warehouseCode";
+        String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";
+    }
+
+
+    interface WarehouseCache {
+        String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:%s";
+        String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:%d:limit";
+        String PICK_UP_LIMIT_COLLECTION = "o2md:warehouse:pick_up:%d:limit";
+        String POS_CODE = "posCode";
+        String WAREHOUSE_STATUS_CODE= "warehouseStatusCode";
+        String WAREHOUSE_TYPE_CODE = "warehouseTypeCode";
+        String PICKUP_FLAG = "pickedUpFlag";
+        String EXPRESSED_FLAG = "expressedFlag";
+        String SCORE = "score";
+        String ACTIVE_DATE_FROM = "activedDateFrom";
+        String ACTIVE_DATE_TO = "activedDateTo";
+        String INV_ORGANIZATION_CODE = "invOrganizationCode";
+        String EXPRESS_LIMIT_QUANTITY= "express_limit_quantity";
         String EXPRESS_LIMIT_VALUE = "express_limit_value";
-        String EXPRESS_LIMIT_COLLECTION = "o2md:pos:express:limit";
-        String PICK_UP_LIMIT_COLLECTION = "o2md:pos:pick_up:limit";
+        String PICK_UP_LIMIT_QUANTITY = "pick_up_limit_quantity";
+        String PICK_UP_LIMIT_VALUE = "pick_up_limit_value";
 
         /**
          * 格式化的字符串
          *
-         * @param tenantId 租户ID
-         * @param posCode  服务点编码
+         * @param tenantId      租户ID
+         * @param warehouseCode 仓库编码
          * @return the return
          * @throws RuntimeException exception description
          */
-        static String posCacheKey(final long tenantId, final String posCode) {
-            return String.format(POS_INFO_KEY, tenantId, posCode);
+        static String warehouseCacheKey(final long tenantId, final String warehouseCode) {
+            return String.format(WAREHOUSE_INFO_KEY, tenantId, warehouseCode);
+        }
+
+        /**
+         * 格式化的字符串
+         * @param limit           limit
+         * @param tenantId      租户ID
+         * @return
+         */
+        static String warehouseLimitCacheKey(final String limit,final long tenantId) {
+            return String.format(limit, tenantId);
         }
     }
+
 
     interface FreightCache {
         /**
@@ -91,6 +119,22 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.POS_STATUS";
     }
+
+    /**
+     * 仓库类型
+     */
+    interface WarehouseType {
+        String LOV_CODE = "O2MD.WAREHOUSE_TYPE";
+    }
+
+    /**
+     * 仓库状态
+     */
+    interface WarehouseStatus {
+
+        String LOV_CODE = "O2MD.WAREHOUSE_STATUS";
+    }
+
 
     /**
      * 来源系统
@@ -157,5 +201,23 @@ public interface MetadataConstants {
             String tenantStr = null == tenantId ? null : tenantId.toString();
             return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYS_PARAMETER, tenantStr, sysParameterCode);
         }
+    }
+
+    /**
+     * 编码规则
+     */
+    interface  CodeRuleBuilder {
+        String RULE_CODE = "O2MD.WAREHOUSE";
+        String LEVEL_CODE = "GLOBAL";
+        String LEVEL_VALUE = "GLOBAL";
+    }
+
+    interface LuaCode {
+        ResourceScriptSource SAVE_REDIS_HASH_VALUE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/save_redis_hash_value.lua"));
+
+        ResourceScriptSource UPDATE_REDIS_HASH_VALUE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/update_redis_hash_value.lua"));
+
     }
 }
