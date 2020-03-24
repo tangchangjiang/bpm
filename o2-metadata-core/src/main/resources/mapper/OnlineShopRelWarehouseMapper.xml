@@ -46,6 +46,7 @@
             w.warehouse_code,
             w.warehouse_name,
             w.warehouse_type_code,
+            w.warehouse_status_code,
             srw.object_version_number,
             srw.online_shop_id,
             srw.active_flag,

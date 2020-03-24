@@ -36,7 +36,7 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
 
     @ApiModelProperty(value = "仓库状态")
     @LovValue(lovCode = MetadataConstants.WarehouseStatus.LOV_CODE)
-    private String warehouseStatus;
+    private String warehouseStatusCode;
 
     private String warehouseStatusMeaning;
 
