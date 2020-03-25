@@ -1,11 +1,9 @@
 package org.o2.metadata.console.app.service.impl;
 
-import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
-import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
@@ -14,11 +12,10 @@ import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.domain.repository.PosRepository;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -199,36 +196,20 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
      * @param scriptSource  scriptSource
      */
     public void syncToRedis (final List<OnlineShopRelWarehouse> relationships,final ResourceScriptSource scriptSource) {
-        final List<String> keyList = new ArrayList<>();
-        final Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+        List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
         for (OnlineShopRelWarehouse onlineShopRelWarehouse : relationships) {
             final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
             final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
             final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-            Map<String, Object> hashMap = onlineShopRelWarehouse.getRedisHashMap(pos.getPosCode(),warehouse.getWarehouseCode(),onlineShopRelWarehouse.getBusinessActiveFlag());
-            String hashKey = onlineShopRelWarehouse.getRedisHashKey(onlineShop.getOnlineShopCode(),warehouse.getWarehouseCode());
-            keyList.add(hashKey);
-            filedMaps.put(hashKey, hashMap);
+            OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
+            onlineShopRelWarehouseVOList.add(onlineShopRelWarehouseVO
+                    .buildOnlineShopRelWarehouseVO(pos,warehouse,onlineShop,onlineShopRelWarehouse));
         }
-        if (! CollectionUtils.isEmpty(keyList)){
-            try {
-                this.executeScript(filedMaps,keyList,scriptSource);
-            } catch (RuntimeException e) {
-                throw new CommonException(BasicDataConstants.ErrorCode.ERROE_REDIS_OPERATION);
-            }
+        if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
+            onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
+                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
+                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    redisCacheClient);
         }
-    }
-
-
-    /**
-     *  operation redis
-     * @param filedMaps filedMaps
-     * @param keyList   keyList
-     * @param resourceScriptSource   resourceScriptSource
-     */
-    public void executeScript(final Map<String, Map<String, Object>> filedMaps, final List<String> keyList,final ResourceScriptSource resourceScriptSource) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
-        this.redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
     }
 }

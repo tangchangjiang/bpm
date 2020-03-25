@@ -6,7 +6,6 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
-import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.Warehouse;
@@ -16,11 +15,8 @@ import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.apache.commons.collections.CollectionUtils;
 
-import javax.persistence.metamodel.CollectionAttribute;
 import java.util.*;
 
 /**
@@ -85,21 +81,10 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     public void refreshWarehouse (Long tenantId) {
         List<Warehouse> warehouseList =  warehouseRepository.queryAllWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(warehouseList)) {
-            Map<Integer, List<Warehouse>> warehouseMap  = warehouseList.get(0).warehouseGroupMap(warehouseList);
-            for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
-                List<String> keyList = new ArrayList<>();
-                Map<String, Map<String, Object>> filedMaps = new HashMap<>();
-                for (Warehouse warehouse : warehouseEntry.getValue()) {
-                    final String hashKey = warehouse.getRedisHashKey(warehouse.getWarehouseCode(), tenantId);
-                    keyList.add(hashKey);
-                    filedMaps.put(hashKey, warehouse.getRedisHashMap());
-                }
-                if (warehouseEntry.getKey() == 1) {
-                    this.executeScript(filedMaps, keyList, O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA);
-                } else {
-                    this.executeScript(filedMaps, keyList, O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA);
-                }
-            }
+            warehouseList.get(0).syncToRedis(warehouseList,
+                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    redisCacheClient);
         }
     }
 
@@ -110,35 +95,13 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     public void refreshOnlineShopRelWarehouse (Long tenantId) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = onlineShopRelWarehouseVOList.get(0).groupMap(onlineShopRelWarehouseVOList);
-            for (Map.Entry<Integer, List<OnlineShopRelWarehouseVO>> OnlineShopRelWarehouseEntry : onlineShopRelWarehouseMap.entrySet()){
-                List<String> keyList = new ArrayList<>();
-                Map<String, Map<String, Object>> filedMaps = new HashMap<>();
-                for (OnlineShopRelWarehouseVO onlineShopRelWarehouseVO : OnlineShopRelWarehouseEntry.getValue()) {
-                    final String hashKey = onlineShopRelWarehouseVO.getRedisHashKey(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode());
-                    keyList.add(hashKey);
-                    filedMaps.put(hashKey, onlineShopRelWarehouseVO.getRedisHashMap(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
-                }
-                if (OnlineShopRelWarehouseEntry.getKey() == 1) {
-                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA);
-                } else {
-                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA);
-                }
-            }
+            onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
+                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
+                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    redisCacheClient);
+
         }
 
-    }
-
-
-    /**
-     *  operation redis
-     * @param filedMaps filedMaps
-     * @param keyList   keyList
-     */
-    public void executeScript(final Map<String, Map<String, Object>> filedMaps, final List<String> keyList, final ResourceScriptSource resourceScriptSource) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
-        this.redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
     }
 
 }

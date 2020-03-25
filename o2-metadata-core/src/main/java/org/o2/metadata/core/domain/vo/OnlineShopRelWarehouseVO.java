@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
+import org.o2.metadata.core.domain.entity.OnlineShop;
 import org.o2.metadata.core.domain.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.core.domain.entity.Pos;
+import org.o2.metadata.core.domain.entity.Warehouse;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 
 import java.util.Date;
@@ -48,9 +51,24 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     @ApiModelProperty(value = "pos编码")
     private String posCode;
 
+    @ApiModelProperty(value = "网店编码")
+    private String shopCode;
+
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {
         return OnlineShopRelWarehouse.class;
     }
 
+
+    public OnlineShopRelWarehouseVO buildOnlineShopRelWarehouseVO ( final Pos pos,final Warehouse warehouse,final OnlineShop onlineShop,final OnlineShopRelWarehouse onlineShopRelWarehouse) {
+        OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
+        onlineShopRelWarehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
+        onlineShopRelWarehouseVO.setActiveFlag(onlineShopRelWarehouse.getActiveFlag());
+        onlineShopRelWarehouseVO.setTenantId(onlineShopRelWarehouse.getTenantId());
+        onlineShopRelWarehouseVO.setPosCode(pos.getPosCode());
+        onlineShopRelWarehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
+        onlineShopRelWarehouseVO.setShopCode(onlineShop.getOnlineShopCode());
+        onlineShopRelWarehouseVO.setBusinessActiveFlag(onlineShopRelWarehouse.getBusinessActiveFlag());
+        return onlineShopRelWarehouseVO;
+    }
 }

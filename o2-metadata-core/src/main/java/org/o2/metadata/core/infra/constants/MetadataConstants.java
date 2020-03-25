@@ -12,7 +12,7 @@ import org.springframework.scripting.support.ResourceScriptSource;
 public interface MetadataConstants {
 
     interface OnlineShopRelWarehouse {
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2inv:shopRelwh:%s:%s:%s";
+        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s:%s";
         String FIELD_POS_CODE = "posCode";
         String FIELD_WAREHOUSE_CODE = "warehouseCode";
         String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";

@@ -8,12 +8,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.o2.core.helper.FastJsonHelper;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -128,9 +132,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     /**
      * 拼写hashKey
      *
-     * @param posCode posCode
+     * @param posCode       posCode
      * @param warehouseCode warehouseCode
-     * @param posCode posCode
+     * @param posCode       posCode
      * @return hashKey
      */
     public String getRedisHashKey(final String posCode,final String warehouseCode) {
@@ -160,5 +164,48 @@ public class OnlineShopRelWarehouse extends AuditDomain {
         onlineShopRelWarehouseMap.put(0,loseEfficacyOnlineShopRelWarehouseList);
         onlineShopRelWarehouseMap.put(1,efficacyOnlineShopRelWarehouseList);
         return onlineShopRelWarehouseMap;
+    }
+
+
+    /**
+     * 同步到redis
+     * @param onlineShopRelWarehouseVOList  onlineShopRelWarehouseVOList
+     * @param saveResourceScriptSource      saveResourceScriptSource
+     * @param deleteResourceScriptSource    deleteResourceScriptSource
+     * @param redisCacheClient              redisCacheClient
+     */
+    public void syncToRedis (final List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList,
+                             final ResourceScriptSource saveResourceScriptSource,
+                             final ResourceScriptSource deleteResourceScriptSource,
+                             final RedisCacheClient redisCacheClient) {
+        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = onlineShopRelWarehouseVOList.get(0).groupMap(onlineShopRelWarehouseVOList);
+        for (Map.Entry<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseEntry : onlineShopRelWarehouseMap.entrySet()){
+            List<String> keyList = new ArrayList<>();
+            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+            for (OnlineShopRelWarehouseVO onlineShopRelWarehouseVO : onlineShopRelWarehouseEntry.getValue()) {
+                final String hashKey = onlineShopRelWarehouseVO.getRedisHashKey(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode());
+                keyList.add(hashKey);
+                filedMaps.put(hashKey, onlineShopRelWarehouseVO.getRedisHashMap(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
+            }
+            if (onlineShopRelWarehouseEntry.getKey() == 1) {
+                this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);
+            } else {
+                this.executeScript (filedMaps,keyList,deleteResourceScriptSource,redisCacheClient);
+            }
+        }
+    }
+
+    /**
+     *  operation redis
+     * @param filedMaps filedMaps
+     * @param keyList   keyList
+     */
+    public void executeScript(final Map<String, Map<String, Object>> filedMaps,
+                              final List<String> keyList,
+                              final ResourceScriptSource resourceScriptSource,
+                              final RedisCacheClient redisCacheClient) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(resourceScriptSource);
+        redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
     }
 }

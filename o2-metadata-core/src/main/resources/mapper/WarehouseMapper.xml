@@ -83,6 +83,7 @@
             <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
             and  w.warehouse_name LIKE #{warehouseNameLike}
         </if>
+        and w.actived_date_to <![CDATA[>]]> sysdate()
         order by w.warehouse_code asc
     </select>
 

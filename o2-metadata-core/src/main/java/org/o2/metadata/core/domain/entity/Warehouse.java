@@ -11,8 +11,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.core.helper.FastJsonHelper;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -207,4 +211,39 @@ public class Warehouse extends AuditDomain {
         return warehouseMap;
     }
 
+
+    public void syncToRedis ( final List<Warehouse> warehouseList,
+                              final ResourceScriptSource saveResourceScriptSource,
+                              final ResourceScriptSource deleteResourceScriptSource,
+                              final RedisCacheClient redisCacheClient) {
+        Map<Integer, List<Warehouse>> warehouseMap  = warehouseList.get(0).warehouseGroupMap(warehouseList);
+        for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
+            List<String> keyList = new ArrayList<>();
+            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+            for (Warehouse warehouse : warehouseEntry.getValue()) {
+                final String hashKey = warehouse.getRedisHashKey(warehouse.getWarehouseCode(), tenantId);
+                keyList.add(hashKey);
+                filedMaps.put(hashKey, warehouse.getRedisHashMap());
+            }
+            if (warehouseEntry.getKey() == 1) {
+                this.executeScript(filedMaps, keyList, saveResourceScriptSource,redisCacheClient);
+            } else {
+                this.executeScript(filedMaps, keyList,deleteResourceScriptSource,redisCacheClient);
+            }
+        }
+    }
+
+    /**
+     *  operation redis
+     * @param filedMaps filedMaps
+     * @param keyList   keyList
+     */
+    public void executeScript(final Map<String, Map<String, Object>> filedMaps,
+                              final List<String> keyList,
+                              final ResourceScriptSource resourceScriptSource,
+                              final RedisCacheClient redisCacheClient) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(resourceScriptSource);
+        redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
+    }
 }

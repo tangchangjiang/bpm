@@ -6,7 +6,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.context.metadata.config.MetadataContextConsumer;
-import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
@@ -14,8 +13,6 @@ import org.o2.metadata.core.domain.entity.Warehouse;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,35 +119,11 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     public void operationRedis (List<Warehouse> warehouses) {
         if (CollectionUtils.isNotEmpty(warehouses)) {
-            Map<Integer, List<Warehouse>> warehouseMap = warehouses.get(0).warehouseGroupMap(warehouses);
-            for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()){
-                List<String> keyList = new ArrayList<>();
-                Map<String, Map<String, Object>> filedMaps = new HashMap<>();
-                for (Warehouse warehouse : warehouseEntry.getValue()) {
-                    final String hashKey = warehouse.getRedisHashKey(warehouse.getWarehouseCode(),warehouse.getTenantId());
-                    keyList.add(hashKey);
-                    filedMaps.put(hashKey, warehouse.getRedisHashMap());
-                }
-                if (warehouseEntry.getKey() == 1) {
-                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA);
-                } else {
-                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA);
-                }
-            }
+            warehouses.get(0).syncToRedis(warehouses,
+                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    redisCacheClient);
         }
     }
-
-
-    /**
-     *  operation redis
-     * @param filedMaps filedMaps
-     * @param keyList   keyList
-     */
-    public void executeScript(final Map<String, Map<String, Object>> filedMaps, final List<String> keyList, final ResourceScriptSource resourceScriptSource) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
-        this.redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
-    }
-
 
 }
