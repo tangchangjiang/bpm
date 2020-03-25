@@ -7,7 +7,7 @@ import org.springframework.scripting.support.ResourceScriptSource;
  * 元数据 console常量
  * @author yuying.shi@hand-china.com 2020/3/24
  */
-public interface O2MtConsoleConstants {
+public interface O2MdConsoleConstants {
 
     interface LuaCode {
 

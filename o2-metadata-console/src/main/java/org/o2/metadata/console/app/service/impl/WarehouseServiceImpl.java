@@ -2,18 +2,24 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.context.metadata.config.MetadataContextConsumer;
+import org.o2.core.helper.FastJsonHelper;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.WarehouseService;
+import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.Warehouse;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 
@@ -33,15 +39,19 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final IWarehouseContext warehouseContext;
 
+    private RedisCacheClient redisCacheClient;
+
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, CodeRuleBuilder codeRuleBuilder,final MetadataContextConsumer metadataContextConsumer) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, CodeRuleBuilder codeRuleBuilder,final MetadataContextConsumer metadataContextConsumer,RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
         this.codeRuleBuilder = codeRuleBuilder;
         this.warehouseContext = metadataContextConsumer.warehouseContext();
+        this.redisCacheClient = redisCacheClient;
     }
 
+
     @Override
-    //@Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public Integer create(final Long tenantId, final Warehouse warehouse) {
         final String warehouseCode = codeRuleBuilder.generateCode(tenantId, MetadataConstants.CodeRuleBuilder.RULE_CODE,
                 MetadataConstants.CodeRuleBuilder.LEVEL_CODE, MetadataConstants.CodeRuleBuilder.LEVEL_VALUE, null);
@@ -53,6 +63,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
         /*for (Warehouse warehouse : warehouses) {
             // 编码规则：W + 6位流水
@@ -61,13 +72,13 @@ public class WarehouseServiceImpl implements WarehouseService {
             log.info("create batch warehouseCode {}", warehouseCode);
             warehouse.setWarehouseCode(warehouseCode);
         }*/
-       warehouseRepository.batchInsert(warehouses);
-        // 更新 redis
-        warehouses.forEach(this::syncToRedis);
+        warehouseRepository.batchInsert(warehouses);
+        this.operationRedis(warehouses);
         return warehouses;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer update(Warehouse warehouse) {
         final Warehouse exists = warehouseRepository.selectByPrimaryKey(warehouse.getWarehouseId());
         log.info("warehouse update exists {}", exists);
@@ -82,10 +93,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(List<Warehouse> warehouses) {
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKeySelective(warehouses);
         // 更新 redis
-        list.forEach(this::updateWarehouseToRedis);
+        this.operationRedis(warehouses);
         return list;
     }
 
@@ -106,6 +118,38 @@ public class WarehouseServiceImpl implements WarehouseService {
     private void updateWarehouseToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.getRedisHashMap();
         this.warehouseContext.updateWarehouse(warehouse.getWarehouseCode(),hashMap,warehouse.getTenantId());
+    }
+
+    public void operationRedis (List<Warehouse> warehouses) {
+        if (CollectionUtils.isNotEmpty(warehouses)) {
+            Map<Integer, List<Warehouse>> warehouseMap = warehouses.get(0).warehouseGroupMap(warehouses);
+            for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()){
+                List<String> keyList = new ArrayList<>();
+                Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+                for (Warehouse warehouse : warehouseEntry.getValue()) {
+                    final String hashKey = warehouse.getRedisHashKey(warehouse.getWarehouseCode(),warehouse.getTenantId());
+                    keyList.add(hashKey);
+                    filedMaps.put(hashKey, warehouse.getRedisHashMap());
+                }
+                if (warehouseEntry.getKey() == 1) {
+                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA);
+                } else {
+                    this.executeScript (filedMaps,keyList, O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA);
+                }
+            }
+        }
+    }
+
+
+    /**
+     *  operation redis
+     * @param filedMaps filedMaps
+     * @param keyList   keyList
+     */
+    public void executeScript(final Map<String, Map<String, Object>> filedMaps, final List<String> keyList, final ResourceScriptSource resourceScriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(resourceScriptSource);
+        this.redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
     }
 
 

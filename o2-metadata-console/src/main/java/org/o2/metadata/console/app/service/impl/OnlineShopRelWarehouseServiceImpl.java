@@ -8,7 +8,7 @@ import org.hzero.core.base.BaseConstants.Flag;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
-import org.o2.metadata.console.infra.constant.O2MtConsoleConstants;
+import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.*;
 import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
@@ -62,7 +62,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         });
 
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        syncToRedis(list,O2MtConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list, O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA);
         return list;
     }
 
@@ -76,7 +76,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        syncToRedis(list, O2MtConsoleConstants.LuaCode.BATCH_UPDATE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list, O2MdConsoleConstants.LuaCode.BATCH_UPDATE_REDIS_HASH_VALUE_LUA);
         return list;
     }
 

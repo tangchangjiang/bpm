@@ -20,8 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 网店关联仓库
@@ -136,5 +135,30 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      */
     public String getRedisHashKey(final String posCode,final String warehouseCode) {
         return  String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,posCode,warehouseCode);
+    }
+
+    /**
+     * 组黄map
+     * @param onlineShopRelWarehouseVOList onlineShopRelWarehouseVOList
+     * @return
+     */
+    public Map<Integer, List<OnlineShopRelWarehouseVO>> groupMap (List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList) {
+        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = new HashMap<>(2);
+        List<OnlineShopRelWarehouseVO> efficacyOnlineShopRelWarehouseList = new ArrayList<>();
+        List<OnlineShopRelWarehouseVO> loseEfficacyOnlineShopRelWarehouseList = new ArrayList<>();
+        onlineShopRelWarehouseVOList.forEach(onlineShopRelWarehouseVO -> {
+            Boolean flag = Boolean.FALSE;
+            if (onlineShopRelWarehouseVO.getActivedDateTo() == null || onlineShopRelWarehouseVO.getActivedDateTo().after(new Date())) {
+                flag = Boolean.TRUE;
+            }
+            if (onlineShopRelWarehouseVO.getActiveFlag() == 1 && flag) {
+                efficacyOnlineShopRelWarehouseList.add(onlineShopRelWarehouseVO);
+            } else {
+                loseEfficacyOnlineShopRelWarehouseList.add(onlineShopRelWarehouseVO);
+            }
+        });
+        onlineShopRelWarehouseMap.put(0,loseEfficacyOnlineShopRelWarehouseList);
+        onlineShopRelWarehouseMap.put(1,efficacyOnlineShopRelWarehouseList);
+        return onlineShopRelWarehouseMap;
     }
 }

@@ -19,9 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 仓库
@@ -156,6 +154,10 @@ public class Warehouse extends AuditDomain {
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
+    /**
+     * 组装hashMap
+     * @return
+     */
     public Map<String, Object> getRedisHashMap() {
         final Map<String, Object> warehouseMap = new HashMap<>(13);
         warehouseMap.put(MetadataConstants.WarehouseCache.POS_CODE,this.posCode);
@@ -174,7 +176,35 @@ public class Warehouse extends AuditDomain {
         return warehouseMap;
     }
 
+    /**
+     * 组装hashkey
+     * @param warehouseCode 仓库编码
+     * @param tenantId      租户ID
+     * @return
+     */
     public String getRedisHashKey(String warehouseCode, Long tenantId) {
         return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
     }
+
+    /**
+     * 仓库分组
+     * @param warehouses 仓库
+     * @return
+     */
+    public Map<Integer, List<Warehouse>> warehouseGroupMap (List<Warehouse> warehouses) {
+        Map<Integer, List<Warehouse>> warehouseMap = new HashMap<>(2);
+        List<Warehouse> efficacyWarehouseList = new ArrayList<>();
+        List<Warehouse> loseEfficacyWarehouseList = new ArrayList<>();
+        warehouses.forEach(warehouse -> {
+            if (warehouse.getActivedDateTo() == null || warehouse.getActivedDateTo().after(new Date())) {
+                efficacyWarehouseList.add(warehouse);
+            } else {
+                loseEfficacyWarehouseList.add(warehouse);
+            }
+        });
+        warehouseMap.put(0,loseEfficacyWarehouseList);
+        warehouseMap.put(1,efficacyWarehouseList);
+        return warehouseMap;
+    }
+
 }
