@@ -32,4 +32,11 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
     List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId);
 
     List<Warehouse> listWarehouseByCondition(Warehouse warehouse);
+
+    /**
+     * 查询租户下的所有仓库
+     * @param tenantId 租户ID
+     * @return
+     */
+    List<Warehouse> queryAllWarehouseByTenantId (Long tenantId);
 }

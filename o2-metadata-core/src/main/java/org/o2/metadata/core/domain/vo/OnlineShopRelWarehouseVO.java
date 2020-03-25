@@ -10,6 +10,8 @@ import org.hzero.mybatis.domian.SecurityToken;
 import org.o2.metadata.core.domain.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 
+import java.util.Date;
+
 
 /**
  * 网店关联仓库列表视图对象
@@ -39,6 +41,12 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     private String warehouseStatusCode;
 
     private String warehouseStatusMeaning;
+
+    @ApiModelProperty(value = "失效日期")
+    private Date activedDateTo;
+
+    @ApiModelProperty(value = "pos编码")
+    private String posCode;
 
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {

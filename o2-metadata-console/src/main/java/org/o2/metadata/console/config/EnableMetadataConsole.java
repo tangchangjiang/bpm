@@ -12,7 +12,9 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Component
 @ComponentScan({
         "org.o2.metadata.console.api",
-        "org.o2.metadata.console.app"})
+        "org.o2.metadata.console.app",
+        "org.o2.metadata.console.job"
+})
 public class EnableMetadataConsole {
     public static final String ADDRESS_MAPPING = "Address Mapping";
     public static final String CARRIER = "Carrier";

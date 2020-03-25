@@ -156,7 +156,7 @@ public class Warehouse extends AuditDomain {
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
-    public Map<String, Object> convertToWarehouseMap() {
+    public Map<String, Object> getRedisHashMap() {
         final Map<String, Object> warehouseMap = new HashMap<>(13);
         warehouseMap.put(MetadataConstants.WarehouseCache.POS_CODE,this.posCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
@@ -168,9 +168,13 @@ public class Warehouse extends AuditDomain {
         warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_TO,this.activedDateFrom);
         warehouseMap.put(MetadataConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
-        warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue);
+        warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
         warehouseMap.put(MetadataConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY,this.pickUpQuantity);
-        warehouseMap.put(MetadataConstants.WarehouseCache.PICK_UP_LIMIT_VALUE,this.pickUpLimitValue);
+        warehouseMap.put(MetadataConstants.WarehouseCache.PICK_UP_LIMIT_VALUE,this.pickUpLimitValue == null ? "0" : this.pickUpLimitValue);
         return warehouseMap;
+    }
+
+    public String getRedisHashKey(String warehouseCode, Long tenantId) {
+        return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
     }
 }

@@ -211,13 +211,4 @@ public interface MetadataConstants {
         String LEVEL_CODE = "GLOBAL";
         String LEVEL_VALUE = "GLOBAL";
     }
-
-    interface LuaCode {
-        ResourceScriptSource SAVE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/save_redis_hash_value.lua"));
-
-        ResourceScriptSource UPDATE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/update_redis_hash_value.lua"));
-
-    }
 }

@@ -115,8 +115,8 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @param businessActiveFlag businessActiveFlag
      * @return
      */
-    public Map<String, String> getRedisHashMap(final String posCode,final String warehouseCode,final Integer businessActiveFlag) {
-        return new HashMap<String, String>(3) {
+    public Map<String, Object> getRedisHashMap(final String posCode,final String warehouseCode,final Integer businessActiveFlag) {
+        return new HashMap<String, Object>(3) {
             {
                 put(MetadataConstants.OnlineShopRelWarehouse.FIELD_POS_CODE,posCode);
                 put(MetadataConstants.OnlineShopRelWarehouse.FIELD_WAREHOUSE_CODE,warehouseCode);

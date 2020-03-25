@@ -95,7 +95,7 @@ public class WarehouseServiceImpl implements WarehouseService {
      * @param warehouse warehouse
      */
     private void syncToRedis(final Warehouse warehouse) {
-        Map<String, Object> hashMap = warehouse.convertToWarehouseMap();
+        Map<String, Object> hashMap = warehouse.getRedisHashMap();
         this.warehouseContext.saveWarehouse(warehouse.getWarehouseCode(),hashMap,warehouse.getTenantId());
     }
 
@@ -104,7 +104,7 @@ public class WarehouseServiceImpl implements WarehouseService {
      * @param warehouse warehouse
      */
     private void updateWarehouseToRedis(final Warehouse warehouse) {
-        Map<String, Object> hashMap = warehouse.convertToWarehouseMap();
+        Map<String, Object> hashMap = warehouse.getRedisHashMap();
         this.warehouseContext.updateWarehouse(warehouse.getWarehouseCode(),hashMap,warehouse.getTenantId());
     }
 

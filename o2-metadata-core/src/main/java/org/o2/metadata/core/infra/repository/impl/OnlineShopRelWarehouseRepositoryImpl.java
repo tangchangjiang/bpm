@@ -32,4 +32,9 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
                 posOptional.map(OnlineShopRelWarehouseVO::getWarehouseCode).orElse(null),
                 posOptional.map(OnlineShopRelWarehouseVO::getWarehouseName).orElse(null),warehouse.getTenantId());
     }
+
+    @Override
+    public List<OnlineShopRelWarehouseVO> queryAllShopRelWarehouseByTenantId(Long tenantId) {
+        return onlineShopRelWarehouseMapper.queryAllShopRelWarehouseByTenantId(tenantId);
+    }
 }

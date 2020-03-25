@@ -40,6 +40,7 @@ public interface BasicDataConstants {
         String BASIC_DATA_TENANT_ID_IS_NULL =  "error.basic_data.tenantId.should.is.not.null";
         String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
+        String ERROE_REDIS_OPERATION = "error.basic_data.redis.operation";
     }
 
     /**

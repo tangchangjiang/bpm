@@ -36,4 +36,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
                                 @Param(value = "tenantId") Long tenantId);
 
     List<Warehouse> listWarehouseByCondition(Warehouse warehouse);
+
+
+    /**
+     * 查询租户下的所有仓库
+     * @param tenantId 租户ID
+     * @return
+     */
+    List<Warehouse> queryAllWarehouseByTenantId (@Param("tenantId") final Long tenantId);
 }

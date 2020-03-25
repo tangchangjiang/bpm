@@ -37,4 +37,9 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     public List<Warehouse> listWarehouseByCondition(Warehouse warehouse) {
         return warehouseMapper.listWarehouseByCondition(warehouse);
     }
+
+    @Override
+    public List<Warehouse> queryAllWarehouseByTenantId(Long tenantId) {
+        return warehouseMapper.queryAllWarehouseByTenantId(tenantId);
+    }
 }

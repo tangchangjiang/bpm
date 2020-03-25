@@ -1,25 +1,27 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
+import org.o2.metadata.console.infra.constant.O2MtConsoleConstants;
 import org.o2.metadata.core.domain.entity.*;
 import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.domain.repository.PosRepository;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
+import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.ScriptSource;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -50,6 +52,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse>  batchInsertSelective(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
@@ -59,11 +62,12 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         });
 
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        syncToRedis(list,MetadataConstants.LuaCode.SAVE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list,O2MtConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA);
         return list;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
@@ -72,7 +76,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        syncToRedis(list,MetadataConstants.LuaCode.UPDATE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list, O2MtConsoleConstants.LuaCode.BATCH_UPDATE_REDIS_HASH_VALUE_LUA);
         return list;
     }
 
@@ -191,24 +195,40 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     /**
      * 同步到redis
-     * @param relationships
-     * @param scriptSource
+     * @param relationships relationships
+     * @param scriptSource  scriptSource
      */
-    public void syncToRedis (final List<OnlineShopRelWarehouse> relationships,final ScriptSource scriptSource) {
+    public void syncToRedis (final List<OnlineShopRelWarehouse> relationships,final ResourceScriptSource scriptSource) {
+        final List<String> keyList = new ArrayList<>();
+        final Map<String, Map<String, Object>> filedMaps = new HashMap<>();
         for (OnlineShopRelWarehouse onlineShopRelWarehouse : relationships) {
             final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
             final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
             final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-            Map<String, String> hashMap = onlineShopRelWarehouse.getRedisHashMap(pos.getPosCode(),warehouse.getWarehouseCode(),onlineShopRelWarehouse.getBusinessActiveFlag());
+            Map<String, Object> hashMap = onlineShopRelWarehouse.getRedisHashMap(pos.getPosCode(),warehouse.getWarehouseCode(),onlineShopRelWarehouse.getBusinessActiveFlag());
             String hashKey = onlineShopRelWarehouse.getRedisHashKey(onlineShop.getOnlineShopCode(),warehouse.getWarehouseCode());
-            executeScript(hashMap,hashKey,scriptSource);
+            keyList.add(hashKey);
+            filedMaps.put(hashKey, hashMap);
+        }
+        if (! CollectionUtils.isEmpty(keyList)){
+            try {
+                this.executeScript(filedMaps,keyList,scriptSource);
+            } catch (RuntimeException e) {
+                throw new CommonException(BasicDataConstants.ErrorCode.ERROE_REDIS_OPERATION);
+            }
         }
     }
 
 
-    public void executeScript( final Map<String,String> hashMap, final String hashKey, final ScriptSource scriptSource) {
+    /**
+     *  operation redis
+     * @param filedMaps filedMaps
+     * @param keyList   keyList
+     * @param resourceScriptSource   resourceScriptSource
+     */
+    public void executeScript(final Map<String, Map<String, Object>> filedMaps, final List<String> keyList,final ResourceScriptSource resourceScriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(hashKey), FastJsonHelper.objectToString(hashMap));
+        defaultRedisScript.setScriptSource(resourceScriptSource);
+        this.redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
     }
 }
