@@ -49,6 +49,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-scheduler</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
         </dependency>
@@ -70,5 +75,7 @@
             <artifactId>ojdbc7</artifactId>
             <optional>true</optional>
         </dependency>
+
+
     </dependencies>
 </project>
