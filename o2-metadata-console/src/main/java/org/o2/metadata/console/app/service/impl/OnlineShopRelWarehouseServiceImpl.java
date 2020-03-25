@@ -59,7 +59,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         });
 
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        syncToRedis(list, O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list);
         return list;
     }
 
@@ -73,7 +73,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        syncToRedis(list, O2MdConsoleConstants.LuaCode.BATCH_UPDATE_REDIS_HASH_VALUE_LUA);
+        syncToRedis(list);
         return list;
     }
 
@@ -193,9 +193,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     /**
      * 同步到redis
      * @param relationships relationships
-     * @param scriptSource  scriptSource
      */
-    public void syncToRedis (final List<OnlineShopRelWarehouse> relationships,final ResourceScriptSource scriptSource) {
+    public void syncToRedis (final List<OnlineShopRelWarehouse> relationships) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
         for (OnlineShopRelWarehouse onlineShopRelWarehouse : relationships) {
             final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
