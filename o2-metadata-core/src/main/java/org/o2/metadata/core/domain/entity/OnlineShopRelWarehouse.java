@@ -118,7 +118,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @param businessActiveFlag businessActiveFlag
      * @return
      */
-    public Map<String, Object> getRedisHashMap(final String posCode,final String warehouseCode,final Integer businessActiveFlag) {
+    public Map<String, Object> buildRedisHashMap(final String posCode,final String warehouseCode,final Integer businessActiveFlag) {
         return new HashMap<String, Object>(3) {
             {
                 put(MetadataConstants.OnlineShopRelWarehouse.FIELD_POS_CODE,posCode);
@@ -137,7 +137,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @param posCode       posCode
      * @return hashKey
      */
-    public String getRedisHashKey(final String posCode,final String warehouseCode) {
+    public String buildRedisHashKey(final String posCode,final String warehouseCode) {
         return  String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,posCode,warehouseCode);
     }
 
@@ -183,9 +183,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
             List<String> keyList = new ArrayList<>();
             Map<String, Map<String, Object>> filedMaps = new HashMap<>();
             for (OnlineShopRelWarehouseVO onlineShopRelWarehouseVO : onlineShopRelWarehouseEntry.getValue()) {
-                final String hashKey = onlineShopRelWarehouseVO.getRedisHashKey(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode());
+                final String hashKey = onlineShopRelWarehouseVO.buildRedisHashKey(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode());
                 keyList.add(hashKey);
-                filedMaps.put(hashKey, onlineShopRelWarehouseVO.getRedisHashMap(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
+                filedMaps.put(hashKey, onlineShopRelWarehouseVO.buildRedisHashMap(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
             }
             if (onlineShopRelWarehouseEntry.getKey() == 1) {
                 this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);

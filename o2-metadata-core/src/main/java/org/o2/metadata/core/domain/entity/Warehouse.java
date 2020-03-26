@@ -162,7 +162,7 @@ public class Warehouse extends AuditDomain {
      * 组装hashMap
      * @return
      */
-    public Map<String, Object> getRedisHashMap() {
+    public Map<String, Object> buildRedisHashMap() {
         final Map<String, Object> warehouseMap = new HashMap<>(13);
         warehouseMap.put(MetadataConstants.WarehouseCache.POS_CODE,this.posCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
@@ -186,7 +186,7 @@ public class Warehouse extends AuditDomain {
      * @param tenantId      租户ID
      * @return
      */
-    public String getRedisHashKey(String warehouseCode, Long tenantId) {
+    public String buildRedisHashKey(String warehouseCode, Long tenantId) {
         return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
     }
 
@@ -221,9 +221,9 @@ public class Warehouse extends AuditDomain {
             List<String> keyList = new ArrayList<>();
             Map<String, Map<String, Object>> filedMaps = new HashMap<>();
             for (Warehouse warehouse : warehouseEntry.getValue()) {
-                final String hashKey = warehouse.getRedisHashKey(warehouse.getWarehouseCode(), tenantId);
+                final String hashKey = warehouse.buildRedisHashKey(warehouse.getWarehouseCode(), tenantId);
                 keyList.add(hashKey);
-                filedMaps.put(hashKey, warehouse.getRedisHashMap());
+                filedMaps.put(hashKey, warehouse.buildRedisHashMap());
             }
             if (warehouseEntry.getKey() == 1) {
                 this.executeScript(filedMaps, keyList, saveResourceScriptSource,redisCacheClient);
