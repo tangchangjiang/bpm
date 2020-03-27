@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.core.infra.mapper.OnlineShopRelWarehouseMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.OnlineShopRelPos">
-        <result column="online_shop_rel_pos_id" property="onlineShopRelPosId" jdbcType="DECIMAL"/>
+    <resultMap id="BaseResultMap" type="org.o2.metadata.core.domain.entity.OnlineShopRelWarehouse">
+        <result column="online_shop_rel_pos_id" property="onlineShopRelWarehouseId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
@@ -16,11 +16,6 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <resultMap id="RelWithPosResultMap" type="org.o2.metadata.core.domain.entity.OnlineShopRelPos"
-               extends="BaseResultMap">
-        <association property="pos" columnPrefix="pos_"
-                     resultMap="org.o2.metadata.core.infra.mapper.PosMapper.BaseResultMap"/>
-    </resultMap>
 
     <resultMap id="RelationshipVOMap" type="org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO">
         <result column="online_shop_rel_warehouse_id" property="onlineShopRelWarehouseId" jdbcType="DECIMAL"/>
