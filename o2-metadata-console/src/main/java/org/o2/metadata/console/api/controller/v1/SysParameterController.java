@@ -33,9 +33,9 @@ public class SysParameterController extends BaseController {
     private final ISysParameterContext sysParameterContext;
 
     public SysParameterController(final SysParameterRepository sysParameterRepository,
-                                  final MetadataContextConsumer metadataContextConsumer) {
+                                  final ISysParameterContext sysParameterContext) {
         this.sysParameterRepository = sysParameterRepository;
-        this.sysParameterContext = metadataContextConsumer.sysParameterContext();
+        this.sysParameterContext = sysParameterContext;
     }
 
     @ApiOperation(value = "系统参数设置列表")

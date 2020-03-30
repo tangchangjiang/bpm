@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.o2.context.metadata.api.IWarehouseContext;
-import org.o2.context.metadata.config.MetadataContextConsumer;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
@@ -16,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 
@@ -39,10 +39,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     private RedisCacheClient redisCacheClient;
 
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository, CodeRuleBuilder codeRuleBuilder,final MetadataContextConsumer metadataContextConsumer,RedisCacheClient redisCacheClient) {
+    public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
+                                final CodeRuleBuilder codeRuleBuilder,
+                                final IWarehouseContext warehouseContext,
+                                final RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
         this.codeRuleBuilder = codeRuleBuilder;
-        this.warehouseContext = metadataContextConsumer.warehouseContext();
+        this.warehouseContext = warehouseContext;
         this.redisCacheClient = redisCacheClient;
     }
 
@@ -101,23 +104,25 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     /**
      * 新增到 redis
+     *
      * @param warehouse warehouse
      */
     private void syncToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.warehouseContext.saveWarehouse(warehouse.getWarehouseCode(),hashMap,warehouse.getTenantId());
+        this.warehouseContext.saveWarehouse(warehouse.getWarehouseCode(), hashMap, warehouse.getTenantId());
     }
 
     /**
-     *  update redis
+     * update redis
+     *
      * @param warehouse warehouse
      */
     private void updateWarehouseToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.warehouseContext.updateWarehouse(warehouse.getWarehouseCode(),hashMap,warehouse.getTenantId());
+        this.warehouseContext.updateWarehouse(warehouse.getWarehouseCode(), hashMap, warehouse.getTenantId());
     }
 
-    public void operationRedis (List<Warehouse> warehouses) {
+    public void operationRedis(List<Warehouse> warehouses) {
         if (CollectionUtils.isNotEmpty(warehouses)) {
             warehouses.get(0).syncToRedis(warehouses,
                     O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
