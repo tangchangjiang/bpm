@@ -3,6 +3,9 @@ package org.o2.metadata.core.infra.constants;
 import com.google.common.base.Joiner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 元数据常量
@@ -10,6 +13,23 @@ import org.springframework.scripting.support.ResourceScriptSource;
  * @author mark.bao@hand-china.com 2019-04-16
  */
 public interface MetadataConstants {
+
+    /**
+     * 统一时间格式
+     */
+    interface MdDateFormat {
+        /**
+         * redis时间格式
+         *
+         * @return DateFormat
+         */
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        static DateFormat dateFormat() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    }
+
 
     interface OnlineShopRelWarehouse {
         String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s:%s";

@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
+import java.text.DateFormat;
 import java.util.*;
 
 /**
@@ -163,6 +164,7 @@ public class Warehouse extends AuditDomain {
      * @return
      */
     public Map<String, Object> buildRedisHashMap() {
+        DateFormat dateFormat = MetadataConstants.MdDateFormat.dateFormat();
         final Map<String, Object> warehouseMap = new HashMap<>(13);
         warehouseMap.put(MetadataConstants.WarehouseCache.POS_CODE,this.posCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
@@ -170,8 +172,10 @@ public class Warehouse extends AuditDomain {
         warehouseMap.put(MetadataConstants.WarehouseCache.PICKUP_FLAG,this.pickedUpFlag);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESSED_FLAG,this.expressedFlag);
         warehouseMap.put(MetadataConstants.WarehouseCache.SCORE,this.score);
-        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_FROM,this.activedDateFrom);
-        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_TO,this.activedDateFrom);
+        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_FROM,
+                (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
+        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_TO,
+                (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
         warehouseMap.put(MetadataConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
