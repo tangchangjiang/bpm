@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
@@ -25,6 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 网店关联仓库
@@ -113,32 +115,23 @@ public class OnlineShopRelWarehouse extends AuditDomain {
 
     /**
      * 拼写RedisHashMap
-     * @param posCode            posCode
-     * @param warehouseCode      warehouseCode
-     * @param businessActiveFlag businessActiveFlag
-     * @return
+     * @param onlineShopRelWarehouseVOs onlineShopRelWarehouseVOs
+     * @return map
      */
-    public Map<String, Object> buildRedisHashMap(final String posCode,final String warehouseCode,final Integer businessActiveFlag) {
-        return new HashMap<String, Object>(3) {
-            {
-                put(MetadataConstants.OnlineShopRelWarehouse.FIELD_POS_CODE,posCode);
-                put(MetadataConstants.OnlineShopRelWarehouse.FIELD_WAREHOUSE_CODE,warehouseCode);
-                put(MetadataConstants.OnlineShopRelWarehouse.FIELD_BUSINESS_ACTIVE_FLAG,String.valueOf(businessActiveFlag));
-
-            }
-        };
+    public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOs) {
+       Map<String,Object> map = new HashMap<>();
+        onlineShopRelWarehouseVOs.forEach(onlineShopRelWarehouseVO ->
+                map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
+       return map;
     }
 
     /**
      * 拼写hashKey
-     *
-     * @param posCode       posCode
-     * @param warehouseCode warehouseCode
-     * @param posCode       posCode
+     * @param onlineShopCode onlineShopCode
      * @return hashKey
      */
-    public String buildRedisHashKey(final String posCode,final String warehouseCode) {
-        return  String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,posCode,warehouseCode);
+    public String buildRedisHashKey(final String onlineShopCode) {
+        return  String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
     }
 
     /**
@@ -178,15 +171,27 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                              final ResourceScriptSource saveResourceScriptSource,
                              final ResourceScriptSource deleteResourceScriptSource,
                              final RedisCacheClient redisCacheClient) {
+        // 根据是否有效分组 无效 删除
         Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = onlineShopRelWarehouseVOList.get(0).groupMap(onlineShopRelWarehouseVOList);
         for (Map.Entry<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseEntry : onlineShopRelWarehouseMap.entrySet()){
+            // 根据 onlineShopCode 分组
+            Map<String, List<OnlineShopRelWarehouseVO>>  synToRedisMap = onlineShopRelWarehouseEntry.getValue().stream()
+                    .collect(Collectors.groupingBy(OnlineShopRelWarehouseVO::getOnlineShopCode));
+
             List<String> keyList = new ArrayList<>();
             Map<String, Map<String, Object>> filedMaps = new HashMap<>();
-            for (OnlineShopRelWarehouseVO onlineShopRelWarehouseVO : onlineShopRelWarehouseEntry.getValue()) {
-                final String hashKey = onlineShopRelWarehouseVO.buildRedisHashKey(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode());
-                keyList.add(hashKey);
-                filedMaps.put(hashKey, onlineShopRelWarehouseVO.buildRedisHashMap(onlineShopRelWarehouseVO.getPosCode(),onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
+
+            for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseVOEntry : synToRedisMap.entrySet()) {
+                List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVOs = onlineShopRelWarehouseVOEntry.getValue();
+                if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVOs)) {
+                    // 获取hashKey
+                    final String hashKey = groupOnlineShopRelWarehouseVOs.get(0).buildRedisHashKey(groupOnlineShopRelWarehouseVOs.get(0).getOnlineShopCode());
+                    keyList.add(hashKey);
+                    // 获取hashMap
+                    filedMaps.put(hashKey, groupOnlineShopRelWarehouseVOs.get(0).buildRedisHashMap(groupOnlineShopRelWarehouseVOs));
+                }
             }
+            // 执行
             if (onlineShopRelWarehouseEntry.getKey() == 1) {
                 this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);
             } else {

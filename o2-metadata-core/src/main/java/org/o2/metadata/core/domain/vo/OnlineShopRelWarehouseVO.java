@@ -48,11 +48,8 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     @ApiModelProperty(value = "失效日期")
     private Date activedDateTo;
 
-    @ApiModelProperty(value = "pos编码")
-    private String posCode;
-
     @ApiModelProperty(value = "网店编码")
-    private String shopCode;
+    private String onlineShopCode;
 
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {
@@ -65,9 +62,8 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
         onlineShopRelWarehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
         onlineShopRelWarehouseVO.setActiveFlag(onlineShopRelWarehouse.getActiveFlag());
         onlineShopRelWarehouseVO.setTenantId(onlineShopRelWarehouse.getTenantId());
-        onlineShopRelWarehouseVO.setPosCode(pos.getPosCode());
         onlineShopRelWarehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
-        onlineShopRelWarehouseVO.setShopCode(onlineShop.getOnlineShopCode());
+        onlineShopRelWarehouseVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopRelWarehouseVO.setBusinessActiveFlag(onlineShopRelWarehouse.getBusinessActiveFlag());
         return onlineShopRelWarehouseVO;
     }

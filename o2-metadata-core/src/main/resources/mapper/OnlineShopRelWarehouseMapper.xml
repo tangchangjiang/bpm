@@ -75,7 +75,6 @@
         SELECT
         w.warehouse_code,
         w.actived_date_to,
-        p.pos_code,
         s.online_shop_code,
         srw.active_flag,
         srw.business_active_flag,
