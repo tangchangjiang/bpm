@@ -72,11 +72,11 @@ public class WarehouseController extends BaseController {
     @PostMapping
     public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                     @RequestBody final List<Warehouse> warehouses) {
-        warehouses.forEach(w -> w.setTenantId(organizationId));
-        for (Warehouse wh : warehouses) {
-            wh.setTenantId(organizationId);
-            this.validObject(wh);
-        }
+        warehouses.forEach(w -> {
+            w.setTenantId(organizationId);
+            w.setActiveFlag(1);
+            this.validObject(w);
+        });
         List<Warehouse> batch = warehouseService.createBatch(organizationId, warehouses);
         return Results.success(batch);
     }
