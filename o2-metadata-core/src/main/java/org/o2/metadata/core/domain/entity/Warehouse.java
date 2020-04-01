@@ -133,6 +133,10 @@ public class Warehouse extends AuditDomain {
     @NotNull
     private Long tenantId;
 
+    @ApiModelProperty(value = "生效状态")
+    @NotNull
+    private Integer activeFlag;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -204,7 +208,11 @@ public class Warehouse extends AuditDomain {
         List<Warehouse> efficacyWarehouseList = new ArrayList<>();
         List<Warehouse> loseEfficacyWarehouseList = new ArrayList<>();
         warehouses.forEach(warehouse -> {
+            Boolean flag = Boolean.FALSE;
             if (warehouse.getActivedDateTo() == null || warehouse.getActivedDateTo().after(new Date())) {
+                flag = Boolean.TRUE;
+            }
+            if (warehouse.getActiveFlag() == 1 && flag) {
                 efficacyWarehouseList.add(warehouse);
             } else {
                 loseEfficacyWarehouseList.add(warehouse);

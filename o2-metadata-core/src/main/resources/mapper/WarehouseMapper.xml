@@ -117,6 +117,7 @@
         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang}
         LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang}
         <where>
+            AND w.active_flag = 1
             <if test="warehouseCode != null and warehouseCode != ''">
                 <bind name="warehouseCodeLike" value="'%' + warehouseCode + '%'"/>
                 AND w.warehouse_code LIKE #{warehouseCodeLike}

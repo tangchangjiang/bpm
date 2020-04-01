@@ -160,21 +160,19 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         }
 
         final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-        final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
-        return getIsInvCalculated(onlineShopRelWarehouse, onlineShop, pos);
+        final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
+        return getIsInvCalculated(onlineShopRelWarehouse, onlineShop, warehouse);
     }
 
 
     /**
      * * 满足以下条件，返回1
-     * 1.网店关联POS有效
-     * 2.网店有效
-     * 3.POS状态为正常
-     * 4.如果POS为门店，需要满足POS可快递发货且接单量未达到上限
-     *
+     * 1.网店o2md_online_shop.active_flag有效
+     * 2.仓库o2md_warehouse.active_flag有效
+     * 3.网店关联仓库o2md_online_shop_rel_warehouse.active_flag有效
      * @return 判断结果
      */
-    private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse, final OnlineShop onlineShop, final Pos pos) {
+    private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse, final OnlineShop onlineShop, final Warehouse warehouse) {
         if (onlineShopRelWarehouse == null || Flag.NO.equals(onlineShopRelWarehouse.getActiveFlag())) {
             return 0;
         }
@@ -183,7 +181,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             return 0;
         }
 
-        if (pos == null || !MetadataConstants.PosStatus.NORMAL.equals(pos.getPosStatusCode())) {
+        if (warehouse == null || Flag.NO.equals(warehouse.getActiveFlag())) {
             return 0;
         }
 

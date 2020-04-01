@@ -31,14 +31,21 @@ public interface MetadataConstants {
     }
 
 
+    /**
+     * Redis OnlineShopRelWarehouse
+     * o2md:shopRelwh:[tenantId]:[shopCode]
+     * key:value [warehouseCode:businessActiveFlag]
+     * 对应数据库表：o2md_online_shop_rel_warehouse
+     */
     interface OnlineShopRelWarehouse {
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s:%s";
-        String FIELD_POS_CODE = "posCode";
-        String FIELD_WAREHOUSE_CODE = "warehouseCode";
-        String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";
+        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s";
     }
 
-
+    /**
+     * Redis Warehouse
+     * o2md:warehouse:[tenantId]:[warehouseCode]
+     * 对应数据库表：o2md_warehouse
+     */
     interface WarehouseCache {
         String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:%s";
         String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:%d:limit";
