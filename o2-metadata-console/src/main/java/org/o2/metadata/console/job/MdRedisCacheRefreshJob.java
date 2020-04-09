@@ -60,14 +60,13 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             LOG.info("start synchronize metadata basic data to redis...");
             if (REFRESH.equals(warehouse)) {
                 // 全量同步 仓库 数据到Redis，判断失效时间
-                //
-                LOG.info("synchronize warehouse to redis chche complete.");
+                LOG.info("synchronize warehouse to redis cache complete.");
                 refreshWarehouse(tenantId);
             }
 
             if (REFRESH.equals(onlineShopRelWarehouse)) {
                 // 全量同步 网店关联仓库 到Redis，判断生效标记 active_flag 和失效时间
-                LOG.info("synchronize onlineShopRelWarehouse to redis chche complete.");
+                LOG.info("synchronize onlineShopRelWarehouse to redis cache complete.");
                 refreshOnlineShopRelWarehouse(tenantId);
             }
         }
