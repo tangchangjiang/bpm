@@ -224,6 +224,13 @@ public class Warehouse extends AuditDomain {
     }
 
 
+    /**
+     * 同步到redis
+     * @param warehouseList warehouseList
+     * @param saveResourceScriptSource   saveResourceScriptSource
+     * @param deleteResourceScriptSource deleteResourceScriptSource
+     * @param redisCacheClient redisCacheClient
+     */
     public void syncToRedis ( final List<Warehouse> warehouseList,
                               final ResourceScriptSource saveResourceScriptSource,
                               final ResourceScriptSource deleteResourceScriptSource,
