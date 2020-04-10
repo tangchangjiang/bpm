@@ -87,7 +87,10 @@ public class WarehouseController extends BaseController {
     public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                     @RequestBody final List<Warehouse> warehouses) {
         SecurityTokenHelper.validToken(warehouses);
-        warehouses.forEach(w -> w.setTenantId(organizationId));
+        warehouses.forEach(w -> {
+            w.setTenantId(organizationId);
+            w.setActiveFlag(1);
+        });
         List<Warehouse> list = warehouseService.updateBatch(warehouses);
         return Results.success(list);
     }
