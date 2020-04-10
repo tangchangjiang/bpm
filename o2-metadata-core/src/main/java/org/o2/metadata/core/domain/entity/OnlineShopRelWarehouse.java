@@ -20,7 +20,6 @@ import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.util.Assert;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -115,12 +114,12 @@ public class OnlineShopRelWarehouse extends AuditDomain {
 
     /**
      * 拼写RedisHashMap
-     * @param onlineShopRelWarehouseVOs onlineShopRelWarehouseVOs
+     * @param onlineShopRelWarehouses onlineShopRelWarehouseVOs
      * @return map
      */
-    public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOs) {
+    public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouses) {
        Map<String,Object> map = new HashMap<>();
-        onlineShopRelWarehouseVOs.forEach(onlineShopRelWarehouseVO ->
+        onlineShopRelWarehouses.forEach(onlineShopRelWarehouseVO ->
                 map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
        return map;
     }
@@ -137,7 +136,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     /**
      * 组黄map
      * @param onlineShopRelWarehouseVOList onlineShopRelWarehouseVOList
-     * @return
+     * @return map
      */
     public Map<Integer, List<OnlineShopRelWarehouseVO>> groupMap (List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList) {
         return onlineShopRelWarehouseVOList.stream().collect(Collectors.groupingBy(
@@ -160,7 +159,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                              final ResourceScriptSource deleteResourceScriptSource,
                              final RedisCacheClient redisCacheClient) {
         // 根据是否有效分组 无效 删除
-        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = onlineShopRelWarehouseVOList.get(0).groupMap(onlineShopRelWarehouseVOList);
+        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = this.groupMap(onlineShopRelWarehouseVOList);
         for (Map.Entry<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseEntry : onlineShopRelWarehouseMap.entrySet()){
             // 根据 onlineShopCode 分组
             Map<String, List<OnlineShopRelWarehouseVO>>  synToRedisMap = onlineShopRelWarehouseEntry.getValue().stream()
@@ -169,14 +168,14 @@ public class OnlineShopRelWarehouse extends AuditDomain {
             List<String> keyList = new ArrayList<>();
             Map<String, Map<String, Object>> filedMaps = new HashMap<>();
 
-            for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseVOEntry : synToRedisMap.entrySet()) {
-                List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVOs = onlineShopRelWarehouseVOEntry.getValue();
-                if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVOs)) {
+            for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWhEntry : synToRedisMap.entrySet()) {
+                List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVos = onlineShopRelWhEntry.getValue();
+                if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVos)) {
                     // 获取hashKey
-                    final String hashKey = groupOnlineShopRelWarehouseVOs.get(0).buildRedisHashKey(groupOnlineShopRelWarehouseVOs.get(0).getOnlineShopCode());
+                    final String hashKey = this.buildRedisHashKey(groupOnlineShopRelWarehouseVos.get(0).getOnlineShopCode());
                     keyList.add(hashKey);
                     // 获取hashMap
-                    filedMaps.put(hashKey, groupOnlineShopRelWarehouseVOs.get(0).buildRedisHashMap(groupOnlineShopRelWarehouseVOs));
+                    filedMaps.put(hashKey, this.buildRedisHashMap(groupOnlineShopRelWarehouseVos));
                 }
             }
             // 执行

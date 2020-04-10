@@ -223,7 +223,7 @@ public class Warehouse extends AuditDomain {
                               final ResourceScriptSource saveResourceScriptSource,
                               final ResourceScriptSource deleteResourceScriptSource,
                               final RedisCacheClient redisCacheClient) {
-        Map<Integer, List<Warehouse>> warehouseMap  = warehouseList.get(0).warehouseGroupMap(warehouseList);
+        Map<Integer, List<Warehouse>> warehouseMap  = this.warehouseGroupMap(warehouseList);
         for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
             List<String> keyList = new ArrayList<>();
             Map<String, Map<String, Object>> filedMaps = new HashMap<>();
