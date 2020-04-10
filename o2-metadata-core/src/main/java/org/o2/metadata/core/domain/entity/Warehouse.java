@@ -8,8 +8,7 @@ import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -25,6 +24,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 仓库
@@ -179,7 +179,7 @@ public class Warehouse extends AuditDomain {
         warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_FROM,
                 (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
         warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_TO,
-                (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
+                (null != this.activedDateTo) ? dateFormat.format(this.activedDateTo) : null);
         warehouseMap.put(MetadataConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
         warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
@@ -204,23 +204,11 @@ public class Warehouse extends AuditDomain {
      * @return
      */
     public Map<Integer, List<Warehouse>> warehouseGroupMap (List<Warehouse> warehouses) {
-        Map<Integer, List<Warehouse>> warehouseMap = new HashMap<>(2);
-        List<Warehouse> efficacyWarehouseList = new ArrayList<>();
-        List<Warehouse> loseEfficacyWarehouseList = new ArrayList<>();
-        warehouses.forEach(warehouse -> {
-            Boolean flag = Boolean.FALSE;
-            if (warehouse.getActivedDateTo() == null || warehouse.getActivedDateTo().after(new Date())) {
-                flag = Boolean.TRUE;
-            }
-            if (warehouse.getActiveFlag() == 1 && flag) {
-                efficacyWarehouseList.add(warehouse);
-            } else {
-                loseEfficacyWarehouseList.add(warehouse);
-            }
-        });
-        warehouseMap.put(0,loseEfficacyWarehouseList);
-        warehouseMap.put(1,efficacyWarehouseList);
-        return warehouseMap;
+        return warehouses.stream().collect(Collectors.groupingBy(
+                warehouse -> warehouse.getActiveFlag() == 1
+                        && ( warehouse.getActivedDateTo() == null
+                        || warehouse.getActivedDateTo().after(new Date())) ? 1 : 0
+        ));
     }
 
 

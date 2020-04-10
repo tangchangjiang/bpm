@@ -140,23 +140,11 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @return
      */
     public Map<Integer, List<OnlineShopRelWarehouseVO>> groupMap (List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList) {
-        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = new HashMap<>(2);
-        List<OnlineShopRelWarehouseVO> efficacyOnlineShopRelWarehouseList = new ArrayList<>();
-        List<OnlineShopRelWarehouseVO> loseEfficacyOnlineShopRelWarehouseList = new ArrayList<>();
-        onlineShopRelWarehouseVOList.forEach(onlineShopRelWarehouseVO -> {
-            Boolean flag = Boolean.FALSE;
-            if (onlineShopRelWarehouseVO.getActivedDateTo() == null || onlineShopRelWarehouseVO.getActivedDateTo().after(new Date())) {
-                flag = Boolean.TRUE;
-            }
-            if (onlineShopRelWarehouseVO.getActiveFlag() == 1 && flag) {
-                efficacyOnlineShopRelWarehouseList.add(onlineShopRelWarehouseVO);
-            } else {
-                loseEfficacyOnlineShopRelWarehouseList.add(onlineShopRelWarehouseVO);
-            }
-        });
-        onlineShopRelWarehouseMap.put(0,loseEfficacyOnlineShopRelWarehouseList);
-        onlineShopRelWarehouseMap.put(1,efficacyOnlineShopRelWarehouseList);
-        return onlineShopRelWarehouseMap;
+        return onlineShopRelWarehouseVOList.stream().collect(Collectors.groupingBy(
+                onlineShopRelWarehouseVO -> onlineShopRelWarehouseVO.getActiveFlag() == 1
+                        && ( onlineShopRelWarehouseVO.getActivedDateTo() == null
+                        || onlineShopRelWarehouseVO.getActivedDateTo().after(new Date())) ? 1 : 0
+        ));
     }
 
 
