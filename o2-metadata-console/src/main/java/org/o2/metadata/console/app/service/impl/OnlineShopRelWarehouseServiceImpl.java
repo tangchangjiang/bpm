@@ -205,7 +205,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
             onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
                     O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }

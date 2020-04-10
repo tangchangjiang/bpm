@@ -17,6 +17,9 @@ public interface O2MdConsoleConstants {
         ResourceScriptSource BATCH_SAVE_REDIS_HASH_VALUE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_save_redis_hash_value.lua"));
 
+        ResourceScriptSource BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/batch_delete_shopRelWh_redis_hash_value.lua"));
+
         ResourceScriptSource BATCH_DELETE_REDIS_HASH_VALUE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_delete_redis_hash_value.lua"));
 
