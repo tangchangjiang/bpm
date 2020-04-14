@@ -6,6 +6,8 @@ import org.springframework.scripting.support.ResourceScriptSource;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * 元数据常量
@@ -39,6 +41,10 @@ public interface MetadataConstants {
      */
     interface OnlineShopRelWarehouse {
         String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s";
+        String FIELD_WAREHOUSE_CODE = "warehouseCode";
+        Collection<String> HASH_KEYS = new HashSet<String>() {{
+            add(FIELD_WAREHOUSE_CODE);
+        }};
     }
 
     /**
