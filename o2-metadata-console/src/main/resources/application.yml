@@ -95,7 +95,7 @@ hzero:
     permission:
       db-owner: ${HZERO_DB_OWNER:}
   scheduler:
-    executor-code: ${HZERO_SCHEDULER_CODE:O2MD_EXECUTOR}
+    executor-code: ${HZERO_SCHEDULER_CODE:O2MD_C_EXECUTOR}
 
 logging:
   level:
