@@ -167,7 +167,8 @@
         w.actived_date_to,
         w.inv_organization_code,
         p.pos_code,
-        w.tenant_id
+        w.tenant_id,
+        w.active_flag
         FROM
         o2md_warehouse AS w
         JOIN o2md_pos AS p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
