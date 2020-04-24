@@ -144,7 +144,7 @@ public class WarehouseContextImpl implements IWarehouseContext {
     private void executeScript(final String warehouseCode, final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), warehouseCode, String.valueOf(tenantId));
+        this.redisCacheClient.execute(defaultRedisScript,Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), warehouseCode, String.valueOf(tenantId));
     }
 
     private void executeScript(final String warehouseCode, final Map<String,Object> hashMap, final Long tenantId, final ScriptSource scriptSource) {
