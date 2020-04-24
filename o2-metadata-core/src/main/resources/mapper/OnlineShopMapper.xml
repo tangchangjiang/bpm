@@ -23,9 +23,10 @@
     </resultMap>
 
     <select id="findByCondition" resultType="org.o2.metadata.core.domain.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         os.online_shop_id,
-        os.online_shop_name,
+        ost.online_shop_name,
         os.online_shop_code,
         os.platform_shop_code,
         os.catalog_code,
@@ -43,12 +44,16 @@
         os.catalog_code,
         os.tenant_id,
         os.catalog_version_code,
-        ocv.catalog_version_name,
-        oc.catalog_name
+        ocvt.catalog_version_name,
+        oct.catalog_name
         FROM
         o2md_online_shop os
-        join o2md_catalog oc on os.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
-        join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code  AND ocv.tenant_id = #{tenantId}
+        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}
+        left join o2md_catalog oc on os.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
+        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang}
+        left join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code  AND ocv.tenant_id = #{tenantId}
+        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and  ocvt.lang = #{lang}
+
         <where>
             <choose>
                 <when test="tenantId != null">

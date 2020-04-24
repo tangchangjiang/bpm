@@ -3,6 +3,8 @@ package org.o2.metadata.core.domain.entity;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -28,6 +30,7 @@ import java.util.List;
 @ApiModel("网店基础设置")
 @ModifyAudit
 @VersionAudit
+@MultiLanguage
 @Table(name = "o2md_online_shop")
 public class OnlineShop extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_ID = "onlineShopId";
@@ -106,6 +109,7 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "网点名称")
     @NotBlank
     @Size(max = 255)
+    @MultiLanguageField
     private String onlineShopName;
 
     @ApiModelProperty(value = "网点编码")
