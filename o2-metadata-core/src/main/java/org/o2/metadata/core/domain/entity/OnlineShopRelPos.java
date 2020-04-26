@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_online_shop_rel_pos")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopRelPos extends AuditDomain {
 
     public static final String FIELD_ONLINE_SHOP_REL_POS_ID = "onlineShopRelPosId";

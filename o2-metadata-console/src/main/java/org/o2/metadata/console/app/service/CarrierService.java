@@ -27,4 +27,11 @@ public interface CarrierService {
      * @return 承运商集合
      */
     List<Carrier> batchMerge(Long organizationId, List<Carrier> carrierList);
+
+    /**
+     * 删除承运商
+     * @param carrierList    承运商
+     * @param organizationId    租户ID
+     */
+    void batchDelete(Long organizationId, List<Carrier> carrierList);
 }

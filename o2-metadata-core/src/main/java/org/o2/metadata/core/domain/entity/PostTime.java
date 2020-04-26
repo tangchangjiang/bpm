@@ -1,6 +1,7 @@
 package org.o2.metadata.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -31,6 +32,7 @@ import java.time.LocalTime;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_post_time")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostTime extends AuditDomain {
 
     public static final String FIELD_POST_TIME_ID = "postTimeId";

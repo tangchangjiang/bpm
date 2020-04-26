@@ -26,4 +26,12 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @throws RuntimeException exception description
      */
     List<OnlineShop> existenceDecide(OnlineShop condition);
+
+    /**
+     * 查询网店(多语言)
+     * @date 2020-04-26
+     * @param  condition 查询条件
+     * @return 网店列表
+     */
+    List<OnlineShop> selectShop(final OnlineShop condition);
 }

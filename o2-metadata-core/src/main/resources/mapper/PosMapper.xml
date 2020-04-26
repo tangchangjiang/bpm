@@ -47,32 +47,36 @@
     </resultMap>
 
     <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         pos.tenant_id,
         pos.pos_id,
         pos.pos_code,
-        pos.pos_name,
+        post.pos_name,
         pos.pos_status_code,
         pos.pos_type_code,
         pos.OBJECT_VERSION_NUMBER,
         address.region_id,
-        region.region_name region_name,
+        regiont.region_name region_name,
         address.city_id,
-        city.region_name city_name,
+        cityt.region_name city_name,
         address.district_id,
-        district.region_name district_name,
+        districtt.region_name district_name,
         address.street_name,
         pos.business_type_code
         from o2md_pos pos
+        left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang}
         left join o2md_pos_address address on pos.address_id = address.pos_address_id
-        LEFT JOIN hpfm_region region on region.region_id = address.region_id
-        LEFT JOIN hpfm_region city on city.region_id = address.city_id
-        LEFT JOIN hpfm_region district on district.region_id= address.district_id
+        LEFT JOIN hpfm_region region on region.region_id = address.region_id and region.tenant_id = #{tenantId}
+        left join hpfm_region_tl regiont on regiont.region_id = region.region_id and regiont.lang = #{lang}
+        LEFT JOIN hpfm_region city on city.region_id = address.city_id and city.tenant_id = #{tenantId}
+        left join hpfm_region_tl cityt on cityt.region_id = region.region_id and cityt.lang = #{lang}
+        LEFT JOIN hpfm_region district on district.region_id= address.district_id and district.tenant_id = #{tenantId}
+        left join hpfm_region_tl districtt on districtt.region_id = region.region_id and districtt.lang = #{lang}
         where 1=1
         <choose>
             <when test="tenantId != null">
-                and pos.tenant_id = #{tenantId} and region.tenant_id = #{tenantId} and city.tenant_id = #{tenantId} and
-                district.tenant_id = #{tenantId}
+                and pos.tenant_id = #{tenantId}
             </when>
             <otherwise>
                 AND 1 = 0

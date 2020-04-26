@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -31,6 +32,7 @@ import javax.validation.constraints.NotNull;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_pos_rel_carrier")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PosRelCarrier extends AuditDomain {
 
     public static final String FIELD_POS_REL_CARRIER_ID = "posRelCarrierId";
