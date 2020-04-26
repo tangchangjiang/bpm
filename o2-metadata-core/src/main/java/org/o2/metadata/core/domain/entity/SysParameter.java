@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
@@ -33,6 +34,7 @@ import java.util.List;
 @ModifyAudit
 @MultiLanguage
 @Table(name = "o2md_sys_parameter")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SysParameter extends AuditDomain {
 
     public static final String FIELD_PARAMETER_SETTING_ID = "parameterId";

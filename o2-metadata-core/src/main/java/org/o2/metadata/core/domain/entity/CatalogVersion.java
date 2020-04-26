@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
 @ModifyAudit
 @MultiLanguage
 @Table(name = "o2md_catalog_version")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CatalogVersion extends AuditDomain {
 
     public static final String FIELD_CATALOG_VERSION_ID = "catalogVersionId";

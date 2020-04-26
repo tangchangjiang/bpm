@@ -47,6 +47,7 @@
     </resultMap>
 
     <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         pos.tenant_id,
         pos.pos_id,

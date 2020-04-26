@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 @Table(name = "o2md_catalog")
 @Builder
 @MultiLanguage
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Catalog extends AuditDomain {
 
     public static final String FIELD_CATALOG_ID = "catalogId";

@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_pos_address")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PosAddress extends AuditDomain {
 
     public static final String FIELD_POS_ADDRESS_ID = "posAddressId";

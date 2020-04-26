@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
@@ -31,6 +32,7 @@ import java.util.List;
 @ModifyAudit
 @Table(name = "o2md_carrier")
 @MultiLanguage
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Carrier extends AuditDomain {
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_CARRIER_CODE = "carrierCode";

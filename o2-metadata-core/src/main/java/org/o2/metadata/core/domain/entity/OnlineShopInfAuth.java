@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_online_shop_inf_auth")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopInfAuth extends AuditDomain {
 
     public static final String FIELD_ONLINE_SHOP_INF_AUTH_ID = "onlineShopInfAuthId";

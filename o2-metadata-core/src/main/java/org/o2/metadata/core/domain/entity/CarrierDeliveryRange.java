@@ -1,5 +1,6 @@
 package org.o2.metadata.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -30,6 +31,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel("承运商送达范围")
 @VersionAudit
 @ModifyAudit
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "o2md_carrier_delivery_range")
 public class CarrierDeliveryRange extends AuditDomain {
 
