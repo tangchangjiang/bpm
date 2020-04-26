@@ -17,10 +17,11 @@
     </resultMap>
 
     <select id="listCarrier" resultType="org.o2.metadata.core.domain.entity.Carrier">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         c.carrier_id,
         c.carrier_code,
-        c.carrier_name,
+        ct.carrier_name,
         c.carrier_type_code,
         c.OBJECT_VERSION_NUMBER,
         c.CREATION_DATE,
@@ -31,6 +32,7 @@
         c.tenant_id
         FROM
         o2md_carrier c
+        left join o2md_carrier_tl ct on ct.carrier_id = c.carrier_id and ct.lang = #{lang}
         where 1=1
             <choose>
                 <when test="tenantId != null">

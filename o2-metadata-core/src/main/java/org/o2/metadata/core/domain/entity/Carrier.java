@@ -2,6 +2,8 @@ package org.o2.metadata.core.domain.entity;
 
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -28,6 +30,7 @@ import java.util.List;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_carrier")
+@MultiLanguage
 public class Carrier extends AuditDomain {
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_CARRIER_CODE = "carrierCode";
@@ -68,6 +71,7 @@ public class Carrier extends AuditDomain {
     private String carrierCode;
 
     @ApiModelProperty(value = "承运商名称")
+    @MultiLanguageField
     private String carrierName;
 
     @ApiModelProperty(value = "承运商类型.值集:O2MD.CARRIER_TYPE")

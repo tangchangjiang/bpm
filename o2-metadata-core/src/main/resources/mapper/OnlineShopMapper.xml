@@ -37,10 +37,6 @@
         os.active_flag,
         os.enable_split_flag,
         os.OBJECT_VERSION_NUMBER,
-        os.CREATION_DATE,
-        os.CREATED_BY,
-        os.LAST_UPDATED_BY,
-        os.LAST_UPDATE_DATE,
         os.catalog_code,
         os.tenant_id,
         os.catalog_version_code,
@@ -84,6 +80,9 @@
             <if test="catalogVersionCode!=null and catalogVersionCode!=''">
                 AND os.catalog_version_code = #{catalogVersionCode}
             </if>
+           <if test="onlineShopId != null">
+               and os.online_shop_id = #{onlineShopId}
+           </if>
         </where>
         ORDER BY os.online_shop_code
     </select>

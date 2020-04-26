@@ -22,12 +22,13 @@
     </resultMap>
 
     <select id="listCarrierMappingByCondition" resultType="org.o2.metadata.core.domain.vo.CarrierMappingVO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         cm.carrier_mapping_id,
         cm.catalog_code,
         cm.carrier_id,
         c.carrier_code,
-        c.carrier_name,
+        oct.carrier_name,
         cm.external_carrier_code,
         cm.external_carrier_Name,
         cm.object_version_number,
@@ -35,11 +36,13 @@
         cm.created_by,
         cm.last_updated_by,
         cm.last_update_date,
-        ca.catalog_name
+        cat.catalog_name
         FROM
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
         join o2md_catalog  ca on ca.catalog_code = cm.catalog_code AND ca.tenant_id = #{tenantId}
+        left join  o2md_catalog_tl cat on cat.catalog_id = ca.catalog_id  and cat.lang = #{lang}
+        left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang}
         where 1 = 1
         <choose>
             <when test="tenantId != null">

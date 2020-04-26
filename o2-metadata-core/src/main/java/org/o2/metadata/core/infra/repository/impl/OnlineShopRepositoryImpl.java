@@ -1,6 +1,7 @@
 package org.o2.metadata.core.infra.repository.impl;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.core.domain.entity.OnlineShop;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
@@ -38,5 +39,15 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
     @Override
     public List<OnlineShop> existenceDecide(OnlineShop condition) {
         return onlineShopMapper.existenceDecide(condition);
+    }
+
+    @Override
+    public OnlineShop selectById(OnlineShop condition) {
+        OnlineShop shop = new OnlineShop();
+        List<OnlineShop> list = onlineShopMapper.findByCondition(condition);
+        if (CollectionUtils.isNotEmpty(list)) {
+            shop = list.get(0);
+        }
+        return shop;
     }
 }

@@ -1,11 +1,18 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.core.domain.entity.Carrier;
+import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.core.domain.entity.PosRelCarrier;
+import org.o2.metadata.core.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.core.domain.repository.CarrierRepository;
+import org.o2.metadata.core.domain.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -21,13 +28,20 @@ import java.util.Map;
 @Service
 public class CarrierServiceImpl implements CarrierService {
     private final CarrierRepository carrierRepository;
+    private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
+    private final PosRelCarrierRepository posRelCarrierRepository;
 
-    public CarrierServiceImpl(final CarrierRepository carrierRepository) {
+
+    public CarrierServiceImpl(final CarrierRepository carrierRepository,
+                              final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
+                              final PosRelCarrierRepository posRelCarrierRepository) {
         this.carrierRepository = carrierRepository;
+        this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
+        this.posRelCarrierRepository = posRelCarrierRepository;
     }
 
     @Override
-    public List<Carrier> batchUpdate(Long organizationId,final List<Carrier> carrierList) {
+    public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
         carrierList.forEach(carrier -> {
             carrier.setTenantId(organizationId);
         });
@@ -36,7 +50,7 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public List<Carrier> batchMerge(Long organizationId,final List<Carrier> carrierList) {
+    public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
         final Map<String, Object> map = new HashMap<>(carrierList.size());
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
@@ -64,6 +78,27 @@ public class CarrierServiceImpl implements CarrierService {
             resultList.addAll(carrierRepository.batchInsertSelective(insertList));
         }
         return resultList;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchDelete(Long organizationId, List<Carrier> carrierList) {
+        for (final Carrier carrier : carrierList) {
+            carrier.setTenantId(organizationId);
+            if (carrier.getCarrierId() != null) {
+                Long carrierId = carrier.getCarrierId();
+                //删除承运商送达范围
+                final List<CarrierDeliveryRange> list = carrierDeliveryRangeRepository.selectByCondition(Condition.builder(CarrierDeliveryRange.class)
+                        .andWhere(Sqls.custom().andEqualTo(CarrierDeliveryRange.FIELD_TENANT_ID, organizationId)
+                                .andEqualTo(CarrierDeliveryRange.FIELD_CARRIER_ID, carrierId)).build());
+                carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(list);
+                //删除服务点关联承运商
+                final List<PosRelCarrier> posRelCarrierList = posRelCarrierRepository.selectByCondition(Condition.builder(PosRelCarrier.class).andWhere(Sqls.custom()
+                        .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, organizationId).andEqualTo(PosRelCarrier.FIELD_CARRIER_ID, carrierId)).build());
+                posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrierList);
+            }
+        }
+        carrierRepository.batchDeleteByPrimaryKey(carrierList);
     }
 
     /**

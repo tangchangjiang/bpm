@@ -39,6 +39,7 @@ public class CarrierDeliveryRange extends AuditDomain {
     public static final String FIELD_CITY_ID = "cityId";
     public static final String FIELD_DISTRICT_ID = "districtId";
     public static final String FIELD_CARRIER_ID = "carrierId";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 业务方法(按public protected private顺序排列)

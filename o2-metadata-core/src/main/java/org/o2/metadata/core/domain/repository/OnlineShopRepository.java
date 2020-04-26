@@ -27,4 +27,12 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      * @throws RuntimeException exception description
      */
     List<OnlineShop> existenceDecide(OnlineShop condition);
+
+
+    /**
+     * 详情
+     * @param condition 查询条件
+     * @return  网店
+     */
+    OnlineShop selectById(OnlineShop condition);
 }

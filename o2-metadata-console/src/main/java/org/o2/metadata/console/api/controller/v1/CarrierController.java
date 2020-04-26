@@ -41,10 +41,6 @@ public class CarrierController extends BaseController {
     private CarrierRepository carrierRepository;
     @Autowired
     private CarrierService carrierService;
-    @Autowired
-    private CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
-    @Autowired
-    private CarrierDeliveryRangeService carrierDeliveryRangeService;
 
 
     @ApiOperation(value = "承运商列表")
@@ -90,15 +86,7 @@ public class CarrierController extends BaseController {
     @DeleteMapping
     public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
         SecurityTokenHelper.validToken(carrierList);
-        for (final Carrier carrier : carrierList) {
-            carrier.setTenantId(organizationId);
-            if (carrier.getCarrierId() != null) {
-                final List<CarrierDeliveryRange> list = carrierDeliveryRangeRepository.select(
-                        CarrierDeliveryRange.FIELD_CARRIER_ID, carrier.getCarrierId());
-                carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(list);
-            }
-        }
-        carrierRepository.batchDeleteByPrimaryKey(carrierList);
+        carrierService.batchDelete(organizationId,carrierList);
         return Results.success();
     }
 }

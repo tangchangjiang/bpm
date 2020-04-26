@@ -83,17 +83,11 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
-    public ResponseEntity<?> detail(@PathVariable final Long shopId) {
-        OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(shopId);
-        Preconditions.checkArgument(null != onlineShop, "invalid field shopId: " + shopId);
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
-        Preconditions.checkArgument(null != catalog, "invalid field catalogCode: " + onlineShop.getCatalogId());
-        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
-        Preconditions.checkArgument(null != catalogVersion, "invalid field catalogVersionCode " + onlineShop.getCatalogVersionId());
-        onlineShop.setCatalogCode(catalog.getCatalogCode());
-        onlineShop.setCatalogVersionName(catalogVersion.getCatalogVersionName());
-        onlineShop.setCatalogVersionCode(catalogVersion.getCatalogVersionCode());
-        return Results.success(onlineShop);
+    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@PathVariable final Long shopId) {
+        OnlineShop onlineShop = new OnlineShop();
+        onlineShop.setTenantId(organizationId);
+        onlineShop.setOnlineShopId(shopId);
+        return Results.success(onlineShopRepository.selectById(onlineShop));
     }
 
     @ApiOperation("创建网店信息")
