@@ -42,12 +42,17 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
     }
 
     @Override
-    public OnlineShop selectById(OnlineShop condition) {
+    public OnlineShop selectById(final OnlineShop condition) {
         OnlineShop shop = new OnlineShop();
         List<OnlineShop> list = onlineShopMapper.findByCondition(condition);
         if (CollectionUtils.isNotEmpty(list)) {
             shop = list.get(0);
         }
         return shop;
+    }
+
+    @Override
+    public List<OnlineShop> selectShop(final OnlineShop condition) {
+        return onlineShopMapper.selectShop(condition);
     }
 }

@@ -24,10 +24,6 @@
         ct.carrier_name,
         c.carrier_type_code,
         c.OBJECT_VERSION_NUMBER,
-        c.CREATION_DATE,
-        c.CREATED_BY,
-        c.LAST_UPDATED_BY,
-        c.LAST_UPDATE_DATE,
         c.active_flag,
         c.tenant_id
         FROM

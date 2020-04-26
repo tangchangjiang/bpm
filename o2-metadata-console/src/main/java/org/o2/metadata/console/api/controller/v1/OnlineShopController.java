@@ -64,11 +64,11 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity<?> listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<?> listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiIgnore PageRequest pageRequest) {
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
-        return Results.success(onlineShopRepository.select(onlineShop));
+        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
     }
 
     @ApiOperation("查询所有网点列表")
@@ -83,7 +83,7 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
-    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@PathVariable final Long shopId) {
+    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long shopId) {
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.setTenantId(organizationId);
         onlineShop.setOnlineShopId(shopId);

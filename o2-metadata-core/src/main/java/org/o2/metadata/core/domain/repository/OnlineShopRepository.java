@@ -34,5 +34,12 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      * @param condition 查询条件
      * @return  网店
      */
-    OnlineShop selectById(OnlineShop condition);
+    OnlineShop selectById(final OnlineShop condition);
+
+    /**
+     * 查询网店(多语言)
+     * @param condition 查询条件
+     * @return  网店列表
+     */
+    List<OnlineShop> selectShop(final OnlineShop condition);
 }
