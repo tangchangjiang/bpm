@@ -6,12 +6,18 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.core.domain.entity.SysParameter;
 import org.o2.metadata.core.domain.entity.Warehouse;
 import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
+import org.o2.metadata.core.domain.repository.SysParameterRepository;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +29,8 @@ import java.util.*;
  * 缓存数据刷新
  * * 仓库 Warehouse
  * * 网店关联仓库 OnlineShopRelWarehouse
+ * * 系统参数 SysParameter
+ *
  * @author yuying.shi@hand-china.com 2020/3/24
  * @description 1、copy redis 的 expressLimitValue、pickUpLimitValue值，如果值不存在value = 0
  */
@@ -37,16 +45,19 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
     private static final String CACHE_WAREHOUSE = "Warehouse";
     private static final String CACHE_ONLINE_SHOP_REL_WAREHOUSE = "OnlineShopRelWarehouse";
+    private static final String CACHE_SYS_PARAMETER = "SysParameter";
 
     private final RedisCacheClient redisCacheClient;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
+    private final SysParameterRepository sysParameterRepository;
 
     @Autowired
-    public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient, OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, WarehouseRepository warehouseRepository) {
+    public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient, OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, WarehouseRepository warehouseRepository, SysParameterRepository sysParameterRepository) {
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.warehouseRepository = warehouseRepository;
+        this.sysParameterRepository = sysParameterRepository;
     }
 
     @Override
@@ -56,6 +67,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             // 判断缓存操作
             final String warehouse = map.getOrDefault(CACHE_WAREHOUSE, DEFAULT_ACTION);
             final String onlineShopRelWarehouse = map.getOrDefault(CACHE_ONLINE_SHOP_REL_WAREHOUSE, DEFAULT_ACTION);
+            final String sysParameter = map.getOrDefault(CACHE_SYS_PARAMETER, DEFAULT_ACTION);
 
             LOG.info("start synchronize metadata basic data to redis...");
             if (REFRESH.equals(warehouse)) {
@@ -68,6 +80,12 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
                 // 全量同步 网店关联仓库 到Redis，判断生效标记 active_flag 和失效时间
                 LOG.info("synchronize onlineShopRelWarehouse to redis cache complete.");
                 refreshOnlineShopRelWarehouse(tenantId);
+            }
+
+            if (REFRESH.equals(sysParameter)) {
+                // 全量同步 系统参数 到Redis 判断 active_flag
+                LOG.info("synchronize sysParameter to redis cache complete.");
+                refreshSysParameter(tenantId);
             }
         }
         return ReturnT.SUCCESS;
@@ -101,6 +119,18 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
         }
 
+    }
+
+    /**
+     * 系统参数
+     * @param tenantId 租户ID
+     */
+    public void refreshSysParameter (Long tenantId) {
+        List<SysParameter> sysParameters = sysParameterRepository.selectByCondition(Condition.builder(SysParameter.class).andWhere(Sqls.custom()
+                .andEqualTo(SysParameter.FIELD_TENANT_ID, tenantId)).build());
+        if (CollectionUtils.isNotEmpty(sysParameters)) {
+            sysParameters.get(0).syncToRedis(sysParameters,redisCacheClient);
+        }
     }
 
 }
