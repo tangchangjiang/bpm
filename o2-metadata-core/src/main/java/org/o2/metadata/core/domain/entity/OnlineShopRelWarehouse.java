@@ -142,9 +142,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      */
     public Map<Integer, List<OnlineShopRelWarehouseVO>> groupMap (List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList) {
         return onlineShopRelWarehouseVOList.stream().collect(Collectors.groupingBy(
-                onlineShopRelWarehouseVO -> onlineShopRelWarehouseVO.getActiveFlag() == 1
-                        && ( onlineShopRelWarehouseVO.getActivedDateTo() == null
-                        || onlineShopRelWarehouseVO.getActivedDateTo().after(new Date())) ? 1 : 0
+                onlineShopRelWarehouseVO -> onlineShopRelWarehouseVO.getActiveFlag() == 1 ? 1 : 0
         ));
     }
 
