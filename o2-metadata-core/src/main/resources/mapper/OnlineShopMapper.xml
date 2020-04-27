@@ -95,7 +95,7 @@
         os.online_shop_name,
         os.online_shop_code,
         os.platform_shop_code,
-        os.catalog_code,
+        os.catalog_code
         FROM
         o2md_online_shop os
         <where>
