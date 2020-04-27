@@ -66,13 +66,10 @@
         pos.business_type_code
         from o2md_pos pos
         left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang}
-        left join o2md_pos_address address on pos.address_id = address.pos_address_id
-        LEFT JOIN hpfm_region region on region.region_id = address.region_id and region.tenant_id = #{tenantId}
-        left join hpfm_region_tl regiont on regiont.region_id = region.region_id and regiont.lang = #{lang}
-        LEFT JOIN hpfm_region city on city.region_id = address.city_id and city.tenant_id = #{tenantId}
-        left join hpfm_region_tl cityt on cityt.region_id = region.region_id and cityt.lang = #{lang}
-        LEFT JOIN hpfm_region district on district.region_id= address.district_id and district.tenant_id = #{tenantId}
-        left join hpfm_region_tl districtt on districtt.region_id = region.region_id and districtt.lang = #{lang}
+        left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
+        left join hpfm_region_tl regiont on regiont.region_id = address.region_id and regiont.lang = #{lang}
+        left join hpfm_region_tl cityt on cityt.region_id = address.city_id and  cityt.lang = #{lang}
+        left join hpfm_region_tl districtt on districtt.region_id = address.district_id and districtt.lang = #{lang}
         where 1=1
         <choose>
             <when test="tenantId != null">
