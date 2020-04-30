@@ -96,6 +96,8 @@ hzero:
       db-owner: ${HZERO_DB_OWNER:}
   scheduler:
     executor-code: ${HZERO_SCHEDULER_CODE:O2MD_C_EXECUTOR}
+    max-pool-size: 100
+    core-pool-size: 20
 
 logging:
   level:
