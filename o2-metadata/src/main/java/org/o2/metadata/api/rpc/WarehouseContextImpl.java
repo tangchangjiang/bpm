@@ -126,12 +126,13 @@ public class WarehouseContextImpl implements IWarehouseContext {
 
     @Override
     public void resetWarehouseExpressLimit(String warehouseCode, Long tenantId) {
-        executeScript(warehouseCode, tenantId, EXPRESS_VALUE_CACHE_RESET_LUA);
+        executeScript(warehouseCode,MetadataConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,tenantId, EXPRESS_VALUE_CACHE_RESET_LUA);
     }
+
 
     @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
-        executeScript(warehouseCode, tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
+        executeScript(warehouseCode,MetadataConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
 
     }
 
@@ -141,10 +142,10 @@ public class WarehouseContextImpl implements IWarehouseContext {
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, num, String.valueOf(tenantId));
     }
 
-    private void executeScript(final String warehouseCode, final Long tenantId, final ScriptSource scriptSource) {
+    private void executeScript(final String warehouseCode,final String limit,final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript,Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), warehouseCode, String.valueOf(tenantId));
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, String.valueOf(tenantId));
     }
 
     private void executeScript(final String warehouseCode, final Map<String,Object> hashMap, final Long tenantId, final ScriptSource scriptSource) {
