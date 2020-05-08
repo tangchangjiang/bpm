@@ -6,8 +6,8 @@
         <result column="pos_rel_carrier_id" property="posRelCarrierId" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
-        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
-        <result column="default_flag" property="defaultFlag" jdbcType="DECIMAL"/>
+        <result column="active_flag" property="activeFlag" jdbcType="INTEGER"/>
+        <result column="default_flag" property="defaultFlag" jdbcType="INTEGER"/>
         <result column="priority" property="priority" jdbcType="DECIMAL"/>
         <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
@@ -107,9 +107,9 @@
         DUAL
     </select>
 
-    <update id="updateIsDefault" parameterType="java.lang.Long">
+    <update id="updateIsDefault" >
         UPDATE o2md_pos_rel_carrier t
-        SET t.default_flag = #{defaultFlag}
+        SET t.default_flag = #{defaultFlag,jdbcType=INTEGER}
         ,t.OBJECT_VERSION_NUMBER=OBJECT_VERSION_NUMBER+1
         WHERE
             t.pos_rel_carrier_id != #{relId, jdbcType=DECIMAL}

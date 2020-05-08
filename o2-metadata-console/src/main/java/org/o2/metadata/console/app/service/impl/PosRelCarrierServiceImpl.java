@@ -6,6 +6,7 @@ import org.o2.metadata.console.app.service.PosRelCarrierService;
 import org.o2.metadata.core.domain.entity.PosRelCarrier;
 import org.o2.metadata.core.domain.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<PosRelCarrier> batchMerge(Long organizationId,final List<PosRelCarrier> posRelCarriers) {
         final Map<String, Object> map = new HashMap<>(posRelCarriers.size());
         final List<PosRelCarrier> updateList = new ArrayList<>();
