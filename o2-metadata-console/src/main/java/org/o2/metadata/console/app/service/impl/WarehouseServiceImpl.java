@@ -4,10 +4,16 @@ import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
+import org.o2.context.inventory.InventoryContext;
+import org.o2.context.inventory.api.IInventoryContext;
+import org.o2.context.inventory.vo.TriggerStockCalculationVO;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.core.domain.entity.Warehouse;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
@@ -15,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,20 +39,28 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private WarehouseRepository warehouseRepository;
 
+    private AcrossSchemaRepository acrossSchemaRepository;
+
     private CodeRuleBuilder codeRuleBuilder;
 
     private final IWarehouseContext warehouseContext;
 
+    private final IInventoryContext iInventoryContext;
+
     private RedisCacheClient redisCacheClient;
 
     @Autowired
-    public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
-                                final CodeRuleBuilder codeRuleBuilder,
-                                final IWarehouseContext warehouseContext,
-                                final RedisCacheClient redisCacheClient) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepository,
+                                AcrossSchemaRepository acrossSchemaRepository,
+                                CodeRuleBuilder codeRuleBuilder,
+                                IWarehouseContext warehouseContext,
+                                IInventoryContext iInventoryContext,
+                                RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
+        this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
         this.warehouseContext = warehouseContext;
+        this.iInventoryContext = iInventoryContext;
         this.redisCacheClient = redisCacheClient;
     }
 
@@ -94,10 +109,35 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<Warehouse> updateBatch(List<Warehouse> warehouses) {
+    public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
+        // 触发线上可用库存计算
+        List<TriggerStockCalculationVO> calInfoList = new ArrayList<>();
+        for (Warehouse warehouse : warehouses) {
+            List<Warehouse> warehouseList = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class).andWhere(Sqls.custom()
+                    .andEqualTo(Warehouse.FIELD_WAREHOUSE_ID, warehouse.getWarehouseId())
+                    .andEqualTo(Warehouse.FIELD_TENANT_ID, warehouse.getTenantId())).build());
+            if (CollectionUtils.isEmpty(warehouseList)) {
+                continue;
+            }
+            Warehouse origin = warehouseList.get(0);
+            String warehouseCode = origin.getWarehouseCode();
+            List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
+            for (String skuCode : skuCodeList) {
+                if (origin.getActiveFlag().equals(warehouse.getActiveFlag())) {
+                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
+                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
+                    triggerStockCalculationVO.setSkuCode(skuCode);
+                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_ACTIVE);
+                    calInfoList.add(triggerStockCalculationVO);
+                }
+            }
+        }
+        // 更新MySQL
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKeySelective(warehouses);
         // 更新 redis
         this.operationRedis(warehouses);
+        // 触发线上可用库存计算
+        iInventoryContext.triggerWhStockCal(tenantId, calInfoList);
         return list;
     }
 

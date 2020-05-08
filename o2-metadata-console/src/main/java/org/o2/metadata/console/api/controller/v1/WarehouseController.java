@@ -91,7 +91,7 @@ public class WarehouseController extends BaseController {
             w.setTenantId(organizationId);
             w.setActiveFlag(1);
         });
-        List<Warehouse> list = warehouseService.updateBatch(warehouses);
+        List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
         return Results.success(list);
     }
 

@@ -19,6 +19,6 @@ public interface WarehouseService {
 
     Integer update(Warehouse warehouse);
 
-    List<Warehouse> updateBatch(List<Warehouse> warehouses);
+    List<Warehouse> updateBatch(Long tenantId, List<Warehouse> warehouses);
 
 }

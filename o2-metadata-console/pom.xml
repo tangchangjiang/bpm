@@ -41,6 +41,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.o2.context</groupId>
+            <artifactId>o2-context-inventory</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-export</artifactId>
         </dependency>

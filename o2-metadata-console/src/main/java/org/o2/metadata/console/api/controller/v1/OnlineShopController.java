@@ -14,6 +14,8 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.context.inventory.InventoryContext;
+import org.o2.context.inventory.api.IInventoryContext;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.Catalog;
@@ -23,11 +25,14 @@ import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.Collections;
 
 /**
  * 网店信息管理 API
@@ -39,16 +44,24 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/v1/{organizationId}/online-shops")
 @Api(tags = EnableMetadataConsole.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
+
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
+    private final IInventoryContext iInventoryContext;
 
-    public OnlineShopController(final OnlineShopRepository onlineShopRepository, final OnlineShopRelWarehouseService onlineShopRelWarehouseService, final CatalogRepository catalogRepository, final CatalogVersionRepository catalogVersionRepository) {
+    @Autowired
+    public OnlineShopController(OnlineShopRepository onlineShopRepository,
+                                OnlineShopRelWarehouseService onlineShopRelWarehouseService,
+                                CatalogRepository catalogRepository,
+                                CatalogVersionRepository catalogVersionRepository,
+                                IInventoryContext iInventoryContext) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
+        this.iInventoryContext = iInventoryContext;
     }
 
     @ApiOperation(value = "按条件查询网店列表",
@@ -131,6 +144,7 @@ public class OnlineShopController extends BaseController {
         if (!onlineShop.exist(onlineShopRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
         }
+        OnlineShop origin = onlineShopRepository.selectById(onlineShop);
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
         Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
@@ -139,6 +153,10 @@ public class OnlineShopController extends BaseController {
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         //触发网店关联仓库更新
         onlineShopRelWarehouseService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
+        // 触发渠道可用库存计算
+        if (null != onlineShop.getActiveFlag() && !onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
+            iInventoryContext.triggerShopStockCalByShop(organizationId, Collections.singleton(onlineShop.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
+        }
         return Results.success(result);
     }
 
