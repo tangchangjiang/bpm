@@ -1,5 +1,6 @@
 package org.o2.metadata.api.rpc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.core.helper.FastJsonHelper;
@@ -17,6 +18,7 @@ import java.util.*;
  *
  * @author yuying.shi@hand-china.com 2020/3/13
  */
+@Slf4j
 public class WarehouseContextImpl implements IWarehouseContext {
 
     private final RedisCacheClient redisCacheClient;
