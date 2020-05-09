@@ -123,7 +123,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             String warehouseCode = origin.getWarehouseCode();
             List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
             for (String skuCode : skuCodeList) {
-                if (origin.getActiveFlag().equals(warehouse.getActiveFlag())) {
+                if (!warehouse.getActiveFlag().equals(origin.getActiveFlag())) {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);

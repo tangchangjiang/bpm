@@ -84,8 +84,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
             OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
-            OnlineShopRelWarehouse onlineShopRelWarehouse = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship.getOnlineShopRelWarehouseId());
-            if (relationship.getActiveFlag().equals(onlineShopRelWarehouse.getActiveFlag())) {
+            OnlineShopRelWarehouse origin = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship.getOnlineShopRelWarehouseId());
+            if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
                 shopCodeSet.add(onlineShop.getOnlineShopCode());
             }
         });

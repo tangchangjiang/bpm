@@ -154,7 +154,7 @@ public class OnlineShopController extends BaseController {
         //触发网店关联仓库更新
         onlineShopRelWarehouseService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
         // 触发渠道可用库存计算
-        if (null != onlineShop.getActiveFlag() && !onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
+        if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
             iInventoryContext.triggerShopStockCalByShopCode(organizationId, Collections.singleton(origin.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
         }
         return Results.success(result);
