@@ -1,5 +1,7 @@
 package org.o2.metadata.console.config;
 
+import org.o2.context.inventory.api.IInventoryContext;
+import org.o2.context.inventory.config.InventoryContextConsumer;
 import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.context.metadata.config.MetadataContextConsumer;
@@ -74,5 +76,11 @@ public class EnableMetadataConsole {
     public IWarehouseContext warehouseContext(final MetadataContextConsumer metadataContextConsumer) {
         metadataContextConsumer.warehouseContextConsumer().init();
         return metadataContextConsumer.warehouseContextConsumer().get();
+    }
+
+    @Bean
+    public IInventoryContext inventoryContext(InventoryContextConsumer inventoryContextConsumer) {
+        inventoryContextConsumer.inventoryContextConsumer().init();
+        return inventoryContextConsumer.inventoryContextConsumer().get();
     }
 }

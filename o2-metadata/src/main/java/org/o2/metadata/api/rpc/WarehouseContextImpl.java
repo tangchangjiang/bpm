@@ -1,5 +1,6 @@
 package org.o2.metadata.api.rpc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.core.helper.FastJsonHelper;
@@ -17,6 +18,7 @@ import java.util.*;
  *
  * @author yuying.shi@hand-china.com 2020/3/13
  */
+@Slf4j
 public class WarehouseContextImpl implements IWarehouseContext {
 
     private final RedisCacheClient redisCacheClient;
@@ -145,6 +147,8 @@ public class WarehouseContextImpl implements IWarehouseContext {
     private void executeScript(final String warehouseCode,final String limit,final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
+        log.info("warehouseLimitCacheKey :({}),",warehouseLimitCacheKey(limit, tenantId));
+        log.info("warehouse :({}),tenantId({})",warehouseCode,String.valueOf(tenantId));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, String.valueOf(tenantId));
     }
 
