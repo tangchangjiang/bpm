@@ -129,6 +129,9 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select os.online_shop_id,
         os.online_shop_code,
+        os.catalog_version_code,
+        os.catalog_code,
+        os.platform_shop_code,
         ost.online_shop_name
         from o2md_online_shop os
         left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang}
