@@ -4,6 +4,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
+import org.o2.context.inventory.InventoryContext;
+import org.o2.context.inventory.api.IInventoryContext;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
@@ -38,42 +40,60 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final OnlineShopRepository onlineShopRepository;
     private final WarehouseRepository warehouseRepository;
     private final PosRepository posRepository;
+    private final IInventoryContext iInventoryContext;
     private RedisCacheClient redisCacheClient;
 
-    public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRepository onlineShopRepository, WarehouseRepository warehouseRepository, PosRepository posRepository, RedisCacheClient redisCacheClient) {
+    public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRepository onlineShopRepository, WarehouseRepository warehouseRepository, PosRepository posRepository,
+                                             IInventoryContext iInventoryContext, RedisCacheClient redisCacheClient) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
         this.posRepository = posRepository;
+        this.iInventoryContext = iInventoryContext;
         this.redisCacheClient = redisCacheClient;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse>  batchInsertSelective(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
+        Set<String> shopCodeSet = new HashSet<>();
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
             Assert.isTrue(!relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_EXISTS);
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
+            OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
+            shopCodeSet.add(onlineShop.getOnlineShopCode());
         });
 
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
         syncToRedis(list);
+        if (!shopCodeSet.isEmpty()) {
+            iInventoryContext.triggerShopStockCalByShopCode(organizationId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_SOURCED);
+        }
         return list;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
+        Set<String> shopCodeSet = new HashSet<>();
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
             Assert.isTrue(relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
+            OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
+            OnlineShopRelWarehouse onlineShopRelWarehouse = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship.getOnlineShopRelWarehouseId());
+            if (relationship.getActiveFlag().equals(onlineShopRelWarehouse.getActiveFlag())) {
+                shopCodeSet.add(onlineShop.getOnlineShopCode());
+            }
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
         syncToRedis(list);
+        if (!shopCodeSet.isEmpty()) {
+            iInventoryContext.triggerShopStockCalByShopCode(organizationId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_ACTIVE);
+        }
         return list;
     }
 

@@ -144,7 +144,7 @@ public class OnlineShopController extends BaseController {
         if (!onlineShop.exist(onlineShopRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
         }
-        OnlineShop origin = onlineShopRepository.selectById(onlineShop);
+        final OnlineShop origin = onlineShopRepository.selectById(onlineShop);
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
         Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
@@ -155,7 +155,7 @@ public class OnlineShopController extends BaseController {
         onlineShopRelWarehouseService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
         // 触发渠道可用库存计算
         if (null != onlineShop.getActiveFlag() && !onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
-            iInventoryContext.triggerShopStockCalByShop(organizationId, Collections.singleton(onlineShop.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
+            iInventoryContext.triggerShopStockCalByShopCode(organizationId, Collections.singleton(origin.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
         }
         return Results.success(result);
     }
