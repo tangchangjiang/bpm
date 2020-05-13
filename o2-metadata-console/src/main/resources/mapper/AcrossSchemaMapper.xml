@@ -10,7 +10,7 @@
             s.warehouse_code = #{warehouseCode}
             <choose>
                 <when test="tenantId != null">
-                    AND w.tenant_id = #{tenantId}
+                    AND s.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
