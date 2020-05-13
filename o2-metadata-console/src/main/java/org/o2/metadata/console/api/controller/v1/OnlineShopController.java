@@ -145,7 +145,7 @@ public class OnlineShopController extends BaseController {
         if (!onlineShop.exist(onlineShopRepository)) {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
         }
-        final OnlineShop origin = onlineShopRepository.selectById(onlineShop);
+        final OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
         log.info("origin shop id({}), active({}), code({}), onlineShop id({}), active({}), code({})", origin.getOnlineShopId(), origin.getActiveFlag(), origin.getOnlineShopCode(),
                 onlineShop.getOnlineShopId(), onlineShop.getActiveFlag(), onlineShop.getOnlineShopCode());
         onlineShop.setCatalogId(catalog.getCatalogId());
