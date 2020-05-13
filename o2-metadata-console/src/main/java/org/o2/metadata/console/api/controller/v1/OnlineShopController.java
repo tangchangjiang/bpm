@@ -9,6 +9,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -39,7 +40,7 @@ import java.util.Collections;
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
-
+@Slf4j
 @RestController("onlineShopController.v1")
 @RequestMapping("/v1/{organizationId}/online-shops")
 @Api(tags = EnableMetadataConsole.ONLINE_SHOP)
@@ -145,6 +146,8 @@ public class OnlineShopController extends BaseController {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
         }
         final OnlineShop origin = onlineShopRepository.selectById(onlineShop);
+        log.info("origin shop id({}), active({}), code({}), onlineShop id({}), active({}), code({})", origin.getOnlineShopId(), origin.getActiveFlag(), origin.getOnlineShopCode(),
+                onlineShop.getOnlineShopId(), onlineShop.getActiveFlag(), onlineShop.getOnlineShopCode());
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
         Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
