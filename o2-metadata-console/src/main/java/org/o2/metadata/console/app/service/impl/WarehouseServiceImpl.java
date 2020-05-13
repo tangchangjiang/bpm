@@ -110,8 +110,22 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
+        // 准备触发线上可用库存计算的数据
+        List<TriggerStockCalculationVO> triggerCalInfoList = this.buildTriggerCalInfoList(tenantId, warehouses);
+        // 更新MySQL
+        List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKeySelective(warehouses);
+        // 更新 redis
+        this.operationRedis(warehouses);
         // 触发线上可用库存计算
-        List<TriggerStockCalculationVO> calInfoList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
+            iInventoryContext.triggerWhStockCal(tenantId, triggerCalInfoList);
+        }
+        return list;
+    }
+
+    private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
+        // 触发线上可用库存计算
+        List<TriggerStockCalculationVO> triggerCalInfoList = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
             List<Warehouse> warehouseList = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class).andWhere(Sqls.custom()
                     .andEqualTo(Warehouse.FIELD_WAREHOUSE_ID, warehouse.getWarehouseId())
@@ -128,17 +142,27 @@ public class WarehouseServiceImpl implements WarehouseService {
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);
                     triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_ACTIVE);
-                    calInfoList.add(triggerStockCalculationVO);
+                    triggerCalInfoList.add(triggerStockCalculationVO);
+                    continue;
+                }
+                if (!warehouse.getExpressedFlag().equals(origin.getExpressedFlag())) {
+                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
+                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
+                    triggerStockCalculationVO.setSkuCode(skuCode);
+                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_EXPRESS);
+                    triggerCalInfoList.add(triggerStockCalculationVO);
+                    continue;
+                }
+                if (!warehouse.getPickedUpFlag().equals(origin.getPickedUpFlag())) {
+                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
+                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
+                    triggerStockCalculationVO.setSkuCode(skuCode);
+                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_PICKUP);
+                    triggerCalInfoList.add(triggerStockCalculationVO);
                 }
             }
         }
-        // 更新MySQL
-        List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKeySelective(warehouses);
-        // 更新 redis
-        this.operationRedis(warehouses);
-        // 触发线上可用库存计算
-        iInventoryContext.triggerWhStockCal(tenantId, calInfoList);
-        return list;
+        return triggerCalInfoList;
     }
 
 

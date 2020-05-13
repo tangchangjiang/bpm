@@ -18,6 +18,7 @@ import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final IInventoryContext iInventoryContext;
     private RedisCacheClient redisCacheClient;
 
+    @Autowired
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRepository onlineShopRepository, WarehouseRepository warehouseRepository, PosRepository posRepository,
                                              IInventoryContext iInventoryContext, RedisCacheClient redisCacheClient) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
