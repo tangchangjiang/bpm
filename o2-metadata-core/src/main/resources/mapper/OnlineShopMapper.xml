@@ -145,8 +145,7 @@
                 </otherwise>
             </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">
-                <bind name="onlineShopCode" value="'%' + onlineShopCode + '%'"/>
-                AND os.onlineShopCode LIKE #{onlineShopCode}
+                AND os.onlineShopCode = #{onlineShopCode}
             </if>
             <if test="onlineShopName!=null and onlineShopName!=''">
                 <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
