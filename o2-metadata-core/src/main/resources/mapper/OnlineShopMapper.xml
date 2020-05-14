@@ -145,10 +145,12 @@
                 </otherwise>
             </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">
-                AND os.online_shop_code = #{onlineShopCode}
+                <bind name="onlineShopCode" value="'%' + onlineShopCode + '%'"/>
+                AND os.onlineShopCode LIKE #{onlineShopCode}
             </if>
             <if test="onlineShopName!=null and onlineShopName!=''">
-                AND os.online_shop_name = #{onlineShopName}
+                <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
+                AND os.online_shop_name LIKE #{onlineShopName}
             </if>
             <if test="platformShopCode!=null and platformShopCode!=''">
                 AND os.platform_shop_code = #{platformShopCode}

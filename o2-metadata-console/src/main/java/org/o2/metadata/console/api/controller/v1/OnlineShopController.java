@@ -1,15 +1,7 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import com.google.common.base.Preconditions;
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.PageHelper;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
+
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -30,10 +22,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 网店信息管理 API
@@ -78,8 +86,7 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity<?> listAllActiveShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiIgnore PageRequest pageRequest) {
-        OnlineShop onlineShop = new OnlineShop();
+    public ResponseEntity<?> listAllActiveShops(OnlineShop onlineShop, @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiIgnore PageRequest pageRequest) {
         onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
