@@ -145,7 +145,7 @@
                 </otherwise>
             </choose>
             <if test="onlineShopCode!=null and onlineShopCode!=''">
-                AND os.onlineShopCode = #{onlineShopCode}
+                AND os.online_shop_code = #{onlineShopCode}
             </if>
             <if test="onlineShopName!=null and onlineShopName!=''">
                 <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
