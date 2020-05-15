@@ -71,7 +71,7 @@ o2:
       host: ${O2_REDIS_HOST:192.168.17.211}
       port: ${O2_REDIS_PORT:6379}
       password: ${O2_REDIS_PASSWORD:1q2w3e4r5t}
-      dbIndex: ${O2_REDIS_DATABASE:13}
+      dbIndex: ${O2_REDIS_DATABASE:0}
       timeout-millis: ${O2_REDIS_COMMAND_TIMEOUT_MILLIS:3000}
       pool-min-idle: ${O2_REDIS_POOL_MIN_IDLE:4}
       pool-max-idle: ${O2_REDIS_POOL_MAX_IDLE:8}
