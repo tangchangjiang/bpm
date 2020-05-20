@@ -84,7 +84,10 @@ o2:
       port: ${DUBBO_PROTOCOL_PORT:-1}
     metadata-report:
       address: ${DUBBO_REDIS_REGISTRY_ADDRESS:redis://o2dubbo:o2dubboDev@dubbo.redis.org:9379?min.idle=4&max.idle=16&max.total=16}
-
+  file:
+   storage-code: ${O2_PCM_FILE_STORAGE_CODE:O2-PUB}
+   storage-path: ${O2_PCM_FILE_PCM_DIRECTORY:metadata/}
+   bucket-code: ${O2_PCM_FILE_PCM_BUCKET:resources}
 hzero:
   lov:
     sql:
@@ -98,7 +101,6 @@ hzero:
     executor-code: ${HZERO_SCHEDULER_CODE:O2MD_C_EXECUTOR}
     max-pool-size: 100
     core-pool-size: 20
-
 logging:
   level:
     org.apache.ibatis: ${LOG_LEVEL:debug}

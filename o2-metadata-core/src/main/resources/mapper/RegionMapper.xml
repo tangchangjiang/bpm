@@ -168,12 +168,24 @@
     </select>
     <select id="selectRegionList" resultType="org.o2.metadata.core.domain.vo.RegionCacheVO">
         select region.region_id,
-               region.region_code,
-               region.country_id,
-               region.region_name,
-               region.parent_region_id
+        region.region_code,
+        region.country_id,
+        t.region_name,
+        region.parent_region_id
         from hpfm_region region
-                 left join hpfm_region_tl t on t.region_id = region.region_id and t.lang = #{lang}
-        where region.tenant_id = #{tenantId}
+        left join hpfm_country country on country.country_id = region.country_id and country.tenant_id = #{tenantId}
+        left join hpfm_region_tl t on t.region_id = region.region_id and t.lang = #{lang}
+        where 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND region.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="countryCode != null">
+            and  country.country_code = #{countryCode}
+        </if>
     </select>
 </mapper>

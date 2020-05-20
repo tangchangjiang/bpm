@@ -27,4 +27,6 @@ public class RegionCacheVO  implements Serializable {
     private String regionCode;
 
     private String lang;
+
+    private String countryCode;
 }

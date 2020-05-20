@@ -12,6 +12,7 @@ import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.Region;
 import org.o2.metadata.core.domain.vo.RegionCacheVO;
 import org.o2.metadata.core.infra.mapper.RegionMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private FileStorageProperties fileStorageProperties;
     private FileClient fileClient;
 
+    @Autowired
     public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
                                        FileStorageProperties fileStorageProperties,
                                        FileClient fileClient) {
@@ -37,19 +39,17 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         this.fileStorageProperties = fileStorageProperties;
         this.fileClient = fileClient;
     }
-    @Override
-    public void createRegionStaticFile() {
-        final Long tenantId = DetailsHelper.getUserDetails().getTenantId();
-        log.info("static params are : {}", tenantId);
-        RegionCacheVO region = new RegionCacheVO();
-        region.setTenantId(tenantId);
-        region.setLang(O2MdConsoleConstants.Path.ZH_CN);
-        List<RegionCacheVO> zhList = regionMapper.selectRegionList(region);
-        this.staticFile(zhList,O2MdConsoleConstants.Path.ZH_CN,tenantId);
 
-        region.setLang(O2MdConsoleConstants.Path.EN_US);
-        List<RegionCacheVO> enList = regionMapper.selectRegionList(region);
-        this.staticFile(enList,O2MdConsoleConstants.Path.EN_US,tenantId);
+    @Override
+    public void createRegionStaticFile(RegionCacheVO regionCacheVO) {
+        log.info("static params are : {},{}", regionCacheVO.getTenantId(), regionCacheVO.getCountryCode());
+        regionCacheVO.setLang(O2MdConsoleConstants.Path.ZH_CN);
+        List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
+        this.staticFile(zhList, O2MdConsoleConstants.Path.ZH_CN, regionCacheVO.getTenantId());
+
+        regionCacheVO.setLang(O2MdConsoleConstants.Path.EN_US);
+        List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
+        this.staticFile(enList, O2MdConsoleConstants.Path.EN_US, regionCacheVO.getTenantId());
 
     }
 
@@ -58,16 +58,20 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
      *
      * @param list 静态文件数据实体
      */
-    private void staticFile(List<RegionCacheVO> list,String lang,Long tenantId) {
+    private void staticFile(List<RegionCacheVO> list, String lang, Long tenantId) {
         final String jsonString = JSON.toJSONString(list);
         // 上传路径全小写，多语言用中划线
         final String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                fileStorageProperties.getStoragePath(), O2MdConsoleConstants.Path.O2_RESOURCES,
-                O2MdConsoleConstants.Path.METADATA,O2MdConsoleConstants.Path.FILE,O2MdConsoleConstants.Path.REGION,
-                lang,tenantId).toLowerCase();
+                fileStorageProperties.getStoragePath(),
+                O2MdConsoleConstants.Path.FILE,
+                O2MdConsoleConstants.Path.REGION,
+                lang).toLowerCase();
+
+        log.info("directory url {}", directory);
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
                 directory, O2MdConsoleConstants.Path.FILE_NAME + O2MdConsoleConstants.FileSuffix.JSON, JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
-        log.info("createProductStaticFileJob url {},{},{}", resultUrl, directory, fileStorageProperties.getStoragePath());
+        log.info("resultUrl url {},{},{}", resultUrl,fileStorageProperties.getBucketCode(),fileStorageProperties.getStorageCode());
+
     }
 }

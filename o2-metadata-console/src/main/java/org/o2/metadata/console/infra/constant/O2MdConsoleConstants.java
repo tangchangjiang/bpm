@@ -28,8 +28,6 @@ public interface O2MdConsoleConstants {
     }
 
     interface  Path {
-       String O2_RESOURCES = "o2-resources";
-       String METADATA ="metadata";
        String FILE = "file";
 
        String REGION ="region";
