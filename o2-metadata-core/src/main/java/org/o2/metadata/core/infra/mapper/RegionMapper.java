@@ -2,6 +2,7 @@ package org.o2.metadata.core.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.o2.metadata.core.domain.entity.Region;
+import org.o2.metadata.core.domain.vo.RegionCacheVO;
 import org.o2.metadata.core.domain.vo.RegionVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -76,5 +77,12 @@ public interface RegionMapper extends BaseMapper<Region> {
      * @return 地区对象
      */
     Region findRegionByPrimaryKey(@Param("regionId") Long regionId);
+
+    /**
+     * 查询省市区
+     * @param region 地区
+     * @return list
+     */
+    List<RegionCacheVO> selectRegionList(final RegionCacheVO region);
 }
 

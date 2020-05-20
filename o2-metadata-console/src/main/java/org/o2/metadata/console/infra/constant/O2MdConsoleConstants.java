@@ -27,4 +27,22 @@ public interface O2MdConsoleConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_update_redis_hash_value.lua"));
     }
 
+    interface  Path {
+       String O2_RESOURCES = "o2-resources";
+       String METADATA ="metadata";
+       String FILE = "file";
+
+       String REGION ="region";
+
+       String ZH_CN ="zh_CN";
+
+       String EN_US ="en_US";
+
+       String FILE_NAME = "country-region";
+
+    }
+
+    public interface FileSuffix {
+        String JSON = ".json";
+    }
 }

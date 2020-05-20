@@ -166,4 +166,14 @@
         WHERE
         b.region_id = #{regionId}
     </select>
+    <select id="selectRegionList" resultType="org.o2.metadata.core.domain.vo.RegionCacheVO">
+        select region.region_id,
+               region.region_code,
+               region.country_id,
+               region.region_name,
+               region.parent_region_id
+        from hpfm_region region
+                 left join hpfm_region_tl t on t.region_id = region.region_id and t.lang = #{lang}
+        where region.tenant_id = #{tenantId}
+    </select>
 </mapper>
