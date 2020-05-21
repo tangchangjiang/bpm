@@ -28,14 +28,14 @@ public class O2SiteRegionFileRefreshJob implements IJobHandler {
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        String organizationId = map.get(TENANT_ID);
-        String countryCode = map.get(COUNTRY_CODE);
+        final String organizationId = map.get(TENANT_ID);
+        final String countryCode = map.get(COUNTRY_CODE);
         if (!StringUtils.hasText(organizationId) || !StringUtils.hasText(countryCode)) {
             tool.error("Parameter [tenantId] and [countryCode] can't be null.Please check job configuration.");
             return ReturnT.FAILURE;
         }
 
-        RegionCacheVO vo = new RegionCacheVO();
+        final RegionCacheVO vo = new RegionCacheVO();
         vo.setTenantId(Long.parseLong(organizationId));
         vo.setCountryCode(countryCode);
         o2SiteRegionFileService.createRegionStaticFile(vo);

@@ -13,5 +13,5 @@ public interface O2SiteRegionFileService {
      * @date 2020-05-20
      * @param regionCacheVO
      */
-    void createRegionStaticFile(RegionCacheVO regionCacheVO);
+    void createRegionStaticFile(final RegionCacheVO regionCacheVO);
 }

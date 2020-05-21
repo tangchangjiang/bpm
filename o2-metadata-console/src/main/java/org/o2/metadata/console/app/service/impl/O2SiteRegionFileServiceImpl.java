@@ -39,15 +39,15 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     }
 
     @Override
-    public void createRegionStaticFile(RegionCacheVO regionCacheVO) {
+    public void createRegionStaticFile(final RegionCacheVO regionCacheVO) {
         log.info("static params are : {},{}", regionCacheVO.getTenantId(), regionCacheVO.getCountryCode());
         final String countryCode = regionCacheVO.getCountryCode();
         regionCacheVO.setLang(O2MdConsoleConstants.Path.ZH_CN);
-        List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
+        final List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
         this.staticFile(zhList, O2MdConsoleConstants.Path.ZH_CN, regionCacheVO.getTenantId(), countryCode);
 
         regionCacheVO.setLang(O2MdConsoleConstants.Path.EN_US);
-        List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
+        final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
         this.staticFile(enList, O2MdConsoleConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
 
     }
