@@ -70,7 +70,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                 lang).toLowerCase();
 
         log.info("directory url {}", directory);
-        final String fileName = O2MdConsoleConstants.Path.FILE_NAME + "-" + countryCode + O2MdConsoleConstants.FileSuffix.JSON;
+        final String fileName = O2MdConsoleConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + O2MdConsoleConstants.FileSuffix.JSON;
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
                 directory, fileName, JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
