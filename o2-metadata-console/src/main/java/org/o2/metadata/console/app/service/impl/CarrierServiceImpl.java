@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -11,14 +12,13 @@ import org.o2.metadata.core.domain.entity.PosRelCarrier;
 import org.o2.metadata.core.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.core.domain.repository.CarrierRepository;
 import org.o2.metadata.core.domain.repository.PosRelCarrierRepository;
+import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 承运商应用服务默认实现
@@ -51,24 +51,27 @@ public class CarrierServiceImpl implements CarrierService {
 
     @Override
     public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
-        final Map<String, Object> map = new HashMap<>(carrierList.size());
+        List<Carrier> unique = carrierList.stream().collect(
+                Collectors.collectingAndThen(
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Carrier::getCarrierCode))), ArrayList::new));
+        if (unique.size() != carrierList.size()) {
+            throw new CommonException(BasicDataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+        }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
         for (int i = 0; i < carrierList.size(); i++) {
             Carrier carrier = carrierList.get(i);
             carrier.setTenantId(organizationId);
             carrier.validate();
-            // 数据库查重
-            Assert.isTrue(!carrier.exist(carrierRepository), "存在相同的承运商");
-            // list查重
-            Assert.isTrue(map.get(carrier.getCarrierCode()) == null, "存在相同的承运商");
             if (carrier.getCarrierId() != null) {
                 SecurityTokenHelper.validToken(carrier);
                 updateList.add(carrier);
             } else {
+                if (carrier.exist(carrierRepository)) {
+                    throw new CommonException(BasicDataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+                }
                 insertList.add(carrier);
             }
-            map.put(carrier.getCarrierCode(), i);
         }
         final List<Carrier> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(updateList)) {
