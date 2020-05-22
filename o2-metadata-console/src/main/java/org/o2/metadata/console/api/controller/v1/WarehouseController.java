@@ -94,6 +94,18 @@ public class WarehouseController extends BaseController {
         List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
         return Results.success(list);
     }
+    @ApiOperation(value = "批量操作仓库")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/batch-handle")
+    public ResponseEntity<?> batchHandle(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                         @RequestBody final List<Warehouse> warehouses) {
+        warehouses.forEach(w -> {
+            w.setTenantId(organizationId);
+            w.setActiveFlag(1);
+        });
+        List<Warehouse> list = warehouseService.batchHandle(organizationId, warehouses);
+        return  Results.success(list);
+    }
 
     @ApiOperation(value = "服务点查询")
     @Permission(level = ResourceLevel.ORGANIZATION)

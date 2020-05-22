@@ -43,4 +43,9 @@ public interface O2MdConsoleConstants {
     public interface FileSuffix {
         String JSON = ".json";
     }
+
+    interface  Status {
+        String UPDATE = "update";
+        String CREATE = "create";
+    }
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.context.inventory.InventoryContext;
 import org.o2.context.inventory.api.IInventoryContext;
@@ -121,6 +122,28 @@ public class WarehouseServiceImpl implements WarehouseService {
             iInventoryContext.triggerWhStockCal(tenantId, triggerCalInfoList);
         }
         return list;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses) {
+        List<Warehouse> updateList = new ArrayList<>();
+        List<Warehouse> insertList = new ArrayList<>();
+        for (Warehouse warehouse : warehouses) {
+            if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status())) {
+                insertList.add(warehouse);
+            }
+            if (O2MdConsoleConstants.Status.UPDATE.equals(warehouse.get_status())) {
+                SecurityTokenHelper.validToken(warehouse);
+                updateList.add(warehouse);
+            }
+        }
+        List<Warehouse> createList = createBatch(tenantId, insertList);
+        List<Warehouse> list = updateBatch(tenantId, updateList);
+        List<Warehouse> totalList = new ArrayList<>();
+        totalList.addAll(createList);
+        totalList.addAll(list);
+        return totalList ;
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
