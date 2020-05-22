@@ -79,7 +79,7 @@ public class CatalogController extends BaseController {
     public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         SecurityTokenHelper.validToken(catalog);
         catalog.setTenantId(organizationId);
-        catalogRepository.updateByPrimaryKeySelective(catalog);
+        catalogService.update(catalog);
         return Results.success(catalog);
     }
 

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.hzero.export.vo.ExportParam;
+import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.vo.CatalogVO;
 
 import java.util.List;
@@ -19,4 +20,10 @@ public interface CatalogService {
      * @throws RuntimeException exception description
      */
     List<CatalogVO> export(ExportParam exportParam);
+    /**
+     * 修改目录版本
+     * @date 2020-05-22
+     * @param catalog
+     */
+    void update(final Catalog catalog);
 }

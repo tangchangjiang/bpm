@@ -48,4 +48,9 @@ public interface O2MdConsoleConstants {
         String UPDATE = "update";
         String CREATE = "create";
     }
+
+    interface  ACTIVE_FLAG {
+        Integer FORBIDDEN = 0;
+        Integer ENABLE = 1;
+    }
 }

@@ -2,10 +2,15 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.hzero.export.vo.ExportParam;
 import org.o2.metadata.console.app.service.CatalogService;
+import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.core.domain.entity.Catalog;
+import org.o2.metadata.core.domain.entity.CatalogVersion;
+import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.core.domain.vo.CatalogVO;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +26,8 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Autowired
     private CatalogRepository catalogRepository;
+    @Autowired
+    private CatalogVersionRepository catalogVersionRepository;
 
     /**
      * 版本Excel导出
@@ -30,7 +37,22 @@ public class CatalogServiceImpl implements CatalogService {
      */
     @Override
     public List<CatalogVO> export(ExportParam exportParam) {
-        Set<Long> catalogBatchIdList =  exportParam.getIds();
+        Set<Long> catalogBatchIdList = exportParam.getIds();
         return catalogRepository.batchFindByIds(catalogBatchIdList);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(Catalog catalog) {
+
+        if (O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+            List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
+                    .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
+            for (CatalogVersion version : versions) {
+                version.setActiveFlag(O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN);
+            }
+            catalogVersionRepository.batchUpdateByPrimaryKeySelective(versions);
+        }
+        catalogRepository.updateByPrimaryKeySelective(catalog);
     }
 }

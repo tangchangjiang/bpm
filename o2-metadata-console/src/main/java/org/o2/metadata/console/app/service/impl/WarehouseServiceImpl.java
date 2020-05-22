@@ -130,10 +130,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<Warehouse> updateList = new ArrayList<>();
         List<Warehouse> insertList = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
-            if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status())) {
+            if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status().name())) {
                 insertList.add(warehouse);
             }
-            if (O2MdConsoleConstants.Status.UPDATE.equals(warehouse.get_status())) {
+            if (O2MdConsoleConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
                 SecurityTokenHelper.validToken(warehouse);
                 updateList.add(warehouse);
             }
