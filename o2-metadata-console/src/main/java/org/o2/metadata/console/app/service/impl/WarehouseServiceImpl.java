@@ -127,9 +127,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses) {
+        log.info("warehouse batch handle tenantId({}), warehouse size({})", tenantId, warehouses.size());
         List<Warehouse> updateList = new ArrayList<>();
         List<Warehouse> insertList = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
+            log.info("warehouse batch handle warehouse({}), _status({})", warehouse.getWarehouseId(), warehouse.get_status().name());
             if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status().name())) {
                 insertList.add(warehouse);
             }
@@ -138,8 +140,11 @@ public class WarehouseServiceImpl implements WarehouseService {
                 updateList.add(warehouse);
             }
         }
+        log.info("warehouse batch handle insert({}), update({})", insertList.size(), updateList.size());
         List<Warehouse> createList = createBatch(tenantId, insertList);
+        log.info("warehouse batch handle 5");
         List<Warehouse> list = updateBatch(tenantId, updateList);
+        log.info("warehouse batch handle 6");
         List<Warehouse> totalList = new ArrayList<>();
         totalList.addAll(createList);
         totalList.addAll(list);
@@ -160,6 +165,17 @@ public class WarehouseServiceImpl implements WarehouseService {
             String warehouseCode = origin.getWarehouseCode();
             List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
             for (String skuCode : skuCodeList) {
+                log.info("warehouse buildTriggerCalInfoList activeFlag({}),({});expressedFlag({}),({});pickedUpFlag({}),({})",
+                        warehouse.getWarehouseStatusCode(), origin.getWarehouseStatusCode(), warehouse.getActiveFlag(), origin.getActiveFlag(),
+                        warehouse.getExpressedFlag(), origin.getExpressedFlag(), warehouse.getPickedUpFlag(), origin.getPickedUpFlag());
+                if (!warehouse.getWarehouseStatusCode().equals(origin.getWarehouseStatusCode())) {
+                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
+                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
+                    triggerStockCalculationVO.setSkuCode(skuCode);
+                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_STATUS);
+                    triggerCalInfoList.add(triggerStockCalculationVO);
+                    continue;
+                }
                 if (!warehouse.getActiveFlag().equals(origin.getActiveFlag())) {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
