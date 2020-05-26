@@ -41,6 +41,7 @@ public interface BasicDataConstants {
         String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
         String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
+        String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
     }
 
     /**

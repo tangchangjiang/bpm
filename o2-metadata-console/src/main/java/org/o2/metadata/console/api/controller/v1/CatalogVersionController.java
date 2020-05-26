@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.core.domain.entity.Catalog;
 import org.o2.metadata.core.domain.entity.CatalogVersion;
 import org.o2.metadata.core.domain.repository.CatalogRepository;
@@ -34,6 +35,9 @@ public class CatalogVersionController extends BaseController {
     private CatalogVersionRepository catalogVersionRepository;
     @Autowired
     private CatalogRepository catalogRepository;
+
+    @Autowired
+    private CatalogVersionService catalogVersionService;
 
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -72,8 +76,7 @@ public class CatalogVersionController extends BaseController {
     @PutMapping
     public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
-        SecurityTokenHelper.validToken(catalogVersion);
-        catalogVersionRepository.updateByPrimaryKeySelective(catalogVersion);
+        catalogVersionService.update(catalogVersion);
         return Results.success(catalogVersion);
     }
 
