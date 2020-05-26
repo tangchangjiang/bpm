@@ -141,7 +141,8 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity<?> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                              @RequestBody final OnlineShop onlineShop) {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
@@ -161,10 +162,10 @@ public class OnlineShopController extends BaseController {
         onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
         onlineShop.setCatalogId(catalog.getCatalogId());
         final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        //触发网店关联仓库更新
-        onlineShopRelWarehouseService.resetIsInvCalculated(onlineShop.getOnlineShopCode(), null, onlineShop.getTenantId());
-        // 触发渠道可用库存计算
         if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
+            //触发网店关联仓库更新
+            onlineShopRelWarehouseService.updateByShop(onlineShop.getOnlineShopId(), origin.getOnlineShopCode(), onlineShop.getActiveFlag(), organizationId);
+            // 触发渠道可用库存计算
             iInventoryContext.triggerShopStockCalByShopCode(organizationId, Collections.singleton(origin.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
         }
         return Results.success(result);

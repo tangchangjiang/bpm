@@ -55,4 +55,6 @@ public interface OnlineShopRelWarehouseService {
      * @return 更新后的列表
      */
     List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId);
+
+    void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
 }

@@ -4,6 +4,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.context.inventory.InventoryContext;
 import org.o2.context.inventory.api.IInventoryContext;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -78,23 +80,28 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
+    public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long tenantId, final List<OnlineShopRelWarehouse> relationships) {
         Set<String> shopCodeSet = new HashSet<>();
         relationships.forEach(relationship -> {
-            relationship.setTenantId(organizationId);
+            relationship.setTenantId(tenantId);
             Assert.isTrue(relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
             OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
-            OnlineShopRelWarehouse origin = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship.getOnlineShopRelWarehouseId());
-            if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
-                shopCodeSet.add(onlineShop.getOnlineShopCode());
+            Warehouse warehouse = warehouseRepository.selectByPrimaryKey(relationship.getWarehouseId());
+            OnlineShopRelWarehouse origin = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship);
+            if (null != onlineShop && null != warehouse && null != origin) {
+                if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
+                    shopCodeSet.add(onlineShop.getOnlineShopCode());
+                }
+                String key = String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShop.getOnlineShopCode());
+                redisCacheClient.opsForHash().put(key, warehouse.getWarehouseCode(), String.valueOf(relationship.getActiveFlag()));
             }
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
         syncToRedis(list);
         if (!shopCodeSet.isEmpty()) {
-            iInventoryContext.triggerShopStockCalByShopCode(organizationId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_ACTIVE);
+            iInventoryContext.triggerShopStockCalByShopCode(tenantId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_ACTIVE);
         }
         return list;
     }
@@ -174,6 +181,29 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             }
         }
         return onlineShopRelWarehouseList;
+    }
+
+    @Override
+    public void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId) {
+
+        List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByCondition(
+                Condition.builder(OnlineShopRelWarehouse.class).andWhere(Sqls.custom()
+                        .andEqualTo(OnlineShopRelWarehouse.FIELD_TENANT_ID, tenantId)
+                        .andEqualTo(OnlineShopRelWarehouse.FIELD_ONLINE_SHOP_ID, onlineShopId)).build());
+
+        onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
+
+        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
+
+        String key = String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
+        Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
+        if (map.isEmpty()) {
+            return;
+        }
+        String activeFlagStr = String.valueOf(activeFlag);
+        Map<Object, String> m = new HashMap<>(2);
+        map.keySet().forEach(hashKey -> m.put(hashKey, activeFlagStr));
+        redisCacheClient.opsForHash().putAll(key, m);
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {
