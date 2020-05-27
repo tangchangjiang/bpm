@@ -114,7 +114,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         // 准备触发线上可用库存计算的数据
         List<TriggerStockCalculationVO> triggerCalInfoList = this.buildTriggerCalInfoList(tenantId, warehouses);
         // 更新MySQL
-        List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKeySelective(warehouses);
+        List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         // 更新 redis
         this.operationRedis(warehouses);
         // 触发线上可用库存计算
