@@ -1,5 +1,8 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
@@ -34,6 +37,7 @@ import java.util.*;
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
+@Slf4j
 @Service
 public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouseService {
 
@@ -185,24 +189,27 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     public void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId) {
-
         List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByCondition(
                 Condition.builder(OnlineShopRelWarehouse.class).andWhere(Sqls.custom()
                         .andEqualTo(OnlineShopRelWarehouse.FIELD_TENANT_ID, tenantId)
                         .andEqualTo(OnlineShopRelWarehouse.FIELD_ONLINE_SHOP_ID, onlineShopId)).build());
 
+        log.info("updateByShop onlineShopId({}), tenantId({}), activeFlag({}), onlineShopRelWarehouses({})",
+                onlineShopId, tenantId, activeFlag, JSONArray.toJSONString(onlineShopRelWarehouses));
         onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
 
         onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
 
         String key = String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
         Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
+        log.info("updateByShop key({}), hashKeySet({})", key, JSON.toJSONString(map.keySet()));
         if (map.isEmpty()) {
             return;
         }
         String activeFlagStr = String.valueOf(activeFlag);
         Map<Object, String> m = new HashMap<>(2);
         map.keySet().forEach(hashKey -> m.put(hashKey, activeFlagStr));
+        log.info("updateByShop key({}), m hashKeySet({}), value({})", key, JSON.toJSONString(m.keySet()), JSON.toJSONString(m.values()));
         redisCacheClient.opsForHash().putAll(key, m);
     }
 
