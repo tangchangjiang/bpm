@@ -1,25 +1,16 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import com.google.common.base.Preconditions;
 
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.context.inventory.InventoryContext;
-import org.o2.context.inventory.api.IInventoryContext;
-import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
+import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.core.domain.entity.Catalog;
-import org.o2.metadata.core.domain.entity.CatalogVersion;
 import org.o2.metadata.core.domain.entity.OnlineShop;
-import org.o2.metadata.core.domain.repository.CatalogRepository;
-import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.core.domain.repository.OnlineShopRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -55,22 +44,11 @@ import springfox.documentation.annotations.ApiIgnore;
 public class OnlineShopController extends BaseController {
 
     private final OnlineShopRepository onlineShopRepository;
-    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
-    private final CatalogRepository catalogRepository;
-    private final CatalogVersionRepository catalogVersionRepository;
-    private final IInventoryContext iInventoryContext;
-
+    private final OnlineShopService onlineShopService;
     @Autowired
-    public OnlineShopController(OnlineShopRepository onlineShopRepository,
-                                OnlineShopRelWarehouseService onlineShopRelWarehouseService,
-                                CatalogRepository catalogRepository,
-                                CatalogVersionRepository catalogVersionRepository,
-                                IInventoryContext iInventoryContext) {
+    public OnlineShopController(OnlineShopRepository onlineShopRepository,OnlineShopService onlineShopService) {
         this.onlineShopRepository = onlineShopRepository;
-        this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
-        this.catalogRepository = catalogRepository;
-        this.catalogVersionRepository = catalogVersionRepository;
-        this.iInventoryContext = iInventoryContext;
+        this.onlineShopService = onlineShopService;
     }
 
     @ApiOperation(value = "按条件查询网店列表",
@@ -117,24 +95,11 @@ public class OnlineShopController extends BaseController {
     @PostMapping
     public ResponseEntity<?> createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
-        Preconditions.checkArgument(null != onlineShop.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         onlineShop.setTenantId(organizationId);
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(organizationId).build());
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
-        if (onlineShop.exist(onlineShopRepository)) {
-            return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_U_INDEX), HttpStatus.OK);
-        }
-        try {
-            onlineShop.setCatalogId(catalog.getCatalogId());
-            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
-            Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogVersionCode && organizationId");
-            onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
-            return Results.success(this.onlineShopRepository.insertSelective(onlineShop));
-        } catch (final DuplicateKeyException e) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,
-                    "OnlineShop(" + onlineShop.getOnlineShopId() + ")");
-        }
+        onlineShopService.createOnlineShop(onlineShop);
+        return Results.success(HttpStatus.OK);
     }
 
     @ApiOperation("修改网店信息")
@@ -146,29 +111,9 @@ public class OnlineShopController extends BaseController {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalog, "illegal combination catalogCode && organizationId");
         this.validObject(onlineShop);
-        onlineShop.validate(onlineShopRepository);
-        if (!onlineShop.exist(onlineShopRepository)) {
-            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
-        }
-        final OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
-        log.info("origin shop id({}), active({}), code({}), onlineShop id({}), active({}), code({})", origin.getOnlineShopId(), origin.getActiveFlag(), origin.getOnlineShopCode(),
-                onlineShop.getOnlineShopId(), onlineShop.getActiveFlag(), onlineShop.getOnlineShopCode());
-        onlineShop.setCatalogId(catalog.getCatalogId());
-        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(organizationId).build());
-        Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
-        onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
-        onlineShop.setCatalogId(catalog.getCatalogId());
-        final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
-            //触发网店关联仓库更新
-            onlineShopRelWarehouseService.updateByShop(onlineShop.getOnlineShopId(), origin.getOnlineShopCode(), onlineShop.getActiveFlag(), organizationId);
-            // 触发渠道可用库存计算
-            iInventoryContext.triggerShopStockCalByShopCode(organizationId, Collections.singleton(origin.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
-        }
-        return Results.success(result);
+        onlineShopService.updateOnlineShop(onlineShop);
+        return Results.success(HttpStatus.OK);
     }
 
 }

@@ -10,6 +10,8 @@
         <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
         <result column="returned_flag" property="returnedFlag" jdbcType="DECIMAL"/>
         <result column="exchanged_flag" property="exchangedFlag" jdbcType="DECIMAL"/>
+        <result column="is_default" property="isDefault" jdbcType="INTEGER"/>
+        <result column="default_currency" property="defaultCurrency" jdbcType="VARCHAR"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="enable_split_flag" property="enableSplitFlag" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
@@ -21,6 +23,9 @@
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
+    <update id="updateDefaultShop">
+        update o2md_online_shop set is_default = 0 where is_default  = 1 and tenant_id = #{tenantId}
+    </update>
 
     <select id="findByCondition" resultType="org.o2.metadata.core.domain.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
@@ -41,7 +46,10 @@
         os.tenant_id,
         os.catalog_version_code,
         ocvt.catalog_version_name,
-        oct.catalog_name
+        oct.catalog_name,
+        os.default_currency,
+        os.is_default,
+        hcl.currency_name
         FROM
         o2md_online_shop os
         left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}
@@ -51,7 +59,8 @@
         #{tenantId}
         left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang =
         #{lang}
-
+        left join  hpfm_currency  hc on hc.currency_code = os.default_currency and hc.tenant_id = #{tenantId}
+        left join  hpfm_currency_tl hcl on hcl.currency_id = hc.currency_id  and   hcl.lang = #{lang}
         <where>
             <choose>
                 <when test="tenantId != null">

@@ -17,7 +17,7 @@ import java.util.List;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Repository
-public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements OnlineShopRepository {
+class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements OnlineShopRepository {
     private final OnlineShopMapper onlineShopMapper;
 
     public OnlineShopRepositoryImpl(final OnlineShopMapper onlineShopMapper) {
@@ -54,5 +54,10 @@ public class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> imp
     @Override
     public List<OnlineShop> selectShop(final OnlineShop condition) {
         return onlineShopMapper.selectShop(condition);
+    }
+
+    @Override
+    public void updateDefaultShop(final Long tenantId) {
+        onlineShopMapper.updateDefaultShop(tenantId);
     }
 }

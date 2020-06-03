@@ -171,7 +171,11 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
 
+    @ApiModelProperty(value = "是否默认网店", hidden = true)
+    private Integer isDefault;
 
+    @ApiModelProperty(value = "默认货币", hidden = true)
+    private String defaultCurrency;
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -189,4 +193,8 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "版本目录名称")
     @Transient
     private String catalogVersionName;
+
+    @ApiModelProperty(value = "货币名称")
+    @Transient
+    private String currencyName;
 }

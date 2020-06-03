@@ -1,5 +1,7 @@
 package org.o2.metadata.core.infra.constants;
 
+import jdk.nashorn.internal.ir.IfNode;
+
 /**
  * 基础数据常量
  *
@@ -144,5 +146,9 @@ public interface BasicDataConstants {
         String OW = "OW";
 
         String LOV_CODE = "O2MD.CATALOG";
+    }
+
+    interface  DefaultShop {
+        Integer DEFAULT = 1;
     }
 }

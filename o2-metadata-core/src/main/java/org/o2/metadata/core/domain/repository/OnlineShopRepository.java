@@ -42,4 +42,10 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      * @return  网店列表
      */
     List<OnlineShop> selectShop(final OnlineShop condition);
+    /**
+     * 更新默认网店值为空
+     * @date 2020-06-03
+     * @param tenantId 租户ID
+\    */
+    void updateDefaultShop( final Long tenantId);
 }

@@ -1,6 +1,7 @@
 package org.o2.metadata.core.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.core.domain.entity.OnlineShop;
 import java.util.List;
 
@@ -34,4 +35,10 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @return 网店列表
      */
     List<OnlineShop> selectShop(final OnlineShop condition);
+    /**
+     * 更新默认网店值为空
+     * @date 2020-06-03
+     * @param tenantId 租户ID
+     */
+    void updateDefaultShop(@Param("tenantId")final Long tenantId);
 }
