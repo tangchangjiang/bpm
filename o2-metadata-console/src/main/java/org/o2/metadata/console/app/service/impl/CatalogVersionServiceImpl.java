@@ -37,4 +37,15 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.updateByPrimaryKeySelective(catalogVersion);
     }
+
+    @Override
+    public void insert(CatalogVersion catalogVersion) {
+        Long catalogId = catalogVersion.getCatalogId();
+        Long tenantId = catalogVersion.getTenantId();
+        Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
+        if (O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+            catalogVersion.setActiveFlag(O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN);
+        }
+        catalogVersionRepository.insertSelective(catalogVersion);
+    }
 }

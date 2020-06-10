@@ -14,5 +14,11 @@ public interface CatalogVersionService {
      * @param catalogVersion 目录版本
      */
     void update(final CatalogVersion catalogVersion);
+    /**
+     * 更新
+     * @date 2020-06-10
+     * @param catalogVersion 目录版本
+     */
+    void insert(final CatalogVersion catalogVersion);
 
 }
