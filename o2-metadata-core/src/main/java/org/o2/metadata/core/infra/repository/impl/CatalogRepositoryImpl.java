@@ -26,13 +26,14 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
     /**
      * 更据版本目录主键集合批量查询ExcelDTO
      * @param catalogIds 版本主键集合
+     * @param tenantId 租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogVO> batchFindByIds(Set<Long> catalogIds) {
+    public List<CatalogVO> batchFindByIds(final Set<Long> catalogIds,final Long tenantId) {
 
-        return catalogMapper.batchFindByIds(catalogIds);
+        return catalogMapper.batchFindByIds(catalogIds,tenantId);
     }
 
     @Override

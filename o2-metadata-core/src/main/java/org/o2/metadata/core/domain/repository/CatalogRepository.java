@@ -17,10 +17,11 @@ public interface CatalogRepository extends BaseRepository<Catalog> {
     /**
      * 更据版本目录主键集合批量查询ExcelDTO
      * @param catalogIds 版本主键集合
+     * @param tenantId 租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogVO> batchFindByIds(Set<Long> catalogIds);
+    List<CatalogVO> batchFindByIds(final Set<Long> catalogIds,final Long tenantId);
     /**
      * 查询目录
      * @author yipeng.zhu@hand-china.com

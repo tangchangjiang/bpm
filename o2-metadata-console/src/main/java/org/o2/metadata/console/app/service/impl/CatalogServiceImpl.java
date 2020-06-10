@@ -32,13 +32,14 @@ public class CatalogServiceImpl implements CatalogService {
     /**
      * 版本Excel导出
      * @param exportParam 版本主键字符拼接
+     * @param tenantId 租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogVO> export(ExportParam exportParam) {
+    public List<CatalogVO> export(final ExportParam exportParam,final Long tenantId) {
         Set<Long> catalogBatchIdList = exportParam.getIds();
-        return catalogRepository.batchFindByIds(catalogBatchIdList);
+        return catalogRepository.batchFindByIds(catalogBatchIdList,tenantId);
     }
 
     @Override

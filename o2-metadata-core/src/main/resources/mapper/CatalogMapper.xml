@@ -36,10 +36,13 @@
                 AND 1 =0
             </otherwise>
         </choose>
-         and c.catalog_id IN
-        <foreach collection="catalogIds" item="id" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="catalogIds != null and catalogIds.size > 0" >
+            and c.catalog_id IN
+            <foreach collection="catalogIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+
         AND t.lang =#{lang}
     </select>
     <select id="listCatalog" resultType="org.o2.metadata.core.domain.entity.Catalog">

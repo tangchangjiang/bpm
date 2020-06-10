@@ -10,6 +10,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.export.annotation.ExcelExport;
@@ -37,6 +38,7 @@ import java.util.List;
 @Api(tags = EnableMetadataConsole.CATALOG)
 @RestController("catalogController.v1")
 @RequestMapping("/v1/{organizationId}/catalogs")
+@Slf4j
 public class CatalogController extends BaseController {
 
     @Autowired
@@ -97,8 +99,9 @@ public class CatalogController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/export")
     @ExcelExport(CatalogVO.class)
-    public ResponseEntity<?> export(ExportParam exportParam, HttpServletResponse response) {
-        List<CatalogVO> export = catalogService.export(exportParam);
+    public ResponseEntity<?> export(ExportParam exportParam, HttpServletResponse response,@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+        List<CatalogVO> export = catalogService.export(exportParam,organizationId);
+        log.info("data {}",export);
         return Results.success(export);
     }
 
