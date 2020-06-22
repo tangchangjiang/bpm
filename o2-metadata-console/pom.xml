@@ -31,6 +31,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-customize</artifactId>
+            <!-- <version>0.1.1.RELEASE</version>   组件版本应该在srm-parent中维护 -->
+        </dependency>
+        <dependency>
             <groupId>org.o2.metadata</groupId>
             <artifactId>o2-metadata-core</artifactId>
         </dependency>
