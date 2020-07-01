@@ -117,7 +117,15 @@
 
     <!--更据catalogCode和regionId查询地址匹配数量-->
     <select id="queryAddressByCondition" resultType="org.o2.metadata.core.domain.entity.AddressMapping">
-        SELECT ad.*
+        SELECT ad.address_mapping_id,
+        ad.region_id,
+        ad.address_type_code,
+        ad.catalog_code,
+        ad.external_code,
+        ad.external_name,
+        ad.active_flag,
+        ad.OBJECT_VERSION_NUMBER,
+        ad.tenant_id
         FROM o2md_address_mapping ad
         WHERE 1=1
         <choose>
