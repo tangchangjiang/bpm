@@ -27,7 +27,7 @@ import java.util.List;
  * @author peng.xu@hand-china.com 2019/5/17
  */
 @RestController("freightTemplateDetailController.v1")
-@RequestMapping("/v1/freight-template-details")
+@RequestMapping("/v1/{organizationId}/freight-template-details")
 @Api(tags = EnableMetadataConsole.FREIGHT_TEMPLATE_DETAIL)
 public class FreightTemplateDetailController extends BaseController {
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
