@@ -117,7 +117,7 @@ public class RegionController extends BaseController {
     @PutMapping
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<?> updateRegion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final Region region) {
-        SecurityTokenHelper.validToken(region);
+        SecurityTokenHelper.validToken(region, false);
         this.validObject(region);
         region.setTenantId(organizationId);
         return ResponseEntity.ok(regionService.updateRegion(region));

@@ -7,6 +7,8 @@ import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.core.domain.entity.Region;
+import org.o2.metadata.core.domain.entity.RegionArea;
+import org.o2.metadata.core.domain.repository.RegionAreaRepository;
 import org.o2.metadata.core.domain.repository.RegionRelPosRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
 import org.o2.metadata.core.domain.vo.RegionVO;
@@ -28,11 +30,12 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private static final long ROOT_ID = -1L;
 
     private RegionRepository regionRepository;
-
+    private RegionAreaRepository regionAreaRepository;
     private RegionRelPosRepository regionRelPosRepository;
 
-    public RegionServiceImpl(RegionRepository regionRepository, RegionRelPosRepository regionRelPosRepository) {
+    public RegionServiceImpl(RegionRepository regionRepository,RegionAreaRepository regionAreaRepository, RegionRelPosRepository regionRelPosRepository) {
         this.regionRepository = regionRepository;
+        this.regionAreaRepository = regionAreaRepository;
         this.regionRelPosRepository = regionRelPosRepository;
     }
 
@@ -104,11 +107,20 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         if (exists == null) {
             throw new CommonException(DATA_NOT_EXISTS);
         }
-        region.setRegionCode(exists.getRegionCode());
-        region.setLevelPath(exists.getLevelPath());
-        if (this.updateByPrimaryKey(region) != 1) {
-            throw new CommonException(BaseConstants.ErrorCode.ERROR);
-        }
+//        region.setRegionCode(exists.getRegionCode());
+//        region.setLevelPath(exists.getLevelPath());
+//        if (this.updateByPrimaryKey(region) != 1) {
+//            throw new CommonException(BaseConstants.ErrorCode.ERROR);
+//        }
+        // 更新大区定义
+        RegionArea regionArea = new RegionArea();
+        regionArea.setAreaCode(region.getAreaCode());
+        regionArea.setEnabledFlag(region.getEnabledFlag());
+        regionArea.setTenantId(region.getTenantId());
+        regionArea.setRegionId(exists.getRegionId());
+        regionArea.setRegionCode(exists.getRegionCode());
+        regionArea.setRegionName(exists.getRegionName());
+        regionAreaRepository.insertSelective(regionArea);
         return region;
     }
 
