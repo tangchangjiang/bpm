@@ -87,11 +87,12 @@
         hr.parent_region_id,
         hr.enabled_flag,
         hr.level_path,
-        '' area_code,
+        ora.area_code area_code,
         hr.object_version_number
         FROM hpfm_region hr
         join hpfm_country oc on hr.country_id=oc.country_id
         left JOIN hpfm_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
+        left join o2md_region_area ora on ora.region_code = hr.region_code and ora.tenant_id = hr.tenant_id
         WHERE 1=1
         and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
         <choose>
