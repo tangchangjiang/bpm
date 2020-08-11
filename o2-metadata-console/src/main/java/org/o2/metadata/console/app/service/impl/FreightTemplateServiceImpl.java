@@ -125,13 +125,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         checkProductRelate(freightTemplateList);
 
         for (final FreightTemplate freightTemplate : freightTemplateList) {
-            final List<FreightTemplateDetail> detailList = freightTemplateDetailRepository.queryFreightTemplateDetailByTemplateId(freightTemplate.getTemplateId());
-
-            freightTemplateDetailRepository.batchDeleteByPrimaryKey(detailList);
             // 清除缓存
-            deleteFreightCache(freightTemplate, detailList);
+            deleteFreightCache(freightTemplate);
+            freightTemplate.setEnabledFlag(Integer.valueOf(0));
+            freightTemplateRepository.updateOptional(freightTemplate,FreightTemplate.FIELD_ENABLED_FLAG);
         }
-        freightTemplateRepository.batchDeleteByPrimaryKey(freightTemplateList);
 
         return true;
     }
@@ -227,7 +225,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         }
 
         // 清除缓存
-        deleteFreightCache(freightTemplateVO, list);
+        deleteFreightCache(freightTemplateVO);
 
         // 更新缓存
         saveFreightCache(freightTemplateVO);
@@ -242,6 +240,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         final Map<String, Object> map = new HashMap<>(freightTemplates.size());
         for (int i = 0; i < freightTemplates.size(); i++) {
             final T freightTemplate = freightTemplates.get(i);
+            freightTemplate.setEnabledFlag(freightTemplate.getEnabledFlag()==null?Integer.valueOf(1):freightTemplate.getEnabledFlag());
             if (isCheckId) {
                 Assert.notNull(freightTemplate.getTemplateId(), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
             }
@@ -323,13 +322,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * 删除运费模板和运费模板明细信息
      *
      * @param freightTemplate
-     * @param freightTemplateDetailList
      */
-    private void deleteFreightCache(FreightTemplate freightTemplate, List<FreightTemplateDetail> freightTemplateDetailList) {
+    private void deleteFreightCache(FreightTemplate freightTemplate) {
         FreightTemplateBO template = new FreightTemplateBO();
         template.setFreight(convertToFreight(freightTemplate));
-      //  template.setFreightDetailList(convertToFreightDetail(freightTemplateDetailList));
-
         freightCacheService.deleteFreight(template);
     }
 

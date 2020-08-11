@@ -86,7 +86,6 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final long tenantId = freight.getTenantId();
         final String freightCode = freight.getTemplateCode();
         final String freightKey = getFreightInforCacheKey( tenantId,freightCode);
-
         this.redisCacheClient.delete(freightKey);
     }
 
