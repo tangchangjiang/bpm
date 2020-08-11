@@ -29,4 +29,9 @@ public class FreightDetailBO extends FreightPriceBO {
      * 关联运费模板编码
      */
     private String templateCode;
+
+    /**
+     * tenantId
+     */
+    private long tenantId;
 }

@@ -331,7 +331,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private void deleteFreightCache(FreightTemplate freightTemplate, List<FreightTemplateDetail> freightTemplateDetailList) {
         FreightTemplateBO template = new FreightTemplateBO();
         template.setFreight(convertToFreight(freightTemplate));
-        template.setFreightDetailList(convertToFreightDetail(freightTemplateDetailList));
+      //  template.setFreightDetailList(convertToFreightDetail(freightTemplateDetailList));
 
         freightCacheService.deleteFreight(template);
     }

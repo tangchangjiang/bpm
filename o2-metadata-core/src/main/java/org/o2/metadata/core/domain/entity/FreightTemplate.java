@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.annotations.Param;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
@@ -40,8 +41,8 @@ public class FreightTemplate extends AuditDomain {
     public static final String FIELD_TEMPLATE_CODE = "templateCode";
     public static final String FIELD_TEMPLATE_NAME = "templateName";
     public static final String FIELD_DELIVERY_FREE_FLAG = "deliveryFreeFlag";
-    public static final String FIELD_VALUATION_TYPE_CODE = "valuationTypeCode";
-    public static final String FIELD_VALUATION_UOM_CODE = "valuationUomCode";
+    public static final String FIELD_VALUATION_TYPE = "valuationType";
+    public static final String FIELD_VALUATION_UOM = "valuationUom";
     public static final String FIELD_DAFAULT_FLAG = "dafaultFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
 
@@ -53,13 +54,20 @@ public class FreightTemplate extends AuditDomain {
         if (this.getTemplateId() != null) {
             final Sqls sqls = Sqls.custom();
             sqls.andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, this.getTemplateCode());
+            sqls.andEqualTo(FreightTemplate.FIELD_TENANT_ID, this.getTenantId());
             sqls.andNotEqualTo(FreightTemplate.FIELD_TEMPLATE_ID, this.getTemplateId());
 
             return freightTemplateRepository.selectCountByCondition(
                     Condition.builder(FreightTemplate.class).andWhere(sqls).build()) > 0;
         }
-        final List<FreightTemplate> list = freightTemplateRepository.select(FIELD_TEMPLATE_CODE, this.templateCode);
-        return list.size() > 0;
+       // final List<FreightTemplate> list = freightTemplateRepository.select(FIELD_TEMPLATE_CODE, this.templateCode);
+
+        final Sqls sqls2 = Sqls.custom();
+        sqls2.andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, this.getTemplateCode());
+        sqls2.andEqualTo(FreightTemplate.FIELD_TENANT_ID, this.getTenantId());
+
+        return freightTemplateRepository.selectCountByCondition(
+                Condition.builder(FreightTemplate.class).andWhere(sqls2).build()) > 0;
     }
 
     public void validate() {
@@ -87,10 +95,10 @@ public class FreightTemplate extends AuditDomain {
     private Integer deliveryFreeFlag;
     @ApiModelProperty(value = "计价方式，值集O2MD.VALUATION_TYPE")
     @LovValue(lovCode = BasicDataConstants.FreightType.LOV_VALUATION_TYPE)
-    private String valuationTypeCode;
+    private String valuationType;
     @ApiModelProperty(value = "计价单位，值集O2MD.UOM")
    // @LovValue(lovCode = BasicDataConstants.FreightType.LOV_UOM)
-    private String valuationUomCode;
+    private String valuationUom;
     @ApiModelProperty(value = "默认运费模板标记，新建的时候默认为0",required = true)
     @NotNull
     private Integer dafaultFlag;

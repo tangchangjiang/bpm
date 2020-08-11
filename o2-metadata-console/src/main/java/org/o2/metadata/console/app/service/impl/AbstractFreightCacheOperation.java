@@ -80,8 +80,8 @@ public abstract class AbstractFreightCacheOperation {
             freight.setTemplateCode(template != null ? template.getTemplateCode() : null);
         }
         freight.setTemplateName(freightTemplate.getTemplateName());
-        freight.setValuationTypeCode(freightTemplate.getValuationTypeCode());
-        freight.setValuationUomCode(freightTemplate.getValuationUomCode());
+        freight.setValuationType(freightTemplate.getValuationType());
+        freight.setValuationUom(freightTemplate.getValuationUom());
         freight.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
 
         return freight;

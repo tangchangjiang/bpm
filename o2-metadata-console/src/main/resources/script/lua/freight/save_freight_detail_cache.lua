@@ -18,12 +18,13 @@ for tmpId,tmpJson in pairs(freightDetailMap) do
     redis.call('hset', freightInforKey, tmpId, tmpJson);
 end
 
-local freightHeadMap ;
-if (ARGV[2] ==nil or ARGV[2] =='')
-    then
-    freightHeadMap = cjson.decode(ARGV[2]);
 
-    for headKey,headJson in pairs(freightHeadMap) do
-         redis.call('hset', freightInforKey, headKey, headJson);
-    end
-end
+--- local freightHeadMap ;
+--- if (ARGV.length>1 and( ARGV[2] ==nil or ARGV[2] ==''))
+---    then
+---    freightHeadMap = cjson.decode(ARGV[2]);
+
+---   for headKey,headJson in pairs(freightHeadMap) do
+---        redis.call('hset', freightInforKey, headKey, headJson);
+---   end
+--- end

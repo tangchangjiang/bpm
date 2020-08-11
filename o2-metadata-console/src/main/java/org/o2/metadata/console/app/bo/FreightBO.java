@@ -33,11 +33,21 @@ public class FreightBO {
     /**
      * 计价方式
      */
-    private String valuationTypeCode;
+    private String valuationType;
 
     /**
      * 计价单位
      */
-    private String valuationUomCode;
+    private String valuationUom;
+
+    /**
+     * tenantId
+     */
+    private Long tenantId;
+    /***
+     * 默认运费模板标记，新建的时候默认为0"
+     */
+    private Integer dafaultFlag;
+
 
 }

@@ -7,7 +7,7 @@
         <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
         <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
-        <result column="valuation_type" property="valuationTypeCode" jdbcType="VARCHAR"/>
+        <result column="valuation_type" property="valuationType" jdbcType="VARCHAR"/>
         <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
@@ -24,7 +24,7 @@
         <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
         <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
-        <result column="valuation_type" property="valuationTypeCode" jdbcType="VARCHAR"/>
+        <result column="valuation_type" property="valuationType" jdbcType="VARCHAR"/>
         <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
@@ -75,11 +75,11 @@
             <if test="deliveryFreeFlag!=null and isFree!=''">
                 AND oft.delivery_free_flag = #{deliveryFreeFlag}
             </if>
-            <if test="valuationTypeCode!=null and valuationTypeCode!=''">
-                AND oft.valuation_type = #{valuationTypeCode}
+            <if test="valuationType!=null and valuationType!=''">
+                AND oft.valuation_type = #{valuationType}
             </if>
-            <if test="valuationUomCode!=null and valuationUomCode!=''">
-                AND oft.valuation_uom = #{valuationUomCode}
+            <if test="valuationUom!=null and valuationUom!=''">
+                AND oft.valuation_uom = #{valuationUom}
             </if>
             <if test="tenantId!=null ">
                 AND oft.tenant_id = #{tenantId}
