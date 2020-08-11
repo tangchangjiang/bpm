@@ -11,7 +11,6 @@ import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.core.domain.entity.FreightTemplate;
 import org.o2.metadata.core.domain.entity.FreightTemplateDetail;
-import org.o2.metadata.core.domain.repository.CarrierRepository;
 import org.o2.metadata.core.domain.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
@@ -129,7 +128,6 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             final List<FreightTemplateDetail> detailList = freightTemplateDetailRepository.queryFreightTemplateDetailByTemplateId(freightTemplate.getTemplateId());
 
             freightTemplateDetailRepository.batchDeleteByPrimaryKey(detailList);
-
             // 清除缓存
             deleteFreightCache(freightTemplate, detailList);
         }
@@ -234,7 +232,6 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         // 更新缓存
         saveFreightCache(freightTemplateVO);
     }
-
     /**
      * 验重
      *
@@ -335,4 +332,20 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         freightCacheService.deleteFreight(template);
     }
+
+    @Override
+    public FreightTemplateVO querydefaultTemplate(Long   organizationId) {
+        // 查询默认模板
+        final List<FreightTemplate> list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
+                .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID,   organizationId)
+                        .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1))).build());
+
+        Assert.isTrue(!CollectionUtils.isEmpty(list), "默认运费模板不存在");
+        Assert.isTrue(!(list.size()!=1), "默认运费模板不唯一");
+
+        return  queryTemplateAndDetails(list.get(0).getTemplateId());
+
+    }
+
+
 }

@@ -84,4 +84,14 @@ public interface FreightTemplateService {
      * @param templateId 运费模板ID
      */
     void refreshCache(final Long templateId);
+
+
+    /**
+     * 根据主键查询运费模板和运费模板明细
+     *
+     * @param  Long organizationId 租户ID
+     * @return 运费模板和运费模板明细
+     */
+    FreightTemplateVO querydefaultTemplate(final Long   organizationId);
+
 }
