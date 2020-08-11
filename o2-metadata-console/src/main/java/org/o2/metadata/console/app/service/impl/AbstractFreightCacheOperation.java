@@ -57,6 +57,8 @@ public abstract class AbstractFreightCacheOperation {
             bo.setFirstPrice(detail.getFirstPrice());
             bo.setNextPieceWeight(detail.getNextPieceWeight());
             bo.setNextPrice(detail.getNextPrice());
+            bo.setTenantId(detail.getTenantId());
+
 
             freightDetailList.add(bo);
         }
@@ -83,6 +85,12 @@ public abstract class AbstractFreightCacheOperation {
         freight.setValuationType(freightTemplate.getValuationType());
         freight.setValuationUom(freightTemplate.getValuationUom());
         freight.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
+        freight.setTemplateCode(freightTemplate.getTemplateCode());
+        freight.setTenantId(freightTemplate.getTenantId());
+        freight.setDafaultFlag(freightTemplate.getDafaultFlag());
+
+
+
 
         return freight;
     }
