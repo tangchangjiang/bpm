@@ -16,11 +16,6 @@ public class FreightDetailBO extends FreightPriceBO {
     private Long templateDetailId;
 
     /**
-     * 快递公司
-     */
-    private String carrierCode;
-
-    /**
      * 目的地
      */
     private String regionCode;
@@ -28,7 +23,7 @@ public class FreightDetailBO extends FreightPriceBO {
     /**
      * 是否默认
      */
-    private Integer isDefault;
+    private Integer defaultFlag;
 
     /**
      * 关联运费模板编码

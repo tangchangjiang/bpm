@@ -33,12 +33,10 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
     public FreightTemplateDetailServiceImpl(FreightTemplateDetailRepository freightTemplateDetailRepository,
                                             FreightCacheService freightCacheService,
-                                            CarrierRepository carrierRepository,
                                             RegionRepository regionRepository,
                                             FreightTemplateRepository freightTemplateRepository) {
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightCacheService = freightCacheService;
-        super.carrierRepository = carrierRepository;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -62,7 +60,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         if (defaultDetail != null) {
             List<FreightTemplateDetail> otherDetailtList = freightTemplateDetailRepository.queryOtherDefaultFreightTemplateDetail(defaultDetail);
             otherDetailtList.forEach(item -> {
-                item.setIsDefault(Integer.valueOf(0));
+                item.setDefaultFlag(Integer.valueOf(0));
             });
             freightTemplateDetailRepository.batchUpdateByPrimaryKey(otherDetailtList);
         }
@@ -123,7 +121,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key = String.valueOf(detail.getCarrierId()) + String.valueOf(detail.getRegionId()) + String.valueOf(detail.getTemplateId());
+            String key = String.valueOf(detail.getRegionId()) + String.valueOf(detail.getTemplateId());
             Assert.isTrue(map.get(key) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
@@ -174,7 +172,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key = String.valueOf(freightTemplateDetail.getCarrierId()) + String.valueOf(freightTemplateDetail.getRegionId()) + String.valueOf(freightTemplateDetail.getTemplateId());
+            String key =  String.valueOf(freightTemplateDetail.getRegionId()) + String.valueOf(freightTemplateDetail.getTemplateId());
             Assert.isTrue(map.get(key) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
@@ -198,7 +196,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         int defaultCount = 0;
         FreightTemplateDetail defaultFreightTemplateDetail = null;
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
-            if (detail.getIsDefault() != null && detail.getIsDefault().intValue() == 1) {
+            if (detail.getDefaultFlag() != null && detail.getDefaultFlag().intValue() == 1) {
                 defaultFreightTemplateDetail = detail;
             }
         }

@@ -62,6 +62,26 @@ public interface BasicDataConstants {
         String LOV_CODE = "O2MD.BUSINESS_TYPE";
     }
 
+
+    /**
+     * 运费模版类型
+     */
+    interface FreightType {
+        /**
+         * 计价方式
+         */
+        String LOV_VALUATION_TYPE = "O2MD.VALUATION_TYPE" ;
+        /**
+         * 计价单位
+         */
+        String LOV_UOM = "O2MD.UOM" ;
+        /**
+         * 运送方式
+         */
+        String LOV_TRANSPORT_TYPE = "O2MD.TRANSPORT_TYPE" ;
+
+    }
+
     /**
      * 承运商类型
      */

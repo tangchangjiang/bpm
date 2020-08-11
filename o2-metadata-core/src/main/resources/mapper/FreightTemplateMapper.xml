@@ -6,11 +6,12 @@
         <result column="template_id" property="templateId" jdbcType="DECIMAL"/>
         <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
-        <result column="is_free" property="isFree" jdbcType="DECIMAL"/>
+        <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
         <result column="valuation_type" property="valuationTypeCode" jdbcType="VARCHAR"/>
         <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
+        <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -22,11 +23,12 @@
         <result column="template_id" property="templateId" jdbcType="DECIMAL"/>
         <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
-        <result column="is_free" property="isFree" jdbcType="DECIMAL"/>
+        <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
         <result column="valuation_type" property="valuationTypeCode" jdbcType="VARCHAR"/>
         <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
+        <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -36,24 +38,27 @@
 
     <select id="listFreightTemplates" resultMap="freightTemplateResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
+
         SELECT oft.template_id,
         oft.template_code,
         oft.template_name,
-        oft.is_free,
+        oft.delivery_free_flag,
         oft.valuation_type,
         hutt.uom_type_name,
         oft.valuation_uom,
         hutl.uom_name,
+        oft.dafault_flag,
         oft.object_version_number,
         oft.creation_date,
         oft.created_by,
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
-        LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1
+        LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1 and hut.tenant_id  = #{tenantId}
         LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id=hutt.uom_type_id AND hutt.lang = #{lang}
-        LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code AND
-        hu.enabled_flag = 1
+        LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code
+                                    AND hu.enabled_flag = 1 AND hu.tenant_id  = #{tenantId}
         LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id=hutl.uom_id AND hutl.lang = #{lang}
         <where>
             <if test="templateId!=null and templateId!=''">
@@ -67,8 +72,8 @@
                 <bind name="templateNameLike" value="'%' + templateName + '%'"/>
                 AND oft.template_name LIKE #{templateNameLike}
             </if>
-            <if test="isFree!=null and isFree!=''">
-                AND oft.is_free = #{isFree}
+            <if test="deliveryFreeFlag!=null and isFree!=''">
+                AND oft.delivery_free_flag = #{deliveryFreeFlag}
             </if>
             <if test="valuationTypeCode!=null and valuationTypeCode!=''">
                 AND oft.valuation_type = #{valuationTypeCode}
@@ -76,31 +81,36 @@
             <if test="valuationUomCode!=null and valuationUomCode!=''">
                 AND oft.valuation_uom = #{valuationUomCode}
             </if>
+            <if test="tenantId!=null ">
+                AND oft.tenant_id = #{tenantId}
+            </if>
         </where>
         ORDER BY oft.template_code ASC
     </select>
 
     <select id="queryFreightTemplateById" resultMap="freightTemplateVOResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
         SELECT oft.template_id,
         oft.template_code,
         oft.template_name,
-        oft.is_free,
+        oft.delivery_free_flag,
         oft.valuation_type,
         hutt.uom_type_name,
         oft.valuation_uom,
         hutl.uom_name,
+        oft.dafault_flag,
         oft.object_version_number,
         oft.creation_date,
         oft.created_by,
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
-        LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1
-        LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id=hutt.uom_type_id AND hutt.lang = #{lang}
-        LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code AND
-        hu.enabled_flag = 1
-        LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id=hutl.uom_id AND hutl.lang = #{lang}
+            LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1 and hut.tenant_id  = #{tenantId}
+            LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id=hutt.uom_type_id AND hutt.lang = #{lang}
+            LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code
+            AND hu.enabled_flag = 1 AND hu.tenant_id  = #{tenantId}
+            LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id=hutl.uom_id AND hutl.lang = #{lang}
         WHERE oft.template_id = #{templateId}
     </select>
 

@@ -96,19 +96,23 @@ public interface MetadataConstants {
 
     interface FreightCache {
         /**
-         * 运费模板redis key(string): o2md:ft:{freightCode}
+         * 运费模板redis key(string): o2md:freight:{freightCode}
          */
-        String FREIGHT_KEY = "o2md:ft:%s";
+        String FREIGHT_KEY = "o2md:freight:%s";
 
         /**
-         * 运费模板明细redis key(hash): o2md:ft:{freightCode}:detail
+         * 运费模板明细redis key(hash): o2md:freight:{freightCode}:detail
          */
-        String FREIGHT_DETAIL_KEY = "o2md:ft:%s:detail";
+        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:detail";
+
+
+
+
 
         /**
-         * 运费价格redis key(string): o2md:ft:{freightCode}:car:{carrierCode}:reg:{regionCode}
+         * 运费价格redis key(string): o2md:freight:{freightCode}:reg:{regionCode}
          */
-        String FREIGHT_PRICE_KEY = "o2md:ft:%s:car:%s:reg:%s";
+        String FREIGHT_PRICE_KEY = "o2md:freight:%s:reg:%s";
 
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));

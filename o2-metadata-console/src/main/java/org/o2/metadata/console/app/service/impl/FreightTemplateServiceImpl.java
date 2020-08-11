@@ -39,13 +39,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
                                       final FreightTemplateDetailService freightTemplateDetailService,
                                       final FreightCacheService freightCacheService,
-                                      final CarrierRepository carrierRepository,
                                       final RegionRepository regionRepository) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
-        super.carrierRepository = carrierRepository;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -203,14 +201,14 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         if (freightTemplate == null) {
             return true;
         }
-        if (freightTemplate.getIsFree() != null && freightTemplate.getIsFree().intValue() == 1) {
+        if (freightTemplate.getDafaultFlag() != null && freightTemplate.getDafaultFlag().intValue() == 1) {
             return true;
         }
 
         // 如果运费模板不包邮，验证有且只有一个默认运费行
         final Sqls sqlcommand = Sqls.custom();
         sqlcommand.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, templateId)
-                .andEqualTo(FreightTemplateDetail.FIELD_IS_DEFAULT, Integer.valueOf(1))
+                .andEqualTo(FreightTemplateDetail.FIELD_DEFAULT_FLAG, Integer.valueOf(1))
                 .andIsNull(FreightTemplateDetail.FIELD_REGION_ID);
 
         final Condition cond = Condition.builder(FreightTemplateDetail.class).andWhere(sqlcommand).build();

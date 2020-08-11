@@ -26,8 +26,6 @@ import java.util.List;
 public abstract class AbstractFreightCacheOperation {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractFreightCacheOperation.class);
 
-    protected CarrierRepository carrierRepository;
-
     protected RegionRepository regionRepository;
 
     protected FreightTemplateRepository freightTemplateRepository;
@@ -44,10 +42,7 @@ public abstract class AbstractFreightCacheOperation {
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
             FreightDetailBO bo = new FreightDetailBO();
 
-            if (detail.getCarrierId() != null) {
-                Carrier carrier = carrierRepository.selectByPrimaryKey(detail.getCarrierId());
-                bo.setCarrierCode(carrier != null ? carrier.getCarrierCode() : null);
-            }
+
             if (detail.getRegionId() != null) {
                 Region region = regionRepository.selectByPrimaryKey(detail.getRegionId());
                 bo.setRegionCode(region != null ? region.getRegionCode() : null);
@@ -56,7 +51,7 @@ public abstract class AbstractFreightCacheOperation {
                 FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(detail.getTemplateId());
                 bo.setTemplateCode(template != null ? template.getTemplateCode() : null);
             }
-            bo.setIsDefault(detail.getIsDefault());
+            bo.setDefaultFlag(detail.getDefaultFlag());
             bo.setTemplateDetailId(detail.getTemplateDetailId());
             bo.setFirstPieceWeight(detail.getFirstPieceWeight());
             bo.setFirstPrice(detail.getFirstPrice());
@@ -87,7 +82,7 @@ public abstract class AbstractFreightCacheOperation {
         freight.setTemplateName(freightTemplate.getTemplateName());
         freight.setValuationTypeCode(freightTemplate.getValuationTypeCode());
         freight.setValuationUomCode(freightTemplate.getValuationUomCode());
-        freight.setIsFree(freightTemplate.getIsFree());
+        freight.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
 
         return freight;
     }

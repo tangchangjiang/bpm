@@ -28,7 +28,7 @@ public class FreightBO {
     /**
      * 是否包邮
      */
-    private Integer isFree;
+    private Integer deliveryFreeFlag;
 
     /**
      * 计价方式

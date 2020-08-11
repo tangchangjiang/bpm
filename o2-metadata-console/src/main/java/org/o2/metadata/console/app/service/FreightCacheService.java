@@ -52,7 +52,7 @@ public interface FreightCacheService {
      * @param regionCode   地区编码
      * @return 运费模板价格行缓存信息
      */
-    FreightPriceBO getFreightPrice(String templateCode, String carrierCode, String regionCode);
+    FreightPriceBO getFreightPrice(String templateCode,  String regionCode);
 
     /**
      * 获取运费模板明细缓存信息

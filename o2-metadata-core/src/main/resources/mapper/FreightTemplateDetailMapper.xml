@@ -3,111 +3,127 @@
 <mapper namespace="org.o2.metadata.core.infra.mapper.FreightTemplateDetailMapper">
     <resultMap id="freightTemplateDetailResultMap" type="org.o2.metadata.core.domain.entity.FreightTemplateDetail">
         <id column="template_detail_id" property="templateDetailId" jdbcType="DECIMAL"/>
-        <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
+        <result column="transport_type_code" property="transportTypeCode" jdbcType="VARCHAR"/>
         <result column="first_piece_weight" property="firstPieceWeight" jdbcType="DECIMAL"/>
         <result column="first_price" property="firstPrice" jdbcType="DECIMAL"/>
         <result column="next_piece_weight" property="nextPieceWeight" jdbcType="DECIMAL"/>
         <result column="next_price" property="nextPrice" jdbcType="DECIMAL"/>
+        <result column="default_flag" property="defaultFlag" jdbcType="DECIMAL"/>
         <result column="template_id" property="templateId" jdbcType="DECIMAL"/>
-        <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
-        <result column="carrier_type_code" property="carrierTypeCode" jdbcType="VARCHAR"/>
-        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
-        <result column="is_default" property="isDefault" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <!-- SQL 要优化 都是一个SQL  -->
 
     <select id="queryDefaultFreightTemplateDetails" resultMap="freightTemplateDetailResultMap">
-        SELECT oftd.template_detail_id,
-             oftd.carrier_id,
-             oc.carrier_name carrier_name,
-             oc.carrier_type_code carrier_type_code,
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
+         SELECT
+             oftd.template_detail_id,
              oftd.region_id,
+             rg.region_name ,
+             oftd.transport_type_code,
              oftd.first_piece_weight,
              oftd.first_price,
              oftd.next_piece_weight,
              oftd.next_price,
+             oftd.default_flag,
              oftd.template_id,
-             oftd.is_default,
              oftd.object_version_number,
              oftd.creation_date,
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
         FROM o2md_freight_template_detail oftd
-             LEFT JOIN o2md_carrier oc ON oftd.carrier_id=oc.carrier_id
-        WHERE oftd.region_id IS NULL
-        AND oftd.template_id= #{templateId}
+			left join  hpfm_region rg on  oftd.region_id = rg.region_id and  rg.tenant_id = #{tenantId}
+			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
+		 WHERE    oftd.default_flag =1 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
     </select>
 
     <select id="queryRegionFreightTemplateDetails" resultMap="freightTemplateDetailResultMap">
-        SELECT oftd.template_detail_id,
-             oftd.carrier_id,
-             oc.carrier_name carrier_name,
-             oc.carrier_type_code carrier_type_code,
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
+           SELECT
+             oftd.template_detail_id,
              oftd.region_id,
-             ore.region_name region_name,
+             rg.region_name ,
+             oftd.transport_type_code,
              oftd.first_piece_weight,
              oftd.first_price,
              oftd.next_piece_weight,
              oftd.next_price,
+             oftd.default_flag,
              oftd.template_id,
-             oftd.is_default,
              oftd.object_version_number,
              oftd.creation_date,
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
         FROM o2md_freight_template_detail oftd
-             LEFT JOIN o2md_carrier oc ON oftd.carrier_id=oc.carrier_id
-             LEFT JOIN o2md_region ore ON oftd.region_id=ore.region_id
-        WHERE oftd.region_id IS NOT NULL
-        AND oftd.template_id= #{templateId}
+	     	left join  hpfm_region rg on  oftd.region_id = rg.region_id and  rg.tenant_id = #{tenantId}
+			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
+		 WHERE oftd.default_flag =0 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
     </select>
 
     <select id="queryFreightTemplateDetailByTemplateId" resultMap="freightTemplateDetailResultMap">
-        SELECT oftd.template_detail_id,
-             oftd.carrier_id,
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
+         SELECT
+             oftd.template_detail_id,
              oftd.region_id,
+             rg.region_name ,
+             oftd.transport_type_code,
              oftd.first_piece_weight,
              oftd.first_price,
              oftd.next_piece_weight,
              oftd.next_price,
+             oftd.default_flag,
              oftd.template_id,
-             oftd.is_default,
              oftd.object_version_number,
              oftd.creation_date,
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
         FROM o2md_freight_template_detail oftd
-        WHERE oftd.template_id= #{templateId}
+			left join  hpfm_region rg on  oftd.region_id = rg.region_id   and  rg.tenant_id = #{tenantId}
+			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
+		 WHERE  oftd.template_id= #{templateId}
     </select>
 
     <select id="queryOtherDefaultFreightTemplateDetail" resultMap="freightTemplateDetailResultMap">
-        SELECT oftd.template_detail_id,
-            oftd.carrier_id,
-            oftd.region_id,
-            oftd.first_piece_weight,
-            oftd.first_price,
-            oftd.next_piece_weight,
-            oftd.next_price,
-            oftd.template_id,
-            oftd.is_default,
-            oftd.object_version_number,
-            oftd.creation_date,
-            oftd.created_by,
-            oftd.last_updated_by,
-            oftd.last_update_date
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
+          SELECT
+             oftd.template_detail_id,
+             oftd.region_id,
+             rg.region_name ,
+             oftd.transport_type_code,
+             oftd.first_piece_weight,
+             oftd.first_price,
+             oftd.next_piece_weight,
+             oftd.next_price,
+             oftd.default_flag,
+             oftd.template_id,
+             oftd.object_version_number,
+             oftd.creation_date,
+             oftd.created_by,
+             oftd.last_updated_by,
+             oftd.last_update_date
         FROM o2md_freight_template_detail oftd
-        WHERE oftd.region_id IS NULL
-                AND oftd.is_default=1
+			left join  hpfm_region rg on  oftd.region_id = rg.region_id and  rg.tenant_id = #{tenantId}
+			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
+		  WHERE   oftd.is_default=1
                 AND oftd.template_id=#{templateId}
                 AND oftd.template_detail_id!=#{templateDetailId}
+                and oftd.tenant_id = #{tenantId}
     </select>
+
+    <!-- SQL 要优化 都是一个SQL  -->
 
 </mapper>

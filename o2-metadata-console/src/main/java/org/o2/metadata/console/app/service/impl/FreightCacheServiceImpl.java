@@ -25,7 +25,6 @@ import java.util.*;
 public class FreightCacheServiceImpl implements FreightCacheService {
     private final static Logger LOG = LoggerFactory.getLogger(FreightCacheServiceImpl.class);
 
-    private final static String DEFAULT_CARRIER = "default";
     private final static String DEFAULT_REGION = "null";
 
     private RedisCacheClient redisCacheClient;
@@ -86,20 +85,20 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     }
 
     @Override
-    public FreightPriceBO getFreightPrice(final String templateCode, final String carrierCode, final String regionCode) {
+    public FreightPriceBO getFreightPrice(final String templateCode,  final String regionCode) {
         // 初始值为默认承运商
-        final String defaultKey = getFreightPriceKey(templateCode, DEFAULT_CARRIER, DEFAULT_REGION);
+        final String defaultKey = getFreightPriceKey(templateCode, DEFAULT_REGION);
         String key = defaultKey;
 
         // 承运商为空、地区不为空时，承运商=默认运费行对应的承运商，地区=传入的地区编码
-        if (StringUtils.isEmpty(carrierCode) && StringUtils.isNotEmpty(regionCode)) {
+        if (StringUtils.isNotEmpty(regionCode)) {
             FreightDetailBO defaultFreightDetail = getDefaultFreightDetail(templateCode);
             if (defaultFreightDetail != null) {
-                LOG.info("templateCode={}, carrierCode={}, regionCode={}", templateCode, defaultFreightDetail.getCarrierCode(), regionCode);
-                key = getFreightPriceKey(templateCode, defaultFreightDetail.getCarrierCode(), regionCode);
+                LOG.info("templateCode={}, carrierCode={}, regionCode={}", templateCode,  regionCode);
+                key = getFreightPriceKey(templateCode, regionCode);
             }
         } else {
-            key = getFreightPriceKey(templateCode, carrierCode, regionCode);
+            key = getFreightPriceKey(templateCode, regionCode);
         }
 
         String jsonStr = this.redisCacheClient.opsForValue().get(key);
@@ -148,7 +147,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
             }
             final FreightDetailBO freightDetail = FastJsonHelper.stringToObject(var, FreightDetailBO.class);
 
-            if (freightDetail.getIsDefault() != null && freightDetail.getIsDefault() == 1) {
+            if (freightDetail.getDefaultFlag() != null && freightDetail.getDefaultFlag() == 1) {
                 return freightDetail;
             }
         }
@@ -180,12 +179,11 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      * 获取运费模板价格行redis缓存key
      *
      * @param freightCode 运费模板编码
-     * @param carrierCode 承运商编码
      * @param regionCode  地区编码
      * @return 运费模板价格行redis缓存key
      */
-    private String getFreightPriceKey(final String freightCode, final String carrierCode, final String regionCode) {
-        return String.format(MetadataConstants.FreightCache.FREIGHT_PRICE_KEY, freightCode, carrierCode, regionCode);
+    private String getFreightPriceKey(final String freightCode, final String regionCode) {
+        return String.format(MetadataConstants.FreightCache.FREIGHT_PRICE_KEY, freightCode, regionCode);
     }
 
     /**
@@ -235,12 +233,12 @@ public class FreightCacheServiceImpl implements FreightCacheService {
             price.setNextPrice(freightDetail.getNextPrice());
 
             final String freightPriceKey = getFreightPriceKey
-                    (freightDetail.getTemplateCode(), freightDetail.getCarrierCode(), freightDetail.getRegionCode());
+                    (freightDetail.getTemplateCode(),freightDetail.getRegionCode());
             final String freightPriceStr = FastJsonHelper.objectToString(price);
             freightPriceMap.put(freightPriceKey, freightPriceStr);
 
-            if (freightDetail.getIsDefault() != null && freightDetail.getIsDefault() == 1) {
-                final String defaultPriceKey = getFreightPriceKey(freightDetail.getTemplateCode(), DEFAULT_CARRIER, DEFAULT_REGION);
+            if (freightDetail.getDefaultFlag() != null && freightDetail.getDefaultFlag() == 1) {
+                final String defaultPriceKey = getFreightPriceKey(freightDetail.getTemplateCode(), DEFAULT_REGION);
                 freightPriceMap.put(defaultPriceKey, freightPriceStr);
             }
         }
