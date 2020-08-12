@@ -96,7 +96,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
             final long tenantId = freightDetailList.get(0).getTenantId();
            // final String freightCodeDefault = freightDetailList.get(0).getDefaultFlag()==1? MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY :"" ;
             final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
-            final List<String> tmpDetailIdList = getTemplateDetailId(freightDetailList);
+            final List<String> tmpDetailIdList = getTemplateDetailRegionCodeList(freightDetailList);
 
             executeDeleteFreightDetailScript(freightDetailKey, tmpDetailIdList);
         }
@@ -122,7 +122,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private Map<String, String> convertToFreightDetailMap(final List<FreightDetailBO> freightDetailList) {
         final Map<String, String> freightDetailMap = new HashMap<>(freightDetailList.size());
         for (FreightDetailBO freightDetail : freightDetailList) {
-            if (freightDetail.getDefaultFlag()==1){
+            if (freightDetail.getDefaultFlag()!=null&&freightDetail.getDefaultFlag()==1){
                 freightDetailMap.put
                         (MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY, FastJsonHelper.objectToString(freightDetail));
             }else{
@@ -141,12 +141,12 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      * @param freightDetailList 运费模板明细列表
      * @return 运费模板明细地区列表
      */
-    private List<String> getTemplateDetailId(final List<FreightDetailBO> freightDetailList) {
-        final List<String> tmpDetailIdList = new ArrayList<>();
+    private List<String> getTemplateDetailRegionCodeList(final List<FreightDetailBO> freightDetailList) {
+        final List<String> tmpDetailIdRegionCodeList = new ArrayList<>();
         for (FreightDetailBO freightDetail : freightDetailList) {
-            tmpDetailIdList.add(freightDetail.getDefaultFlag()==1?MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY:freightDetail.getRegionCode());
+            tmpDetailIdRegionCodeList.add(freightDetail.getDefaultFlag()==1?MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY:freightDetail.getRegionCode());
         }
-        return tmpDetailIdList;
+        return tmpDetailIdRegionCodeList;
     }
 
 
@@ -170,13 +170,13 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      * 清除运费模板明细redis缓存
      *
      * @param freightDetailKey 运费模板明细redis key
-     * @param tmpDetailIdList  运费模板明细ID列表
+     * @param templateRegionCodeList  运费模板明细ID列表
      */
     private void executeDeleteFreightDetailScript(final String freightDetailKey,
-                                                  final List<String> tmpDetailIdList) {
+                                                  final List<String> templateRegionCodeList) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(MetadataConstants.FreightCache.DELETE_FREIGHT_DETAIL_CACHE_LUA);
-        LOG.info("tmpDetailIdList json = {}", FastJsonHelper.objectToString(tmpDetailIdList));
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(tmpDetailIdList));
+        LOG.info("templateRegionCodeList json = {}", FastJsonHelper.objectToString(templateRegionCodeList));
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(templateRegionCodeList));
     }
 }

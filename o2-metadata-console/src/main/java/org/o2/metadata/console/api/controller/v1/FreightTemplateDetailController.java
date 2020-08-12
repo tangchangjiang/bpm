@@ -67,6 +67,7 @@ public class FreightTemplateDetailController extends BaseController {
         final FreightTemplateDetail freightTemplateDetail = freightTemplateDetailRepository.selectByPrimaryKey(templateDetailId);
         return Results.success(freightTemplateDetail);
     }
+/*
 
     @ApiOperation(value = "批量新增或修改默认运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -101,12 +102,13 @@ public class FreightTemplateDetailController extends BaseController {
         final List<FreightTemplateDetail> updateResult = freightTemplateDetailService.batchUpdate(freightTemplateDetailList, true);
         return Results.success(updateResult);
     }
+*/
 
     @ApiOperation(value = "批量删除运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-        SecurityTokenHelper.validToken(freightTemplateDetailList);
+       // SecurityTokenHelper.validToken(freightTemplateDetailList);
         freightTemplateDetailService.batchDelete(freightTemplateDetailList);
         return Results.success();
     }

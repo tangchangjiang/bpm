@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 
+import io.choerodon.core.oauth.DetailsHelper;
 import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
@@ -38,6 +39,7 @@ public abstract class AbstractFreightCacheOperation {
      */
     protected List<FreightDetailBO> convertToFreightDetail(List<FreightTemplateDetail> freightTemplateDetailList) {
         List<FreightDetailBO> freightDetailList = new ArrayList<>();
+        Long tenantId = DetailsHelper.getUserDetails().getTenantId();
 
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
             FreightDetailBO bo = new FreightDetailBO();
@@ -57,7 +59,7 @@ public abstract class AbstractFreightCacheOperation {
             bo.setFirstPrice(detail.getFirstPrice());
             bo.setNextPieceWeight(detail.getNextPieceWeight());
             bo.setNextPrice(detail.getNextPrice());
-            bo.setTenantId(detail.getTenantId());
+            bo.setTenantId(detail.getTenantId() !=null?detail.getTenantId() :tenantId);
 
 
             freightDetailList.add(bo);
@@ -76,6 +78,7 @@ public abstract class AbstractFreightCacheOperation {
      */
     protected FreightBO convertToFreight(FreightTemplate freightTemplate) {
         FreightBO freight = new FreightBO();
+        Long tenantId = DetailsHelper.getUserDetails().getTenantId();
         freight.setTemplateId(freightTemplate.getTemplateId());
         if (freightTemplate.getTemplateId() != null) {
             FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(freightTemplate.getTemplateId());
@@ -86,7 +89,7 @@ public abstract class AbstractFreightCacheOperation {
         freight.setValuationUom(freightTemplate.getValuationUom());
         freight.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
         freight.setTemplateCode(freightTemplate.getTemplateCode());
-        freight.setTenantId(freightTemplate.getTenantId());
+        freight.setTenantId(freightTemplate.getTenantId() !=null ? freightTemplate.getTenantId() :tenantId );
         freight.setDafaultFlag(freightTemplate.getDafaultFlag());
 
 

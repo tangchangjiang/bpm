@@ -6,20 +6,19 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
+import org.o2.metadata.core.domain.entity.FreightTemplate;
 import org.o2.metadata.core.domain.entity.FreightTemplateDetail;
 import org.o2.metadata.core.domain.repository.CarrierRepository;
 import org.o2.metadata.core.domain.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
+import org.o2.metadata.core.domain.vo.FreightTemplateVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 运费模板明细默认实现
@@ -93,11 +92,16 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     @Override
-    public void batchDelete(List<FreightTemplateDetail> freightTemplateDetailList) {
-        freightTemplateDetailRepository.batchDeleteByPrimaryKey(freightTemplateDetailList);
+    public void batchDelete(List<FreightTemplateDetail> regionFreightDetailDisplayLis) {
 
+        //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
+        FreightTemplateVO freightTemplateVO =  new FreightTemplateVO();
+        final List<FreightTemplateDetail> regionDetailListInput  =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
+        freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
+
+        freightTemplateDetailRepository.batchDeleteByPrimaryKey(regionDetailListInput);
         // 删除缓存
-        deleteFreightDetailCache(freightTemplateDetailList);
+        deleteFreightDetailCache(regionDetailListInput);
     }
 
     /**

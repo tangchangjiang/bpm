@@ -1,6 +1,7 @@
 package org.o2.metadata.core.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -59,6 +60,7 @@ public class FreightTemplateVO extends FreightTemplate {
 
         List<FreightTemplateDetail> regionDetailList = new ArrayList<>();
         if (CollectionUtils.isEmpty(regionDetailDisplayList)){ return  regionDetailList; }
+        Long tenantId = DetailsHelper.getUserDetails().getTenantId();
 
         regionDetailDisplayList.forEach(old ->{
              for (int i = 0; i  < old.getRegionIdArr().size() ; i++) {
@@ -70,12 +72,15 @@ public class FreightTemplateVO extends FreightTemplate {
                  detail.setTransportTypeCode(old.getTransportTypeCode());
                  detail.setTransportTypeMeaning(old.getTransportTypeMeaning());
                  detail.setTemplateId(old.getTemplateId());
-                 detail.setTenantId(old.getTenantId());
+                 detail.setDefaultFlag(old.getDefaultFlag());
+                 detail.setTenantId(old.getTenantId()==null?tenantId:old.getTenantId());
 
-                 detail.setObjectVersionNumber(old.getObjectVersionNumberArr().get(i));
                  detail.setRegionId(old.getRegionIdArr().get(i));
                  detail.setRegionName(old.getRegionNameArr().get(i));
-                 detail.setTemplateDetailId(old.getTemplateDetailIdArr().get(i));
+                 List<Long> TemplateDetailIdArr =  old.getTemplateDetailIdArr();
+                 detail.setTemplateDetailId( i<(TemplateDetailIdArr.size())? TemplateDetailIdArr.get(i):null);
+                 List<Long> objectVersionNumberArr =  old.getObjectVersionNumberArr();
+                 detail.setObjectVersionNumber(i<objectVersionNumberArr.size()?objectVersionNumberArr.get(i):null);
                  regionDetailList.add(detail);
             }
         });
@@ -96,6 +101,7 @@ public class FreightTemplateVO extends FreightTemplate {
         //转化成前端需要的显示格式~
         Map<String, List<FreightTemplateDetail>> complexMap = regionDetailTemplateList.stream().collect(Collectors.groupingBy(detail -> fetchGroupKey(detail)));
 
+        Long tenantId = DetailsHelper.getUserDetails().getTenantId();
         complexMap.forEach((key,value)->{
             FreightTemplateDetail fist =   value.get(0);
             FreightTemplateDetail  detail =  new FreightTemplateDetail();
@@ -106,7 +112,8 @@ public class FreightTemplateVO extends FreightTemplate {
             detail.setTransportTypeCode(fist.getTransportTypeCode());
             detail.setTransportTypeMeaning(fist.getTransportTypeMeaning());
             detail.setTemplateId(fist.getTemplateId());
-            detail.setTenantId(fist.getTenantId());
+            detail.setDefaultFlag(fist.getDefaultFlag());
+            detail.setTenantId(fist.getTenantId()==null ? tenantId:fist.getTenantId());
 
             detail.setRegionIdArr(value.stream().map(e -> e.getRegionId()).collect(Collectors.toList()));
             detail.setRegionNameArr(value.stream().map(e -> e.getRegionName()).collect(Collectors.toList()));

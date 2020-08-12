@@ -105,7 +105,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         final List<FreightTemplate> list = Arrays.asList(freightTemplateVO);
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateVO.getDefaultFreightTemplateDetails();
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
-        final List<FreightTemplateDetail> regionDetailListInput  =     freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
+        final List<FreightTemplateDetail> regionDetailListInput  =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
         freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
         final List<FreightTemplateDetail> regionDetailList = freightTemplateVO.getRegionFreightTemplateDetails();
 
@@ -114,15 +114,22 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         final FreightTemplate result = batchMerge(list).get(0);
         final FreightTemplateVO resultVO = new FreightTemplateVO(result);
 
+        // 先删除 再插入
+        final List<FreightTemplateDetail> oldList = freightTemplateDetailRepository.selectByCondition(Condition.builder(FreightTemplateDetail.class)
+                .andWhere(Sqls.custom().andEqualTo(FreightTemplateDetail.FIELD_TENANT_ID,   result.getTenantId())
+                        .andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID,result.getTemplateId())
+                        ).build());
+        freightTemplateDetailRepository.batchDeleteByPrimaryKey(oldList);
+        deleteFreightCache(resultVO);
+
         if (CollectionUtils.isNotEmpty(defaultDetailList)) {
-            final List<FreightTemplateDetail> savedDefaultDetailList = freightTemplateDetailService.defaultBatchMerge(defaultDetailList);
+            final List<FreightTemplateDetail> savedDefaultDetailList = setTemplateIdAndSave(defaultDetailList, result.getTemplateId(), false);
             resultVO.setDefaultFreightTemplateDetails(savedDefaultDetailList);
         }
         if (CollectionUtils.isNotEmpty(regionDetailList)) {
-            final List<FreightTemplateDetail> savedRegionDetailList = freightTemplateDetailService.regionBatchMerge(regionDetailList);
+            final List<FreightTemplateDetail> savedRegionDetailList = setTemplateIdAndSave(regionDetailList, result.getTemplateId(), true);
             resultVO.setRegionFreightTemplateDetails(savedRegionDetailList);
         }
-
         checkUniqueDefault(freightTemplateVO);
 
         // 更新redis缓存
@@ -205,6 +212,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public boolean uniqueDefaultValidate(final Long templateId) {
+
         final FreightTemplate freightTemplate = freightTemplateRepository.selectByPrimaryKey(templateId);
         // freightTemplate为空或包邮时，通过验证
         if (freightTemplate == null) {
@@ -276,6 +284,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      */
     private List<FreightTemplateDetail> setTemplateIdAndSave(final List<FreightTemplateDetail> freightTemplateDetailList, final Long templateId, final boolean isRegion) {
         for (final FreightTemplateDetail detail : freightTemplateDetailList) {
+            if (detail.getTemplateDetailId()!=null){detail.setTemplateDetailId(null);}
             detail.setTemplateId(templateId);
         }
         return freightTemplateDetailService.batchInsert(freightTemplateDetailList, isRegion);

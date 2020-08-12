@@ -13,6 +13,7 @@
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -31,6 +32,7 @@
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -51,6 +53,7 @@
         oft.valuation_uom,
         hutl.uom_name,
         oft.dafault_flag,
+        oft.tenant_id,
         oft.object_version_number,
         oft.creation_date,
         oft.created_by,
@@ -106,6 +109,7 @@
         oft.valuation_uom,
         hutl.uom_name,
         oft.dafault_flag,
+        oft.tenant_id,
         oft.object_version_number,
         oft.creation_date,
         oft.created_by,

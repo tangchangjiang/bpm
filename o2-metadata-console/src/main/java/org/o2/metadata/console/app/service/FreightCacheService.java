@@ -44,38 +44,4 @@ public interface FreightCacheService {
      */
     void deleteFreightDetails(List<FreightDetailBO> freightDetailList);
 
-    /**
-     * 获取运费模板价格行缓存信息
-     *
-     * @param templateCode 运费模板编码
-     * @param carrierCode  承运商编码
-     * @param regionCode   地区编码
-     * @return 运费模板价格行缓存信息
-     */
-    //FreightPriceBO getFreightPrice(String templateCode,  String regionCode);
-
-    /**
-     * 获取运费模板明细缓存信息
-     *
-     * @param templateCode 运费模板编码
-     * @param detailId  运费模板明细ID
-     * @return  运费模板明细缓存信息
-     */
-   // FreightDetailBO getFreightDetail(String templateCode, Long detailId);
-
-    /**
-     * 获取运费模板缓存信息(不包含运费模板明细)
-     *
-     * @param templateCode 运费模板编码
-     * @return 运费模板缓存信息
-     */
-  //  FreightBO getFreight(String templateCode);
-
-    /**
-     * 获取默认的运费模板明细缓存信息
-     *
-     * @param templateCode 运费模板编码
-     * @return 默认的运费模板明细缓存信息
-     */
-   // FreightDetailBO getDefaultFreightDetail(String templateCode);
 }

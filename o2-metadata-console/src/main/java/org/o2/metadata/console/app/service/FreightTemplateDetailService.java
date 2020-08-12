@@ -35,6 +35,7 @@ public interface FreightTemplateDetailService {
      * @param freightTemplateDetailList 创建或更新的默认运费模板明细列表
      * @return 操作成功的默认运费模板明细列表
      */
+    @Deprecated
     List<FreightTemplateDetail> defaultBatchMerge(final List<FreightTemplateDetail> freightTemplateDetailList);
 
     /**
@@ -43,6 +44,7 @@ public interface FreightTemplateDetailService {
      * @param freightTemplateDetailList 创建或更新的指定地区运费模板明细列表
      * @return 操作成功的指定地区运费模板明细列表
      */
+    @Deprecated
     List<FreightTemplateDetail> regionBatchMerge(final List<FreightTemplateDetail> freightTemplateDetailList);
 
     /**
