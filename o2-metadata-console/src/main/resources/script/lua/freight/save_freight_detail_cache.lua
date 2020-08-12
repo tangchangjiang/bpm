@@ -12,18 +12,19 @@ for tmpId,tmpJson in pairs(freightDetailMap) do
     then
         local oldData = cjson.decode(oldJson);
         local regionCode = (oldData["defaultFlag"] == '1') and oldData["regionCode"]  or 'DEFAULT';
-        local oldPriceKey = 'o2om:freight:'..oldData["tenantId"]..':'..oldData["templateCode"]..':'..regionCode;
+        local oldPriceKey = 'o2md:freight:'..oldData["tenantId"]..':'..oldData["templateCode"]..':'..regionCode;
         redis.call('del', oldPriceKey);
     end
     redis.call('hset', freightInforKey, tmpId, tmpJson);
 end
 
-local freightHeadMap ;
-if (ARGV[2] ==nil or ARGV[2] =='')
-    then
-    freightHeadMap = cjson.decode(ARGV[2]);
 
-    for headKey,headJson in pairs(freightHeadMap) do
-         redis.call('hset', freightInforKey, headKey, headJson);
-    end
-end
+--- local freightHeadMap ;
+--- if (ARGV.length>1 and( ARGV[2] ==nil or ARGV[2] ==''))
+---    then
+---    freightHeadMap = cjson.decode(ARGV[2]);
+
+---   for headKey,headJson in pairs(freightHeadMap) do
+---        redis.call('hset', freightInforKey, headKey, headJson);
+---   end
+--- end

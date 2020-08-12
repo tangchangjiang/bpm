@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 运费模板明细
@@ -87,6 +88,20 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "运送方式含义")
     @Transient
     private String transportTypeMeaning;
+
+
+    @ApiModelProperty("目的地描述集合")
+    @Transient
+    private List<String> regionNameArr;
+    @ApiModelProperty(value = "目的ID集合")
+    @Transient
+    private List<Long>  regionIdArr;
+    @ApiModelProperty(value = "表ID")
+    @Transient
+    private List<Long>  templateDetailIdArr;
+    @Transient
+    @ApiModelProperty(value = "版本报名集合")
+    private List<Long>  objectVersionNumberArr;
 
     //
     // 业务方法(按public protected private顺序排列)
