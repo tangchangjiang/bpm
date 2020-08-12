@@ -8,20 +8,21 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.ibatis.annotations.Param;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
+import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.util.Assert;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * 运费模板

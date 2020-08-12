@@ -8,7 +8,7 @@
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
         <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
         <result column="valuation_type" property="valuationType" jdbcType="VARCHAR"/>
-        <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
+        <result column="valuation_uom" property="valuationUom" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
@@ -26,7 +26,7 @@
         <result column="template_name" property="templateName" jdbcType="VARCHAR"/>
         <result column="delivery_free_flag" property="deliveryFreeFlag" jdbcType="DECIMAL"/>
         <result column="valuation_type" property="valuationType" jdbcType="VARCHAR"/>
-        <result column="valuation_uom" property="valuationUomCode" jdbcType="VARCHAR"/>
+        <result column="valuation_uom" property="valuationUom" jdbcType="VARCHAR"/>
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
@@ -74,7 +74,7 @@
                 <bind name="templateNameLike" value="'%' + templateName + '%'"/>
                 AND oft.template_name LIKE #{templateNameLike}
             </if>
-            <if test="deliveryFreeFlag!=null and isFree!=''">
+            <if test="deliveryFreeFlag!=null and deliveryFreeFlag!=''">
                 AND oft.delivery_free_flag = #{deliveryFreeFlag}
             </if>
             <if test="valuationType!=null and valuationType!=''">
@@ -123,7 +123,7 @@
     <select id="freightTemplateRelateProCount" resultType="int">
         SELECT COUNT(1)
         FROM o2pcm_platform_product opp
-        WHERE opp.shelf_status = 'ON'
-              AND opp.shipping_template_id = #{templateId}
+        WHERE opp.shelf_status_code = 'ON'
+              AND opp.template_id = #{templateId}
     </select>
 </mapper>

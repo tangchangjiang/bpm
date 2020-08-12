@@ -15,7 +15,6 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.core.domain.entity.Carrier;
 import org.o2.metadata.core.domain.entity.FreightTemplate;
 import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.domain.vo.FreightTemplateVO;
@@ -47,7 +46,7 @@ public class FreightTemplateController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
-        final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+        final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
         return Results.success(list);
     }
