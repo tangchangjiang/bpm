@@ -56,15 +56,25 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         freightTemplateVO.setDefaultFreightTemplateDetails(defaultDetailList);
         final List<FreightTemplateDetail> regionDetailList = freightTemplateDetailRepository.queryRegionFreightTemplateDetail(templateId);
         freightTemplateVO.setRegionFreightTemplateDetails(regionDetailList);
+        final List<FreightTemplateDetail> regionDetailDisplayList  =freightTemplateVO.exchangeRegionDetailTemplateList2Displayist(freightTemplateVO.getRegionFreightTemplateDetails());
+        freightTemplateVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
 
         return freightTemplateVO;
     }
 
-    @Override
+    public String fetchGroupKey(final FreightTemplateDetail detail) {
+        return detail.getFirstPieceWeight()+""+detail.getFirstPrice()+""+detail.getNextPieceWeight()+""+detail.getNextPrice()+""+detail.getTransportTypeCode();
+    }
+
+
+        @Override
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateVO createTemplateAndDetails(final FreightTemplateVO freightTemplateVO) {
         final List<FreightTemplate> list = Arrays.asList(freightTemplateVO);
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateVO.getDefaultFreightTemplateDetails();
+        //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
+        final List<FreightTemplateDetail> regionDetailListInput =     freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
+        freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
         final List<FreightTemplateDetail> regionDetailList = freightTemplateVO.getRegionFreightTemplateDetails();
 
         checkData(list, false);
@@ -94,6 +104,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     public FreightTemplateVO updateTemplateAndDetails(final FreightTemplateVO freightTemplateVO) {
         final List<FreightTemplate> list = Arrays.asList(freightTemplateVO);
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateVO.getDefaultFreightTemplateDetails();
+        //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
+        final List<FreightTemplateDetail> regionDetailListInput  =     freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
+        freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
         final List<FreightTemplateDetail> regionDetailList = freightTemplateVO.getRegionFreightTemplateDetails();
 
         checkData(list, true);
