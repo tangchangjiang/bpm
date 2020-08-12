@@ -2,7 +2,9 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.copier.PropertiesCopier;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
@@ -70,7 +72,18 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
                 list = new ArrayList<>();
                 regionMap.put(key, list);
             }
-            list.add(new RegionDTO(regionVO.getRegionId(), regionVO.getRegionCode(), regionVO.getRegionName()));
+            List<RegionVO> childrenVO = regionRepository.listChildren(countryIdOrCode, regionVO.getRegionId(), enabledFlag, tenantId);
+            List<RegionDTO> childrenDTO = null;
+            if (CollectionUtils.isNotEmpty(childrenVO)) {
+                childrenDTO = childrenVO.stream().map(m -> {
+                    RegionDTO regionDTO = new RegionDTO();
+                    regionDTO.setRegionId(m.getRegionId());
+                    regionDTO.setRegionCode(m.getRegionCode());
+                    regionDTO.setRegionName(m.getRegionName());
+                    return regionDTO;
+                }).collect(Collectors.toList());
+            }
+            list.add(new RegionDTO(regionVO.getRegionId(), regionVO.getRegionCode(), regionVO.getRegionName(), childrenDTO));
         }
         final List<AreaRegionDTO> areaRegionList = new ArrayList<>(regionMap.size());
         for (final String areaCode : regionMap.keySet()) {
