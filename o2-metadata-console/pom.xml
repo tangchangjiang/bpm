@@ -64,11 +64,6 @@
             <artifactId>hzero-boot-scheduler</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-        </dependency>
-
         <!-- other -->
         <dependency>
             <groupId>org.projectlombok</groupId>
