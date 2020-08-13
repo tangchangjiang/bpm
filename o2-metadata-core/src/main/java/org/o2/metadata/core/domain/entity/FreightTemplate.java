@@ -62,7 +62,6 @@ public class FreightTemplate extends AuditDomain {
             return freightTemplateRepository.selectCountByCondition(
                     Condition.builder(FreightTemplate.class).andWhere(sqls).build()) > 0;
         }
-       // final List<FreightTemplate> list = freightTemplateRepository.select(FIELD_TEMPLATE_CODE, this.templateCode);
 
         final Sqls sqls2 = Sqls.custom();
         sqls2.andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, this.getTemplateCode());
@@ -75,6 +74,7 @@ public class FreightTemplate extends AuditDomain {
     public void validate() {
         Assert.notNull(this.templateCode, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_CODE_IS_NULL);
         Assert.notNull(this.templateName, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_NAME_IS_NULL);
+
     }
 
     //

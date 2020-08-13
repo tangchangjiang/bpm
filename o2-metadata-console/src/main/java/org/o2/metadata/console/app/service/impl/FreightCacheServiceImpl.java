@@ -69,12 +69,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
             final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
-
             final Map<String, String> freightDetailMap = convertToFreightDetailMap(freightDetailList);
-
-            //运费模板头信息
-         //  final Map<String, String> freightHeadeMap = new HashMap<>();
-        //   freightHeadeMap.put(MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY, FastJsonHelper.objectToString(freight));
 
             executeSaveFreightInforScript(freightDetailKey, freightDetailMap);
         }
@@ -94,7 +89,6 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         if (freightDetailList != null && freightDetailList.size() > 0) {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
-           // final String freightCodeDefault = freightDetailList.get(0).getDefaultFlag()==1? MetadataConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY :"" ;
             final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
             final List<String> tmpDetailIdList = getTemplateDetailRegionCodeList(freightDetailList);
 

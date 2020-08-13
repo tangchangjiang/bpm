@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 
 import io.choerodon.core.oauth.DetailsHelper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
@@ -40,6 +41,7 @@ public abstract class AbstractFreightCacheOperation {
     protected List<FreightDetailBO> convertToFreightDetail(List<FreightTemplateDetail> freightTemplateDetailList) {
         List<FreightDetailBO> freightDetailList = new ArrayList<>();
         Long tenantId = DetailsHelper.getUserDetails().getTenantId();
+        if (CollectionUtils.isEmpty(freightTemplateDetailList)){return freightDetailList;}
 
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
             FreightDetailBO bo = new FreightDetailBO();
@@ -91,8 +93,6 @@ public abstract class AbstractFreightCacheOperation {
         freight.setTemplateCode(freightTemplate.getTemplateCode());
         freight.setTenantId(freightTemplate.getTenantId() !=null ? freightTemplate.getTenantId() :tenantId );
         freight.setDafaultFlag(freightTemplate.getDafaultFlag());
-
-
 
 
         return freight;
