@@ -190,7 +190,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             final FreightTemplate freightTemplate = freightTemplateList.get(i);
             freightTemplate.validate();
             // 数据库查重
-            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), "数据库存在相同的运费模板");
+            if (freightTemplate.getTemplateId()!=null){
+                Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), "数据库存在相同的运费模板");
+            }
             // list查重
             Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, "提交数据中存在相同的运费模板");
             //默认启用;默认不是默认模板
@@ -250,8 +252,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         // 如果运费模板不包邮，验证有且只有一个默认运费行
         final Sqls sqlcommand = Sqls.custom();
         sqlcommand.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, templateId)
-                .andEqualTo(FreightTemplateDetail.FIELD_DEFAULT_FLAG, Integer.valueOf(1))
-                .andIsNull(FreightTemplateDetail.FIELD_REGION_ID);
+                .andEqualTo(FreightTemplateDetail.FIELD_DEFAULT_FLAG, Integer.valueOf(1));
 
         final Condition cond = Condition.builder(FreightTemplateDetail.class).andWhere(sqlcommand).build();
 
@@ -311,8 +312,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @return
      */
     private List<FreightTemplateDetail> setTemplateIdAndSave(final List<FreightTemplateDetail> freightTemplateDetailList, final Long templateId, final boolean isRegion) {
+        long tenantId =DetailsHelper.getUserDetails().getTenantId();
         for (final FreightTemplateDetail detail : freightTemplateDetailList) {
             if (detail.getTemplateDetailId()!=null){detail.setTemplateDetailId(null);}
+            detail.setTenantId(detail.getTenantId() ==null?tenantId:detail.getTenantId());
             detail.setTemplateId(templateId);
         }
         return freightTemplateDetailService.batchInsert(freightTemplateDetailList, isRegion);

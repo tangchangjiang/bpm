@@ -133,7 +133,6 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             Assert.isTrue(!detail.exist(freightTemplateDetailRepository, isRegion), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
 
             if (detail.getTemplateDetailId() != null) {
-                SecurityTokenHelper.validToken(detail);
                 updateList.add(detail);
             } else {
                 insertList.add(detail);
@@ -176,7 +175,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key =  String.valueOf(freightTemplateDetail.getRegionId()) + String.valueOf(freightTemplateDetail.getTemplateId());
+            String key =  String.valueOf(freightTemplateDetail.getRegionId()+"") + String.valueOf(freightTemplateDetail.getTemplateId());
             Assert.isTrue(map.get(key) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 

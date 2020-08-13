@@ -126,13 +126,10 @@ public class FreightTemplateDetail extends AuditDomain {
     }
 
     public boolean exist(final FreightTemplateDetailRepository freightTemplateDetailRepository, final boolean isRegion) {
+        if (!isRegion) { return false;}
         final Sqls sqls = Sqls.custom();
         sqls.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, this.getTemplateId());
-        sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_ID, this.getRegionId());
-        if (isRegion) {
-        } else {
-            sqls.andIsNull(FreightTemplateDetail.FIELD_REGION_ID);
-        }
+            sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_ID, this.getRegionId());
 
         // 更新操作时，验证更新后的数据不与数据库中其他行重复
         if (this.getTemplateDetailId() != null) {
@@ -140,7 +137,9 @@ public class FreightTemplateDetail extends AuditDomain {
         }
 
         return freightTemplateDetailRepository.selectCountByCondition(
-                Condition.builder(FreightTemplateDetail.class).andWhere(sqls).build()) > 0;
+                    Condition.builder(FreightTemplateDetail.class).andWhere(sqls).build()) > 0;
+
+
     }
 
 
