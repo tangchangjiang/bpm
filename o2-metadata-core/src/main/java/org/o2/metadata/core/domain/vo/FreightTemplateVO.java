@@ -29,6 +29,8 @@ public class FreightTemplateVO extends FreightTemplate {
 
     public static final String FIELD_DEFAULT_FREIGHT_TEMPLATE_DETAILS = "defaultFreightTemplateDetails";
     public static final String FIELD_REGION_FREIGHT_TEMPLATE_DETAILS = "regionFreightTemplateDetails";
+    public static final String FIELD_REGION_FREIGHT_DETAIL_DISPLAY_LIST = "regionFreightDetailDisplayList";
+
 
     @ApiModelProperty(value = "默认运费模板明细")
     @Transient
@@ -76,11 +78,18 @@ public class FreightTemplateVO extends FreightTemplate {
                  detail.setTenantId(old.getTenantId()==null?tenantId:old.getTenantId());
 
                  detail.setRegionId(old.getRegionIdArr().get(i));
-                 detail.setRegionName(old.getRegionNameArr().get(i));
+                 List<String> regionNameArr =  old.getRegionNameArr();
+                 if (CollectionUtils.isNotEmpty(regionNameArr)){
+                     detail.setRegionName( i<regionNameArr.size()?regionNameArr.get(i):null );
+                 }
                  List<Long> TemplateDetailIdArr =  old.getTemplateDetailIdArr();
-                 detail.setTemplateDetailId( i<(TemplateDetailIdArr.size())? TemplateDetailIdArr.get(i):null);
+                 if (CollectionUtils.isNotEmpty(TemplateDetailIdArr)){
+                     detail.setTemplateDetailId( i<(TemplateDetailIdArr.size())? TemplateDetailIdArr.get(i):null);
+                 }
                  List<Long> objectVersionNumberArr =  old.getObjectVersionNumberArr();
-                 detail.setObjectVersionNumber(i<objectVersionNumberArr.size()?objectVersionNumberArr.get(i):null);
+                 if (CollectionUtils.isNotEmpty(objectVersionNumberArr)){
+                     detail.setObjectVersionNumber(i<objectVersionNumberArr.size()?objectVersionNumberArr.get(i):null);
+                 }
                  regionDetailList.add(detail);
             }
         });

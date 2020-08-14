@@ -74,7 +74,7 @@ public interface BasicDataConstants {
         /**
          * 计价单位
          */
-        String LOV_UOM = "O2MD.UOM" ;
+        String LOV_VALUATION_UOM = "O2MD.VALUATION_UOM" ;
         /**
          * 运送方式
          */

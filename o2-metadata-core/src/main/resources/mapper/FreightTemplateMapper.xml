@@ -49,9 +49,7 @@
         oft.template_name,
         oft.delivery_free_flag,
         oft.valuation_type,
-        hutt.uom_type_name,
         oft.valuation_uom,
-        hutl.uom_name,
         oft.dafault_flag,
         oft.tenant_id,
         oft.object_version_number,
@@ -60,11 +58,6 @@
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
-        LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1 and hut.tenant_id  = #{tenantId}
-        LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id=hutt.uom_type_id AND hutt.lang = #{lang}
-        LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code
-                                    AND hu.enabled_flag = 1 AND hu.tenant_id  = #{tenantId}
-        LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id=hutl.uom_id AND hutl.lang = #{lang}
         <where>
             <if test="templateId!=null and templateId!=''">
                 AND oft.template_id LIKE #{templateId}
@@ -105,9 +98,7 @@
         oft.template_name,
         oft.delivery_free_flag,
         oft.valuation_type,
-        hutt.uom_type_name,
         oft.valuation_uom,
-        hutl.uom_name,
         oft.dafault_flag,
         oft.tenant_id,
         oft.object_version_number,
@@ -116,11 +107,6 @@
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
-            LEFT JOIN hpfm_uom_type hut ON oft.valuation_type=hut.uom_type_code AND hut.enabled_flag = 1 and hut.tenant_id  = #{tenantId}
-            LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id=hutt.uom_type_id AND hutt.lang = #{lang}
-            LEFT JOIN hpfm_uom hu ON oft.valuation_uom=hu.uom_code AND oft.valuation_type = hu.uom_type_code
-            AND hu.enabled_flag = 1 AND hu.tenant_id  = #{tenantId}
-            LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id=hutl.uom_id AND hutl.lang = #{lang}
         WHERE oft.template_id = #{templateId}
     </select>
 

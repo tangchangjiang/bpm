@@ -60,5 +60,6 @@ public class Country extends AuditDomain {
     private Integer enabledFlag;
 
     @ApiModelProperty(value = "租户ID")
+    @MultiLanguageField
     private Long tenantId;
 }
