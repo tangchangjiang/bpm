@@ -12,7 +12,7 @@
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
-        <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
@@ -31,7 +31,7 @@
         <result column="uom_type_name" property="valuationTypeMeaning" jdbcType="VARCHAR"/>
         <result column="uom_name" property="valuationUomMeaning" jdbcType="VARCHAR"/>
         <result column="dafault_flag" property="dafaultFlag" jdbcType="DECIMAL"/>
-        <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
@@ -52,6 +52,7 @@
         oft.valuation_uom,
         oft.dafault_flag,
         oft.tenant_id,
+        oft.active_flag,
         oft.object_version_number,
         oft.creation_date,
         oft.created_by,
@@ -82,8 +83,8 @@
             <if test="tenantId!=null ">
                 AND oft.tenant_id = #{tenantId}
             </if>
-            <if test="enabledFlag!=null">
-                AND oft.enabled_flag = #{enabledFlag}
+            <if test="activeFlag!=null">
+                AND oft.ACTIVE_FLAG = #{activeFlag}
             </if>
 
         </where>

@@ -27,6 +27,7 @@ public interface BasicDataConstants {
         String BASIC_DATA_FREIGHT_ID_IS_NULL = "error.basic_data.freight_template.id.not_null";
         String BASIC_DATA_FREIGHT_CODE_IS_NULL = "error.basic_data.freight_template.code.not_null";
         String BASIC_DATA_FREIGHT_NAME_IS_NULL = "error.basic_data.freight_template.name.not_null";
+        String BASIC_DATA_FREIGHT_NOT_EXISTS = "error.basic_data.freight_template.name.not_null";
         String BASIC_DATA_FREIGHT_DUPLICATE_CODE = "error.basic_data.freight_template.duplicate_code";
         String BASIC_DATA_FREIGHT_UNIQUE_DEFAULT = "error.basic_data.freight_template.unique_default";
         String BASIC_DATA_FREIGHT_CAN_NOT_REMOVE = "error.basic_data.freight_template.can_not_remove";

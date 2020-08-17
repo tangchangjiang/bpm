@@ -85,6 +85,9 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty("目的地描述")
     @Transient
     private String regionName;
+    @ApiModelProperty("目的地描述集合")
+    @Transient
+    private String parentRegionName;
     @ApiModelProperty(value = "运送方式含义")
     @Transient
     private String transportTypeMeaning;

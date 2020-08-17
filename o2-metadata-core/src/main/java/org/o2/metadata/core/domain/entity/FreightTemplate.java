@@ -45,7 +45,7 @@ public class FreightTemplate extends AuditDomain {
     public static final String FIELD_VALUATION_TYPE = "valuationType";
     public static final String FIELD_VALUATION_UOM = "valuationUom";
     public static final String FIELD_DAFAULT_FLAG = "dafaultFlag";
-    public static final String FIELD_ENABLED_FLAG = "enabledFlag";
+    public static final String FIELD_ACTIVE_FLAG = "activeFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
 
     //
@@ -105,7 +105,7 @@ public class FreightTemplate extends AuditDomain {
     @NotNull
     private Integer dafaultFlag;
     @ApiModelProperty(value = "是否启用标记,默认是启用")
-    private Integer enabledFlag;
+    private Integer activeFlag;
     @ApiModelProperty(value = "租户ID",required = true)
     @NotNull
     private Long tenantId;

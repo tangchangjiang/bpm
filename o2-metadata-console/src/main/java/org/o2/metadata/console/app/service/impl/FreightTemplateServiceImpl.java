@@ -151,8 +151,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             // 清除缓存
             deleteFreightCache(freightTemplate);
-            freightTemplate.setEnabledFlag(Integer.valueOf(0));
-            freightTemplateRepository.updateOptional(freightTemplate,FreightTemplate.FIELD_ENABLED_FLAG);
+            freightTemplate.setActiveFlag(Integer.valueOf(0));
+            freightTemplateRepository.updateOptional(freightTemplate,FreightTemplate.FIELD_ACTIVE_FLAG);
         }
 
         return true;
@@ -196,7 +196,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             // list查重
             Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, "提交数据中存在相同的运费模板");
             //默认启用;默认不是默认模板
-            freightTemplate.setEnabledFlag(freightTemplate.getEnabledFlag()==null?1:freightTemplate.getEnabledFlag());
+            freightTemplate.setActiveFlag(freightTemplate.getActiveFlag()==null?1:freightTemplate.getActiveFlag());
             freightTemplate.setDafaultFlag(freightTemplate.getDafaultFlag()==null?0:freightTemplate.getDafaultFlag());
             freightTemplate.setTenantId(freightTemplate.getTenantId()==null?tenantId:freightTemplate.getTenantId());
             if (freightTemplate.getTemplateId() != null) {
@@ -277,6 +277,37 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         // 更新缓存
         saveFreightCache(freightTemplateVO);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void setDefaultTemp(final Long organizationId, Long templateId) {
+        Assert.notNull(templateId, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
+
+        //查找默认的并删除
+        Long oldTemplateId =null;
+         final Sqls sqls2 = Sqls.custom();
+         sqls2.andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1));
+         sqls2.andEqualTo(FreightTemplate.FIELD_TENANT_ID,  organizationId);
+         List<FreightTemplate> defaultTempList = freightTemplateRepository.selectByCondition( Condition.builder(FreightTemplate.class).andWhere(sqls2).build());
+         FreightTemplate oldDefTemp  ;
+         if(CollectionUtils.isNotEmpty(defaultTempList)){
+             oldDefTemp =  defaultTempList.get(0);
+             oldDefTemp.setDafaultFlag(0);
+             freightTemplateRepository.updateOptional(oldDefTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
+             oldTemplateId=oldDefTemp.getTemplateId();
+
+         }
+        FreightTemplate defaultTemp = freightTemplateRepository.selectByPrimaryKey(templateId);
+        Assert.notNull(defaultTemp, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_NOT_EXISTS);
+        defaultTemp.setDafaultFlag(Integer.valueOf(1));
+        freightTemplateRepository.updateOptional(defaultTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
+
+        if (oldTemplateId!=null){
+            refreshCache(oldTemplateId);
+        }
+        refreshCache(templateId);
+    }
+
     /**
      * 验重
      *
@@ -288,7 +319,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         for (int i = 0; i < freightTemplates.size(); i++) {
             final T freightTemplate = freightTemplates.get(i);
             // 默认启用 默认不是默认运费模板
-            freightTemplate.setEnabledFlag(freightTemplate.getEnabledFlag()==null?Integer.valueOf(1):freightTemplate.getEnabledFlag());
+            freightTemplate.setActiveFlag(freightTemplate.getActiveFlag()==null?Integer.valueOf(1):freightTemplate.getActiveFlag());
             freightTemplate.setDafaultFlag(freightTemplate.getDafaultFlag()==null?Integer.valueOf(0):freightTemplate.getDafaultFlag());
 
             if (isCheckId) {

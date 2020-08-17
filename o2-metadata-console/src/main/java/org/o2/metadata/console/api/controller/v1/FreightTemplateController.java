@@ -46,6 +46,8 @@ public class FreightTemplateController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
+        freightTemplate.setActiveFlag(1); //默认查询生效的
+
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
         return Results.success(list);
@@ -93,6 +95,14 @@ public class FreightTemplateController extends BaseController {
     @PostMapping("/refresh-cache")
     public ResponseEntity<?> refreshCache(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
         freightTemplateService.refreshCache(templateId);
+        return Results.success();
+    }
+
+    @ApiOperation(value = "设置默认模板")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/setDefaultTemp")
+    public ResponseEntity<?> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
+        freightTemplateService.setDefaultTemp(organizationId,templateId);
         return Results.success();
     }
 

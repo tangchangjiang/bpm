@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.o2.metadata.core.domain.entity.FreightTemplate;
 import org.o2.metadata.core.domain.entity.FreightTemplateDetail;
 import org.hzero.mybatis.domian.SecurityToken;
@@ -100,7 +101,7 @@ public class FreightTemplateVO extends FreightTemplate {
 
     /***
      * 跟进中台给过来的数据转化成数据库需要的数据格式
-     * @param regionDetailDisplayList
+     * @param regionDetailTemplateList
      * @return
      */
     public  List<FreightTemplateDetail>  exchangeRegionDetailTemplateList2Displayist( List<FreightTemplateDetail> regionDetailTemplateList){
@@ -123,8 +124,16 @@ public class FreightTemplateVO extends FreightTemplate {
             detail.setTemplateId(fist.getTemplateId());
             detail.setDefaultFlag(fist.getDefaultFlag());
             detail.setTenantId(fist.getTenantId()==null ? tenantId:fist.getTenantId());
-
             detail.setRegionIdArr(value.stream().map(e -> e.getRegionId()).collect(Collectors.toList()));
+            Map<String ,List<FreightTemplateDetail>> regionMap = value.stream().collect(
+                    Collectors.groupingBy(regionItem -> StringUtils.isEmpty(regionItem.getParentRegionName())?"":regionItem.getParentRegionName()));
+            List<String>  displayRegion = new ArrayList<>();
+            regionMap.forEach((parentRegion,region)->{
+              String    curStr = parentRegion+":["+ StringUtils.join(region.stream().map(e -> e.getRegionName()).collect(Collectors.toList()), ",") +"]" ;
+              displayRegion.add(curStr);
+            });
+
+            detail.setRegionName(StringUtils.join(displayRegion, ","));
             detail.setRegionNameArr(value.stream().map(e -> e.getRegionName()).collect(Collectors.toList()));
             detail.setObjectVersionNumberArr(value.stream().map(e -> e.getObjectVersionNumber()).collect(Collectors.toList()));
             detail.setTemplateDetailIdArr(value.stream().map(e -> e.getTemplateDetailId()).collect(Collectors.toList()));

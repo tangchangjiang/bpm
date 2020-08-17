@@ -85,13 +85,20 @@ public interface FreightTemplateService {
      */
     void refreshCache(final Long templateId);
 
+    /**
+     * 设置默默认运费模板
+     *
+     * @param organizationId
+     * @param templateId
+     */
+    void setDefaultTemp(final Long organizationId, final Long templateId);
 
     /**
      * 根据主键查询运费模板和运费模板明细
      *
-     * @param  Long organizationId 租户ID
+     * @param Long organizationId 租户ID
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO querydefaultTemplate(final Long   organizationId);
+    FreightTemplateVO querydefaultTemplate(final Long organizationId);
 
 }
