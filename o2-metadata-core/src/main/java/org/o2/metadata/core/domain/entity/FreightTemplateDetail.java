@@ -71,6 +71,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "续件/千克价格")
     private BigDecimal nextPrice;
     @ApiModelProperty(value = "是否默认")
+    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_HPFM_FLAG)
     private Integer defaultFlag;
     @ApiModelProperty(value = "关联运费模板ID")
     private Long templateId;
@@ -91,6 +92,9 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "运送方式含义")
     @Transient
     private String transportTypeMeaning;
+    @ApiModelProperty(value = "是否默认")
+    @Transient
+    private String defaultFlagMeaninng;
 
 
     @ApiModelProperty("目的地描述集合")

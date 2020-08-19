@@ -80,6 +80,12 @@ public interface BasicDataConstants {
          * 运送方式
          */
         String LOV_TRANSPORT_TYPE = "O2MD.TRANSPORT_TYPE" ;
+        /**
+         *是否标识
+         */
+        String LOV_HPFM_FLAG = "HPFM.FLAG" ;
+
+
 
     }
 
