@@ -49,7 +49,7 @@ public class PublicLovController {
 
     @ApiOperation("集值 - 批量查询")
     @Permission(permissionPublic = true)
-    @GetMapping({"/pub/lov//batch/search-by-code"})
+    @GetMapping({"/pub/lov/batch/search-by-code"})
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchLov(@RequestParam final Map<String, String> queryMap,
                                                                          @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN") final String lang,
                                                                          @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
