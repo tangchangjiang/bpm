@@ -25,7 +25,7 @@ import java.util.Map;
         tags = {"Public Lov"}
 )
 @RestController("publicLovController.v1")
-@RequestMapping({"/v1/{organizationId}/lov"})
+@RequestMapping({"/v1/{organizationId}"})
 public class PublicLovController {
     private final CustomLovService customLovService;
 
@@ -35,7 +35,7 @@ public class PublicLovController {
 
     @ApiOperation("集值 - 查询")
     @Permission(permissionPublic = true)
-    @GetMapping({"/search-by-code"})
+    @GetMapping({"/pub/lov/search-by-code"})
     public ResponseEntity<List<LovValueDTO>> searchLov(@RequestParam @ApiParam(value = "值集编码", required = true) final String lovCode,
                                                        @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN") final String lang,
                                                        @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
@@ -49,7 +49,7 @@ public class PublicLovController {
 
     @ApiOperation("集值 - 批量查询")
     @Permission(permissionPublic = true)
-    @GetMapping({"/batch/search-by-code"})
+    @GetMapping({"/pub/lov//batch/search-by-code"})
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchLov(@RequestParam final Map<String, String> queryMap,
                                                                          @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN") final String lang,
                                                                          @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
