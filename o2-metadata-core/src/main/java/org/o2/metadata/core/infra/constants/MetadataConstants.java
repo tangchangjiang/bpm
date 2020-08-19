@@ -221,7 +221,7 @@ public interface MetadataConstants {
          */
         String JD = "JD";
 
-        String LOV_CODE = "O2MD.CHANNEL_TYPE";
+        String LOV_CODE = "O2MD.TERMINAL_TYPE";
     }
 
 
