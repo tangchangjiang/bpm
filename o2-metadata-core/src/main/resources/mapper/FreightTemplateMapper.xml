@@ -86,6 +86,9 @@
             <if test="activeFlag!=null">
                 AND oft.ACTIVE_FLAG = #{activeFlag}
             </if>
+            <if test="dafaultFlag!=null">
+                AND oft.dafault_flag = #{dafaultFlag}
+            </if>
 
         </where>
         ORDER BY oft.template_code ASC
