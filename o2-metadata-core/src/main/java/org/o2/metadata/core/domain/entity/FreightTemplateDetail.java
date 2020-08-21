@@ -107,7 +107,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @Transient
     private List<Long>  templateDetailIdArr;
     @Transient
-    @ApiModelProperty(value = "版本报名集合")
+    @ApiModelProperty(value = "版本号集合")
     private List<Long>  objectVersionNumberArr;
 
     //

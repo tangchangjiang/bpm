@@ -96,7 +96,13 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
         FreightTemplateVO freightTemplateVO =  new FreightTemplateVO();
-        final List<FreightTemplateDetail> regionDetailListInput  =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
+        final List<FreightTemplateDetail> regionDetailListInput ;
+        //  默认运费模板不需要处理； 地区运费模板要转化一下
+        if (regionFreightDetailDisplayLis.get(0).getDefaultFlag() ==1 ){
+            regionDetailListInput =regionFreightDetailDisplayLis;
+        }else{
+            regionDetailListInput =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
+        }
         freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
 
         freightTemplateDetailRepository.batchDeleteByPrimaryKey(regionDetailListInput);
