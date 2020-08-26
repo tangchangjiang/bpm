@@ -72,7 +72,7 @@
             </choose>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
-                AND os.online_shop_code LIKE #{onlineShopCodeLike}
+                AND os.online_shop_code   LIKE upper(#{onlineShopCodeLike})
             </if>
             <if test="onlineShopName != null">
                 <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
