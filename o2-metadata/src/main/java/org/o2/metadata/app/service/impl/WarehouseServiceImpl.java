@@ -1,31 +1,33 @@
-package org.o2.metadata.api.rpc;
+package org.o2.metadata.app.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Warehouse RPC Provider
- *
- * @author yuying.shi@hand-china.com 2020/3/13
+ * @author lei.tang02@hand-china.com 2020/8/27
  */
-@Slf4j
-public class WarehouseContextImpl implements IWarehouseContext {
+@Service
+public class WarehouseServiceImpl implements WarehouseService {
 
     private final RedisCacheClient redisCacheClient;
 
-    public WarehouseContextImpl(RedisCacheClient redisCacheClient) {
+    public WarehouseServiceImpl(RedisCacheClient redisCacheClient) {
         this.redisCacheClient = redisCacheClient;
     }
+
 
     @Override
     public void saveWarehouse(String warehouseCode,Map<String, Object> hashMap,  Long tenantId) {
@@ -134,7 +136,7 @@ public class WarehouseContextImpl implements IWarehouseContext {
 
     @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
-        executeScript(warehouseCode,MetadataConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
+        executeScript(warehouseCode, MetadataConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
 
     }
 
@@ -168,9 +170,9 @@ public class WarehouseContextImpl implements IWarehouseContext {
             new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache.lua"));
     private static final ResourceScriptSource PICK_UP_VALUE_CACHE_RESET_LUA =
             new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache_reset.lua"));
-
     private static final ResourceScriptSource SAVE_WAREHOUSE_LUA =
             new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/save_warehouse_cache.lua"));
     private static final ResourceScriptSource UPDATE_WAREHOUSE_LUA =
             new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
+
 }

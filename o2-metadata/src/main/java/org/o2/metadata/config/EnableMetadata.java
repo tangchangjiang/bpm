@@ -1,36 +1,30 @@
 package org.o2.metadata.config;
 
-import org.o2.context.metadata.api.ISysParameterContext;
-import org.o2.context.metadata.api.IWarehouseContext;
-import org.o2.context.metadata.config.MetadataContextProvider;
-import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.api.rpc.SysParameterContextImpl;
-import org.o2.metadata.api.rpc.WarehouseContextImpl;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.service.Tag;
+import springfox.documentation.spring.web.plugins.Docket;
 
 /**
  * @author mark.bao@hand-china.com 2020/1/2
  */
 @Configuration
+@ComponentScan({
+        "org.o2.metadata.api",
+        "org.o2.metadata.app"
+})
 public class EnableMetadata {
 
-    @Bean
-    public ISysParameterContext sysParameterContext(final RedisCacheClient redisCacheClient,
-                                                    final MetadataContextProvider metadataContextProvider) {
-        final ISysParameterContext sysParameterContext = new SysParameterContextImpl(redisCacheClient);
-        metadataContextProvider.sysParameterContextService().setRef(sysParameterContext);
-        metadataContextProvider.sysParameterContextService().export();
-        return sysParameterContext;
+    public static final String SYS_PARAMETER_INTERNAL = "sys Parameter Internal";
+
+    public static final String SYS_WAREHOUSE_INTERNAL = "warehouse Internal";
+
+    @Autowired
+    public EnableMetadata(final Docket docket) {
+        docket.tags(new Tag(EnableMetadata.SYS_PARAMETER_INTERNAL, "系统参数内部接口"))
+                .tags(new Tag(EnableMetadata.SYS_WAREHOUSE_INTERNAL, "库存内部接口"));
     }
 
-    @Bean
-    public IWarehouseContext warehouseContext(final RedisCacheClient redisCacheClient,
-                                              final MetadataContextProvider metadataContextProvider) {
-        final IWarehouseContext warehouseContext = new WarehouseContextImpl(redisCacheClient);
-        metadataContextProvider.warehouseContextService().setRef(warehouseContext);
-        metadataContextProvider.warehouseContextService().export();
-        return warehouseContext;
-    }
 
 }

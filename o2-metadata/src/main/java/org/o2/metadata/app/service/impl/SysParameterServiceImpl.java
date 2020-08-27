@@ -1,22 +1,24 @@
-package org.o2.metadata.api.rpc;
+package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.context.metadata.api.ISysParameterContext;
 import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.springframework.stereotype.Service;
 
 /**
  * SysParameter RPC Provider
  *
  * @author mark.bao@hand-china.com 2019/11/29
  */
-public class SysParameterContextImpl implements ISysParameterContext {
+@Service
+public class SysParameterServiceImpl implements SysParameterService {
     private final RedisCacheClient redisCacheClient;
 
-    public SysParameterContextImpl(final RedisCacheClient redisCacheClient) {
+    public SysParameterServiceImpl(final RedisCacheClient redisCacheClient) {
         this.redisCacheClient = redisCacheClient;
     }
 
