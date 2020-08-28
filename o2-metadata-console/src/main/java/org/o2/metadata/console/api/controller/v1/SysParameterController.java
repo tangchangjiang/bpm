@@ -8,9 +8,8 @@ import io.swagger.annotations.*;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.context.metadata.api.ISysParameterContext;
-import org.o2.context.metadata.config.MetadataContextConsumer;
-import org.o2.context.metadata.vo.SysParameterVO;
+import org.o2.feignclient.O2MetadataClient;
+import org.o2.feignclient.metadata.domain.vo.SysParameterVO;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.SysParameter;
 import org.o2.metadata.core.domain.repository.SysParameterRepository;
@@ -30,12 +29,12 @@ import java.util.List;
 @Api(tags = EnableMetadataConsole.SYS_PARAMETER_SETTING)
 public class SysParameterController extends BaseController {
     private final SysParameterRepository sysParameterRepository;
-    private final ISysParameterContext sysParameterContext;
+    private final O2MetadataClient o2MetadataClient;
 
     public SysParameterController(final SysParameterRepository sysParameterRepository,
-                                  final ISysParameterContext sysParameterContext) {
+                                  final O2MetadataClient o2MetadataClient) {
         this.sysParameterRepository = sysParameterRepository;
-        this.sysParameterContext = sysParameterContext;
+        this.o2MetadataClient = o2MetadataClient;
     }
 
     @ApiOperation(value = "系统参数设置列表")
@@ -83,7 +82,7 @@ public class SysParameterController extends BaseController {
         sysParameter.setTenantId(organizationId);
         if (sysParameter.getParameterId() != null) {
             sysParameterRepository.updateByPrimaryKeySelective(sysParameter);
-            sysParameterContext.saveSysParameter(convert(sysParameter));
+            o2MetadataClient.saveSysParameter(organizationId, convert(sysParameter));
         }
         return Results.success(sysParameter);
     }
@@ -97,7 +96,7 @@ public class SysParameterController extends BaseController {
         sysParameter.validateParameterCode(sysParameterRepository);
         sysParameter.setParameterId(null);
         sysParameterRepository.insertSelective(sysParameter);
-        sysParameterContext.saveSysParameter(convert(sysParameter));
+        o2MetadataClient.saveSysParameter(organizationId, convert(sysParameter));
 
         return Results.success(sysParameter);
     }
@@ -109,7 +108,7 @@ public class SysParameterController extends BaseController {
         SecurityTokenHelper.validToken(sysParameter);
         sysParameter.setTenantId(organizationId);
         sysParameterRepository.deleteByPrimaryKey(sysParameter);
-        sysParameterContext.deleteSysParameter(sysParameter.getParameterCode(), sysParameter.getTenantId());
+        o2MetadataClient.deleteSysParameter(sysParameter.getTenantId(), sysParameter.getParameterCode());
         return Results.success();
     }
 

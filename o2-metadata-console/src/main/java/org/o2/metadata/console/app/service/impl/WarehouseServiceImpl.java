@@ -10,8 +10,8 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.context.inventory.InventoryContext;
 import org.o2.context.inventory.api.IInventoryContext;
 import org.o2.context.inventory.vo.TriggerStockCalculationVO;
-import org.o2.context.metadata.api.IWarehouseContext;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.feignclient.O2MetadataClient;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
@@ -38,29 +38,24 @@ import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
-    private WarehouseRepository warehouseRepository;
-
-    private AcrossSchemaRepository acrossSchemaRepository;
-
-    private CodeRuleBuilder codeRuleBuilder;
-
-    private final IWarehouseContext warehouseContext;
-
+    private final WarehouseRepository warehouseRepository;
+    private final AcrossSchemaRepository acrossSchemaRepository;
+    private final CodeRuleBuilder codeRuleBuilder;
+    private final O2MetadataClient o2MetadataClient;
     private final IInventoryContext iInventoryContext;
-
-    private RedisCacheClient redisCacheClient;
+    private final RedisCacheClient redisCacheClient;
 
     @Autowired
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository,
-                                AcrossSchemaRepository acrossSchemaRepository,
-                                CodeRuleBuilder codeRuleBuilder,
-                                IWarehouseContext warehouseContext,
-                                IInventoryContext iInventoryContext,
-                                RedisCacheClient redisCacheClient) {
+    public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
+                                final AcrossSchemaRepository acrossSchemaRepository,
+                                final CodeRuleBuilder codeRuleBuilder,
+                                final O2MetadataClient o2MetadataClient,
+                                final IInventoryContext iInventoryContext,
+                                final RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
         this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
-        this.warehouseContext = warehouseContext;
+        this.o2MetadataClient = o2MetadataClient;
         this.iInventoryContext = iInventoryContext;
         this.redisCacheClient = redisCacheClient;
     }
@@ -212,7 +207,7 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     private void syncToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.warehouseContext.saveWarehouse(warehouse.getWarehouseCode(), hashMap, warehouse.getTenantId());
+        this.o2MetadataClient.saveWarehouse(warehouse.getTenantId() ,warehouse.getWarehouseCode(), hashMap);
     }
 
     /**
@@ -222,7 +217,7 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     private void updateWarehouseToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.warehouseContext.updateWarehouse(warehouse.getWarehouseCode(), hashMap, warehouse.getTenantId());
+        this.o2MetadataClient.updateWarehouse(warehouse.getTenantId(), warehouse.getWarehouseCode(), hashMap);
     }
 
     public void operationRedis(List<Warehouse> warehouses) {
