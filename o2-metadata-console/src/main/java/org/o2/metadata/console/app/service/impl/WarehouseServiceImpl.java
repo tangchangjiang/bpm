@@ -7,11 +7,11 @@ import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.context.inventory.InventoryContext;
-import org.o2.context.inventory.api.IInventoryContext;
-import org.o2.context.inventory.vo.TriggerStockCalculationVO;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.feignclient.O2MetadataClient;
+import org.o2.feignclient.inventory.O2InventoryClient;
+import org.o2.feignclient.inventory.domain.vo.TriggerStockCalculationVO;
+import org.o2.feignclient.inventory.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
@@ -42,7 +42,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final AcrossSchemaRepository acrossSchemaRepository;
     private final CodeRuleBuilder codeRuleBuilder;
     private final O2MetadataClient o2MetadataClient;
-    private final IInventoryContext iInventoryContext;
+    private O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
 
     @Autowired
@@ -50,13 +50,13 @@ public class WarehouseServiceImpl implements WarehouseService {
                                 final AcrossSchemaRepository acrossSchemaRepository,
                                 final CodeRuleBuilder codeRuleBuilder,
                                 final O2MetadataClient o2MetadataClient,
-                                final IInventoryContext iInventoryContext,
+                                final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
         this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
         this.o2MetadataClient = o2MetadataClient;
-        this.iInventoryContext = iInventoryContext;
+        this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
     }
 
@@ -114,7 +114,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.operationRedis(warehouses);
         // 触发线上可用库存计算
         if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
-            iInventoryContext.triggerWhStockCal(tenantId, triggerCalInfoList);
+            o2InventoryClient.triggerWhStockCal(tenantId, triggerCalInfoList);
         }
         return list;
     }
@@ -167,7 +167,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_STATUS);
+                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
                     triggerCalInfoList.add(triggerStockCalculationVO);
                     continue;
                 }
@@ -175,7 +175,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_ACTIVE);
+                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
                     triggerCalInfoList.add(triggerStockCalculationVO);
                     continue;
                 }
@@ -183,7 +183,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_EXPRESS);
+                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
                     triggerCalInfoList.add(triggerStockCalculationVO);
                     continue;
                 }
@@ -191,7 +191,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
                     triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(InventoryContext.invCalCase.WH_PICKUP);
+                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
                     triggerCalInfoList.add(triggerStockCalculationVO);
                 }
             }

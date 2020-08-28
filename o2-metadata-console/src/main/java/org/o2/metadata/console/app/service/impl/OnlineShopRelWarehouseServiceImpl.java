@@ -9,9 +9,9 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.context.inventory.InventoryContext;
-import org.o2.context.inventory.api.IInventoryContext;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.feignclient.inventory.O2InventoryClient;
+import org.o2.feignclient.inventory.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.*;
@@ -24,7 +24,6 @@ import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -47,17 +46,17 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final OnlineShopRepository onlineShopRepository;
     private final WarehouseRepository warehouseRepository;
     private final PosRepository posRepository;
-    private final IInventoryContext iInventoryContext;
+    private O2InventoryClient o2InventoryClient;
     private RedisCacheClient redisCacheClient;
 
     @Autowired
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRepository onlineShopRepository, WarehouseRepository warehouseRepository, PosRepository posRepository,
-                                             IInventoryContext iInventoryContext, RedisCacheClient redisCacheClient) {
+                                             O2InventoryClient o2InventoryClient, RedisCacheClient redisCacheClient) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
         this.posRepository = posRepository;
-        this.iInventoryContext = iInventoryContext;
+        this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
     }
 
@@ -77,7 +76,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
         syncToRedis(list);
         if (!shopCodeSet.isEmpty()) {
-            iInventoryContext.triggerShopStockCalByShopCode(organizationId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_SOURCED);
+            o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
         }
         return list;
     }
@@ -105,7 +104,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
         syncToRedis(list);
         if (!shopCodeSet.isEmpty()) {
-            iInventoryContext.triggerShopStockCalByShopCode(tenantId, shopCodeSet, InventoryContext.invCalCase.SHOP_WH_ACTIVE);
+            o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
         }
         return list;
     }

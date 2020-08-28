@@ -41,8 +41,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.o2.context</groupId>
-            <artifactId>o2-context-inventory</artifactId>
+            <groupId>org.o2.feignclient</groupId>
+            <artifactId>o2-feignclient-inventory</artifactId>
         </dependency>
 
         <dependency>

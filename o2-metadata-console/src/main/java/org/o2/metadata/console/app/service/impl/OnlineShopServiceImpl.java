@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.base.BaseConstants;
-import org.o2.context.inventory.InventoryContext;
-import org.o2.context.inventory.api.IInventoryContext;
+import org.o2.feignclient.inventory.O2InventoryClient;
+import org.o2.feignclient.inventory.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.core.domain.entity.Catalog;
@@ -31,18 +31,18 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
-    private final IInventoryContext iInventoryContext;
+    private O2InventoryClient o2InventoryClient;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                 OnlineShopRelWarehouseService onlineShopRelWarehouseService,
                                 CatalogRepository catalogRepository,
                                 CatalogVersionRepository catalogVersionRepository,
-                                IInventoryContext iInventoryContext) {
+                                 O2InventoryClient o2InventoryClient) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
-        this.iInventoryContext = iInventoryContext;
+        this.o2InventoryClient = o2InventoryClient;
     }
     @Override
     public void createOnlineShop(OnlineShop onlineShop) {
@@ -93,7 +93,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             //触发网店关联仓库更新
             onlineShopRelWarehouseService.updateByShop(onlineShop.getOnlineShopId(), origin.getOnlineShopCode(), onlineShop.getActiveFlag(), onlineShop.getTenantId());
             // 触发渠道可用库存计算
-            iInventoryContext.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), InventoryContext.invCalCase.SHOP_ACTIVE);
+            o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }
     }
 }

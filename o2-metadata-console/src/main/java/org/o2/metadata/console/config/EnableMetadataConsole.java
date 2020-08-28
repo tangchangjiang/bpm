@@ -1,9 +1,6 @@
 package org.o2.metadata.console.config;
 
-import org.o2.context.inventory.api.IInventoryContext;
-import org.o2.context.inventory.config.InventoryContextConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import springfox.documentation.service.Tag;
@@ -63,9 +60,4 @@ public class EnableMetadataConsole {
                 .tags(new Tag(EnableMetadataConsole.REGION_REL_POS, "区域关联服务点配置"));
     }
 
-    @Bean
-    public IInventoryContext inventoryContext(InventoryContextConsumer inventoryContextConsumer) {
-        inventoryContextConsumer.inventoryContextConsumer().init();
-        return inventoryContextConsumer.inventoryContextConsumer().get();
-    }
 }
