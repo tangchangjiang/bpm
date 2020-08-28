@@ -2,11 +2,11 @@ package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.context.metadata.vo.SysParameterVO;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.domain.vo.SysParameterVO;
 import org.springframework.stereotype.Service;
 
 /**

@@ -6,7 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.context.metadata.vo.SysParameterVO;
+import org.o2.metadata.domain.vo.SysParameterVO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.config.EnableMetadata;
 import org.springframework.http.ResponseEntity;
