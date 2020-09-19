@@ -16,8 +16,8 @@
 
     <repositories>
         <repository>
-            <id>o2-maven</id>
-            <url>https://nexus.choerodon.com.cn/repository/ocp-o2/</url>
+            <id>o2-group</id>
+            <url>http://nexus.saas.hand-china.com/repository/o2-group/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
