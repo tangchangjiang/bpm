@@ -152,7 +152,7 @@ public class RegionRelPos extends AuditDomain {
     }
 
     /**
-     * @return 区域id，关联o2md_region.region_id
+     * @return 区域id，关联hpfm_region.region_id
      */
     public Long getRegionId() {
         return regionId;
