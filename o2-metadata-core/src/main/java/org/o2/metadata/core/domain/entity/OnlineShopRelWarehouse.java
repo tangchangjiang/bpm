@@ -1,6 +1,8 @@
 package org.o2.metadata.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -25,6 +27,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -173,17 +176,26 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                 if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVos)) {
                     // 获取hashKey
                     final String hashKey = this.buildRedisHashKey(groupOnlineShopRelWarehouseVos.get(0).getOnlineShopCode());
-                    keyList.add(hashKey);
-                    // 获取hashMap
-                    filedMaps.put(hashKey, this.buildRedisHashMap(groupOnlineShopRelWarehouseVos));
+                    if (onlineShopRelWarehouseEntry.getKey() == 1) {
+                        try {
+                            redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(FastJsonHelper.objectToString(this.buildRedisHashMap(groupOnlineShopRelWarehouseVos)), new TypeReference<Map<String, String>>() {
+                            }));
+                        } catch (IOException e) {
+                        }
+                    } else {
+                        redisCacheClient.opsForHash().delete(hashKey);
+                    }
+//                    keyList.add(hashKey);
+//                    // 获取hashMap
+//                    filedMaps.put(hashKey, this.buildRedisHashMap(groupOnlineShopRelWarehouseVos));
                 }
             }
             // 执行
-            if (onlineShopRelWarehouseEntry.getKey() == 1) {
-                this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);
-            } else {
-                this.executeScript (filedMaps,keyList,deleteResourceScriptSource,redisCacheClient);
-            }
+//            if (onlineShopRelWarehouseEntry.getKey() == 1) {
+//                this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);
+//            } else {
+//                this.executeScript (filedMaps,keyList,deleteResourceScriptSource,redisCacheClient);
+//            }
         }
     }
 

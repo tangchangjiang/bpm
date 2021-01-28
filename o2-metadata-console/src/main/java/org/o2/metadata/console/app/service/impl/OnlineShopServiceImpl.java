@@ -50,9 +50,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
-        if (onlineShop.exist(onlineShopRepository)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_U_INDEX);
-        }
+//        if (onlineShop.exist(onlineShopRepository)) {
+//            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_U_INDEX);
+//        }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
             CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());

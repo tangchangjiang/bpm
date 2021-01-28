@@ -44,7 +44,7 @@
             p.LAST_UPDATE_DATE,
             p.tenant_id
         FROM
-            o2md_pos AS p
+            o2md_pos p
         where p.pos_id = #{posId}
         <choose>
             <when test="tenantId != null">
@@ -83,7 +83,12 @@
             <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
             and  w.warehouse_name LIKE #{warehouseNameLike}
         </if>
-        and w.actived_date_to <![CDATA[>]]> sysdate()
+        <if test="_databaseId == 'mysql'">
+            and w.actived_date_to <![CDATA[>]]> sysdate()
+        </if>
+        <if test="_databaseId == 'oracle'">
+            and w.actived_date_to <![CDATA[>]]> sysdate
+        </if>
         order by w.warehouse_code asc
     </select>
 
@@ -112,8 +117,8 @@
         w.LAST_UPDATE_DATE,
         w.tenant_id
         FROM
-        o2md_warehouse AS w
-        JOIN o2md_pos AS p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
+        o2md_warehouse w
+        JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang}
         LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang}
         <where>
@@ -170,8 +175,8 @@
         w.tenant_id,
         w.active_flag
         FROM
-        o2md_warehouse AS w
-        JOIN o2md_pos AS p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
+        o2md_warehouse w
+        JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">

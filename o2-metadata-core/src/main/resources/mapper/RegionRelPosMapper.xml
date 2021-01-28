@@ -120,7 +120,7 @@
         p.pos_type_code,
         p.business_type_code
         FROM
-        o2md_pos AS p
+        o2md_pos p
         where not exists(
         select 1 from o2md_region_rel_pos rrp where rrp.pos_id = p.pos_id and rrp.online_shop_id = #{onlineShopId} and
         rrp.region_id = #{regionId}

@@ -95,7 +95,12 @@
         left JOIN hpfm_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
         left join o2md_region_area ora on ora.region_code = hr.region_code and ora.tenant_id = hr.tenant_id
         WHERE 1=1
-        and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        <if test="countryIdOrCode != null and _databaseId == 'mysql'">
+            and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        </if>
+        <if test="countryIdOrCode != null and _databaseId == 'oracle'">
+            and (to_char(hr.country_id) = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+        </if>
         <choose>
             <when test="tenantId != null">
                 AND hr.tenant_id = #{tenantId} AND oc.tenant_id = #{tenantId}

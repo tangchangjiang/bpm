@@ -29,7 +29,7 @@ public class SysParameterMetadataInternalController {
     @ApiOperation("保存系统参数缓存(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/internal/saveSysParameter"})
-    public ResponseEntity<?> saveSysParameter(final SysParameterVO sysParameterVO,
+    public ResponseEntity<?> saveSysParameter(@RequestBody final SysParameterVO sysParameterVO,
                                               @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
         sysParameterService.saveSysParameter(sysParameterVO);
         return Results.success();
