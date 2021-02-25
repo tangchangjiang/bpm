@@ -71,7 +71,7 @@
                 <bind name="templateNameLike" value="'%' + templateName + '%'"/>
                 AND oft.template_name LIKE #{templateNameLike}
             </if>
-            <if test="deliveryFreeFlag!=null and deliveryFreeFlag!=''">
+            <if test="deliveryFreeFlag!=null">
                 AND oft.delivery_free_flag = #{deliveryFreeFlag}
             </if>
             <if test="valuationType!=null and valuationType!=''">
