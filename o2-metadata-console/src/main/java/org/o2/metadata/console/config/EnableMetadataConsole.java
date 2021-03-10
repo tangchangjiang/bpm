@@ -3,6 +3,7 @@ package org.o2.metadata.console.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+
 import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -30,7 +31,8 @@ public class EnableMetadataConsole {
     public static final String POS = "POS (Point Of Service)";
     public static final String POS_REL_CARRIER = "Pos Rel Carrier";
     public static final String REGION = "Region";
-    public static final String SYS_PARAMETER_SETTING = "System Parameter Setting";
+    public static final String SYSTEM_PARAMETER = "SYSTEM_PARAMETER";
+    public static final String SYSTEM_PARAMETER_VALUE = "SYSTEM_PARAMETER_VALUE";
     public static final String FREIGHT_TEMPLATE = "Freight Template";
     public static final String FREIGHT_TEMPLATE_DETAIL = "Freight Template Detail";
     public static final String PLATFORM_UOM = "Platform Uom";
@@ -53,7 +55,9 @@ public class EnableMetadataConsole {
                 .tags(new Tag(EnableMetadataConsole.POS, "服务点信息管理"))
                 .tags(new Tag(EnableMetadataConsole.POS_REL_CARRIER, "服务点关联承运商管理"))
                 .tags(new Tag(EnableMetadataConsole.REGION, "区域定义"))
-                .tags(new Tag(EnableMetadataConsole.SYS_PARAMETER_SETTING, "系统参数配置管理"))
+                .tags(new Tag(EnableMetadataConsole.SYSTEM_PARAMETER, "系统参数"))
+                .tags(new Tag(EnableMetadataConsole.SYSTEM_PARAMETER_VALUE, "系统参数值"))
+
                 .tags(new Tag(EnableMetadataConsole.FREIGHT_TEMPLATE, "运费模板管理"))
                 .tags(new Tag(EnableMetadataConsole.FREIGHT_TEMPLATE_DETAIL, "运费模板明细管理"))
                 .tags(new Tag(EnableMetadataConsole.PLATFORM_UOM, "平台值集管理"))

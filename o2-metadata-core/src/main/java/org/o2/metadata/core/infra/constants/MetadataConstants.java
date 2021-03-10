@@ -1,8 +1,8 @@
 package org.o2.metadata.core.infra.constants;
 
-import com.google.common.base.Joiner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -129,6 +129,43 @@ public interface MetadataConstants {
     }
 
     /**
+     * Redis Hash 系统参数
+     *
+     * o2ext:parameter:[tenantId]:[parameterType]
+     */
+    interface SystemParameter {
+        String KEY = "o2md:parameter:%d:%s";
+    }
+
+    interface LuaCode {
+        ResourceScriptSource BATCH_SAVE_REDIS_HASH_VALUE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/batch_save_redis_hash_value.lua"));
+    }
+
+    /**
+     * 系统参数类型
+     */
+    interface ParamType {
+        /**
+         * key-value
+         */
+        String KV = "KV";
+        /**
+         * 重复
+         */
+        String LIST = "LIST";
+        /**
+         * 不重复
+         */
+        String SET = "SET";
+        /**
+         * 值集编码
+         */
+        String LOV_CODE = "O2EXT.PARAM_TYPE";
+    }
+
+
+    /**
      * 服务点类型
      */
     interface PosType {
@@ -229,23 +266,6 @@ public interface MetadataConstants {
         String CACHE_SERVICE_NAME_POS = "pos";
     }
 
-    interface SysParameterCache {
-        String SYS_PARAMETER_KEY = "o2md:sys_parameter:%s";
-        String CACHE_SERVICE_NAME = "o2md";
-        String CACHE_MODULE_NAME_SYS_PARAMETER = "sys_parameter";
-
-        /**
-         * 系统参数缓存 KEY
-         *
-         * @param sysParameterCode 系统参数编码
-         * @param tenantId         租户Id
-         * @return 系统参数缓存 KEY
-         */
-        static String sysParameterKey(String sysParameterCode, Long tenantId) {
-            String tenantStr = null == tenantId ? null : tenantId.toString();
-            return Joiner.on(":").skipNulls().join(CACHE_SERVICE_NAME, CACHE_MODULE_NAME_SYS_PARAMETER, tenantStr, sysParameterCode);
-        }
-    }
 
     /**
      * 编码规则

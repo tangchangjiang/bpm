@@ -1,9 +1,9 @@
 package org.o2.metadata.core.domain.vo;
 
+import java.io.Serializable;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.io.Serializable;
 
 /**
  * 系统参数业务对象
