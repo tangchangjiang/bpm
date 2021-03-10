@@ -1,17 +1,7 @@
 package org.o2.metadata.core.domain.entity;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.core.domain.repository.SystemParameterRepository;
-import org.o2.metadata.core.domain.vo.SysParameterVO;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,7 +10,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -89,60 +78,6 @@ public class SystemParameter extends AuditDomain {
     @Transient
     @ApiModelProperty("参数类型")
     private String paramTypeMeaning;
-
-
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    public void validateParameterCode(final SystemParameterRepository sysParameterRepository) {
-        final SystemParameter entity = new SystemParameter();
-        entity.setTenantId(this.tenantId);
-        entity.setParamCode(this.paramCode);
-        final List<SystemParameter> list = sysParameterRepository.select(entity);
-        if (CollectionUtils.isNotEmpty(list)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "SysParameter(" + this.paramCode + ")");
-        }
-    }
-
-    /**
-     * 转换保存
-     *
-     * @param sysParameter sysParameter
-     * @return SysParameterVO
-     */
-    private SysParameterVO convert(final SystemParameter sysParameter) {
-        final SysParameterVO sysParameterVO = new SysParameterVO();
-        sysParameterVO.setParameterCode(sysParameter.getParamCode());
-        sysParameterVO.setParameterValue(sysParameter.getDefaultValue());
-        sysParameterVO.setActiveFlag(sysParameter.getActiveFlag());
-        sysParameterVO.setTenantId(sysParameter.getTenantId());
-        return sysParameterVO;
-    }
-
-    /**
-     * 组黄map
-     *
-     * @param sysParameters sysParameters
-     * @return map
-     */
-    public Map<Integer, List<SystemParameter>> groupMap(List<SystemParameter> sysParameters) {
-        return sysParameters.stream().collect(Collectors.groupingBy(SystemParameter::getActiveFlag));
-    }
-
-    /**
-     * 同步到redis
-     *
-     * @param sysParameters    sysParameters
-     * @param redisCacheClient redisCacheClient
-     */
-    public void syncToRedis(final List<SystemParameter> sysParameters,
-                            RedisCacheClient redisCacheClient) {
-        final String cacheKey = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.KV);
-        Map<String, String> map = new HashMap<>();
-        sysParameters.forEach(sp -> map.put(sp.getParamCode(), sp.getDefaultValue()));
-        redisCacheClient.opsForHash().putAll(cacheKey, map);
-    }
 
 
 }

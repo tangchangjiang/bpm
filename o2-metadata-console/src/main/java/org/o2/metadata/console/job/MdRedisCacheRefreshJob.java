@@ -5,10 +5,11 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
-import org.hzero.core.base.BaseConstants;
+import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.core.domain.entity.SystemParameter;
 import org.o2.metadata.core.domain.entity.Warehouse;
@@ -16,6 +17,7 @@ import org.o2.metadata.core.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.core.domain.repository.SystemParameterRepository;
 import org.o2.metadata.core.domain.repository.WarehouseRepository;
 import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,22 +53,24 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     private final RedisCacheClient redisCacheClient;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
-    private final SystemParameterRepository sysParameterRepository;
+    private final SystemParameterRepository systemParameterRepository;
+    private final SysParamService sysParamService;
 
     @Autowired
     public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient,
                                   OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                   WarehouseRepository warehouseRepository,
-                                  SystemParameterRepository sysParameterRepository) {
+                                  SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.warehouseRepository = warehouseRepository;
-        this.sysParameterRepository = sysParameterRepository;
+        this.systemParameterRepository = systemParameterRepository;
+        this.sysParamService = sysParamService;
     }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        if (map !=null && !map.isEmpty()) {
+        if (map != null && !map.isEmpty()) {
             final Long tenantId = DetailsHelper.getUserDetails().getTenantId();
             // 判断缓存操作
             final String warehouse = map.getOrDefault(CACHE_WAREHOUSE, DEFAULT_ACTION);
@@ -97,10 +101,11 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
     /**
      * 仓库
-     * @param tenantId  租户ID
+     *
+     * @param tenantId 租户ID
      */
-    public void refreshWarehouse (Long tenantId) {
-        List<Warehouse> warehouseList =  warehouseRepository.queryAllWarehouseByTenantId(tenantId);
+    public void refreshWarehouse(Long tenantId) {
+        List<Warehouse> warehouseList = warehouseRepository.queryAllWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(warehouseList)) {
             warehouseList.get(0).syncToRedis(warehouseList,
                     O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
@@ -111,9 +116,10 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
     /**
      * 网点关联仓库
-     * @param tenantId  租户ID
+     *
+     * @param tenantId 租户ID
      */
-    public void refreshOnlineShopRelWarehouse (Long tenantId) {
+    public void refreshOnlineShopRelWarehouse(Long tenantId) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
             onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
@@ -127,15 +133,21 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
     /**
      * 系统参数
+     *
      * @param tenantId 租户ID
      */
-    public void refreshSysParameter (Long tenantId) {
-        List<SystemParameter> sysParameters = sysParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
-                .andWhere(Sqls.custom().andEqualTo(SystemParameter.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES)).andWhere(Sqls.custom()
-                .andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)).build());
-        if (CollectionUtils.isNotEmpty(sysParameters)) {
-            sysParameters.get(0).syncToRedis(sysParameters,redisCacheClient);
+    public void refreshSysParameter(Long tenantId) {
+        // 获取系统参数
+        List<SystemParameter> systemParameterList = systemParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
+                .andWhere(Sqls.custom().andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)).build());
+
+        if (CollectionUtils.isEmpty(systemParameterList)) {
+            log.warn(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
+            return;
         }
+
+        sysParamService.synToRedis(systemParameterList, tenantId);
+
     }
 
 }

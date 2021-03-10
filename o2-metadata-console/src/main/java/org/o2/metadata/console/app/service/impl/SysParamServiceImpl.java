@@ -9,6 +9,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.feignclient.inventory.O2InventoryClient;
 import org.o2.metadata.console.app.service.SysParamService;
+import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.util.MetadataRedisUtil;
 import org.o2.metadata.core.domain.entity.SystemParameter;
 import org.o2.metadata.core.domain.repository.SystemParameterRepository;
@@ -110,7 +111,7 @@ public class SysParamServiceImpl implements SysParamService {
                     }
                 }
             }
-            MetadataRedisUtil.executeScript(filedMaps, Collections.emptyList(), MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA, redisCacheClient);
+            MetadataRedisUtil.executeScript(filedMaps, Collections.emptyList(), O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA, redisCacheClient);
         } catch (Exception e) {
             throw new CommonException(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM).desc());
         }
@@ -147,7 +148,7 @@ public class SysParamServiceImpl implements SysParamService {
             if (CollectionUtils.isNotEmpty(list)) {
                 String defaultValue = list.get(0).getDefaultValue();
                 log.info("sysparam key({}), paramCode({}), value({})", kvHashKey, paramCode, defaultValue);
-                redisCacheClient.opsForHash().put(kvHashKey, paramCode, null==defaultValue ? "" : defaultValue);
+                redisCacheClient.opsForHash().put(kvHashKey, paramCode, null == defaultValue ? "" : defaultValue);
             }
         } else if (MetadataConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
             List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(paramCode, tenantId);

@@ -40,6 +40,11 @@ public interface MetadataConstants {
          * 系统参数编码不可重复，成功保存N条数据
          */
         String SYSTEM_PARAMETER_SUCCESS_NUM = "system_parameter.success_num";
+        /**
+         * 没有找到任何系统参数数据
+         */
+        String SYSTEM_PARAMETER_NOT_FOUND = "system_parameter.not_found";
+
     }
 
 
@@ -148,10 +153,7 @@ public interface MetadataConstants {
         String KEY = "o2md:parameter:%d:%s";
     }
 
-    interface LuaCode {
-        ResourceScriptSource BATCH_SAVE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/batch_save_redis_hash_value.lua"));
-    }
+
 
     /**
      * 系统参数类型
