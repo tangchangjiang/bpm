@@ -31,6 +31,17 @@ public interface MetadataConstants {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     }
+    /**
+     * 提示信息
+     */
+    interface Message {
+
+        /**
+         * 系统参数编码不可重复，成功保存N条数据
+         */
+        String SYSTEM_PARAMETER_SUCCESS_NUM = "system_parameter.success_num";
+    }
+
 
 
     /**
@@ -139,7 +150,7 @@ public interface MetadataConstants {
 
     interface LuaCode {
         ResourceScriptSource BATCH_SAVE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/batch_save_redis_hash_value.lua"));
+                new ResourceScriptSource(new ClassPathResource("script/lua/freight/batch_save_redis_hash_value.lua"));
     }
 
     /**
