@@ -1,0 +1,24 @@
+stages:
+  - sonar
+  - maven_package
+
+sonar_check:
+  stage: sonar
+  script:
+    - mvn --batch-mode clean verify sonar:sonar
+      -Dsonar.host.url=${SONAR_URL}
+      -Dsonar.login=${SONAR_TOKEN}
+      -Dsonar.sorceEncoding=UTF-8
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+      -Dmaven.test.failure.ignore=true
+      -DskipTests=true
+  only:
+    - sonar
+
+maven_package:
+  stage: maven_package
+  script:
+    - mvn clean -U -Dmaven.test.skip=true -Dspring-boot.repackage.skip=true -Dfile.encoding=UTF-8 deploy
+  only:
+    - dev
+    - test
