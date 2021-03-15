@@ -11,13 +11,6 @@
     <description>O2-Metadata模块</description>
     <packaging>pom</packaging>
 
-    <parent>
-        <groupId>org.o2</groupId>
-        <artifactId>o2-parent</artifactId>
-        <version>1.2.7-SNAPSHOT</version>
-        <!--<relativePath/>-->
-    </parent>
-
     <modules>
         <module>o2-metadata-core</module>
         <module>o2-metadata</module>
