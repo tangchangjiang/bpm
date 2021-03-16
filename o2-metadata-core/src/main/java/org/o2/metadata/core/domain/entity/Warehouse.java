@@ -1,6 +1,8 @@
 package org.o2.metadata.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -22,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -225,18 +228,29 @@ public class Warehouse extends AuditDomain {
                               final RedisCacheClient redisCacheClient) {
         Map<Integer, List<Warehouse>> warehouseMap  = this.warehouseGroupMap(warehouseList);
         for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
-            List<String> keyList = new ArrayList<>();
-            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+//            List<String> keyList = new ArrayList<>();
+//            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
             for (Warehouse warehouse : warehouseEntry.getValue()) {
                 final String hashKey = warehouse.buildRedisHashKey(warehouse.getWarehouseCode(), tenantId);
-                keyList.add(hashKey);
-                filedMaps.put(hashKey, warehouse.buildRedisHashMap());
+                if (warehouseEntry.getKey() == 1) {
+                    try {
+                        redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(FastJsonHelper.objectToString(warehouse.buildRedisHashMap()), new TypeReference<Map<String, String>>() {
+                        }));
+                    } catch (IOException e) {
+
+                    }
+                } else {
+                    redisCacheClient.opsForHash().delete(hashKey);
+                }
+
+//                keyList.add(hashKey);
+//                filedMaps.put(hashKey, warehouse.buildRedisHashMap());
             }
-            if (warehouseEntry.getKey() == 1) {
-                this.executeScript(filedMaps, keyList, saveResourceScriptSource,redisCacheClient);
-            } else {
-                this.executeScript(filedMaps, keyList,deleteResourceScriptSource,redisCacheClient);
-            }
+//            if (warehouseEntry.getKey() == 1) {
+//                this.executeScript(filedMaps, keyList, saveResourceScriptSource,redisCacheClient);
+//            } else {
+//                this.executeScript(filedMaps, keyList,deleteResourceScriptSource,redisCacheClient);
+//            }
         }
     }
 

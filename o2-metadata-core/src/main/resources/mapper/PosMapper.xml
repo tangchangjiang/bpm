@@ -153,7 +153,7 @@
         p.tenant_id,
         p.notice
         FROM
-        o2md_pos AS p
+        o2md_pos p
         where p.pos_id = #{posId}
         <choose>
             <when test="tenantId != null">
