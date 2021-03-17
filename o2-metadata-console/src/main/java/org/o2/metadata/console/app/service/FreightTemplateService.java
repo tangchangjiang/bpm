@@ -102,4 +102,12 @@ public interface FreightTemplateService {
      */
     FreightTemplateVO querydefaultTemplate(final Long organizationId);
 
+
+    /**
+     * 手动转换值集视图
+     * @param freightTemplates
+     * @param organizationId
+     */
+    void tranLov(List<FreightTemplate> freightTemplates,Long organizationId);
+
 }
