@@ -50,6 +50,7 @@ public class FreightTemplateController extends BaseController {
 
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
+        freightTemplateService.tranLov(list.getContent(),organizationId);
         return Results.success(list);
     }
 

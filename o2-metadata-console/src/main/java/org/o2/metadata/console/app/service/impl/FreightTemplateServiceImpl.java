@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -59,6 +58,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
         final FreightTemplate freightTemplate = freightTemplateRepository.selectyTemplateId(templateId);
+        List<FreightTemplate> list = new ArrayList<>();
+        list.add(freightTemplate);
+        this.tranLov(list,organizationId);
         final FreightTemplateVO freightTemplateVO = new FreightTemplateVO(freightTemplate);
 
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
@@ -68,44 +70,46 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         final List<FreightTemplateDetail> regionDetailDisplayList  =freightTemplateVO.exchangeRegionDetailTemplateList2Displayist(freightTemplateVO.getRegionFreightTemplateDetails());
         freightTemplateVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
 
-        tranLov(freightTemplateVO,organizationId);
-
         return freightTemplateVO;
     }
 
-    private void tranLov(FreightTemplateVO freightTemplateVO, Long organizationId) {
-        String valuationType = freightTemplateVO.getValuationType();
-        String valuationUom = freightTemplateVO.getValuationUom();
-        if (StringUtils.isNotBlank(valuationUom) && StringUtils.isNotBlank(valuationType)){
-            List<Map<String, Object>> list = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW,organizationId);
-            if (CollectionUtils.isNotEmpty(list)){
-                Optional<Map<String, Object>> first = list.stream().filter(li -> li.get("uomTypeCode").equals(valuationType)
-                        && li.get("uomCode").equals(valuationUom)).findFirst();
-                if (first.isPresent()){
-                    freightTemplateVO.setValuationUomMeaning(first.get().get("uomName").toString());
+    @Override
+    public void tranLov(List<FreightTemplate> list, Long organizationId) {
+        if (CollectionUtils.isNotEmpty(list)){
+            List<Map<String, Object>>  uomList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
+            List<Map<String, Object>>  typeList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
+
+            list.forEach(freightTemplateVO->{
+                String valuationType = freightTemplateVO.getValuationType();
+                String valuationUom = freightTemplateVO.getValuationUom();
+                if (StringUtils.isNotBlank(valuationUom) && StringUtils.isNotBlank(valuationType)){
+                    if (CollectionUtils.isNotEmpty(uomList)){
+                        Optional<Map<String, Object>> first = uomList.stream().filter(li -> li.get("uomTypeCode").equals(valuationType)
+                                && li.get("uomCode").equals(valuationUom)).findFirst();
+                        if (first.isPresent()){
+                            freightTemplateVO.setValuationUomMeaning(first.get().get("uomName").toString());
+                        }
+                    }
                 }
-            }
-        }
-        if (StringUtils.isNotBlank(valuationType)){
-            List<Map<String, Object>> list = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW,organizationId);
-            if (CollectionUtils.isNotEmpty(list)){
-                Optional<Map<String, Object>> first = list.stream().filter(li -> li.get("uomTypeCode").equals(valuationType) ).findFirst();
-                if (first.isPresent()){
-                    freightTemplateVO.setValuationTypeMeaning(first.get().get("uomTypeName").toString());
+                if (StringUtils.isNotBlank(valuationType)){
+                    if (CollectionUtils.isNotEmpty(typeList)){
+                        Optional<Map<String, Object>> first = typeList.stream().filter(li -> li.get("uomTypeCode").equals(valuationType) ).findFirst();
+                        if (first.isPresent()){
+                            freightTemplateVO.setValuationTypeMeaning(first.get().get("uomTypeName").toString());
+                        }
+                    }
                 }
-            }
+            });
         }
     }
 
-
-    private List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
+    public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
         Map<String,Object> params = new HashMap<>(4);
         params.put("lovCode",lovCode);
         params.put("page",0);
         params.put("size",100);
         params.put("tenantId",tenantId);
         List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 10);
-        log.info("getSqlMeaning,lovCode:{},lovSqlMeaning:{},",lovCode, JSON.toJSONString(lovSqlMeaning));
         return lovSqlMeaning;
     }
 
