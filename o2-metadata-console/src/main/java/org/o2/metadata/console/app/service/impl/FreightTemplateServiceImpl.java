@@ -2,6 +2,8 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.oauth.DetailsHelper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -17,6 +19,7 @@ import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
 import org.o2.metadata.core.domain.vo.FreightTemplateVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -34,6 +37,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
     private final FreightTemplateDetailService freightTemplateDetailService;
     private final FreightCacheService freightCacheService;
+    @Autowired
+    private LovSqlHandler lovSqlHandler;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
@@ -49,7 +54,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightTemplateVO queryTemplateAndDetails(final Long templateId) {
+    public FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
         final FreightTemplate freightTemplate = freightTemplateRepository.selectyTemplateId(templateId);
         final FreightTemplateVO freightTemplateVO = new FreightTemplateVO(freightTemplate);
 
@@ -60,7 +65,39 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         final List<FreightTemplateDetail> regionDetailDisplayList  =freightTemplateVO.exchangeRegionDetailTemplateList2Displayist(freightTemplateVO.getRegionFreightTemplateDetails());
         freightTemplateVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
 
+        tranLov(freightTemplateVO,organizationId);
+
         return freightTemplateVO;
+    }
+
+    private void tranLov(FreightTemplateVO freightTemplateVO, Long organizationId) {
+        if (StringUtils.isNotBlank(freightTemplateVO.getValuationUom())){
+            freightTemplateVO.setValuationUomMeaning(getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW,
+                    freightTemplateVO.getValuationUom(),organizationId));
+        }
+        if (StringUtils.isNotBlank(freightTemplateVO.getValuationType())){
+            freightTemplateVO.setValuationTypeMeaning(getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW,
+                    freightTemplateVO.getValuationType(),organizationId));
+        }
+    }
+
+    /**
+     * 获取自定义SQL值集
+     *
+     * @param lovCode  值集编码，如：O2MD.CURRENCY
+     * @param lovValue 值集，如：CNY
+     * @param tenantId 租户ID
+     * @return meaning
+     */
+    private String getSqlMeaning(String lovCode,String lovValue, Long tenantId) {
+        Map<String,Object> params = new HashMap<>(1);
+        params.put("identities", "'" + lovValue + "'");
+        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.getLovSqlMeaning(lovCode, tenantId, params);
+        if (!org.springframework.util.CollectionUtils.isEmpty(lovSqlMeaning)) {
+            Object meaning = lovSqlMeaning.get(0).get("meaning");
+            return String.valueOf(meaning);
+        }
+        return null;
     }
 
     public String fetchGroupKey(final FreightTemplateDetail detail) {
@@ -261,7 +298,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public void refreshCache(Long templateId) {
-        FreightTemplateVO freightTemplateVO = queryTemplateAndDetails(templateId);
+        FreightTemplateVO freightTemplateVO = queryTemplateAndDetails(templateId, null);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
         if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
@@ -423,7 +460,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         Assert.isTrue(!CollectionUtils.isEmpty(list), "默认运费模板不存在");
         Assert.isTrue(!(list.size()!=1), "默认运费模板不唯一");
 
-        return  queryTemplateAndDetails(list.get(0).getTemplateId());
+        return  queryTemplateAndDetails(list.get(0).getTemplateId(), organizationId);
 
     }
 
