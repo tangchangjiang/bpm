@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import io.choerodon.core.oauth.DetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.handler.LovSqlHandler;
@@ -32,6 +34,7 @@ import java.util.*;
  * @author peng.xu@hand-china.com 2019/5/17
  */
 @Service
+@Slf4j
 public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation implements FreightTemplateService {
     private final FreightTemplateRepository freightTemplateRepository;
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
@@ -71,33 +74,39 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     private void tranLov(FreightTemplateVO freightTemplateVO, Long organizationId) {
-        if (StringUtils.isNotBlank(freightTemplateVO.getValuationUom())){
-            freightTemplateVO.setValuationUomMeaning(getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW,
-                    freightTemplateVO.getValuationUom(),organizationId));
+        String valuationType = freightTemplateVO.getValuationType();
+        String valuationUom = freightTemplateVO.getValuationUom();
+        if (StringUtils.isNotBlank(valuationUom) && StringUtils.isNotBlank(valuationType)){
+            List<Map<String, Object>> list = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW,organizationId);
+            if (CollectionUtils.isNotEmpty(list)){
+                Optional<Map<String, Object>> first = list.stream().filter(li -> li.get("uomTypeCode").equals(valuationType)
+                        && li.get("uomCode").equals(valuationUom)).findFirst();
+                if (first.isPresent()){
+                    freightTemplateVO.setValuationUomMeaning(first.get().get("uomName").toString());
+                }
+            }
         }
-        if (StringUtils.isNotBlank(freightTemplateVO.getValuationType())){
-            freightTemplateVO.setValuationTypeMeaning(getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW,
-                    freightTemplateVO.getValuationType(),organizationId));
+        if (StringUtils.isNotBlank(valuationType)){
+            List<Map<String, Object>> list = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW,organizationId);
+            if (CollectionUtils.isNotEmpty(list)){
+                Optional<Map<String, Object>> first = list.stream().filter(li -> li.get("uomTypeCode").equals(valuationType) ).findFirst();
+                if (first.isPresent()){
+                    freightTemplateVO.setValuationTypeMeaning(first.get().get("uomTypeName").toString());
+                }
+            }
         }
     }
 
-    /**
-     * 获取自定义SQL值集
-     *
-     * @param lovCode  值集编码，如：O2MD.CURRENCY
-     * @param lovValue 值集，如：CNY
-     * @param tenantId 租户ID
-     * @return meaning
-     */
-    private String getSqlMeaning(String lovCode,String lovValue, Long tenantId) {
-        Map<String,Object> params = new HashMap<>(1);
-        params.put("identities", "'" + lovValue + "'");
-        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.getLovSqlMeaning(lovCode, tenantId, params);
-        if (!org.springframework.util.CollectionUtils.isEmpty(lovSqlMeaning)) {
-            Object meaning = lovSqlMeaning.get(0).get("meaning");
-            return String.valueOf(meaning);
-        }
-        return null;
+
+    private List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
+        Map<String,Object> params = new HashMap<>(4);
+        params.put("lovCode",lovCode);
+        params.put("page",0);
+        params.put("size",100);
+        params.put("tenantId",tenantId);
+        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 10);
+        log.info("getSqlMeaning,lovCode:{},lovSqlMeaning:{},",lovCode, JSON.toJSONString(lovSqlMeaning));
+        return lovSqlMeaning;
     }
 
     public String fetchGroupKey(final FreightTemplateDetail detail) {
