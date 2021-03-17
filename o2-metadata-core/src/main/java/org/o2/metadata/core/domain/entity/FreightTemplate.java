@@ -96,11 +96,9 @@ public class FreightTemplate extends AuditDomain {
     @Min(0)
     @LovValue(lovCode = BasicDataConstants.FreightType.LOV_HPFM_FLAG)
     private Integer deliveryFreeFlag;
-    @ApiModelProperty(value = "计价方式，值集O2MD.VALUATION_TYPE")
-    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_VALUATION_TYPE)
+    @ApiModelProperty(value = "计价方式，值集视图O2MD.UOM_TYPE")
     private String valuationType;
-    @ApiModelProperty(value = "计价单位，值集O2MD.VALUATION_UOM")
-    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_VALUATION_UOM)
+    @ApiModelProperty(value = "计价单位，值集视图O2MD.UOM")
     private String valuationUom;
     @ApiModelProperty(value = "默认运费模板标记，新建的时候默认为0",required = true)
     @NotNull
