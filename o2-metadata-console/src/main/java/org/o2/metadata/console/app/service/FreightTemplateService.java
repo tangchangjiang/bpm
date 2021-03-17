@@ -16,9 +16,10 @@ public interface FreightTemplateService {
      * 根据主键查询运费模板和运费模板明细
      *
      * @param templateId 运费模板ID
+     * @param organizationId 租户id
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO queryTemplateAndDetails(final Long templateId);
+    FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId);
 
     /**
      * 新增运费模板和运费模板明细
