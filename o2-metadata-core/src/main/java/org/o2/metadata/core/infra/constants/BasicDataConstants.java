@@ -86,6 +86,15 @@ public interface BasicDataConstants {
         String LOV_HPFM_FLAG = "HPFM.FLAG" ;
 
 
+        /**
+         * 计价方式
+         */
+        String LOV_VALUATION_TYPE_NEW = "O2MD.UOM_TYPE" ;
+
+        /**
+         * 计价单位
+         */
+        String LOV_VALUATION_UOM_NEW = "O2MD.UOM" ;
 
     }
 
