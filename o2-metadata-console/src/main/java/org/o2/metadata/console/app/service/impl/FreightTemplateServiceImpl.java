@@ -1,7 +1,10 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.oauth.DetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -17,6 +20,7 @@ import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.core.domain.repository.RegionRepository;
 import org.o2.metadata.core.domain.vo.FreightTemplateVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -29,11 +33,14 @@ import java.util.*;
  * @author peng.xu@hand-china.com 2019/5/17
  */
 @Service
+@Slf4j
 public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation implements FreightTemplateService {
     private final FreightTemplateRepository freightTemplateRepository;
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
     private final FreightTemplateDetailService freightTemplateDetailService;
     private final FreightCacheService freightCacheService;
+    @Autowired
+    private LovSqlHandler lovSqlHandler;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
@@ -49,8 +56,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightTemplateVO queryTemplateAndDetails(final Long templateId) {
+    public FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
         final FreightTemplate freightTemplate = freightTemplateRepository.selectyTemplateId(templateId);
+        List<FreightTemplate> list = new ArrayList<>();
+        list.add(freightTemplate);
+        this.tranLov(list,organizationId);
         final FreightTemplateVO freightTemplateVO = new FreightTemplateVO(freightTemplate);
 
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
@@ -61,6 +71,46 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         freightTemplateVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
 
         return freightTemplateVO;
+    }
+
+    @Override
+    public void tranLov(List<FreightTemplate> list, Long organizationId) {
+        if (CollectionUtils.isNotEmpty(list)){
+            List<Map<String, Object>>  uomList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
+            List<Map<String, Object>>  typeList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
+
+            list.forEach(freightTemplateVO->{
+                String valuationType = freightTemplateVO.getValuationType();
+                String valuationUom = freightTemplateVO.getValuationUom();
+                if (StringUtils.isNotBlank(valuationUom) && StringUtils.isNotBlank(valuationType)){
+                    if (CollectionUtils.isNotEmpty(uomList)){
+                        Optional<Map<String, Object>> first = uomList.stream().filter(li -> li.get("uomTypeCode").equals(valuationType)
+                                && li.get("uomCode").equals(valuationUom)).findFirst();
+                        if (first.isPresent()){
+                            freightTemplateVO.setValuationUomMeaning(first.get().get("uomName").toString());
+                        }
+                    }
+                }
+                if (StringUtils.isNotBlank(valuationType)){
+                    if (CollectionUtils.isNotEmpty(typeList)){
+                        Optional<Map<String, Object>> first = typeList.stream().filter(li -> li.get("uomTypeCode").equals(valuationType) ).findFirst();
+                        if (first.isPresent()){
+                            freightTemplateVO.setValuationTypeMeaning(first.get().get("uomTypeName").toString());
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
+        Map<String,Object> params = new HashMap<>(4);
+        params.put("lovCode",lovCode);
+        params.put("page",0);
+        params.put("size",100);
+        params.put("tenantId",tenantId);
+        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 10);
+        return lovSqlMeaning;
     }
 
     public String fetchGroupKey(final FreightTemplateDetail detail) {
@@ -261,7 +311,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public void refreshCache(Long templateId) {
-        FreightTemplateVO freightTemplateVO = queryTemplateAndDetails(templateId);
+        FreightTemplateVO freightTemplateVO = queryTemplateAndDetails(templateId, null);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
         if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
@@ -423,7 +473,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         Assert.isTrue(!CollectionUtils.isEmpty(list), "默认运费模板不存在");
         Assert.isTrue(!(list.size()!=1), "默认运费模板不唯一");
 
-        return  queryTemplateAndDetails(list.get(0).getTemplateId());
+        return  queryTemplateAndDetails(list.get(0).getTemplateId(), organizationId);
 
     }
 

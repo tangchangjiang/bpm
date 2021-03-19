@@ -1,3 +1,4 @@
+image: registry.cn-shanghai.aliyuncs.com/c7n/cibase:0.11.0
 stages:
   - sonar
   - maven_package
@@ -5,13 +6,11 @@ stages:
 sonar_check:
   stage: sonar
   script:
-    - mvn --batch-mode clean verify sonar:sonar
-      -Dsonar.host.url=${SONAR_URL}
-      -Dsonar.login=${SONAR_TOKEN}
-      -Dsonar.sorceEncoding=UTF-8
-      -Dsonar.projectKey=${SONAR_PROJECT_KEY}
-      -Dmaven.test.failure.ignore=true
-      -DskipTests=true
+    - mvn --batch-mode clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar
+      -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.gitlab.project_id=$CI_PROJECT_PATH
+      -Dsonar.gitlab.commit_sha=$CI_COMMIT_REF_NAME -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+      -Dsonar.analysis.serviceGroup=$GROUP_NAME -Dsonar.analysis.commitId=$CI_COMMIT_SHA
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dmaven.test.failure.ignore=true -DskipTests=true
   only:
     - sonar
 
@@ -22,3 +21,13 @@ maven_package:
   only:
     - dev
     - test
+    - test_for_1.2.4
+
+before_script:
+  - |
+    http_status_code=`curl -o .auto_devops.sh -s -m 10 --connect-timeout 10 -w %{http_code} "${CHOERODON_URL}/devops/ci?token=${Token}&type=microservice"`
+    if [ "$http_status_code" != "200" ]; then
+      cat ./.auto_devops.sh
+      exit 1
+    fi
+    source ./.auto_devops.sh
