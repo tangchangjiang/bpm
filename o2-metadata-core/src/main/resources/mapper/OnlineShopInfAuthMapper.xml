@@ -63,8 +63,8 @@
         osia.last_updated_by,
         osia.last_update_date
         FROM
-        o2md_online_shop_inf_auth as osia
-        JOIN o2md_online_shop as os on osia.online_shop_id = os.online_shop_id and os.tenant_id = #{tenantId}
+        o2md_online_shop_inf_auth osia
+        JOIN o2md_online_shop os on osia.online_shop_id = os.online_shop_id and os.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
