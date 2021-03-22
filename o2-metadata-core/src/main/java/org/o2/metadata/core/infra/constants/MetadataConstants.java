@@ -1,5 +1,7 @@
 package org.o2.metadata.core.infra.constants;
 
+import com.google.common.base.Joiner;
+import org.hzero.core.base.BaseConstants;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
@@ -56,7 +58,7 @@ public interface MetadataConstants {
      * 对应数据库表：o2md_online_shop_rel_warehouse
      */
     interface OnlineShopRelWarehouse {
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:%s";
+        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:{%s}";
         String FIELD_WAREHOUSE_CODE = "warehouseCode";
         Collection<String> HASH_KEYS = new HashSet<String>() {{
             add(FIELD_WAREHOUSE_CODE);
@@ -69,7 +71,7 @@ public interface MetadataConstants {
      * 对应数据库表：o2md_warehouse
      */
     interface WarehouseCache {
-        String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:%s";
+        String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:{%s}";
         String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:%d:limit";
         String PICK_UP_LIMIT_COLLECTION = "o2md:warehouse:pick_up:%d:limit";
         String POS_CODE = "posCode";
@@ -134,7 +136,7 @@ public interface MetadataConstants {
          *     {region} - 地区信息对应模板
          *     DEFAULT  - 默认运费模板行
          */
-        String FREIGHT_DETAIL_KEY = "o2om:freight:%s:%s";
+        String FREIGHT_DETAIL_KEY = "o2om:freight:{%s}:%s";
 
 
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =

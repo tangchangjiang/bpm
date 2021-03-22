@@ -42,7 +42,6 @@
         os.active_flag,
         os.enable_split_flag,
         os.OBJECT_VERSION_NUMBER,
-        os.catalog_code,
         os.tenant_id,
         os.catalog_version_code,
         ocvt.catalog_version_name,
