@@ -5,6 +5,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.SystemParamValue;
@@ -48,6 +49,8 @@ public class SystemParamValueController extends BaseController {
     private SystemParamValueRepository systemParamValueRepository;
     @Autowired
     private SystemParamValueService systemParamValueService;
+    @Autowired
+    private SysParamService sysParamService;
 
     @ApiOperation(value = "系统参数值列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -79,6 +82,7 @@ public class SystemParamValueController extends BaseController {
     public ResponseEntity<?> create(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         systemParamValueRepository.insertSelective(systemParamValue);
+        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
         return Results.success(systemParamValue);
     }
 
@@ -88,7 +92,8 @@ public class SystemParamValueController extends BaseController {
     public ResponseEntity<?> update(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
-        systemParamValueRepository.updateByPrimaryKeySelective(systemParamValue);
+        systemParamValueRepository.updateByPrimaryKey(systemParamValue);
+        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
         return Results.success(systemParamValue);
     }
 
@@ -99,6 +104,7 @@ public class SystemParamValueController extends BaseController {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
         systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
+        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
         return Results.success();
     }
 
