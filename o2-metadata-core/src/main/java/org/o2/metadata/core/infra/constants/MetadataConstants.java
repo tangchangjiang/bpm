@@ -1,7 +1,5 @@
 package org.o2.metadata.core.infra.constants;
 
-import com.google.common.base.Joiner;
-import org.hzero.core.base.BaseConstants;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
@@ -152,7 +150,7 @@ public interface MetadataConstants {
      * o2ext:parameter:[tenantId]:[parameterType]
      */
     interface SystemParameter {
-        String KEY = "o2md:parameter:%d:%s";
+        String KEY = "o2md:parameter:%d:{%s}";
     }
 
 
