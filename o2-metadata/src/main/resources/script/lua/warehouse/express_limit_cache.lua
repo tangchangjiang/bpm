@@ -1,5 +1,6 @@
 local warehouseLimitKey = KEYS[1];
-local warehouseCacheKey = 'o2md:warehouse:' .. ARGV[3] ..':'.. ARGV[1];
+--local warehouseCacheKey = 'o2md:warehouse:' .. ARGV[3] ..':'.. ARGV[1];
+local warehouseCacheKey = ARGV[4];
 
 redis.call('hset', warehouseCacheKey, 'express_limit_quantity', ARGV[2])
 local pushLimit = tonumber(ARGV[2]);
