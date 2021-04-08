@@ -125,7 +125,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouses) {
        Map<String,Object> map = new HashMap<>();
         onlineShopRelWarehouses.forEach(onlineShopRelWarehouseVO ->
-                map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getBusinessActiveFlag()));
+                map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getActiveFlag()));
        return map;
     }
 
@@ -183,7 +183,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                         } catch (IOException e) {
                         }
                     } else {
-                        redisCacheClient.opsForHash().delete(hashKey);
+                        redisCacheClient.opsForHash().delete(hashKey, groupOnlineShopRelWarehouseVos.stream().map(OnlineShopRelWarehouseVO::getWarehouseCode).toArray());
                     }
 //                    keyList.add(hashKey);
 //                    // 获取hashMap
