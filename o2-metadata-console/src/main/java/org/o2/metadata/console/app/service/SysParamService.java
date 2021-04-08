@@ -31,6 +31,14 @@ public interface SysParamService {
     void updateToRedis(SystemParameter systemParameter,
                        Long tenantId);
 
+    /**
+     * 单条更新系统参数
+     *
+     * @param paramId  系统参数ID
+     * @param tenantId 租户ID
+     **/
+    void updateToRedis(Long paramId, Long tenantId);
+
     void extraOperate(String paramCode, Long tenantId);
 
 

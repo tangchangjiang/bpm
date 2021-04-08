@@ -240,7 +240,7 @@ public class Warehouse extends AuditDomain {
 
                     }
                 } else {
-                    redisCacheClient.opsForHash().delete(hashKey);
+                    redisCacheClient.opsForHash().delete(hashKey, warehouse.buildRedisHashMap().keySet().toArray());
                 }
 
 //                keyList.add(hashKey);

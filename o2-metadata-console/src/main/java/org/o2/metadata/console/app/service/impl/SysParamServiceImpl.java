@@ -158,6 +158,19 @@ public class SysParamServiceImpl implements SysParamService {
         }
     }
 
+
+    @Override
+    public void updateToRedis(Long paramId, Long tenantId) {
+        SystemParameter queryParam = new SystemParameter();
+        queryParam.setParamId(paramId);
+        queryParam.setTenantId(tenantId);
+
+        SystemParameter systemParameter = systemParameterRepository.selectOne(queryParam);
+        if (null != systemParameter) {
+            this.updateToRedis(systemParameter, systemParameter.getTenantId());
+        }
+    }
+
     @Override
     public void extraOperate(String paramCode, Long tenantId) {
         if (DEFAULT_WH_UPLOAD_RATIO.equals(paramCode) || DEFAULT_WH_SAFETY_STOCK.equals(paramCode)) {
