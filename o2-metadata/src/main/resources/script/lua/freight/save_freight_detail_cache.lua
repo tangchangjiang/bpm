@@ -12,7 +12,7 @@ for tmpId,tmpJson in pairs(freightDetailMap) do
     then
         local oldData = cjson.decode(oldJson);
         local regionCode = (oldData["defaultFlag"] == '1') and oldData["regionCode"]  or 'DEFAULT';
-        local oldPriceKey = 'o2om:freight:'..oldData["tenantId"]..':'..oldData["templateCode"]..':'..regionCode;
+        local oldPriceKey = 'o2om:freight:'..oldData["tenantId"]..':{'..oldData["templateCode"]..'}:'..regionCode;
         redis.call('del', oldPriceKey);
     end
     redis.call('hset', freightInforKey, tmpId, tmpJson);
