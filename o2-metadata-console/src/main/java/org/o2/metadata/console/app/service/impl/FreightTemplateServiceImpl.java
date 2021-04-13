@@ -265,7 +265,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                     FreightTemplate oldDefTemp  ;
                     if(CollectionUtils.isNotEmpty(defaultTempList)){
                         oldDefTemp =  defaultTempList.get(0);
-                        if (oldDefTemp.getTemplateCode() != freightTemplate.getTemplateCode()){
+                        if (oldDefTemp.getTemplateCode().equals(freightTemplate.getTemplateCode())){
                             oldDefTemp.setDafaultFlag(0);
                             freightTemplateRepository.updateOptional(oldDefTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
                         }

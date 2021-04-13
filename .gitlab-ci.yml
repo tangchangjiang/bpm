@@ -21,7 +21,6 @@ maven_package:
   only:
     - dev
     - test
-    - test_for_1.2.4
 
 before_script:
   - |
