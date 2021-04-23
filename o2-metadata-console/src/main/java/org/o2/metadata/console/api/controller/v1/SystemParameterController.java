@@ -1,5 +1,8 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -11,14 +14,11 @@ import org.o2.metadata.core.domain.entity.SystemParameter;
 import org.o2.metadata.core.domain.repository.SystemParameterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
+
+import javax.validation.Valid;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
@@ -27,10 +27,6 @@ import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 系统参数 管理 API
@@ -76,7 +72,7 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "创建系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> create(@RequestBody @Valid SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         systemParameterRepository.insertSelective(systemParameter);
         sysParamService.updateToRedis(systemParameter, organizationId);
@@ -86,7 +82,7 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "修改系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> update(@RequestBody @Valid SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.updateByPrimaryKey(systemParameter);
