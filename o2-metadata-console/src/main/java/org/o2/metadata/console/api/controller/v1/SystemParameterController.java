@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 
-import javax.validation.Valid;
-
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -72,7 +70,8 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "创建系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> create(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+        this.validObject(systemParameter);
         systemParameter.setTenantId(organizationId);
         systemParameterRepository.insertSelective(systemParameter);
         sysParamService.updateToRedis(systemParameter, organizationId);
@@ -82,7 +81,8 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "修改系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody @Valid SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> update(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+        this.validObject(systemParameter);
         systemParameter.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.updateByPrimaryKey(systemParameter);
