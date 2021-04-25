@@ -1,7 +1,12 @@
 package org.o2.metadata.core.domain.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
+
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,10 +18,6 @@ import javax.validation.constraints.NotNull;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 系统参数
@@ -66,6 +67,7 @@ public class SystemParameter extends AuditDomain {
     @ApiModelProperty(value = "备注说明")
     private String remark;
     @ApiModelProperty(value = "默认值")
+    @NotBlank(message = "默认值不能为空")
     private String defaultValue;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
