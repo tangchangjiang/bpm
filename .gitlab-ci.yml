@@ -20,6 +20,7 @@ maven_package:
     - mvn clean -U -Dmaven.test.skip=true -Dspring-boot.repackage.skip=true -Dfile.encoding=UTF-8 deploy
   only:
     - dev
+    - test
 
 before_script:
   - |
