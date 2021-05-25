@@ -109,7 +109,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         params.put("page",0);
         params.put("size",100);
         params.put("tenantId",tenantId);
-        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 10);
+        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 100);
         return lovSqlMeaning;
     }
 
