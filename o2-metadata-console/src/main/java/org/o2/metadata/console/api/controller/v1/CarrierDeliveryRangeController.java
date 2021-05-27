@@ -1,27 +1,33 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.PageHelper;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.CarrierDeliveryRangeSaveDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.core.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.core.domain.repository.CountryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+
 import java.util.List;
+import java.util.stream.Collectors;
+
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.core.oauth.DetailsHelper;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 
 
 /**
@@ -36,11 +42,13 @@ import java.util.List;
 public class CarrierDeliveryRangeController extends BaseController {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final CarrierDeliveryRangeService carrierDeliveryRangeService;
+    private final CountryRepository countryRepository;
 
     public CarrierDeliveryRangeController(final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
-                                          final CarrierDeliveryRangeService carrierDeliveryRangeService) {
+                                          final CarrierDeliveryRangeService carrierDeliveryRangeService, CountryRepository countryRepository) {
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.carrierDeliveryRangeService = carrierDeliveryRangeService;
+        this.countryRepository = countryRepository;
     }
 
     @ApiOperation(value = "承运商送达范围列表")
@@ -65,7 +73,11 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量创建或新增承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public ResponseEntity<?> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRangeSaveDTO> carrierDeliveryRangeSaveDTOList) {
+        carrierDeliveryRangeSaveDTOList.forEach(CarrierDeliveryRangeSaveDTO::baseValidate);
+        List<CarrierDeliveryRange> carrierDeliveryRanges = carrierDeliveryRangeSaveDTOList.stream()
+                .map(dto -> dto.convertToCarrierDeliveryRange(countryRepository, DetailsHelper.getUserDetails().getTenantId()))
+                .collect(Collectors.toList());
         final List<CarrierDeliveryRange> resultList = carrierDeliveryRangeService.batchMerge(organizationId, carrierDeliveryRanges);
         return Results.success(resultList);
     }

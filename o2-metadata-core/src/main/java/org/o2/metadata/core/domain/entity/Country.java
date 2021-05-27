@@ -1,18 +1,20 @@
 package org.o2.metadata.core.domain.entity;
 
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.MultiLanguage;
-import io.choerodon.mybatis.annotation.MultiLanguageField;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hzero.core.util.Regexs;
+
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
+
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -32,6 +34,7 @@ public class Country extends AuditDomain {
     public static final String FIELD_COUNTRY_CODE = "countryCode";
     public static final String FIELD_COUNTRY_NAME = "countryName";
     public static final String FIELD_ENABLED_FLAG = "enabledFlag";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 数据库字段
