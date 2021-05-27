@@ -49,7 +49,9 @@ public class CarrierDeliveryRangeSaveDTO {
 
 
     public CarrierDeliveryRange convertToCarrierDeliveryRange(CountryRepository countryRepository, Long tenantId) {
-        setCountryIdByCode(countryRepository, tenantId);
+        if (StringUtils.isNotBlank(countryCode)) {
+            setCountryIdByCode(countryRepository, tenantId);
+        }
         CarrierDeliveryRange carrierDeliveryRange = new CarrierDeliveryRange();
         PropertiesCopier.copyEntities(this, carrierDeliveryRange);
         return carrierDeliveryRange;
