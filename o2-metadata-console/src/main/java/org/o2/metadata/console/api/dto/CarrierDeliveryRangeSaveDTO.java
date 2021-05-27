@@ -3,6 +3,7 @@ package org.o2.metadata.console.api.dto;
 import com.google.common.base.Preconditions;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -11,7 +12,6 @@ import org.o2.core.copier.PropertiesCopier;
 import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
 import org.o2.metadata.core.domain.entity.Country;
 import org.o2.metadata.core.domain.repository.CountryRepository;
-import org.springframework.util.Assert;
 
 
 import javax.validation.constraints.NotNull;
@@ -24,6 +24,7 @@ import java.util.List;
  * @date 2021/05/27 10:18
  */
 @Data
+@Slf4j
 public class CarrierDeliveryRangeSaveDTO {
 
     @ApiModelProperty(value = "国家编码")
@@ -66,9 +67,10 @@ public class CarrierDeliveryRangeSaveDTO {
 
 
     public void baseValidate() {
+        log.info("CarrierDeliveryRangeSaveDTO#baseValidate start");
         Preconditions.checkArgument(StringUtils.isNoneBlank(this.countryCode)
                 || null != this.countryId, "国家不能为空");
-        Assert.notNull(this.carrierId, "承运商不能为空");
-        Assert.notNull(this.regionId, "省不能为空");
+        Preconditions.checkArgument(null != this.carrierId, "承运商不能为空");
+        Preconditions.checkArgument(null != this.regionId, "省不能为空");
     }
 }
