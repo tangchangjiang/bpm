@@ -16,6 +16,10 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-export</artifactId>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

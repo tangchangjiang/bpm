@@ -20,8 +20,20 @@
         <o2.starter.core.version>1.4.0-SNAPSHOT</o2.starter.core.version>
         <o2.starter.data.redis.version>1.4.0-SNAPSHOT</o2.starter.data.redis.version>
         <o2.metadata.domain.version>1.4.0-SNAPSHOT</o2.metadata.domain.version>
+        <o2.metadata.version>1.4.0-SNAPSHOT</o2.metadata.version>
+        <o2.metadata.management.ersion>1.4.0-SNAPSHOT</o2.metadata.management.ersion>
         <o2.metadata.client.version>1.4.0-SNAPSHOT</o2.metadata.client.version>
     </properties>
+
+    <modules>
+        <module>o2-metadata</module>
+        <module>o2-metadata-domain</module>
+        <module>o2-metadata-client</module>
+        <module>o2-metadata-management</module>
+        <module>o2-metadata-management-client</module>
+        <module>o2-metadata-pipeline-management</module>
+        <module>o2-metadata-pipeline-client</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -35,6 +47,16 @@
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-metadata-domain</artifactId>
                 <version>${o2.metadata.domain.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata</artifactId>
+                <version>${o2.metadata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-management</artifactId>
+                <version>${o2.metadata.management.ersion}</version>
             </dependency>
             <dependency>
                 <groupId>org.o2.starter</groupId>
