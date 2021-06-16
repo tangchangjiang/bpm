@@ -20,9 +20,9 @@
     </parent>
 
     <modules>
-        <module>o2-metadata-core</module>
+        <module>o2-metadata-domain</module>
         <module>o2-metadata</module>
-        <module>o2-metadata-console</module>
+        <module>o2-metadata-management</module>
     </modules>
 
     <build>
