@@ -5,15 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.o2</groupId>
-        <artifactId>o2-parent</artifactId>
-        <version>1.2.7-SNAPSHOT</version>
+        <groupId>org.o2.metadata</groupId>
+        <artifactId>o2-metadata-parent</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.o2.metadata</groupId>
     <artifactId>o2-metadata-pipeline-management</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+    </dependencies>
     <repositories>
         <repository>
             <id>o2-group</id>
@@ -29,6 +30,4 @@
         </repository>
     </repositories>
 
-    <dependencies>
-    </dependencies>
 </project>
