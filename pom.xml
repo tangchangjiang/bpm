@@ -23,6 +23,7 @@
         <o2.metadata.version>1.4.0-SNAPSHOT</o2.metadata.version>
         <o2.metadata.management.ersion>1.4.0-SNAPSHOT</o2.metadata.management.ersion>
         <o2.metadata.client.version>1.4.0-SNAPSHOT</o2.metadata.client.version>
+        <o2.inventory.client.version>1.4.0-SNAPSHOT</o2.inventory.client.version>
     </properties>
 
     <modules>
@@ -69,9 +70,9 @@
                 <version>${o2.metadata.client.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.o2.feignclient</groupId>
-                <artifactId>o2-feignclient-inventory</artifactId>
-                <version>1.4.0-SNAPSHOT</version>
+                <groupId>org.o2.inventory</groupId>
+                <artifactId>o2-inventory-client</artifactId>
+                <version>${o2.inventory.client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
