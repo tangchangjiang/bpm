@@ -21,7 +21,7 @@
         <o2.starter.data.redis.version>1.4.0-SNAPSHOT</o2.starter.data.redis.version>
         <o2.metadata.domain.version>1.4.0-SNAPSHOT</o2.metadata.domain.version>
         <o2.metadata.version>1.4.0-SNAPSHOT</o2.metadata.version>
-        <o2.metadata.management.ersion>1.4.0-SNAPSHOT</o2.metadata.management.ersion>
+        <o2.metadata.management.version>1.4.0-SNAPSHOT</o2.metadata.management.version>
         <o2.metadata.client.version>1.4.0-SNAPSHOT</o2.metadata.client.version>
         <o2.inventory.client.version>1.4.0-SNAPSHOT</o2.inventory.client.version>
     </properties>
@@ -57,7 +57,7 @@
             <dependency>
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-metadata-management</artifactId>
-                <version>${o2.metadata.management.ersion}</version>
+                <version>${o2.metadata.management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.o2.starter</groupId>
@@ -76,19 +76,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
