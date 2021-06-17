@@ -25,8 +25,8 @@
             <artifactId>o2-metadata-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.o2.feignclient</groupId>
-            <artifactId>o2-feignclient-inventory</artifactId>
+            <groupId>org.o2.inventory</groupId>
+            <artifactId>o2-inventory-client</artifactId>
         </dependency>
 
         <!-- hzero -->
