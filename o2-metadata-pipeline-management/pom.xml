@@ -10,25 +10,11 @@
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>o2-metadata</artifactId>
+    <artifactId>o2-metadata-pipeline-management</artifactId>
     <packaging>jar</packaging>
 
-
-
     <dependencies>
-        <!--o2-->
-        <dependency>
-            <groupId>org.o2.metadata</groupId>
-            <artifactId>o2-metadata-domain</artifactId>
-        </dependency>
-        <!--other-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
-
     <repositories>
         <repository>
             <id>o2-group</id>
@@ -43,4 +29,5 @@
             </releases>
         </repository>
     </repositories>
+
 </project>

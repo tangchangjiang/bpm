@@ -21,6 +21,7 @@ maven_package:
   only:
     - dev
     - test
+    - /^*-SNAPSHOT$/
 
 before_script:
   - |

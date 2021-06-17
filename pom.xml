@@ -4,14 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.o2.metadata</groupId>
-    <artifactId>metadata-module</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
-    <name>metadata-module</name>
-    <description>O2-Metadata模块</description>
-    <packaging>pom</packaging>
-
-
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-parent</artifactId>
@@ -19,11 +11,71 @@
         <!--<relativePath/>-->
     </parent>
 
+    <groupId>org.o2.metadata</groupId>
+    <artifactId>o2-metadata-parent</artifactId>
+    <version>1.4.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <o2.starter.core.version>1.4.0-SNAPSHOT</o2.starter.core.version>
+        <o2.starter.data.redis.version>1.4.0-SNAPSHOT</o2.starter.data.redis.version>
+        <o2.metadata.domain.version>1.4.0-SNAPSHOT</o2.metadata.domain.version>
+        <o2.metadata.version>1.4.0-SNAPSHOT</o2.metadata.version>
+        <o2.metadata.management.ersion>1.4.0-SNAPSHOT</o2.metadata.management.ersion>
+        <o2.metadata.client.version>1.4.0-SNAPSHOT</o2.metadata.client.version>
+    </properties>
+
     <modules>
-        <module>o2-metadata-core</module>
         <module>o2-metadata</module>
-        <module>o2-metadata-console</module>
+        <module>o2-metadata-domain</module>
+        <module>o2-metadata-client</module>
+        <module>o2-metadata-management</module>
+        <module>o2-metadata-management-client</module>
+        <module>o2-metadata-pipeline-management</module>
+        <module>o2-metadata-pipeline-client</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- o2 -->
+            <dependency>
+                <groupId>org.o2.starter</groupId>
+                <artifactId>o2-starter-core</artifactId>
+                <version>${o2.starter.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-domain</artifactId>
+                <version>${o2.metadata.domain.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata</artifactId>
+                <version>${o2.metadata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-management</artifactId>
+                <version>${o2.metadata.management.ersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.starter</groupId>
+                <artifactId>o2-starter-data-redis</artifactId>
+                <version>${o2.starter.data.redis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-client</artifactId>
+                <version>${o2.metadata.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.feignclient</groupId>
+                <artifactId>o2-feignclient-inventory</artifactId>
+                <version>1.4.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
     <build>
         <plugins>
