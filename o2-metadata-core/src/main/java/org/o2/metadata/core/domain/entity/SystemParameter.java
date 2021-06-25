@@ -67,7 +67,6 @@ public class SystemParameter extends AuditDomain {
     @ApiModelProperty(value = "备注说明")
     private String remark;
     @ApiModelProperty(value = "默认值")
-    @NotBlank(message = "默认值不能为空")
     private String defaultValue;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
