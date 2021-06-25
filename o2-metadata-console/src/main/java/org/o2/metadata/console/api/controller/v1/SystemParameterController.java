@@ -71,8 +71,8 @@ public class SystemParameterController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<?> create(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
-        this.validObject(systemParameter);
         systemParameter.setTenantId(organizationId);
+        this.validObject(systemParameter);
         systemParameterRepository.insertSelective(systemParameter);
         sysParamService.updateToRedis(systemParameter, organizationId);
         return Results.success(systemParameter);
@@ -82,8 +82,8 @@ public class SystemParameterController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<?> update(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
-        this.validObject(systemParameter);
         systemParameter.setTenantId(organizationId);
+        this.validObject(systemParameter);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.updateByPrimaryKey(systemParameter);
         sysParamService.updateToRedis(systemParameter, organizationId);
