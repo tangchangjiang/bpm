@@ -73,7 +73,7 @@ public class MetadataRedisUtil {
             }
             executeScript(filedMaps, Collections.emptyList(), resourceScriptSource, redisCacheClient);
         } catch (Exception e) {
-            throw new CommonException(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM).desc());
+            throw new CommonException(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
         }
     }
 
