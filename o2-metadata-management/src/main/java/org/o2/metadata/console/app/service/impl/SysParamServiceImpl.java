@@ -113,7 +113,7 @@ public class SysParamServiceImpl implements SysParamService {
             }
             MetadataRedisUtil.executeScript(filedMaps, Collections.emptyList(), O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA, redisCacheClient);
         } catch (Exception e) {
-            throw new CommonException(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM).desc());
+            throw new CommonException(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
         }
     }
 

@@ -1,7 +1,7 @@
 package org.o2.metadata.app.service;
 
 
-import org.o2.metadata.core.domain.vo.SystemParamDetailVO;
+import org.o2.metadata.api.vo.SystemParamDetailVO;
 
 /**
  * 系统参数缓存

@@ -14,21 +14,6 @@
     <packaging>jar</packaging>
 
 
-
-    <dependencies>
-        <!--o2-->
-        <dependency>
-            <groupId>org.o2.metadata</groupId>
-            <artifactId>o2-metadata-domain</artifactId>
-        </dependency>
-        <!--other-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <repositories>
         <repository>
             <id>o2-group</id>
@@ -43,4 +28,25 @@
             </releases>
         </repository>
     </repositories>
+
+    <dependencies>
+        <!-- o2 -->
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-platform</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

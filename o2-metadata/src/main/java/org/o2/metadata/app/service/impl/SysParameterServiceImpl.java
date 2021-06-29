@@ -3,10 +3,10 @@ package org.o2.metadata.app.service.impl;
 import com.alibaba.fastjson.JSONArray;
 
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.api.vo.SystemParamDetailVO;
+import org.o2.metadata.api.vo.SystemParamValueVO;
 import org.o2.metadata.app.service.SysParameterService;
-import org.o2.metadata.core.domain.vo.SystemParamDetailVO;
-import org.o2.metadata.core.domain.vo.SystemParamValueVO;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.infra.constants.MetadataConstants;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
