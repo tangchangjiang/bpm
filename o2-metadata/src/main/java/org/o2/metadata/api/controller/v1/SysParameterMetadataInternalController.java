@@ -1,9 +1,9 @@
 package org.o2.metadata.api.controller.v1;
 
 import org.hzero.core.util.Results;
+import org.o2.metadata.api.vo.SystemParamDetailVO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.config.EnableMetadata;
-import org.o2.metadata.core.domain.vo.SystemParamDetailVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

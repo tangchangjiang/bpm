@@ -12,7 +12,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 @ComponentScan({
         "org.o2.metadata.api",
-        "org.o2.metadata.app"
+        "org.o2.metadata.app",
+        "org.o2.metadata.infra",
 })
 public class EnableMetadata {
 

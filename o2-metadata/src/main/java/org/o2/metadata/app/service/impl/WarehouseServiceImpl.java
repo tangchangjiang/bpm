@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.app.service.WarehouseService;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.infra.constants.MetadataConstants;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;

@@ -10,9 +10,23 @@
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>o2-metadata</artifactId>
+    <artifactId>o2-metadata-client</artifactId>
     <packaging>jar</packaging>
 
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-platform</artifactId>
+        </dependency>
+        <!--other-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <repositories>
         <repository>
@@ -28,25 +42,4 @@
             </releases>
         </repository>
     </repositories>
-
-    <dependencies>
-        <!-- o2 -->
-        <dependency>
-            <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hzero.boot</groupId>
-            <artifactId>hzero-boot-platform</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 </project>

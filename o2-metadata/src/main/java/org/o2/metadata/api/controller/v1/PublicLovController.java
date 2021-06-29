@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
-import org.o2.metadata.core.infra.service.CustomLovService;
+import org.o2.metadata.app.service.CustomLovService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
