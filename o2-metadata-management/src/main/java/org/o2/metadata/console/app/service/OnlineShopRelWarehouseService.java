@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.core.domain.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.domain.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
 

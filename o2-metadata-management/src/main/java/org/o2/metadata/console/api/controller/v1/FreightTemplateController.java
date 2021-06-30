@@ -13,11 +13,11 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.core.domain.entity.FreightTemplate;
-import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
-import org.o2.metadata.core.domain.vo.FreightTemplateVO;
+import org.o2.metadata.console.domain.entity.FreightTemplate;
+import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

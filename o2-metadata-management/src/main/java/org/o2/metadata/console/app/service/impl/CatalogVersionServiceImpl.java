@@ -4,10 +4,10 @@ import io.choerodon.core.exception.CommonException;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.core.domain.entity.Catalog;
-import org.o2.metadata.core.domain.entity.CatalogVersion;
-import org.o2.metadata.core.domain.repository.CatalogRepository;
-import org.o2.metadata.core.domain.repository.CatalogVersionRepository;
+import org.o2.metadata.console.domain.entity.Catalog;
+import org.o2.metadata.console.domain.entity.CatalogVersion;
+import org.o2.metadata.console.domain.repository.CatalogRepository;
+import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.stereotype.Service;
 

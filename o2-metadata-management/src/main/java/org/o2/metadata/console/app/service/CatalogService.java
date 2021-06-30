@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service;
 
 import org.hzero.export.vo.ExportParam;
-import org.o2.metadata.core.domain.entity.Catalog;
-import org.o2.metadata.core.domain.vo.CatalogVO;
+import org.o2.metadata.console.api.vo.CatalogVO;
+import org.o2.metadata.console.domain.entity.Catalog;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface CatalogService {
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogVO> export(final  ExportParam exportParam,final Long tenantId );
+    List<CatalogVO> export(final  ExportParam exportParam, final Long tenantId );
     /**
      * 修改目录版本
      * @date 2020-05-22

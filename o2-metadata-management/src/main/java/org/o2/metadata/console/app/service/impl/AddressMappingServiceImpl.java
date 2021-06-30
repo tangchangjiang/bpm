@@ -2,8 +2,8 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.o2.metadata.console.app.service.AddressMappingService;
-import org.o2.metadata.core.domain.entity.AddressMapping;
-import org.o2.metadata.core.domain.entity.Region;
+import org.o2.metadata.console.domain.entity.AddressMapping;
+import org.o2.metadata.console.domain.entity.Region;
 import org.o2.metadata.core.domain.vo.RegionTreeChildVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.o2.metadata.core.infra.mapper.AddressMappingMapper;

@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.core.domain.entity.OnlineShop;
+import org.o2.metadata.console.domain.entity.OnlineShop;
 
 /**
  * 网店应用服务
