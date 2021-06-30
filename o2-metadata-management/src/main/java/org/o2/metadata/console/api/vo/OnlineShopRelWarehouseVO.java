@@ -11,7 +11,7 @@ import org.o2.metadata.console.domain.entity.OnlineShop;
 import org.o2.metadata.console.domain.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.domain.entity.Pos;
 import org.o2.metadata.console.domain.entity.Warehouse;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 import java.util.Date;
 

@@ -13,7 +13,7 @@ import org.o2.metadata.console.domain.entity.Region;
 import org.o2.metadata.console.domain.repository.CarrierRepository;
 import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.console.domain.repository.RegionRepository;
-import org.o2.metadata.core.domain.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.core.domain.vo.RegionCacheVO;
+import org.o2.metadata.console.api.vo.RegionCacheVO;
 
 /**
  * 同步地区静态文件

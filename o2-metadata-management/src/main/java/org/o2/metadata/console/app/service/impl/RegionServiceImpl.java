@@ -13,7 +13,7 @@ import org.o2.metadata.console.domain.entity.RegionArea;
 import org.o2.metadata.console.domain.repository.RegionAreaRepository;
 import org.o2.metadata.console.domain.repository.RegionRelPosRepository;
 import org.o2.metadata.console.domain.repository.RegionRepository;
-import org.o2.metadata.core.domain.vo.RegionVO;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

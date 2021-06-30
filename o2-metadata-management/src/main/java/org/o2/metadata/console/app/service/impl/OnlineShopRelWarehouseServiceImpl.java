@@ -19,7 +19,7 @@ import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepositor
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
 import org.o2.metadata.console.domain.repository.PosRepository;
 import org.o2.metadata.console.domain.repository.WarehouseRepository;
-import org.o2.metadata.core.domain.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.core.infra.constants.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

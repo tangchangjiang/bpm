@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 
-import org.o2.metadata.core.domain.vo.SystemParamValueVO;
+import org.o2.metadata.console.api.vo.SystemParamValueVO;
 
 import java.util.List;
 import java.util.Set;

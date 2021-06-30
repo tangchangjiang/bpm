@@ -6,7 +6,7 @@ import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.domain.entity.Catalog;
 import org.o2.metadata.console.domain.entity.CatalogVersion;
 import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
-import org.o2.metadata.core.domain.vo.CatalogVO;
+import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.domain.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

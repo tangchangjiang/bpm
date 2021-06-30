@@ -18,7 +18,7 @@ import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
 import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.console.domain.repository.RegionRepository;
-import org.o2.metadata.core.domain.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.core.infra.constants.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

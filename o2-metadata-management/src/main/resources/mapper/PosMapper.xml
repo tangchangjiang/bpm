@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.PosMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.Pos">
+        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
+        <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
+        <result column="open_date" property="openDate" jdbcType="DATE"/>
+        <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
+        <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
+        <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <resultMap id="PosVOMap" type="org.o2.metadata.console.api.vo.PosVO">
+        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
+        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
+        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
+        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
+        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
+        <result column="region_id" property="regionId" jdbcType="BIGINT"/>
+        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
+        <result column="city_id" property="cityId" jdbcType="BIGINT"/>
+        <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+        <result column="district_name" property="districtName" jdbcType="VARCHAR"/>
+        <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="PosResultMap" type="org.o2.metadata.console.domain.entity.Pos" extends="BaseResultMap">
+        <association property="address" columnPrefix="address_"
+                     resultMap="org.o2.metadata.console.infra.mapper.PosAddressMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        pos.tenant_id,
+        pos.pos_id,
+        pos.pos_code,
+        post.pos_name,
+        pos.pos_status_code,
+        pos.pos_type_code,
+        pos.OBJECT_VERSION_NUMBER,
+        address.region_id,
+        regiont.region_name region_name,
+        address.city_id,
+        cityt.region_name city_name,
+        address.district_id,
+        districtt.region_name district_name,
+        address.street_name,
+        pos.business_type_code
+        from o2md_pos pos
+        left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang}
+        left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
+        left join hpfm_region_tl regiont on regiont.region_id = address.region_id and regiont.lang = #{lang}
+        left join hpfm_region_tl cityt on cityt.region_id = address.city_id and  cityt.lang = #{lang}
+        left join hpfm_region_tl districtt on districtt.region_id = address.district_id and districtt.lang = #{lang}
+        where 1=1
+        <choose>
+            <when test="tenantId != null">
+                and pos.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="posCode != null and posCode != ''">
+            <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+            and pos.pos_code like #{posCodeLike}
+        </if>
+        <if test="posName != null and posName != ''">
+            <bind name="posNameLike" value="'%' + posName + '%'"/>
+            and pos.pos_name like #{posNameLike}
+        </if>
+        <if test="posStatusCode != null and posStatusCode != ''">
+            and pos.pos_status_code = #{posStatusCode}
+        </if>
+        <if test="posTypeCode != null and posTypeCode != ''">
+            and pos.pos_type_code = #{posTypeCode}
+        </if>
+        <if test="regionId != null and regionId != ''">
+            and address.region_id = #{regionId}
+        </if>
+        <if test="cityId != null and cityId != ''">
+            and address.city_Id = #{cityId}
+        </if>
+        <if test="districtId != null and districtId != ''">
+            and address.district_Id = #{districtId}
+        </if>
+        order by pos.pos_code ASC
+    </select>
+
+    <select id="listUnbindPosList" resultMap="BaseResultMap">
+        select
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_type_code
+        from o2md_pos p
+        where not exists(
+        select 1 from o2md_online_shop_rel_pos srp where srp.pos_id = p.pos_id and srp.online_shop_id = #{onlineShopId}
+        and srp.tenant_id = #{tenantId}
+        )
+        <choose>
+            <when test="tenantId != null">
+                and p.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                and 1 = 0
+            </otherwise>
+        </choose>
+        <if test="posCode != null">
+            <bind name="posCodeLike" value="posCode + '%'"/>
+            and p.pos_code LIKE #{posCodeLike}
+        </if>
+        <if test="posName != null">
+            <bind name="posNameLike" value="'%' + posName + '%'"/>
+            and p.pos_name LIKE #{posNameLike}
+        </if>
+        order by p.pos_code asc
+    </select>
+    <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">
+        SELECT
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_status_code,
+        p.pos_type_code,
+        p.business_type_code,
+        p.open_date,
+        p.address_id,
+        p.business_time,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE,
+        p.tenant_id,
+        p.notice
+        FROM
+        o2md_pos p
+        where p.pos_id = #{posId}
+        <choose>
+            <when test="tenantId != null">
+                AND p.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="listPosByCondition" resultType="org.o2.metadata.console.domain.entity.Pos">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        p.tenant_id,
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_type_code,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE
+        FROM
+        o2md_pos p
+        LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang}
+        <where>
+            <if test="posCode != null and posCode != ''">
+                <bind name="posCodeLike" value="'%' + posCode + '%'"/>
+                and p.pos_code like #{posCodeLike}
+            </if>
+            <if test="posName != null and posName != ''">
+                <bind name="posNameLike" value="'%' + posName + '%'"/>
+                and ptl.pos_name like #{posNameLike}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND p.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY p.pos_code ASC
+    </select>
+</mapper>
