@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.core.domain.vo.PlatformUomVO;
+import org.o2.metadata.console.api.vo.PlatformUomVO;
 
 import java.util.List;
 

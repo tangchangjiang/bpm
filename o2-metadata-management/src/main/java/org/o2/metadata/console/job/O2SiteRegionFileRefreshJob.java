@@ -6,7 +6,7 @@ import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
-import org.o2.metadata.core.domain.vo.RegionCacheVO;
+import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 

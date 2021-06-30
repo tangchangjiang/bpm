@@ -9,9 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.copier.PropertiesCopier;
-import org.o2.metadata.core.domain.entity.CarrierDeliveryRange;
-import org.o2.metadata.core.domain.entity.Country;
-import org.o2.metadata.core.domain.repository.CountryRepository;
+import org.o2.metadata.console.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.console.domain.entity.Country;
+import org.o2.metadata.console.domain.repository.CountryRepository;
 
 
 import javax.validation.constraints.NotNull;

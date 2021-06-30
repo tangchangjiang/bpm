@@ -8,8 +8,8 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.core.domain.vo.RegionCacheVO;
-import org.o2.metadata.core.infra.mapper.RegionMapper;
+import org.o2.metadata.console.api.vo.RegionCacheVO;
+import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

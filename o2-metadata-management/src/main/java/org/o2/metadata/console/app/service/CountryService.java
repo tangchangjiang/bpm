@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.core.domain.entity.Country;
+import org.o2.metadata.console.domain.entity.Country;
 
 import java.util.List;
 

@@ -10,10 +10,10 @@ import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
-import org.o2.metadata.core.domain.entity.Region;
-import org.o2.metadata.core.domain.entity.RegionArea;
-import org.o2.metadata.core.domain.repository.RegionAreaRepository;
-import org.o2.metadata.core.domain.repository.RegionRepository;
+import org.o2.metadata.console.domain.entity.Region;
+import org.o2.metadata.console.domain.entity.RegionArea;
+import org.o2.metadata.console.domain.repository.RegionAreaRepository;
+import org.o2.metadata.console.domain.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

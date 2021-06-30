@@ -10,8 +10,8 @@ import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.FreightTemplateService;
-import org.o2.metadata.core.domain.entity.FreightTemplate;
-import org.o2.metadata.core.domain.repository.FreightTemplateRepository;
+import org.o2.metadata.console.domain.entity.FreightTemplate;
+import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
