@@ -20,8 +20,8 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.domain.repository.PosRelCarrierRepository;
 import org.o2.metadata.console.domain.repository.PosRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 

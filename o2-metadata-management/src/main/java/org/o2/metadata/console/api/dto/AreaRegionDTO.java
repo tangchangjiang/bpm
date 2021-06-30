@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;

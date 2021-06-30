@@ -14,7 +14,7 @@ import org.o2.metadata.console.domain.entity.OnlineShop;
 import org.o2.metadata.console.domain.repository.CatalogRepository;
 import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 

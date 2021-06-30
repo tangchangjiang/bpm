@@ -1,7 +1,8 @@
 package org.o2.metadata.console.domain.repository;
 
 
-import org.o2.metadata.console.domain.vo.PlatformUomVO;
+
+import org.o2.metadata.console.api.vo.PlatformUomVO;
 
 import java.util.List;
 

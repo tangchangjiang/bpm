@@ -12,7 +12,7 @@ import org.o2.metadata.console.domain.entity.PosRelCarrier;
 import org.o2.metadata.console.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.domain.repository.CarrierRepository;
 import org.o2.metadata.console.domain.repository.PosRelCarrierRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;

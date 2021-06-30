@@ -17,7 +17,7 @@ import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepositor
 import org.o2.metadata.console.domain.repository.SystemParameterRepository;
 import org.o2.metadata.console.domain.repository.WarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

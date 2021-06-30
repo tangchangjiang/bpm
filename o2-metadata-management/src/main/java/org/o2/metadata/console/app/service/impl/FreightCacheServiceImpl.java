@@ -6,7 +6,7 @@ import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.script.DefaultRedisScript;

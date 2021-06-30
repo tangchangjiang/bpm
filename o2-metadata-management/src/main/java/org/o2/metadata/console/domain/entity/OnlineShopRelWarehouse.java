@@ -14,12 +14,13 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
 import org.o2.metadata.console.domain.repository.WarehouseRepository;
-import org.o2.metadata.console.domain.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.util.Assert;

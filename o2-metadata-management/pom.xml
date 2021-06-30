@@ -24,7 +24,10 @@
             <groupId>org.o2.inventory</groupId>
             <artifactId>o2-inventory-client</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-data-redis</artifactId>
+        </dependency>
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>

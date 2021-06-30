@@ -1,8 +1,8 @@
 package org.o2.metadata.console.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.domain.entity.Region;
-import org.o2.metadata.console.domain.vo.RegionVO;
 
 import java.util.List;
 

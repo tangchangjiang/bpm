@@ -17,7 +17,7 @@ import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.domain.entity.Warehouse;
 import org.o2.metadata.console.domain.repository.WarehouseRepository;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

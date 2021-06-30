@@ -9,7 +9,7 @@ import org.o2.metadata.console.domain.entity.SystemParameter;
 import org.o2.metadata.console.domain.repository.SystemParamValueRepository;
 import org.o2.metadata.console.domain.repository.SystemParameterRepository;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
-import org.o2.metadata.core.infra.constants.MetadataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

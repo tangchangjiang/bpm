@@ -5,7 +5,7 @@ import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.domain.entity.AddressMapping;
 import org.o2.metadata.console.domain.entity.Region;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
-import org.o2.metadata.core.infra.constants.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.slf4j.Logger;
