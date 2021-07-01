@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.CarrierMappingMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.CarrierMapping">
+        <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
+        <result column="catalog_code" property="catalogCode" jdbcType="DECIMAL"/>
+        <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
+        <result column="external_carrier_code" property="externalCarrierCode" jdbcType="VARCHAR"/>
+        <result column="external_carrier_Name" property="externalCarrierName" jdbcType="VARCHAR"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <resultMap id="carrierMappingVO" type="org.o2.metadata.console.api.vo.CarrierMappingVO" extends="BaseResultMap">
+        <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR"/>
+        <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="listCarrierMappingByCondition" resultType="org.o2.metadata.console.api.vo.CarrierMappingVO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        cm.carrier_mapping_id,
+        cm.catalog_code,
+        cm.carrier_id,
+        c.carrier_code,
+        oct.carrier_name,
+        cm.external_carrier_code,
+        cm.external_carrier_Name,
+        cm.object_version_number,
+        cm.creation_date,
+        cm.created_by,
+        cm.last_updated_by,
+        cm.last_update_date,
+        cat.catalog_name
+        FROM
+        o2md_carrier c
+        JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
+        join o2md_catalog  ca on ca.catalog_code = cm.catalog_code AND ca.tenant_id = #{tenantId}
+        left join  o2md_catalog_tl cat on cat.catalog_id = ca.catalog_id  and cat.lang = #{lang}
+        left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang}
+        where 1 = 1
+        <choose>
+            <when test="tenantId != null">
+                AND c.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="catalogCode!=null and catalogCode!=''">
+            AND cm.catalog_code = #{catalogCode}
+        </if>
+        <if test="carrierCode!=null and carrierCode!=''">
+            <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
+            AND c.carrier_code LIKE #{carrierCode}
+        </if>
+        <if test="externalCarrierCode != null and externalCarrierCode != ''">
+            <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
+            and cm.external_carrier_code like #{externalCarrierCodeLike}
+        </if>
+        ORDER BY cm.catalog_code, c.carrier_code
+    </select>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.OnlineShopMapper">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.OnlineShop">
+        <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
+        <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
+        <result column="platform_shop_code" property="platformShopCode" jdbcType="VARCHAR"/>
+        <result column="sourced_flag" property="sourcedFlag" jdbcType="DECIMAL"/>
+        <result column="picked_up_flag" property="pickedUpFlag" jdbcType="DECIMAL"/>
+        <result column="returned_flag" property="returnedFlag" jdbcType="DECIMAL"/>
+        <result column="exchanged_flag" property="exchangedFlag" jdbcType="DECIMAL"/>
+        <result column="is_default" property="isDefault" jdbcType="INTEGER"/>
+        <result column="default_currency" property="defaultCurrency" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <result column="enable_split_flag" property="enableSplitFlag" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
+        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <update id="updateDefaultShop">
+        update o2md_online_shop set is_default = 0 where is_default  = 1 and tenant_id = #{tenantId}
+    </update>
+
+    <select id="findByCondition" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        os.online_shop_id,
+        ost.online_shop_name,
+        os.online_shop_code,
+        os.platform_shop_code,
+        os.catalog_code,
+        os.sourced_flag,
+        os.picked_up_flag,
+        os.returned_flag,
+        os.exchanged_flag,
+        os.active_flag,
+        os.enable_split_flag,
+        os.OBJECT_VERSION_NUMBER,
+        os.tenant_id,
+        os.catalog_version_code,
+        ocvt.catalog_version_name,
+        oct.catalog_name,
+        os.default_currency,
+        os.is_default,
+        hcl.currency_name
+        FROM
+        o2md_online_shop os
+        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}
+        left join o2md_catalog oc on os.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
+        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang}
+        left join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code AND ocv.tenant_id =
+        #{tenantId}
+        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang =
+        #{lang}
+        left join  hpfm_currency  hc on hc.currency_code = os.default_currency and hc.tenant_id = #{tenantId}
+        left join  hpfm_currency_tl hcl on hcl.currency_id = hc.currency_id  and   hcl.lang = #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="onlineShopCode != null">
+                <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
+                AND os.online_shop_code   LIKE upper(#{onlineShopCodeLike})
+            </if>
+            <if test="onlineShopName != null">
+                <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
+                AND os.online_shop_name LIKE #{onlineShopNameLike}
+            </if>
+            <if test="activeFlag != null">
+                AND os.active_flag = #{activeFlag}
+            </if>
+            <if test="platformShopCode != null">
+                <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
+                AND os.platform_shop_code LIKE #{platformShopCodeLike}
+            </if>
+            <if test="catalogCode!=null and catalogCode!=''">
+                AND os.catalog_code = #{catalogCode}
+            </if>
+            <if test="catalogVersionCode!=null and catalogVersionCode!=''">
+                AND os.catalog_version_code = #{catalogVersionCode}
+            </if>
+            <if test="onlineShopId != null">
+                and os.online_shop_id = #{onlineShopId}
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
+    </select>
+
+
+    <select id="existenceDecide" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+        SELECT os.online_shop_id,
+        os.online_shop_name,
+        os.online_shop_code,
+        os.platform_shop_code,
+        os.catalog_code
+        FROM
+        o2md_online_shop os
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="onlineShopCode!=null and onlineShopCode!=''">
+                AND os.online_shop_code = #{onlineShopCode}
+            </if>
+            <if test="onlineShopName!=null and onlineShopName!=''">
+                AND os.online_shop_name = #{onlineShopName}
+            </if>
+            <if test="platformShopCode!=null and platformShopCode!=''">
+                AND os.platform_shop_code = #{platformShopCode}
+            </if>
+            <if test="catalogCode!=null and catalogCode!=''">
+                AND os.catalog_code = #{catalogCode}
+            </if>
+            <if test="catalogVersionCode!=null and catalogVersionCode!=''">
+                AND os.catalog_version_code = #{catalogVersionCode}
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
+    </select>
+    <select id="selectShop" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select os.online_shop_id,
+        os.online_shop_code,
+        os.catalog_version_code,
+        os.catalog_code,
+        os.platform_shop_code,
+        ost.online_shop_name
+        from o2md_online_shop os
+        left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="onlineShopCode!=null and onlineShopCode!=''">
+                AND os.online_shop_code = #{onlineShopCode}
+            </if>
+            <if test="onlineShopName!=null and onlineShopName!=''">
+                <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
+                AND os.online_shop_name LIKE #{onlineShopName}
+            </if>
+            <if test="platformShopCode!=null and platformShopCode!=''">
+                AND os.platform_shop_code = #{platformShopCode}
+            </if>
+            <if test="catalogCode!=null and catalogCode!=''">
+                AND os.catalog_code = #{catalogCode}
+            </if>
+            <if test="activeFlag!=null ">
+                AND os.active_flag = #{activeFlag}
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
+    </select>
+</mapper>
