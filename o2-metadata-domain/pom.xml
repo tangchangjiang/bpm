@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.o2.metadata</groupId>
+        <artifactId>o2-metadata-parent</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>o2-metadata-domain</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- o2 -->
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-core</artifactId>
+        </dependency>
+
+
+        <!-- hzero -->
+
+        <!-- spring-boot -->
+
+        <!-- other -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>

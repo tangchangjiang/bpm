@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.o2.metadata</groupId>
+        <artifactId>o2-metadata-parent</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>o2-metadata-management</artifactId>
+    <packaging>jar</packaging>
+
+
+    <dependencies>
+        <!-- o2 -->
+        <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-metadata-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.inventory</groupId>
+            <artifactId>o2-inventory-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-data-redis</artifactId>
+        </dependency>
+        <!-- hzero -->
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-export</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-import</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-scheduler</artifactId>
+        </dependency>
+
+        <!-- other -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>o2-group</id>
+            <url>http://nexus.saas.hand-china.com/repository/o2-group/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>
+</project>
