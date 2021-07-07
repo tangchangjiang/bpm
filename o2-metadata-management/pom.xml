@@ -22,11 +22,15 @@
         </dependency>
         <dependency>
             <groupId>org.o2.inventory</groupId>
-            <artifactId>o2-inventory-client</artifactId>
+            <artifactId>o2-inventory-management-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-core</artifactId>
         </dependency>
         <!-- hzero -->
         <dependency>

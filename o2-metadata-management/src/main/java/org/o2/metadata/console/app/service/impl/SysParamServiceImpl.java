@@ -3,11 +3,10 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSONArray;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.feignclient.inventory.O2InventoryClient;
+import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.util.MetadataRedisUtil;
