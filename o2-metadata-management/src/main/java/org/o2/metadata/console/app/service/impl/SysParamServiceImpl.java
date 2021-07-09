@@ -9,13 +9,15 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.convertor.SysParameterConvertor;
 import org.o2.metadata.console.infra.util.MetadataRedisUtil;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
-import org.o2.metadata.console.api.vo.SystemParamDetailVO;
+import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
+import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,7 @@ public class SysParamServiceImpl implements SysParamService {
     private O2InventoryClient o2InventoryClient;
 
     private RedisCacheClient redisCacheClient;
+    private SystemParameterDomainService systemParameterDomainService;
 
     @Autowired
     public SysParamServiceImpl(SystemParameterRepository systemParameterRepository,
@@ -117,20 +120,8 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
-    public SystemParamDetailVO listSystemParameter(String paramCode, Long tenantId) {
-        SystemParamDetailVO response = new SystemParamDetailVO();
-        response.setParamCode(paramCode);
-        String key = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.KV);
-        Object valueObj = redisCacheClient.opsForHash().get(key, paramCode);
-        if (null != valueObj) {
-            response.setKvValue(String.valueOf(valueObj));
-        }
-        key = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.SET);
-        valueObj = redisCacheClient.opsForHash().get(key, paramCode);
-        if (null != valueObj) {
-            response.setSetValue(new HashSet(JSONArray.parseArray(String.valueOf(valueObj), SystemParamValueVO.class)));
-        }
-        return response;
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
+        return SysParameterConvertor.doToVoObject(systemParameterDomainService.getSystemParameter(paramCode,tenantId));
     }
 
     @Override

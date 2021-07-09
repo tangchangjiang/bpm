@@ -10,11 +10,11 @@ import lombok.Data;
  **/
 
 @Data
-public class SystemParamDetailVO {
+public class SystemParameterVO {
 
     private String paramCode;
 
-    private String kvValue;
+    private String defaultValue;
 
-    private Set<SystemParamValueVO> setValue;
+    private Set<SystemParamValueVO> setSystemParamValue;
 }

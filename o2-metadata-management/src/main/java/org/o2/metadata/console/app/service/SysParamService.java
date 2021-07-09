@@ -2,7 +2,7 @@ package org.o2.metadata.console.app.service;
 
 
 import org.o2.metadata.console.infra.entity.SystemParameter;
-import org.o2.metadata.console.api.vo.SystemParamDetailVO;
+import org.o2.metadata.console.api.vo.SystemParameterVO;
 
 import java.util.List;
 
@@ -49,6 +49,6 @@ public interface SysParamService {
      * @param tenantId 租户ID
      * @return SystemParamDetailVO
      */
-    SystemParamDetailVO listSystemParameter(String paramCode, Long tenantId);
+    SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
 
 }

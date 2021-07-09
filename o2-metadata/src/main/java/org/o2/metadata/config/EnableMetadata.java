@@ -14,6 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.metadata.api",
         "org.o2.metadata.app",
         "org.o2.metadata.infra",
+        "org.o2.metadata.domain",
 })
 public class EnableMetadata {
 

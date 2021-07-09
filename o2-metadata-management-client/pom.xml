@@ -18,7 +18,16 @@
     <dependencies>
         <dependency>
             <groupId>org.hzero.starter</groupId>
-            <artifactId>hzero-starter-export</artifactId>
+            <artifactId>hzero-starter-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <repositories>

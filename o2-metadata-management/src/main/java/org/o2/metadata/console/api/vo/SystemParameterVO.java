@@ -8,10 +8,10 @@ import java.util.Set;
  * @author hongyun.wang01@hand-china.com
  */
 @Data
-public class SystemParamDetailVO {
+public class SystemParameterVO {
     private String paramCode;
 
-    private String kvValue;
+    private String defaultValue;
 
-    private Set<SystemParamValueVO> setValue;
+    private Set<SystemParamValueVO> setSystemParamValue;
 }
