@@ -16,7 +16,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.console.domain.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

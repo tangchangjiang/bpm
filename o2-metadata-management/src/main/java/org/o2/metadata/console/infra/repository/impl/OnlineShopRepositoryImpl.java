@@ -3,7 +3,7 @@ package org.o2.metadata.console.infra.repository.impl;
 import com.google.common.base.Preconditions;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.OnlineShop;
+import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.OnlineShopMapper;

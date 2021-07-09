@@ -1,7 +1,7 @@
 package org.o2.metadata.console.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.domain.entity.RegionArea;
+import org.o2.metadata.console.infra.entity.RegionArea;
 
 /**
  * 大区定义资源库

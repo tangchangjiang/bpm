@@ -16,7 +16,7 @@ import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.console.domain.entity.*;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
 import org.o2.metadata.console.domain.repository.PosRepository;

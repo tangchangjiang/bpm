@@ -3,7 +3,7 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
-import org.o2.metadata.console.domain.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
 

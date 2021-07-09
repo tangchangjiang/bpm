@@ -9,7 +9,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.CarrierDeliveryRangeSaveDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.console.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.domain.repository.CountryRepository;
 import org.springframework.http.ResponseEntity;

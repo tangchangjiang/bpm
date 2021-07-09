@@ -1,7 +1,7 @@
 package org.o2.metadata.console.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.domain.entity.CatalogVersion;
+import org.o2.metadata.console.infra.entity.CatalogVersion;
 
 /**
  * 版本目录资源库

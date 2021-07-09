@@ -4,9 +4,9 @@ import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.core.response.BatchResponse;
-import org.o2.metadata.console.domain.entity.Pos;
-import org.o2.metadata.console.domain.entity.Region;
-import org.o2.metadata.console.domain.entity.RegionRelPos;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionRelPos;
 
 import java.util.List;
 

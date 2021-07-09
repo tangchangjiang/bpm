@@ -2,7 +2,7 @@ package org.o2.metadata.console.app.service;
 
 import org.hzero.export.vo.ExportParam;
 import org.o2.metadata.console.api.vo.CatalogVO;
-import org.o2.metadata.console.domain.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Catalog;
 
 import java.util.List;
 

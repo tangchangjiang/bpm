@@ -2,9 +2,9 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.domain.entity.Pos;
-import org.o2.metadata.console.domain.entity.Region;
-import org.o2.metadata.console.domain.entity.RegionRelPos;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionRelPos;
 
 import java.util.List;
 

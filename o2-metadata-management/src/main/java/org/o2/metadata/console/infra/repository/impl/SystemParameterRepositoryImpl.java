@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.SystemParameter;
+import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.domain.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.mapper.SystemParameterMapper;
 import org.springframework.beans.factory.annotation.Autowired;

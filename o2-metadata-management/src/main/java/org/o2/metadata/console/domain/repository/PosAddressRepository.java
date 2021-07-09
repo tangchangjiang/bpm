@@ -2,7 +2,7 @@ package org.o2.metadata.console.domain.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.domain.entity.PosAddress;
+import org.o2.metadata.console.infra.entity.PosAddress;
 
 
 /**

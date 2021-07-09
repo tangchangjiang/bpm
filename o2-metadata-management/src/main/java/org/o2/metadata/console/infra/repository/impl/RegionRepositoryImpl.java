@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.Region;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.domain.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.mapper.RegionMapper;

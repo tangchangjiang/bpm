@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.CarrierDeliveryRange;
+import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.domain.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.mapper.CarrierDeliveryRangeMapper;
 import org.springframework.stereotype.Component;

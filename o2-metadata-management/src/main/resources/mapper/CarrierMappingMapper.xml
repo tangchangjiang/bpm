@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.CarrierMappingMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.CarrierMapping">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.CarrierMapping">
         <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>

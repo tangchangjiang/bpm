@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.RegionRelPosMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.RegionRelPos">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.RegionRelPos">
         <result column="region_rel_pos_id" property="regionRelPosId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="area_code" property="areaCode" jdbcType="VARCHAR"/>
@@ -76,7 +76,7 @@
         </if>
     </select>
 
-    <select id="selectUnbindRegionByStoreId" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="selectUnbindRegionByStoreId" resultType="org.o2.metadata.console.infra.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         hr.region_id,
@@ -110,7 +110,7 @@
         order by hr.region_id
     </select>
 
-    <select id="selectUnbindPosByRegionId" resultType="org.o2.metadata.console.domain.entity.Pos">
+    <select id="selectUnbindPosByRegionId" resultType="org.o2.metadata.console.infra.entity.Pos">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         p.pos_id,

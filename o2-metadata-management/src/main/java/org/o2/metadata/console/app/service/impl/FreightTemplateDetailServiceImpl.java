@@ -5,7 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
-import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
 import org.o2.metadata.console.domain.repository.RegionRepository;

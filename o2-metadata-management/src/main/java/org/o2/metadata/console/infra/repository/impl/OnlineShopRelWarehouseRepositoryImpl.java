@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.mapper.OnlineShopRelWarehouseMapper;

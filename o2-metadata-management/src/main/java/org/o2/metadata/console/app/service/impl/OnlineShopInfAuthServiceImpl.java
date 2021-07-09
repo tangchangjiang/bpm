@@ -2,7 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
-import org.o2.metadata.console.domain.entity.OnlineShopInfAuth;
+import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
 import org.o2.metadata.console.domain.repository.OnlineShopInfAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -16,7 +16,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.console.domain.entity.Carrier;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.domain.repository.CarrierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

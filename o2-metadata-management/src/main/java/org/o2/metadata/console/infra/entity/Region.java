@@ -1,4 +1,4 @@
-package org.o2.metadata.console.domain.entity;
+package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

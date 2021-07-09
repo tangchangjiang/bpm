@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.OnlineShopMapper">
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.OnlineShop">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.OnlineShop">
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
         <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
@@ -27,7 +27,7 @@
         update o2md_online_shop set is_default = 0 where is_default  = 1 and tenant_id = #{tenantId}
     </update>
 
-    <select id="findByCondition" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+    <select id="findByCondition" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         os.online_shop_id,
@@ -98,7 +98,7 @@
     </select>
 
 
-    <select id="existenceDecide" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+    <select id="existenceDecide" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         SELECT os.online_shop_id,
         os.online_shop_name,
         os.online_shop_code,
@@ -133,7 +133,7 @@
         </where>
         ORDER BY os.online_shop_code
     </select>
-    <select id="selectShop" resultType="org.o2.metadata.console.domain.entity.OnlineShop">
+    <select id="selectShop" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select os.online_shop_id,
         os.online_shop_code,

@@ -2,7 +2,7 @@ package org.o2.metadata.console.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.vo.CatalogVO;
-import org.o2.metadata.console.domain.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Catalog;
 
 import java.util.List;
 import java.util.Set;

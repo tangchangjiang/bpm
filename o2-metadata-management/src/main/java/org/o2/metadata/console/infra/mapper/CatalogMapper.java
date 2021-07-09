@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.domain.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.api.vo.CatalogVO;
 
 import java.util.List;

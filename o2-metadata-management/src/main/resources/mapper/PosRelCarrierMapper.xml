@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.PosRelCarrierMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.PosRelCarrier">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.PosRelCarrier">
         <result column="pos_rel_carrier_id" property="posRelCarrierId" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>

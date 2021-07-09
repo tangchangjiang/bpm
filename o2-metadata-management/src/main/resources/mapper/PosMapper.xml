@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.PosMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.Pos">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.Pos">
         <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
         <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
         <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
@@ -41,7 +41,7 @@
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <resultMap id="PosResultMap" type="org.o2.metadata.console.domain.entity.Pos" extends="BaseResultMap">
+    <resultMap id="PosResultMap" type="org.o2.metadata.console.infra.entity.Pos" extends="BaseResultMap">
         <association property="address" columnPrefix="address_"
                      resultMap="org.o2.metadata.console.infra.mapper.PosAddressMapper.BaseResultMap"/>
     </resultMap>
@@ -165,7 +165,7 @@
         </choose>
     </select>
 
-    <select id="listPosByCondition" resultType="org.o2.metadata.console.domain.entity.Pos">
+    <select id="listPosByCondition" resultType="org.o2.metadata.console.infra.entity.Pos">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         p.tenant_id,

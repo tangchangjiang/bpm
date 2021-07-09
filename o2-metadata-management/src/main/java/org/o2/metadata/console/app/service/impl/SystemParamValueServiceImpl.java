@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.SystemParamValueService;
-import org.o2.metadata.console.domain.entity.SystemParameter;
+import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.domain.repository.SystemParamValueRepository;
 import org.o2.metadata.console.domain.repository.SystemParameterRepository;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;

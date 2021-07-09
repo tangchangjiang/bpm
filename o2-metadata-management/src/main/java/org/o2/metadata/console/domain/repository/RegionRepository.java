@@ -2,7 +2,7 @@ package org.o2.metadata.console.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
-import org.o2.metadata.console.domain.entity.Region;
+import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
 

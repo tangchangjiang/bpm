@@ -2,8 +2,8 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import com.google.common.base.Preconditions;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.Pos;
-import org.o2.metadata.console.domain.entity.PostTime;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PostTime;
 import org.o2.metadata.console.domain.repository.PosRepository;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;

@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.domain.repository.CatalogRepository;
 import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.infra.mapper.CatalogMapper;

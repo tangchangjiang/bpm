@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.metadata.console.domain.entity.OnlineShop;
-import org.o2.metadata.console.domain.entity.OnlineShopRelWarehouse;
-import org.o2.metadata.console.domain.entity.Pos;
-import org.o2.metadata.console.domain.entity.Warehouse;
+import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 import java.util.Date;

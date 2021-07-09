@@ -1,4 +1,4 @@
-package org.o2.metadata.console.domain.entity;
+package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,7 +18,6 @@ import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.domain.repository.OnlineShopRepository;
 import org.o2.metadata.console.domain.repository.WarehouseRepository;
-
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;

@@ -1,4 +1,4 @@
-package org.o2.metadata.console.domain.entity;
+package org.o2.metadata.console.infra.entity;
 
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
