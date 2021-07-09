@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
@@ -18,6 +20,12 @@ public class SysParameterRemoteServiceImpl implements SysParameterRemoteService 
     @Override
     public ResponseEntity<String> getSystemParameter(Long organizationId, String paramCode) {
         logger.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCode);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listSystemParameters(Long organizationId, List<String> paramCodes) {
+        logger.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -29,8 +29,8 @@ public class O2MetadataClient {
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      */
-    public SystemParameterVO listSystemParameter(String paramCode, Long tenantId){
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameter(tenantId, paramCode), SystemParameterVO.class);
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId){
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
     }
 
     /**

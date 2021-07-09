@@ -26,7 +26,7 @@ public interface SysParameterRemoteService {
      * @return ResponseEntity<String>
      */
     @GetMapping("/{organizationId}/{paramCode}")
-    public ResponseEntity<String> listSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                       @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
 
 }

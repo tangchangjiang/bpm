@@ -51,4 +51,13 @@ public interface SysParamService {
      */
     SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
 
+    /**
+     * 批量从redis查询系统参数
+     *
+     * @param paramCodes 参数编码集合
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId);
+
 }

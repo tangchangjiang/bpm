@@ -125,6 +125,11 @@ public class SysParamServiceImpl implements SysParamService {
     }
 
     @Override
+    public List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return SysParameterConvertor.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes,tenantId));
+    }
+
+    @Override
     public void updateToRedis(SystemParameter systemParameter, Long tenantId) {
         // 获取hashKey
         final String kvHashKey = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.KV);
