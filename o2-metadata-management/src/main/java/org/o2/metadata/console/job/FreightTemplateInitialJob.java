@@ -11,7 +11,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
-import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

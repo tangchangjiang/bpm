@@ -18,7 +18,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
-import org.o2.metadata.console.domain.repository.NeighboringRegionRepository;
+import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;

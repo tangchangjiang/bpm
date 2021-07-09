@@ -20,7 +20,7 @@ import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.Catalog;
-import org.o2.metadata.console.domain.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

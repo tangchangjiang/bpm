@@ -16,7 +16,7 @@ import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
-import org.o2.metadata.console.domain.repository.OnlineShopInfAuthRepository;
+import org.o2.metadata.console.infra.repository.OnlineShopInfAuthRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;

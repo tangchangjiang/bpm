@@ -9,7 +9,7 @@ import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
-import org.o2.metadata.console.domain.repository.SystemParamValueRepository;
+import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

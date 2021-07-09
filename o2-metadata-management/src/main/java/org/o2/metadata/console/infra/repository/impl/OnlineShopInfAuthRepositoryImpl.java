@@ -3,7 +3,7 @@ package org.o2.metadata.console.infra.repository.impl;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
-import org.o2.metadata.console.domain.repository.OnlineShopInfAuthRepository;
+import org.o2.metadata.console.infra.repository.OnlineShopInfAuthRepository;
 import org.o2.metadata.console.infra.mapper.OnlineShopInfAuthMapper;
 import org.springframework.stereotype.Component;
 

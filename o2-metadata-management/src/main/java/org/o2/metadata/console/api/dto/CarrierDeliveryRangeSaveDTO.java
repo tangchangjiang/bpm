@@ -11,7 +11,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.core.copier.PropertiesCopier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.Country;
-import org.o2.metadata.console.domain.repository.CountryRepository;
+import org.o2.metadata.console.infra.repository.CountryRepository;
 
 
 import javax.validation.constraints.NotNull;

@@ -12,8 +12,8 @@ import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
-import org.o2.metadata.console.domain.repository.RegionAreaRepository;
-import org.o2.metadata.console.domain.repository.RegionRepository;
+import org.o2.metadata.console.infra.repository.RegionAreaRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

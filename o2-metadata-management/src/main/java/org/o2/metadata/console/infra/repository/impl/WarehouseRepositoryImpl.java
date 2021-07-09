@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.Warehouse;
-import org.o2.metadata.console.domain.repository.WarehouseRepository;
+import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.mapper.WarehouseMapper;
 import org.springframework.stereotype.Component;
 

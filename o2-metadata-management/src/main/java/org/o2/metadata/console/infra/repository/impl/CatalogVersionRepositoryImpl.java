@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
-import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
+import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.springframework.stereotype.Component;
 
 /**

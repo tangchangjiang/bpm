@@ -15,7 +15,7 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
-import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

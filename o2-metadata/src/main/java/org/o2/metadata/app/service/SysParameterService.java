@@ -1,7 +1,7 @@
 package org.o2.metadata.app.service;
 
 
-import org.o2.metadata.api.vo.SystemParamDetailVO;
+import org.o2.metadata.api.vo.SystemParameterVO;
 
 /**
  * 系统参数缓存
@@ -18,6 +18,6 @@ public interface SysParameterService {
      * @param tenantId 租户ID
      * @return SystemParamDetailVO
      */
-    SystemParamDetailVO listSystemParameter(String paramCode, Long tenantId);
+    SystemParameterVO listSystemParameter(String paramCode, Long tenantId);
 
 }

@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
-import org.o2.metadata.console.domain.repository.NeighboringRegionRepository;
+import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.o2.metadata.console.infra.mapper.NeighboringRegionMapper;
 import org.springframework.stereotype.Component;
 

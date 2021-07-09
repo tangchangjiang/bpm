@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.util.Assert;
 

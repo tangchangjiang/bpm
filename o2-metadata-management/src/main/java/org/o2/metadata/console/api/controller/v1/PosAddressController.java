@@ -13,7 +13,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.PosAddress;
-import org.o2.metadata.console.domain.repository.PosAddressRepository;
+import org.o2.metadata.console.infra.repository.PosAddressRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;

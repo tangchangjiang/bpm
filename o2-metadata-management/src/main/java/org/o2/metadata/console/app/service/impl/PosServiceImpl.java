@@ -4,7 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.entity.*;
-import org.o2.metadata.console.domain.repository.*;
+import org.o2.metadata.console.infra.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

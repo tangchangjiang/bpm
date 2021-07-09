@@ -5,7 +5,7 @@ import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.app.service.CountryService;
 import org.o2.metadata.console.infra.entity.Country;
-import org.o2.metadata.console.domain.repository.CountryRepository;
+import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

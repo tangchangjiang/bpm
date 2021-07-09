@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
-import org.o2.metadata.console.domain.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

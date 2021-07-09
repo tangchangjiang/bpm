@@ -11,7 +11,7 @@ import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.util.MetadataRedisUtil;
 import org.o2.metadata.console.infra.entity.SystemParameter;
-import org.o2.metadata.console.domain.repository.SystemParameterRepository;
+import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.api.vo.SystemParamDetailVO;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;

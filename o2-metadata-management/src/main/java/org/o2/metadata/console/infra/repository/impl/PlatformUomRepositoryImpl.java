@@ -1,6 +1,6 @@
 package org.o2.metadata.console.infra.repository.impl;
 
-import org.o2.metadata.console.domain.repository.PlatformUomRepository;
+import org.o2.metadata.console.infra.repository.PlatformUomRepository;
 import org.o2.metadata.console.api.vo.PlatformUomVO;
 import org.o2.metadata.console.infra.mapper.PlatformUomMapper;
 import org.springframework.stereotype.Component;

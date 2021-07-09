@@ -12,7 +12,7 @@ import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionRelPos;
-import org.o2.metadata.console.domain.repository.RegionRelPosRepository;
+import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.hzero.mybatis.helper.SecurityTokenHelper;

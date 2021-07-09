@@ -12,7 +12,7 @@ import org.o2.core.response.BatchResponse;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionRelPos;
-import org.o2.metadata.console.domain.repository.RegionRelPosRepository;
+import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.RegionRelPosMapper;
 import org.springframework.stereotype.Component;

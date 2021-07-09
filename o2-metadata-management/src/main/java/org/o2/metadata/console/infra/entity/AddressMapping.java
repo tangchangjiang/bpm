@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.domain.repository.AddressMappingRepository;
+import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
