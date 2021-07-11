@@ -18,6 +18,6 @@ public interface SysParameterService {
      * @param tenantId 租户ID
      * @return SystemParamDetailVO
      */
-    SystemParameterVO listSystemParameter(String paramCode, Long tenantId);
+    SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
 
 }

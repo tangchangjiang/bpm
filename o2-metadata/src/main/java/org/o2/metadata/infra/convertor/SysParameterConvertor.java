@@ -1,11 +1,11 @@
-package org.o2.metadata.console.infra.convertor;
+package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
-import org.o2.metadata.console.api.vo.SystemParameterVO;
-import org.o2.metadata.console.infra.entity.SystemParamValue;
-import org.o2.metadata.console.infra.entity.SystemParameter;
+import org.o2.metadata.api.vo.SystemParamValueVO;
+import org.o2.metadata.api.vo.SystemParameterVO;
 import org.o2.metadata.core.systemparameter.domain.SystemParamValueDO;
 import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.infra.entity.SystemParamValue;
+import org.o2.metadata.infra.entity.SystemParameter;
 
 import java.util.ArrayList;
 import java.util.HashSet;

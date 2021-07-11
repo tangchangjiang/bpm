@@ -5,7 +5,7 @@ import org.o2.metadata.api.vo.SystemParameterVO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
-import org.o2.metadata.infra.convertor.SysParameteConvertor;
+import org.o2.metadata.infra.convertor.SysParameterConvertor;
 import org.springframework.stereotype.Service;
 
 
@@ -23,8 +23,8 @@ public class SysParameterServiceImpl implements SysParameterService {
     }
 
     @Override
-    public SystemParameterVO listSystemParameter(String paramCode, Long tenantId) {
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO =systemParameterDomainService.getSystemParameter(paramCode,tenantId);
-        return SysParameteConvertor.doToVoObject(systemParameterDO);
+        return SysParameterConvertor.doToVoObject(systemParameterDO);
     }
 }

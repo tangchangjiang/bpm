@@ -1,6 +1,8 @@
 package org.o2.metadata.console.domain.repository.impl;
 
-import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.infra.convertor.SysParameterConvertor;
+import org.o2.metadata.console.infra.redis.SystemParameterRedis;
+import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.core.systemparameter.repository.SystemParameterDomainRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,20 +16,21 @@ import java.util.List;
  **/
 @Component
 public class SystemParameterDomainRepositoryImpl implements SystemParameterDomainRepository {
-    private  final RedisCacheClient redisCacheClient;
+    private final SystemParameterRedis systemParameterRedis;
 
-    public SystemParameterDomainRepositoryImpl(RedisCacheClient redisCacheClient) {
-        this.redisCacheClient = redisCacheClient;
+    public SystemParameterDomainRepositoryImpl(SystemParameterRedis systemParameterRedis) {
+        this.systemParameterRedis = systemParameterRedis;
+    }
+
+
+    @Override
+    public List<SystemParameterDO> listSystemParameters(List<String> paramCodeList, Long tenantId) {
+        return SysParameterConvertor.poToDoListObjects(systemParameterRedis.listSystemParameters(paramCodeList,tenantId));
     }
 
     @Override
-    public List<String> listSystemParameters(List<String> paramCodeList, String key) {
-        return redisCacheClient.<String,String>opsForHash().multiGet(key,paramCodeList);
-    }
-
-    @Override
-    public String getSystemParameter(String paramCode, String key) {
-        return redisCacheClient.<String,String>opsForHash().get(key, paramCode);
+    public SystemParameterDO getSystemParameter(String paramCode, Long tenantId) {
+        return SysParameterConvertor.poToDoObject( systemParameterRedis.getSystemParameter(paramCode,tenantId));
 
     }
 }

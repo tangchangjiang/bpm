@@ -1,6 +1,8 @@
 package org.o2.metadata.core.systemparameter.repository;
 
 
+import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
+
 import java.util.List;
 
 /**
@@ -13,15 +15,15 @@ public interface SystemParameterDomainRepository {
     /**
      * 获取系统参数
      * @param paramCodeList 编码集合
-     * @param key 租户ID
+     * @param tenantId 租户ID
      * @return 集合
      */
-    List<String> listSystemParameters(List<String> paramCodeList, String key);
+    List<SystemParameterDO> listSystemParameters(List<String> paramCodeList, Long tenantId);
     /**
      * 获取系统参数
      * @param paramCode 编码
-     * @param key redis key
+     * @param tenantId 租户ID
      * @return 实体
      */
-    String getSystemParameter(String paramCode, String key);
+    SystemParameterDO getSystemParameter(String paramCode, Long tenantId);
 }

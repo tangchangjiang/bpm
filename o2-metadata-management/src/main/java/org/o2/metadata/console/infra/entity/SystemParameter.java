@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.core.systemparameter.domain.SystemParamValueDO;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * 系统参数
@@ -77,6 +79,8 @@ public class SystemParameter extends AuditDomain {
     @Transient
     @ApiModelProperty("参数类型")
     private String paramTypeMeaning;
+    @Transient
+    private Set<SystemParamValue> setSystemParamValue;
 
 
 }
