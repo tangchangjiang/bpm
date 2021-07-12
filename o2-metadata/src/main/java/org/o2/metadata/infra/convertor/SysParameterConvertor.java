@@ -32,6 +32,9 @@ public class SysParameterConvertor {
         systemParameterVO.setParamCode(systemParameterDO.getParamCode());
         systemParameterVO.setDefaultValue(systemParameterDO.getDefaultValue());
         Set<SystemParamValueDO> systemParamValueDO = systemParameterDO.getSetSystemParamValue();
+        if (null == systemParamValueDO || systemParamValueDO.isEmpty()) {
+            return systemParameterVO;
+        }
         Set<SystemParamValueVO> systemParamValueVos = new HashSet<>();
         for (SystemParamValueDO valueDO : systemParamValueDO) {
             SystemParamValueVO valueVO = new SystemParamValueVO();
@@ -57,6 +60,9 @@ public class SysParameterConvertor {
         systemParameterDO.setParamCode(systemParameter.getParamCode());
         systemParameterDO.setDefaultValue(systemParameterDO.getDefaultValue());
         Set<SystemParamValue> systemParamValue = systemParameter.getSetSystemParamValue();
+        if (null == systemParamValue || systemParamValue.isEmpty()) {
+            return systemParameterDO;
+        }
         Set<SystemParamValueDO> systemParamValueDos = new HashSet<>();
         for (SystemParamValue value : systemParamValue) {
             SystemParamValueDO valueDO = new SystemParamValueDO();

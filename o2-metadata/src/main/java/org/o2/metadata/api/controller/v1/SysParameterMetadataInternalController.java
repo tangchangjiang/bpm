@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiParam;
  */
 @Api(tags = {EnableMetadata.SYS_PARAMETER_INTERNAL})
 @RestController("sysParameterInternalController.v1")
-@RequestMapping("v1/{organizationId}")
+@RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {
 
     private SysParameterService sysParameterService;

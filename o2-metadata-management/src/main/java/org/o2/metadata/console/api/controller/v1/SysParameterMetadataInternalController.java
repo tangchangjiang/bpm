@@ -20,7 +20,7 @@ import java.util.Map;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @RestController("sysParameterInternalController.v1")
-@RequestMapping("v1/{organizationId}")
+@RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {
 
     private SysParamService sysParamService;

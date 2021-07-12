@@ -17,13 +17,13 @@ import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
+import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,11 +57,13 @@ public class SysParamServiceImpl implements SysParamService {
     public SysParamServiceImpl(SystemParameterRepository systemParameterRepository,
                                SystemParamValueMapper systemParamValueMapper,
                                O2InventoryClient o2InventoryClient,
-                               RedisCacheClient redisCacheClient) {
+                               RedisCacheClient redisCacheClient,
+                               SystemParameterDomainService systemParameterDomainService) {
         this.systemParameterRepository = systemParameterRepository;
         this.systemParamValueMapper = systemParamValueMapper;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
+        this.systemParameterDomainService = systemParameterDomainService;
     }
 
     @Override
@@ -121,7 +123,8 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
-        return SysParameterConvertor.doToVoObject(systemParameterDomainService.getSystemParameter(paramCode,tenantId));
+        SystemParameterDO systemParameterDO = systemParameterDomainService.getSystemParameter(paramCode,tenantId);
+        return SysParameterConvertor.doToVoObject(systemParameterDO);
     }
 
     @Override

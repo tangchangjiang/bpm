@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @ComponentScan({
         "org.o2.metadata.core.config",
-        "org.o2.metadata.core.domain",
+        "org.o2.metadata.core.systemparameter",
         "org.o2.metadata.core.infra"
 })
 @Configuration

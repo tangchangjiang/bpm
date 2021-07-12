@@ -1,6 +1,7 @@
 package org.o2.feignclient;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
@@ -32,12 +33,13 @@ public class O2MetadataManagementClient {
 
     /**
      * 从redis查询系统参数
-     *
-     * @param paramCode 参数编码
+     *  @param paramCodes 参数编码
      * @param tenantId 租户ID
+     * @return map
      */
-    public Map<String,SystemParameterVO> listSystemParameters(List<String> paramCode, Long tenantId){
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCode), Map.class);
+    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
+        });
     }
 
 }
