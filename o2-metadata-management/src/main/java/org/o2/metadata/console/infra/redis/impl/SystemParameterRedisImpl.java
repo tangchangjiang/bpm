@@ -156,7 +156,6 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     }
     @Override
     public void updateToRedis(SystemParameter systemParameter, Long tenantId) {
-        int u= 3/0;
         final String paramTypeCode = systemParameter.getParamTypeCode();
         final String paramCode = systemParameter.getParamCode();
         //参数redis更新
