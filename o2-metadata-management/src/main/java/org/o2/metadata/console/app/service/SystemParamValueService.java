@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
+import org.o2.metadata.console.infra.entity.SystemParamValue;
 
 import java.util.List;
 import java.util.Set;
@@ -40,30 +40,22 @@ public interface SystemParamValueService {
     Set<String> getSysSetByParam(String paramCode, Long tenantId);
 
     /**
-     * 从Redis获取系统参数
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return String
+     * 新建参数值
+     * @param  systemParamValue 参数值
+     * @return
      */
-    String getSysValueFromRedis(String paramCode, Long tenantId);
+    void saveSystemParamValue(SystemParamValue systemParamValue);
 
     /**
-     * 从Redis获取系统参数（KV）
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return String
+     * 更新参数值
+     * @param  systemParamValue 参数值
      */
-    String getSysValueKvFromRedis(String paramCode, Long tenantId);
+    void updateSystemParamValue(SystemParamValue systemParamValue);
 
     /**
-     * 从Redis获取系统参数（SET）
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return List
+     * 删除参数值
+     * @param  systemParamValue 参数值
      */
-    List<SystemParamValueVO> getSysValueSetFromRedis(String paramCode, Long tenantId);
+    void removeSystemParamValue(SystemParamValue systemParamValue);
 
 }

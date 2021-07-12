@@ -24,4 +24,30 @@ public interface SystemParameterRedis {
      * @return  list
      */
     List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId);
+
+    /**
+     * 全量同步系统参数
+     *
+     * @param ts 待同步的系统参数数据
+     * @param tenantId 租户ID
+     **/
+    void synToRedis(List<SystemParameter> ts,Long tenantId);
+
+    /**
+     * 单条更新系统参数
+     *
+     * @param systemParameter 待同步的系统参数数据
+     * @param tenantId 租户ID
+     **/
+    void updateToRedis(SystemParameter systemParameter,Long tenantId);
+
+
+    /**
+     *
+     * @date 2021-07-12
+     * @param
+     * @return 
+     */
+    void extraOperate(String paramCode, Long tenantId);
+
 }

@@ -1,17 +1,16 @@
 package org.o2.metadata.console.app.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.SystemParamValueService;
+import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
+import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,12 +24,18 @@ import java.util.Set;
  */
 @Service
 public class SystemParamValueServiceImpl implements SystemParamValueService {
-    @Autowired
     private SystemParamValueRepository systemParamValueRepository;
-    @Autowired
     private SystemParameterRepository systemParameterRepository;
-    @Autowired
-    private RedisCacheClient redisCacheClient;
+    private SystemParameterRedis systemParameterRedis;
+
+    public SystemParamValueServiceImpl(SystemParamValueRepository systemParamValueRepository,
+                                       SystemParameterRepository systemParameterRepository,
+                                       SystemParameterRedis systemParameterRedis) {
+        this.systemParamValueRepository = systemParamValueRepository;
+        this.systemParameterRepository = systemParameterRepository;
+        this.systemParameterRedis = systemParameterRedis;
+    }
+
 
     @Override
     public String getSysValueByParam(String paramCode, Long tenantId) {
@@ -58,36 +63,41 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveSystemParamValue(SystemParamValue systemParamValue) {
+        SystemParameter systemParameter = getSystemParameter(systemParamValue);
+        systemParamValueRepository.insertSelective(systemParamValue);
+        systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSystemParamValue(SystemParamValue systemParamValue) {
+        SystemParameter systemParameter = getSystemParameter(systemParamValue);
+        systemParamValueRepository.updateByPrimaryKey(systemParamValue);
+        systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeSystemParamValue(SystemParamValue systemParamValue) {
+        SystemParameter systemParameter = getSystemParameter(systemParamValue);
+        systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
+        systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
+    }
+
     /**
-     * 从Redis获取系统参数
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return StringList<String>
+     * 获取系统参数
+     * @param  systemParamValue 系统参数值
+     * @return 系统参数实体类
      */
-    @Override
-    public String getSysValueFromRedis(String paramCode, Long tenantId) {
-        String valueKv = getSysValueKvFromRedis(paramCode, tenantId);
-        if (null != valueKv) {
-            return valueKv;
-        }
-        String key = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.SET);
-        Object valueObj = redisCacheClient.opsForHash().get(key, paramCode);
-        return null == valueObj ? null : String.valueOf(valueObj);
-    }
-
-    @Override
-    public String getSysValueKvFromRedis(String paramCode, Long tenantId) {
-        String key = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.KV);
-        Object valueObj = redisCacheClient.opsForHash().get(key, paramCode);
-        return null == valueObj ? null : String.valueOf(valueObj);
-    }
-
-    @Override
-    public List<SystemParamValueVO> getSysValueSetFromRedis(String paramCode, Long tenantId) {
-        String key = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.SET);
-        Object valueObj = redisCacheClient.opsForHash().get(key, paramCode);
-        return null == valueObj ? null : JSONArray.parseArray(String.valueOf(valueObj), SystemParamValueVO.class);
+    private SystemParameter getSystemParameter(SystemParamValue systemParamValue) {
+        Long tenantId = systemParamValue.getTenantId();
+        SystemParameter queryParam = new SystemParameter();
+        queryParam.setParamId(systemParamValue.getParamId());
+        queryParam.setTenantId(tenantId);
+        return systemParameterRepository.selectOne(queryParam);
     }
 
     /**
