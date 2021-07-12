@@ -1,6 +1,6 @@
-package org.o2.metadata.core.systemparameter.service;
+package org.o2.metadata.domain.systemparameter.service;
 
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 
 import java.util.List;
 

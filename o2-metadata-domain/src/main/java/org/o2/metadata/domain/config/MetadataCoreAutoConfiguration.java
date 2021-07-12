@@ -1,4 +1,4 @@
-package org.o2.metadata.core.config;
+package org.o2.metadata.domain.config;
 
 import org.hzero.core.message.MessageAccessor;
 import org.springframework.beans.factory.InitializingBean;
@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
  * @author lei.tang02@hand-china.com 2019-09-16
  */
 @ComponentScan({
-        "org.o2.metadata.core.config",
-        "org.o2.metadata.core.systemparameter",
-        "org.o2.metadata.core.infra"
+        "org.o2.metadata.domain.config",
+        "org.o2.metadata.domain.systemparameter",
+        "org.o2.metadata.domain.infra"
 })
 @Configuration
 public class MetadataCoreAutoConfiguration implements InitializingBean {

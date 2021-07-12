@@ -3,8 +3,8 @@ package org.o2.metadata.app.service.impl;
 
 import org.o2.metadata.api.vo.SystemParameterVO;
 import org.o2.metadata.app.service.SysParameterService;
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
-import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.o2.metadata.infra.convertor.SysParameterConvertor;
 import org.springframework.stereotype.Service;
 

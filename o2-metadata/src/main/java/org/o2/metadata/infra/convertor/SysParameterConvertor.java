@@ -2,8 +2,8 @@ package org.o2.metadata.infra.convertor;
 
 import org.o2.metadata.api.vo.SystemParamValueVO;
 import org.o2.metadata.api.vo.SystemParameterVO;
-import org.o2.metadata.core.systemparameter.domain.SystemParamValueDO;
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.domain.SystemParamValueDO;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.infra.entity.SystemParamValue;
 import org.o2.metadata.infra.entity.SystemParameter;
 

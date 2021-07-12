@@ -1,4 +1,4 @@
-package org.o2.metadata.core.infra.constants;
+package org.o2.metadata.domain.infra.constants;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;

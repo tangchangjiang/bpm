@@ -16,8 +16,8 @@ import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.util.MetadataRedisUtil;
-import org.o2.metadata.core.infra.constants.MetadataDomainConstants;
-import org.o2.metadata.core.systemparameter.domain.SystemParamValueDO;
+import org.o2.metadata.domain.infra.constants.MetadataDomainConstants;
+import org.o2.metadata.domain.systemparameter.domain.SystemParamValueDO;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
