@@ -169,7 +169,9 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             if (CollectionUtils.isNotEmpty(voList)) {
                 redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JSONArray.toJSONString(voList));
+                return;
             }
+            redisCacheClient.opsForHash().delete(setHashKey, systemParameter.getParamCode());
         }
 
     }
