@@ -12,7 +12,6 @@ import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -37,11 +36,13 @@ import io.choerodon.swagger.annotation.Permission;
 @Api(tags = EnableMetadataConsole.SYSTEM_PARAMETER)
 public class SystemParameterController extends BaseController {
 
-    @Autowired
     private SystemParameterRepository systemParameterRepository;
-
-    @Autowired
     private SysParamService sysParamService;
+
+    public SystemParameterController(SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
+        this.systemParameterRepository = systemParameterRepository;
+        this.sysParamService = sysParamService;
+    }
 
     @ApiOperation(value = "系统参数列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -70,31 +71,28 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "创建系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> saveSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         this.validObject(systemParameter);
-        systemParameterRepository.insertSelective(systemParameter);
-        sysParamService.updateToRedis(systemParameter, organizationId);
+        sysParamService.saveSystemParameter(systemParameter, organizationId);
         return Results.success(systemParameter);
     }
 
     @ApiOperation(value = "修改系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> updateSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         this.validObject(systemParameter);
         SecurityTokenHelper.validToken(systemParameter);
-        systemParameterRepository.updateByPrimaryKey(systemParameter);
-        sysParamService.updateToRedis(systemParameter, organizationId);
-        sysParamService.extraOperate(systemParameter.getParamCode(), organizationId);
+        sysParamService.updateSystemParameter(systemParameter, organizationId);
         return Results.success(systemParameter);
     }
 
     @ApiOperation(value = "删除系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> removeSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.deleteByPrimaryKey(systemParameter);
