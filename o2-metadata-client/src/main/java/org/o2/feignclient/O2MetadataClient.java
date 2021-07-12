@@ -30,12 +30,18 @@ public class O2MetadataClient {
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      */
-    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId){
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
     }
 
-    public Map<String,SystemParameterVO> listSystemParameters(List<String> paramCodes,Long tenantId){
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), Map.class);
+    /**
+     * 批量从redis查询系统参数
+     * @param  paramCodes 参数编码
+     * @return list
+     */
+    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), new TypeReference<Map<String, SystemParameterVO>>() {
+        });
     }
 
     /**
