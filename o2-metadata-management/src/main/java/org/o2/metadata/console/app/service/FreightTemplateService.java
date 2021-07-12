@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
-import org.o2.metadata.console.domain.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.metadata.console.domain.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import java.util.List;
 import java.util.Objects;

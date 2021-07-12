@@ -17,12 +17,12 @@
     <dependencies>
         <!-- o2 -->
         <dependency>
-            <groupId>org.o2.metadata</groupId>
-            <artifactId>o2-metadata-client</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.o2.inventory</groupId>
             <artifactId>o2-inventory-management-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-metadata-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>org.o2.starter</groupId>

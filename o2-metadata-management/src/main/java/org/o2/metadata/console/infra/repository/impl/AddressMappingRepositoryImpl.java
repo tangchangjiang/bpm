@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.AddressMapping;
-import org.o2.metadata.console.domain.repository.AddressMappingRepository;
+import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

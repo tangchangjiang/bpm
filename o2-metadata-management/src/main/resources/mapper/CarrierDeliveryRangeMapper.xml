@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.CarrierDeliveryRangeMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.CarrierDeliveryRange">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.CarrierDeliveryRange">
         <id column="delivery_range_id" property="deliveryRangeId" jdbcType="DECIMAL"/>
         <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
         <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
@@ -17,7 +17,7 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <select id="list" resultType="org.o2.metadata.console.domain.entity.CarrierDeliveryRange">
+    <select id="list" resultType="org.o2.metadata.console.infra.entity.CarrierDeliveryRange">
         SELECT
         rel.delivery_range_id,
         rel.carrier_id,

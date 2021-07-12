@@ -7,22 +7,27 @@ import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.feignclient.O2MetadataClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.api.vo.TriggerStockCalculationVO;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
-import org.o2.metadata.console.domain.entity.Warehouse;
-import org.o2.metadata.console.domain.repository.WarehouseRepository;
+import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.ScriptSource;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +42,9 @@ import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 @Slf4j
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
-
     private final WarehouseRepository warehouseRepository;
     private final AcrossSchemaRepository acrossSchemaRepository;
     private final CodeRuleBuilder codeRuleBuilder;
-    private final O2MetadataClient o2MetadataClient;
     private O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
 
@@ -49,13 +52,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final AcrossSchemaRepository acrossSchemaRepository,
                                 final CodeRuleBuilder codeRuleBuilder,
-                                final O2MetadataClient o2MetadataClient,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient) {
         this.warehouseRepository = warehouseRepository;
         this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
-        this.o2MetadataClient = o2MetadataClient;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
     }
@@ -199,17 +200,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return triggerCalInfoList;
     }
 
-
-    /**
-     * 新增到 redis
-     *
-     * @param warehouse warehouse
-     */
-    private void syncToRedis(final Warehouse warehouse) {
-        Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.o2MetadataClient.saveWarehouse(warehouse.getTenantId() ,warehouse.getWarehouseCode(), hashMap);
-    }
-
     /**
      * update redis
      *
@@ -217,10 +207,10 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     private void updateWarehouseToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.o2MetadataClient.updateWarehouse(warehouse.getTenantId(), warehouse.getWarehouseCode(), hashMap);
+        updateWarehouse(warehouse.getWarehouseCode(), hashMap,warehouse.getTenantId());
     }
 
-    public void operationRedis(List<Warehouse> warehouses) {
+    private void operationRedis(List<Warehouse> warehouses) {
         if (CollectionUtils.isNotEmpty(warehouses)) {
             warehouses.get(0).syncToRedis(warehouses,
                     O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
@@ -228,5 +218,37 @@ public class WarehouseServiceImpl implements WarehouseService {
                     redisCacheClient);
         }
     }
+    /**
+     * 新增到 redis
+     *
+     * @param warehouse warehouse
+     */
+    private void syncToRedis(final Warehouse warehouse) {
+        Map<String, Object> hashMap = warehouse.buildRedisHashMap();
+        saveWarehouse(warehouse.getWarehouseCode(), hashMap,warehouse.getTenantId());
+    }
+    private void updateWarehouse(String warehouseCode, Map<String, Object> hashMap, Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, UPDATE_WAREHOUSE_LUA);
+
+    }
+    private void saveWarehouse(String warehouseCode,Map<String, Object> hashMap,  Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, SAVE_WAREHOUSE_LUA);
+    }
+    private void executeScript(final String warehouseCode, final Map<String,Object> hashMap, final Long tenantId, final ScriptSource scriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), FastJsonHelper.objectToString(hashMap));
+    }
+    private String warehouseCacheKey(String warehouseCode, Long tenantId) {
+        if (tenantId == null) {
+            return MetadataConstants.WarehouseCache.warehouseCacheKey(0, warehouseCode);
+        }
+        return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
+    }
+
+    private static final ResourceScriptSource SAVE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/save_warehouse_cache.lua"));
+    private static final ResourceScriptSource UPDATE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
 
 }

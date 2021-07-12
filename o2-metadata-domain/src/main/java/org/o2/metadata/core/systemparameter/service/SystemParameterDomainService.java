@@ -1,0 +1,23 @@
+package org.o2.metadata.core.systemparameter.service;
+
+import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
+
+import java.util.List;
+
+/**
+ *
+ * 系统参数
+ *
+ * @author yipeng.zhu@hand-china.com 2021-07-09
+ **/
+public interface SystemParameterDomainService {
+
+    SystemParameterDO getSystemParameter(String paramCode, Long tenantId);
+    /**
+     * 获取系统参数
+     * @param paramCodes 编码集合
+     * @param tenantId 租户ID
+     * @return 集合
+     */
+    List<SystemParameterDO> listSystemParameters(List<String> paramCodes, Long tenantId);
+}

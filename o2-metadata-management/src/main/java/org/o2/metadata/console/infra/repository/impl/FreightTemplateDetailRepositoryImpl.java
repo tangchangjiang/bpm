@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
-import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.mapper.FreightTemplateDetailMapper;
 import org.springframework.stereotype.Component;
 

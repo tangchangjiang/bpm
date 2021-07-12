@@ -3,10 +3,11 @@ package org.o2.feignclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.vo.SystemParamDetailVO;
+import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,8 +30,12 @@ public class O2MetadataClient {
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      */
-    public SystemParamDetailVO listSystemParameter(String paramCode, Long tenantId){
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameter(tenantId, paramCode), SystemParamDetailVO.class);
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId){
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
+    }
+
+    public Map<String,SystemParameterVO> listSystemParameters(List<String> paramCodes,Long tenantId){
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), Map.class);
     }
 
     /**

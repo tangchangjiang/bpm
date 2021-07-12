@@ -36,6 +36,10 @@
             <artifactId>o2-starter-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-metadata-domain</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-data-redis</artifactId>
         </dependency>

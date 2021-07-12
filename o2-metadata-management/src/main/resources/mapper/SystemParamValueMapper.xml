@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.SystemParamValueMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.SystemParamValue">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.SystemParamValue">
         <result column="value_id" property="valueId" jdbcType="DECIMAL"/>
         <result column="param_id" property="paramId" jdbcType="DECIMAL"/>
         <result column="param_value" property="paramValue" jdbcType="VARCHAR"/>

@@ -1,7 +1,7 @@
 package org.o2.metadata.api.controller.v1;
 
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.SystemParamDetailVO;
+import org.o2.metadata.api.vo.SystemParameterVO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.config.EnableMetadata;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiParam;
  */
 @Api(tags = {EnableMetadata.SYS_PARAMETER_INTERNAL})
 @RestController("sysParameterInternalController.v1")
-@RequestMapping("v1/{organizationId}")
+@RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {
 
     private SysParameterService sysParameterService;
@@ -33,9 +33,8 @@ public class SysParameterMetadataInternalController {
     @ApiOperation(value = "从redis查询系统参数")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}")
-    public ResponseEntity<SystemParamDetailVO> listSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                   @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
-        SystemParamDetailVO systemParamDetailVO = sysParameterService.listSystemParameter(paramCode, organizationId);
-        return Results.success(systemParamDetailVO);
+    public ResponseEntity<SystemParameterVO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
+        return Results.success(sysParameterService.getSystemParameter(paramCode, organizationId));
     }
 }

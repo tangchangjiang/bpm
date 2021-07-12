@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.PostTime;
-import org.o2.metadata.console.domain.repository.PostTimeRepository;
+import org.o2.metadata.console.infra.entity.PostTime;
+import org.o2.metadata.console.infra.repository.PostTimeRepository;
 import org.springframework.stereotype.Component;
 
 /**

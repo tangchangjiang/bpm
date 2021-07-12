@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
-import org.o2.metadata.console.domain.entity.Country;
+import org.o2.metadata.console.infra.entity.Country;
 
 
 /**

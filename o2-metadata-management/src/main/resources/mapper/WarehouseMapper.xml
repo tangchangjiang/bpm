@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.WarehouseMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.Warehouse">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.Warehouse">
         <id column="warehouse_id" property="warehouseId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
         <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
@@ -92,7 +92,7 @@
         order by w.warehouse_code asc
     </select>
 
-    <select id="listWarehouseByCondition" resultType="org.o2.metadata.console.domain.entity.Warehouse">
+    <select id="listWarehouseByCondition" resultType="org.o2.metadata.console.infra.entity.Warehouse">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         w.warehouse_id,
@@ -156,7 +156,7 @@
         </where>
     </select>
 
-    <select id="queryAllWarehouseByTenantId" resultType="org.o2.metadata.console.domain.entity.Warehouse">
+    <select id="queryAllWarehouseByTenantId" resultType="org.o2.metadata.console.infra.entity.Warehouse">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         w.warehouse_id,

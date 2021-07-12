@@ -1,5 +1,6 @@
 package org.o2.feignclient.metadata.infra.feign;
 
+import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import io.swagger.annotations.ApiParam;
+
+import java.util.List;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
@@ -26,7 +29,13 @@ public interface SysParameterRemoteService {
      * @return ResponseEntity<String>
      */
     @GetMapping("/{organizationId}/{paramCode}")
-    public ResponseEntity<String> listSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                       @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
-
+    /**
+     * 批量从redis查询系统参数
+     * @param paramCodes 编码集合
+     * @param tenantId 租户ID
+     * @return
+     */
+    ResponseEntity<String> listSystemParameters(List<String> paramCodes, Long tenantId);
 }

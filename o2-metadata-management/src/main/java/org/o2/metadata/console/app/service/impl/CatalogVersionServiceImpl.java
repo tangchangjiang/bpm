@@ -5,10 +5,10 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.console.domain.entity.Catalog;
-import org.o2.metadata.console.domain.entity.CatalogVersion;
-import org.o2.metadata.console.domain.repository.CatalogRepository;
-import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
+import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.CatalogVersion;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.springframework.stereotype.Service;
 
 /**

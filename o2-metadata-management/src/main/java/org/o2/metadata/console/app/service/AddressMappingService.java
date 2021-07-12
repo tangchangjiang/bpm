@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
-import org.o2.metadata.console.domain.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import java.util.List;
 

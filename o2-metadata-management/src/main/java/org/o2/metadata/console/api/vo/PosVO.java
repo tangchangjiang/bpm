@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.metadata.console.domain.entity.Pos;
+import org.o2.metadata.console.infra.entity.Pos;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
