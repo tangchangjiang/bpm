@@ -31,8 +31,7 @@ public interface SystemParameterRedis {
      * @param ts 待同步的系统参数数据
      * @param tenantId 租户ID
      **/
-    void synToRedis(List<SystemParameter> ts,
-                    Long tenantId);
+    void synToRedis(List<SystemParameter> ts,Long tenantId);
 
     /**
      * 单条更新系统参数
@@ -40,16 +39,9 @@ public interface SystemParameterRedis {
      * @param systemParameter 待同步的系统参数数据
      * @param tenantId 租户ID
      **/
-    void updateToRedis(SystemParameter systemParameter,
-                       Long tenantId);
+    void updateToRedis(SystemParameter systemParameter,Long tenantId);
 
-    /**
-     * 单条更新系统参数
-     *
-     * @param paramId  系统参数ID
-     * @param tenantId 租户ID
-     **/
-    void updateToRedis(Long paramId, Long tenantId);
+
     /**
      *
      * @date 2021-07-12
@@ -57,11 +49,5 @@ public interface SystemParameterRedis {
      * @return 
      */
     void extraOperate(String paramCode, Long tenantId);
-    
-    /**
-     * 删除系统参数
-     * @param
-     * @return 
-     */
-    void delToRedis(SystemParameter systemParameter,Long tenantId);
+
 }

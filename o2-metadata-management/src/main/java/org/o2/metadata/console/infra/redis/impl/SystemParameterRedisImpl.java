@@ -46,8 +46,11 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     private O2InventoryClient o2InventoryClient;
 
 
-    public SystemParameterRedisImpl(RedisCacheClient redisCacheClient) {
+    public SystemParameterRedisImpl(RedisCacheClient redisCacheClient, SystemParameterRepository systemParameterRepository, SystemParamValueMapper systemParamValueMapper, O2InventoryClient o2InventoryClient) {
         this.redisCacheClient = redisCacheClient;
+        this.systemParameterRepository = systemParameterRepository;
+        this.systemParamValueMapper = systemParamValueMapper;
+        this.o2InventoryClient = o2InventoryClient;
     }
 
     @Override
@@ -153,33 +156,24 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     }
     @Override
     public void updateToRedis(SystemParameter systemParameter, Long tenantId) {
-        // 获取hashKey
         final String paramTypeCode = systemParameter.getParamTypeCode();
         final String paramCode = systemParameter.getParamCode();
+        //参数redis更新
         if (MetadataConstants.ParamType.KV.equalsIgnoreCase(paramTypeCode)) {
             final String kvHashKey = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.KV);
             redisCacheClient.opsForHash().put(kvHashKey, paramCode, systemParameter.getDefaultValue());
-        } else if (MetadataConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
+        }
+        //参数值redis更新
+        if (MetadataConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
             final String setHashKey = String.format(MetadataConstants.SystemParameter.KEY, tenantId, MetadataConstants.ParamType.SET);
-            List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(paramCode, tenantId);
+            List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             if (CollectionUtils.isNotEmpty(voList)) {
-                redisCacheClient.opsForHash().put(setHashKey, paramCode, JSONArray.toJSONString(voList));
+                redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JSONArray.toJSONString(voList));
             }
         }
+
     }
 
-
-    @Override
-    public void updateToRedis(Long paramId, Long tenantId) {
-        SystemParameter queryParam = new SystemParameter();
-        queryParam.setParamId(paramId);
-        queryParam.setTenantId(tenantId);
-
-        SystemParameter systemParameter = systemParameterRepository.selectOne(queryParam);
-        if (null != systemParameter) {
-            this.updateToRedis(systemParameter, systemParameter.getTenantId());
-        }
-    }
 
     @Override
     public void extraOperate(String paramCode, Long tenantId) {
@@ -191,8 +185,4 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
     }
 
-    @Override
-    public void delToRedis(SystemParameter systemParameter, Long tenantId) {
-
-    }
 }

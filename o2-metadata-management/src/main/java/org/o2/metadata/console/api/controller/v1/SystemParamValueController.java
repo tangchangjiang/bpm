@@ -49,13 +49,11 @@ public class SystemParamValueController extends BaseController {
     private SystemParamValueRepository systemParamValueRepository;
     @Autowired
     private SystemParamValueService systemParamValueService;
-    @Autowired
-    private SysParamService sysParamService;
 
     @ApiOperation(value = "系统参数值列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
+    public ResponseEntity<?> listSystemParamValues(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         Page<SystemParamValue> page = PageHelper.doPage(pageRequest, () -> systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class)
@@ -68,7 +66,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "系统参数值明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{valueId}")
-    public ResponseEntity<?> detail(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> getSystemParamValue(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
         SystemParamValue condition = new SystemParamValue();
         condition.setTenantId(organizationId);
         condition.setValueId(valueId);
@@ -79,32 +77,29 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "创建系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> saveSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
-        systemParamValueRepository.insertSelective(systemParamValue);
-        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
+        systemParamValueService.saveSystemParamValue(systemParamValue);
         return Results.success(systemParamValue);
     }
 
     @ApiOperation(value = "修改系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
-        systemParamValueRepository.updateByPrimaryKey(systemParamValue);
-        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
+        systemParamValueService.updateSystemParamValue(systemParamValue);
         return Results.success(systemParamValue);
     }
 
     @ApiOperation(value = "删除系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<?> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
-        systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
-        sysParamService.updateToRedis(systemParamValue.getParamId(), organizationId);
+        systemParamValueService.removeSystemParamValue(systemParamValue);
         return Results.success();
     }
 

@@ -9,10 +9,10 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -54,18 +54,18 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
     private final SystemParameterRepository systemParameterRepository;
-    private final SysParamService sysParamService;
+    private final SystemParameterRedis systemParameterRedis;
 
     @Autowired
     public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient,
                                   OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                   WarehouseRepository warehouseRepository,
-                                  SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
+                                  SystemParameterRepository systemParameterRepository, SystemParameterRedis systemParameterRedis) {
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.warehouseRepository = warehouseRepository;
         this.systemParameterRepository = systemParameterRepository;
-        this.sysParamService = sysParamService;
+        this.systemParameterRedis = systemParameterRedis;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             return;
         }
 
-        sysParamService.synToRedis(systemParameterList, tenantId);
+        systemParameterRedis.synToRedis(systemParameterList, tenantId);
 
     }
 
