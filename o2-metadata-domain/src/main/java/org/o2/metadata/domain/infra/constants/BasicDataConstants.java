@@ -1,6 +1,4 @@
-package org.o2.metadata.core.infra.constants;
-
-import jdk.nashorn.internal.ir.IfNode;
+package org.o2.metadata.domain.infra.constants;
 
 /**
  * 基础数据常量

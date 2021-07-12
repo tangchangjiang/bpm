@@ -1,4 +1,4 @@
-package org.o2.metadata.core.systemparameter.domain;
+package org.o2.metadata.domain.systemparameter.domain;
 
 
 import java.util.Objects;

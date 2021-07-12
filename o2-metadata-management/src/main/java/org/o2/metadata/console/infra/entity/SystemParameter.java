@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.core.systemparameter.domain.SystemParamValueDO;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

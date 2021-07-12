@@ -1,8 +1,8 @@
-package org.o2.metadata.core.systemparameter.service.impl;
+package org.o2.metadata.domain.systemparameter.service.impl;
 
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
-import org.o2.metadata.core.systemparameter.repository.SystemParameterDomainRepository;
-import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.repository.SystemParameterDomainRepository;
+import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.springframework.stereotype.Service;
 
 

@@ -8,8 +8,8 @@ import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
-import org.o2.metadata.core.systemparameter.service.SystemParameterDomainService;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

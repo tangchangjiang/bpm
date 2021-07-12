@@ -2,8 +2,8 @@ package org.o2.metadata.console.domain.repository.impl;
 
 import org.o2.metadata.console.infra.convertor.SysParameterConvertor;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
-import org.o2.metadata.core.systemparameter.domain.SystemParameterDO;
-import org.o2.metadata.core.systemparameter.repository.SystemParameterDomainRepository;
+import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
+import org.o2.metadata.domain.systemparameter.repository.SystemParameterDomainRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
