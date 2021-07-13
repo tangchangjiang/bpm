@@ -15,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -26,6 +27,7 @@ import org.springframework.util.Assert;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -96,7 +98,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @NotNull
     private Long tenantId;
 
-
+    @ApiModelProperty(value = "仓库编码")
+    @Transient
+    private String warehouseCode;
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -106,7 +110,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
         if (this.onlineShopRelWarehouseId != null) {
             return relPosRepository.existsWithPrimaryKey(this);
         }
-        final OnlineShopRelWarehouseVO rel = new OnlineShopRelWarehouseVO();
+        final OnlineShopRelWarehouse rel = new OnlineShopRelWarehouse();
         rel.setPosId(this.posId);
         rel.setWarehouseId(this.warehouseId);
         rel.setOnlineShopId(this.onlineShopId);
@@ -140,7 +144,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @return hashKey
      */
     public String buildRedisHashKey(final String onlineShopCode) {
-        return  String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
+        return  String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
     }
 
     /**

@@ -1,17 +1,14 @@
-package org.o2.metadata.console.api.vo;
+package org.o2.metadata.domain.onlineshop.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.util.Date;
-
 /**
  * 网店关联仓库
  *
  * @author yuying.shi@hand-china.com 2020-03-02
  */
 @ApiModel("网店关联仓库")
-public class OnlineShopRelWarehouseVO {
+public class OnlineShopRelWarehouseDO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long onlineShopRelWarehouseId;
@@ -35,35 +32,6 @@ public class OnlineShopRelWarehouseVO {
     private Long tenantId;
     @ApiModelProperty(value = "仓库编码")
     private String warehouseCode;
-    @ApiModelProperty(value = "网店编码")
-    private String onlineShopCode;
-    private Date activedDateTo;
-    @ApiModelProperty(value = "网店名称")
-    private String WarehouseName;
-
-    public String getWarehouseName() {
-        return WarehouseName;
-    }
-
-    public void setWarehouseName(String warehouseName) {
-        WarehouseName = warehouseName;
-    }
-
-    public Date getActivedDateTo() {
-        return activedDateTo;
-    }
-
-    public void setActivedDateTo(Date activedDateTo) {
-        this.activedDateTo = activedDateTo;
-    }
-
-    public String getOnlineShopCode() {
-        return onlineShopCode;
-    }
-
-    public void setOnlineShopCode(String onlineShopCode) {
-        this.onlineShopCode = onlineShopCode;
-    }
 
     public String getWarehouseCode() {
         return warehouseCode;

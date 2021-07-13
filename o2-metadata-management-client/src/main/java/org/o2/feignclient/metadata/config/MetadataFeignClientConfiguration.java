@@ -1,8 +1,10 @@
 package org.o2.feignclient.metadata.config;
 
 import org.o2.feignclient.O2MetadataManagementClient;
+import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
+import org.o2.feignclient.metadata.infra.feign.fallback.OnlineShopRelWarehouseRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,8 +32,14 @@ public class MetadataFeignClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public OnlineShopRelWarehouseRemoteServiceImpl OnlineShopRelWarehouseRemoteServiceFallback() {
+        return new OnlineShopRelWarehouseRemoteServiceImpl();
+    }
+    @Bean
+    @ConditionalOnMissingBean
     O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
-                                                          WarehouseRemoteService warehouseRemoteService) {
-        return new O2MetadataManagementClient(sysParameterRemoteService, warehouseRemoteService);
+                                                          WarehouseRemoteService warehouseRemoteService,
+                                                          OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService) {
+        return new O2MetadataManagementClient(sysParameterRemoteService, warehouseRemoteService, onlineShopRelWarehouseRemoteService);
     }
 }

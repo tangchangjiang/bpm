@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.hzero.mybatis.domian.Condition;
@@ -15,12 +16,15 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConvertor;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.domain.onlineshop.service.OnlineShopRelWarehouseDomainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +52,23 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final PosRepository posRepository;
     private O2InventoryClient o2InventoryClient;
     private RedisCacheClient redisCacheClient;
+    private final OnlineShopRelWarehouseDomainService onlineShopRelWarehouseDomainService;
 
     @Autowired
-    public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRepository onlineShopRepository, WarehouseRepository warehouseRepository, PosRepository posRepository,
-                                             O2InventoryClient o2InventoryClient, RedisCacheClient redisCacheClient) {
+    public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
+                                             OnlineShopRepository onlineShopRepository,
+                                             WarehouseRepository warehouseRepository,
+                                             PosRepository posRepository,
+                                             O2InventoryClient o2InventoryClient,
+                                             RedisCacheClient redisCacheClient,
+                                             OnlineShopRelWarehouseDomainService onlineShopRelWarehouseDomainService) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
         this.posRepository = posRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
+        this.onlineShopRelWarehouseDomainService = onlineShopRelWarehouseDomainService;
     }
 
     @Override
@@ -97,7 +108,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                 if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
                     shopCodeSet.add(onlineShop.getOnlineShopCode());
                 }
-                String key = String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShop.getOnlineShopCode());
+                String key = String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShop.getOnlineShopCode());
                 redisCacheClient.opsForHash().put(key, warehouse.getWarehouseCode(), String.valueOf(relationship.getActiveFlag()));
             }
         });
@@ -199,7 +210,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
         onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
 
-        String key = String.format(MetadataConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
+        String key = String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
         Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
         log.info("updateByShop key({}), hashKeySet({})", key, JSON.toJSONString(map.keySet()));
         if (map.isEmpty()) {
@@ -210,6 +221,11 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         map.keySet().forEach(hashKey -> m.put(hashKey, activeFlagStr));
         log.info("updateByShop key({}), m hashKeySet({}), value({})", key, JSON.toJSONString(m.keySet()), JSON.toJSONString(m.values()));
         redisCacheClient.opsForHash().putAll(key, m);
+    }
+
+    @Override
+    public List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
+        return OnlineShopRelWarehouseConvertor.doToVoListObjects(onlineShopRelWarehouseDomainService.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {
@@ -250,21 +266,30 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
      * 同步到redis
      * @param relationships relationships
      */
-    public void syncToRedis (final List<OnlineShopRelWarehouse> relationships) {
+    private void syncToRedis (final List<OnlineShopRelWarehouse> relationships) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
         for (OnlineShopRelWarehouse onlineShopRelWarehouse : relationships) {
             final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
             final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
             final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-            OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
-            onlineShopRelWarehouseVOList.add(onlineShopRelWarehouseVO
-                    .buildOnlineShopRelWarehouseVO(pos,warehouse,onlineShop,onlineShopRelWarehouse));
+            onlineShopRelWarehouseVOList.add(buildOnlineShopRelWarehouseVO(pos,warehouse,onlineShop,onlineShopRelWarehouse));
         }
+        OnlineShopRelWarehouse warehouse = new OnlineShopRelWarehouse();
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
+            warehouse.syncToRedis(onlineShopRelWarehouseVOList,
                     MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
                     MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
+    }
+    private OnlineShopRelWarehouseVO buildOnlineShopRelWarehouseVO (final Pos pos, final Warehouse warehouse, final OnlineShop onlineShop, final OnlineShopRelWarehouse onlineShopRelWarehouse) {
+        OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
+        onlineShopRelWarehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
+        onlineShopRelWarehouseVO.setActiveFlag(onlineShopRelWarehouse.getActiveFlag());
+        onlineShopRelWarehouseVO.setTenantId(onlineShopRelWarehouse.getTenantId());
+        onlineShopRelWarehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
+        onlineShopRelWarehouseVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        onlineShopRelWarehouseVO.setBusinessActiveFlag(onlineShopRelWarehouse.getBusinessActiveFlag());
+        return onlineShopRelWarehouseVO;
     }
 }
