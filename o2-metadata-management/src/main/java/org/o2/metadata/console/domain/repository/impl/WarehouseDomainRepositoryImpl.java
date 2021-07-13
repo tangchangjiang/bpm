@@ -1,9 +1,11 @@
 package org.o2.metadata.console.domain.repository.impl;
 
-import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.infra.convertor.WarehouseConvertor;
+import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.springframework.stereotype.Component;
+
 
 /**
  *
@@ -13,14 +15,14 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class WarehouseDomainRepositoryImpl implements WarehouseDomainRepository {
-    private final RedisCacheClient redisCacheClient;
+    private final WarehouseRedis warehouseRedis;
 
-    public WarehouseDomainRepositoryImpl(RedisCacheClient redisCacheClient) {
-        this.redisCacheClient = redisCacheClient;
+    public WarehouseDomainRepositoryImpl(WarehouseRedis warehouseRedis) {
+        this.warehouseRedis = warehouseRedis;
     }
 
     @Override
     public WarehouseDO getWarehouse(String warehouseCode, Long tenantId) {
-        return null;
+        return WarehouseConvertor.poToDoObject(warehouseRedis.getWarehouse(warehouseCode,tenantId));
     }
 }

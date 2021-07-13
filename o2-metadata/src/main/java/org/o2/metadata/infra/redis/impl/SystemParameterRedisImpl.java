@@ -3,8 +3,8 @@ package org.o2.metadata.infra.redis.impl;
 import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.domain.infra.constants.MetadataDomainConstants;
 import org.o2.metadata.domain.systemparameter.domain.SystemParamValueDO;
+import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParameter;
 import org.o2.metadata.infra.redis.SystemParameterRedis;
 import org.springframework.stereotype.Component;
@@ -33,13 +33,13 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         SystemParameter systemParameter = new SystemParameter();
         systemParameter.setParamCode(paramCode);
         //hash类型
-        String key = String.format(MetadataDomainConstants.SystemParameter.KEY, tenantId, MetadataDomainConstants.ParamType.KV);
+        String key = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         String object = redisCacheClient.<String,String>opsForHash().get(key, paramCode);
         if (object != null) {
             systemParameter.setDefaultValue(object);
         }
         //set类型 不重复
-        String keySet = String.format(MetadataDomainConstants.SystemParameter.KEY, tenantId, MetadataDomainConstants.ParamType.SET);
+        String keySet = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
         if (null != object) {
             systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(object, SystemParamValueDO.class)));
@@ -50,7 +50,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
         List<SystemParameter> doList = new ArrayList<>();
-        String key = String.format(MetadataDomainConstants.SystemParameter.KEY, tenantId, MetadataDomainConstants.ParamType.KV);
+        String key = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         List<String> list = redisCacheClient.<String,String>opsForHash().multiGet(key,paramCodeList);
         if (CollectionUtils.isNotEmpty(list)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
@@ -61,7 +61,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             }
             return doList;
         }
-        String keySet = String.format(MetadataDomainConstants.SystemParameter.KEY, tenantId, MetadataDomainConstants.ParamType.SET);
+        String keySet = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         List<String> listSet = redisCacheClient.<String,String>opsForHash().multiGet(keySet,paramCodeList);
         if (CollectionUtils.isNotEmpty(listSet)) {
             for (int i = 0; i < paramCodeList.size(); i++) {

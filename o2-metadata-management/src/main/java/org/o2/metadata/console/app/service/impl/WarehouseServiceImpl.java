@@ -12,6 +12,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.api.vo.TriggerStockCalculationVO;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -146,6 +147,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         totalList.addAll(createList);
         totalList.addAll(list);
         return totalList ;
+    }
+
+    @Override
+    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
+        return null;
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
