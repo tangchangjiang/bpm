@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({
         "org.o2.metadata.domain.config",
         "org.o2.metadata.domain.systemparameter",
+        "org.o2.metadata.domain.warehouse",
         "org.o2.metadata.domain.infra"
 })
 @Configuration
