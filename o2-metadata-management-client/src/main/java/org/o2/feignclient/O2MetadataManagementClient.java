@@ -3,8 +3,10 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.vo.OnlineShopRelWarehouseVO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
+import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
@@ -19,11 +21,14 @@ public class O2MetadataManagementClient {
 
     private final SysParameterRemoteService sysParameterRemoteService;
     private final WarehouseRemoteService warehouseRemoteService;
+    private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
-                                      WarehouseRemoteService warehouseRemoteService) {
+                                      WarehouseRemoteService warehouseRemoteService,
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
+        this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
     }
 
     /**
@@ -56,5 +61,14 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
         });
     }
-
+    /**
+     * 从redis查询网店关联库存
+     *  @param onlineShopeCode 网店编码
+     * @param tenantId 租户ID
+     * @return map<warehouseCode,OnlineShopRelWarehouseVO>
+     */
+    public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+        });
+    }
 }

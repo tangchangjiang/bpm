@@ -200,19 +200,6 @@ public interface MetadataConstants {
     }
 
 
-    /**
-     * Redis OnlineShopRelWarehouse
-     * o2md:shopRelwh:[tenantId]:[shopCode]
-     * key:value [warehouseCode:businessActiveFlag]
-     * 对应数据库表：o2md_online_shop_rel_warehouse
-     */
-    interface OnlineShopRelWarehouse {
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:{%s}";
-        String FIELD_WAREHOUSE_CODE = "warehouseCode";
-        Collection<String> HASH_KEYS = new HashSet<String>() {{
-            add(FIELD_WAREHOUSE_CODE);
-        }};
-    }
 
     interface FreightCache {
 

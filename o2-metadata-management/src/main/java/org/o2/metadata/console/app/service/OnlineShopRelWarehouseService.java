@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.domain.onlineshop.domain.OnlineShopRelWarehouseDO;
 
 import java.util.List;
 
@@ -57,4 +59,11 @@ public interface OnlineShopRelWarehouseService {
     List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId);
 
     void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
+    /**
+     * 查询网店关联库存
+     * @param onlineShopCode 网店编码
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
 }

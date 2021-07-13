@@ -1,4 +1,4 @@
-package org.o2.metadata.console.api.vo;
+package org.o2.feignclient.metadata.domain.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
