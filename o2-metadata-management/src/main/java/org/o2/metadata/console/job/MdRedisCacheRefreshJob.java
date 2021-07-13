@@ -11,6 +11,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -121,8 +122,9 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
      */
     public void refreshOnlineShopRelWarehouse(Long tenantId) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
+        OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
+            onlineShopRelWarehouse.syncToRedis(onlineShopRelWarehouseVOList,
                     MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
                     MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);

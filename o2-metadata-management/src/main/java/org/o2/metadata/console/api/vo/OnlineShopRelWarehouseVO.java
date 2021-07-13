@@ -38,6 +38,16 @@ public class OnlineShopRelWarehouseVO {
     @ApiModelProperty(value = "网店编码")
     private String onlineShopCode;
     private Date activedDateTo;
+    @ApiModelProperty(value = "网店名称")
+    private String WarehouseName;
+
+    public String getWarehouseName() {
+        return WarehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        WarehouseName = warehouseName;
+    }
 
     public Date getActivedDateTo() {
         return activedDateTo;
