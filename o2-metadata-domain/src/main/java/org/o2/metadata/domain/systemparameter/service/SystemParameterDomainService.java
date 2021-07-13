@@ -11,7 +11,12 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-09
  **/
 public interface SystemParameterDomainService {
-
+    /**
+     * 获取系统参数
+     * @param paramCode 编码
+     * @param tenantId 租户ID
+     * @return  系统参数
+     */
     SystemParameterDO getSystemParameter(String paramCode, Long tenantId);
     /**
      * 获取系统参数

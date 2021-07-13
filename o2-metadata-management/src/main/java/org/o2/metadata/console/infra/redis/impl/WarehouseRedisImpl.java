@@ -5,6 +5,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
+@Component
 public class WarehouseRedisImpl implements WarehouseRedis {
     private final RedisCacheClient redisCacheClient;
 

@@ -2,7 +2,6 @@ package org.o2.metadata.domain.warehouse.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
 import java.util.Date;
 
@@ -11,7 +10,6 @@ import java.util.Date;
  *
  * @author yuying.shi@hand-china.com 2020-03-02
  */
-@Data
 @ApiModel("仓库表")
 public class WarehouseDO  {
 
@@ -77,4 +75,179 @@ public class WarehouseDO  {
 
     private String pickUpLimitValue;
 
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public Long getPosId() {
+        return posId;
+    }
+
+    public void setPosId(Long posId) {
+        this.posId = posId;
+    }
+
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
+
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getWarehouseStatusCode() {
+        return warehouseStatusCode;
+    }
+
+    public void setWarehouseStatusCode(String warehouseStatusCode) {
+        this.warehouseStatusCode = warehouseStatusCode;
+    }
+
+    public String getWarehouseTypeCode() {
+        return warehouseTypeCode;
+    }
+
+    public void setWarehouseTypeCode(String warehouseTypeCode) {
+        this.warehouseTypeCode = warehouseTypeCode;
+    }
+
+    public Long getPickUpQuantity() {
+        return pickUpQuantity;
+    }
+
+    public void setPickUpQuantity(Long pickUpQuantity) {
+        this.pickUpQuantity = pickUpQuantity;
+    }
+
+    public Long getExpressedQuantity() {
+        return expressedQuantity;
+    }
+
+    public void setExpressedQuantity(Long expressedQuantity) {
+        this.expressedQuantity = expressedQuantity;
+    }
+
+    public Integer getPickedUpFlag() {
+        return pickedUpFlag;
+    }
+
+    public void setPickedUpFlag(Integer pickedUpFlag) {
+        this.pickedUpFlag = pickedUpFlag;
+    }
+
+    public Integer getExpressedFlag() {
+        return expressedFlag;
+    }
+
+    public void setExpressedFlag(Integer expressedFlag) {
+        this.expressedFlag = expressedFlag;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
+    }
+
+    public Date getActivedDateFrom() {
+        return activedDateFrom;
+    }
+
+    public void setActivedDateFrom(Date activedDateFrom) {
+        this.activedDateFrom = activedDateFrom;
+    }
+
+    public Date getActivedDateTo() {
+        return activedDateTo;
+    }
+
+    public void setActivedDateTo(Date activedDateTo) {
+        this.activedDateTo = activedDateTo;
+    }
+
+    public String getInvOrganizationCode() {
+        return invOrganizationCode;
+    }
+
+    public void setInvOrganizationCode(String invOrganizationCode) {
+        this.invOrganizationCode = invOrganizationCode;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public Integer getActiveFlag() {
+        return activeFlag;
+    }
+
+    public void setActiveFlag(Integer activeFlag) {
+        this.activeFlag = activeFlag;
+    }
+
+    public String getPosCode() {
+        return posCode;
+    }
+
+    public void setPosCode(String posCode) {
+        this.posCode = posCode;
+    }
+
+    public String getPosName() {
+        return posName;
+    }
+
+    public void setPosName(String posName) {
+        this.posName = posName;
+    }
+
+    public String getWarehouseStatusMeaning() {
+        return warehouseStatusMeaning;
+    }
+
+    public void setWarehouseStatusMeaning(String warehouseStatusMeaning) {
+        this.warehouseStatusMeaning = warehouseStatusMeaning;
+    }
+
+    public String getWarehouseTypeMeaning() {
+        return warehouseTypeMeaning;
+    }
+
+    public void setWarehouseTypeMeaning(String warehouseTypeMeaning) {
+        this.warehouseTypeMeaning = warehouseTypeMeaning;
+    }
+
+    public String getExpressLimitValue() {
+        return expressLimitValue;
+    }
+
+    public void setExpressLimitValue(String expressLimitValue) {
+        this.expressLimitValue = expressLimitValue;
+    }
+
+    public String getPickUpLimitValue() {
+        return pickUpLimitValue;
+    }
+
+    public void setPickUpLimitValue(String pickUpLimitValue) {
+        this.pickUpLimitValue = pickUpLimitValue;
+    }
 }
