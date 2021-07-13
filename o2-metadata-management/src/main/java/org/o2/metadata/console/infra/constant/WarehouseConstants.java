@@ -1,32 +1,27 @@
-package org.o2.metadata.infra.constants;
-
-
-import java.util.Collection;
-import java.util.HashSet;
+package org.o2.metadata.console.infra.constant;
 
 /**
- * 元数据常量
  *
- * @author mark.bao@hand-china.com 2019-04-16
- */
-public interface MetadataConstants {
-    interface ErrorCode {
-        String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
-    }
+ * 仓库常量
+ *
+ * @author yipeng.zhu@hand-china.com 2021-07-13
+ **/
+public interface WarehouseConstants {
+
     /**
-     * Redis OnlineShopRelWarehouse
-     * o2md:shopRelwh:[tenantId]:[shopCode]
-     * key:value [warehouseCode:businessActiveFlag]
-     * 对应数据库表：o2md_online_shop_rel_warehouse
+     * 仓库类型
      */
-    interface OnlineShopRelWarehouse {
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelwh:%d:{%s}";
-        String FIELD_WAREHOUSE_CODE = "warehouseCode";
-        Collection<String> HASH_KEYS = new HashSet<String>() {{
-            add(FIELD_WAREHOUSE_CODE);
-        }};
+    interface WarehouseType {
+        String LOV_CODE = "O2MD.WAREHOUSE_TYPE";
     }
 
+    /**
+     * 仓库状态
+     */
+    interface WarehouseStatus {
+
+        String LOV_CODE = "O2MD.WAREHOUSE_STATUS";
+    }
     /**
      * Redis Warehouse
      * o2md:warehouse:[tenantId]:[warehouseCode]
@@ -72,5 +67,4 @@ public interface MetadataConstants {
             return String.format(limit, tenantId);
         }
     }
-
 }

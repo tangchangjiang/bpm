@@ -8,6 +8,8 @@ import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainServi
 import org.o2.metadata.infra.convertor.SysParameterConvertor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * SysParameter RPC Provider
@@ -26,5 +28,10 @@ public class SysParameterServiceImpl implements SysParameterService {
     public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO =systemParameterDomainService.getSystemParameter(paramCode,tenantId);
         return SysParameterConvertor.doToVoObject(systemParameterDO);
+    }
+
+    @Override
+    public List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long organizationId) {
+        return SysParameterConvertor.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, organizationId));
     }
 }

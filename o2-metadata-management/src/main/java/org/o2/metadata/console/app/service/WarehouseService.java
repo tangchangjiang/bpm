@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -28,5 +29,7 @@ public interface WarehouseService {
      * @return  list 仓库集合
      */
     List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses);
+
+    WarehouseVO getWarehouse(String warehouseCode,Long tenantId);
 
 }

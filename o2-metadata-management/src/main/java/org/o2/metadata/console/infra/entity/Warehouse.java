@@ -16,6 +16,7 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scripting.support.ResourceScriptSource;
@@ -91,13 +92,13 @@ public class Warehouse extends AuditDomain {
     private String warehouseName;
 
     @ApiModelProperty(value = "仓库状态,值集：O2MD.WAREHOUSE_STATUS")
-    @LovValue(lovCode = MetadataConstants.WarehouseStatus.LOV_CODE)
+    @LovValue(lovCode = WarehouseConstants.WarehouseStatus.LOV_CODE)
     @NotBlank
     @Size(max = 255)
     private String warehouseStatusCode;
 
     @ApiModelProperty(value = "仓库类型,值集: O2MD.WAREHOUSE_TYPE （良品仓/不良品仓/退货仓）")
-    @LovValue(lovCode = MetadataConstants.WarehouseType.LOV_CODE)
+    @LovValue(lovCode = WarehouseConstants.WarehouseType.LOV_CODE)
     @NotBlank
     @Size(max = 255)
     private String warehouseTypeCode;
@@ -177,21 +178,21 @@ public class Warehouse extends AuditDomain {
     public Map<String, Object> buildRedisHashMap() {
         DateFormat dateFormat = MetadataConstants.MdDateFormat.dateFormat();
         final Map<String, Object> warehouseMap = new HashMap<>(13);
-        warehouseMap.put(MetadataConstants.WarehouseCache.POS_CODE,this.posCode);
-        warehouseMap.put(MetadataConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
-        warehouseMap.put(MetadataConstants.WarehouseCache.WAREHOUSE_TYPE_CODE,this.warehouseTypeCode);
-        warehouseMap.put(MetadataConstants.WarehouseCache.PICKUP_FLAG,this.pickedUpFlag);
-        warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESSED_FLAG,this.expressedFlag);
-        warehouseMap.put(MetadataConstants.WarehouseCache.SCORE,this.score);
-        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_FROM,
+        warehouseMap.put(WarehouseConstants.WarehouseCache.POS_CODE,this.posCode);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_TYPE_CODE,this.warehouseTypeCode);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.PICKUP_FLAG,this.pickedUpFlag);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESSED_FLAG,this.expressedFlag);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.SCORE,this.score);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_FROM,
                 (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
-        warehouseMap.put(MetadataConstants.WarehouseCache.ACTIVE_DATE_TO,
+        warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_TO,
                 (null != this.activedDateTo) ? dateFormat.format(this.activedDateTo) : null);
-        warehouseMap.put(MetadataConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
-        warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
-        warehouseMap.put(MetadataConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
-        warehouseMap.put(MetadataConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY,this.pickUpQuantity);
-        warehouseMap.put(MetadataConstants.WarehouseCache.PICK_UP_LIMIT_VALUE,this.pickUpLimitValue == null ? "0" : this.pickUpLimitValue);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY,this.pickUpQuantity);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_VALUE,this.pickUpLimitValue == null ? "0" : this.pickUpLimitValue);
         return warehouseMap;
     }
 
@@ -202,7 +203,7 @@ public class Warehouse extends AuditDomain {
      * @return
      */
     public String buildRedisHashKey(String warehouseCode, Long tenantId) {
-        return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
+        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
     }
 
     /**

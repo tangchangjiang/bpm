@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -58,7 +59,7 @@ public class SystemParameter extends AuditDomain {
     @ApiModelProperty(value = "参数名称")
     private String paramName;
     @ApiModelProperty(value = "值集，KV（key-value） LIST(重复) SET（不重复）", required = true)
-    @LovValue(MetadataConstants.ParamType.LOV_CODE)
+    @LovValue(SystemParameterConstants.ParamType.LOV_CODE)
     private String paramTypeCode;
     @ApiModelProperty(value = "是否启用", required = true)
     @NotNull

@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.service.SystemParamValueService;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -39,7 +40,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public String getSysValueByParam(String paramCode, Long tenantId) {
-        if (MetadataConstants.ParamType.KV.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
+        if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             return systemParamValueRepository.getSysValueByParam(paramCode, tenantId);
         }
         return null;
@@ -47,7 +48,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public List<String> getSysListByParam(String paramCode, Long tenantId) {
-        if (MetadataConstants.ParamType.LIST.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
+        if (SystemParameterConstants.ParamType.LIST.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             return systemParamValueRepository.getSysListByParam(paramCode, tenantId);
         }
         return new ArrayList<>();
@@ -56,7 +57,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public Set<String> getSysSetByParam(String paramCode, Long tenantId) {
-        if (MetadataConstants.ParamType.SET.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
+        if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             return systemParamValueRepository.getSysSetByParam(paramCode, tenantId);
         }
         return new HashSet<>();

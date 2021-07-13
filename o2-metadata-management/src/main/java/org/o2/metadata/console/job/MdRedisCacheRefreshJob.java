@@ -10,6 +10,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -17,7 +18,6 @@ import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +142,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
                 .andWhere(Sqls.custom().andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)).build());
 
         if (CollectionUtils.isEmpty(systemParameterList)) {
-            log.warn(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
+            log.warn(MessageAccessor.getMessage(SystemParameterConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
             return;
         }
 

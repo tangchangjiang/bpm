@@ -1,10 +1,9 @@
 package org.o2.metadata.console.infra.util;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.hzero.core.message.MessageAccessor;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 
@@ -23,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author yuying.shi@hand-china.com 2020/3/25
  */
 @Slf4j
-public class MetadataRedisUtil {
+public class SystemParameterRedisUtil {
 
     private static final String METHOD_GROUP_MAP = "groupMap";
     private static final String METHOD_BUILD_REDIS_HASH_KEY = "buildRedisHashKey";
@@ -73,7 +72,7 @@ public class MetadataRedisUtil {
             }
             executeScript(filedMaps, Collections.emptyList(), resourceScriptSource, redisCacheClient);
         } catch (Exception e) {
-            throw new CommonException(MetadataConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
+            throw new CommonException(SystemParameterConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
         }
     }
 
