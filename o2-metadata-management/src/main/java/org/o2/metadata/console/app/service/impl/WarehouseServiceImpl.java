@@ -79,13 +79,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
-        /*for (Warehouse warehouse : warehouses) {
-            // 编码规则：W + 6位流水
-            final String warehouseCode = codeRuleBuilder.generateCode(tenantId, MetadataConstants.CodeRuleBuilder.RULE_CODE,
-                    MetadataConstants.CodeRuleBuilder.LEVEL_CODE, MetadataConstants.CodeRuleBuilder.LEVEL_VALUE, null);
-            log.info("create batch warehouseCode {}", warehouseCode);
-            warehouse.setWarehouseCode(warehouseCode);
-        }*/
         warehouseRepository.batchInsert(warehouses);
         this.operationRedis(warehouses);
         return warehouses;
