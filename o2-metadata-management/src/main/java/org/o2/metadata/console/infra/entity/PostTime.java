@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
@@ -80,11 +80,11 @@ public class PostTime extends AuditDomain {
 
     void validate() {
         if (this.distributeEndTime != null && this.distributeStartTime != null && this.distributeStartTime.isAfter(this.distributeEndTime)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DATE_RANGE_ERROR,
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DATE_RANGE_ERROR,
                     this.distributeStartTime, this.distributeEndTime);
         }
         if (this.receiveStartTime != null && this.receiveEndTime != null && this.receiveStartTime.isAfter(this.receiveEndTime)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DATE_RANGE_ERROR,
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DATE_RANGE_ERROR,
                     this.receiveStartTime, this.receiveEndTime);
         }
     }

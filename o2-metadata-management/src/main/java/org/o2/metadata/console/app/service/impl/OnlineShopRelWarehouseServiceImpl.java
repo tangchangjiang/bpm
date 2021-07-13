@@ -15,7 +15,6 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
@@ -263,8 +262,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         }
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
             onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }

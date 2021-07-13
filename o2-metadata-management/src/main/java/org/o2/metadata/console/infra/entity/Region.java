@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.util.Regexs;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -87,7 +87,7 @@ public class Region extends AuditDomain {
 
     @Transient
     @ApiModelProperty("大区，值集O2MD.AREA_CODE")
-    @LovValue(lovCode = BasicDataConstants.AreaCode.LOV_CODE)
+    @LovValue(lovCode = MetadataConstants.AreaCode.LOV_CODE)
     private String areaCode;
 
     @ApiModelProperty(value = "大区名称")

@@ -20,7 +20,6 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
@@ -78,7 +77,7 @@ public class Pos extends AuditDomain {
     public void baseValidate(final PosRepository posRepository) {
         if (this.getPosId() != null) {
             final Pos record = posRepository.selectByPrimaryKey(this.posId);
-            Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+            Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
             Assert.isTrue(record.getPosCode().equals(this.posCode), "pos code must not be changed");
             Assert.isTrue(record.getPosTypeCode().equals(this.posTypeCode), "pos type code must not be changed");
         }
@@ -108,7 +107,7 @@ public class Pos extends AuditDomain {
         pos.setTenantId(this.tenantId);
         final List<Pos> mayEmpty = posRepository.select(pos);
         if (CollectionUtils.isNotEmpty(mayEmpty)) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Pos(" + pos.getPosId() + ")");
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Pos(" + pos.getPosId() + ")");
         }
     }
 
@@ -160,7 +159,7 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "营业类型")
     @Size(max = 255)
-    @LovValue(lovCode = BasicDataConstants.BusinessType.LOV_CODE)
+    @LovValue(lovCode = MetadataConstants.BusinessType.LOV_CODE)
     @Column(name = "business_type_code")
     private String businessTypeCode;
 

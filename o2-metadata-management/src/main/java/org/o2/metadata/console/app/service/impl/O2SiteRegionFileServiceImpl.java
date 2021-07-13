@@ -7,8 +7,8 @@ import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,13 +42,13 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     public void createRegionStaticFile(final RegionCacheVO regionCacheVO) {
         log.info("static params are : {},{}", regionCacheVO.getTenantId(), regionCacheVO.getCountryCode());
         final String countryCode = regionCacheVO.getCountryCode();
-        regionCacheVO.setLang(O2MdConsoleConstants.Path.ZH_CN);
+        regionCacheVO.setLang(MetadataConstants.Path.ZH_CN);
         final List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
-        this.staticFile(zhList, O2MdConsoleConstants.Path.ZH_CN, regionCacheVO.getTenantId(), countryCode);
+        this.staticFile(zhList, MetadataConstants.Path.ZH_CN, regionCacheVO.getTenantId(), countryCode);
 
-        regionCacheVO.setLang(O2MdConsoleConstants.Path.EN_US);
+        regionCacheVO.setLang(MetadataConstants.Path.EN_US);
         final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
-        this.staticFile(enList, O2MdConsoleConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
+        this.staticFile(enList, MetadataConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
 
     }
 
@@ -65,12 +65,12 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         // 上传路径全小写，多语言用中划线
         final String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
                 fileStorageProperties.getStoragePath(),
-                O2MdConsoleConstants.Path.FILE,
-                O2MdConsoleConstants.Path.REGION,
+                MetadataConstants.Path.FILE,
+                MetadataConstants.Path.REGION,
                 lang).toLowerCase();
 
         log.info("directory url {}", directory);
-        final String fileName = O2MdConsoleConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + O2MdConsoleConstants.FileSuffix.JSON;
+        final String fileName = MetadataConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + MetadataConstants.FileSuffix.JSON;
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
                 directory, fileName, JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
