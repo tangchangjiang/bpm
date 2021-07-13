@@ -2,10 +2,10 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.o2.metadata.console.app.service.AddressMappingService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.slf4j.Logger;
@@ -41,13 +41,13 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMapping condition, final String countryCode) {
         if (condition.getCatalogCode() == null || "".equals(condition.getCatalogCode())) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
         }
         if (null == condition.getTenantId()) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         }
         final List<RegionTreeChildVO> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(condition, countryCode);
 
@@ -81,7 +81,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         LOG.info("regionTreeChildList.size:" + regionTreeChildList.size());
         //按照levelPath进行分组，获得省市区
         for (final RegionTreeChildVO regionTreeChildVO : regionTreeChildList) {
-            final String[] regionPaths = regionTreeChildVO.getLevelPath().split(BasicDataConstants.Constants.ADDRESS_SPLIT_REGEX);
+            final String[] regionPaths = regionTreeChildVO.getLevelPath().split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
             LOG.info("regionPaths:" + regionPaths);
             LOG.info("regionPaths.length:" + regionPaths.length);
             for (int i = regionPaths.length - 1; i >= 0; i--) {

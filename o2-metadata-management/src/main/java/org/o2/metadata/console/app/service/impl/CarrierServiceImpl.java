@@ -6,13 +6,13 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.CarrierService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -55,7 +55,7 @@ public class CarrierServiceImpl implements CarrierService {
                 Collectors.collectingAndThen(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Carrier::getCarrierCode))), ArrayList::new));
         if (unique.size() != carrierList.size()) {
-            throw new CommonException(BasicDataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
         }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
@@ -68,7 +68,7 @@ public class CarrierServiceImpl implements CarrierService {
                 updateList.add(carrier);
             } else {
                 if (carrier.exist(carrierRepository)) {
-                    throw new CommonException(BasicDataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
                 }
                 insertList.add(carrier);
             }

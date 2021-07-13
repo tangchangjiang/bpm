@@ -13,8 +13,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -67,11 +67,11 @@ public class OnlineShop extends AuditDomain {
     }
 
     public void validate(final OnlineShopRepository onlineShopRepository) {
-        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         if (this.getOnlineShopId() != null) {
             final OnlineShop record = onlineShopRepository.selectByPrimaryKey(this.onlineShopId);
             if (!record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {
-                throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_ENTITY_CANNOT_UPDATE, "OnlineShop(" + this.getOnlineShopId() + ")");
+                throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_ENTITY_CANNOT_UPDATE, "OnlineShop(" + this.getOnlineShopId() + ")");
             }
         }
     }

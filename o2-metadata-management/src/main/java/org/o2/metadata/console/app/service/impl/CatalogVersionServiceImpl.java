@@ -3,8 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CatalogVersionService;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
@@ -31,8 +30,8 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
-        if (O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
-            throw new CommonException(BasicDataConstants.ErrorCode.O2MD_ERROR_CATALOG_FORBIDDEN);
+        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CATALOG_FORBIDDEN);
         }
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.updateByPrimaryKeySelective(catalogVersion);
@@ -43,8 +42,8 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
-        if (O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
-            catalogVersion.setActiveFlag(O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN);
+        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+            catalogVersion.setActiveFlag(MetadataConstants.ACTIVE_FLAG.FORBIDDEN);
         }
         catalogVersionRepository.insertSelective(catalogVersion);
     }

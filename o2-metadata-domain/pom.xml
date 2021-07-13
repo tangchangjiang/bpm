@@ -19,11 +19,6 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>

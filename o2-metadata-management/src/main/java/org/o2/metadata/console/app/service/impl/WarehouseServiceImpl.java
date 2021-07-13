@@ -14,7 +14,6 @@ import org.o2.inventory.management.client.api.vo.TriggerStockCalculationVO;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.entity.Warehouse;
@@ -123,10 +122,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<Warehouse> insertList = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
             log.info("warehouse batch handle warehouse({}), _status({})", warehouse.getWarehouseId(), warehouse.get_status().name());
-            if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status().name())) {
+            if (MetadataConstants.Status.CREATE.equals(warehouse.get_status().name())) {
                 insertList.add(warehouse);
             }
-            if (O2MdConsoleConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
+            if (MetadataConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
                 SecurityTokenHelper.validToken(warehouse);
                 updateList.add(warehouse);
             }
@@ -213,8 +212,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     private void operationRedis(List<Warehouse> warehouses) {
         if (CollectionUtils.isNotEmpty(warehouses)) {
             warehouses.get(0).syncToRedis(warehouses,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }

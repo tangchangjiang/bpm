@@ -11,8 +11,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -58,7 +58,7 @@ public class PosRelCarrier extends AuditDomain {
     }
 
     public void baseValidate() {
-        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商ID不能为空");
         Assert.notNull(this.posId, "服务点ID不能为空");
         Assert.notNull(this.activeFlag, "状态不能为空");

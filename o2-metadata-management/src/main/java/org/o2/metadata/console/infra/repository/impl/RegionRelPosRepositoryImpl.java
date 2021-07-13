@@ -9,11 +9,11 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.core.response.BatchResponse;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionRelPos;
 import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.RegionRelPosMapper;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +60,7 @@ public class RegionRelPosRepositoryImpl extends BaseRepositoryImpl<RegionRelPos>
         List<RegionRelPos> regions = regionRelPos.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(()
                 -> new TreeSet<>(Comparator.comparing(RegionRelPos::getPriority))), ArrayList::new));
         if (regionRelPos.size() != regions.size()) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Priority");
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Priority");
         }
         final BatchResponse<RegionRelPos> batchResponse = new BatchResponse<>();
         for (RegionRelPos relPos : regionRelPos) {

@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -72,8 +72,8 @@ public class FreightTemplate extends AuditDomain {
     }
 
     public void validate() {
-        Assert.notNull(this.templateCode, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_CODE_IS_NULL);
-        Assert.notNull(this.templateName, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_NAME_IS_NULL);
+        Assert.notNull(this.templateCode, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_CODE_IS_NULL);
+        Assert.notNull(this.templateName, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_NAME_IS_NULL);
 
     }
 
@@ -94,7 +94,7 @@ public class FreightTemplate extends AuditDomain {
     @NotNull
     @Max(1)
     @Min(0)
-    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_HPFM_FLAG)
+    @LovValue(lovCode = MetadataConstants.FreightType.LOV_HPFM_FLAG)
     private Integer deliveryFreeFlag;
     @ApiModelProperty(value = "计价方式，值集视图O2MD.UOM_TYPE")
     private String valuationType;

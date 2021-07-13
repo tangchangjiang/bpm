@@ -12,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -55,7 +55,7 @@ public class Carrier extends AuditDomain {
     }
 
     public void validate() {
-        Preconditions.checkArgument(null != this.tenantId, BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierCode, "承运商编码不能为空");
         Assert.notNull(this.carrierName, "承运商名称不能为空");
         Assert.notNull(this.carrierTypeCode, "承运商类型不能为空");
@@ -77,7 +77,7 @@ public class Carrier extends AuditDomain {
     private String carrierName;
 
     @ApiModelProperty(value = "承运商类型.值集:O2MD.CARRIER_TYPE")
-    @LovValue(lovCode = BasicDataConstants.CarrierType.LOV_CODE)
+    @LovValue(lovCode = MetadataConstants.CarrierType.LOV_CODE)
     private String carrierTypeCode;
 
     @ApiModelProperty(value = "是否有效")

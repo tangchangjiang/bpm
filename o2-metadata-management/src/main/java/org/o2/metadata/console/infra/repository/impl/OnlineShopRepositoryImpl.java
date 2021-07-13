@@ -3,9 +3,9 @@ package org.o2.metadata.console.infra.repository.impl;
 import com.google.common.base.Preconditions;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.o2.metadata.console.infra.mapper.OnlineShopMapper;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +26,7 @@ class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements
 
     @Override
     public List<OnlineShop> selectByCondition(final OnlineShop condition) {
-        Preconditions.checkArgument(null != condition.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        Preconditions.checkArgument(null != condition.getTenantId(), MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         return onlineShopMapper.findByCondition(condition);
     }
 

@@ -9,7 +9,7 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.entity.Warehouse;
@@ -108,8 +108,8 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
         List<Warehouse> warehouseList = warehouseRepository.queryAllWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(warehouseList)) {
             warehouseList.get(0).syncToRedis(warehouseList,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }
@@ -123,8 +123,8 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
             onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
 
         }

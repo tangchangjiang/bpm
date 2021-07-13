@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -56,7 +56,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @Id
     @GeneratedValue
     private Long templateDetailId;
-    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_TRANSPORT_TYPE)
+    @LovValue(lovCode = MetadataConstants.FreightType.LOV_TRANSPORT_TYPE)
     @ApiModelProperty(value = "运送方式，关联值集O2MD.TRANSPORT_TYPE",required = true)
     @NotNull
     private String transportTypeCode;
@@ -71,7 +71,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "续件/千克价格")
     private BigDecimal nextPrice;
     @ApiModelProperty(value = "是否默认")
-    @LovValue(lovCode = BasicDataConstants.FreightType.LOV_HPFM_FLAG)
+    @LovValue(lovCode = MetadataConstants.FreightType.LOV_HPFM_FLAG)
     private Integer defaultFlag;
     @ApiModelProperty(value = "关联运费模板ID")
     private Long templateId;
@@ -115,21 +115,21 @@ public class FreightTemplateDetail extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     public void defaultDetailValidate() {
-        Assert.isNull(this.regionId, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
+        Assert.isNull(this.regionId, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
     public void regionDetailValidate() {
-        Assert.notNull(this.regionId, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
+        Assert.notNull(this.regionId, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
     private void validate() {
-        Assert.notNull(this.firstPieceWeight, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_FIRST_PIECE_WEIGHT_IS_NULL);
-        Assert.notNull(this.firstPrice, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_FIRST_PRICE_IS_NULL);
-        Assert.notNull(this.nextPieceWeight, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_NEXT_PIECE_WEIGHT_IS_NULL);
-        Assert.notNull(this.nextPrice, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_NEXT_PRICE_IS_NULL);
-        Assert.notNull(this.templateId, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL);
+        Assert.notNull(this.firstPieceWeight, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_FIRST_PIECE_WEIGHT_IS_NULL);
+        Assert.notNull(this.firstPrice, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_FIRST_PRICE_IS_NULL);
+        Assert.notNull(this.nextPieceWeight, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_NEXT_PIECE_WEIGHT_IS_NULL);
+        Assert.notNull(this.nextPrice, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_NEXT_PRICE_IS_NULL);
+        Assert.notNull(this.templateId, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL);
     }
 
     public boolean exist(final FreightTemplateDetailRepository freightTemplateDetailRepository, final boolean isRegion) {

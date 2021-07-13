@@ -9,7 +9,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
@@ -140,7 +140,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                     }
                 }
             }
-            SystemParameterRedisUtil.executeScript(filedMaps, Collections.emptyList(), O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA, redisCacheClient);
+            SystemParameterRedisUtil.executeScript(filedMaps, Collections.emptyList(), MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA, redisCacheClient);
         } catch (Exception e) {
             throw new CommonException(SystemParameterConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
         }

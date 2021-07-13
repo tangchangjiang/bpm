@@ -17,11 +17,11 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,11 +108,11 @@ public class OnlineShopRelWarehouseController extends BaseController {
             @RequestParam(required = false) final String onlineShopCode,
             @RequestParam(required = false) final String warehouseCode) {
         if (StringUtils.isEmpty(onlineShopCode) && StringUtils.isEmpty(warehouseCode)) {
-            return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
+            return new ResponseEntity<>(getExceptionResponse(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
         }
 
         if (StringUtils.isNotEmpty(onlineShopCode) && StringUtils.isNotEmpty(warehouseCode)) {
-            return new ResponseEntity<>(getExceptionResponse(BasicDataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
+            return new ResponseEntity<>(getExceptionResponse(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
         }
         return Results.success(onlineShopRelWarehouseService.resetIsInvCalculated(onlineShopCode, warehouseCode,organizationId));
     }
