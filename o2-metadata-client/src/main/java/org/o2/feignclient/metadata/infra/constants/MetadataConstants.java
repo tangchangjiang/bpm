@@ -1,11 +1,11 @@
-package org.o2.metadata.domain.infra.constant;
+package org.o2.feignclient.metadata.infra.constants;
 
 /**
- * 基础数据常量
+ * 元数据常量
  *
- * @author tingting.wang@hand-china.com 2019-3-25
+ * @author mark.bao@hand-china.com 2019-04-16
  */
-public interface MetadataDomainConstants {
+public interface MetadataConstants {
     /**
      * 服务点类型
      */
@@ -21,5 +21,6 @@ public interface MetadataDomainConstants {
 
         String LOV_CODE = "O2MD.POS_TYPE";
     }
+
 
 }
