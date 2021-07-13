@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.Pos;
@@ -34,13 +35,13 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     private String warehouseName;
 
     @ApiModelProperty(value = "仓库类型")
-    @LovValue(lovCode = MetadataConstants.WarehouseType.LOV_CODE)
+    @LovValue(lovCode = WarehouseConstants.WarehouseType.LOV_CODE)
     private String warehouseTypeCode;
 
     private String warehouseTypeMeaning;
 
     @ApiModelProperty(value = "仓库状态")
-    @LovValue(lovCode = MetadataConstants.WarehouseStatus.LOV_CODE)
+    @LovValue(lovCode = WarehouseConstants.WarehouseStatus.LOV_CODE)
     private String warehouseStatusCode;
 
     private String warehouseStatusMeaning;

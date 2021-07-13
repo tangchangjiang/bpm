@@ -14,6 +14,7 @@ import org.o2.inventory.management.client.api.vo.TriggerStockCalculationVO;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -241,9 +242,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
     private String warehouseCacheKey(String warehouseCode, Long tenantId) {
         if (tenantId == null) {
-            return MetadataConstants.WarehouseCache.warehouseCacheKey(0, warehouseCode);
+            return WarehouseConstants.WarehouseCache.warehouseCacheKey(0, warehouseCode);
         }
-        return MetadataConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
+        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
     }
 
     private static final ResourceScriptSource SAVE_WAREHOUSE_LUA =
