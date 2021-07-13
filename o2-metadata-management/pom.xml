@@ -10,6 +10,7 @@
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.o2.metadata</groupId>
     <artifactId>o2-metadata-management</artifactId>
     <packaging>jar</packaging>
 
