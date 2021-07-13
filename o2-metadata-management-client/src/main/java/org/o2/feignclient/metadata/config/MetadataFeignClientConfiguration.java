@@ -25,6 +25,6 @@ public class MetadataFeignClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService) {
-        return new O2MetadataManagementClient(sysParameterRemoteService);
+        return new O2MetadataManagementClient(sysParameterRemoteService, warehouseRemoteService);
     }
 }

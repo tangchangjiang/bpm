@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @RestController("warehouseInternalController.v1")
-@RequestMapping("v1/{organizationId}/warehouse")
+@RequestMapping("v1/{organizationId}/warehouse-internal")
 public class WarehouseInternalController {
 
     private WarehouseService warehouseService;
