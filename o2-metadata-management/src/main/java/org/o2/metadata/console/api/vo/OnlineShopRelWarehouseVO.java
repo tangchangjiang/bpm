@@ -2,6 +2,10 @@ package org.o2.metadata.console.api.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.Date;
 
@@ -11,163 +15,30 @@ import java.util.Date;
  * @author yuying.shi@hand-china.com 2020-03-02
  */
 @ApiModel("网店关联仓库")
-public class OnlineShopRelWarehouseVO {
-
-    @ApiModelProperty("表ID，主键，供其他表做外键")
-    private Long onlineShopRelWarehouseId;
-
-    @ApiModelProperty(value = "网店id，关联o2md_online_shop.online_shop_id")
-    private Long onlineShopId;
-
-    @ApiModelProperty(value = "服务点id,关联o2md_pos.pos_id")
-    private Long posId;
-
-    @ApiModelProperty(value = "仓库id，关联o2md_warehouse.warehouse_id")
-    private Long warehouseId;
-
-    @ApiModelProperty("是否有效")
-    private Integer activeFlag;
-
-    @ApiModelProperty("是否业务有效（寻源，库存计算 判断关联关系）")
-    private Integer businessActiveFlag;
-
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
+@Data
+public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     @ApiModelProperty(value = "仓库编码")
     private String warehouseCode;
+
+    @ApiModelProperty(value = "仓库名称")
+    private String warehouseName;
+
+    @ApiModelProperty(value = "仓库类型")
+    @LovValue(lovCode = WarehouseConstants.WarehouseType.LOV_CODE)
+    private String warehouseTypeCode;
+
+    private String warehouseTypeMeaning;
+
+    @ApiModelProperty(value = "仓库状态")
+    @LovValue(lovCode = WarehouseConstants.WarehouseStatus.LOV_CODE)
+    private String warehouseStatusCode;
+
+    private String warehouseStatusMeaning;
+
+    @ApiModelProperty(value = "失效日期")
+    private Date activedDateTo;
+
     @ApiModelProperty(value = "网店编码")
     private String onlineShopCode;
-    private Date activedDateTo;
-    @ApiModelProperty(value = "网店名称")
-    private String warehouseName;
-    @ApiModelProperty(value = "网店类型编码")
-    private String warehouseTypeCode;
-    @ApiModelProperty(value = "版本号")
-    private Long objectVersionNumber;
-    private String _token;
 
-    public String get_token() {
-        return _token;
-    }
-
-    public void set_token(String _token) {
-        this._token = _token;
-    }
-
-    public String getWarehouseName() {
-        return warehouseName;
-    }
-
-    public void setWarehouseName(String warehouseName) {
-        this.warehouseName = warehouseName;
-    }
-
-    public String getWarehouseTypeCode() {
-        return warehouseTypeCode;
-    }
-
-    public void setWarehouseTypeCode(String warehouseTypeCode) {
-        this.warehouseTypeCode = warehouseTypeCode;
-    }
-
-    public Long getObjectVersionNumber() {
-        return objectVersionNumber;
-    }
-
-    public void setObjectVersionNumber(Long objectVersionNumber) {
-        this.objectVersionNumber = objectVersionNumber;
-    }
-
-    public Date getActivedDateTo() {
-        return activedDateTo;
-    }
-
-    public void setActivedDateTo(Date activedDateTo) {
-        this.activedDateTo = activedDateTo;
-    }
-
-    public String getOnlineShopCode() {
-        return onlineShopCode;
-    }
-
-    public void setOnlineShopCode(String onlineShopCode) {
-        this.onlineShopCode = onlineShopCode;
-    }
-
-    public String getWarehouseCode() {
-        return warehouseCode;
-    }
-
-    public void setWarehouseCode(String warehouseCode) {
-        this.warehouseCode = warehouseCode;
-    }
-
-    public Long getOnlineShopRelWarehouseId() {
-        return onlineShopRelWarehouseId;
-    }
-
-    public void setOnlineShopRelWarehouseId(Long onlineShopRelWarehouseId) {
-        this.onlineShopRelWarehouseId = onlineShopRelWarehouseId;
-    }
-
-    public Long getOnlineShopId() {
-        return onlineShopId;
-    }
-
-    public void setOnlineShopId(Long onlineShopId) {
-        this.onlineShopId = onlineShopId;
-    }
-
-    public Long getPosId() {
-        return posId;
-    }
-
-    public void setPosId(Long posId) {
-        this.posId = posId;
-    }
-
-    public Long getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(Long warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
-    public Integer getActiveFlag() {
-        return activeFlag;
-    }
-
-    public void setActiveFlag(Integer activeFlag) {
-        this.activeFlag = activeFlag;
-    }
-
-    public Integer getBusinessActiveFlag() {
-        return businessActiveFlag;
-    }
-
-    public void setBusinessActiveFlag(Integer businessActiveFlag) {
-        this.businessActiveFlag = businessActiveFlag;
-    }
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    @Override
-    public String toString() {
-        return "OnlineShopRelWarehouseDO{" +
-                "onlineShopRelWarehouseId=" + onlineShopRelWarehouseId +
-                ", onlineShopId=" + onlineShopId +
-                ", posId=" + posId +
-                ", warehouseId=" + warehouseId +
-                ", activeFlag=" + activeFlag +
-                ", businessActiveFlag=" + businessActiveFlag +
-                ", tenantId=" + tenantId +
-                '}';
-    }
 }
