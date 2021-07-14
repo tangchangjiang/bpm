@@ -44,6 +44,15 @@ public class OnlineShopRelWarehouseVO {
     private String warehouseTypeCode;
     @ApiModelProperty(value = "版本号")
     private Long objectVersionNumber;
+    private String _token;
+
+    public String get_token() {
+        return _token;
+    }
+
+    public void set_token(String _token) {
+        this._token = _token;
+    }
 
     public String getWarehouseName() {
         return warehouseName;
