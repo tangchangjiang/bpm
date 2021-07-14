@@ -24,7 +24,7 @@ import java.util.Map;
  */
 
 @RestController("onlineShopRelWarehouseInternalController.v1")
-@RequestMapping("/v1/{organizationId}/onlineShopRelWarehouse--internal")
+@RequestMapping("/v1/{organizationId}/onlineShopRelWarehouse-internal")
 @Api(tags = EnableMetadataConsole.ONLINE_SHOP_WAREHOUSE_REL)
 public class OnlineShopRelWarehouseInternalController {
     private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
