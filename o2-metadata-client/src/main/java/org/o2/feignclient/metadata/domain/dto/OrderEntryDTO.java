@@ -1,4 +1,4 @@
-package org.o2.metadata.api.dto;
+package org.o2.feignclient.metadata.domain.dto;
 
 import lombok.Data;
 

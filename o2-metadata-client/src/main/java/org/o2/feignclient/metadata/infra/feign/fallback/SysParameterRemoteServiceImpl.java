@@ -25,6 +25,7 @@ public class SysParameterRemoteServiceImpl implements SysParameterRemoteService 
 
     @Override
     public ResponseEntity<String> listSystemParameters(List<String> paramCodes, Long organizationId) {
+        logger.error("Error listSystemParameters, params[tenantId = {}, paramCodes = {}]", organizationId, paramCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
