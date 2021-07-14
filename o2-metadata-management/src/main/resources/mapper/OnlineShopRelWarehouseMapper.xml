@@ -28,6 +28,10 @@
         <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
         <result column="warehouse_type_code" property="warehouseTypeCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <select id="listShopWarehouseRelsByOption" resultMap="RelationshipVOMap">
