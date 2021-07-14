@@ -214,5 +214,13 @@ public interface WarehouseRemoteService {
     ResponseEntity<String> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                      @RequestParam(value = "warehouseCode", required = true) String warehouseCode);
 
-
+    /**
+     * 从redis查询系统仓库
+     *
+     * @param warehouseCode 仓库编码
+     * @param organizationId 租户ID
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/{organizationId}/internal/{warehouseCode}")
+    ResponseEntity<String>  getWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable(value = "warehouseCode") @ApiParam(value = "参数code", required = true)String warehouseCode);
 }

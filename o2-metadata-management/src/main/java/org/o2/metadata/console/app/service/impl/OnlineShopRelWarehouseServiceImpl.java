@@ -198,6 +198,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId) {
         List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByCondition(
                 Condition.builder(OnlineShopRelWarehouse.class).andWhere(Sqls.custom()
@@ -208,14 +209,13 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                 onlineShopId, tenantId, activeFlag, JSONArray.toJSONString(onlineShopRelWarehouses));
         onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
 
-        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
-
         String key = String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
         Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
         log.info("updateByShop key({}), hashKeySet({})", key, JSON.toJSONString(map.keySet()));
         if (map.isEmpty()) {
             return;
         }
+        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
         String activeFlagStr = String.valueOf(activeFlag);
         Map<Object, String> m = new HashMap<>(2);
         map.keySet().forEach(hashKey -> m.put(hashKey, activeFlagStr));

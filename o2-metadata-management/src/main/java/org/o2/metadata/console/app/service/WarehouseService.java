@@ -30,6 +30,12 @@ public interface WarehouseService {
      */
     List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses);
 
+    /**
+     * 获取仓库信息
+     * @param  warehouseCode 仓库编码
+     * @param  tenantId 租户ID
+     * @return
+     */
     WarehouseVO getWarehouse(String warehouseCode,Long tenantId);
 
 }

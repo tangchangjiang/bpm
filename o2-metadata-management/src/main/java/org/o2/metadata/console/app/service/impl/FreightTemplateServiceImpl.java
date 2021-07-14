@@ -209,6 +209,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchInsert(final List<FreightTemplate> freightTemplateList) {
         checkData(freightTemplateList, false);
         List<FreightTemplate> freightTemplates = freightTemplateRepository.batchInsertSelective(freightTemplateList);
@@ -220,6 +221,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchUpdate(final List<FreightTemplate> freightTemplateList) {
         checkData(freightTemplateList, true);
         List<FreightTemplate> freightTemplates = freightTemplateRepository.batchUpdateByPrimaryKey(freightTemplateList);
@@ -231,6 +233,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchMerge(final List<FreightTemplate> freightTemplateList) {
         long tenantId =  DetailsHelper.getUserDetails().getTenantId();
         final Map<String, Object> map = new HashMap<>(freightTemplateList.size());
