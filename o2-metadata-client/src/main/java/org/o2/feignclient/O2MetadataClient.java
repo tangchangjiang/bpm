@@ -10,7 +10,6 @@ import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
