@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.springframework.http.ResponseEntity;
