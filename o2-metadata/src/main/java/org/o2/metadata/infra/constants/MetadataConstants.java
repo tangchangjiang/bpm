@@ -1,8 +1,6 @@
 package org.o2.metadata.infra.constants;
 
 
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * 元数据常量
