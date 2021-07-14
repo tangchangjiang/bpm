@@ -4,6 +4,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
+@Component
 public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRedis {
     private final RedisCacheClient redisCacheClient;
 
