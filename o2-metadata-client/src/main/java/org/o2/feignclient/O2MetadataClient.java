@@ -3,11 +3,14 @@ package org.o2.feignclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
+import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +21,14 @@ public class O2MetadataClient {
 
     private final SysParameterRemoteService sysParameterRemoteService;
     private final WarehouseRemoteService warehouseRemoteService;
+    private final FreightRemoteService freightRemoteService;
 
-    public O2MetadataClient(SysParameterRemoteService sysParameterRemoteService, WarehouseRemoteService warehouseRemoteService) {
+    public O2MetadataClient(SysParameterRemoteService sysParameterRemoteService,
+                            WarehouseRemoteService warehouseRemoteService,
+                            FreightRemoteService freightRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
+        this.freightRemoteService = freightRemoteService;
     }
 
     /**
@@ -52,5 +59,13 @@ public class O2MetadataClient {
     public WarehouseVO getWarehouse(String warehouseCode, Long tenantId){
         return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
     }
-
+    /**
+     * 获取运费
+     *
+     * @param freight 运费参数
+     * @return 运费结果
+     */
+    public BigDecimal getFreightAmount(FreightDTO freight){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightAmount(freight), BigDecimal.class);
+    }
 }

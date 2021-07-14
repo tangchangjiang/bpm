@@ -16,7 +16,7 @@ public interface FreightService {
      * 获取运费
      *
      * @param freight 运费参数
-     * @return 运费结果
+     * @return 运费
      */
     BigDecimal getFreightAmount(FreightDTO freight);
 }
