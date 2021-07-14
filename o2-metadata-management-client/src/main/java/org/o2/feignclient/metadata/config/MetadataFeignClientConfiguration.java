@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @EnableFeignClients(
-        basePackageClasses = {SysParameterRemoteService.class, WarehouseRemoteService.class}
+        basePackageClasses = {SysParameterRemoteService.class, WarehouseRemoteService.class,OnlineShopRelWarehouseRemoteService.class}
 )
 public class MetadataFeignClientConfiguration {
     @Bean
@@ -32,7 +32,7 @@ public class MetadataFeignClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OnlineShopRelWarehouseRemoteServiceImpl OnlineShopRelWarehouseRemoteServiceFallback() {
+    public OnlineShopRelWarehouseRemoteServiceImpl onlineShopRelWarehouseRemoteServiceFallback() {
         return new OnlineShopRelWarehouseRemoteServiceImpl();
     }
     @Bean

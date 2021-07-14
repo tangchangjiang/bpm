@@ -1,5 +1,8 @@
 package org.o2.metadata.app.service;
 
+import org.o2.metadata.api.vo.WarehouseVO;
+import org.o2.metadata.infra.entity.Warehouse;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -161,4 +164,7 @@ public interface WarehouseService {
      * @param warehouseCode 仓库编码
      */
     void resetWarehousePickUpLimit(String warehouseCode, Long tenantId);
+
+
+    WarehouseVO getWarehouse(String warehouseCode, Long organizationId);
 }

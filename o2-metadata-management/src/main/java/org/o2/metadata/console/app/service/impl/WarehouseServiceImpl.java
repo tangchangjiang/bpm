@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -15,10 +16,12 @@ import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
+import org.o2.metadata.console.infra.convertor.WarehouseConvertor;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -48,18 +51,21 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final CodeRuleBuilder codeRuleBuilder;
     private O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
+    private final WarehouseDomainService warehouseDomainService;
 
     @Autowired
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final AcrossSchemaRepository acrossSchemaRepository,
                                 final CodeRuleBuilder codeRuleBuilder,
                                 final O2InventoryClient o2InventoryClient,
-                                final RedisCacheClient redisCacheClient) {
+                                final RedisCacheClient redisCacheClient,
+                                WarehouseDomainService warehouseDomainService) {
         this.warehouseRepository = warehouseRepository;
         this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
+        this.warehouseDomainService = warehouseDomainService;
     }
 
 
@@ -143,7 +149,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
-        return null;
+        return WarehouseConvertor.doToVoObject(warehouseDomainService.getWarehouse(warehouseCode,tenantId));
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {

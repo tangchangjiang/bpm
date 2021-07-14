@@ -3,9 +3,11 @@ package org.o2.metadata.app.service.impl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.api.vo.WarehouseVO;
 import org.o2.metadata.app.service.WarehouseService;
-import org.o2.metadata.infra.constants.MetadataConstants;
+import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.o2.metadata.infra.constants.WarehouseConstants;
+import org.o2.metadata.infra.convertor.WarehouseConvertor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
@@ -25,9 +27,11 @@ import java.util.Set;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final RedisCacheClient redisCacheClient;
+    private final WarehouseDomainService warehouseDomainService;
 
-    public WarehouseServiceImpl(RedisCacheClient redisCacheClient) {
+    public WarehouseServiceImpl(RedisCacheClient redisCacheClient, WarehouseDomainService warehouseDomainService) {
         this.redisCacheClient = redisCacheClient;
+        this.warehouseDomainService = warehouseDomainService;
     }
 
 
@@ -142,6 +146,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     }
 
+    @Override
+    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
+        return WarehouseConvertor.doToVoObject(warehouseDomainService.getWarehouse(warehouseCode,tenantId));
+    }
     private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
@@ -159,6 +167,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         defaultRedisScript.setScriptSource(scriptSource);
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), FastJsonHelper.objectToString(hashMap));
     }
+
 
     private static final ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
             new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
