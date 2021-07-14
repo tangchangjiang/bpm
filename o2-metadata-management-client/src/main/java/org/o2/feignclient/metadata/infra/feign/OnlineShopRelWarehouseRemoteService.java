@@ -28,7 +28,7 @@ public interface OnlineShopRelWarehouseRemoteService {
      * @return ResponseEntity<String>
      */
     @GetMapping("/{organizationId}/onlineShopRelWarehouse-internal/{onlineShopCode}")
-    ResponseEntity<String> listOnlineShopRelWarehouses(@PathVariable @ApiParam(value = "网店编码", required = true) String onlineShopCode,
+    ResponseEntity<String> listOnlineShopRelWarehouses(@PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode,
                                                        @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long tenantId);
 
 }
