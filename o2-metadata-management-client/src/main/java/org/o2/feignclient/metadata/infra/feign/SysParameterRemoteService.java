@@ -39,7 +39,7 @@ public interface SysParameterRemoteService {
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}//sysParameter-internal/paramCodes")
+    @GetMapping("/{organizationId}/sysParameter-internal/paramCodes")
     ResponseEntity<String> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                      @RequestParam List<String> paramCodes);
 }
