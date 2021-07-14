@@ -39,14 +39,34 @@ public class OnlineShopRelWarehouseVO {
     private String onlineShopCode;
     private Date activedDateTo;
     @ApiModelProperty(value = "网店名称")
-    private String WarehouseName;
+    private String warehouseName;
+    @ApiModelProperty(value = "网店类型编码")
+    private String warehouseTypeCode;
+    @ApiModelProperty(value = "版本号")
+    private Long objectVersionNumber;
 
     public String getWarehouseName() {
-        return WarehouseName;
+        return warehouseName;
     }
 
     public void setWarehouseName(String warehouseName) {
-        WarehouseName = warehouseName;
+        this.warehouseName = warehouseName;
+    }
+
+    public String getWarehouseTypeCode() {
+        return warehouseTypeCode;
+    }
+
+    public void setWarehouseTypeCode(String warehouseTypeCode) {
+        this.warehouseTypeCode = warehouseTypeCode;
+    }
+
+    public Long getObjectVersionNumber() {
+        return objectVersionNumber;
+    }
+
+    public void setObjectVersionNumber(Long objectVersionNumber) {
+        this.objectVersionNumber = objectVersionNumber;
     }
 
     public Date getActivedDateTo() {
