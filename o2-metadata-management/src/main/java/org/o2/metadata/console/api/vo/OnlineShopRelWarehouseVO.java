@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.hzero.mybatis.domian.SecurityToken;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
@@ -17,6 +19,7 @@ import java.util.Date;
 @ApiModel("网店关联仓库")
 @Data
 public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
+
     @ApiModelProperty(value = "仓库编码")
     private String warehouseCode;
 
@@ -40,5 +43,10 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
 
     @ApiModelProperty(value = "网店编码")
     private String onlineShopCode;
+
+    @Override
+    public Class<? extends SecurityToken> associateEntityClass() {
+        return OnlineShopRelWarehouse.class;
+    }
 
 }
