@@ -37,17 +37,17 @@
     <select id="listShopWarehouseRelsByOption" resultMap="RelationshipVOMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
-            w.warehouse_id,
-            w.pos_id,
-            w.warehouse_code,
-            wt.warehouse_name,
-            w.warehouse_type_code,
-            w.warehouse_status_code,
-            srw.object_version_number,
-            srw.online_shop_id,
-            srw.active_flag,
-            srw.business_active_flag,
-            srw.online_shop_rel_warehouse_id
+        w.warehouse_id,
+        w.pos_id,
+        w.warehouse_code,
+        wt.warehouse_name,
+        w.warehouse_type_code,
+        w.warehouse_status_code,
+        srw.object_version_number,
+        srw.online_shop_id,
+        srw.active_flag,
+        srw.business_active_flag,
+        srw.online_shop_rel_warehouse_id
         FROM
         o2md_warehouse w
         JOIN o2md_online_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id
