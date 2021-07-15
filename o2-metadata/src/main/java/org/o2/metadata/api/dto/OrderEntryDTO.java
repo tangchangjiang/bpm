@@ -30,14 +30,4 @@ public class OrderEntryDTO {
      */
     private String unit;
 
-    /**
-     * 重量
-     */
-    private BigDecimal weight;
-    private String weightUomCode;
-    /**
-     * 体积
-     */
-    private BigDecimal volume;
-    private String volumeUomCode;
 }

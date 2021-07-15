@@ -93,7 +93,7 @@ public class FreightServiceImpl implements FreightService {
         String cityCode = address.getCityCode();
         for (Map.Entry<String, List<OrderEntryDTO>> entry : templateRelProductMap.entrySet()) {
             String freightDetailKey = FreightConstants.RedisKey.getFreightDetailKey(tenantId, entry.getKey());
-            //模版详情 依次取 地区模版，运费模版头，运费模版默认行信息
+            //模版详情 依次取 地区模版0，运费模版头1，运费模版默认行信息2
             List<String> freightTemplateStr = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, Arrays.asList(cityCode, FreightConstants.RedisKey.FREIGHT_HEAD_KEY, FreightConstants.RedisKey.FREIGHT_DEFAULT_KEY));
             // 是否有运费模版详情
             boolean isEmpty = CollectionUtils.isEmpty(freightTemplateStr) || StringUtils.isEmpty(freightTemplateStr.get(0));
@@ -101,7 +101,7 @@ public class FreightServiceImpl implements FreightService {
                 continue;
             }
             //运费模版头
-            FreightTemplateBO freightTemplateHead = FastJsonHelper.stringToObject(freightTemplateStr.get(0), FreightTemplateBO.class);
+            FreightTemplateBO freightTemplateHead = FastJsonHelper.stringToObject(freightTemplateStr.get(1), FreightTemplateBO.class);
             //运费模版详情信息
             String freightTemplateDetailStr = StringUtils.isEmpty(freightTemplateStr.get(0)) ? freightTemplateStr.get(2) : freightTemplateStr.get(0);
             //不包邮但无模版详情信息
