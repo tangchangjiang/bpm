@@ -74,13 +74,13 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     *
-     * @date 2021-07-15
-     * @param
-     * @return
+     * 查询有效仓库
+     * @param onlineShopCode 网店编码
+     * @param tenantId 租户ID
+     * @return 集合
      */
-    public List<WarehouseVO> listActiveWarehouse(String onlineShopeCode,Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopeCode, tenantId), new TypeReference<List<WarehouseVO>>() {
+    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode,Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
 
