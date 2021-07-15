@@ -44,4 +44,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return
      */
     List<Warehouse> queryAllWarehouseByTenantId(@Param("tenantId") final Long tenantId);
+
+    /**
+     * 查询有效的仓库
+     * @param onlineShopCode 网店编码
+     * @param organizationId 租户ID
+     * @return
+     */
+    List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
 }

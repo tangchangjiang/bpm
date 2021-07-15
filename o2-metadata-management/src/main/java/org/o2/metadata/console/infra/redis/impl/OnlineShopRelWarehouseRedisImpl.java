@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.redis.impl;
 
-import org.hzero.core.base.BaseConstants;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
@@ -37,11 +36,9 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
             OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
             String key  = String.valueOf(entry.getKey());
             Integer value = Integer.parseInt(String.valueOf(entry.getValue()));
-            if (BaseConstants.Flag.YES.equals(value)) {
-                onlineShopRelWarehouse.setActiveFlag(value);
-                onlineShopRelWarehouse.setWarehouseCode(key);
-                list.add(onlineShopRelWarehouse);
-            }
+            onlineShopRelWarehouse.setActiveFlag(value);
+            onlineShopRelWarehouse.setWarehouseCode(key);
+            list.add(onlineShopRelWarehouse);
         }
         return list;
     }

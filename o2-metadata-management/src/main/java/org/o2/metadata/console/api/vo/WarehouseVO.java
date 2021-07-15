@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel("仓库表")
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class WarehouseVO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
@@ -76,5 +78,7 @@ public class WarehouseVO {
     private String expressLimitValue;
 
     private String pickUpLimitValue;
+
+    private String warehouseStatus;
 
 }

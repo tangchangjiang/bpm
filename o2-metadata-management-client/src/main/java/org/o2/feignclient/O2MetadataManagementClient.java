@@ -74,6 +74,17 @@ public class O2MetadataManagementClient {
     }
 
     /**
+     *
+     * @date 2021-07-15
+     * @param
+     * @return
+     */
+    public List<WarehouseVO> listActiveWarehouse(String onlineShopeCode,Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopeCode, tenantId), new TypeReference<List<WarehouseVO>>() {
+        });
+    }
+
+    /**
      * 保存仓库快递配送接单量限制
      *
      * @param organizationId  租户ID
