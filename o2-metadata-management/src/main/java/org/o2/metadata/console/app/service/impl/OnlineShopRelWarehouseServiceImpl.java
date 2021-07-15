@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.hzero.mybatis.domian.Condition;
@@ -24,7 +23,7 @@ import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.domain.onlineshop.service.OnlineShopRelWarehouseDomainService;
+import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final PosRepository posRepository;
     private O2InventoryClient o2InventoryClient;
     private RedisCacheClient redisCacheClient;
-    private final OnlineShopRelWarehouseDomainService onlineShopRelWarehouseDomainService;
+    private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
 
     @Autowired
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
@@ -61,14 +60,14 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                                              PosRepository posRepository,
                                              O2InventoryClient o2InventoryClient,
                                              RedisCacheClient redisCacheClient,
-                                             OnlineShopRelWarehouseDomainService onlineShopRelWarehouseDomainService) {
+                                             OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
         this.posRepository = posRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
-        this.onlineShopRelWarehouseDomainService = onlineShopRelWarehouseDomainService;
+        this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
     }
 
     @Override
@@ -225,7 +224,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     public List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return OnlineShopRelWarehouseConvertor.doToVoListObjects(onlineShopRelWarehouseDomainService.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
+        return OnlineShopRelWarehouseConvertor.doToVoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {

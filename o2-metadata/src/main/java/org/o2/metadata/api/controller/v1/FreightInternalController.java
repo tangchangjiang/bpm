@@ -27,7 +27,7 @@ public class FreightInternalController {
     }
 
     @ApiOperation(value = "从redis查询仓库")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/freight-amount")
     public ResponseEntity<BigDecimal> getFreightAmount(@RequestBody FreightDTO freight) {
         return Results.success(freightService.getFreightAmount(freight));
