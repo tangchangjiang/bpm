@@ -10,6 +10,7 @@ import org.o2.metadata.console.app.service.WarehouseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,14 +28,20 @@ public class WarehouseInternalController {
         this.warehouseService = warehouseService;
     }
 
-    @ApiOperation(value = "从redis查询仓库")
+    @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{warehouseCode}")
     public ResponseEntity<WarehouseVO> getWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                     @PathVariable(value = "warehouseCode") @ApiParam(value = "参数code", required = true) String warehouseCode) {
         return Results.success(warehouseService.getWarehouse(warehouseCode, organizationId));
     }
-
+    @ApiOperation(value = "查询有效仓库")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/active/{onlineShopCode}")
+    public ResponseEntity<List<WarehouseVO>> listActiveWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode) {
+        return Results.success(warehouseService.listActiveWarehouses(onlineShopCode, organizationId));
+    }
 
     @ApiOperation("保存(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)

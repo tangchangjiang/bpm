@@ -330,6 +330,12 @@ public class WarehouseServiceImpl implements WarehouseService {
         executeScript(warehouseCode, WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
 
     }
+
+    @Override
+    public List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId) {
+        return WarehouseConvertor.poToVoListObjects(warehouseRepository.listActiveWarehouses(onlineShopCode,organizationId));
+    }
+
     private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);

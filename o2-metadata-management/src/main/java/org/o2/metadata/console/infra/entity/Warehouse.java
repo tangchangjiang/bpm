@@ -166,6 +166,8 @@ public class Warehouse extends AuditDomain {
     @Transient
     private String pickUpLimitValue;
 
+    @Transient
+    private String warehouseStatus;
 
     //
     // 业务方法(按public protected private顺序排列)
