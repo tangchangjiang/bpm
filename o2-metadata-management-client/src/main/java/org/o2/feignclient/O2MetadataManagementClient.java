@@ -43,7 +43,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询系统仓库
+     * 从redis查询仓库
      *
      * @param warehouseCode 仓库编码
      * @param tenantId 租户ID
@@ -63,7 +63,7 @@ public class O2MetadataManagementClient {
         });
     }
     /**
-     * 从redis查询网店关联库存
+     * 从redis查询网店关联有效的仓库
      *  @param onlineShopeCode 网店编码
      * @param tenantId 租户ID
      * @return map<warehouseCode,OnlineShopRelWarehouseVO>

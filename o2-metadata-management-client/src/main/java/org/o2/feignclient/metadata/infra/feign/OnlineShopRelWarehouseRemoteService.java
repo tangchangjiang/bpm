@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface OnlineShopRelWarehouseRemoteService {
     /**
-     * 从redis查询网店关联仓库
+     * 查询网店关联有效仓库
      *
      * @param onlineShopCode 网店编码
      * @param tenantId 租户ID

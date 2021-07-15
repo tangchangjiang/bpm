@@ -60,7 +60,7 @@ public interface OnlineShopRelWarehouseService {
 
     void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
     /**
-     * 查询网店关联库存
+     * 查询网店关联有效仓库
      * @param onlineShopCode 网店编码
      * @param tenantId 租户ID
      * @return list
