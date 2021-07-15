@@ -18,7 +18,8 @@ public interface PipelineConfConstants {
     }
 
     interface Redis {
-        String PIPELINE_KEY = "o2pl:pipeline:%s";
+        // o2md:pipeline:[{$tenantid}]:{$pipelineCode}
+        String PIPELINE_KEY = "o2pl:pipeline:{%s}:%s";
         String PIPELINE_NODE_INFO = "info";
     }
 }
