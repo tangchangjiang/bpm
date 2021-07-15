@@ -12,7 +12,8 @@ public interface PipelineConstants {
 
 
     interface Redis {
-        String PIPELINE_KEY = "o2pl:pipeline:%s";
+        // o2md:pipeline:[{$tenantid}]:{$pipelineCode}
+        String PIPELINE_KEY = "o2pl:pipeline:{%s}:%s";
         String PIPELINE_NODE_INFO = "info";
         String PIPELINE_VERSION = "pipeline_version";
         long EXPIRE_TIME_MINUTES = 3;
