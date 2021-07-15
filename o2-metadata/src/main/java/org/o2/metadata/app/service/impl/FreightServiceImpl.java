@@ -49,9 +49,10 @@ public class FreightServiceImpl implements FreightService {
         //商品关联运费模版
         List<String> freightRelTemplateStr = redisCacheClient.<String, String>opsForHash().multiGet(skuRelFreightKey, platformSkuCodeList);
 
-        /*
-         * templateRelProductMap:运费模版关联订单行,一对多 key:运费模版编码 value:订单行集合
-         * productRelFreightMap: key : 运费模版编码 value: 商品运费关联关系类
+        /**
+         *  拼接运费编码与订单行关联集合map，运费编码与商品运费集合map
+         *  templateRelProductMap:运费模版关联订单行,一对多 key:运费模版编码 value:订单行集合
+         *  productRelFreightMap: key : 运费模版编码 value: 商品运费关联关系类
          *
          */
         Map<String, List<OrderEntryDTO>> templateRelProductMap = new HashMap<>();
