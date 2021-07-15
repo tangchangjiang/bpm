@@ -33,7 +33,7 @@ public class OnlineShopRelWarehouseInternalController {
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
     }
 
-    @ApiOperation(value = "从redis查询网店关联库存")
+    @ApiOperation(value = "查询网店关联有效仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{onlineShopCode}")
     public ResponseEntity<Map<String,OnlineShopRelWarehouseVO>> listOnlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
