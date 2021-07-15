@@ -16,15 +16,15 @@ import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
-import org.o2.metadata.console.domain.entity.AddressMapping;
-import org.o2.metadata.console.domain.entity.Catalog;
-import org.o2.metadata.console.domain.entity.Country;
-import org.o2.metadata.console.domain.entity.Region;
-import org.o2.metadata.console.domain.repository.AddressMappingRepository;
-import org.o2.metadata.console.domain.repository.CatalogRepository;
-import org.o2.metadata.console.domain.repository.CountryRepository;
-import org.o2.metadata.console.domain.repository.RegionRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Country;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.repository.AddressMappingRepository;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.CountryRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ public class AddressMappingController extends BaseController {
     @GetMapping("/all")
     public ResponseEntity<?> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final AddressMapping condition, final String countryCode) {
         condition.setTenantId(organizationId);
-        if (BasicDataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
+        if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
             final List<Country> countryList = countryRepository.select(Country.builder().enabledFlag(1).tenantId(condition.getTenantId()).build());
@@ -96,13 +96,13 @@ public class AddressMappingController extends BaseController {
         if (region != null) {
             addressMapping.setRegionName(region.getRegionName());
             //通过路径path，获取
-            if (BasicDataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
+            if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
                 final Country country = countryRepository.selectByPrimaryKey(region.getCountryId());
                 addressMapping.getRegionPathIds().add(country == null ? -100L : country.getCountryId());
                 addressMapping.getRegionPathCodes().add(country == null ? "NULL" : country.getCountryCode());
                 addressMapping.getRegionPathNames().add(country == null ? "NULL" : country.getCountryName());
             }
-            final String[] regionPaths = region.getLevelPath().split(BasicDataConstants.Constants.ADDRESS_SPLIT_REGEX);
+            final String[] regionPaths = region.getLevelPath().split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
             for (final String code : regionPaths) {
                 final Region region1 = regionService.getRegionByCode(code);
                 addressMapping.getRegionPathIds().add(region1 == null ? -100L : region1.getRegionId());
@@ -122,15 +122,15 @@ public class AddressMappingController extends BaseController {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
         try {
-            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), BasicDataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
-            Preconditions.checkArgument(null != addressMapping.getTenantId(), BasicDataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+            Preconditions.checkArgument(null != addressMapping.getTenantId(), MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
             Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
             Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getCatalogCode() + "or tenantId:" + addressMapping.getTenantId());
             addressMapping.setCatalogId(catalog.getCatalogId());
             addressMappingRepository.insertSelective(addressMapping);
             return Results.success(addressMapping);
         } catch (final DuplicateKeyException e) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e, "AddressMapping(" + addressMapping.getAddressMappingId() + ")");
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e, "AddressMapping(" + addressMapping.getAddressMappingId() + ")");
         }
     }
 

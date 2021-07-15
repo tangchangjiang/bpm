@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.OnlineShopRelWarehouseMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.OnlineShopRelWarehouse">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse">
         <result column="online_shop_rel_pos_id" property="onlineShopRelWarehouseId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
@@ -37,17 +37,17 @@
     <select id="listShopWarehouseRelsByOption" resultMap="RelationshipVOMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
-            w.warehouse_id,
-            w.pos_id,
-            w.warehouse_code,
-            wt.warehouse_name,
-            w.warehouse_type_code,
-            w.warehouse_status_code,
-            srw.object_version_number,
-            srw.online_shop_id,
-            srw.active_flag,
-            srw.business_active_flag,
-            srw.online_shop_rel_warehouse_id
+        w.warehouse_id,
+        w.pos_id,
+        w.warehouse_code,
+        wt.warehouse_name,
+        w.warehouse_type_code,
+        w.warehouse_status_code,
+        srw.object_version_number,
+        srw.online_shop_id,
+        srw.active_flag,
+        srw.business_active_flag,
+        srw.online_shop_rel_warehouse_id
         FROM
         o2md_warehouse w
         JOIN o2md_online_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id

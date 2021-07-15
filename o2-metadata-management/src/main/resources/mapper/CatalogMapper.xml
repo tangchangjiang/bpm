@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.CatalogMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.Catalog">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.Catalog">
         <result column="catalog_id" property="catalogId" jdbcType="DECIMAL"/>
         <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
         <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
@@ -45,7 +45,7 @@
 
         AND t.lang =#{lang}
     </select>
-    <select id="listCatalog" resultType="org.o2.metadata.console.domain.entity.Catalog">
+    <select id="listCatalog" resultType="org.o2.metadata.console.infra.entity.Catalog">
         select c.catalog_id,
         c.catalog_code,
         c.catalog_name,

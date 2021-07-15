@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
-import org.o2.metadata.console.domain.entity.Carrier;
+import org.o2.metadata.console.infra.entity.Carrier;
 
 import java.util.List;
 

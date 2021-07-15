@@ -7,24 +7,29 @@ import org.hzero.boot.platform.code.builder.CodeRuleBuilder;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.feignclient.O2MetadataClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.api.vo.TriggerStockCalculationVO;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
+import org.o2.metadata.console.infra.convertor.WarehouseConvertor;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
-import org.o2.metadata.console.domain.entity.Warehouse;
-import org.o2.metadata.console.domain.repository.WarehouseRepository;
+import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.ScriptSource;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 
@@ -37,27 +42,26 @@ import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 @Slf4j
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
-
     private final WarehouseRepository warehouseRepository;
     private final AcrossSchemaRepository acrossSchemaRepository;
     private final CodeRuleBuilder codeRuleBuilder;
-    private final O2MetadataClient o2MetadataClient;
     private O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
+    private final WarehouseDomainService warehouseDomainService;
 
     @Autowired
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final AcrossSchemaRepository acrossSchemaRepository,
                                 final CodeRuleBuilder codeRuleBuilder,
-                                final O2MetadataClient o2MetadataClient,
                                 final O2InventoryClient o2InventoryClient,
-                                final RedisCacheClient redisCacheClient) {
+                                final RedisCacheClient redisCacheClient,
+                                WarehouseDomainService warehouseDomainService) {
         this.warehouseRepository = warehouseRepository;
         this.acrossSchemaRepository = acrossSchemaRepository;
         this.codeRuleBuilder = codeRuleBuilder;
-        this.o2MetadataClient = o2MetadataClient;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
+        this.warehouseDomainService = warehouseDomainService;
     }
 
 
@@ -76,13 +80,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
-        /*for (Warehouse warehouse : warehouses) {
-            // 编码规则：W + 6位流水
-            final String warehouseCode = codeRuleBuilder.generateCode(tenantId, MetadataConstants.CodeRuleBuilder.RULE_CODE,
-                    MetadataConstants.CodeRuleBuilder.LEVEL_CODE, MetadataConstants.CodeRuleBuilder.LEVEL_VALUE, null);
-            log.info("create batch warehouseCode {}", warehouseCode);
-            warehouse.setWarehouseCode(warehouseCode);
-        }*/
         warehouseRepository.batchInsert(warehouses);
         this.operationRedis(warehouses);
         return warehouses;
@@ -127,10 +124,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<Warehouse> insertList = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
             log.info("warehouse batch handle warehouse({}), _status({})", warehouse.getWarehouseId(), warehouse.get_status().name());
-            if (O2MdConsoleConstants.Status.CREATE.equals(warehouse.get_status().name())) {
+            if (MetadataConstants.Status.CREATE.equals(warehouse.get_status().name())) {
                 insertList.add(warehouse);
             }
-            if (O2MdConsoleConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
+            if (MetadataConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
                 SecurityTokenHelper.validToken(warehouse);
                 updateList.add(warehouse);
             }
@@ -144,6 +141,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         totalList.addAll(createList);
         totalList.addAll(list);
         return totalList ;
+    }
+
+    @Override
+    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
+        return WarehouseConvertor.doToVoObject(warehouseDomainService.getWarehouse(warehouseCode,tenantId));
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
@@ -199,17 +201,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return triggerCalInfoList;
     }
 
-
-    /**
-     * 新增到 redis
-     *
-     * @param warehouse warehouse
-     */
-    private void syncToRedis(final Warehouse warehouse) {
-        Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.o2MetadataClient.saveWarehouse(warehouse.getTenantId() ,warehouse.getWarehouseCode(), hashMap);
-    }
-
     /**
      * update redis
      *
@@ -217,16 +208,194 @@ public class WarehouseServiceImpl implements WarehouseService {
      */
     private void updateWarehouseToRedis(final Warehouse warehouse) {
         Map<String, Object> hashMap = warehouse.buildRedisHashMap();
-        this.o2MetadataClient.updateWarehouse(warehouse.getTenantId(), warehouse.getWarehouseCode(), hashMap);
+        updateWarehouse(warehouse.getWarehouseCode(), hashMap,warehouse.getTenantId());
     }
 
-    public void operationRedis(List<Warehouse> warehouses) {
+    private void operationRedis(List<Warehouse> warehouses) {
         if (CollectionUtils.isNotEmpty(warehouses)) {
             warehouses.get(0).syncToRedis(warehouses,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }
+
+    @Override
+    public void saveWarehouse(String warehouseCode,Map<String, Object> hashMap,  Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, SAVE_WAREHOUSE_LUA);
+    }
+
+    @Override
+    public void updateWarehouse(String warehouseCode, Map<String, Object> hashMap, Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, UPDATE_WAREHOUSE_LUA);
+
+    }
+
+    @Override
+    public void saveExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
+        executeScript(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,warehouseCode, expressQuantity, tenantId, EXPRESS_LIMIT_CACHE_LUA);
+    }
+
+    @Override
+    public void savePickUpQuantity(String warehouseCode, String pickUpQuantity, Long tenantId) {
+        executeScript(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,warehouseCode, pickUpQuantity, tenantId, PICK_UP_LIMIT_CACHE_LUA);
+    }
+
+    @Override
+    public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
+        executeScript(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,warehouseCode, increment, tenantId, EXPRESS_VALUE_CACHE_LUA);
+    }
+
+    @Override
+    public void updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
+        executeScript(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,warehouseCode, increment, tenantId, PICK_UP_VALUE_CACHE_LUA);
+    }
+
+    @Override
+    public String getExpressLimit(String warehouseCode, Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY);
+    }
+
+    @Override
+    public String getPickUpLimit(String warehouseCode, Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY);
+    }
+
+    @Override
+    public String getExpressValue(String warehouseCode, Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_VALUE);
+    }
+
+    @Override
+    public String getPickUpValue(String warehouseCode, Long tenantId) {
+        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_VALUE);
+    }
+
+    @Override
+    public String warehouseCacheKey(String warehouseCode, Long tenantId) {
+        if (tenantId == null) {
+            return WarehouseConstants.WarehouseCache.warehouseCacheKey(0, warehouseCode);
+        }
+        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
+    }
+
+    @Override
+    public String warehouseLimitCacheKey(String limit,Long tenantId) {
+        if (tenantId == null) {
+            return WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(limit,0);
+        }
+        return WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(limit,tenantId);
+    }
+
+    @Override
+    public boolean isWarehouseExpressLimit(String warehouseCode, Long tenantId) {
+        final Boolean result = this.redisCacheClient.boundSetOps(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION).isMember(warehouseCacheKey(warehouseCode, tenantId));
+        return result != null && result;
+    }
+
+    @Override
+    public boolean isWarehousePickUpLimit(String warehouseCode, Long tenantId) {
+        final Boolean result = this.redisCacheClient.boundSetOps(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION).isMember(warehouseCacheKey(warehouseCode, tenantId));
+        return result != null && result;
+    }
+
+    @Override
+    public Set<String> expressLimitWarehouseCollection(Long tenantId) {
+        final Set<String> members = this.redisCacheClient.boundSetOps(warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,tenantId)).members();
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(members)) {
+            return new HashSet<>(members);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Set<String> pickUpLimitWarehouseCollection(Long tenantId) {
+        final Set<String> members = this.redisCacheClient.boundSetOps(warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId)).members();
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(members)) {
+            return new HashSet<>(members);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void resetWarehouseExpressLimit(String warehouseCode, Long tenantId) {
+        executeScript(warehouseCode,WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,tenantId, EXPRESS_VALUE_CACHE_RESET_LUA);
+    }
+
+
+    @Override
+    public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
+        executeScript(warehouseCode, WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
+
+    }
+    private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, num, String.valueOf(tenantId), warehouseCacheKey(warehouseCode, tenantId));
+    }
+
+    private void executeScript(final String warehouseCode,final String limit,final Long tenantId, final ScriptSource scriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, String.valueOf(tenantId), warehouseCacheKey(warehouseCode, tenantId));
+    }
+
+    private void executeScript(final String warehouseCode, final Map<String,Object> hashMap, final Long tenantId, final ScriptSource scriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), FastJsonHelper.objectToString(hashMap));
+    }
+
+
+    private static final ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
+    private static final ResourceScriptSource EXPRESS_VALUE_CACHE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_value_cache.lua"));
+    private static final ResourceScriptSource EXPRESS_VALUE_CACHE_RESET_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_value_cache_reset.lua"));
+    private static final ResourceScriptSource PICK_UP_LIMIT_CACHE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_limit_cache.lua"));
+    private static final ResourceScriptSource PICK_UP_VALUE_CACHE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache.lua"));
+    private static final ResourceScriptSource PICK_UP_VALUE_CACHE_RESET_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache_reset.lua"));
+    private static final ResourceScriptSource SAVE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/save_warehouse_cache.lua"));
+    private static final ResourceScriptSource UPDATE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
+    /**
+     * 新增到 redis
+     *
+     * @param warehouse warehouse
+     */
+    private void syncToRedis(final Warehouse warehouse) {
+        Map<String, Object> hashMap = warehouse.buildRedisHashMap();
+        saveWarehouse(warehouse.getWarehouseCode(), hashMap,warehouse.getTenantId());
+    }
+  /*  private void updateWarehouse(String warehouseCode, Map<String, Object> hashMap, Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, UPDATE_WAREHOUSE_LUA);
+
+    }
+    private void saveWarehouse(String warehouseCode,Map<String, Object> hashMap,  Long tenantId) {
+        executeScript(warehouseCode, hashMap, tenantId, SAVE_WAREHOUSE_LUA);
+    }
+    private void executeScript(final String warehouseCode, final Map<String,Object> hashMap, final Long tenantId, final ScriptSource scriptSource) {
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseCacheKey(warehouseCode, tenantId)), FastJsonHelper.objectToString(hashMap));
+    }
+    private String warehouseCacheKey(String warehouseCode, Long tenantId) {
+        if (tenantId == null) {
+            return WarehouseConstants.WarehouseCache.warehouseCacheKey(0, warehouseCode);
+        }
+        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
+    }
+
+    private static final ResourceScriptSource SAVE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/save_warehouse_cache.lua"));
+    private static final ResourceScriptSource UPDATE_WAREHOUSE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));*/
 
 }

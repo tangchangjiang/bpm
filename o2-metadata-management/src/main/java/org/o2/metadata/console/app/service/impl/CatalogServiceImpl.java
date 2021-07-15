@@ -2,12 +2,12 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.hzero.export.vo.ExportParam;
 import org.o2.metadata.console.app.service.CatalogService;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.console.domain.entity.Catalog;
-import org.o2.metadata.console.domain.entity.CatalogVersion;
-import org.o2.metadata.console.domain.repository.CatalogVersionRepository;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.CatalogVersion;
+import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.api.vo.CatalogVO;
-import org.o2.metadata.console.domain.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +46,11 @@ public class CatalogServiceImpl implements CatalogService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
 
-        if (O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
                     .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
             for (CatalogVersion version : versions) {
-                version.setActiveFlag(O2MdConsoleConstants.ACTIVE_FLAG.FORBIDDEN);
+                version.setActiveFlag(MetadataConstants.ACTIVE_FLAG.FORBIDDEN);
             }
             catalogVersionRepository.batchUpdateByPrimaryKeySelective(versions);
         }

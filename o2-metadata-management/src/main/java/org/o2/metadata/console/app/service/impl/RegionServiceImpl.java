@@ -4,18 +4,16 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.copier.PropertiesCopier;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
-import org.o2.metadata.console.domain.entity.Region;
-import org.o2.metadata.console.domain.entity.RegionArea;
-import org.o2.metadata.console.domain.repository.RegionAreaRepository;
-import org.o2.metadata.console.domain.repository.RegionRelPosRepository;
-import org.o2.metadata.console.domain.repository.RegionRepository;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionArea;
+import org.o2.metadata.console.infra.repository.RegionAreaRepository;
+import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,7 +102,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
             if (parentRegion == null) {
                 throw new CommonException(DATA_NOT_EXISTS);
             }
-            region.setLevelPath(parentRegion.getLevelPath() + BasicDataConstants.Constants.ADDRESS_SPLIT + region.getRegionCode());
+            region.setLevelPath(parentRegion.getLevelPath() + MetadataConstants.Constants.ADDRESS_SPLIT + region.getRegionCode());
         } else {
             region.setLevelPath(region.getRegionCode());
         }
@@ -148,13 +146,13 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         }
         region.setLevelPath(exists.getLevelPath());
         // 默认父级未启用禁止启用下级
-        if (enableFlag == BaseConstants.Flag.YES && region.getLevelPath().contains(BasicDataConstants.Constants.ADDRESS_SPLIT)) {
+        if (enableFlag == BaseConstants.Flag.YES && region.getLevelPath().contains(MetadataConstants.Constants.ADDRESS_SPLIT)) {
             // 验证父级是否开启
             final List<Region> parentRegionList =
                     regionRepository.listRegionByLevelPath(resolveParentLevelPath(region.getLevelPath()),region.getTenantId());
             for (final Region parent : parentRegionList) {
                 if (Objects.equals(BaseConstants.Flag.NO, parent.getEnabledFlag())) {
-                    throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_PARENT_NOT_ENABLED);
+                    throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PARENT_NOT_ENABLED);
                 }
             }
         }
@@ -207,8 +205,8 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
      */
     private List<String> resolveParentLevelPath(String levelPath) {
         final List<String> levelPathList = new ArrayList<>();
-        while (levelPath.contains(BasicDataConstants.Constants.ADDRESS_SPLIT)) {
-            levelPath = levelPath.substring(0, levelPath.lastIndexOf(BasicDataConstants.Constants.ADDRESS_SPLIT));
+        while (levelPath.contains(MetadataConstants.Constants.ADDRESS_SPLIT)) {
+            levelPath = levelPath.substring(0, levelPath.lastIndexOf(MetadataConstants.Constants.ADDRESS_SPLIT));
             levelPathList.add(levelPath);
         }
         return levelPathList;

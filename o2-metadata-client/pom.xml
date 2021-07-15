@@ -5,11 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.o2.metadata</groupId>
-        <artifactId>o2-metadata-parent</artifactId>
+        <groupId>org.o2</groupId>
+        <artifactId>o2-build-parent</artifactId>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.o2.metadata</groupId>
     <artifactId>o2-metadata-client</artifactId>
     <packaging>jar</packaging>
 
@@ -17,10 +18,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hzero.boot</groupId>
-            <artifactId>hzero-boot-platform</artifactId>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-core</artifactId>
         </dependency>
-        <!--other-->
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

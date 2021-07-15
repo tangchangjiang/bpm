@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.o2.metadata</groupId>
-        <artifactId>o2-metadata-parent</artifactId>
+        <groupId>org.o2</groupId>
+        <artifactId>o2-build-parent</artifactId>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
-
+    <groupId>org.o2.metadata</groupId>
     <artifactId>o2-metadata-domain</artifactId>
     <packaging>jar</packaging>
 
@@ -18,18 +18,6 @@
         <dependency>
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
-        </dependency>
-
-
-        <!-- hzero -->
-
-        <!-- spring-boot -->
-
-        <!-- other -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

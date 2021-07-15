@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
@@ -25,8 +28,15 @@ public interface SysParameterRemoteService {
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/{paramCode}")
-    public ResponseEntity<String> listSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    @GetMapping("/{organizationId}/sysParameter-internal/{paramCode}")
+    ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                       @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
-
+    /**
+     * 批量从redis查询系统参数
+     * @param paramCodes 编码集合
+     * @param organizationId 租户ID
+     * @return
+     */
+    @GetMapping("/{organizationId}/sysParameter-internal/paramCodes")
+    ResponseEntity<String> listSystemParameters(@RequestParam List<String> paramCodes,@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

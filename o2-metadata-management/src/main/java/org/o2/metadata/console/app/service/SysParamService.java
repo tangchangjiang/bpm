@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service;
 
 
-import org.o2.metadata.console.domain.entity.SystemParameter;
-import org.o2.metadata.console.api.vo.SystemParamDetailVO;
+import org.o2.metadata.console.infra.entity.SystemParameter;
+import org.o2.metadata.console.api.vo.SystemParameterVO;
 
 import java.util.List;
 
@@ -14,41 +14,35 @@ import java.util.List;
 public interface SysParamService {
 
     /**
-     * 全量同步系统参数
-     *
-     * @param ts 待同步的系统参数数据
-     * @param tenantId 租户ID
-     **/
-    void synToRedis(List<SystemParameter> ts,
-                    Long tenantId);
-
-    /**
-     * 单条更新系统参数
-     *
-     * @param systemParameter 待同步的系统参数数据
-     * @param tenantId 租户ID
-     **/
-    void updateToRedis(SystemParameter systemParameter,
-                       Long tenantId);
-
-    /**
-     * 单条更新系统参数
-     *
-     * @param paramId  系统参数ID
-     * @param tenantId 租户ID
-     **/
-    void updateToRedis(Long paramId, Long tenantId);
-
-    void extraOperate(String paramCode, Long tenantId);
-
-
-    /**
      * 从redis查询系统参数
      *
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      * @return SystemParamDetailVO
      */
-    SystemParamDetailVO listSystemParameter(String paramCode, Long tenantId);
+    SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
+
+    /**
+     * 批量从redis查询系统参数
+     *
+     * @param paramCodes 参数编码集合
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId);
+    
+    /**
+     *  新建系统参数
+     * @param systemParameter 系统参数
+     * @param tenantId 租户ID
+     */
+    void saveSystemParameter(SystemParameter systemParameter, Long tenantId);
+
+    /**
+     * 更新系统参数
+     * @param systemParameter 系统参数
+     * @param tenantId 租户ID
+     */
+    void updateSystemParameter(SystemParameter systemParameter, Long tenantId);
 
 }

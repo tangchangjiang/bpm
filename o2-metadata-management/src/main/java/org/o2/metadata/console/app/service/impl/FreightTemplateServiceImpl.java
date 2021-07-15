@@ -13,13 +13,13 @@ import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.app.service.FreightTemplateService;
-import org.o2.metadata.console.domain.entity.FreightTemplate;
-import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
-import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
-import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
-import org.o2.metadata.console.domain.repository.RegionRepository;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +76,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public void tranLov(List<FreightTemplate> list, Long organizationId) {
         if (CollectionUtils.isNotEmpty(list)){
-            List<Map<String, Object>>  uomList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
-            List<Map<String, Object>>  typeList = getSqlMeaning(BasicDataConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
+            List<Map<String, Object>>  uomList = getSqlMeaning(MetadataConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
+            List<Map<String, Object>>  typeList = getSqlMeaning(MetadataConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
 
             list.forEach(freightTemplateVO->{
                 String valuationType = freightTemplateVO.getValuationType();
@@ -209,6 +209,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchInsert(final List<FreightTemplate> freightTemplateList) {
         checkData(freightTemplateList, false);
         List<FreightTemplate> freightTemplates = freightTemplateRepository.batchInsertSelective(freightTemplateList);
@@ -220,6 +221,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchUpdate(final List<FreightTemplate> freightTemplateList) {
         checkData(freightTemplateList, true);
         List<FreightTemplate> freightTemplates = freightTemplateRepository.batchUpdateByPrimaryKey(freightTemplateList);
@@ -231,6 +233,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<FreightTemplate> batchMerge(final List<FreightTemplate> freightTemplateList) {
         long tenantId =  DetailsHelper.getUserDetails().getTenantId();
         final Map<String, Object> map = new HashMap<>(freightTemplateList.size());
@@ -331,7 +334,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void setDefaultTemp(final Long organizationId, Long templateId) {
-        Assert.notNull(templateId, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
+        Assert.notNull(templateId, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
 
         //查找默认的并删除
         Long oldTemplateId =null;
@@ -348,7 +351,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
          }
         FreightTemplate defaultTemp = freightTemplateRepository.selectByPrimaryKey(templateId);
-        Assert.notNull(defaultTemp, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_NOT_EXISTS);
+        Assert.notNull(defaultTemp, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_NOT_EXISTS);
         defaultTemp.setDafaultFlag(Integer.valueOf(1));
         freightTemplateRepository.updateOptional(defaultTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
 
@@ -373,13 +376,13 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             freightTemplate.setDafaultFlag(freightTemplate.getDafaultFlag()==null?Integer.valueOf(0):freightTemplate.getDafaultFlag());
 
             if (isCheckId) {
-                Assert.notNull(freightTemplate.getTemplateId(), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
+                Assert.notNull(freightTemplate.getTemplateId(), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
             }
             freightTemplate.validate();
             // 数据库查重
-            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
             // list查重
-            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
             map.put(freightTemplate.getTemplateCode(), i);
         }
     }
@@ -408,7 +411,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @param freightTemplate
      */
     private void checkUniqueDefault(final FreightTemplate freightTemplate) {
-        Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
+        Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
     }
 
     /**
@@ -420,7 +423,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private void checkProductRelate(final List<FreightTemplate> freightTemplateList) {
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             final boolean relateFlag = freightTemplateRepository.isFreightTemplateRelatePro(freightTemplate);
-            Assert.isTrue(!relateFlag, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
+            Assert.isTrue(!relateFlag, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
         }
     }
 

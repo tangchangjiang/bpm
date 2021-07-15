@@ -4,9 +4,9 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.app.service.CountryService;
-import org.o2.metadata.console.domain.entity.Country;
-import org.o2.metadata.console.domain.repository.CountryRepository;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.Country;
+import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +58,7 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
         // 验证国家Code是否重复
         final List<Country> countryList = countryRepository.select(Country.builder().countryCode(country.getCountryCode()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Country(" + country.getCountryCode() + ")");
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Country(" + country.getCountryCode() + ")");
         }
     }
 
@@ -66,7 +66,7 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
         // 验证国家名称是否重复
         final List<Country> countryList = countryRepository.select(Country.builder().countryName(country.getCountryName()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_DUPLICATE_NAME, "Country(" + country.getCountryCode() + ")");
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_NAME, "Country(" + country.getCountryCode() + ")");
         }
     }
 }

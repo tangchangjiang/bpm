@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.metadata.console.domain.entity.FreightTemplate;
-import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.springframework.cglib.beans.BeanCopier;
 
 import javax.persistence.Transient;

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.RegionMapper">
 
-    <resultMap id="listOfRegionMap" type="org.o2.metadata.console.domain.entity.Region">
+    <resultMap id="listOfRegionMap" type="org.o2.metadata.console.infra.entity.Region">
         <id column="region_id" property="regionId" jdbcType="DECIMAL"/>
         <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
         <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
@@ -58,7 +58,7 @@
         </if>
         order by hr.region_code
     </select>
-    <select id="listRegionByLevelPath" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="listRegionByLevelPath" resultType="org.o2.metadata.console.infra.entity.Region">
         select
         region_id,
         enabled_flag
@@ -69,7 +69,7 @@
         </foreach>
         and re.tenant_id = #{tenantId}
     </select>
-    <select id="listRegionChildrenByLevelPath" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="listRegionChildrenByLevelPath" resultType="org.o2.metadata.console.infra.entity.Region">
         select
         region_id,
         object_version_number
@@ -78,7 +78,7 @@
         where level_path like #{levelPath}
         and tenant_id = #{tenantId}
     </select>
-    <select id="selectRegion" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="selectRegion" resultType="org.o2.metadata.console.infra.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         hr.region_id,
@@ -117,7 +117,7 @@
             AND hr.enabled_flag = #{enabledFlag}
         </if>
     </select>
-    <select id="selectRegionParent" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="selectRegionParent" resultType="org.o2.metadata.console.infra.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         hr.region_id,
@@ -148,7 +148,7 @@
             AND hr.enabled_flag = #{enabledFlag}
         </if>
     </select>
-    <select id="findRegionByPrimaryKey" resultType="org.o2.metadata.console.domain.entity.Region">
+    <select id="findRegionByPrimaryKey" resultType="org.o2.metadata.console.infra.entity.Region">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         b.creation_date,

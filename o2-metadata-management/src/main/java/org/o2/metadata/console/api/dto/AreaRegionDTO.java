@@ -5,7 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AreaRegionDTO implements Serializable, Comparable {
     @ApiModelProperty("大区，值集O2MD.AREA_CODE")
-    @LovValue(lovCode = BasicDataConstants.AreaCode.LOV_CODE)
+    @LovValue(lovCode = MetadataConstants.AreaCode.LOV_CODE)
     private String areaCode;
 
     @ApiModelProperty(value = "大区名称")

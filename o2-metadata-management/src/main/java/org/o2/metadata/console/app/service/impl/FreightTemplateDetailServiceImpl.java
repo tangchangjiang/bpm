@@ -5,12 +5,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
-import org.o2.metadata.console.domain.entity.FreightTemplateDetail;
-import org.o2.metadata.console.domain.repository.FreightTemplateDetailRepository;
-import org.o2.metadata.console.domain.repository.FreightTemplateRepository;
-import org.o2.metadata.console.domain.repository.RegionRepository;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
-import org.o2.metadata.console.infra.constant.BasicDataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -129,11 +129,11 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
             // list验重
             String key = String.valueOf(detail.getRegionId()) + String.valueOf(detail.getTemplateId());
-            Assert.isTrue(map.get(key) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
+            Assert.isTrue(map.get(key) == null, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
             // 数据库验重
-            Assert.isTrue(!detail.exist(freightTemplateDetailRepository, isRegion), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
+            Assert.isTrue(!detail.exist(freightTemplateDetailRepository, isRegion), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
 
             if (detail.getTemplateDetailId() != null) {
                 updateList.add(detail);
@@ -167,7 +167,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
             // 主键验空
             if (isCheckId) {
-                Assert.notNull(freightTemplateDetail.getTemplateDetailId(), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_ID_IS_NULL);
+                Assert.notNull(freightTemplateDetail.getTemplateDetailId(), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_ID_IS_NULL);
             }
 
             if (isRegion) {
@@ -179,11 +179,11 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
             // list验重
             String key =  String.valueOf(freightTemplateDetail.getRegionId()+"") + String.valueOf(freightTemplateDetail.getTemplateId());
-            Assert.isTrue(map.get(key) == null, BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
+            Assert.isTrue(map.get(key) == null, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
             // 数据库验重
-            Assert.isTrue(!freightTemplateDetail.exist(freightTemplateDetailRepository, isRegion), BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
+            Assert.isTrue(!freightTemplateDetail.exist(freightTemplateDetailRepository, isRegion), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
         }
     }
 
@@ -208,7 +208,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         }
 
         if (defaultCount > 1) {
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
         } else {
             return defaultFreightTemplateDetail;
         }

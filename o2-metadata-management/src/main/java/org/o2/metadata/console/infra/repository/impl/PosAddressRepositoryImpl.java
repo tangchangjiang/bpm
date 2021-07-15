@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.domain.entity.PosAddress;
-import org.o2.metadata.console.domain.repository.PosAddressRepository;
+import org.o2.metadata.console.infra.entity.PosAddress;
+import org.o2.metadata.console.infra.repository.PosAddressRepository;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;
 import org.springframework.stereotype.Component;
 

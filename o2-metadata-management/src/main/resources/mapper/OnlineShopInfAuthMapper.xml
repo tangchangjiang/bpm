@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.o2.metadata.console.infra.mapper.OnlineShopInfAuthMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.domain.entity.OnlineShopInfAuth">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.OnlineShopInfAuth">
         <result column="online_shop_inf_auth_id" property="onlineShopInfAuthId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
@@ -18,8 +18,8 @@
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
-    <select id="listOnlineShopInfAuthByOption" parameterType="org.o2.metadata.console.domain.entity.OnlineShopInfAuth"
-            resultType="org.o2.metadata.console.domain.entity.OnlineShopInfAuth">
+    <select id="listOnlineShopInfAuthByOption" parameterType="org.o2.metadata.console.infra.entity.OnlineShopInfAuth"
+            resultType="org.o2.metadata.console.infra.entity.OnlineShopInfAuth">
         select
         ia.online_shop_inf_auth_id as onlineShopInfAuthId,
         ia.online_shop_id as onlineShopId,
@@ -45,8 +45,8 @@
         and  ia.online_shop_id = #{onlineShopId}
     </select>
 
-    <select id="listInfAuthByOnlineShop" parameterType="org.o2.metadata.console.domain.entity.OnlineShop"
-            resultType="org.o2.metadata.console.domain.entity.OnlineShopInfAuth">
+    <select id="listInfAuthByOnlineShop" parameterType="org.o2.metadata.console.infra.entity.OnlineShop"
+            resultType="org.o2.metadata.console.infra.entity.OnlineShopInfAuth">
         SELECT
         osia.online_shop_inf_auth_id,
         osia.online_shop_id,

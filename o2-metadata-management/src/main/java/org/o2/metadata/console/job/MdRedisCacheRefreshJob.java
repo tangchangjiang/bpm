@@ -9,15 +9,16 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.app.service.SysParamService;
-import org.o2.metadata.console.infra.constant.O2MdConsoleConstants;
-import org.o2.metadata.console.domain.entity.SystemParameter;
-import org.o2.metadata.console.domain.entity.Warehouse;
-import org.o2.metadata.console.domain.repository.OnlineShopRelWarehouseRepository;
-import org.o2.metadata.console.domain.repository.SystemParameterRepository;
-import org.o2.metadata.console.domain.repository.WarehouseRepository;
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.SystemParameter;
+import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.SystemParameterRedis;
+import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
+import org.o2.metadata.console.infra.repository.SystemParameterRepository;
+import org.o2.metadata.console.infra.repository.WarehouseRepository;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,18 +55,18 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
     private final SystemParameterRepository systemParameterRepository;
-    private final SysParamService sysParamService;
+    private final SystemParameterRedis systemParameterRedis;
 
     @Autowired
     public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient,
                                   OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                   WarehouseRepository warehouseRepository,
-                                  SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
+                                  SystemParameterRepository systemParameterRepository, SystemParameterRedis systemParameterRedis) {
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.warehouseRepository = warehouseRepository;
         this.systemParameterRepository = systemParameterRepository;
-        this.sysParamService = sysParamService;
+        this.systemParameterRedis = systemParameterRedis;
     }
 
     @Override
@@ -108,8 +109,8 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
         List<Warehouse> warehouseList = warehouseRepository.queryAllWarehouseByTenantId(tenantId);
         if (CollectionUtils.isNotEmpty(warehouseList)) {
             warehouseList.get(0).syncToRedis(warehouseList,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
         }
     }
@@ -121,10 +122,11 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
      */
     public void refreshOnlineShopRelWarehouse(Long tenantId) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
+        OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
         if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            onlineShopRelWarehouseVOList.get(0).syncToRedis(onlineShopRelWarehouseVOList,
-                    O2MdConsoleConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    O2MdConsoleConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
+            onlineShopRelWarehouse.syncToRedis(onlineShopRelWarehouseVOList,
+                    MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
+                    MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
                     redisCacheClient);
 
         }
@@ -142,11 +144,11 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
                 .andWhere(Sqls.custom().andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)).build());
 
         if (CollectionUtils.isEmpty(systemParameterList)) {
-            log.warn(MessageAccessor.getMessage(MetadataConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
+            log.warn(MessageAccessor.getMessage(SystemParameterConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
             return;
         }
 
-        sysParamService.synToRedis(systemParameterList, tenantId);
+        systemParameterRedis.synToRedis(systemParameterList, tenantId);
 
     }
 

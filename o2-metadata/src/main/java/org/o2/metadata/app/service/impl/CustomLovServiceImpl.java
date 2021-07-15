@@ -6,7 +6,7 @@ import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.boot.platform.lov.feign.LovFeignClient;
 import org.hzero.core.util.Results;
 import org.o2.metadata.app.service.CustomLovService;
-import org.o2.metadata.infra.constants.BasicDataConstants;
+import org.o2.metadata.infra.constants.MetadataConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class CustomLovServiceImpl implements CustomLovService {
         final Optional<LovValueDTO> lovValueDTO = lovLists.stream().filter(e -> lovCode.equals(e.getValue())).findAny();
         if (!lovValueDTO.isPresent()) {
             log.error("Please Check Config : [{}], Lov Code:[{}]", publicLovMetaData, lovCode);
-            throw new CommonException(BasicDataConstants.ErrorCode.BASIC_DATA_LOV_PERMISSION_NOT_PASS);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_LOV_PERMISSION_NOT_PASS);
         }
         final List<LovValueDTO> lovValues = lovFeignClient.queryLovValue(lovCode, tenantId);
         if (log.isDebugEnabled()) {
