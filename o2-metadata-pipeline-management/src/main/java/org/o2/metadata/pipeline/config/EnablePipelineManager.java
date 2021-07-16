@@ -22,11 +22,13 @@ public class EnablePipelineManager {
     public static final String PIPELINE = "PIPELINE";
     public static final String PIPELINE_ACTION = "PIPELINE ACTION";
     public static final String PIPELINE_NODE = "PIPELINE_NODE";
+    public static final String ACTION_PARAMETER = "ACTION PARAMETER";
 
     @Autowired
     public EnablePipelineManager(final Docket docket) {
         docket.tags(new Tag(PIPELINE, "流水线"))
                 .tags(new Tag(PIPELINE_NODE, "流水线节点"))
+                .tags(new Tag(ACTION_PARAMETER, "行为参数"))
                 .tags(new Tag(PIPELINE_ACTION,"行为"));
     }
 }
