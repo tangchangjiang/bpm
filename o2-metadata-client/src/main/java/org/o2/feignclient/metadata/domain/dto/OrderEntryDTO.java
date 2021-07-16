@@ -2,8 +2,6 @@ package org.o2.feignclient.metadata.domain.dto;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 
 /**
  *
@@ -31,13 +29,7 @@ public class OrderEntryDTO {
     private String unit;
 
     /**
-     * 重量
+     * 运费模版
      */
-    private BigDecimal weight;
-    private String weightUomCode;
-    /**
-     * 体积
-     */
-    private BigDecimal volume;
-    private String volumeUomCode;
+    private String freightTemplateCode;
 }

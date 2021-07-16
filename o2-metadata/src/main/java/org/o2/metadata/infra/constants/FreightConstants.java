@@ -24,6 +24,7 @@ public interface FreightConstants {
          * value: freightCode <br />
          */
         String SKU_REL_FREIGHT = "o2om:freight:skurel:{%s}";
+
         /**
          * GetSkuRelFreight
          *
@@ -52,6 +53,7 @@ public interface FreightConstants {
             return String.format(FREIGHT_DETAIL_KEY, tenantId, freightCode);
         }
     }
+
     /**
      * 计价方式
      */
@@ -72,5 +74,13 @@ public interface FreightConstants {
         String PIECE = "PIECE";
 
         String LOV_CODE = "HPFM.UOM_TYPE";
+    }
+
+    /**
+     * 模版
+     */
+    interface Template {
+        String TEMPLATE_HEAD = "HEAD";
+        String TEMPLATE_DETAIL = "DETAIL";
     }
 }
