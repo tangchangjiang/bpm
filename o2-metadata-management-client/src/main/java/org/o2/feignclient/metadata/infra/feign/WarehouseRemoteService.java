@@ -197,5 +197,13 @@ public interface WarehouseRemoteService {
     @PostMapping({"/{organizationId}/warehouse-internal/resetWarehousePickUpLimit"})
     ResponseEntity<String> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                      @RequestParam(value = "warehouseCode", required = true) String warehouseCode);
-
+    /**
+     * 查询有效仓库
+     * @param onlineShopCode 网店编码
+     * @param organizationId 租户ID
+     * @return  ResponseEntity<String>
+     */
+    @GetMapping("/{organizationId}/warehouse-internal/active/{onlineShopCode}")
+    ResponseEntity<String> listActiveWarehouse(@PathVariable @ApiParam(value = "网店编码", required = true)String onlineShopCode,
+                                               @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 }

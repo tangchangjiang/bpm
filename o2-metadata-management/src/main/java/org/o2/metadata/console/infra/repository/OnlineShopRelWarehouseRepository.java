@@ -28,4 +28,6 @@ public interface OnlineShopRelWarehouseRepository extends BaseRepository<OnlineS
      * @return
      */
     List<OnlineShopRelWarehouseVO> queryAllShopRelWarehouseByTenantId(Long tenantId);
+
+    List<OnlineShopRelWarehouse> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
 }

@@ -35,4 +35,11 @@ public interface OnlineShopRelWarehouseMapper extends BaseMapper<OnlineShopRelWa
      * @return
      */
     List<OnlineShopRelWarehouseVO> queryAllShopRelWarehouseByTenantId(@Param("tenantId") Long tenantId);
+    /**
+     * 查询网店关联有效的仓库
+     * @param onlineShopCode 网店编码
+     * @param tenantId 租户ID
+     * @return 网店关联有效的仓库集合
+     */
+    List<OnlineShopRelWarehouse> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
 }

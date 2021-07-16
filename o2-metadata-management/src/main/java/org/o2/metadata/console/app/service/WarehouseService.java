@@ -195,5 +195,12 @@ public interface WarehouseService {
      * @param warehouseCode 仓库编码
      */
     void resetWarehousePickUpLimit(String warehouseCode, Long tenantId);
-
+    
+    /**
+     * 查询有效的仓库
+     * @param onlineShopCode 网店编码
+     * @param organizationId 租户ID
+     * @return
+     */
+    List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId);
 }

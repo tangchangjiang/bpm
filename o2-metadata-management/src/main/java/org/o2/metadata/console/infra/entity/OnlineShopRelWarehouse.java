@@ -102,6 +102,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @Transient
     private String warehouseCode;
 
+    @Transient
+    private String warehouseStatus;
+
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------

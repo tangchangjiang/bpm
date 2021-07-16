@@ -12,7 +12,7 @@ import java.util.List;
  **/
 public interface OnlineShopRelWarehouseDomainRepository {
     /**
-     * 查询网店关联库存
+     * 查询网店关联有效仓库
      * @param onlineShopCode 网店编码
      * @param tenantId 租户ID
      * @return list

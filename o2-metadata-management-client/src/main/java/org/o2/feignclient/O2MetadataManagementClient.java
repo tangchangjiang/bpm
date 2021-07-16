@@ -43,7 +43,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询系统仓库
+     * 从redis查询仓库
      *
      * @param warehouseCode 仓库编码
      * @param tenantId 租户ID
@@ -63,13 +63,24 @@ public class O2MetadataManagementClient {
         });
     }
     /**
-     * 从redis查询网店关联库存
+     * 从redis查询网店关联有效的仓库
      *  @param onlineShopeCode 网店编码
      * @param tenantId 租户ID
      * @return map<warehouseCode,OnlineShopRelWarehouseVO>
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+        });
+    }
+
+    /**
+     * 查询有效仓库
+     * @param onlineShopCode 网店编码
+     * @param tenantId 租户ID
+     * @return 集合
+     */
+    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode,Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
 

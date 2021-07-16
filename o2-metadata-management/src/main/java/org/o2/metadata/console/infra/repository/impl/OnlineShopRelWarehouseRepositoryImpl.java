@@ -37,4 +37,9 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
     public List<OnlineShopRelWarehouseVO> queryAllShopRelWarehouseByTenantId(Long tenantId) {
         return onlineShopRelWarehouseMapper.queryAllShopRelWarehouseByTenantId(tenantId);
     }
+
+    @Override
+    public List<OnlineShopRelWarehouse> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
+        return onlineShopRelWarehouseMapper.listOnlineShopRelWarehouses(onlineShopCode,tenantId);
+    }
 }

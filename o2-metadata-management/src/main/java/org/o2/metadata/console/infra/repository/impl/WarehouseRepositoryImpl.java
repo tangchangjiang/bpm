@@ -42,4 +42,9 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     public List<Warehouse> queryAllWarehouseByTenantId(Long tenantId) {
         return warehouseMapper.queryAllWarehouseByTenantId(tenantId);
     }
+
+    @Override
+    public List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId) {
+        return warehouseMapper.listActiveWarehouses(onlineShopCode,organizationId);
+    }
 }
