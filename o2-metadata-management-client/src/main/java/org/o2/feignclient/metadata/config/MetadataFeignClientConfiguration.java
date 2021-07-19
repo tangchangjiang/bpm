@@ -1,9 +1,11 @@
 package org.o2.feignclient.metadata.config;
 
 import org.o2.feignclient.O2MetadataManagementClient;
+import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
+import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.OnlineShopRelWarehouseRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
@@ -35,11 +37,22 @@ public class MetadataFeignClientConfiguration {
     public OnlineShopRelWarehouseRemoteServiceImpl onlineShopRelWarehouseRemoteServiceFallback() {
         return new OnlineShopRelWarehouseRemoteServiceImpl();
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FreightServiceRemoteServiceImpl freightServiceRemoteServiceFallback() {
+        return new FreightServiceRemoteServiceImpl();
+    }
+
     @Bean
     @ConditionalOnMissingBean
     O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                                           WarehouseRemoteService warehouseRemoteService,
-                                                          OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService) {
-        return new O2MetadataManagementClient(sysParameterRemoteService, warehouseRemoteService, onlineShopRelWarehouseRemoteService);
+                                                          OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
+                                                          FreightRemoteService freightRemoteService) {
+        return new O2MetadataManagementClient(sysParameterRemoteService,
+                   warehouseRemoteService,
+                   onlineShopRelWarehouseRemoteService,
+                   freightRemoteService);
     }
 }
