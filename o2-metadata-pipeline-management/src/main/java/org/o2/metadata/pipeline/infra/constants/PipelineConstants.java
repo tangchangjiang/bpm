@@ -12,12 +12,25 @@ public interface PipelineConstants {
 
 
     interface Redis {
+        /**
+         * 动作缓存key
+         * o2ext:library:${tenantId}:${serviceCode}:action:${actionId}
+         */
+        String PIPELINE_ACTION = "o2ext:library:%d:%s:action:%d";
+
+        /**
+         * 动作参数缓存key
+         * o2ext:library:${tenantId}:${serviceCode}:action_parameter:${actionId}
+         */
+        String ACTION_PARAMETER = "o2ext:library:%d:%s:action_parameter:%d";
+
         String PIPELINE_KEY = "o2pl:pipeline:%s";
         String PIPELINE_NODE_INFO = "info";
         String PIPELINE_VERSION = "pipeline_version";
         long EXPIRE_TIME_MINUTES = 3;
         ResourceScriptSource PIPELINE_CONF_UPDATE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/pipeline_conf_update.lua"));
+
 
     }
 
@@ -67,6 +80,13 @@ public interface PipelineConstants {
          * 下个节点行为和决策类型不可重复，成功保存N条数据
          */
         String PIPELINE_NODE_SUCCESS_NUM = "pipeline.node_success_num";
+    }
+    /**
+     * 库文件数据类型
+     */
+    interface RuleDataType {
+
+        String CODE = "O2EXT.RULE_DATA_TYPE";
     }
 
     /**
