@@ -60,12 +60,12 @@ public class O2MetadataClient {
         return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
     }
     /**
-     * 获取运费
+     * 获取模版
      *
      * @param freight 运费参数
      * @return 运费结果
      */
-    public BigDecimal getFreightAmount(FreightDTO freight){
-        return ResponseUtils.getResponse(freightRemoteService.getFreightAmount(freight), BigDecimal.class);
+    public BigDecimal getFreightTemplate(FreightDTO freight){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight), BigDecimal.class);
     }
 }
