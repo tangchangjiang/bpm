@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
+import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
 import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
@@ -65,7 +66,7 @@ public class O2MetadataClient {
      * @param freight 运费参数
      * @return 运费结果
      */
-    public BigDecimal getFreightTemplate(FreightDTO freight){
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight), BigDecimal.class);
+    public FreightInfoVO getFreightTemplate(FreightDTO freight){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight), FreightInfoVO.class);
     }
 }
