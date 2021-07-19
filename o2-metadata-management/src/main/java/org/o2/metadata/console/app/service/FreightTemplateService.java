@@ -1,5 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.FreightDTO;
+import org.o2.metadata.console.api.vo.FreightInfoVO;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
@@ -110,4 +112,10 @@ public interface FreightTemplateService {
      */
     void tranLov(List<FreightTemplate> freightTemplates,Long organizationId);
 
+    /**
+     * 内部方法 获取运费模版
+     * @param  freight  运费参数
+     * @return 模版信息
+     */
+    FreightInfoVO getFreightTemplate(FreightDTO freight);
 }

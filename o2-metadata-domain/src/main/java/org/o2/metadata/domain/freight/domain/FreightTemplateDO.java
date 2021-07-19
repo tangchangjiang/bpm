@@ -3,7 +3,6 @@ package org.o2.metadata.domain.freight.domain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
 
 /**
  * 运费模板
@@ -112,5 +111,21 @@ public class FreightTemplateDO {
 
     public void setValuationUomMeaning(String valuationUomMeaning) {
         this.valuationUomMeaning = valuationUomMeaning;
+    }
+
+    @Override
+    public String toString() {
+        return "FreightTemplateDO{" +
+                "templateId=" + templateId +
+                ", templateCode='" + templateCode + '\'' +
+                ", templateName='" + templateName + '\'' +
+                ", deliveryFreeFlag=" + deliveryFreeFlag +
+                ", valuationType='" + valuationType + '\'' +
+                ", valuationUom='" + valuationUom + '\'' +
+                ", dafaultFlag=" + dafaultFlag +
+                ", tenantId=" + tenantId +
+                ", valuationTypeMeaning='" + valuationTypeMeaning + '\'' +
+                ", valuationUomMeaning='" + valuationUomMeaning + '\'' +
+                '}';
     }
 }

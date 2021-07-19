@@ -16,9 +16,15 @@ public class FreightInfoDO {
 
     private  String headTemplate;
 
-    private  String cityTemplate;
+    private  String regionTemplate;
 
-    private  String defaultTemplate;
+    public String getRegionTemplate() {
+        return regionTemplate;
+    }
+
+    public void setRegionTemplate(String regionTemplate) {
+        this.regionTemplate = regionTemplate;
+    }
 
     public String getFreightTemplateCode() {
         return freightTemplateCode;
@@ -36,19 +42,12 @@ public class FreightInfoDO {
         this.headTemplate = headTemplate;
     }
 
-    public String getCityTemplate() {
-        return cityTemplate;
-    }
-
-    public void setCityTemplate(String cityTemplate) {
-        this.cityTemplate = cityTemplate;
-    }
-
-    public String getDefaultTemplate() {
-        return defaultTemplate;
-    }
-
-    public void setDefaultTemplate(String defaultTemplate) {
-        this.defaultTemplate = defaultTemplate;
+    @Override
+    public String toString() {
+        return "FreightInfoDO{" +
+                "freightTemplateCode='" + freightTemplateCode + '\'' +
+                ", headTemplate='" + headTemplate + '\'' +
+                ", regionTemplate='" + regionTemplate + '\'' +
+                '}';
     }
 }
