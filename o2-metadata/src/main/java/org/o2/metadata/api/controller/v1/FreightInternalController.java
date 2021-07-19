@@ -5,11 +5,11 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.dto.FreightDTO;
+import org.o2.metadata.api.vo.FreightInfoVO;
 import org.o2.metadata.app.service.FreightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 
 /**
  *
@@ -28,8 +28,8 @@ public class FreightInternalController {
 
     @ApiOperation(value = "从redis查询仓库")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/freight-amount")
-    public ResponseEntity<BigDecimal> getFreightAmount(@RequestBody FreightDTO freight) {
-        return Results.success(freightService.getFreightAmount(freight));
+    @PostMapping("/template")
+    public ResponseEntity<FreightInfoVO> getFreightTemplate(@RequestBody FreightDTO freight) {
+        return Results.success(freightService.getFreightTemplate(freight));
     }
 }

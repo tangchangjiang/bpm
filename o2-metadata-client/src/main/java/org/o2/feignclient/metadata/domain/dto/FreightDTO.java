@@ -2,7 +2,6 @@ package org.o2.feignclient.metadata.domain.dto;
 
 import lombok.Data;
 
-import java.util.List;
 
 /**
  *
@@ -13,13 +12,13 @@ import java.util.List;
 @Data
 public class FreightDTO {
     /**
-     * 地址信息
+     * 地址编码
      */
-    private AddressDTO address;
+    private String regionCode;
     /**
-     * 订单行
+     * 模版编码
      */
-    private List<OrderEntryDTO> orderEntryList;
+    private String templateCode;
     /**
      * 租户ID
      */
