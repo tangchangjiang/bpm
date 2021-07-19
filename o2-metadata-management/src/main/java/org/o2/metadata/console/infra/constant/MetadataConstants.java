@@ -225,7 +225,7 @@ public interface MetadataConstants {
          *     {region} - 地区信息对应模板
          *     DEFAULT  - 默认运费模板行
          */
-        String FREIGHT_DETAIL_KEY = "o2om:freight:%s:{%s}";
+        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
 
 
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
