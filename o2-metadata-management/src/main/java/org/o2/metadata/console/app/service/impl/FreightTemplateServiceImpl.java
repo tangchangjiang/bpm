@@ -8,18 +8,22 @@ import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.dto.FreightDTO;
+import org.o2.metadata.console.api.vo.FreightInfoVO;
 import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.convertor.FreightConvertor;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +43,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
     private final FreightTemplateDetailService freightTemplateDetailService;
     private final FreightCacheService freightCacheService;
+    private final FreightTemplateDomainRepository freightTemplateDomainRepository;
     @Autowired
     private LovSqlHandler lovSqlHandler;
 
@@ -46,11 +51,12 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
                                       final FreightTemplateDetailService freightTemplateDetailService,
                                       final FreightCacheService freightCacheService,
-                                      final RegionRepository regionRepository) {
+                                      final RegionRepository regionRepository, FreightTemplateDomainRepository freightTemplateDomainRepository) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
+        this.freightTemplateDomainRepository = freightTemplateDomainRepository;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -101,6 +107,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                 }
             });
         }
+    }
+
+    @Override
+    public FreightInfoVO getFreightTemplate(FreightDTO freight) {
+        return FreightConvertor.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {

@@ -3,9 +3,12 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.dto.FreightDTO;
+import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
 import org.o2.feignclient.metadata.domain.vo.OnlineShopRelWarehouseVO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
+import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
@@ -23,13 +26,16 @@ public class O2MetadataManagementClient {
     private final SysParameterRemoteService sysParameterRemoteService;
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
+    private final FreightRemoteService freightRemoteService;
+
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService) {
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
+        this.freightRemoteService = freightRemoteService;
     }
 
     /**
@@ -73,6 +79,15 @@ public class O2MetadataManagementClient {
         });
     }
 
+    /**
+     * 获取模版
+     *
+     * @param freight 运费参数
+     * @return 运费结果
+     */
+    public FreightInfoVO getFreightTemplate(FreightDTO freight){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight), FreightInfoVO.class);
+    }
     /**
      * 查询有效仓库
      * @param onlineShopCode 网店编码
