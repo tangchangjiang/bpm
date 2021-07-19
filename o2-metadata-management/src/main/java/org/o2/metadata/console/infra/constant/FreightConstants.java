@@ -18,29 +18,13 @@ public interface FreightConstants {
          * 运费模板头KEY
          */
         String FREIGHT_HEAD_KEY = "HEAD";
-        /**
-         * platformSku关联运费模板hash key: o2om:freight:skurel:${tenantId} <br />
-         * key: platformSkuCode <br />
-         * value: freightCode <br />
-         */
-        String SKU_REL_FREIGHT = "o2om:freight:skurel:{%s}";
 
         /**
-         * GetSkuRelFreight
-         *
-         * @param tenantId
-         * @return
-         */
-        static String getSkuRelFreightKey(Long tenantId) {
-            return String.format(SKU_REL_FREIGHT, tenantId);
-        }
-
-        /**
-         * 运费模板明细hash key: o2om:freight:{tenantId}:{freightCode} <br />
+         * 运费模板明细hash key: o2md:freight:{tenantId}:{freightCode} <br />
          * key: HEAD/region <br />
          * value: freight detail json <br />
          */
-        String FREIGHT_DETAIL_KEY = "o2om:freight:%s:{%s}";
+        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
 
         /**
          * GetFreightDefaultKey

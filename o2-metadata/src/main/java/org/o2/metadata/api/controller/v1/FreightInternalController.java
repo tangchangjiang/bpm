@@ -26,7 +26,7 @@ public class FreightInternalController {
         this.freightService = freightService;
     }
 
-    @ApiOperation(value = "从redis查询仓库")
+    @ApiOperation(value = "查询运费模版信息")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/template")
     public ResponseEntity<FreightInfoVO> getFreightTemplate(@RequestBody FreightDTO freight) {
