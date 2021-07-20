@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Objects;
+
 
 /**
  * 运费模板
@@ -34,5 +36,28 @@ public class FreightTemplateVO {
     private String valuationTypeMeaning;
     @ApiModelProperty(value = "计价单位描述")
     private String valuationUomMeaning;
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {return false;}
+        FreightTemplateVO that = (FreightTemplateVO) o;
+        return templateId.equals(that.templateId) &&
+                templateCode.equals(that.templateCode) &&
+                templateName.equals(that.templateName) &&
+                deliveryFreeFlag.equals(that.deliveryFreeFlag) &&
+                valuationType.equals(that.valuationType) &&
+                valuationUom.equals(that.valuationUom) &&
+                dafaultFlag.equals(that.dafaultFlag) &&
+                tenantId.equals(that.tenantId) &&
+                valuationTypeMeaning.equals(that.valuationTypeMeaning) &&
+                valuationUomMeaning.equals(that.valuationUomMeaning);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(templateId, templateCode, templateName, deliveryFreeFlag, valuationType, valuationUom, dafaultFlag, tenantId, valuationTypeMeaning, valuationUomMeaning);
+    }
 }
