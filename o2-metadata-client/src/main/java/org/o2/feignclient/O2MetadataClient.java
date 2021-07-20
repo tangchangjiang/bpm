@@ -66,7 +66,7 @@ public class O2MetadataClient {
      * @param freight 运费参数
      * @return 运费结果
      */
-    public FreightInfoVO getFreightTemplate(FreightDTO freight){
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight), FreightInfoVO.class);
+    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight,tenantId), FreightInfoVO.class);
     }
 }
