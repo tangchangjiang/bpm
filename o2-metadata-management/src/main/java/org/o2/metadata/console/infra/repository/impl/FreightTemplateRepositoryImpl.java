@@ -3,7 +3,7 @@ package org.o2.metadata.console.infra.repository.impl;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.infra.mapper.FreightTemplateMapper;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class FreightTemplateRepositoryImpl extends BaseRepositoryImpl<FreightTem
     }
 
     @Override
-    public List<FreightTemplateVO> listFreightTemplates(final FreightTemplate freightTemplate) {
+    public List<FreightTemplateManagementVO> listFreightTemplates(final FreightTemplate freightTemplate) {
         return freightTemplateMapper.listFreightTemplates(freightTemplate);
     }
 

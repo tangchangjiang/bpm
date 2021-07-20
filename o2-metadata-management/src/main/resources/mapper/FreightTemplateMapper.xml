@@ -20,7 +20,7 @@
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
-    <resultMap id="freightTemplateVOResultMap" type="org.o2.metadata.console.api.vo.FreightTemplateVO">
+    <resultMap id="freightTemplateVOResultMap" type="org.o2.metadata.console.api.vo.FreightTemplateManagementVO">
         <id column="template_id" property="templateId" jdbcType="DECIMAL"/>
         <result column="template_id" property="templateId" jdbcType="DECIMAL"/>
         <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
