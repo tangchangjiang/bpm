@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 public class FreightServiceRemoteServiceImpl implements FreightRemoteService {
 
     @Override
-    public ResponseEntity<String> getFreightTemplate(FreightDTO freight) {
-        log.error("Error getFreightTemplate, params[freight = {}]", freight);
+    public ResponseEntity<String> getFreightTemplate(FreightDTO freight,Long organizationId) {
+        log.error("Error getFreightTemplate, params[freight = {},organizationId= {}]", freight,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
