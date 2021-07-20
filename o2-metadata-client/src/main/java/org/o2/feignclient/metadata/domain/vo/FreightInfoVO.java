@@ -26,13 +26,11 @@ public class FreightInfoVO {
         if (this == o) {return true;}
         if (o == null || getClass() != o.getClass()) {return false;}
         FreightInfoVO that = (FreightInfoVO) o;
-        return freightTemplateCode.equals(that.freightTemplateCode) &&
-                headTemplate.equals(that.headTemplate) &&
-                regionTemplate.equals(that.regionTemplate);
+        return freightTemplateCode.equals(that.freightTemplateCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(freightTemplateCode, headTemplate, regionTemplate);
+        return Objects.hash(freightTemplateCode);
     }
 }
