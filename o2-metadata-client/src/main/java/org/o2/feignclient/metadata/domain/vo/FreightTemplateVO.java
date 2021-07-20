@@ -32,10 +32,6 @@ public class FreightTemplateVO {
     private Integer dafaultFlag;
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
-    @ApiModelProperty(value = "计价方式描述")
-    private String valuationTypeMeaning;
-    @ApiModelProperty(value = "计价单位描述")
-    private String valuationUomMeaning;
 
     @Override
     public boolean equals(Object o) {
@@ -51,13 +47,11 @@ public class FreightTemplateVO {
                 valuationType.equals(that.valuationType) &&
                 valuationUom.equals(that.valuationUom) &&
                 dafaultFlag.equals(that.dafaultFlag) &&
-                tenantId.equals(that.tenantId) &&
-                valuationTypeMeaning.equals(that.valuationTypeMeaning) &&
-                valuationUomMeaning.equals(that.valuationUomMeaning);
+                tenantId.equals(that.tenantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(templateId, templateCode, templateName, deliveryFreeFlag, valuationType, valuationUom, dafaultFlag, tenantId, valuationTypeMeaning, valuationUomMeaning);
+        return Objects.hash(templateId, templateCode, templateName, deliveryFreeFlag, valuationType, valuationUom, dafaultFlag, tenantId);
     }
 }
