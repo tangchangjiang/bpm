@@ -14,17 +14,9 @@ public class FreightInfoDO {
      */
     private  String freightTemplateCode;
 
-    private  String headTemplate;
+    private  FreightTemplateDO headTemplate;
 
-    private  String regionTemplate;
-
-    public String getRegionTemplate() {
-        return regionTemplate;
-    }
-
-    public void setRegionTemplate(String regionTemplate) {
-        this.regionTemplate = regionTemplate;
-    }
+    private  FreightTemplateDetailDO regionTemplate;
 
     public String getFreightTemplateCode() {
         return freightTemplateCode;
@@ -34,20 +26,19 @@ public class FreightInfoDO {
         this.freightTemplateCode = freightTemplateCode;
     }
 
-    public String getHeadTemplate() {
+    public FreightTemplateDO getHeadTemplate() {
         return headTemplate;
     }
 
-    public void setHeadTemplate(String headTemplate) {
+    public void setHeadTemplate(FreightTemplateDO headTemplate) {
         this.headTemplate = headTemplate;
     }
 
-    @Override
-    public String toString() {
-        return "FreightInfoDO{" +
-                "freightTemplateCode='" + freightTemplateCode + '\'' +
-                ", headTemplate='" + headTemplate + '\'' +
-                ", regionTemplate='" + regionTemplate + '\'' +
-                '}';
+    public FreightTemplateDetailDO getRegionTemplate() {
+        return regionTemplate;
+    }
+
+    public void setRegionTemplate(FreightTemplateDetailDO regionTemplate) {
+        this.regionTemplate = regionTemplate;
     }
 }
