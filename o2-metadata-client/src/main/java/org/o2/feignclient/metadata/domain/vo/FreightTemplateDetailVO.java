@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 运费模板
@@ -34,6 +35,27 @@ public class FreightTemplateDetailVO {
     private Long tenantId;
     @ApiModelProperty("目的地描述")
     private String regionName;
-    @ApiModelProperty(value = "运送方式含义")
-    private String transportTypeMeaning;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+        if (o == null || getClass() != o.getClass()) {return false;}
+        FreightTemplateDetailVO that = (FreightTemplateDetailVO) o;
+        return templateDetailId.equals(that.templateDetailId) &&
+                transportTypeCode.equals(that.transportTypeCode) &&
+                regionId.equals(that.regionId) &&
+                firstPieceWeight.equals(that.firstPieceWeight) &&
+                firstPrice.equals(that.firstPrice) &&
+                nextPieceWeight.equals(that.nextPieceWeight) &&
+                nextPrice.equals(that.nextPrice) &&
+                defaultFlag.equals(that.defaultFlag) &&
+                templateId.equals(that.templateId) &&
+                tenantId.equals(that.tenantId) &&
+                regionName.equals(that.regionName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(templateDetailId, transportTypeCode, regionId, firstPieceWeight, firstPrice, nextPieceWeight, nextPrice, defaultFlag, templateId, tenantId, regionName);
+    }
 }
