@@ -48,7 +48,7 @@
         p.LAST_UPDATED_BY,
         p.LAST_UPDATE_DATE
         FROM
-        o2ext_pipeline p
+        o2md_pipeline p
         <where>
             p.tenant_id = #{tenantId}
             <if test="id != null">

@@ -48,7 +48,7 @@
                o2epa.label,
                o2epa.display_type_code,
                o2epa.status_flag
-        FROM o2ext_pipeline_action o2epa
+        FROM o2md_pipeline_action o2epa
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -94,7 +94,7 @@
         o2eap.parameter_code,
         o2eap.parameter_name,
         o2eap.data_type_code
-        FROM o2ext_pipeline_action o2epa LEFT JOIN o2ext_action_parameter o2eap ON o2epa.id = o2eap.action_id
+        FROM o2md_pipeline_action o2epa LEFT JOIN o2md_action_parameter o2eap ON o2epa.id = o2eap.action_id
         <where>
             AND o2epa.tenant_id = #{tenantId}
             <if test="code != null and code !='' ">
