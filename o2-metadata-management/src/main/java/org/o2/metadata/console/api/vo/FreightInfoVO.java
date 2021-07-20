@@ -15,7 +15,7 @@ public class FreightInfoVO {
      */
     private  String freightTemplateCode;
 
-    private  String headTemplate;
+    private  FreightTemplateVO headTemplate;
 
-    private  String regionTemplate;
+    private  FreightTemplateDetailVO regionTemplate;
 }

@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface FreightTemplateMapper extends BaseMapper<FreightTemplate> {
      * @param freightTemplate 查询条件
      * @return 运费模板视图列表
      */
-    List<FreightTemplateVO> listFreightTemplates(FreightTemplate freightTemplate);
+    List<FreightTemplateManagementVO> listFreightTemplates(FreightTemplate freightTemplate);
 
     /**
      * 根据运费模板ID，查询运费模板

@@ -22,7 +22,7 @@ import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,21 +62,21 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
+    public FreightTemplateManagementVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
         final FreightTemplate freightTemplate = freightTemplateRepository.selectyTemplateId(templateId);
         List<FreightTemplate> list = new ArrayList<>();
         list.add(freightTemplate);
         this.tranLov(list,organizationId);
-        final FreightTemplateVO freightTemplateVO = new FreightTemplateVO(freightTemplate);
+        final FreightTemplateManagementVO freightTemplateManagementVO = new FreightTemplateManagementVO(freightTemplate);
 
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
-        freightTemplateVO.setDefaultFreightTemplateDetails(defaultDetailList);
+        freightTemplateManagementVO.setDefaultFreightTemplateDetails(defaultDetailList);
         final List<FreightTemplateDetail> regionDetailList = freightTemplateDetailRepository.queryRegionFreightTemplateDetail(templateId);
-        freightTemplateVO.setRegionFreightTemplateDetails(regionDetailList);
-        final List<FreightTemplateDetail> regionDetailDisplayList  =freightTemplateVO.exchangeRegionDetailTemplateList2Displayist(freightTemplateVO.getRegionFreightTemplateDetails());
-        freightTemplateVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
+        freightTemplateManagementVO.setRegionFreightTemplateDetails(regionDetailList);
+        final List<FreightTemplateDetail> regionDetailDisplayList  = freightTemplateManagementVO.exchangeRegionDetailTemplateList2Displayist(freightTemplateManagementVO.getRegionFreightTemplateDetails());
+        freightTemplateManagementVO.setRegionFreightDetailDisplayList(regionDetailDisplayList);
 
-        return freightTemplateVO;
+        return freightTemplateManagementVO;
     }
 
     @Override
@@ -131,20 +131,20 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         @Override
     @Transactional(rollbackFor = Exception.class)
-    public FreightTemplateVO createTemplateAndDetails(final FreightTemplateVO freightTemplateVO) {
-        final List<FreightTemplate> list = Arrays.asList(freightTemplateVO);
-        final List<FreightTemplateDetail> defaultDetailList = freightTemplateVO.getDefaultFreightTemplateDetails();
+    public FreightTemplateManagementVO createTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
+        final List<FreightTemplate> list = Arrays.asList(freightTemplateManagementVO);
+        final List<FreightTemplateDetail> defaultDetailList = freightTemplateManagementVO.getDefaultFreightTemplateDetails();
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
-       if (!CollectionUtils.isEmpty(freightTemplateVO.getRegionFreightDetailDisplayList())){
-                final List<FreightTemplateDetail> regionDetailListInput =     freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
-                freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
+       if (!CollectionUtils.isEmpty(freightTemplateManagementVO.getRegionFreightDetailDisplayList())){
+                final List<FreightTemplateDetail> regionDetailListInput =     freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(freightTemplateManagementVO.getRegionFreightDetailDisplayList());
+                freightTemplateManagementVO.setRegionFreightTemplateDetails(regionDetailListInput);
        }
-        final List<FreightTemplateDetail> regionDetailList = freightTemplateVO.getRegionFreightTemplateDetails();
+        final List<FreightTemplateDetail> regionDetailList = freightTemplateManagementVO.getRegionFreightTemplateDetails();
 
         checkData(list, false);
 
         final FreightTemplate result = batchInsert(list).get(0);
-        final FreightTemplateVO resultVO = new FreightTemplateVO(result);
+        final FreightTemplateManagementVO resultVO = new FreightTemplateManagementVO(result);
 
         return  insertTemplateDetails(resultVO,defaultDetailList,regionDetailList);
 
@@ -152,20 +152,20 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FreightTemplateVO updateTemplateAndDetails(final FreightTemplateVO freightTemplateVO) {
-        final List<FreightTemplate> list = Arrays.asList(freightTemplateVO);
+    public FreightTemplateManagementVO updateTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
+        final List<FreightTemplate> list = Arrays.asList(freightTemplateManagementVO);
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
-        if (!CollectionUtils.isEmpty(freightTemplateVO.getRegionFreightDetailDisplayList())){
-            final List<FreightTemplateDetail> regionDetailListInput  =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(freightTemplateVO.getRegionFreightDetailDisplayList());
-            freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
+        if (!CollectionUtils.isEmpty(freightTemplateManagementVO.getRegionFreightDetailDisplayList())){
+            final List<FreightTemplateDetail> regionDetailListInput  =   freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(freightTemplateManagementVO.getRegionFreightDetailDisplayList());
+            freightTemplateManagementVO.setRegionFreightTemplateDetails(regionDetailListInput);
         }
-        final List<FreightTemplateDetail> defaultDetailList = freightTemplateVO.getDefaultFreightTemplateDetails();
-        final List<FreightTemplateDetail> regionDetailList = freightTemplateVO.getRegionFreightTemplateDetails();
+        final List<FreightTemplateDetail> defaultDetailList = freightTemplateManagementVO.getDefaultFreightTemplateDetails();
+        final List<FreightTemplateDetail> regionDetailList = freightTemplateManagementVO.getRegionFreightTemplateDetails();
 
         checkData(list, true);
 
         final FreightTemplate result = batchMerge(list).get(0);
-        FreightTemplateVO resultVO = new FreightTemplateVO(result);
+        FreightTemplateManagementVO resultVO = new FreightTemplateManagementVO(result);
 
         // 先删除 再插入
         final List<FreightTemplateDetail> oldList = freightTemplateDetailRepository.selectByCondition(Condition.builder(FreightTemplateDetail.class)
@@ -185,7 +185,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
 
     @Transactional(rollbackFor = Exception.class)
-    public FreightTemplateVO insertTemplateDetails(  FreightTemplateVO resultVO ,  final List<FreightTemplateDetail> defaultDetailList, final List<FreightTemplateDetail> regionDetailList) {
+    public FreightTemplateManagementVO insertTemplateDetails(FreightTemplateManagementVO resultVO , final List<FreightTemplateDetail> defaultDetailList, final List<FreightTemplateDetail> regionDetailList) {
 
         if (CollectionUtils.isNotEmpty(defaultDetailList)) {
             final List<FreightTemplateDetail> savedDefaultDetailList = setTemplateIdAndSave(defaultDetailList, resultVO.getTemplateId(), false);
@@ -325,21 +325,21 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public void refreshCache(Long templateId) {
-        FreightTemplateVO freightTemplateVO = queryTemplateAndDetails(templateId, null);
+        FreightTemplateManagementVO freightTemplateManagementVO = queryTemplateAndDetails(templateId, null);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
-        if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
-            list.addAll(freightTemplateVO.getDefaultFreightTemplateDetails());
+        if (freightTemplateManagementVO.getDefaultFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateManagementVO.getDefaultFreightTemplateDetails());
         }
-        if (freightTemplateVO.getRegionFreightTemplateDetails() != null) {
-            list.addAll(freightTemplateVO.getRegionFreightTemplateDetails());
+        if (freightTemplateManagementVO.getRegionFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateManagementVO.getRegionFreightTemplateDetails());
         }
 
         // 清除缓存
-        deleteFreightCache(freightTemplateVO);
+        deleteFreightCache(freightTemplateManagementVO);
 
         // 更新缓存
-        saveFreightCache(freightTemplateVO);
+        saveFreightCache(freightTemplateManagementVO);
     }
 
     @Override
@@ -443,7 +443,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      *
      * @param resultVO
      */
-    private void saveFreightCache(FreightTemplateVO resultVO) {
+    private void saveFreightCache(FreightTemplateManagementVO resultVO) {
         FreightTemplateBO freightTemplate = convertToFreightTemplate(resultVO);
         freightCacheService.saveFreight(freightTemplate);
     }
@@ -478,7 +478,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightTemplateVO querydefaultTemplate(Long   organizationId) {
+    public FreightTemplateManagementVO querydefaultTemplate(Long   organizationId) {
         // 查询默认模板
         final List<FreightTemplate> list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID,   organizationId)

@@ -11,7 +11,7 @@ import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,18 +99,18 @@ public abstract class AbstractFreightCacheOperation {
     /**
      * 将运费模板实体列表(包含运费模板明细信息)，转换为运费模板缓存操作对象列表
      *
-     * @param freightTemplateVO 运费模板实体列表(包含运费模板明细信息)
+     * @param freightTemplateManagementVO 运费模板实体列表(包含运费模板明细信息)
      * @return 运费模板缓存操作对象列表
      */
-    protected FreightTemplateBO convertToFreightTemplate(FreightTemplateVO freightTemplateVO) {
-        FreightBO freight = convertToFreight(freightTemplateVO);
+    protected FreightTemplateBO convertToFreightTemplate(FreightTemplateManagementVO freightTemplateManagementVO) {
+        FreightBO freight = convertToFreight(freightTemplateManagementVO);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
-        if (freightTemplateVO.getDefaultFreightTemplateDetails() != null) {
-            list.addAll(freightTemplateVO.getDefaultFreightTemplateDetails());
+        if (freightTemplateManagementVO.getDefaultFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateManagementVO.getDefaultFreightTemplateDetails());
         }
-        if (freightTemplateVO.getRegionFreightTemplateDetails() != null) {
-            list.addAll(freightTemplateVO.getRegionFreightTemplateDetails());
+        if (freightTemplateManagementVO.getRegionFreightTemplateDetails() != null) {
+            list.addAll(freightTemplateManagementVO.getRegionFreightTemplateDetails());
         }
         List<FreightDetailBO> freightDetailList = convertToFreightDetail(list);
 

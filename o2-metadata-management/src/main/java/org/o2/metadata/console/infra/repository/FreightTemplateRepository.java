@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface FreightTemplateRepository extends BaseRepository<FreightTemplat
      * @param freightTemplate 运费模板查询条件
      * @return 运费模板列表
      */
-    List<FreightTemplateVO> listFreightTemplates(final FreightTemplate freightTemplate);
+    List<FreightTemplateManagementVO> listFreightTemplates(final FreightTemplate freightTemplate);
 
     /**
      * 通过运费模板ID，查询运费模板
