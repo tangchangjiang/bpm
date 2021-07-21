@@ -207,7 +207,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList) {
+    public Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList) {
         SecurityTokenHelper.validToken(freightTemplateList);
         checkProductRelate(freightTemplateList);
 

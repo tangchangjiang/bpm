@@ -131,7 +131,7 @@ public class PipelineController extends BaseController {
         if (blankFilename) {
             return new ResponseEntity<>(getExceptionResponse(PipelineConstants.Message.PIPELINE_FILENAME_IS_NULL), HttpStatus.OK);
         }
-        pipelineService.savePipelineDTOS(multipartFiles);
+        pipelineService.savePipeline(multipartFiles);
 
         return Results.success(MessageAccessor.getMessage(PipelineConstants.Message.PIPELINE_UPLOAD_SUCCESS).desc());
     }

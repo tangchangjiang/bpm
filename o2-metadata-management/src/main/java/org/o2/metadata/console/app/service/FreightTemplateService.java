@@ -45,7 +45,7 @@ public interface FreightTemplateService {
      * @param freightTemplateList 待删除的运费模板列表
      * @return boolean  是否删除成功
      */
-    boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
+    Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
 
     /**
      * 新增运费模板
