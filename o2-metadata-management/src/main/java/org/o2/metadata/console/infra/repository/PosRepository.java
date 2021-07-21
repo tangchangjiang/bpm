@@ -56,5 +56,10 @@ public interface PosRepository extends BaseRepository<Pos> {
      */
     Pos getPosByCode(Long tenantId, String posCode);
 
+    /**
+     * 多条件查询服务点
+     * @param pos 服务点
+     * @return  list
+     */
     List<Pos> listPosByCondition(Pos pos);
 }

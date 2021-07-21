@@ -32,6 +32,7 @@ public interface RegionRelPosMapper extends BaseMapper<RegionRelPos> {
 
     /**
      * 通过地区ID以及网店ID获取未绑定服务点
+     * @param regionRelPos 地区关联服务点
      * @return 服务点
      */
     List<Pos> selectUnbindPosByRegionId(RegionRelPos regionRelPos);

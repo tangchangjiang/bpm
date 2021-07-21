@@ -28,7 +28,7 @@ public abstract class AbstractFreightCacheOperation {
 
     protected RegionRepository regionRepository;
 
-    private FreightTemplateRepository freightTemplateRepository;
+    protected FreightTemplateRepository freightTemplateRepository;
 
     protected AbstractFreightCacheOperation() {
     }

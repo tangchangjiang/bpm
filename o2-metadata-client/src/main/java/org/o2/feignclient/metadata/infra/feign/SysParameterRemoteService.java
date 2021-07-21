@@ -35,7 +35,7 @@ public interface SysParameterRemoteService {
      * 批量从redis查询系统参数
      * @param paramCodes 编码集合
      * @param organizationId 租户ID
-     * @return
+     * @return ResponseEntity<String>
      */
     @GetMapping("/{organizationId}/sysParameter-internal/paramCodes")
     ResponseEntity<String> listSystemParameters(@RequestParam List<String> paramCodes,@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);

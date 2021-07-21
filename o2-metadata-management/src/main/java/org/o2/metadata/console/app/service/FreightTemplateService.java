@@ -99,7 +99,7 @@ public interface FreightTemplateService {
     /**
      * 根据主键查询运费模板和运费模板明细
      *
-     * @param Long organizationId 租户ID
+     * @param organizationId organizationId 租户ID
      * @return 运费模板和运费模板明细
      */
     FreightTemplateManagementVO querydefaultTemplate(final Long organizationId);

@@ -15,7 +15,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 主键查询
-     * @param tenantId
+     * @param tenantId 租户ID
      * @param posId 服务点 id
      * @return 带详细地址和接派单时间的仓库信息
      */
@@ -25,9 +25,9 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * 查询未与网店关联的仓库
      *
      * @param onlineShopId 网店 id
-     * @param warehouseCode
-     * @param warehouseName
-     * @param tenantId
+     * @param warehouseCode 仓库编码
+     * @param warehouseName 仓库名称
+     * @param tenantId 租户ID
      * @return 仓库列表
      */
     List<Warehouse> listUnbindWarehouseList(@Param(value = "onlineShopId") Long onlineShopId,
@@ -35,6 +35,11 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
                                             @Param(value = "warehouseName") String warehouseName,
                                             @Param(value = "tenantId") Long tenantId);
 
+    /**
+     *  条件查询仓促
+     * @param warehouse 仓库
+     * @return list
+     */
     List<Warehouse> listWarehouseByCondition(Warehouse warehouse);
 
 
