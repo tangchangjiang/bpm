@@ -15,14 +15,37 @@ import java.util.Set;
  **/
 
 public interface WarehouseService {
-
+    /**
+     * 插入仓库信息
+     * @param warehouse 仓库
+     * @param tenantId 租户ID
+     * @return int
+     */
     Integer create(Long tenantId, Warehouse warehouse);
-
+    
+    /**
+     * 批量插入仓库信息
+     * @param warehouses 仓库集合
+     * @param tenantId 租户ID
+     * @return list
+     */
     List<Warehouse> createBatch(Long tenantId, List<Warehouse> warehouses);
-
+    
+    /**
+     * 更新仓库信息
+     * @param warehouse 仓库信息
+     * @return  int
+     */
     Integer update(Warehouse warehouse);
 
+    /**
+     * 批量更新仓库
+     * @param warehouses 仓库集合
+     * @param tenantId 租户ID
+     * @return  list
+     */
     List<Warehouse> updateBatch(Long tenantId, List<Warehouse> warehouses);
+
     /**
      * 批量操作仓库
      * @date 2020-05-22
@@ -36,7 +59,7 @@ public interface WarehouseService {
      * 获取仓库信息
      * @param  warehouseCode 仓库编码
      * @param  tenantId 租户ID
-     * @return
+     * @return 仓库
      */
     WarehouseVO getWarehouse(String warehouseCode,Long tenantId);
 
@@ -52,9 +75,9 @@ public interface WarehouseService {
 
     /**
      * 更新
-     * @param warehouseCode
-     * @param hashMap
-     * @param tenantId
+     * @param warehouseCode 仓库编码
+     * @param hashMap map
+     * @param tenantId 租户id
      */
     void updateWarehouse (String warehouseCode,Map<String,Object> hashMap, Long tenantId);
 
@@ -200,7 +223,7 @@ public interface WarehouseService {
      * 查询有效的仓库
      * @param onlineShopCode 网店编码
      * @param organizationId 租户ID
-     * @return
+     * @return list
      */
     List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId);
 }

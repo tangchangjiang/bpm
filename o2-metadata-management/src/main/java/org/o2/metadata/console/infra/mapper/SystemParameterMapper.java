@@ -12,7 +12,12 @@ import java.util.List;
  * @author hongyun.wang01@hand-china.com 2020-02-13
  */
 public interface SystemParameterMapper extends BaseMapper<SystemParameter> {
-
+    /**
+     * 批量查询系统参数
+     * @param systemParameter 系统参数
+     * @param tenantId 租户ID
+     * @return list
+     */
     List<SystemParameter> fuzzyQuery(@Param("systemParameter") SystemParameter systemParameter,
                                      @Param("tenantId") Long tenantId);
 

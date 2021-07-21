@@ -45,7 +45,7 @@ public interface FreightTemplateService {
      * @param freightTemplateList 待删除的运费模板列表
      * @return boolean  是否删除成功
      */
-    boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
+    Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
 
     /**
      * 新增运费模板
@@ -99,7 +99,7 @@ public interface FreightTemplateService {
     /**
      * 根据主键查询运费模板和运费模板明细
      *
-     * @param Long organizationId 租户ID
+     * @param organizationId organizationId 租户ID
      * @return 运费模板和运费模板明细
      */
     FreightTemplateManagementVO querydefaultTemplate(final Long organizationId);

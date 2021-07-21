@@ -26,6 +26,7 @@ public interface FreightRemoteService {
      * 获取运费
      *
      * @param freight 运费参数
+     * @param organizationId 租户ID
      * @return 运费
      */
     @PostMapping("/{organizationId}/freight-internal/template")

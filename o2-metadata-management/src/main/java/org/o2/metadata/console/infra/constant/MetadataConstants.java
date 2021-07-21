@@ -194,6 +194,10 @@ public interface MetadataConstants {
          */
         DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+        /**
+         * 时间格式
+         * @return DateFormat
+         */
         static DateFormat dateFormat() {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }

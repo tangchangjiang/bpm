@@ -5,7 +5,6 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.mapper.SystemParameterMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +17,11 @@ import java.util.List;
 @Repository
 public class SystemParameterRepositoryImpl extends BaseRepositoryImpl<SystemParameter> implements SystemParameterRepository {
 
-    @Autowired
-    private SystemParameterMapper systemParameterMapper;
+    private final SystemParameterMapper systemParameterMapper;
+
+    public SystemParameterRepositoryImpl(SystemParameterMapper systemParameterMapper) {
+        this.systemParameterMapper = systemParameterMapper;
+    }
 
     @Override
     public List<SystemParameter> fuzzyQuery(SystemParameter systemParameter, Long tenantId) {

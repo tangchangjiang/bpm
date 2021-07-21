@@ -18,8 +18,9 @@ public interface SystemParameterDomainService {
      * @return  系统参数
      */
     SystemParameterDO getSystemParameter(String paramCode, Long tenantId);
+
     /**
-     * 获取系统参数
+     * 批量获取系统参数
      * @param paramCodes 编码集合
      * @param tenantId 租户ID
      * @return 集合

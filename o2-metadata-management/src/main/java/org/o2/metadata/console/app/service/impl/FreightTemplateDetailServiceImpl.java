@@ -69,26 +69,6 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     @Override
-    public List<FreightTemplateDetail> defaultBatchMerge(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightTemplateDetail> freightTemplateDetails = batchMerge(freightTemplateDetailList, false);
-
-        //更新缓存
-        saveFreightDetailCache(freightTemplateDetails);
-
-        return freightTemplateDetails;
-    }
-
-    @Override
-    public List<FreightTemplateDetail> regionBatchMerge(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightTemplateDetail> freightTemplateDetails = batchMerge(freightTemplateDetailList, true);
-
-        //更新缓存
-        saveFreightDetailCache(freightTemplateDetails);
-
-        return freightTemplateDetails;
-    }
-
-    @Override
     public void batchDelete(List<FreightTemplateDetail> regionFreightDetailDisplayLis) {
 
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！

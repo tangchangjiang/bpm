@@ -57,7 +57,13 @@ public interface OnlineShopRelWarehouseService {
      * @return 更新后的列表
      */
     List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId);
-
+    /**
+     * 更新网店
+     * @param onlineShopId 网店ID
+     * @param onlineShopCode 网店编码
+     * @param activeFlag 是否有效
+     * @param tenantId 租户ID
+     */
     void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
     /**
      * 查询网店关联有效仓库

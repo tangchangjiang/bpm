@@ -19,6 +19,7 @@ public interface SystemParameterDomainRepository {
      * @return 集合
      */
     List<SystemParameterDO> listSystemParameters(List<String> paramCodeList, Long tenantId);
+
     /**
      * 获取系统参数
      * @param paramCode 编码

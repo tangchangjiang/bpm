@@ -45,7 +45,7 @@ public class OnlineShopController extends BaseController {
 
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopService onlineShopService;
-    @Autowired
+
     public OnlineShopController(OnlineShopRepository onlineShopRepository,OnlineShopService onlineShopService) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopService = onlineShopService;

@@ -31,10 +31,13 @@ import java.util.Collections;
 @Api(tags = EnableMetadataConsole.REGION)
 public class RegionController extends BaseController {
 
-    @Autowired
-    private RegionService regionService;
-    @Autowired
-    private RegionRepository regionRepository;
+    private final RegionService regionService;
+    private final RegionRepository regionRepository;
+
+    public RegionController(RegionService regionService, RegionRepository regionRepository) {
+        this.regionService = regionService;
+        this.regionRepository = regionRepository;
+    }
 
     @ApiOperation("查询国家下地区定义，使用树状结构返回")
     @GetMapping

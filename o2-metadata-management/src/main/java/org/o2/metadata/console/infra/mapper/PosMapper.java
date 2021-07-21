@@ -46,6 +46,11 @@ public interface PosMapper extends BaseMapper<Pos> {
      */
     Pos getPosWithCarrierNameById(Long tenantId, Long posId);
 
+    /**
+     * 多条件查询服务点
+     * @param pos 服务点
+     * @return  list
+     */
     List<Pos> listPosByCondition(Pos pos);
 
 }

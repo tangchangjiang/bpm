@@ -17,7 +17,6 @@ public class AcrossSchemaRepositoryImpl implements AcrossSchemaRepository {
 
     private AcrossSchemaMapper acrossSchemaMapper;
 
-    @Autowired
     public AcrossSchemaRepositoryImpl(AcrossSchemaMapper acrossSchemaMapper) {
         this.acrossSchemaMapper = acrossSchemaMapper;
     }

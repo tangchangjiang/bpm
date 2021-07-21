@@ -41,4 +41,13 @@ public class FreightInfoDO {
     public void setRegionTemplate(FreightTemplateDetailDO regionTemplate) {
         this.regionTemplate = regionTemplate;
     }
+
+    @Override
+    public String toString() {
+        return "FreightInfoDO{" +
+                "freightTemplateCode='" + freightTemplateCode + '\'' +
+                ", headTemplate=" + headTemplate +
+                ", regionTemplate=" + regionTemplate +
+                '}';
+    }
 }

@@ -31,13 +31,17 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/v1/{organizationId}/catalog-versions")
 public class CatalogVersionController extends BaseController {
 
-    @Autowired
-    private CatalogVersionRepository catalogVersionRepository;
-    @Autowired
-    private CatalogRepository catalogRepository;
+    private final CatalogVersionRepository catalogVersionRepository;
+    private final CatalogRepository catalogRepository;
+    private final CatalogVersionService catalogVersionService;
 
-    @Autowired
-    private CatalogVersionService catalogVersionService;
+    public CatalogVersionController(CatalogVersionRepository catalogVersionRepository,
+                                    CatalogRepository catalogRepository,
+                                    CatalogVersionService catalogVersionService) {
+        this.catalogVersionRepository = catalogVersionRepository;
+        this.catalogRepository = catalogRepository;
+        this.catalogVersionService = catalogVersionService;
+    }
 
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)

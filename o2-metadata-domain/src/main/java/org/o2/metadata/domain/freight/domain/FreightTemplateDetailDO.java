@@ -128,4 +128,22 @@ public class FreightTemplateDetailDO {
     public void setTransportTypeMeaning(String transportTypeMeaning) {
         this.transportTypeMeaning = transportTypeMeaning;
     }
+
+    @Override
+    public String toString() {
+        return "FreightTemplateDetailDO{" +
+                "templateDetailId=" + templateDetailId +
+                ", transportTypeCode='" + transportTypeCode + '\'' +
+                ", regionId=" + regionId +
+                ", firstPieceWeight=" + firstPieceWeight +
+                ", firstPrice=" + firstPrice +
+                ", nextPieceWeight=" + nextPieceWeight +
+                ", nextPrice=" + nextPrice +
+                ", defaultFlag=" + defaultFlag +
+                ", templateId=" + templateId +
+                ", tenantId=" + tenantId +
+                ", regionName='" + regionName + '\'' +
+                ", transportTypeMeaning='" + transportTypeMeaning + '\'' +
+                '}';
+    }
 }

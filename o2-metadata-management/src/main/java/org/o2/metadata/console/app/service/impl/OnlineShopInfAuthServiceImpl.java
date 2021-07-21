@@ -4,7 +4,6 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
 import org.o2.metadata.console.infra.repository.OnlineShopInfAuthRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +16,11 @@ import java.util.List;
 @Service
 public class OnlineShopInfAuthServiceImpl implements OnlineShopInfAuthService {
 
-    @Autowired
     private OnlineShopInfAuthRepository onlineShopInfAuthRepository;
+
+    public OnlineShopInfAuthServiceImpl(OnlineShopInfAuthRepository onlineShopInfAuthRepository) {
+        this.onlineShopInfAuthRepository = onlineShopInfAuthRepository;
+    }
 
     @Override
     public OnlineShopInfAuth updateOrInsert(final OnlineShopInfAuth onlineShopInfAuth) {

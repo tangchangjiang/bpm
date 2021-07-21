@@ -22,9 +22,7 @@ import java.util.*;
 @Component("freightCacheService")
 public class FreightCacheServiceImpl implements FreightCacheService {
     private final static Logger LOG = LoggerFactory.getLogger(FreightCacheServiceImpl.class);
-
     private final static String DEFAULT_REGION = "null";
-
     private RedisCacheClient redisCacheClient;
 
     public FreightCacheServiceImpl(final RedisCacheClient redisCacheClient) {
@@ -154,9 +152,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
                                                final Map<String, String> freightDetailMap) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(MetadataConstants.FreightCache.SAVE_FREIGHT_DETAIL_CACHE_LUA);
-      //  String freightHeadMapStr = ObjectUtils.isEmpty(freightHeadMap)? FastJsonHelper.objectToString(freightHeadMap) :"" ;
-        //   LOG.info("freightHeadlMap json = {}", freightHeadMapStr);
-        LOG.info("freightDetailMap json = {}", FastJsonHelper.objectToString(freightDetailMap));
+        LOG.info("freightDetailMap json {}", FastJsonHelper.objectToString(freightDetailMap));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(freightDetailMap));
     }
 

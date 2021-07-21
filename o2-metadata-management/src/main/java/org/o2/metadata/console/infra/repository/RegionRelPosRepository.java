@@ -39,6 +39,7 @@ public interface RegionRelPosRepository extends BaseRepository<RegionRelPos> {
     /**
      * 通过网店ID以及地区ID查未关联服务点
      * @param pageRequest 分页请求
+     * @param regionRelPos 地区关联服务点
      * @return 服务点数据
      */
     Page<Pos> listUnbindPos(PageRequest pageRequest, RegionRelPos regionRelPos);

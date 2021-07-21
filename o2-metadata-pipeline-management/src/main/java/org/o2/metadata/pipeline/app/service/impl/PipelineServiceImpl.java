@@ -84,7 +84,7 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public void savePipelineDTOS(List<MultipartFile> multipartFiles) {
+    public void savePipeline(List<MultipartFile> multipartFiles) {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         Pipeline pipeline;
         final BeanCopier pipelineCopier = BeanCopier.create(PipelineDTO.class, Pipeline.class, false);
@@ -101,10 +101,10 @@ public class PipelineServiceImpl implements PipelineService {
                 if (null == pipeline.getId()) {
                     throw new CommonException(PipelineConstants.ErrorCode.PIPELINE_ALREADY_EXISTS, pipeline.getCode());
                 }
-                Map<String, PipelineNodeDTO> pipelineDTONodes = pipelineDTO.getPipelineNodes();
-                List<PipelineNode> pipelineNodes = new ArrayList<>(pipelineDTONodes.size());
+                Map<String, PipelineNodeDTO> pipelineDtoNodes = pipelineDTO.getPipelineNodes();
+                List<PipelineNode> pipelineNodes = new ArrayList<>(pipelineDtoNodes.size());
                 Pipeline finalPipeline = pipeline;
-                pipelineDTONodes.forEach((key, pipelineNodeDTO) -> {
+                pipelineDtoNodes.forEach((key, pipelineNodeDTO) -> {
                     PipelineNode pipelineNode = new PipelineNode();
                     pipelineNodeCopier.copy(pipelineNodeDTO, pipelineNode, null);
                     pipelineNode.setPipelineId(finalPipeline.getId());

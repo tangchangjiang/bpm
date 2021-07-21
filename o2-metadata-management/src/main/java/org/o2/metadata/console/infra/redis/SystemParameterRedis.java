@@ -43,10 +43,9 @@ public interface SystemParameterRedis {
     void updateToRedis(SystemParameter systemParameter,Long tenantId);
 
     /**
-     *
-     * @date 2021-07-12
-     * @param
-     * @return 
+     * 触发全量网店库存计算
+     * @param paramCode 系统参数编码
+     * @param tenantId 租户ID
      */
     void extraOperate(String paramCode, Long tenantId);
 

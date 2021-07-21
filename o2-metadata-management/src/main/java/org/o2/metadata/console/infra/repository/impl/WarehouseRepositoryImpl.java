@@ -23,11 +23,6 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
         this.warehouseMapper = warehouseMapper;
     }
 
-//    @Override
-//    public Warehouse getWarehouseWithCarrierNameById(Long tenantId, Long posId) {
-//        return warehouseMapper.getWarehouseWithCarrierNameById(tenantId,posId);
-//    }
-
     @Override
     public List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId) {
         return warehouseMapper.listUnbindWarehouseList(shopId, warehouseCode, warehouseName, tenantId);
