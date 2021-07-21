@@ -17,7 +17,7 @@ import java.util.Map;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @FeignClient(
-        value = O2Service.metadata.NAME,
+        value = O2Service.Metadata.NAME,
         path = "/v1",
         fallback = WarehouseRemoteServiceImpl.class
 )

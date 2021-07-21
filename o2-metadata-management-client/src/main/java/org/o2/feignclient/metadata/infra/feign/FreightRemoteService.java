@@ -17,7 +17,7 @@ package org.o2.feignclient.metadata.infra.feign;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 @FeignClient(
-        value = O2Service.metadata.NAME,
+        value = O2Service.Metadata.NAME,
         path = "/v1",
         fallback = FreightServiceRemoteServiceImpl.class
 )

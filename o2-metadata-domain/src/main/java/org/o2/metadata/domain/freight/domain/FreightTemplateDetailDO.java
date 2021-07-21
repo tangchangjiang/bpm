@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 
 /**
- * 运费模板明细
+ * 运费模版明细
+ *
+ * @author peng.xu@hand-china.com 2019-06-18
  */
 public class FreightTemplateDetailDO {
     @ApiModelProperty("表ID，主键")

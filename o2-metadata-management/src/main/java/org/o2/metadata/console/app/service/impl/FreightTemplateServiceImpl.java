@@ -453,10 +453,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 批量更新运费模板缓存(仅运费模板信息，不包含运费模板明细)
      *
-     * @param freightTemplateList
+     * @param freightTemplateList 模版列表
      */
     private void batchSaveFreightCache(List<FreightTemplate> freightTemplateList) {
-        if (freightTemplateList != null && freightTemplateList.size() > 0) {
+        if (freightTemplateList != null && !freightTemplateList.isEmpty()) {
             for (FreightTemplate freightTemplate : freightTemplateList) {
                 FreightBO freight = convertToFreight(freightTemplate);
                 FreightTemplateBO template = new FreightTemplateBO();
@@ -486,8 +486,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                 .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID,   organizationId)
                         .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1))).build());
 
-        Assert.isTrue(!CollectionUtils.isEmpty(list), "默认运费模板不存在");
-        Assert.isTrue(!(list.size()!=1), "默认运费模板不唯一");
+        Assert.isTrue(!CollectionUtils.isEmpty(list), "Default freight template does not exist");
+        Assert.isTrue(list.size() == 1, "Default freight template is not unique");
 
         return  queryTemplateAndDetails(list.get(0).getTemplateId(), organizationId);
 

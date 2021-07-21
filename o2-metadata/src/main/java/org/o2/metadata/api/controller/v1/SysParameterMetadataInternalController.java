@@ -46,7 +46,7 @@ public class SysParameterMetadataInternalController {
     public ResponseEntity<Map<String, SystemParameterVO>> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                @RequestParam List<String> paramCodes) {
         List<SystemParameterVO> systemParameterVOList = sysParameterService.listSystemParameters(paramCodes, organizationId);
-        Map<String, SystemParameterVO> map = new HashMap<>();
+        Map<String, SystemParameterVO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
         }
