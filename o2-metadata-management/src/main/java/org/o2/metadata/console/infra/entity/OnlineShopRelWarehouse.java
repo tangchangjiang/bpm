@@ -135,7 +135,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @return map
      */
     public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouses) {
-       Map<String,Object> map = new HashMap<>();
+       Map<String,Object> map = new HashMap<>(4);
         onlineShopRelWarehouses.forEach(onlineShopRelWarehouseVO ->
                 map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getActiveFlag()));
        return map;
@@ -181,7 +181,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                     .collect(Collectors.groupingBy(OnlineShopRelWarehouseVO::getOnlineShopCode));
 
             List<String> keyList = new ArrayList<>();
-            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
+            Map<String, Map<String, Object>> filedMaps = new HashMap<>(4);
 
             for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWhEntry : synToRedisMap.entrySet()) {
                 List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVos = onlineShopRelWhEntry.getValue();

@@ -179,7 +179,7 @@ public interface MetadataConstants {
         String CREATE = "create";
     }
 
-    interface  ACTIVE_FLAG {
+    interface  ActiveFlag {
         Integer FORBIDDEN = 0;
         Integer ENABLE = 1;
     }

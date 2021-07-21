@@ -148,6 +148,8 @@ public class Warehouse extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+
     @Transient
     private String posCode;
 

@@ -46,7 +46,8 @@ public class FreightTemplateController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
-        freightTemplate.setActiveFlag(1); //默认查询生效的
+        //默认查询生效的
+        freightTemplate.setActiveFlag(1);
 
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));

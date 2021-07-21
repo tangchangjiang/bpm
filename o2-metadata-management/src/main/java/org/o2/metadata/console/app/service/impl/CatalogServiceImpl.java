@@ -48,11 +48,11 @@ public class CatalogServiceImpl implements CatalogService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
 
-        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+        if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
                     .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
             for (CatalogVersion version : versions) {
-                version.setActiveFlag(MetadataConstants.ACTIVE_FLAG.FORBIDDEN);
+                version.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
             }
             catalogVersionRepository.batchUpdateByPrimaryKeySelective(versions);
         }

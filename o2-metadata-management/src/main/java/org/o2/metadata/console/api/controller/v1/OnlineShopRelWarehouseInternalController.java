@@ -39,7 +39,7 @@ public class OnlineShopRelWarehouseInternalController {
     public ResponseEntity<Map<String,OnlineShopRelWarehouseVO>> listOnlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                             @PathVariable(value = "onlineShopCode") @ApiParam(value = "参数code", required = true) String onlineShopCode) {
         List<OnlineShopRelWarehouseVO> systemParameterVOList = onlineShopRelWarehouseService.listOnlineShopRelWarehouses(onlineShopCode, organizationId);
-        Map<String, OnlineShopRelWarehouseVO> map = new HashMap<>();
+        Map<String, OnlineShopRelWarehouseVO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
         }

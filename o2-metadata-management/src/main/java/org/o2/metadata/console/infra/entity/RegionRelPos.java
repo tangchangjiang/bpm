@@ -68,7 +68,6 @@ public class RegionRelPos extends AuditDomain {
     @Unique
     private Long onlineShopId;
     @ApiModelProperty(value = "大区，值集O2MD.AREA_CODE")
-    //todo 添加值集注解
     private String areaCode;
     @ApiModelProperty(value = "区域id，关联hpfm_region.region_id")
     @NotNull
