@@ -45,10 +45,13 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = EnableMetadataConsole.SYSTEM_PARAMETER_VALUE)
 public class SystemParamValueController extends BaseController {
 
-    @Autowired
-    private SystemParamValueRepository systemParamValueRepository;
-    @Autowired
-    private SystemParamValueService systemParamValueService;
+    private final SystemParamValueRepository systemParamValueRepository;
+    private final SystemParamValueService systemParamValueService;
+
+    public SystemParamValueController(SystemParamValueRepository systemParamValueRepository, SystemParamValueService systemParamValueService) {
+        this.systemParamValueRepository = systemParamValueRepository;
+        this.systemParamValueService = systemParamValueService;
+    }
 
     @ApiOperation(value = "系统参数值列表")
     @Permission(level = ResourceLevel.ORGANIZATION)

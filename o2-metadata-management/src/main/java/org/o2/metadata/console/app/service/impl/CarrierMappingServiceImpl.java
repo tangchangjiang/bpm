@@ -6,7 +6,6 @@ import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.o2.metadata.console.infra.mapper.CatalogMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,12 +20,12 @@ import java.util.Map;
 @Service
 public class CarrierMappingServiceImpl implements CarrierMappingService {
 
-    @Autowired
     private CatalogMapper catalogMapper;
 
     private final CarrierMappingRepository carrierMappingRepository;
 
-    public CarrierMappingServiceImpl(final CarrierMappingRepository carrierMappingRepository) {
+    public CarrierMappingServiceImpl(CatalogMapper catalogMapper, final CarrierMappingRepository carrierMappingRepository) {
+        this.catalogMapper = catalogMapper;
         this.carrierMappingRepository = carrierMappingRepository;
     }
 

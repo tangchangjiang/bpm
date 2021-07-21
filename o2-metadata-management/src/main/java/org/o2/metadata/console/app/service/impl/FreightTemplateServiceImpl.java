@@ -44,19 +44,21 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightTemplateDetailService freightTemplateDetailService;
     private final FreightCacheService freightCacheService;
     private final FreightTemplateDomainRepository freightTemplateDomainRepository;
-    @Autowired
-    private LovSqlHandler lovSqlHandler;
+    private  final LovSqlHandler lovSqlHandler;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
                                       final FreightTemplateDetailService freightTemplateDetailService,
                                       final FreightCacheService freightCacheService,
-                                      final RegionRepository regionRepository, FreightTemplateDomainRepository freightTemplateDomainRepository) {
+                                      final RegionRepository regionRepository,
+                                      FreightTemplateDomainRepository freightTemplateDomainRepository,
+                                      LovSqlHandler lovSqlHandler) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
         this.freightTemplateDomainRepository = freightTemplateDomainRepository;
+        this.lovSqlHandler = lovSqlHandler;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }

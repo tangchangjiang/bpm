@@ -45,11 +45,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final AcrossSchemaRepository acrossSchemaRepository;
     private final CodeRuleBuilder codeRuleBuilder;
-    private O2InventoryClient o2InventoryClient;
+    private final O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
     private final WarehouseDomainService warehouseDomainService;
 
-    @Autowired
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final AcrossSchemaRepository acrossSchemaRepository,
                                 final CodeRuleBuilder codeRuleBuilder,

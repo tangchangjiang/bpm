@@ -29,7 +29,6 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private FileStorageProperties fileStorageProperties;
     private FileClient fileClient;
 
-    @Autowired
     public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
                                        FileStorageProperties fileStorageProperties,
                                        FileClient fileClient) {

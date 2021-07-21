@@ -34,10 +34,13 @@ import java.util.List;
 @RequestMapping("/v1/{organizationId}/carriers")
 @Api(tags = EnableMetadataConsole.CARRIER)
 public class CarrierController extends BaseController {
-    @Autowired
-    private CarrierRepository carrierRepository;
-    @Autowired
-    private CarrierService carrierService;
+    private final CarrierRepository carrierRepository;
+    private final CarrierService carrierService;
+
+    public CarrierController(CarrierRepository carrierRepository, CarrierService carrierService) {
+        this.carrierRepository = carrierRepository;
+        this.carrierService = carrierService;
+    }
 
 
     @ApiOperation(value = "承运商列表")

@@ -38,12 +38,9 @@ import java.util.List;
 public class WarehouseController extends BaseController {
 
     private final WarehouseService warehouseService;
-
     private final WarehouseRepository warehouseRepository;
-
     private final PosRepository posRepository;
 
-    @Autowired
     public WarehouseController(WarehouseService warehouseService,
                                WarehouseRepository warehouseRepository,
                                PosRepository posRepository) {

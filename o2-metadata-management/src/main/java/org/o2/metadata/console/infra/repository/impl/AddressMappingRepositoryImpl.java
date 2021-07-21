@@ -4,7 +4,6 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,8 +16,11 @@ import java.util.List;
 @Component
 public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapping> implements AddressMappingRepository {
 
-    @Autowired
-    private AddressMappingMapper addressMappingMapper;
+    private final AddressMappingMapper addressMappingMapper;
+
+    public AddressMappingRepositoryImpl(AddressMappingMapper addressMappingMapper) {
+        this.addressMappingMapper = addressMappingMapper;
+    }
 
     /**
      * 更据catalogCode和regionId查询地址匹配数量

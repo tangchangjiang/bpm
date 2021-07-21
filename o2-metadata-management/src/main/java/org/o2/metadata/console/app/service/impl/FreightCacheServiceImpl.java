@@ -22,9 +22,7 @@ import java.util.*;
 @Component("freightCacheService")
 public class FreightCacheServiceImpl implements FreightCacheService {
     private final static Logger LOG = LoggerFactory.getLogger(FreightCacheServiceImpl.class);
-
     private final static String DEFAULT_REGION = "null";
-
     private RedisCacheClient redisCacheClient;
 
     public FreightCacheServiceImpl(final RedisCacheClient redisCacheClient) {
