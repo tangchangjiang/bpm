@@ -1,5 +1,6 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,19 +14,19 @@ import java.util.List;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @Component
+@Slf4j
 public class SysParameterRemoteServiceImpl implements SysParameterRemoteService {
-    private static final Logger logger = LoggerFactory.getLogger(SysParameterRemoteServiceImpl.class);
 
 
     @Override
     public ResponseEntity<String> getSystemParameter(Long organizationId, String paramCode) {
-        logger.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCode);
+        log.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCode);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> listSystemParameters(Long organizationId, List<String> paramCodes) {
-        logger.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCodes);
+        log.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
