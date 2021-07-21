@@ -83,9 +83,9 @@ public class FreightTemplateManagementVO extends FreightTemplate {
                  if (CollectionUtils.isNotEmpty(regionNameArr)){
                      detail.setRegionName( i<regionNameArr.size()?regionNameArr.get(i):null );
                  }
-                 List<Long> TemplateDetailIdArr =  old.getTemplateDetailIdArr();
-                 if (CollectionUtils.isNotEmpty(TemplateDetailIdArr)){
-                     detail.setTemplateDetailId( i<(TemplateDetailIdArr.size())? TemplateDetailIdArr.get(i):null);
+                 List<Long> templateDetailIdArr =  old.getTemplateDetailIdArr();
+                 if (CollectionUtils.isNotEmpty(templateDetailIdArr)){
+                     detail.setTemplateDetailId( i<(templateDetailIdArr.size())? templateDetailIdArr.get(i):null);
                  }
                  List<Long> objectVersionNumberArr =  old.getObjectVersionNumberArr();
                  if (CollectionUtils.isNotEmpty(objectVersionNumberArr)){
