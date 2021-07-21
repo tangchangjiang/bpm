@@ -112,7 +112,6 @@ public class WarehouseController extends BaseController {
                                      final Pos pos,
                                      @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
-        //final Page<Pos> posList = posRepository.page(pos, pageRequest.getPage(), pageRequest.getSize());
         final Page<Pos> posList = PageHelper.doPageAndSort(pageRequest, () -> posRepository.listPosByCondition(pos));
         return Results.success(posList);
     }

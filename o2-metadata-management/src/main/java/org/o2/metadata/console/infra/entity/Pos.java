@@ -58,8 +58,6 @@ public class Pos extends AuditDomain {
 
     //
     // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
     public boolean exist(final PosRepository posRepository) {
         if (this.posId != null) {
             return posRepository.existsWithPrimaryKey(this.posId);
@@ -88,13 +86,6 @@ public class Pos extends AuditDomain {
         if (MetadataConstants.PosType.WAREHOUSE.equalsIgnoreCase(this.posTypeCode)) {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
         }
-
-//        if (this.pickedUpFlag == 0) {
-//            Assert.isNull(this.pickUpLimitQuantity, "limit should be null when picked up is not enabled");
-//        }
-//        if (this.expressedFlag == 0) {
-//            Assert.isNull(this.expressLimitQuantity, "limit should be null when expressed is not enabled");
-//        }
 
         if (CollectionUtils.isNotEmpty(this.postTimes)) {
             this.postTimes.forEach(PostTime::validate);

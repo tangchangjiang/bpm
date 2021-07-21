@@ -66,48 +66,11 @@ public class FreightTemplateDetailController extends BaseController {
         final FreightTemplateDetail freightTemplateDetail = freightTemplateDetailRepository.selectByPrimaryKey(templateDetailId);
         return Results.success(freightTemplateDetail);
     }
-/*
-
-    @ApiOperation(value = "批量新增或修改默认运费模板明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/default")
-    public ResponseEntity<?> defaultFreightTemplateDetailCreate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-        final List<FreightTemplateDetail> insertResult = freightTemplateDetailService.defaultBatchMerge(freightTemplateDetailList);
-        return Results.success(insertResult);
-    }
-
-    @ApiOperation(value = "批量新增或修改指定地区的运费模板明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/region")
-    public ResponseEntity<?> regionFreightTemplateDetailCreate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-        final List<FreightTemplateDetail> insertResult = freightTemplateDetailService.regionBatchMerge(freightTemplateDetailList);
-        return Results.success(insertResult);
-    }
-
-    @ApiOperation(value = "批量修改默认运费模板明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PutMapping("/default")
-    public ResponseEntity<?> defaultFreightTemplateDetailUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-        SecurityTokenHelper.validToken(freightTemplateDetailList);
-        final List<FreightTemplateDetail> updateResult = freightTemplateDetailService.batchUpdate(freightTemplateDetailList, false);
-        return Results.success(updateResult);
-    }
-
-    @ApiOperation(value = "批量修改指定地区的运费模板明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PutMapping("/region")
-    public ResponseEntity<?> regionFreightTemplateDetailUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-        SecurityTokenHelper.validToken(freightTemplateDetailList);
-        final List<FreightTemplateDetail> updateResult = freightTemplateDetailService.batchUpdate(freightTemplateDetailList, true);
-        return Results.success(updateResult);
-    }
-*/
 
     @ApiOperation(value = "批量删除运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
-       // SecurityTokenHelper.validToken(freightTemplateDetailList);
         freightTemplateDetailService.batchDelete(freightTemplateDetailList);
         return Results.success();
     }

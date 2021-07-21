@@ -89,7 +89,6 @@ public class PosController extends BaseController {
         pos.setTenantId(organizationId);
         posService.update(pos);
         //触发网店关联服务点更新
-//        onlineShopRelPosService.resetIsInvCalculated(null, pos.getPosCode(), pos.getTenantId());
         return Results.success(pos);
     }
 

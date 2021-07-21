@@ -18,7 +18,6 @@ import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;

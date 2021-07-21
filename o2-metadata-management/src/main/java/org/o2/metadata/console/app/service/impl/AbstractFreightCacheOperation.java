@@ -28,7 +28,10 @@ public abstract class AbstractFreightCacheOperation {
 
     protected RegionRepository regionRepository;
 
-    protected FreightTemplateRepository freightTemplateRepository;
+    private FreightTemplateRepository freightTemplateRepository;
+
+    protected AbstractFreightCacheOperation() {
+    }
 
     /**
      * 将运费模板明细实体列表，转换为运费模板明细缓存操作对象列表
