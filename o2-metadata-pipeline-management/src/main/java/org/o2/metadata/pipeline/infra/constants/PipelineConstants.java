@@ -29,7 +29,7 @@ public interface PipelineConstants {
         String PIPELINE_VERSION = "pipeline_version";
         long EXPIRE_TIME_MINUTES = 3;
         ResourceScriptSource PIPELINE_CONF_UPDATE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/pipeline_conf_update.lua"));
+                new ResourceScriptSource(new ClassPathResource("lua/pipeline_conf_update.lua"));
 
 
     }
