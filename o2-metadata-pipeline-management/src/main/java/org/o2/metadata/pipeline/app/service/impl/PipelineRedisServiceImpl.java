@@ -59,7 +59,7 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
             pipelineEntity.put(PipelineConstants.Redis.PIPELINE_NODE_INFO, pipelineEntityJson);
             pipelineEntity.put(PipelineConstants.Redis.PIPELINE_VERSION, pipeline.getObjectVersionNumber().toString());
             final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
-            redisCacheClient.opsForHash().putAll(buildInterfaceConfKey(pipeline.getCode()),
+            redisCacheClient.opsForHash().putAll(buildInterfaceConfKey(tenantId,pipeline.getCode()),
                     pipelineEntity);
         }
     }
@@ -82,23 +82,23 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
             final String interfaceEntityJson = this.buildPipelineConfJson(pipeline, pipelineNodes);
             final String pipelineVersion = pipeline.getObjectVersionNumber().toString();
 
-            return this.executeScript(pipelineCode, interfaceEntityJson, pipelineVersion);
+            return this.executeScript(pipelineCode, interfaceEntityJson, pipelineVersion,tenantId);
         }
         return false;
     }
 
     @Override
-    public void delRedisPipelineConf(String pipelineCode) {
+    public void delRedisPipelineConf(Long tenantId,String pipelineCode) {
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
-        redisCacheClient.expire(buildInterfaceConfKey(pipelineCode),
+        redisCacheClient.expire(buildInterfaceConfKey(tenantId,pipelineCode),
                 PipelineConstants.Redis.EXPIRE_TIME_MINUTES, TimeUnit.MINUTES);
     }
 
     @Override
-    public String getPipelineConf(final String pipelineConfCode) {
+    public String getPipelineConf(final Long tenantId,final String pipelineConfCode) {
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
         final String interfaceConfJson = redisCacheClient.<String, String>opsForHash()
-                .get(buildInterfaceConfKey(pipelineConfCode), PipelineConstants.Redis.PIPELINE_NODE_INFO);
+                .get(buildInterfaceConfKey(tenantId,pipelineConfCode), PipelineConstants.Redis.PIPELINE_NODE_INFO);
         if (StringUtils.isBlank(interfaceConfJson)) {
             return "";
         }
@@ -130,22 +130,23 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
     }
 
     private boolean executeScript(final String pipelineCode, final String pipelineEntityJson,
-                                  final String pipelineVersion) {
+                                  final String pipelineVersion,final Long tenantId) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(PipelineConstants.Redis.PIPELINE_CONF_UPDATE_LUA);
         defaultRedisScript.setResultType(Boolean.class);
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
         return redisCacheClient.execute(
-                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(pipelineCode)), pipelineEntityJson,
+                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(tenantId,pipelineCode)), pipelineEntityJson,
                 pipelineVersion);
     }
 
     /**
      * @param pipelineCode 流程器配置代码
+     * @param tenantId 租户ID
      * @return redis cache key
      */
-    private String buildInterfaceConfKey(final String pipelineCode) {
-        return String.format(PipelineConstants.Redis.PIPELINE_KEY, pipelineCode);
+    private String buildInterfaceConfKey(Long tenantId,final String pipelineCode) {
+        return String.format(PipelineConstants.Redis.PIPELINE_KEY,tenantId, pipelineCode);
     }
 
 }
