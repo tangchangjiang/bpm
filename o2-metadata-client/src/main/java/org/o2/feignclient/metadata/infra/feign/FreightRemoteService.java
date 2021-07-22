@@ -1,10 +1,12 @@
 package org.o2.feignclient.metadata.infra.feign;
 
+import io.swagger.annotations.ApiParam;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
-import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteRemoteServiceImpl;
+import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,17 +17,18 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 @FeignClient(
-        value = O2Service.metadata.NAME,
+        value = O2Service.Metadata.NAME,
         path = "/v1",
-        fallback = FreightServiceRemoteRemoteServiceImpl.class
+        fallback = FreightServiceRemoteServiceImpl.class
 )
 public interface FreightRemoteService {
     /**
      * 获取运费
      *
      * @param freight 运费参数
+     * @param organizationId 租户ID
      * @return 运费
      */
-    @PostMapping("/{organizationId}/freight-internal/freight-amount")
-    ResponseEntity<String> getFreightAmount(@RequestBody FreightDTO freight);
+    @PostMapping("/{organizationId}/freight-internal/template")
+    ResponseEntity<String> getFreightTemplate(@RequestBody FreightDTO freight, @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 }

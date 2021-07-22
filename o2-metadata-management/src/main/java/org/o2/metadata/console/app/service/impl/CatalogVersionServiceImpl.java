@@ -30,7 +30,7 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
-        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+        if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CATALOG_FORBIDDEN);
         }
         SecurityTokenHelper.validToken(catalogVersion);
@@ -42,8 +42,8 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
-        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
-            catalogVersion.setActiveFlag(MetadataConstants.ACTIVE_FLAG.FORBIDDEN);
+        if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
+            catalogVersion.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
         }
         catalogVersionRepository.insertSelective(catalogVersion);
     }

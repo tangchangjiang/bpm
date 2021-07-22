@@ -179,7 +179,7 @@ public interface MetadataConstants {
         String CREATE = "create";
     }
 
-    interface  ACTIVE_FLAG {
+    interface  ActiveFlag {
         Integer FORBIDDEN = 0;
         Integer ENABLE = 1;
     }
@@ -194,6 +194,10 @@ public interface MetadataConstants {
          */
         DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+        /**
+         * 时间格式
+         * @return DateFormat
+         */
         static DateFormat dateFormat() {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
@@ -225,7 +229,7 @@ public interface MetadataConstants {
          *     {region} - 地区信息对应模板
          *     DEFAULT  - 默认运费模板行
          */
-        String FREIGHT_DETAIL_KEY = "o2om:freight:%s:{%s}";
+        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
 
 
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =

@@ -15,10 +15,11 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Slf4j
-public class FreightServiceRemoteRemoteServiceImpl implements FreightRemoteService {
+public class FreightServiceRemoteServiceImpl implements FreightRemoteService {
+
     @Override
-    public ResponseEntity<String> getFreightAmount(FreightDTO freight) {
-        log.error("Error listSystemParameters, params[freight = {}]", freight);
+    public ResponseEntity<String> getFreightTemplate(FreightDTO freight,Long organizationId) {
+        log.error("Error getFreightTemplate, params[freight = {}, organizationId = {}]", freight,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -40,11 +40,14 @@ import java.util.List;
 @Slf4j
 public class CatalogController extends BaseController {
 
-    @Autowired
-    private CatalogRepository catalogRepository;
+    private final CatalogRepository catalogRepository;
 
-    @Autowired
-    private CatalogService catalogService;
+    private final CatalogService catalogService;
+
+    public CatalogController(CatalogRepository catalogRepository, CatalogService catalogService) {
+        this.catalogRepository = catalogRepository;
+        this.catalogService = catalogService;
+    }
 
     @ApiOperation(value = "版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)

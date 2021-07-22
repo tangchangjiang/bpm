@@ -10,7 +10,7 @@ import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -69,38 +69,18 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     @Override
-    public List<FreightTemplateDetail> defaultBatchMerge(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightTemplateDetail> freightTemplateDetails = batchMerge(freightTemplateDetailList, false);
-
-        //更新缓存
-        saveFreightDetailCache(freightTemplateDetails);
-
-        return freightTemplateDetails;
-    }
-
-    @Override
-    public List<FreightTemplateDetail> regionBatchMerge(List<FreightTemplateDetail> freightTemplateDetailList) {
-        List<FreightTemplateDetail> freightTemplateDetails = batchMerge(freightTemplateDetailList, true);
-
-        //更新缓存
-        saveFreightDetailCache(freightTemplateDetails);
-
-        return freightTemplateDetails;
-    }
-
-    @Override
     public void batchDelete(List<FreightTemplateDetail> regionFreightDetailDisplayLis) {
 
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
-        FreightTemplateVO freightTemplateVO =  new FreightTemplateVO();
+        FreightTemplateManagementVO freightTemplateManagementVO =  new FreightTemplateManagementVO();
         final List<FreightTemplateDetail> regionDetailListInput ;
         //  默认运费模板不需要处理； 地区运费模板要转化一下
         if (regionFreightDetailDisplayLis.get(0).getDefaultFlag() ==1 ){
             regionDetailListInput =regionFreightDetailDisplayLis;
         }else{
-            regionDetailListInput =   freightTemplateVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
+            regionDetailListInput =   freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
         }
-        freightTemplateVO.setRegionFreightTemplateDetails(regionDetailListInput);
+        freightTemplateManagementVO.setRegionFreightTemplateDetails(regionDetailListInput);
 
         freightTemplateDetailRepository.batchDeleteByPrimaryKey(regionDetailListInput);
         // 删除缓存

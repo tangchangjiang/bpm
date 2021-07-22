@@ -21,10 +21,12 @@ public interface SysParameterService {
      * @return SystemParamDetailVO
      */
     SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
+
     /**
-     *
-     * @param
-     * @return 
+     * 批量查询系统参数
+     * @param  paramCodes 编码集合
+     * @param  organizationId 租户id
+     * @return  系统参数
      */
     List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long organizationId);
 }

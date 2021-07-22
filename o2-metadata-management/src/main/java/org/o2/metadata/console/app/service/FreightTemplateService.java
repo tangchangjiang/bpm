@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.dto.FreightDTO;
+import org.o2.metadata.console.api.vo.FreightInfoVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public interface FreightTemplateService {
      * @param organizationId 租户id
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO queryTemplateAndDetails(final Long templateId, Long organizationId);
+    FreightTemplateManagementVO queryTemplateAndDetails(final Long templateId, Long organizationId);
 
     /**
      * 新增运费模板和运费模板明细
@@ -27,7 +29,7 @@ public interface FreightTemplateService {
      * @param freightTemplate 新增的运费模板和运费模板明细
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO createTemplateAndDetails(final FreightTemplateVO freightTemplate);
+    FreightTemplateManagementVO createTemplateAndDetails(final FreightTemplateManagementVO freightTemplate);
 
     /**
      * 更新运费模板和运费模板明细
@@ -35,7 +37,7 @@ public interface FreightTemplateService {
      * @param freightTemplate 更新的运费模板和运费模板明细
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO updateTemplateAndDetails(final FreightTemplateVO freightTemplate);
+    FreightTemplateManagementVO updateTemplateAndDetails(final FreightTemplateManagementVO freightTemplate);
 
     /**
      * 批量删除运费模板和运费模板明细
@@ -43,7 +45,7 @@ public interface FreightTemplateService {
      * @param freightTemplateList 待删除的运费模板列表
      * @return boolean  是否删除成功
      */
-    boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
+    Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
 
     /**
      * 新增运费模板
@@ -97,10 +99,10 @@ public interface FreightTemplateService {
     /**
      * 根据主键查询运费模板和运费模板明细
      *
-     * @param Long organizationId 租户ID
+     * @param organizationId organizationId 租户ID
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateVO querydefaultTemplate(final Long organizationId);
+    FreightTemplateManagementVO querydefaultTemplate(final Long organizationId);
 
 
     /**
@@ -110,4 +112,10 @@ public interface FreightTemplateService {
      */
     void tranLov(List<FreightTemplate> freightTemplates,Long organizationId);
 
+    /**
+     * 内部方法 获取运费模版
+     * @param  freight  运费参数
+     * @return 模版信息
+     */
+    FreightInfoVO getFreightTemplate(FreightDTO freight);
 }

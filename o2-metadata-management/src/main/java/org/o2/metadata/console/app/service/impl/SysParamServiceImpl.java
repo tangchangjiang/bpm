@@ -31,7 +31,6 @@ public class SysParamServiceImpl implements SysParamService {
     private final SystemParameterRepository systemParameterRepository;
     private final SystemParameterRedis systemParameterRedis;
 
-    @Autowired
     public SysParamServiceImpl(SystemParameterDomainService systemParameterDomainService,
                                SystemParameterRepository systemParameterRepository,
                                SystemParameterRedis systemParameterRedis) {

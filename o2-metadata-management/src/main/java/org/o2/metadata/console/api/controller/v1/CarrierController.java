@@ -18,7 +18,6 @@ import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -34,10 +33,13 @@ import java.util.List;
 @RequestMapping("/v1/{organizationId}/carriers")
 @Api(tags = EnableMetadataConsole.CARRIER)
 public class CarrierController extends BaseController {
-    @Autowired
-    private CarrierRepository carrierRepository;
-    @Autowired
-    private CarrierService carrierService;
+    private final CarrierRepository carrierRepository;
+    private final CarrierService carrierService;
+
+    public CarrierController(CarrierRepository carrierRepository, CarrierService carrierService) {
+        this.carrierRepository = carrierRepository;
+        this.carrierService = carrierService;
+    }
 
 
     @ApiOperation(value = "承运商列表")

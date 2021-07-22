@@ -14,7 +14,13 @@ import java.util.List;
 
 @Component
 public interface AcrossSchemaMapper {
-
+    /**
+     * 查询仓库关联sku
+     *
+     * @param warehouseCode 仓库编码
+     * @param tenantId 租户ID
+     * @return List sku编码
+     **/
     List<String> selectSkuByWarehouse(@Param("warehouseCode") String warehouseCode,
                                       @Param("tenantId") Long tenantId);
 

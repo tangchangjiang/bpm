@@ -56,10 +56,13 @@ public class Pos extends AuditDomain {
     public static final String FIELD_BUSINESS_TIME = "businessTime";
     public static final String FIELD_NOTICE = "notice";
 
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
+    
+    /**
+     *
+     * 业务方法(按public protected private顺序排列)
+     * @param posRepository 服务点调用
+     * @return boolean
+     */
     public boolean exist(final PosRepository posRepository) {
         if (this.posId != null) {
             return posRepository.existsWithPrimaryKey(this.posId);
@@ -74,6 +77,10 @@ public class Pos extends AuditDomain {
         return posRepository.selectCount(pos) > 0;
     }
 
+   /**
+    * 基本数据校验
+    * @param posRepository 服务点调用
+    */
     public void baseValidate(final PosRepository posRepository) {
         if (this.getPosId() != null) {
             final Pos record = posRepository.selectByPrimaryKey(this.posId);
@@ -89,18 +96,14 @@ public class Pos extends AuditDomain {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
         }
 
-//        if (this.pickedUpFlag == 0) {
-//            Assert.isNull(this.pickUpLimitQuantity, "limit should be null when picked up is not enabled");
-//        }
-//        if (this.expressedFlag == 0) {
-//            Assert.isNull(this.expressLimitQuantity, "limit should be null when expressed is not enabled");
-//        }
-
         if (CollectionUtils.isNotEmpty(this.postTimes)) {
             this.postTimes.forEach(PostTime::validate);
         }
     }
-
+    /**
+     * 服务点是否存在
+     * @param posRepository 服务点调用
+     */
     public void validatePosCode(final PosRepository posRepository) {
         final Pos pos = new Pos();
         pos.setPosCode(this.posCode);

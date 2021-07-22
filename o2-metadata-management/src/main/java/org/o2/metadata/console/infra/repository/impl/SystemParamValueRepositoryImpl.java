@@ -4,7 +4,6 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,8 +16,11 @@ import java.util.Set;
  */
 @Component
 public class SystemParamValueRepositoryImpl extends BaseRepositoryImpl<SystemParamValue> implements SystemParamValueRepository {
-    @Autowired
-    private SystemParamValueMapper systemParamValueMapper;
+    private  final  SystemParamValueMapper systemParamValueMapper;
+
+    public SystemParamValueRepositoryImpl(SystemParamValueMapper systemParamValueMapper) {
+        this.systemParamValueMapper = systemParamValueMapper;
+    }
 
     @Override
     public String getSysValueByParam(String paramCode, Long tenantId) {

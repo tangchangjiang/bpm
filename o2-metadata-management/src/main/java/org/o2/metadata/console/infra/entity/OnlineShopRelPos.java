@@ -32,32 +32,6 @@ public class OnlineShopRelPos extends AuditDomain {
     public static final String FIELD_IS_ACTIVE = "activeFlag";
     public static final String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";
 
-
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-//
-//    public boolean exist(final OnlineShopRelWarehouseRepository relPosRepository) {
-//        if (this.onlineShopRelPosId != null) {
-//            return relPosRepository.existsWithPrimaryKey(this);
-//        }
-//        final OnlineShopRelPos rel = new OnlineShopRelPos();
-//        rel.setPosId(this.posId);
-//        rel.setOnlineShopId(this.onlineShopId);
-//        return relPosRepository.selectCount(rel) > 0;
-//    }
-//
-//    public void baseValidate(final OnlineShopRepository shopRepository, final WarehouseRepository warehouseRepository) {
-//        Assert.notNull(this.posId, "pos id must not null");
-//        Assert.isTrue(warehouseRepository.existsWithPrimaryKey(this.posId), "associate POS must exist");
-//        Assert.notNull(this.onlineShopId, "online shop id must not null");
-//        Assert.isTrue(shopRepository.existsWithPrimaryKey(this.onlineShopId), "associate online shop must exist");
-//        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-//    }
-    //
-    // 数据库字段
-    // ------------------------------------------------------------------------------
-
     @ApiModelProperty("表ID，主键，供其他表做外键")
     @Id
     @GeneratedValue

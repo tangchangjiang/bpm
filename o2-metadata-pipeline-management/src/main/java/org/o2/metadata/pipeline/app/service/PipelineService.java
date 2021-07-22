@@ -32,5 +32,5 @@ public interface PipelineService {
      *
      * @param multipartFiles
      */
-    void savePipelineDTOS(List<MultipartFile> multipartFiles);
+    void savePipeline(List<MultipartFile> multipartFiles);
 }

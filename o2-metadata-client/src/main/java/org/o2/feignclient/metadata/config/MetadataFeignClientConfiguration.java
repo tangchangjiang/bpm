@@ -4,7 +4,7 @@ import org.o2.feignclient.O2MetadataClient;
 import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
-import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteRemoteServiceImpl;
+import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,8 +32,8 @@ public class MetadataFeignClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public FreightServiceRemoteRemoteServiceImpl freightServiceRemoteServiceFallback() {
-        return new FreightServiceRemoteRemoteServiceImpl();
+    public FreightServiceRemoteServiceImpl freightServiceRemoteServiceFallback() {
+        return new FreightServiceRemoteServiceImpl();
     }
 
     @Bean

@@ -5,7 +5,6 @@ import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.infra.mapper.CatalogMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,8 +19,11 @@ import java.util.Set;
 public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implements CatalogRepository {
 
 
-    @Autowired
-    private CatalogMapper catalogMapper;
+    private final CatalogMapper catalogMapper;
+
+    public CatalogRepositoryImpl(CatalogMapper catalogMapper) {
+        this.catalogMapper = catalogMapper;
+    }
 
     /**
      * 更据版本目录主键集合批量查询ExcelDTO

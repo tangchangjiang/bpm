@@ -30,24 +30,6 @@ public interface FreightTemplateDetailService {
     List<FreightTemplateDetail> batchUpdate(final List<FreightTemplateDetail> freightTemplateDetailList, final boolean isRegion);
 
     /**
-     * 更新默认运费模板明细
-     *
-     * @param freightTemplateDetailList 创建或更新的默认运费模板明细列表
-     * @return 操作成功的默认运费模板明细列表
-     */
-    @Deprecated
-    List<FreightTemplateDetail> defaultBatchMerge(final List<FreightTemplateDetail> freightTemplateDetailList);
-
-    /**
-     * 更新指定地区运费模板明细
-     *
-     * @param freightTemplateDetailList 创建或更新的指定地区运费模板明细列表
-     * @return 操作成功的指定地区运费模板明细列表
-     */
-    @Deprecated
-    List<FreightTemplateDetail> regionBatchMerge(final List<FreightTemplateDetail> freightTemplateDetailList);
-
-    /**
      * 删除运费模板明细
      *
      * @param freightTemplateDetailList 待删除的运费模板明细列表

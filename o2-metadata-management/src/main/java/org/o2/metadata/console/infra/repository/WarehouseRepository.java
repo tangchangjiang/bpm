@@ -12,13 +12,6 @@ import java.util.List;
  * @author yuying.shi@hand-china.com 2020/3/2
  */
 public interface WarehouseRepository extends BaseRepository<Warehouse> {
-//    /**
-//     * 主键查询
-//     * @param tenantId
-//     * @param posId 服务点 id
-//     * @return 带详细地址和接派单时间的服务点信息
-//     */
-//    Warehouse getWarehouseWithCarrierNameById(Long tenantId, Long posId);
 
     /**
      * 查询未与网店关联的仓库
@@ -31,12 +24,17 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      */
     List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId);
 
+    /**
+     *  条件查询仓促
+     * @param warehouse 仓库
+     * @return list
+     */
     List<Warehouse> listWarehouseByCondition(Warehouse warehouse);
 
     /**
      * 查询租户下的所有仓库
      * @param tenantId 租户ID
-     * @return
+     * @return list
      */
     List<Warehouse> queryAllWarehouseByTenantId(Long tenantId);
 
@@ -44,7 +42,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * 查询有效的仓库
      * @param onlineShopCode 网店编码
      * @param organizationId 租户ID
-     * @return
+     * @return list
      */
     List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
 }

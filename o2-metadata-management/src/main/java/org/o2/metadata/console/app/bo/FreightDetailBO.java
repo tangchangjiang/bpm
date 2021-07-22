@@ -33,5 +33,5 @@ public class FreightDetailBO extends FreightPriceBO {
     /**
      * tenantId
      */
-    private long tenantId;
+    private Long tenantId;
 }

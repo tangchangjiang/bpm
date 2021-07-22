@@ -2,6 +2,7 @@ package org.o2.metadata.console.api.controller.v1;
 
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.exception.ExceptionResponse;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -43,23 +44,31 @@ import java.util.List;
 @RequestMapping("/v1/{organizationId}/address-mappings")
 @Api(tags = EnableMetadataConsole.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
-    @Autowired
-    private AddressMappingRepository addressMappingRepository;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired
-    private AddressMappingService addressMappingService;
-    @Autowired
-    private RegionService regionService;
-    @Autowired
-    private CountryRepository countryRepository;
-    @Autowired
-    private CatalogRepository catalogRepository;
+    private final AddressMappingRepository addressMappingRepository;
+    private final RegionRepository regionRepository;
+    private final AddressMappingService addressMappingService;
+    private final RegionService regionService;
+    private final CountryRepository countryRepository;
+    private final CatalogRepository catalogRepository;
+
+    public AddressMappingController(AddressMappingRepository addressMappingRepository,
+                                    RegionRepository regionRepository,
+                                    AddressMappingService addressMappingService,
+                                    RegionService regionService,
+                                    CountryRepository countryRepository,
+                                    CatalogRepository catalogRepository) {
+        this.addressMappingRepository = addressMappingRepository;
+        this.regionRepository = regionRepository;
+        this.addressMappingService = addressMappingService;
+        this.regionService = regionService;
+        this.countryRepository = countryRepository;
+        this.catalogRepository = catalogRepository;
+    }
 
     @ApiOperation(value = "地址匹配列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity<?> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final AddressMapping condition, final String countryCode) {
+    public ResponseEntity<List<RegionTreeChildVO>> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final AddressMapping condition, final String countryCode) {
         condition.setTenantId(organizationId);
         if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
@@ -72,7 +81,7 @@ public class AddressMappingController extends BaseController {
                 treeChildVO.setRegionCode(country.getCountryCode());
                 treeChildVO.setRegionName(country.getCountryName());
                 treeChildVO.setChildren(addressMappingService.findAddressMappingGroupByCondition(condition, country.getCountryCode()));
-                if (treeChildVO.getChildren().size() > 0) {
+                if (!treeChildVO.getChildren().isEmpty()) {
                     results.add(treeChildVO);
                 }
             }
@@ -87,7 +96,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/detail")
-    public ResponseEntity<?> detail(final Long addressMappingId, final String countryCode) {
+    public ResponseEntity<AddressMapping> detail(final Long addressMappingId, final String countryCode) {
         final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
         final Region region = regionRepository.selectByPrimaryKey(addressMapping.getRegionId());
         final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
@@ -150,7 +159,7 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "删除地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
+    public ResponseEntity<Void> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);

@@ -8,7 +8,6 @@ import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +23,13 @@ import java.util.Set;
 public class CatalogServiceImpl implements CatalogService {
 
 
-    @Autowired
     private CatalogRepository catalogRepository;
-    @Autowired
     private CatalogVersionRepository catalogVersionRepository;
+
+    public CatalogServiceImpl(CatalogRepository catalogRepository, CatalogVersionRepository catalogVersionRepository) {
+        this.catalogRepository = catalogRepository;
+        this.catalogVersionRepository = catalogVersionRepository;
+    }
 
     /**
      * 版本Excel导出
@@ -46,11 +48,11 @@ public class CatalogServiceImpl implements CatalogService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
 
-        if (MetadataConstants.ACTIVE_FLAG.FORBIDDEN.equals(catalog.getActiveFlag())) {
+        if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
                     .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
             for (CatalogVersion version : versions) {
-                version.setActiveFlag(MetadataConstants.ACTIVE_FLAG.FORBIDDEN);
+                version.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
             }
             catalogVersionRepository.batchUpdateByPrimaryKeySelective(versions);
         }

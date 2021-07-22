@@ -43,7 +43,6 @@ public class CountryController extends BaseController {
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
 
-    @Autowired
     public CountryController(final CountryService countryService,
                              final RegionRepository regionRepository,
                              final CountryRepository countryRepository) {

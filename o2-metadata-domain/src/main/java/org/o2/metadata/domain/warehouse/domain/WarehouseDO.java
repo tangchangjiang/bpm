@@ -250,4 +250,32 @@ public class WarehouseDO  {
     public void setPickUpLimitValue(String pickUpLimitValue) {
         this.pickUpLimitValue = pickUpLimitValue;
     }
+
+    @Override
+    public String toString() {
+        return "WarehouseDO{" +
+                "warehouseId=" + warehouseId +
+                ", posId=" + posId +
+                ", warehouseCode='" + warehouseCode + '\'' +
+                ", warehouseName='" + warehouseName + '\'' +
+                ", warehouseStatusCode='" + warehouseStatusCode + '\'' +
+                ", warehouseTypeCode='" + warehouseTypeCode + '\'' +
+                ", pickUpQuantity=" + pickUpQuantity +
+                ", expressedQuantity=" + expressedQuantity +
+                ", pickedUpFlag=" + pickedUpFlag +
+                ", expressedFlag=" + expressedFlag +
+                ", score=" + score +
+                ", activedDateFrom=" + activedDateFrom +
+                ", activedDateTo=" + activedDateTo +
+                ", invOrganizationCode='" + invOrganizationCode + '\'' +
+                ", tenantId=" + tenantId +
+                ", activeFlag=" + activeFlag +
+                ", posCode='" + posCode + '\'' +
+                ", posName='" + posName + '\'' +
+                ", warehouseStatusMeaning='" + warehouseStatusMeaning + '\'' +
+                ", warehouseTypeMeaning='" + warehouseTypeMeaning + '\'' +
+                ", expressLimitValue='" + expressLimitValue + '\'' +
+                ", pickUpLimitValue='" + pickUpLimitValue + '\'' +
+                '}';
+    }
 }

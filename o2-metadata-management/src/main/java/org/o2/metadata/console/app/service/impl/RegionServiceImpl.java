@@ -118,11 +118,6 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         if (exists == null) {
             throw new CommonException(DATA_NOT_EXISTS);
         }
-//        region.setRegionCode(exists.getRegionCode());
-//        region.setLevelPath(exists.getLevelPath());
-//        if (this.updateByPrimaryKey(region) != 1) {
-//            throw new CommonException(BaseConstants.ErrorCode.ERROR);
-//        }
         // 更新大区定义
         RegionArea regionArea = new RegionArea();
         regionArea.setAreaCode(region.getAreaCode());
