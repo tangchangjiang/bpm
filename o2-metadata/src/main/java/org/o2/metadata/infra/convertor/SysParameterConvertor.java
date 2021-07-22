@@ -58,7 +58,7 @@ public class SysParameterConvertor {
         }
         SystemParameterDO systemParameterDO = new SystemParameterDO();
         systemParameterDO.setParamCode(systemParameter.getParamCode());
-        systemParameterDO.setDefaultValue(systemParameterDO.getDefaultValue());
+        systemParameterDO.setDefaultValue(systemParameter.getDefaultValue());
         Set<SystemParamValue> systemParamValue = systemParameter.getSetSystemParamValue();
         if (null == systemParamValue || systemParamValue.isEmpty()) {
             return systemParameterDO;
