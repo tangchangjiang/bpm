@@ -18,7 +18,7 @@ public interface PipelineConfConstants {
     }
 
     interface Redis {
-        String PIPELINE_KEY = "o2md:pipeline:%s";
+        String PIPELINE_KEY = "o2md:pipeline:%d:%s";
         String PIPELINE_NODE_INFO = "info";
     }
 }

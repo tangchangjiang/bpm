@@ -28,19 +28,17 @@ public interface PipelineRedisService {
     /**
      * 删除流程器信息
      *
-     * @param tenantId   租户Id
      * @param pipelineId 流程器配置
+     * @param tenantId 租户ID
      */
-    void delRedisPipelineConf(final Long tenantId,
-                              final String pipelineId);
+    void delRedisPipelineConf(final Long tenantId,final String pipelineId);
 
     /**
      * 查询流程器缓存信息
      *
-     * @param tenantId     租户Id
      * @param pipelineCode 流程器配置代码
+     * @param tenantId 租户ID
      * @return 流程器缓存信息
      */
-    String getPipelineConf(final Long tenantId,
-                           final String pipelineCode);
+    String getPipelineConf(final  Long tenantId,final String pipelineCode);
 }
