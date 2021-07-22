@@ -130,23 +130,22 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
     }
 
     private boolean executeScript(final String pipelineCode, final String pipelineEntityJson,
-                                  final String pipelineVersion,final Long tenantId) {
+                                  final String pipelineVersion) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(PipelineConstants.Redis.PIPELINE_CONF_UPDATE_LUA);
         defaultRedisScript.setResultType(Boolean.class);
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
         return redisCacheClient.execute(
-                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(tenantId,pipelineCode)), pipelineEntityJson,
+                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(pipelineCode)), pipelineEntityJson,
                 pipelineVersion);
     }
 
     /**
      * @param pipelineCode 流程器配置代码
-     * @param tenantId 租户ID
      * @return redis cache key
      */
-    private String buildInterfaceConfKey(Long tenantId,final String pipelineCode) {
-        return String.format(PipelineConstants.Redis.PIPELINE_KEY,tenantId, pipelineCode);
+    private String buildInterfaceConfKey(final String pipelineCode) {
+        return String.format(PipelineConstants.Redis.PIPELINE_KEY, pipelineCode);
     }
 
 }
