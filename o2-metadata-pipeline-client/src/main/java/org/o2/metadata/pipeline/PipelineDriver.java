@@ -26,8 +26,8 @@ import java.util.Set;
  */
 public class PipelineDriver {
 
-    public static <T extends PipelineExecParam> void start(final String pipelineCode, final T pipelineNodeParams) {
-        final PipelineVO pipeline = getPipelineDetail(pipelineCode);
+    public static <T extends PipelineExecParam> void start(final Long tenantId,final String pipelineCode, final T pipelineNodeParams) {
+        final PipelineVO pipeline = getPipelineDetail(tenantId,pipelineCode);
         start(pipeline, pipelineNodeParams);
     }
 
@@ -83,14 +83,14 @@ public class PipelineDriver {
         return (T) clazzObj.invokeMethod("run", pipelineExecParam);
     }
 
-    public static PipelineVO getPipelineDetail(final String pipelineCode) {
+    public static PipelineVO getPipelineDetail(final Long tenantId,final String pipelineCode) {
         if (StringUtils.isBlank(pipelineCode)) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_CODE_NULL);
         }
 
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
 
-        final String pipelineKey = String.format(PipelineConfConstants.Redis.PIPELINE_KEY, pipelineCode);
+        final String pipelineKey = String.format(PipelineConfConstants.Redis.PIPELINE_KEY,tenantId, pipelineCode);
         final String pipelineInfo = redisCacheClient.<String, String>boundHashOps(pipelineKey).get(PipelineConfConstants.Redis.PIPELINE_NODE_INFO);
         final PipelineVO pipeline = FastJsonHelper.stringToObject(pipelineInfo, PipelineVO.class);
 
