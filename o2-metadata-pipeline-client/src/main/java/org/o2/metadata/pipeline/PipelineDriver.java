@@ -5,12 +5,14 @@ import groovy.lang.GroovyObject;
 import io.choerodon.core.convertor.ApplicationContextHelper;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.util.ResponseUtils;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.pipeline.constants.PipelineConfConstants;
 import org.o2.metadata.pipeline.data.PipelineExecParam;
 import org.o2.metadata.pipeline.exception.PipelineRuntimeException;
+import org.o2.metadata.pipeline.infra.PipelineRemoteService;
 import org.o2.metadata.pipeline.node.PipelineNodeExecutor;
 import org.o2.metadata.pipeline.vo.PipelineNodeVO;
 import org.o2.metadata.pipeline.vo.PipelineVO;
@@ -26,8 +28,9 @@ import java.util.Set;
  */
 public class PipelineDriver {
 
-    public static <T extends PipelineExecParam> void start(final String pipelineCode, final T pipelineNodeParams) {
-        final PipelineVO pipeline = getPipelineDetail(pipelineCode);
+
+    public static <T extends PipelineExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
+        final PipelineVO pipeline = getPipelineDetail(tenantId, pipelineCode);
         start(pipeline, pipelineNodeParams);
     }
 
@@ -44,8 +47,7 @@ public class PipelineDriver {
             if (StringUtils.isNotBlank(script)) {
                 pipelineExecParam = evaluateGroovy(pipelineExecParam, script);
             } else {
-                final PipelineNodeExecutor pipelineNodeExecutor = applicationContext.getBean(runningAction, PipelineNodeExecutor.class);
-                pipelineNodeExecutor.run(pipelineExecParam);
+                applicationContext.getBean(runningAction, PipelineNodeExecutor.class).run(pipelineExecParam);
             }
             if (O2CoreConstants.PipelineStrategy.END.equalsIgnoreCase(pipelineExecParam.getNextStrategy())) {
                 break;
@@ -58,12 +60,9 @@ public class PipelineDriver {
             runningAction = curPipelineNode.getNextBeanId();
             script = curPipelineNode.getScript();
         }
-
         if (StringUtils.isNotBlank(pipeline.getEndBeanId())) {
-            final PipelineNodeExecutor pipelineNodeExecutor = applicationContext.getBean(pipeline.getEndBeanId(), PipelineNodeExecutor.class);
-            pipelineNodeExecutor.run(pipelineExecParam);
+            applicationContext.getBean(pipeline.getEndBeanId(), PipelineNodeExecutor.class).run(pipelineExecParam);
         }
-
         if (StringUtils.isNotEmpty(pipeline.getEndScript())) {
             evaluateGroovy(pipelineExecParam, script);
         }
@@ -83,21 +82,15 @@ public class PipelineDriver {
         return (T) clazzObj.invokeMethod("run", pipelineExecParam);
     }
 
-    public static PipelineVO getPipelineDetail(final String pipelineCode) {
+    public static PipelineVO getPipelineDetail(final Long tenantId, final String pipelineCode) {
         if (StringUtils.isBlank(pipelineCode)) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_CODE_NULL);
         }
-
-        final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
-
-        final String pipelineKey = String.format(PipelineConfConstants.Redis.PIPELINE_KEY, pipelineCode);
-        final String pipelineInfo = redisCacheClient.<String, String>boundHashOps(pipelineKey).get(PipelineConfConstants.Redis.PIPELINE_NODE_INFO);
-        final PipelineVO pipeline = FastJsonHelper.stringToObject(pipelineInfo, PipelineVO.class);
-
+        PipelineRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(PipelineRemoteService.class);
+        final PipelineVO pipeline = ResponseUtils.getResponse(pipelineRemoteService.getPipelineByCode(tenantId, pipelineCode), PipelineVO.class);
         if (pipeline == null || MapUtils.isEmpty(pipeline.getPipelineNodes())) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_NULL, pipelineCode);
         }
-
         if (StringUtils.isBlank(pipeline.getStartBeanId())) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_START_ACTION_NULL, pipelineCode);
         }
