@@ -23,8 +23,10 @@ public interface PipelineConstants {
          * o2md:library:${tenantId}:${serviceCode}:action_parameter:${actionId}
          */
         String ACTION_PARAMETER = "o2md:library:%d:%s:action_parameter:%d";
-
-        String PIPELINE_KEY = "o2md:pipeline:%s";
+        /**
+         * 流水线编码
+         */
+        String PIPELINE_KEY = "o2md:pipeline:%d:%s";
         String PIPELINE_NODE_INFO = "info";
         String PIPELINE_VERSION = "pipeline_version";
         long EXPIRE_TIME_MINUTES = 3;

@@ -90,7 +90,7 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
     @Override
     public void delRedisPipelineConf(Long tenantId, String pipelineCode) {
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
-        redisCacheClient.expire(buildInterfaceConfKey(tenantId, pipelineCode),
+        redisCacheClient.expire(buildInterfaceConfKey(tenantId,pipelineCode),
                 PipelineConstants.Redis.EXPIRE_TIME_MINUTES, TimeUnit.MINUTES);
     }
 
@@ -132,7 +132,7 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
         defaultRedisScript.setResultType(Boolean.class);
         final RedisCacheClient redisCacheClient = ApplicationContextHelper.getContext().getBean(RedisCacheClient.class);
         return redisCacheClient.execute(
-                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(tenantId, pipelineCode)), pipelineEntityJson,
+                defaultRedisScript, Collections.singletonList(buildInterfaceConfKey(tenantId,pipelineCode)), pipelineEntityJson,
                 pipelineVersion);
     }
 

@@ -117,7 +117,7 @@ public class PipelineController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/cache/{code}")
     public ResponseEntity<?> getRedisConfigInfo(@PathVariable final String code, @PathVariable Long organizationId) {
-        return Results.success(pipelineRedisService.getPipelineConf(organizationId, code));
+        return Results.success(pipelineRedisService.getPipelineConf(organizationId,code));
     }
 
     @ApiOperation(value = "流程器yaml导入")
