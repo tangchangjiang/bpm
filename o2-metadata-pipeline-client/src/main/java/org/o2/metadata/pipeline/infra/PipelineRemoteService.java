@@ -27,7 +27,7 @@ public interface PipelineRemoteService {
      * @param code           流程器编码
      * @return 流程器信息
      */
-    @GetMapping("/{organizationId}/pipeline/{code}")
+    @GetMapping("/{organizationId}/internal/pipeline/{code}")
     ResponseEntity<String> getPipelineByCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                              @PathVariable(value = "code") @ApiParam(value = "流程器编码", required = true) String code);
 }

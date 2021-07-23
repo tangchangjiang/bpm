@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author miao.chen01@hand-china.com 2021-07-23
  */
 @RestController("pipelineInternalController.v1")
-@RequestMapping("v1/{organizationId}/pipeline")
+@RequestMapping("v1/{organizationId}/internal/pipeline")
 public class PipelineInternalController {
 
     private final PipelineRedisService pipelineRedisService;
