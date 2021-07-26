@@ -60,7 +60,7 @@ public interface SystemParameterConstants {
      */
     interface Redis {
         String KEY = "o2md:parameter:%d:{%s}";
-        String MAP_KEY = "o2md:parameter:map:%d:{%s}";
+        String MAP_KEY = "o2md:parameter:%d:map:{%s}";
 
     }
 
