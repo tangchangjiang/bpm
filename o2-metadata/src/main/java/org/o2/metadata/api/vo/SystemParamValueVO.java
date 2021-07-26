@@ -1,5 +1,6 @@
 package org.o2.metadata.api.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -16,5 +17,9 @@ public class SystemParamValueVO {
     private String param2;
 
     private String param3;
+
+    @ApiModelProperty(value = "键")
+    private String paramKey;
+
 
 }

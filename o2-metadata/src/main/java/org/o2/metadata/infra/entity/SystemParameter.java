@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.infra.constants.MetadataConstants;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 
 import javax.validation.constraints.NotBlank;

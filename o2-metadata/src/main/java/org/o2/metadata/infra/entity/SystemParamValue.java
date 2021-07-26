@@ -52,6 +52,8 @@ public class SystemParamValue {
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     private Long tenantId;
+    @ApiModelProperty(value = "键")
+    private String paramKey;
 
     //
     // 非数据库字段
