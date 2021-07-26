@@ -25,7 +25,7 @@ public class EnableMetadata {
     @Autowired
     public EnableMetadata(final Docket docket) {
         docket.tags(new Tag(EnableMetadata.SYS_PARAMETER_INTERNAL, "系统参数内部接口"))
-                .tags(new Tag(EnableMetadata.SYS_WAREHOUSE_INTERNAL, "库存内部接口"));
+                .tags(new Tag(EnableMetadata.SYS_WAREHOUSE_INTERNAL, "仓库内部接口"));
     }
 
 
