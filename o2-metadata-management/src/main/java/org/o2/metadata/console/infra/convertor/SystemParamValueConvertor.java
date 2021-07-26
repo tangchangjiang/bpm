@@ -13,6 +13,7 @@ public class SystemParamValueConvertor {
 
     public static SystemParamValue dtoToPoObject(SystemParamValueDTO systemParamValueDTO){
 
+
         if (systemParamValueDTO == null) {
             return null;
         }
@@ -26,6 +27,16 @@ public class SystemParamValueConvertor {
         systemParamValue.setTenantId(systemParamValueDTO.getTenantId());
         systemParamValue.setParamKey(systemParamValueDTO.getParamKey());
         systemParamValue.setDescription(systemParamValueDTO.getDescription());
+        systemParamValue.setCreationDate(systemParamValueDTO.getCreationDate());
+        systemParamValue.setCreatedBy(systemParamValueDTO.getCreatedBy());
+        systemParamValue.setLastUpdateDate(systemParamValueDTO.getLastUpdateDate());
+        systemParamValue.setLastUpdatedBy(systemParamValueDTO.getLastUpdatedBy());
+        systemParamValue.setObjectVersionNumber(systemParamValueDTO.getObjectVersionNumber());
+        systemParamValue.setTableId(systemParamValueDTO.getTableId());
+        systemParamValue.set_tls(systemParamValueDTO.get_tls());
+        systemParamValue.set_status(systemParamValueDTO.get_status());
+        systemParamValue.setFlex(systemParamValueDTO.getFlex());
+        systemParamValue.set_token(systemParamValueDTO.get_token());
         return systemParamValue;
     }
 }

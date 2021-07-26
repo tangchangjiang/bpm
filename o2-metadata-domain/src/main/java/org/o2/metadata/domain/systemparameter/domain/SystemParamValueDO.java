@@ -44,6 +44,18 @@ public class SystemParamValueDO {
     private Long tenantId;
 
     private String paramKey;
+    /**
+     * 版本号
+     */
+    private String objectVersionNumber;
+
+    public String getObjectVersionNumber() {
+        return objectVersionNumber;
+    }
+
+    public void setObjectVersionNumber(String objectVersionNumber) {
+        this.objectVersionNumber = objectVersionNumber;
+    }
 
     public String getParamKey() {
         return paramKey;
