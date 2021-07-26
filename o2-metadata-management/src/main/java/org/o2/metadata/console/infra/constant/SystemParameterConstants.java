@@ -7,6 +7,11 @@ package org.o2.metadata.console.infra.constant;
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
 public interface SystemParameterConstants {
+
+    interface ErrorCode {
+
+        String BASIC_DATA_MAP_KEY_IS_NULL = "error.basic_data.system_param_value.key.not_null";
+    }
     /**
      * 提示信息
      */
@@ -39,6 +44,10 @@ public interface SystemParameterConstants {
          */
         String SET = "SET";
         /**
+         * KEY VALUE
+         */
+        String MAP = "MAP";
+        /**
          * 值集编码
          */
         String LOV_CODE = "O2EXT.PARAM_TYPE";
@@ -49,9 +58,12 @@ public interface SystemParameterConstants {
      *
      * o2ext:parameter:[tenantId]:[parameterType]
      */
-    interface SystemParameter {
+    interface Redis {
         String KEY = "o2md:parameter:%d:{%s}";
+        String MAP_KEY = "o2md:parameter:map:%d:{%s}";
+
     }
+
     interface Parameter {
        String DEFAULT_WH_UPLOAD_RATIO = "DEFAULT_WH_UPLOAD_RATIO";
        String DEFAULT_WH_SAFETY_STOCK = "DEFAULT_WH_SAFETY_STOCK";

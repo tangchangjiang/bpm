@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 
+import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 
 import java.util.List;
@@ -41,21 +42,27 @@ public interface SystemParamValueService {
 
     /**
      * 新建参数值
-     * @param  systemParamValue 参数值
+     * @param  systemParamValueDTO 参数值
      * @return
      */
-    void saveSystemParamValue(SystemParamValue systemParamValue);
+    void saveSystemParamValue(SystemParamValueDTO systemParamValueDTO);
 
     /**
      * 更新参数值
-     * @param  systemParamValue 参数值
+     * @param  systemParamValueDTO 参数值
      */
-    void updateSystemParamValue(SystemParamValue systemParamValue);
+    void updateSystemParamValue(SystemParamValueDTO systemParamValueDTO);
 
     /**
      * 删除参数值
      * @param  systemParamValue 参数值
      */
     void removeSystemParamValue(SystemParamValue systemParamValue);
+    
+    /**
+     * 校验值
+     * @param systemParamValueDTO 参数值
+     */
+    void  systemParamValueValidate(SystemParamValueDTO systemParamValueDTO);
 
 }

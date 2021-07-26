@@ -11,6 +11,7 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.api.vo.SystemParamValueVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
+import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -50,13 +51,13 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         SystemParameter systemParameter = new SystemParameter();
         systemParameter.setParamCode(paramCode);
         //hash类型
-        String key = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
+        String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         String object = redisCacheClient.<String,String>opsForHash().get(key, paramCode);
         if (object != null) {
             systemParameter.setDefaultValue(object);
         }
         //set类型 不重复
-        String keySet = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
+        String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
         if (null != object) {
             systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(object, SystemParamValueDO.class)));
@@ -67,7 +68,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
         List<SystemParameter> doList = new ArrayList<>();
-        String key = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
+        String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         List<String> list = redisCacheClient.<String,String>opsForHash().multiGet(key,paramCodeList);
         if (CollectionUtils.isNotEmpty(list)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
@@ -78,7 +79,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             }
             return doList;
         }
-        String keySet = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
+        String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         List<String> listSet = redisCacheClient.<String,String>opsForHash().multiGet(keySet,paramCodeList);
         if (CollectionUtils.isNotEmpty(listSet)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
@@ -108,8 +109,8 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                     Map<String, Object> kvHashMap = new HashMap<>(4);
                     Map<String, Object> setHashMap = new HashMap<>(4);
                     // 获取hashKey
-                    final String kvHashKey = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
-                    final String setHashKey = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
+                    final String kvHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
+                    final String setHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
                     for (SystemParameter t : tEntry.getValue()) {
                         final String paramTypeCode = t.getParamTypeCode();
                         final String paramCode = t.getParamCode();
@@ -121,7 +122,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                                 kvHashMap.put(paramCode, list.get(0).getDefaultValue());
                             }
                         } else if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
-                            List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(paramCode, tenantId);
+                            List<SystemParamValue> voList = systemParamValueMapper.getSysSetWithParams(paramCode, tenantId);
                             if (CollectionUtils.isNotEmpty(voList)) {
                                 setHashMap.put(paramCode, JSONArray.toJSONString(voList));
                             }
@@ -134,7 +135,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                 else {
                     for (SystemParameter t : tEntry.getValue()) {
                         // 获取hashKey
-                        final String hashKey = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, t.getParamTypeCode());
+                        final String hashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, t.getParamTypeCode());
                         // 获取hashMap
                         filedMaps.put(hashKey, null);
                     }
@@ -151,18 +152,28 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         final String paramCode = systemParameter.getParamCode();
         //参数redis更新
         if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(paramTypeCode)) {
-            final String kvHashKey = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.KV);
+            final String kvHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
             redisCacheClient.opsForHash().put(kvHashKey, paramCode, systemParameter.getDefaultValue());
         }
         //参数值redis更新
         if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
-            final String setHashKey = String.format(SystemParameterConstants.SystemParameter.KEY, tenantId, SystemParameterConstants.ParamType.SET);
-            List<SystemParamValueVO> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
+            final String setHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
+            List<SystemParamValue> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             if (CollectionUtils.isNotEmpty(voList)) {
                 redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JSONArray.toJSONString(voList));
                 return;
             }
             redisCacheClient.opsForHash().delete(setHashKey, systemParameter.getParamCode());
+        }
+
+        if (SystemParameterConstants.ParamType.MAP.equals(paramCode)) {
+            final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, SystemParameterConstants.ParamType.MAP);
+            List<SystemParamValue> list = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
+            Map<String,String> map = new HashMap<>(4);
+            for (SystemParamValue value : list) {
+                map.put(value.getParamKey(),value.getParamValue());
+            }
+            redisCacheClient.opsForHash().putAll(hashMapKey, map);
         }
 
     }

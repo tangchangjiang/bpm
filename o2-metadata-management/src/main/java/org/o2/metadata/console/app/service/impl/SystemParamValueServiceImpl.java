@@ -1,15 +1,18 @@
 package org.o2.metadata.console.app.service.impl;
 
 
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
+import org.o2.metadata.console.infra.convertor.SystemParamValueConvertor;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +69,8 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveSystemParamValue(SystemParamValue systemParamValue) {
+    public void saveSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
+        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.insertSelective(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -74,7 +78,8 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateSystemParamValue(SystemParamValue systemParamValue) {
+    public void updateSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
+        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.updateByPrimaryKey(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -86,6 +91,19 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
+    }
+
+    @Override
+    public void systemParamValueValidate(SystemParamValueDTO systemParamValueDTO) {
+        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
+        SystemParameter systemParameter = getSystemParameter(systemParamValue);
+        if (SystemParameterConstants.ParamType.MAP.equals(systemParameter.getParamTypeCode())){
+           String key =  systemParamValueDTO.getParamKey();
+           if (StringUtils.isEmpty(key)) {
+               throw new CommonException(SystemParameterConstants.ErrorCode.BASIC_DATA_MAP_KEY_IS_NULL);
+           }
+        }
+
     }
 
     /**

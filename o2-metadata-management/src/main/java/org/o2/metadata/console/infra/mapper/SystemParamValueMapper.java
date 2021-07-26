@@ -48,6 +48,6 @@ public interface SystemParamValueMapper extends BaseMapper<SystemParamValue> {
      * @param tenantId  租户id
      * @return SystemParamValueVO
      */
-    List<SystemParamValueVO> getSysSetWithParams(@Param("paramCode") String paramCode, @Param("tenantId") Long tenantId);
+    List<SystemParamValue> getSysSetWithParams(@Param("paramCode") String paramCode, @Param("tenantId") Long tenantId);
 
 }

@@ -6,9 +6,11 @@
         <result column="value_id" property="valueId" jdbcType="DECIMAL"/>
         <result column="param_id" property="paramId" jdbcType="DECIMAL"/>
         <result column="param_value" property="paramValue" jdbcType="VARCHAR"/>
+        <result column="param_key" property="paramKey" jdbcType="VARCHAR"/>
         <result column="param1" property="param1" jdbcType="VARCHAR"/>
         <result column="param2" property="param2" jdbcType="VARCHAR"/>
         <result column="param3" property="param3" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="creation_date" property="creationDate" jdbcType="DATE"/>
@@ -74,12 +76,14 @@
         </where>
     </select>
 
-    <select id="getSysSetWithParams" resultType="org.o2.metadata.console.api.vo.SystemParamValueVO">
+    <select id="getSysSetWithParams" resultType="org.o2.metadata.console.infra.entity.SystemParamValue">
         SELECT
         ospv.param_value,
         ospv.param1,
         ospv.param2,
-        ospv.param3
+        ospv.param3,
+        ospv.param_key,
+        ospv.description
         FROM
         o2md_system_param_value ospv
         JOIN o2md_system_parameter osp ON ospv.param_id = osp.param_id AND ospv.tenant_id = osp.tenant_id

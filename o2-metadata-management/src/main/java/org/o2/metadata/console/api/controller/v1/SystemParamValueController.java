@@ -5,12 +5,11 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.app.service.SysParamService;
+import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.config.EnableMetadataConsole;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,20 +79,22 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "创建系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> saveSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
-        systemParamValue.setTenantId(organizationId);
-        systemParamValueService.saveSystemParamValue(systemParamValue);
-        return Results.success(systemParamValue);
+    public ResponseEntity<?> saveSystemParamValue(@RequestBody SystemParamValueDTO systemParamValueDTO, @PathVariable("organizationId") Long organizationId) {
+        systemParamValueDTO.setTenantId(organizationId);
+        systemParamValueService.systemParamValueValidate(systemParamValueDTO);
+        systemParamValueService.saveSystemParamValue(systemParamValueDTO);
+        return Results.success(systemParamValueDTO);
     }
 
     @ApiOperation(value = "修改系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
-        systemParamValue.setTenantId(organizationId);
-        SecurityTokenHelper.validToken(systemParamValue);
-        systemParamValueService.updateSystemParamValue(systemParamValue);
-        return Results.success(systemParamValue);
+    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValueDTO systemParamValueDTO, @PathVariable("organizationId") Long organizationId) {
+        systemParamValueDTO.setTenantId(organizationId);
+        SecurityTokenHelper.validToken(systemParamValueDTO);
+        systemParamValueService.systemParamValueValidate(systemParamValueDTO);
+        systemParamValueService.updateSystemParamValue(systemParamValueDTO);
+        return Results.success(systemParamValueDTO);
     }
 
     @ApiOperation(value = "删除系统参数值")
