@@ -34,14 +34,16 @@ public class SystemParamValueDTO implements SecurityToken {
     @ApiModelProperty(value = "描述")
     private String description;
 
+    private String _token;
+
     @Override
     public String get_token() {
-        return null;
+        return this._token;
     }
 
     @Override
     public void set_token(String tokenValue) {
-
+        this._token = _token;
     }
 
     @Override
