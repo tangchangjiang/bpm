@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.dto;
 
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.mybatis.domian.SecurityToken;
@@ -13,7 +14,7 @@ import org.o2.metadata.console.infra.entity.SystemParamValue;
  * @author yipeng.zhu@hand-china.com 2021-07-23
  **/
 @Data
-public class SystemParamValueDTO implements SecurityToken {
+public class SystemParamValueDTO extends AuditDomain {
     @ApiModelProperty("表ID，主键")
     private Long valueId;
     @ApiModelProperty(value = "关联参数表，o2ext_system_param.param_id", required = true)
@@ -33,19 +34,6 @@ public class SystemParamValueDTO implements SecurityToken {
     private String paramKey;
     @ApiModelProperty(value = "描述")
     private String description;
-
-    private String _token;
-
-    @Override
-    public String get_token() {
-        return this._token;
-    }
-
-    @Override
-    public void set_token(String tokenValue) {
-        this._token = _token;
-    }
-
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {
         return SystemParamValue.class;
