@@ -24,6 +24,7 @@ public interface SystemParameterConstants {
          * 不重复
          */
         String SET = "SET";
+        String MAP = "map";
         /**
          * 值集编码
          */
@@ -37,6 +38,6 @@ public interface SystemParameterConstants {
      */
     interface Redis {
         String KEY = "o2md:parameter:%d:{%s}";
-        String MAP_KEY = "o2md:parameter:%d:map:{%s}";
+        String MAP_KEY = "o2md:parameter:%d:%s:{%s}";
     }
 }
