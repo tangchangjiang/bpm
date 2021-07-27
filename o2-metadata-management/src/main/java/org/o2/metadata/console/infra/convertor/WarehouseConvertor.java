@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.infra.entity.Warehouse;
-import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 
 import java.util.ArrayList;

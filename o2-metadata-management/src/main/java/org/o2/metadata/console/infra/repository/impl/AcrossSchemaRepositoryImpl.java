@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.o2.metadata.console.infra.mapper.AcrossSchemaMapper;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

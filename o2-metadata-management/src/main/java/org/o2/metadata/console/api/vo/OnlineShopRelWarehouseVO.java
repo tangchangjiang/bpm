@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 

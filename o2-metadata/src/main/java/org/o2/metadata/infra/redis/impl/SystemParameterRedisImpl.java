@@ -3,7 +3,6 @@ package org.o2.metadata.infra.redis.impl;
 import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.domain.systemparameter.domain.SystemParamValueDO;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParamValue;
 import org.o2.metadata.infra.entity.SystemParameter;

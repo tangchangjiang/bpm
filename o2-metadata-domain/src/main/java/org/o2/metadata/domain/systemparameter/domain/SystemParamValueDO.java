@@ -1,7 +1,6 @@
 package org.o2.metadata.domain.systemparameter.domain;
 
 
-import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 

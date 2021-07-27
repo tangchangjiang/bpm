@@ -6,7 +6,6 @@ import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.infra.constant.FreightConstants;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
