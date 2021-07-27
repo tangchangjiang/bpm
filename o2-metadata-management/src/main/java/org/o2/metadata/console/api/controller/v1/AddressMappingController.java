@@ -2,7 +2,6 @@ package org.o2.metadata.console.api.controller.v1;
 
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.exception.ExceptionResponse;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -16,7 +15,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.app.service.RegionService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Catalog;
@@ -26,7 +25,6 @@ import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,7 @@ import java.util.List;
  */
 @RestController("addressMappingController.v1")
 @RequestMapping("/v1/{organizationId}/address-mappings")
-@Api(tags = EnableMetadataConsole.ADDRESS_MAPPING)
+@Api(tags = MetadataManagementAutoConfiguration.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     private final AddressMappingRepository addressMappingRepository;
     private final RegionRepository regionRepository;

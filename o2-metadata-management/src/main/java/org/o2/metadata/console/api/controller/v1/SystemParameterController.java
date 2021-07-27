@@ -9,7 +9,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.SysParamService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ import io.choerodon.swagger.annotation.Permission;
 @Slf4j
 @RestController("systemParameterController.v1")
 @RequestMapping("/v1/{organizationId}/system-parameters")
-@Api(tags = EnableMetadataConsole.SYSTEM_PARAMETER)
+@Api(tags = MetadataManagementAutoConfiguration.SYSTEM_PARAMETER)
 public class SystemParameterController extends BaseController {
 
     private SystemParameterRepository systemParameterRepository;

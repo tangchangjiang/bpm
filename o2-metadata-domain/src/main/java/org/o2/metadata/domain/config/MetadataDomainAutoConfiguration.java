@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
         "org.o2.metadata.domain.onlineshop"
 })
 @Configuration
-public class MetadataCoreAutoConfiguration implements InitializingBean {
+public class MetadataDomainAutoConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {

@@ -16,7 +16,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController("neighboringRegionController.v1")
 @RequestMapping("/v1/{organizationId}/neighboring-regions")
-@Api(tags = EnableMetadataConsole.NEIGHBORING_REGION)
+@Api(tags = MetadataManagementAutoConfiguration.NEIGHBORING_REGION)
 public class NeighboringRegionController extends BaseController {
     private final NeighboringRegionRepository neighboringRegionRepository;
     private final NeighboringRegionService neighboringRegionService;
