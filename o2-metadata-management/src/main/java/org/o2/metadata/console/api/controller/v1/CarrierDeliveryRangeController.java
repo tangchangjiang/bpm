@@ -8,7 +8,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.CarrierDeliveryRangeSaveDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
@@ -38,7 +38,7 @@ import io.choerodon.swagger.annotation.Permission;
 
 @RestController("carrierDeliveryRangeController.v1")
 @RequestMapping("/v1/{organizationId}/carrier-delivery-ranges")
-@Api(tags = EnableMetadataConsole.CARRIER_DELIVERY_RANGE)
+@Api(tags = MetadataManagementAutoConfiguration.CARRIER_DELIVERY_RANGE)
 public class CarrierDeliveryRangeController extends BaseController {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final CarrierDeliveryRangeService carrierDeliveryRangeService;

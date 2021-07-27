@@ -7,10 +7,9 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController("onlineShopController.v1")
 @RequestMapping("/v1/{organizationId}/online-shops")
-@Api(tags = EnableMetadataConsole.ONLINE_SHOP)
+@Api(tags = MetadataManagementAutoConfiguration.ONLINE_SHOP)
 public class OnlineShopController extends BaseController {
 
     private final OnlineShopRepository onlineShopRepository;

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.pipeline.config.EnablePipelineManager
+org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration

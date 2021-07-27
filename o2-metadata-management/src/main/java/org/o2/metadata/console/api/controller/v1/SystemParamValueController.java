@@ -7,7 +7,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.app.service.SystemParamValueService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +41,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController("systemParamValueController.v1")
 @RequestMapping("/v1/{organizationId}/system-param-values")
-@Api(tags = EnableMetadataConsole.SYSTEM_PARAMETER_VALUE)
+@Api(tags = MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_VALUE)
 public class SystemParamValueController extends BaseController {
 
     private final SystemParamValueRepository systemParamValueRepository;

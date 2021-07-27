@@ -15,7 +15,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.pipeline.app.service.PipelineActionService;
-import org.o2.metadata.pipeline.config.EnablePipelineManager;
+import org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration;
 import org.o2.metadata.pipeline.domain.entity.PipelineAction;
 import org.o2.metadata.pipeline.domain.repository.PipelineActionRepository;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController("pipelineActionController.v1")
 @RequestMapping("/v1/{organizationId}/pipeline-actions")
-@Api(tags = {EnablePipelineManager.PIPELINE_ACTION})
+@Api(tags = {PipelineManagerAutoConfiguration.PIPELINE_ACTION})
 public class PipelineActionController extends BaseController {
 
     private final PipelineActionRepository pipelineActionRepository;

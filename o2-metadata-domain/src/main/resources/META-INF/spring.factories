@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.domain.config.MetadataCoreAutoConfiguration
+org.o2.metadata.domain.config.MetadataDomainAutoConfiguration
