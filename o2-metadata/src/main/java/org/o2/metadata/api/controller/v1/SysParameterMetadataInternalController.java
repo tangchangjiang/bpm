@@ -4,7 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.vo.SystemParameterVO;
 import org.o2.metadata.app.service.SysParameterService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
-@Api(tags = {EnableMetadata.SYS_PARAMETER_INTERNAL})
+@Api(tags = {MetadataAutoConfiguration.SYS_PARAMETER_INTERNAL})
 @RestController("sysParameterInternalController.v1")
 @RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {

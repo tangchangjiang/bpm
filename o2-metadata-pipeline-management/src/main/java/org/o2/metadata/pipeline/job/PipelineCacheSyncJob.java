@@ -10,7 +10,6 @@ import org.o2.metadata.pipeline.app.service.PipelineService;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.o2.metadata.pipeline.infra.constants.PipelineConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -24,11 +23,15 @@ import java.util.Map;
 @JobHandler("pipelineCacheSyncJob")
 public class PipelineCacheSyncJob implements IJobHandler {
 
-    @Autowired
     private PipelineRepository pipelineRepository;
 
-    @Autowired
+
     private PipelineService pipelineService;
+
+    public PipelineCacheSyncJob(PipelineRepository pipelineRepository, PipelineService pipelineService) {
+        this.pipelineRepository = pipelineRepository;
+        this.pipelineService = pipelineService;
+    }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {

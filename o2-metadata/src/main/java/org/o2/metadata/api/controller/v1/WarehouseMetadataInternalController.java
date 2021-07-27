@@ -8,14 +8,14 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.vo.WarehouseVO;
 import org.o2.metadata.app.service.WarehouseService;
-import org.o2.metadata.config.EnableMetadata;
+import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
-@Api(tags = {EnableMetadata.SYS_WAREHOUSE_INTERNAL})
+@Api(tags = {MetadataAutoConfiguration.SYS_WAREHOUSE_INTERNAL})
 @RestController("warehouseMetadataInternalController.v1")
 @RequestMapping("v1/{organizationId}")
 public class WarehouseMetadataInternalController {

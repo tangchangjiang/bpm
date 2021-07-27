@@ -18,10 +18,9 @@ import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.app.service.CatalogService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -34,7 +33,7 @@ import java.util.List;
  *
  * @author jiu.yang@hand-china.com 2019-12-02 15:33:52
  */
-@Api(tags = EnableMetadataConsole.CATALOG)
+@Api(tags = MetadataManagementAutoConfiguration.CATALOG)
 @RestController("catalogController.v1")
 @RequestMapping("/v1/{organizationId}/catalogs")
 @Slf4j

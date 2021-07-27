@@ -10,7 +10,6 @@ import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package org.o2.metadata.domain.systemparameter.domain;
 
 
+
 import java.util.Objects;
 
 /**
@@ -40,6 +41,28 @@ public class SystemParamValueDO {
      * 租户ID
      */
     private Long tenantId;
+
+    private String paramKey;
+    /**
+     * 版本号
+     */
+    private String objectVersionNumber;
+
+    public String getObjectVersionNumber() {
+        return objectVersionNumber;
+    }
+
+    public void setObjectVersionNumber(String objectVersionNumber) {
+        this.objectVersionNumber = objectVersionNumber;
+    }
+
+    public String getParamKey() {
+        return paramKey;
+    }
+
+    public void setParamKey(String paramKey) {
+        this.paramKey = paramKey;
+    }
 
     public Long getValueId() {
         return valueId;

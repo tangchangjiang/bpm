@@ -13,7 +13,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
 import org.o2.metadata.console.infra.repository.OnlineShopInfAuthRepository;
@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController("onlineShopInfAuthController.v1")
 @RequestMapping("/v1/{organizationId}/online-shop-inf-auths")
-@Api(tags = EnableMetadataConsole.ONLINE_SHOP_INF_AUTH)
+@Api(tags = MetadataManagementAutoConfiguration.ONLINE_SHOP_INF_AUTH)
 public class OnlineShopInfAuthController extends BaseController {
 
     private final OnlineShopInfAuthRepository onlineShopInfAuthRepository;

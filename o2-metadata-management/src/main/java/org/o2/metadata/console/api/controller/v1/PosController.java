@@ -16,7 +16,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController("posController.v1")
 @RequestMapping("/v1/{organizationId}/poses")
-@Api(tags = EnableMetadataConsole.POS)
+@Api(tags = MetadataManagementAutoConfiguration.POS)
 public class PosController extends BaseController {
 
     private final PosRepository posRepository;

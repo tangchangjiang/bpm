@@ -4,8 +4,6 @@ package org.o2.metadata.infra.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.Id;
 
 
 import javax.validation.constraints.NotNull;
@@ -52,6 +50,8 @@ public class SystemParamValue {
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     private Long tenantId;
+    @ApiModelProperty(value = "键")
+    private String paramKey;
 
     //
     // 非数据库字段

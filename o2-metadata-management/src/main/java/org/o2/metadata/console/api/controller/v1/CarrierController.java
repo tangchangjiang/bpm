@@ -15,7 +15,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CarrierService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController("carrierController.v1")
 @RequestMapping("/v1/{organizationId}/carriers")
-@Api(tags = EnableMetadataConsole.CARRIER)
+@Api(tags = MetadataManagementAutoConfiguration.CARRIER)
 public class CarrierController extends BaseController {
     private final CarrierRepository carrierRepository;
     private final CarrierService carrierService;

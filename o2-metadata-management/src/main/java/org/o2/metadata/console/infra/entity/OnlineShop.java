@@ -56,14 +56,14 @@ public class OnlineShop extends AuditDomain {
         onlineShopWithCode.setOnlineShopCode(this.onlineShopCode);
         onlineShopWithCode.setTenantId(this.tenantId);
         List<OnlineShop> onlineShopsWithCode =  shopRepository.existenceDecide(onlineShopWithCode);
-        if (onlineShopsWithCode.size() > 0) {
+        if (!onlineShopsWithCode.isEmpty()) {
             return true;
         }
         final OnlineShop onlineShop = new OnlineShop();
         onlineShop.setCatalogVersionCode(this.catalogVersionCode);
         onlineShop.setTenantId(this.tenantId);
         List<OnlineShop> onlineShops =  shopRepository.existenceDecide(onlineShop);
-        return onlineShops.size() > 0;
+        return !onlineShops.isEmpty();
     }
 
     public void validate(final OnlineShopRepository onlineShopRepository) {

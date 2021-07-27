@@ -51,7 +51,7 @@ public class Carrier extends AuditDomain {
         carrier.setTenantId(this.tenantId);
         carrier.setCarrierCode(this.carrierCode);
         final List<Carrier> list = carrierRepository.select(carrier);
-        return list.size() > 0;
+        return !list.isEmpty();
     }
 
     public void validate() {

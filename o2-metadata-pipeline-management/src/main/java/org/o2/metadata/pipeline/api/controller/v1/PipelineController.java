@@ -19,7 +19,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.pipeline.api.dto.PipelineDTO;
 import org.o2.metadata.pipeline.app.service.PipelineRedisService;
 import org.o2.metadata.pipeline.app.service.PipelineService;
-import org.o2.metadata.pipeline.config.EnablePipelineManager;
+import org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.o2.metadata.pipeline.infra.constants.PipelineConstants;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 @RestController("pipelineController.vPipelineController1")
 @RequestMapping("/v1/{organizationId}/pipeline")
-@Api(tags = EnablePipelineManager.PIPELINE)
+@Api(tags = PipelineManagerAutoConfiguration.PIPELINE)
 public class PipelineController extends BaseController {
     private static final String APPLICATION_OCTET_STREAM_CHARSET_UTF_8 = "application/octet-stream; charset=utf-8";
 

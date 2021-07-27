@@ -13,12 +13,11 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.CountryService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Country;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -36,7 +35,7 @@ import java.util.List;
 
 @RestController("countryController.v1")
 @RequestMapping("/v1/{organizationId}/countries")
-@Api(tags = EnableMetadataConsole.COUNTRY)
+@Api(tags = MetadataManagementAutoConfiguration.COUNTRY)
 public class CountryController extends BaseController {
 
     private final CountryService countryService;
@@ -100,11 +99,11 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     public ResponseEntity<?> getCountryByRegionId(@RequestParam final Long regionId) {
         final List<Region> regionList = regionRepository.select(Region.FIELD_REGION_ID, regionId);
-        if (regionList.size() == 0) {
+        if (regionList.isEmpty()) {
             return Results.error();
         }
         final List<Country> countryList = countryRepository.select(Country.FIELD_COUNTRY_ID, regionList.get(0).getCountryId());
-        if (countryList.size() == 0) {
+        if (countryList.isEmpty()) {
             return Results.error();
         }
         return Results.success(countryList.get(0));

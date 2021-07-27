@@ -15,7 +15,7 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.pipeline.app.service.PipelineNodeService;
-import org.o2.metadata.pipeline.config.EnablePipelineManager;
+import org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration;
 import org.o2.metadata.pipeline.domain.entity.PipelineNode;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.infra.constants.PipelineConstants;
@@ -31,7 +31,7 @@ import java.util.List;
  */
 @RestController("pipelineNodeController.v1")
 @RequestMapping("/v1/{organizationId}/pipeline-node")
-@Api(tags = EnablePipelineManager.PIPELINE_NODE)
+@Api(tags = PipelineManagerAutoConfiguration.PIPELINE_NODE)
 public class PipelineNodeController extends BaseController {
     private final PipelineNodeRepository pipelineNodeRepository;
     private final PipelineNodeService pipelineNodeService;

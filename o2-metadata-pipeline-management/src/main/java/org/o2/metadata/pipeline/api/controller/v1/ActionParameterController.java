@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.pipeline.config.EnablePipelineManager;
+import org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration;
 import org.o2.metadata.pipeline.domain.entity.ActionParameter;
 import org.o2.metadata.pipeline.domain.repository.ActionParameterRepository;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController("actionParameterController.v1")
 @RequestMapping("/v1/{organizationId}/action-parameters")
-@Api(tags = {EnablePipelineManager.ACTION_PARAMETER})
+@Api(tags = {PipelineManagerAutoConfiguration.ACTION_PARAMETER})
 public class ActionParameterController extends BaseController {
 
     private final ActionParameterRepository actionParameterRepository;

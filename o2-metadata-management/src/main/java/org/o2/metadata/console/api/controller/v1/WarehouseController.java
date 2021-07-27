@@ -13,12 +13,11 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -34,7 +33,7 @@ import java.util.List;
 
 @RestController("warehouseController.v1")
 @RequestMapping("/v1/{organizationId}/warehouse")
-@Api(tags = EnableMetadataConsole.WAREHOUSE)
+@Api(tags = MetadataManagementAutoConfiguration.WAREHOUSE)
 public class WarehouseController extends BaseController {
 
     private final WarehouseService warehouseService;

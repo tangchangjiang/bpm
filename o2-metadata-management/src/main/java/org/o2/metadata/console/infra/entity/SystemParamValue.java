@@ -61,6 +61,11 @@ public class SystemParamValue extends AuditDomain {
     @NotNull
     private Long tenantId;
 
+    @ApiModelProperty(value = "key")
+    private String paramKey;
+    @ApiModelProperty(value = "描述")
+    private String description;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------

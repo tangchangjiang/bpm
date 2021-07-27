@@ -11,7 +11,6 @@ import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 

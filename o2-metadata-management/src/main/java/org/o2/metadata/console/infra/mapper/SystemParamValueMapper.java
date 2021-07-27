@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
 
 import java.util.List;
 import java.util.Set;
@@ -48,6 +47,6 @@ public interface SystemParamValueMapper extends BaseMapper<SystemParamValue> {
      * @param tenantId  租户id
      * @return SystemParamValueVO
      */
-    List<SystemParamValueVO> getSysSetWithParams(@Param("paramCode") String paramCode, @Param("tenantId") Long tenantId);
+    List<SystemParamValue> getSysSetWithParams(@Param("paramCode") String paramCode, @Param("tenantId") Long tenantId);
 
 }

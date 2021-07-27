@@ -8,7 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
-import org.o2.metadata.console.config.EnableMetadataConsole;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 
 @RestController("onlineShopRelWarehouseInternalController.v1")
 @RequestMapping("/v1/{organizationId}/onlineShopRelWarehouse-internal")
-@Api(tags = EnableMetadataConsole.ONLINE_SHOP_WAREHOUSE_REL)
+@Api(tags = MetadataManagementAutoConfiguration.ONLINE_SHOP_WAREHOUSE_REL)
 public class OnlineShopRelWarehouseInternalController {
     private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
 
