@@ -4,10 +4,8 @@ package org.o2.feignclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
-import org.o2.feignclient.metadata.domain.vo.OnlineShopRelWarehouseVO;
-import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
-import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
+import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
+import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
 import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
@@ -56,6 +54,16 @@ public class O2MetadataManagementClient {
      */
     public WarehouseVO getWarehouse(String warehouseCode, Long tenantId){
         return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
+    }
+
+    /**
+     * 更新系统参数
+     *
+     * @param systemParameterDTO  系统
+     * @param tenantId 租户ID
+     */
+    public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId){
+        return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterDTO, tenantId), ResponseVO.class);
     }
 
     /**
