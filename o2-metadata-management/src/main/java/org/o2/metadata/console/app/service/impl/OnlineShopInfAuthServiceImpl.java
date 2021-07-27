@@ -26,7 +26,7 @@ public class OnlineShopInfAuthServiceImpl implements OnlineShopInfAuthService {
     public OnlineShopInfAuth updateOrInsert(final OnlineShopInfAuth onlineShopInfAuth) {
         if (onlineShopInfAuth.getOnlineShopId() != null) {
             final List<OnlineShopInfAuth> onlineShopInfAuthList = onlineShopInfAuthRepository.select(OnlineShopInfAuth.FIELD_ONLINE_SHOP_ID, onlineShopInfAuth.getOnlineShopId());
-            if (onlineShopInfAuthList != null && onlineShopInfAuthList.size() > 0) {
+            if (onlineShopInfAuthList != null && !onlineShopInfAuthList.isEmpty()) {
                 onlineShopInfAuth.setOnlineShopInfAuthId(onlineShopInfAuthList.get(0).getOnlineShopInfAuthId());
                 SecurityTokenHelper.validToken(onlineShopInfAuth);
                 onlineShopInfAuthRepository.updateByPrimaryKeySelective(onlineShopInfAuth);

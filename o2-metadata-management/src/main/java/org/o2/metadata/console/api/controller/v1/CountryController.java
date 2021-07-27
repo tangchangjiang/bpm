@@ -99,11 +99,11 @@ public class CountryController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     public ResponseEntity<?> getCountryByRegionId(@RequestParam final Long regionId) {
         final List<Region> regionList = regionRepository.select(Region.FIELD_REGION_ID, regionId);
-        if (regionList.size() == 0) {
+        if (regionList.isEmpty()) {
             return Results.error();
         }
         final List<Country> countryList = countryRepository.select(Country.FIELD_COUNTRY_ID, regionList.get(0).getCountryId());
-        if (countryList.size() == 0) {
+        if (countryList.isEmpty()) {
             return Results.error();
         }
         return Results.success(countryList.get(0));
