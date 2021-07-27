@@ -198,7 +198,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
 
         if (SystemParameterConstants.ParamType.MAP.equals(paramTypeCode)) {
-            final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, SystemParameterConstants.ParamType.MAP);
+            final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, paramCode);
             List<SystemParamValue> list = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             Map<String,String> map = new HashMap<>(4);
             for (SystemParamValue value : list) {
