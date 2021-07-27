@@ -12,7 +12,6 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,13 @@ import java.util.Map;
 public class FreightTemplateInitialJob implements IJobHandler {
     private static final String TENANT_ID = "tenantId";
 
-    @Autowired
-    private FreightTemplateRepository freightTemplateRepository;
-    @Autowired
-    private FreightTemplateService freightTemplateService;
+    private final FreightTemplateRepository freightTemplateRepository;
+    private final FreightTemplateService freightTemplateService;
+
+    public FreightTemplateInitialJob(FreightTemplateRepository freightTemplateRepository, FreightTemplateService freightTemplateService) {
+        this.freightTemplateRepository = freightTemplateRepository;
+        this.freightTemplateService = freightTemplateService;
+    }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {

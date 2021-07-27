@@ -14,7 +14,6 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -30,12 +29,16 @@ public class RegionAreaInitialJob implements IJobHandler {
     private static final String AREA_CODE = "O2MD.AREA_CODE";
     private static final String TENANT_ID = "tenantId";
 
-    @Autowired
-    private LovAdapter lovAdapter;
-    @Autowired
-    private RegionRepository regionRepository;
-    @Autowired
-    private RegionAreaRepository regionAreaRepository;
+    private final LovAdapter lovAdapter;
+    private final RegionRepository regionRepository;
+    private final RegionAreaRepository regionAreaRepository;
+
+    public RegionAreaInitialJob(LovAdapter lovAdapter, RegionRepository regionRepository,
+                                RegionAreaRepository regionAreaRepository) {
+        this.lovAdapter = lovAdapter;
+        this.regionRepository = regionRepository;
+        this.regionAreaRepository = regionAreaRepository;
+    }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
