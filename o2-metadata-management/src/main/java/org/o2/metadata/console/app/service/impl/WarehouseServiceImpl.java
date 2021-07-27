@@ -21,7 +21,6 @@ import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;

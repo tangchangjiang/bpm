@@ -4,8 +4,6 @@ package org.o2.metadata.infra.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.Id;
 
 
 import javax.validation.constraints.NotNull;

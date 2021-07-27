@@ -1,9 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 
-import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
-import org.o2.metadata.console.app.bo.FreightPriceBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 
 import java.util.List;

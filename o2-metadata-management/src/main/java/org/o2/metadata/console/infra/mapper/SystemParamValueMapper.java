@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
 
 import java.util.List;
 import java.util.Set;

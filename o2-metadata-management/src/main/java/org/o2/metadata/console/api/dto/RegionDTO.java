@@ -3,7 +3,6 @@ package org.o2.metadata.console.api.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
-import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
 
