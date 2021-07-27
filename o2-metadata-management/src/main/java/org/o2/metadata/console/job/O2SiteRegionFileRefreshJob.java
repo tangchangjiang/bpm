@@ -7,7 +7,6 @@ import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -23,8 +22,11 @@ public class O2SiteRegionFileRefreshJob implements IJobHandler {
     private static final String TENANT_ID = "tenantId";
     private static final String COUNTRY_CODE = "countryCode";
 
-    @Autowired
-    private O2SiteRegionFileService o2SiteRegionFileService;
+    private final O2SiteRegionFileService o2SiteRegionFileService;
+
+    public O2SiteRegionFileRefreshJob(O2SiteRegionFileService o2SiteRegionFileService) {
+        this.o2SiteRegionFileService = o2SiteRegionFileService;
+    }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {

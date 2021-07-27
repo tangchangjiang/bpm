@@ -16,17 +16,17 @@ public interface PipelineConstants {
          * 动作缓存key
          * o2md:library:${tenantId}:${serviceCode}:action:${actionId}
          */
-        String PIPELINE_ACTION = "o2md:library:%d:%s:action:%d";
+        String PIPELINE_ACTION = "o2md:library:%d:%s:action:{%d}";
 
         /**
          * 动作参数缓存key
          * o2md:library:${tenantId}:${serviceCode}:action_parameter:${actionId}
          */
-        String ACTION_PARAMETER = "o2md:library:%d:%s:action_parameter:%d";
+        String ACTION_PARAMETER = "o2md:library:%d:%s:action_parameter:{%d}";
         /**
          * 流水线编码
          */
-        String PIPELINE_KEY = "o2md:pipeline:%d:%s";
+        String PIPELINE_KEY = "o2md:pipeline:%d:{%s}";
         String PIPELINE_NODE_INFO = "info";
         String PIPELINE_VERSION = "pipeline_version";
         long EXPIRE_TIME_MINUTES = 3;

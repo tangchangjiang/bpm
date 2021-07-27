@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
 
+import org.o2.metadata.console.api.dto.SystemParameterDTO;
+import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +53,12 @@ public class SysParameterMetadataInternalController {
             map.put(vo.getParamCode(), vo);
         }
         return Results.success(map);
+    }
+
+    @ApiOperation(value = "更新系统参数(map）类型")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/update")
+    public ResponseEntity<ResponseVO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterDTO systemParameterDTO) {
+        return Results.success(sysParamService.updateSysParameter(systemParameterDTO,organizationId));
     }
 }

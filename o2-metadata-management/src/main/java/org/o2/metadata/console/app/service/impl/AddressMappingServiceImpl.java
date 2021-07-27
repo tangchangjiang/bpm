@@ -164,7 +164,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             RegionTreeChildVO parent = new RegionTreeChildVO();
             if (parents.size() == 1) {
                 parent = parents.get(0);
-            } else if (parents.size() == 0) {
+            } else if (parents.isEmpty()) {
                 final Region region = regionMapper.findRegionByPrimaryKey(key);
                 parent.setParentRegionId(region.getParentRegionId());
                 parent.setRegionCode(region.getRegionCode());
@@ -187,16 +187,17 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             //return;
         });
         //如果没有父节点 退出递归
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             return;
         }
         //分组下一次数据
-        final Map<Long, List<RegionTreeChildVO>> parentMap = result.stream().map(node -> {
+        final Map<Long, List<RegionTreeChildVO>> parentMap = new HashMap<>();
+        for (RegionTreeChildVO node : result) {
             if (node.getParentRegionId() == null) {
                 node.setParentRegionId(-1L);
             }
-            return node;
-        }).collect(Collectors.groupingBy(RegionTreeChildVO::getParentRegionId));
+            parentMap.computeIfAbsent(node.getParentRegionId(), k -> new ArrayList<>()).add(node);
+        }
         //递归调用
         getParent(parentMap, tree, type,tenantId);
     }
