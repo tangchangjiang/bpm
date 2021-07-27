@@ -15,6 +15,7 @@ import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.app.service.FreightTemplateService;
+import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.FreightConvertor;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
@@ -84,8 +85,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public void tranLov(List<FreightTemplate> list, Long organizationId) {
         if (CollectionUtils.isNotEmpty(list)){
-            List<Map<String, Object>>  uomList = getSqlMeaning(MetadataConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
-            List<Map<String, Object>>  typeList = getSqlMeaning(MetadataConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
+            List<Map<String, Object>>  uomList = getSqlMeaning(FreightConstants.FreightType.LOV_VALUATION_UOM_NEW, organizationId);
+            List<Map<String, Object>>  typeList = getSqlMeaning(FreightConstants.FreightType.LOV_VALUATION_TYPE_NEW, organizationId);
 
             list.forEach(freightTemplateVO->{
                 String valuationType = freightTemplateVO.getValuationType();
@@ -347,12 +348,12 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void setDefaultTemp(final Long organizationId, Long templateId) {
-        Assert.notNull(templateId, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
+        Assert.notNull(templateId, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
 
         //查找默认的并删除
         Long oldTemplateId =null;
          final Sqls sqls2 = Sqls.custom();
-         sqls2.andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1));
+         sqls2.andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, 1);
          sqls2.andEqualTo(FreightTemplate.FIELD_TENANT_ID,  organizationId);
          List<FreightTemplate> defaultTempList = freightTemplateRepository.selectByCondition( Condition.builder(FreightTemplate.class).andWhere(sqls2).build());
          FreightTemplate oldDefTemp  ;
@@ -364,8 +365,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
          }
         FreightTemplate defaultTemp = freightTemplateRepository.selectByPrimaryKey(templateId);
-        Assert.notNull(defaultTemp, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_NOT_EXISTS);
-        defaultTemp.setDafaultFlag(Integer.valueOf(1));
+        Assert.notNull(defaultTemp, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_NOT_EXISTS);
+        defaultTemp.setDafaultFlag(1);
         freightTemplateRepository.updateOptional(defaultTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
 
         if (oldTemplateId!=null){
@@ -389,13 +390,13 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             freightTemplate.setDafaultFlag(freightTemplate.getDafaultFlag()==null?Integer.valueOf(0):freightTemplate.getDafaultFlag());
 
             if (isCheckId) {
-                Assert.notNull(freightTemplate.getTemplateId(), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
+                Assert.notNull(freightTemplate.getTemplateId(), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_ID_IS_NULL);
             }
             freightTemplate.validate();
             // 数据库查重
-            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
             // list查重
-            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
             map.put(freightTemplate.getTemplateCode(), i);
         }
     }
@@ -424,7 +425,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @param freightTemplate
      */
     private void checkUniqueDefault(final FreightTemplate freightTemplate) {
-        Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
+        Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
     }
 
     /**
@@ -436,7 +437,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private void checkProductRelate(final List<FreightTemplate> freightTemplateList) {
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             final boolean relateFlag = freightTemplateRepository.isFreightTemplateRelatePro(freightTemplate);
-            Assert.isTrue(!relateFlag, MetadataConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
+            Assert.isTrue(!relateFlag, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
         }
     }
 

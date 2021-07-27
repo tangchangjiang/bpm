@@ -31,22 +31,7 @@ public interface MetadataConstants {
         String BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL = "error.basic_data.online_and_warehouse_code_is_null";
         String BASIC_DATA_PARENT_NOT_ENABLED = "error.basic_data.parent_disable";
 
-        String BASIC_DATA_FREIGHT_ID_IS_NULL = "error.basic_data.freight_template.id.not_null";
-        String BASIC_DATA_FREIGHT_CODE_IS_NULL = "error.basic_data.freight_template.code.not_null";
-        String BASIC_DATA_FREIGHT_NAME_IS_NULL = "error.basic_data.freight_template.name.not_null";
-        String BASIC_DATA_FREIGHT_NOT_EXISTS = "error.basic_data.freight_template.name.not_null";
-        String BASIC_DATA_FREIGHT_DUPLICATE_CODE = "error.basic_data.freight_template.duplicate_code";
-        String BASIC_DATA_FREIGHT_UNIQUE_DEFAULT = "error.basic_data.freight_template.unique_default";
-        String BASIC_DATA_FREIGHT_CAN_NOT_REMOVE = "error.basic_data.freight_template.can_not_remove";
-        String BASIC_DATA_FREIGHT_DETAIL_ID_IS_NULL = "error.basic_data.freight_template_detail.id.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_CARRIER_IS_NULL = "error.basic_data.freight_template_detail.carrier_id.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL = "error.basic_data.freight_template_detail.region_id.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_FIRST_PIECE_WEIGHT_IS_NULL = "error.basic_data.freight_template_detail.first_piece_weight.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_FIRST_PRICE_IS_NULL = "error.basic_data.freight_template_detail.first_price.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_NEXT_PIECE_WEIGHT_IS_NULL = "error.basic_data.freight_template_detail.next_piece_weight.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_NEXT_PRICE_IS_NULL = "error.basic_data.freight_template_detail.next_price.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL = "error.basic_data.freight_template_detail.template_id.not_null";
-        String BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE = "error.basic_data.freight_template_detail.duplicate";
+
         String BASIC_DATA_TENANT_ID_IS_NULL =  "error.basic_data.tenantId.should.is.not.null";
         String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
@@ -71,39 +56,6 @@ public interface MetadataConstants {
     }
 
 
-    /**
-     * 运费模版类型
-     */
-    interface FreightType {
-        /**
-         * 计价方式
-         */
-        String LOV_VALUATION_TYPE = "O2MD.VALUATION_TYPE" ;
-        /**
-         * 计价单位
-         */
-        String LOV_VALUATION_UOM = "O2MD.VALUATION_UOM" ;
-        /**
-         * 运送方式
-         */
-        String LOV_TRANSPORT_TYPE = "O2MD.TRANSPORT_TYPE" ;
-        /**
-         *是否标识
-         */
-        String LOV_HPFM_FLAG = "HPFM.FLAG" ;
-
-
-        /**
-         * 计价方式
-         */
-        String LOV_VALUATION_TYPE_NEW = "O2MD.UOM_TYPE" ;
-
-        /**
-         * 计价单位
-         */
-        String LOV_VALUATION_UOM_NEW = "O2MD.UOM" ;
-
-    }
 
     /**
      * 承运商类型
