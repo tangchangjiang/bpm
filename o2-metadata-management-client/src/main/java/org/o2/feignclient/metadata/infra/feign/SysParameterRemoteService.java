@@ -1,14 +1,13 @@
 package org.o2.feignclient.metadata.infra.feign;
 
+import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public interface SysParameterRemoteService {
      */
     @GetMapping("/{organizationId}/sysParameter-internal/{paramCode}")
     ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                      @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
+                                              @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
 
     /**
      * 从redis查询系统参数
@@ -41,5 +40,15 @@ public interface SysParameterRemoteService {
      */
     @GetMapping("/{organizationId}/sysParameter-internal/paramCodes")
     ResponseEntity<String> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                     @RequestParam List<String> paramCodes);
+                                                @RequestParam List<String> paramCodes);
+
+    /**
+     * 更新系统参数（map 类型）
+     * @param  systemParameterDTO 系统参数
+     * @param  organizationId 租户ID
+     * @return  ResponseEntity<String>
+     */
+    @PostMapping({"/{organizationId}/sysParameter-internal/update"})
+    ResponseEntity<String> updateSysParameter(@RequestBody SystemParameterDTO systemParameterDTO,
+                                              @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 }

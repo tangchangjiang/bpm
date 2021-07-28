@@ -17,4 +17,6 @@ public class SystemParamValueVO {
 
     private String param3;
 
+    private String paramKey;
+
 }

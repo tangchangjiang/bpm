@@ -90,7 +90,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
      * @return  set
      */
     private Set<SystemParamValue> listSystemParamValue(Long tenantId,String paramCode) {
-        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,paramCode);
+        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,SystemParameterConstants.ParamType.MAP,paramCode);
         Map<String,String> valueMap = redisCacheClient.<String,String>opsForHash().entries(mapKey);
         Set<SystemParamValue> setList = new HashSet<>(4);
         if (valueMap.isEmpty()) {
