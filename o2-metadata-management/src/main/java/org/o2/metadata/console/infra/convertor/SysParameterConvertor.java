@@ -42,7 +42,7 @@ public class SysParameterConvertor {
             valueVO.setParam2(valueDO.getParam2());
             valueVO.setParam3(valueDO.getParam3());
             valueVO.setParamValue(valueDO.getParamValue());
-            valueDO.setParamKey(valueDO.getParamKey());
+            valueVO.setParamKey(valueDO.getParamKey());
             systemParamValueVos.add(valueVO);
         }
         systemParameterVO.setSetSystemParamValue(systemParamValueVos);
