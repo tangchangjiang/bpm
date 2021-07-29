@@ -108,7 +108,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
      * @return  set
      */
     private Set<SystemParamValue> listSystemParamValue(Long tenantId,String paramCode) {
-        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,SystemParameterConstants.ParamType.MAP,paramCode);
+        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,paramCode);
         Map<String,String> valueMap = redisCacheClient.<String,String>opsForHash().entries(mapKey);
         Set<SystemParamValue> setList = new HashSet<>(4);
         if (valueMap.isEmpty()) {
@@ -196,7 +196,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             redisCacheClient.opsForHash().delete(setHashKey, systemParameter.getParamCode());
         }
         if (SystemParameterConstants.ParamType.MAP.equals(paramTypeCode)) {
-            final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,SystemParameterConstants.ParamType.MAP, paramCode);
+            final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, paramCode);
             List<SystemParamValue> list = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             Map<String,String> map = new HashMap<>(4);
             if (CollectionUtils.isNotEmpty(list)) {
