@@ -1,19 +1,19 @@
 package org.o2.metadata.console.app.service.impl;
 
+import org.hzero.mybatis.helper.UniqueHelper;
+import org.o2.metadata.console.app.service.StaticResourceService;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.stream.Collectors;
-import io.choerodon.mybatis.domain.AuditDomain;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
-import org.o2.metadata.console.app.service.StaticResourceService;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.hzero.mybatis.helper.UniqueHelper;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * 静态资源文件表应用服务默认实现
@@ -22,12 +22,11 @@ import org.hzero.mybatis.helper.UniqueHelper;
  */
 @Service
 public class StaticResourceServiceImpl implements StaticResourceService {
-                                                                
+
     @Autowired
     private StaticResourceRepository staticResourceRepository;
 
 
-    
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<StaticResource> batchSave(List<StaticResource> staticResourceList) {
@@ -42,7 +41,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
             List<StaticResource> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
                 // TODO: 唯一性校验
-                UniqueHelper.valid(item,StaticResource.O2MD_STATIC_RESOURCE_U1);
+                UniqueHelper.valid(item, StaticResource.O2MD_STATIC_RESOURCE_U1);
                 staticResourceRepository.updateByPrimaryKeySelective(item);
             });
         }
@@ -51,7 +50,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
             List<StaticResource> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
                 // TODO: 唯一性校验
-                UniqueHelper.valid(item,StaticResource.O2MD_STATIC_RESOURCE_U1);
+                UniqueHelper.valid(item, StaticResource.O2MD_STATIC_RESOURCE_U1);
                 staticResourceRepository.insertSelective(item);
             });
         }
@@ -75,7 +74,6 @@ public class StaticResourceServiceImpl implements StaticResourceService {
                     StaticResource.FIELD_TENANT_ID
             );
         }
-
         return staticResource;
     }
 }
