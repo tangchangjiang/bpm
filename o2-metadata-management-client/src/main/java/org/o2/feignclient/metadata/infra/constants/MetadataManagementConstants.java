@@ -1,5 +1,8 @@
 package org.o2.feignclient.metadata.infra.constants;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
+
 /**
  * 元数据 B端常量
  *
@@ -24,6 +27,16 @@ public interface MetadataManagementConstants {
          * CMS - CMS页面装修
          */
         String O2CMS_DECORATION = "O2CMS_DECORATION";
+
+        /**
+         * 构造CMS配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
+         *
+         * @param siteCode 站点编码
+         * @return CMS配置文件资源编码
+         */
+        static String buildCmsResourceCode(String siteCode) {
+            return O2CMS_DECORATION + BaseConstants.Symbol.LOWER_LINE + StringUtils.upperCase(siteCode);
+        }
     }
 
     /**
