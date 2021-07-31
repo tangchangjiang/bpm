@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
                 SysParameterRemoteService.class,
                 WarehouseRemoteService.class,
                 OnlineShopRelWarehouseRemoteService.class,
-                StaticResourceRemoteServiceImpl.class
+                StaticResourceRemoteService.class
         }
 )
 public class MetadataFeignClientAutoConfiguration {
