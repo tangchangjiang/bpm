@@ -1,6 +1,5 @@
 package org.o2.feignclient.metadata.infra.feign;
 
-import io.swagger.annotations.ApiOperation;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
@@ -9,10 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 静态资源表 -远程调用资源库接口
@@ -27,11 +22,22 @@ import io.choerodon.swagger.annotation.Permission;
 )
 public interface StaticResourceRemoteRepository {
 
+    /**
+     * 查询资源code&url映射
+     *
+     * @param staticResourceQueryDTO staticResourceQueryDTO
+     * @return code&url映射关系
+     */
     @PostMapping("/query-resource-url")
     ResponseEntity<String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO);
 
-    @ApiOperation(value = "查询静态资源文件code&url映射")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+
+    /**
+     * 保存静态资源文件
+     *
+     * @param staticResourceSaveDTO staticResourceSaveDTO
+     * @return code&url映射关系
+     */
     @PostMapping("/save")
     ResponseEntity<String> saveResource(@RequestBody StaticResourceSaveDTO staticResourceSaveDTO);
 
