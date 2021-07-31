@@ -6,11 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
-import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
+import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     }
 
     @Override
-    public void createRegionStaticFile(final RegionCacheVO regionCacheVO) {
+    public String createRegionStaticFile(final RegionCacheVO regionCacheVO) {
         log.info("static params are : {},{}", regionCacheVO.getTenantId(), regionCacheVO.getCountryCode());
         final String countryCode = regionCacheVO.getCountryCode();
         regionCacheVO.setLang(MetadataConstants.Path.ZH_CN);
@@ -46,8 +47,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         regionCacheVO.setLang(MetadataConstants.Path.EN_US);
         final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
-        this.staticFile(enList, MetadataConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
-
+        return this.staticFile(enList, MetadataConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
     }
 
     /**
@@ -55,10 +55,11 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
      *
      * @param list 静态文件数据实体
      */
-    private void staticFile(final List<RegionCacheVO> list,
-                            final String lang,
-                            final Long tenantId,
-                            final String countryCode) {
+    // TODO：文件上传需要分布式锁
+    private String staticFile(final List<RegionCacheVO> list,
+                              final String lang,
+                              final Long tenantId,
+                              final String countryCode) {
         final String jsonString = JSON.toJSONString(list);
         // 上传路径全小写，多语言用中划线
         final String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
@@ -73,5 +74,6 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                 directory, fileName, JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
         log.info("resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
+        return resultUrl;
     }
 }
