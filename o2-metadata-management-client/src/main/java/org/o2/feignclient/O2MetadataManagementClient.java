@@ -26,17 +26,17 @@ public class O2MetadataManagementClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
-    private final StaticResourceRemoteRepository staticResourceRemoteRepository;
+    private final StaticResourceRemoteService staticResourceRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService, StaticResourceRemoteRepository staticResourceRemoteRepository) {
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService, StaticResourceRemoteService staticResourceRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
-        this.staticResourceRemoteRepository = staticResourceRemoteRepository;
+        this.staticResourceRemoteService = staticResourceRemoteService;
     }
 
     /**
@@ -291,7 +291,7 @@ public class O2MetadataManagementClient {
      * @return code&url映射
      */
     public Map<String, String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO) {
-        return ResponseUtils.getResponse(staticResourceRemoteRepository.queryResourceCodeUrlMap(staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
+        return ResponseUtils.getResponse(staticResourceRemoteService.queryResourceCodeUrlMap(staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
         });
     }
 
@@ -301,7 +301,7 @@ public class O2MetadataManagementClient {
      * @param staticResourceSaveDTO staticResourceSaveDTO
      */
     public Boolean saveResource(@RequestBody StaticResourceSaveDTO staticResourceSaveDTO) {
-        return ResponseUtils.getResponse(staticResourceRemoteRepository.saveResource(staticResourceSaveDTO), Boolean.class);
+        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTO), Boolean.class);
     }
 
 }
