@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
                 SysParameterRemoteService.class,
                 WarehouseRemoteService.class,
                 OnlineShopRelWarehouseRemoteService.class,
-                StaticResourceRemoteRepository.class
+                StaticResourceRemoteServiceImpl.class
         }
 )
 public class MetadataFeignClientAutoConfiguration {
@@ -45,8 +45,8 @@ public class MetadataFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public StaticResourceRemoteRepository staticResourceRemoteServiceFallback() {
-        return new StaticResourceRemoteRepositoryImpl();
+    public StaticResourceRemoteService staticResourceRemoteServiceFallback() {
+        return new StaticResourceRemoteServiceImpl();
     }
 
     @Bean
@@ -55,10 +55,10 @@ public class MetadataFeignClientAutoConfiguration {
                                                           WarehouseRemoteService warehouseRemoteService,
                                                           OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                                           FreightRemoteService freightRemoteService,
-                                                          StaticResourceRemoteRepository staticResourceRemoteRepository) {
+                                                          StaticResourceRemoteService staticResourceRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
-                freightRemoteService, staticResourceRemoteRepository);
+                freightRemoteService, staticResourceRemoteService);
     }
 }
