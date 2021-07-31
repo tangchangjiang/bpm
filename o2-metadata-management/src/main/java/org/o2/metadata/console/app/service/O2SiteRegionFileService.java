@@ -10,8 +10,10 @@ import org.o2.metadata.console.api.vo.RegionCacheVO;
 public interface O2SiteRegionFileService {
     /**
      * 同步地区静态文件
-     * @date 2020-05-20
+     *
      * @param regionCacheVO
+     * @return OSS url
+     * @date 2020-05-20
      */
-    void createRegionStaticFile(final RegionCacheVO regionCacheVO);
+    String createRegionStaticFile(final RegionCacheVO regionCacheVO);
 }

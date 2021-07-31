@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.constant;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -280,9 +281,33 @@ public interface MetadataConstants {
     /**
      * 编码规则
      */
-    interface  CodeRuleBuilder {
+    interface CodeRuleBuilder {
         String RULE_CODE = "O2MD.WAREHOUSE";
         String LEVEL_CODE = "GLOBAL";
         String LEVEL_VALUE = "GLOBAL";
+    }
+
+    /**
+     * 静态资源文件编码
+     */
+    interface StaticResourceCode {
+        /**
+         * 元数据 - 地区数据文件
+         */
+        String O2MD_REGION = "O2MD_REGION";
+
+        /**
+         * 元数据 - 地区数据文件描述
+         */
+        String O2MD_REGION_DESCRIPTION = "省市区数据文件";
+    }
+
+    /**
+     * 静态资源文件来源系统编码
+     */
+    interface StaticResourceSourceModuleCode {
+        String METADATA = "METADATA";
+        String PCM = "PRODUCT";
+        String CMS = "CMS";
     }
 }
