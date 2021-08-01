@@ -3,13 +3,11 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.dto.CatalogVersionDTO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
 import org.o2.feignclient.metadata.domain.vo.*;
-import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
-import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
-import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
-import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
+import org.o2.feignclient.metadata.infra.feign.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,15 +23,19 @@ public class O2MetadataManagementClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
+    private final CatalogVersionRemoteService catalogVersionRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService) {
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
+                                      FreightRemoteService freightRemoteService,
+                                      CatalogVersionRemoteService catalogVersionRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
+        this.catalogVersionRemoteService = catalogVersionRemoteService;
     }
 
     /**
@@ -106,7 +108,16 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
-
+    /**
+     * 批量查询目录版本
+     * @param catalogVersionList 目录版本集合
+     * @param tenantId 租户ID
+     * @return  map
+     */
+    public Map<String,String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList,Long tenantId){
+        return ResponseUtils.getResponse(catalogVersionRemoteService.batchSelectNameByCode(catalogVersionList,tenantId),new TypeReference<Map<String,String>>(){
+        });
+    }
     /**
      * 保存仓库快递配送接单量限制
      *

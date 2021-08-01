@@ -42,4 +42,9 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
     public List<Catalog> listCatalog(Catalog catalog) {
         return catalogMapper.listCatalog(catalog);
     }
+
+    @Override
+    public List<Catalog> batchSelectByCodes(List<String> catalogCodes, Long tenantId) {
+        return catalogMapper.batchSelectByCodes(catalogCodes,tenantId);
+    }
 }
