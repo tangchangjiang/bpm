@@ -1,10 +1,13 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.dto.CarrierDTO;
+import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -102,6 +105,29 @@ public class CarrierServiceImpl implements CarrierService {
             }
         }
         carrierRepository.batchDeleteByPrimaryKey(carrierList);
+    }
+
+    @Override
+    public Map<String, CarrierVO> listCarriers(List<CarrierDTO> carrierDTOList, Long organizationId) {
+        Map<String, CarrierVO> map = Maps.newHashMapWithExpectedSize(carrierDTOList.size());
+        if (carrierDTOList.isEmpty()) {
+            return map;
+        }
+        List<String> codeList = new ArrayList<>(carrierDTOList.size());
+        for (CarrierDTO dto : carrierDTOList) {
+            codeList.add(dto.getCarrierCode());
+        }
+        List<Carrier> carriers = carrierRepository.batchSelectByCode(codeList,organizationId);
+        if (carriers.isEmpty()) {
+            return map;
+        }
+        CarrierVO carrierVO = new CarrierVO();
+        for (Carrier carrier : carriers) {
+            carrierVO.setCarrierCode(carrier.getCarrierCode());
+            carrierVO.setCarrierName(carrier.getCarrierName());
+            map.put(carrier.getCarrierCode(), carrierVO);
+        }
+        return map;
     }
 
     /**

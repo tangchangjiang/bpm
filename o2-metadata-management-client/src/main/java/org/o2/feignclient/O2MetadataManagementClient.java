@@ -3,6 +3,7 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.dto.CarrierDTO;
 import org.o2.feignclient.metadata.domain.dto.CatalogVersionDTO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
@@ -24,18 +25,21 @@ public class O2MetadataManagementClient {
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
     private final CatalogVersionRemoteService catalogVersionRemoteService;
+    private final CarrierRemoteService carrierRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
                                       OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                       FreightRemoteService freightRemoteService,
-                                      CatalogVersionRemoteService catalogVersionRemoteService) {
+                                      CatalogVersionRemoteService catalogVersionRemoteService,
+                                      CarrierRemoteService carrierRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
         this.catalogVersionRemoteService = catalogVersionRemoteService;
+        this.carrierRemoteService = carrierRemoteService;
     }
 
     /**
@@ -116,6 +120,17 @@ public class O2MetadataManagementClient {
      */
     public Map<String,String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList,Long tenantId){
         return ResponseUtils.getResponse(catalogVersionRemoteService.batchSelectNameByCode(catalogVersionList,tenantId),new TypeReference<Map<String,String>>(){
+        });
+    }
+    
+    /**
+     * 批量查询承运商
+     * @param carrierList 承运商
+     * @param tenantId 租户ID
+     * @return map
+     */
+    public Map<String,CarrierVO> listCarriers(List<CarrierDTO> carrierList, Long tenantId){
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierList,tenantId),new TypeReference<Map<String,CarrierVO>>(){
         });
     }
     /**

@@ -40,8 +40,14 @@ public class MetadataFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public CatalogVersionRemoteServiceImpl ctalogVersionRemoteServiceFallback() {
+    public CatalogVersionRemoteServiceImpl catalogVersionRemoteServiceFallback() {
         return new CatalogVersionRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CarrierRemoteServiceImpl carrierRemoteServiceFallback() {
+        return new CarrierRemoteServiceImpl();
     }
 
     @Bean
@@ -50,11 +56,13 @@ public class MetadataFeignClientAutoConfiguration {
                                                           WarehouseRemoteService warehouseRemoteService,
                                                           OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                                           FreightRemoteService freightRemoteService,
-                                                          CatalogVersionRemoteService catalogVersionRemoteService) {
+                                                          CatalogVersionRemoteService catalogVersionRemoteService,
+                                                          CarrierRemoteService carrierRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
                 freightRemoteService,
-                catalogVersionRemoteService);
+                catalogVersionRemoteService,
+                carrierRemoteService);
     }
 }

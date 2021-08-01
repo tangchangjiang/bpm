@@ -20,4 +20,12 @@ public interface CarrierRepository extends BaseRepository<Carrier> {
      * @return 承运商资源库
      */
     List<Carrier> listCarrier(Carrier carrier);
+
+    /**
+     * 批量查询承运商
+     * @param codeList 承运商
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<Carrier> batchSelectByCode(List<String> codeList, Long tenantId);
 }
