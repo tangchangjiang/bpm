@@ -78,7 +78,7 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         c.catalog_code catalogCode,
-        t.catalog_name catalogName,
+        t.catalog_name catalogName
         FROM
         o2md_catalog c left join o2md_catalog_tl t on c.catalog_id = t.catalog_id
         WHERE 1=1
