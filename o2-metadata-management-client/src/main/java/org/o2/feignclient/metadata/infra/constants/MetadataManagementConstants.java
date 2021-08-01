@@ -49,6 +49,10 @@ public interface MetadataManagementConstants {
         static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode, String languageCode) {
             return String.format("%s_%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode, languageCode);
         }
+
+        static String buildMetadataRegionCode(String languageCode) {
+            return String.format("%s_%s", O2MD_REGION, languageCode);
+        }
     }
 
     /**
