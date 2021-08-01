@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.List;
 import java.util.Map;
 
 import io.choerodon.core.iam.ResourceLevel;
@@ -45,8 +46,10 @@ public class StaticResourceInternalController extends BaseController {
     @ApiOperation(value = "查询静态资源文件code&url映射")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping("/save")
-    public ResponseEntity<Boolean> saveResource(@RequestBody StaticResourceSaveDTO staticResourceSaveDTO) {
-        staticResourceInternalService.saveResource(staticResourceSaveDTO);
+    public ResponseEntity<Boolean> saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
+            staticResourceInternalService.saveResource(saveDTO);
+        }
         return Results.success(true);
     }
 
