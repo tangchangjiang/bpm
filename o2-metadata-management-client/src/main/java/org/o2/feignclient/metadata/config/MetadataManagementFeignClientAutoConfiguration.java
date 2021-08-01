@@ -6,6 +6,7 @@ import org.o2.feignclient.metadata.infra.feign.fallback.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
                 FreightRemoteService.class
         }
 )
+@ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
 public class MetadataManagementFeignClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
@@ -47,17 +49,18 @@ public class MetadataManagementFeignClientAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public StaticResourceRemoteService staticResourceRemoteServiceFallback() {
         return new StaticResourceRemoteServiceImpl();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
-                                                          WarehouseRemoteService warehouseRemoteService,
-                                                          OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
-                                                          FreightRemoteService freightRemoteService,
-                                                          StaticResourceRemoteService staticResourceRemoteService) {
+    public O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
+                                                                 WarehouseRemoteService warehouseRemoteService,
+                                                                 OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
+                                                                 FreightRemoteService freightRemoteService,
+                                                                 StaticResourceRemoteService staticResourceRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
