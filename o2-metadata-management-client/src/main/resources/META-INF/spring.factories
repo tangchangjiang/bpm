@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.feignclient.metadata.config.MetadataFeignClientAutoConfiguration
+org.o2.feignclient.metadata.config.MetadataManagementFeignClientAutoConfiguration
