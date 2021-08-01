@@ -47,6 +47,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         regionCacheVO.setLang(MetadataConstants.Path.EN_US);
         final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
+        // FXIME：区分语言 OSS url
         return this.staticFile(enList, MetadataConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
     }
 

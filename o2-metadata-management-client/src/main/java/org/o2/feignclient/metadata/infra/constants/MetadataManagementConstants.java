@@ -1,7 +1,6 @@
 package org.o2.feignclient.metadata.infra.constants;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.core.base.BaseConstants;
 
 /**
  * 元数据 B端常量
@@ -31,22 +30,24 @@ public interface MetadataManagementConstants {
         /**
          * 构造CMS配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
          *
-         * @param siteCode 站点编码
+         * @param siteCode     站点编码
+         * @param languageCode 语言编码
          * @return CMS配置文件资源编码
          */
-        static String buildCmsResourceCode(String siteCode) {
-            return O2CMS_DECORATION + BaseConstants.Symbol.LOWER_LINE + StringUtils.upperCase(siteCode);
+        static String buildCmsResourceCode(String siteCode, String languageCode) {
+            return String.format("%s_%s_%s", O2CMS_DECORATION, StringUtils.upperCase(siteCode), languageCode);
         }
 
         /**
          * 构造商品模块资源编码
          *
          * @param catalogCode        目录编码
+         * @param languageCode       语言编码
          * @param catalogVersionCode 目录版本编码
          * @return 商品类别文件资源编码
          */
-        static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode) {
-            return String.format("%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode);
+        static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode, String languageCode) {
+            return String.format("%s_%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode, languageCode);
         }
     }
 
