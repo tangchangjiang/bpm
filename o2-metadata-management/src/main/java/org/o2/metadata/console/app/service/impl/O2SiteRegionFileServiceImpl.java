@@ -6,13 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
+import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
+import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,29 +28,39 @@ import java.util.List;
 @Slf4j
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private static final String JSON_TYPE = "application/json";
-    private RegionMapper regionMapper;
-    private FileStorageProperties fileStorageProperties;
-    private FileClient fileClient;
+    private final RegionMapper regionMapper;
+    private final FileStorageProperties fileStorageProperties;
+    private final FileClient fileClient;
+    private final StaticResourceInternalService staticResourceInternalService;
 
     public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
                                        FileStorageProperties fileStorageProperties,
-                                       FileClient fileClient) {
+                                       FileClient fileClient, StaticResourceInternalService staticResourceInternalService) {
         this.regionMapper = regionMapper;
         this.fileStorageProperties = fileStorageProperties;
         this.fileClient = fileClient;
+        this.staticResourceInternalService = staticResourceInternalService;
     }
 
     @Override
-    public String createRegionStaticFile(final RegionCacheVO regionCacheVO) {
-        log.info("static params are : {},{}", regionCacheVO.getTenantId(), regionCacheVO.getCountryCode());
+    public void createRegionStaticFile(final RegionCacheVO regionCacheVO) {
+        final Long tenantId = regionCacheVO.getTenantId();
+        log.info("static params are : {},{}", tenantId, regionCacheVO.getCountryCode());
         final String countryCode = regionCacheVO.getCountryCode();
         regionCacheVO.setLang(MetadataConstants.Path.ZH_CN);
         final List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
-        this.staticFile(zhList, MetadataConstants.Path.ZH_CN, regionCacheVO.getTenantId(), countryCode);
+        String zhResourceUrl = this.staticFile(zhList, MetadataConstants.Path.ZH_CN, tenantId, countryCode);
 
         regionCacheVO.setLang(MetadataConstants.Path.EN_US);
         final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
-        return this.staticFile(enList, MetadataConstants.Path.EN_US, regionCacheVO.getTenantId(), countryCode);
+        // FXIME：区分语言 OSS url
+        String enResourceUrl = this.staticFile(enList, MetadataConstants.Path.EN_US, tenantId, countryCode);
+
+        //  更新静态文件资源表
+        List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, zhResourceUrl, enResourceUrl);
+        for (StaticResourceSaveDTO saveDTO : saveDTOList) {
+            staticResourceInternalService.saveResource(saveDTO);
+        }
     }
 
     /**
@@ -75,5 +88,24 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
         log.info("resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
         return resultUrl;
+    }
+
+    private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId, String zhResourceUrl, String enResourceUrl) {
+        List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
+        StaticResourceSaveDTO zhSaveDTO = fillCommonFields(tenantId, zhResourceUrl);
+        saveDTOList.add(zhSaveDTO);
+        StaticResourceSaveDTO enSaveDTO = fillCommonFields(tenantId, enResourceUrl);
+        saveDTOList.add(enSaveDTO);
+        return saveDTOList;
+    }
+
+    private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl) {
+        StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
+        saveDTO.setTenantId(tenantId);
+        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION);
+        saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
+        saveDTO.setDescription(MetadataConstants.StaticResourceCode.O2MD_REGION_DESCRIPTION);
+        saveDTO.setResourceUrl(resourceUrl);
+        return saveDTO;
     }
 }
