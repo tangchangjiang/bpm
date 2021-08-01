@@ -37,6 +37,17 @@ public interface MetadataManagementConstants {
         static String buildCmsResourceCode(String siteCode) {
             return O2CMS_DECORATION + BaseConstants.Symbol.LOWER_LINE + StringUtils.upperCase(siteCode);
         }
+
+        /**
+         * 构造商品模块资源编码
+         *
+         * @param catalogCode        目录编码
+         * @param catalogVersionCode 目录版本编码
+         * @return 商品类别文件资源编码
+         */
+        static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode) {
+            return String.format("%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode);
+        }
     }
 
     /**
