@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 
+import java.util.List;
+
+
 /**
  * description
  *
@@ -26,8 +29,11 @@ public class StaticResourceRemoteServiceImpl implements StaticResourceRemoteServ
     }
 
     @Override
-    public ResponseEntity<String> saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
-        log.error("Error saveResource, params[resourceCode = {}, resourceUrl = {}, tenantId = {}]", staticResourceSaveDTO.getResourceCode(), staticResourceSaveDTO.getResourceUrl(), staticResourceSaveDTO.getTenantId());
+    public ResponseEntity<String> saveResource(List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        for (StaticResourceSaveDTO dto : staticResourceSaveDTOList) {
+            log.error("Error saveResource, params[resourceCode = {}, resourceUrl = {}, tenantId = {}]",
+                    dto.getResourceCode(), dto.getResourceUrl(), dto.getTenantId());
+        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

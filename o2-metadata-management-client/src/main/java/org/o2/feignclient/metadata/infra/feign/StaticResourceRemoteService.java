@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
+import java.util.List;
+
 /**
  * 静态资源表 -远程调用资源库接口
  *
@@ -35,11 +38,11 @@ public interface StaticResourceRemoteService {
     /**
      * 保存静态资源文件
      *
-     * @param staticResourceSaveDTO staticResourceSaveDTO
+     * @param staticResourceSaveDTOList staticResourceSaveDTOList
      * @return code&url映射关系
      */
     @PostMapping("/save")
-    ResponseEntity<String> saveResource(@RequestBody StaticResourceSaveDTO staticResourceSaveDTO);
+    ResponseEntity<String> saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList);
 
 }
 

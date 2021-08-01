@@ -298,10 +298,10 @@ public class O2MetadataManagementClient {
     /**
      * 保存静态资源文件表
      *
-     * @param staticResourceSaveDTO staticResourceSaveDTO
+     * @param staticResourceSaveDTOList staticResourceSaveDTOList
      */
-    public Boolean saveResource(@RequestBody StaticResourceSaveDTO staticResourceSaveDTO) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTO), Boolean.class);
+    public Boolean saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTOList), Boolean.class);
     }
 
 }
