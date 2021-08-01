@@ -25,9 +25,9 @@ import java.util.List;
 @Slf4j
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private static final String JSON_TYPE = "application/json";
-    private RegionMapper regionMapper;
-    private FileStorageProperties fileStorageProperties;
-    private FileClient fileClient;
+    private final RegionMapper regionMapper;
+    private final FileStorageProperties fileStorageProperties;
+    private final FileClient fileClient;
 
     public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
                                        FileStorageProperties fileStorageProperties,
