@@ -15,5 +15,5 @@ public interface O2SiteRegionFileService {
      * @return OSS url
      * @date 2020-05-20
      */
-    String createRegionStaticFile(final RegionCacheVO regionCacheVO);
+    void createRegionStaticFile(final RegionCacheVO regionCacheVO);
 }
