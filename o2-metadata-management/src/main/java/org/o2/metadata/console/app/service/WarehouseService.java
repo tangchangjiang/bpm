@@ -9,9 +9,7 @@ import java.util.Set;
 
 /**
  * @author NieYong
- * @Title WarehouseService
- * @Description
- * @date 2020/3/4 13:29
+ * @Description 仓库
  **/
 
 public interface WarehouseService {
@@ -57,11 +55,11 @@ public interface WarehouseService {
 
     /**
      * 获取仓库信息
-     * @param  warehouseCode 仓库编码
+     * @param  warehouseCodes 仓库编码
      * @param  tenantId 租户ID
      * @return 仓库
      */
-    WarehouseVO getWarehouse(String warehouseCode,Long tenantId);
+    List<WarehouseVO> listWarehouses(List<String> warehouseCodes,Long tenantId);
 
 
     /**

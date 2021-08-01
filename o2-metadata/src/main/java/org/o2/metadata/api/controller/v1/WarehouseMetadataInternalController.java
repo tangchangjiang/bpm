@@ -1,5 +1,6 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.google.common.collect.Maps;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -11,6 +12,9 @@ import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
@@ -24,11 +28,19 @@ public class WarehouseMetadataInternalController {
     public WarehouseMetadataInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
-    @ApiOperation(value = "从redis查询仓库")
+    @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/internal//{warehouseCode}")
-    public ResponseEntity<WarehouseVO> getWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                    @PathVariable(value = "warehouseCode") @ApiParam(value = "参数code", required = true) String warehouseCode) {
-        return Results.success(warehouseService.getWarehouse(warehouseCode, organizationId));
+    @GetMapping("/internal/list")
+    public ResponseEntity<Map<String, WarehouseVO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestParam List<String> warehouseCodes) {
+        Map<String,WarehouseVO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
+        List<WarehouseVO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
+        if (vos.isEmpty()){
+            return Results.success(map);
+        }
+        for (WarehouseVO warehouseVO : vos) {
+            map.put(warehouseVO.getWarehouseCode(), warehouseVO);
+        }
+        return  Results.success(map);
     }
 }

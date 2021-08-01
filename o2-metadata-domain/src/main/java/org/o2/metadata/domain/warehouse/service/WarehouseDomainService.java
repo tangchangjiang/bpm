@@ -2,6 +2,8 @@ package org.o2.metadata.domain.warehouse.service;
 
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 
+import java.util.List;
+
 /**
  *
  * 仓库
@@ -11,9 +13,9 @@ import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 public interface WarehouseDomainService {
     /**
      * 查询仓库信息
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      * @return 仓库
      */
-    WarehouseDO getWarehouse(String warehouseCode, Long tenantId );
+    List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId );
 }
