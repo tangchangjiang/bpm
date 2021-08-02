@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,11 +53,12 @@ public interface WarehouseRemoteService {
     /**
      * 从redis查询系统仓库
      *
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/internal/{warehouseCode}")
-    ResponseEntity<String>  getWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable(value = "warehouseCode") @ApiParam(value = "参数code", required = true)String warehouseCode);
+    @GetMapping("/{organizationId}/internal/list")
+    ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                           @RequestParam(value = "warehouseCodes") List<String> warehouseCodes);
 
 }

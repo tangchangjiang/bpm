@@ -3,14 +3,12 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.dto.CarrierDTO;
+import org.o2.feignclient.metadata.domain.dto.CatalogVersionDTO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
-import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
 import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 import java.util.List;
 import java.util.Map;
@@ -26,17 +24,22 @@ public class O2MetadataManagementClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
-    private final StaticResourceRemoteService staticResourceRemoteService;
+    private final CatalogVersionRemoteService catalogVersionRemoteService;
+    private final CarrierRemoteService carrierRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService, StaticResourceRemoteService staticResourceRemoteService) {
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
+                                      FreightRemoteService freightRemoteService,
+                                      CatalogVersionRemoteService catalogVersionRemoteService,
+                                      CarrierRemoteService carrierRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
-        this.staticResourceRemoteService = staticResourceRemoteService;
+        this.catalogVersionRemoteService = catalogVersionRemoteService;
+        this.carrierRemoteService = carrierRemoteService;
     }
 
     /**
@@ -52,11 +55,12 @@ public class O2MetadataManagementClient {
     /**
      * 从redis查询仓库
      *
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      */
-    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId){
-        return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
+    public Map<String,WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId){
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes),new TypeReference<Map<String, WarehouseVO>>() {
+        });
     }
 
     /**
@@ -109,7 +113,27 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
-
+    /**
+     * 批量查询目录版本
+     * @param catalogVersionList 目录版本集合
+     * @param tenantId 租户ID
+     * @return  map
+     */
+    public Map<String,String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList,Long tenantId){
+        return ResponseUtils.getResponse(catalogVersionRemoteService.batchSelectNameByCode(catalogVersionList,tenantId),new TypeReference<Map<String,String>>(){
+        });
+    }
+    
+    /**
+     * 批量查询承运商
+     * @param carrierList 承运商
+     * @param tenantId 租户ID
+     * @return map
+     */
+    public Map<String,CarrierVO> listCarriers(List<CarrierDTO> carrierList, Long tenantId){
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierList,tenantId),new TypeReference<Map<String,CarrierVO>>(){
+        });
+    }
     /**
      * 保存仓库快递配送接单量限制
      *
@@ -283,25 +307,4 @@ public class O2MetadataManagementClient {
     public Boolean resetWarehousePickUpLimit(final Long organizationId, final String warehouseCode) {
         return ResponseUtils.isFailed(warehouseRemoteService.resetWarehousePickUpLimit(organizationId, warehouseCode));
     }
-
-    /**
-     * 查询静态资源文件code&url映射
-     *
-     * @param staticResourceQueryDTO staticResourceQueryDTO
-     * @return code&url映射
-     */
-    public Map<String, String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.queryResourceCodeUrlMap(staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
-        });
-    }
-
-    /**
-     * 保存静态资源文件表
-     *
-     * @param staticResourceSaveDTOList staticResourceSaveDTOList
-     */
-    public Boolean saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTOList), Boolean.class);
-    }
-
 }

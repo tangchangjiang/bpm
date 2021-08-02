@@ -30,4 +30,12 @@ public interface CatalogRepository extends BaseRepository<Catalog> {
      * @return  目录列表
      */
     List<Catalog> listCatalog(Catalog catalog);
+
+    /**
+     * 通过编码查询目录
+     * @param  catalogCodes 目录编码
+     * @param  organizationId 租户ID
+     * @return 目录
+     */
+    List<Catalog> batchSelectByCodes(List<String> catalogCodes, Long organizationId);
 }

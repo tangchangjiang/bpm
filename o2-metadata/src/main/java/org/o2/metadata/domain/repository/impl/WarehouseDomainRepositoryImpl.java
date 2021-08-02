@@ -6,6 +6,8 @@ import org.o2.metadata.infra.convertor.WarehouseConvertor;
 import org.o2.metadata.infra.redis.WarehouseRedis;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 /**
  *
@@ -22,7 +24,7 @@ public class WarehouseDomainRepositoryImpl implements WarehouseDomainRepository 
     }
 
     @Override
-    public WarehouseDO getWarehouse(String warehouseCode, Long tenantId) {
-        return WarehouseConvertor.poToDoObject(warehouseRedis.getWarehouse(warehouseCode,tenantId));
+    public List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return WarehouseConvertor.poToDoListObjects(warehouseRedis.listWarehouses(warehouseCodes,tenantId));
     }
 }

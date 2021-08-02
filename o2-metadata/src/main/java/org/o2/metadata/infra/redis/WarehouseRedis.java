@@ -3,6 +3,8 @@ package org.o2.metadata.infra.redis;
 
 import org.o2.metadata.infra.entity.Warehouse;
 
+import java.util.List;
+
 /**
  *
  * 仓库
@@ -13,9 +15,9 @@ public interface WarehouseRedis {
 
     /**
      * 查询仓库信息
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      * @return 仓库
      */
-    Warehouse getWarehouse(String warehouseCode, Long tenantId);
+    List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId);
 }

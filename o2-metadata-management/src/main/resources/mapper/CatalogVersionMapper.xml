@@ -16,4 +16,29 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
     </resultMap>
+    <select id="batchSelectByCodes" resultType="org.o2.metadata.console.infra.entity.CatalogVersion">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        c.catalog_version_code,
+        t.catalog_version_name
+        FROM
+        o2md_catalog_version c left join o2md_catalog_version_tl t on c.catalog_version_id = t.catalog_version_id
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND c.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+        <if test="catalogVersionCodes != null and catalogVersionCodes.size > 0" >
+            and c.catalog_version_code IN
+            <foreach collection="catalogVersionCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+
+        AND t.lang =#{lang}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import com.google.common.collect.Maps;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
@@ -7,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +32,18 @@ public class WarehouseInternalController {
 
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{warehouseCode}")
-    public ResponseEntity<WarehouseVO> getWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                    @PathVariable(value = "warehouseCode") @ApiParam(value = "参数code", required = true) String warehouseCode) {
-        return Results.success(warehouseService.getWarehouse(warehouseCode, organizationId));
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, WarehouseVO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @RequestParam List<String> warehouseCodes) {
+        Map<String,WarehouseVO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
+        List<WarehouseVO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
+        if (vos.isEmpty()){
+          return Results.success(map);
+        }
+        for (WarehouseVO warehouseVO : vos) {
+            map.put(warehouseVO.getWarehouseCode(), warehouseVO);
+        }
+        return  Results.success(map);
     }
     @ApiOperation(value = "查询有效仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)

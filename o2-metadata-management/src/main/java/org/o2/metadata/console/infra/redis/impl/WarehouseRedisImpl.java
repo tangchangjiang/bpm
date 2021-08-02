@@ -7,6 +7,8 @@ import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,10 +26,14 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     }
 
     @Override
-    public Warehouse getWarehouse(String warehouseCode, Long tenantId) {
-        String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
-        Map<Object,Object> wareHouseMap = redisCacheClient.opsForHash().entries(key);
-        String jsonStr = FastJsonHelper.mapToString(wareHouseMap);
-        return FastJsonHelper.stringToObject(jsonStr,Warehouse.class);
+    public List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        List<Warehouse> list = new ArrayList<>(warehouseCodes.size());
+        for (String code : warehouseCodes) {
+            String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, code);
+            Map<Object,Object> wareHouseMap = redisCacheClient.opsForHash().entries(key);
+            String jsonStr = FastJsonHelper.mapToString(wareHouseMap);
+            list.add(FastJsonHelper.stringToObject(jsonStr,Warehouse.class));
+        }
+        return list;
     }
 }

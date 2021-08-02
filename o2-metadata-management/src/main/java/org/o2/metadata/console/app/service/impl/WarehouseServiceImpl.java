@@ -25,6 +25,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,8 +143,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
-        return WarehouseConvertor.doToVoObject(warehouseDomainService.getWarehouse(warehouseCode,tenantId));
+    public List<WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        if (warehouseCodes.isEmpty()){
+            return new ArrayList<>();
+        }
+        return WarehouseConvertor.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseCodes,tenantId));
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {

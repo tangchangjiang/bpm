@@ -26,4 +26,9 @@ public class CarrierRepositoryImpl extends BaseRepositoryImpl<Carrier> implement
     public List<Carrier> listCarrier(final Carrier carrier) {
         return carrierMapper.listCarrier(carrier);
     }
+
+    @Override
+    public List<Carrier> batchSelectByCode(List<String> carrierCodeList, Long tenantId) {
+        return carrierMapper.batchSelectByCode(carrierCodeList,tenantId);
+    }
 }
