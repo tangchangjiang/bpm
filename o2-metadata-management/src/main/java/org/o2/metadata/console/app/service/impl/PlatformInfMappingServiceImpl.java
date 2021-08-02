@@ -1,9 +1,13 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
+import lombok.RequiredArgsConstructor;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -20,12 +24,10 @@ import java.util.List;
  * @author zhilin.ren@hand-china.com 2021-08-02 11:11:28
  */
 @Service
+@RequiredArgsConstructor
 public class PlatformInfMappingServiceImpl implements PlatformInfMappingService {
-                                                                                
-    @Autowired
-    private PlatformInfMappingRepository platformInfMappingRepository;
 
-
+    private final PlatformInfMappingRepository platformInfMappingRepository;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -59,6 +61,17 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PlatformInfMapping save(PlatformInfMapping platformInfMapping) {
+
+        // 唯一性校验
+        Condition condition = Condition.builder(PlatformInfMapping.class).andWhere(Sqls.custom()
+                .andEqualTo(PlatformInfMapping.FIELD_PLATFORM_CODE, platformInfMapping.getPlatformCode())
+                .andEqualTo(PlatformInfMapping.FIELD_INF_TYPE_CODE, platformInfMapping.getInfTypeCode())
+                .andEqualTo(PlatformInfMapping.FIELD_PLATFORM_INF_CODE, platformInfMapping.getPlatformInfCode()))
+                .build();
+        int count = platformInfMappingRepository.selectCountByCondition(condition);
+        if (count > 0 ){
+            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
+        }
         //保存平台信息匹配表
         if (platformInfMapping.getPlatformInfMappingId() == null) {
             platformInfMappingRepository.insertSelective(platformInfMapping);
@@ -73,7 +86,6 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
                     PlatformInfMapping.FIELD_TENANT_ID
             );
         }
-
         return platformInfMapping;
     }
 }

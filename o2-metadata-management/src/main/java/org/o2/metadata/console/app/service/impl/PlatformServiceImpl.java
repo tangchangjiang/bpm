@@ -1,15 +1,13 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
-import org.apache.commons.collections.CollectionUtils;
+import lombok.RequiredArgsConstructor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.stream.Collectors;
 import io.choerodon.mybatis.domain.AuditDomain;
 import java.util.Map;
@@ -25,10 +23,10 @@ import java.util.List;
  * @author zhilin.ren@hand-china.com 2021-08-02 11:11:28
  */
 @Service
+@RequiredArgsConstructor
 public class PlatformServiceImpl implements PlatformService {
-                                                        
-    @Autowired
-    private PlatformRepository platformRepository;
+
+    private final PlatformRepository platformRepository;
 
     
     @Override
@@ -64,12 +62,10 @@ public class PlatformServiceImpl implements PlatformService {
     @Transactional(rollbackFor = Exception.class)
     public Platform save(Platform platform) {
         // 唯一性校验
-        String platformCode = "%"+platform.getPlatformCode()+"%";
-        String platformStatus = "%"+platform.getPlatformStatusCode()+"%";
-        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andLike(Platform.FIELD_PLATFORM_CODE,platformCode)
-                .andLike(Platform.FIELD_PLATFORM_STATUS_CODE,platformStatus)).build();
-        List<Platform> platforms = platformRepository.selectByCondition(condition);
-        if (CollectionUtils.isNotEmpty(platforms)) {
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())
+                .andEqualTo(Platform.FIELD_PLATFORM_STATUS_CODE,platform.getPlatformStatusCode())).build();
+        int count = platformRepository.selectCountByCondition(condition);
+        if (count > 0) {
             throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
         }
         //保存平台定义表

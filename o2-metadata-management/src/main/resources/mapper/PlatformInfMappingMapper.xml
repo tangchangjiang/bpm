@@ -18,5 +18,61 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
     </resultMap>
 
+    <select id="listInfMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+        select
+        inf.platform_inf_mapping_id,
+        inf.inf_type_code,
+        inf.platform_code,
+        inf.inf_code,
+        inf.inf_name,
+        inf.platform_inf_code,
+        inf.platform_inf_name,
+        inf.tenant_id,
+        inf.object_version_number,
+        pf.platform_name
+        from o2md_platform_inf_mapping inf
+        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND inf.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="platformCode != null and platformCode != ''">
+                and inf.platform_code = #{platformCode}
+            </if>
+            <if test="infTypeCode != null and infTypeCode != ''">
+                and inf.inf_type_code = #{infTypeCode}
+            </if>
+            <if test="infName != null and infName != ''">
+                <bind name="infName" value="'%'+infName+'%'"/>
+                and inf.inf_name like #{infName}
+            </if>
+        </where>
+    </select>
+    <select id="selectById" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+        select
+            inf.platform_inf_mapping_id,
+            inf.inf_type_code,
+            inf.platform_code,
+            inf.inf_code,
+            inf.inf_name,
+            inf.platform_inf_code,
+            inf.platform_inf_name,
+            inf.tenant_id,
+            inf.object_version_number,
+            inf.created_by,
+            inf.last_updated_by,
+            inf.creation_date,
+            inf.last_update_date,
+            pf.platform_name
+        from o2md_platform_inf_mapping inf
+        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        where inf.platform_inf_mapping_id = #{id}
+    </select>
+
 
 </mapper>
