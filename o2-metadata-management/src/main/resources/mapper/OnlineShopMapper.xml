@@ -174,10 +174,11 @@
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         select online.online_shop_id,
                tl.online_shop_name,
-               online.online_shop_code
+               online.online_shop_code,
+               online.catalog_code,
+               online.catalog_version_code
         from o2md_online_shop online
         left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
-        WHERE 1=1
         <choose>
             <when test="tenantId != null">
                 AND online.tenant_id = #{tenantId}
@@ -193,7 +194,7 @@
             </foreach>
         </if>
         <if test="onlineShopNames != null and onlineShopNames.size > 0" >
-            and online.online_shop_name in
+            and tl.online_shop_name in
             <foreach collection="onlineShopNames" item="name" open="(" separator="," close=")">
                 #{name}
             </foreach>
