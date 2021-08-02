@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 
 /**
  * 平台信息匹配表
@@ -51,6 +53,7 @@ public class PlatformInfMapping extends AuditDomain {
     private Long platformInfMappingId;
     @ApiModelProperty(value = "信息类型，值集：O2MD.INF_TYPE", required = true)
     @NotBlank
+    @LovValue(lovCode = "O2MD.INF_TYPE")
     private String infTypeCode;
     @ApiModelProperty(value = "平台编码", required = true)
     @NotBlank
@@ -74,6 +77,16 @@ public class PlatformInfMapping extends AuditDomain {
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @Transient
+    @ApiModelProperty(value = "平台名称")
+    private String platformName;
+
+    @Transient
+    @ApiModelProperty(value = "信息类型")
+    private String infTypeMeaning;
+
+
     //
     // getter/setter
     // ------------------------------------------------------------------------------
