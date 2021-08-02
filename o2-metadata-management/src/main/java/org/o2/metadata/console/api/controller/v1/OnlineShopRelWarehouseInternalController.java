@@ -11,13 +11,13 @@ import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,13 +52,21 @@ public class OnlineShopRelWarehouseInternalController {
         return Results.success(map);
     }
 
-    @ApiOperation(value = "查询网店关联有效仓库")
+    @ApiOperation(value = "查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/onlineShop-list")
     public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody OnlineShopDTO onlineShopDTO) {
         List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
-        return Results.success(null);
+        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopCodes())) {
+            Map<String, OnlineShopVO> codeMap = onlineShopVOList.stream().collect(Collectors.toMap(OnlineShopVO::getOnlineShopCode, item -> item));
+            return Results.success(codeMap);
+        }
+        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopNames())) {
+            Map<String, OnlineShopVO> nameMap = onlineShopVOList.stream().collect(Collectors.toMap(OnlineShopVO::getOnlineShopName, item -> item));
+            return Results.success(nameMap);
+        }
+        return Results.success(new HashMap<String, OnlineShopVO>(16));
     }
 
 }

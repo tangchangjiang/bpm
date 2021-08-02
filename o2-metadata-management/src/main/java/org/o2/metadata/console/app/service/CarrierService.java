@@ -40,9 +40,9 @@ public interface CarrierService {
 
     /**
      * 批量查询承运商
-     * @param carrierDTOList 承运商
+     * @param carrierDTO 承运商
      * @param organizationId 租户ID
      * @return map
      */
-    Map<String, CarrierVO> listCarriers(List<CarrierDTO> carrierDTOList, Long organizationId);
+    Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId);
 }

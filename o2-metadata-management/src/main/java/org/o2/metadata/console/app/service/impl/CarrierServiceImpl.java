@@ -108,16 +108,12 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public Map<String, CarrierVO> listCarriers(List<CarrierDTO> carrierDTOList, Long organizationId) {
-        Map<String, CarrierVO> map = Maps.newHashMapWithExpectedSize(carrierDTOList.size());
-        if (carrierDTOList.isEmpty()) {
+    public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId) {
+        Map<String, CarrierVO> map = new HashMap<>(16);
+        if (carrierDTO.getCarrierCodes().isEmpty() || carrierDTO.getCarrierNames().isEmpty()) {
             return map;
         }
-        List<String> codeList = new ArrayList<>(carrierDTOList.size());
-        for (CarrierDTO dto : carrierDTOList) {
-            codeList.add(dto.getCarrierCode());
-        }
-        List<Carrier> carriers = carrierRepository.batchSelectByCode(codeList,organizationId);
+        List<Carrier> carriers = carrierRepository.batchSelect(carrierDTO,organizationId);
         if (carriers.isEmpty()) {
             return map;
         }

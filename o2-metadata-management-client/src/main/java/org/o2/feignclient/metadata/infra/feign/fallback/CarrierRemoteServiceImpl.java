@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  *
  * 承运商
@@ -19,8 +17,8 @@ import java.util.List;
 @Slf4j
 public class CarrierRemoteServiceImpl implements CarrierRemoteService {
     @Override
-    public ResponseEntity<String> listCarriers(List<CarrierDTO> carrierList, Long organizationId) {
-        log.error("Error listCarriers, params[tenantId = {}, carrierList = {}]", organizationId, carrierList);
+    public ResponseEntity<String> listCarriers(CarrierDTO carrierDTO, Long organizationId) {
+        log.error("Error listCarriers, params[tenantId = {}, carrierDTO = {}]", organizationId, carrierDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

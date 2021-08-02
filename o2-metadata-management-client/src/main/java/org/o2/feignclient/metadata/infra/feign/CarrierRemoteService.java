@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 /**
  *
  * 承运商
@@ -25,11 +23,11 @@ import java.util.List;
 public interface CarrierRemoteService {
     /**
      * 批量查询承运商
-     * @param carrierList 承运商
+     * @param carrierDTO 承运商
      * @param organizationId 租户ID
      * @return map
      */
     @PostMapping("/{organizationId}/carrier-internal/list")
-    ResponseEntity<String> listCarriers(@RequestBody List<CarrierDTO> carrierList,
+    ResponseEntity<String> listCarriers(@RequestBody CarrierDTO carrierDTO,
                                         @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

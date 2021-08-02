@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
         }
 )
 @ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
-public class MetadataManagementFeignClientAutoConfiguration {
+public class MetadataManagementClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SysParameterRemoteServiceImpl sysParameterRemoteServiceFallback() {
@@ -81,6 +81,9 @@ public class MetadataManagementFeignClientAutoConfiguration {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
-                freightRemoteService, staticResourceRemoteService, catalogVersionRemoteService, carrierRemoteService);
+                freightRemoteService,
+                staticResourceRemoteService,
+                catalogVersionRemoteService,
+                carrierRemoteService);
     }
 }
