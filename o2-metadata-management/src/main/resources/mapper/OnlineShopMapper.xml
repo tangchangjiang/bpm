@@ -182,6 +182,7 @@
         ORDER BY os.online_shop_code
     </select>
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select online.online_shop_id,
                online.platform_code,
                tl.online_shop_name,
@@ -198,15 +199,15 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="onlineShopCodes != null and onlineShopCodes.size > 0" >
+        <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0" >
             and online.online_shop_code in
-            <foreach collection="onlineShopCodes" item="code" open="(" separator="," close=")">
+            <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
-        <if test="onlineShopNames != null and onlineShopNames.size > 0" >
+        <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size > 0" >
             and tl.online_shop_name in
-            <foreach collection="onlineShopNames" item="name" open="(" separator="," close=")">
+            <foreach collection="onlineShopDTO.onlineShopNames" item="name" open="(" separator="," close=")">
                 #{name}
             </foreach>
         </if>

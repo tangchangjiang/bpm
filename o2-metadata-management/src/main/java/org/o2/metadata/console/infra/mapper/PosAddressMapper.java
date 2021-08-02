@@ -29,5 +29,5 @@ public interface PosAddressMapper extends BaseMapper<PosAddress> {
      * @param tenantId 租户ID
      * @return  list
      */
-    List<PosAddress> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId);
+    List<PosAddress> listPosAddress(@Param("posAddressDTO")PosAddressDTO posAddressDTO, @Param("tenantId")Long tenantId);
 }
