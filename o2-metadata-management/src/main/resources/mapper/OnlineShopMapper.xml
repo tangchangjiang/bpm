@@ -3,6 +3,7 @@
 <mapper namespace="org.o2.metadata.console.infra.mapper.OnlineShopMapper">
     <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.OnlineShop">
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
+        <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
         <result column="online_shop_name" property="onlineShopName" jdbcType="VARCHAR"/>
         <result column="online_shop_code" property="onlineShopCode" jdbcType="VARCHAR"/>
         <result column="platform_shop_code" property="platformShopCode" jdbcType="VARCHAR"/>
@@ -31,6 +32,7 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         os.online_shop_id,
+        os.platform_code,
         ost.online_shop_name,
         os.online_shop_code,
         os.platform_shop_code,
@@ -48,7 +50,8 @@
         oct.catalog_name,
         os.default_currency,
         os.is_default,
-        hcl.currency_name
+        hcl.currency_name,
+        pf.platform_name
         FROM
         o2md_online_shop os
         left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}
@@ -60,6 +63,7 @@
         #{lang}
         left join  hpfm_currency  hc on hc.currency_code = os.default_currency and hc.tenant_id = #{tenantId}
         left join  hpfm_currency_tl hcl on hcl.currency_id = hc.currency_id  and   hcl.lang = #{lang}
+        left join  o2md_platform pf on pf.platform_code = os.platform_code
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -69,6 +73,10 @@
                     AND 1 = 0
                 </otherwise>
             </choose>
+            <if test="platformCode != null">
+                <bind name="platformCodeLike" value="'%'+platformCode+'%'"/>
+                AND os.platform_code LIKE upper(#{platformCodeLike})
+            </if>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code   LIKE upper(#{onlineShopCodeLike})
@@ -100,6 +108,7 @@
 
     <select id="existenceDecide" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         SELECT os.online_shop_id,
+        os.platform_code,
         os.online_shop_name,
         os.online_shop_code,
         os.platform_shop_code,
@@ -136,6 +145,7 @@
     <select id="selectShop" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select os.online_shop_id,
+        os.platform_code,
         os.online_shop_code,
         os.catalog_version_code,
         os.catalog_code,
@@ -173,6 +183,7 @@
     </select>
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         select online.online_shop_id,
+               online.platform_code,
                tl.online_shop_name,
                online.online_shop_code,
                online.catalog_code,

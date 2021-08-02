@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
@@ -37,6 +38,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShop extends AuditDomain {
     public static final String FIELD_ONLINE_SHOP_ID = "onlineShopId";
+    public static final String FIELD_PLATFORM_CODE = "platformCode";
     public static final String FIELD_ONLINE_SHOP_NAME = "onlineShopName";
     public static final String FIELD_ONLINE_SHOP_CODE = "onlineShopCode";
     public static final String FIELD_PLATFORM_SHOP_CODE = "platformShopCode";
@@ -108,6 +110,10 @@ public class OnlineShop extends AuditDomain {
     @Id
     @GeneratedValue
     private Long onlineShopId;
+
+    @LovValue(lovCode = "o2md_platform")
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
 
     @ApiModelProperty(value = "网点名称")
     @NotBlank
@@ -198,4 +204,8 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "货币名称")
     @Transient
     private String currencyName;
+
+    @Transient
+    @ApiModelProperty(value = "平台名称")
+    private String platformName;
 }
