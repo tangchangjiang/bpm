@@ -2,7 +2,10 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.metadata.console.api.dto.PosAddressDTO;
+import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.infra.convertor.PosAddressConvertor;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
 import org.slf4j.Logger;
@@ -21,8 +24,6 @@ import java.util.List;
  */
 @Service
 public class PosServiceImpl implements PosService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PosServiceImpl.class);
 
     private final PosRepository posRepository;
     private final PostTimeRepository postTimeRepository;
@@ -121,6 +122,11 @@ public class PosServiceImpl implements PosService {
             pos.setCarrierName(carrier.getCarrierName());
         }
         return pos;
+    }
+
+    @Override
+    public List<PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId) {
+        return PosAddressConvertor.poToVoListObjects(posAddressRepository.listPosAddress(posAddressDTO,tenantId));
     }
 
 
