@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.PlatformInfMappingMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+        <result column="platform_inf_mapping_id" property="platformInfMappingId" jdbcType="DECIMAL"/>
+        <result column="inf_type_code" property="infTypeCode" jdbcType="VARCHAR"/>
+        <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
+        <result column="inf_code" property="infCode" jdbcType="VARCHAR"/>
+        <result column="inf_name" property="infName" jdbcType="VARCHAR"/>
+        <result column="platform_inf_code" property="platformInfCode" jdbcType="VARCHAR"/>
+        <result column="platform_inf_name" property="platformInfName" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+    </resultMap>
+
+
+</mapper>
