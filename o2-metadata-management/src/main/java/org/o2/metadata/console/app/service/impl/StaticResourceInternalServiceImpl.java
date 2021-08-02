@@ -71,13 +71,7 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
             StaticResource originResource = staticResources.get(0);
             staticResource.setObjectVersionNumber(originResource.getObjectVersionNumber());
             staticResource.setResourceId(originResource.getResourceId());
-            staticResourceRepository.updateOptional(staticResource,
-                    StaticResource.FIELD_RESOURCE_CODE,
-                    StaticResource.FIELD_SOURCE_MODULE_CODE,
-                    StaticResource.FIELD_RESOURCE_URL,
-                    StaticResource.FIELD_DESCRIPTION,
-                    StaticResource.FIELD_TENANT_ID
-            );
+            staticResourceRepository.updateByPrimaryKey(staticResource);
         }
     }
 }
