@@ -6,6 +6,7 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.StaticResourceRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -32,7 +33,7 @@ public interface StaticResourceRemoteService {
      * @return code&url映射关系
      */
     @PostMapping("/{organizationId}/static-resources-internal/query-resource-url")
-    ResponseEntity<String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO);
+    ResponseEntity<String> queryResourceCodeUrlMap(@PathVariable(value = "organizationId") Long organizationId, @RequestBody StaticResourceQueryDTO staticResourceQueryDTO);
 
 
     /**
@@ -42,7 +43,7 @@ public interface StaticResourceRemoteService {
      * @return code&url映射关系
      */
     @PostMapping("/{organizationId}/static-resources-internal/save")
-    ResponseEntity<String> saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList);
+    ResponseEntity<String> saveResource(@PathVariable(value = "organizationId") Long organizationId, @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList);
 
 }
 

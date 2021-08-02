@@ -23,6 +23,8 @@ public class OnlineShopConvertor {
         onlineShopVO.setOnlineShopId(onlineShop.getOnlineShopId());
         onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
+        onlineShopVO.setCatalogCode(onlineShop.getCatalogCode());
+        onlineShopVO.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
         return onlineShopVO;
     }
 

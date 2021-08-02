@@ -15,10 +15,10 @@ public class CatalogVersionDTO {
     /**
      * 目录编码
      */
-    private String catalogCode;
+    private List<String> catalogCodes;
 
     /**
      * 目录版本编码
      */
-    private List<String> catalogCodeVersionList;
+    private List<String> catalogCodeVersionCodes;
 }
