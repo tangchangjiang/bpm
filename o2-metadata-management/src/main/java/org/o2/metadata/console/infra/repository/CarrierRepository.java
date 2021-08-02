@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository;
 
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.CarrierDTO;
 import org.o2.metadata.console.infra.entity.Carrier;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface CarrierRepository extends BaseRepository<Carrier> {
 
     /**
      * 批量查询承运商
-     * @param codeList 承运商
+     * @param carrierDTO 承运商
      * @param tenantId 租户ID
      * @return list
      */
-    List<Carrier> batchSelectByCode(List<String> codeList, Long tenantId);
+    List<Carrier> batchSelect(CarrierDTO carrierDTO, Long tenantId);
 }

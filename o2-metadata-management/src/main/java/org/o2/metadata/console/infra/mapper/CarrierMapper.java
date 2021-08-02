@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.CarrierDTO;
 import org.o2.metadata.console.infra.entity.Carrier;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface CarrierMapper extends BaseMapper<Carrier> {
 
     /**
      * 批量查询承运商
-     * @param carrierCodeList 承运商
+     * @param carrierDTO 承运商
      * @param tenantId 租户ID
      * @return list
      */
-    List<Carrier> batchSelectByCode(@Param("carrierCodeList") List<String> carrierCodeList, @Param("tenantId") Long tenantId);
+    List<Carrier> batchSelect(CarrierDTO carrierDTO, @Param("tenantId") Long tenantId);
 }
