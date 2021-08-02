@@ -6,11 +6,10 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.CatalogVersionRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 
 /**
  *
@@ -26,11 +25,11 @@ import java.util.List;
 public interface CatalogVersionRemoteService {
     /**
      * 批量查询目录版本
-     * @param catalogVersionList 目录版本集合
+     * @param catalogVersionDTO 目录版本集合
      * @param organizationId 租户ID
      * @return  map
      */
-    @GetMapping("/{organizationId}/catalogVersion-internal/select-name")
-    ResponseEntity<String> batchSelectNameByCode(@RequestParam List<CatalogVersionDTO> catalogVersionList,
+    @PostMapping("/{organizationId}/catalogVersion-internal/select-name")
+    ResponseEntity<String> listCatalogVersions(@RequestBody CatalogVersionDTO catalogVersionDTO,
                                                @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }
