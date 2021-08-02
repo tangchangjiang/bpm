@@ -3,10 +3,7 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.dto.CarrierDTO;
-import org.o2.feignclient.metadata.domain.dto.CatalogVersionDTO;
-import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
+import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 
@@ -138,6 +135,15 @@ public class O2MetadataManagementClient {
         });
     }
 
+    /**
+     * 批量查询网店
+     * @param  onlineShopDTO 网店
+     * @return map
+     */
+    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId){
+        return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+        });
+    }
 
     /**
      * 获取快递配送接单量到达上限的仓库

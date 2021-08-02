@@ -11,7 +11,12 @@ import org.springframework.context.annotation.Bean;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @EnableFeignClients(
-        basePackageClasses = {SysParameterRemoteService.class, WarehouseRemoteService.class, OnlineShopRelWarehouseRemoteService.class}
+        basePackageClasses = {SysParameterRemoteService.class,
+                WarehouseRemoteService.class,
+                OnlineShopRelWarehouseRemoteService.class,
+                FreightRemoteService.class,
+                CatalogVersionRemoteService.class,
+                CarrierRemoteService.class}
 )
 public class MetadataFeignClientAutoConfiguration {
     @Bean
