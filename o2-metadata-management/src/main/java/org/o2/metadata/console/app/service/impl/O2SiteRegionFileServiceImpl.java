@@ -28,10 +28,14 @@ import java.util.List;
 @Slf4j
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private static final String JSON_TYPE = "application/json";
+    private static final String ZH_CN = "zh_CN";
+    private static final String EN_US = "en_US";
+
     private final RegionMapper regionMapper;
     private final FileStorageProperties fileStorageProperties;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
+
 
     public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
                                        FileStorageProperties fileStorageProperties,
@@ -92,17 +96,17 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId, String zhResourceUrl, String enResourceUrl) {
         List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
-        StaticResourceSaveDTO zhSaveDTO = fillCommonFields(tenantId, zhResourceUrl);
+        StaticResourceSaveDTO zhSaveDTO = fillCommonFields(tenantId, zhResourceUrl, ZH_CN);
         saveDTOList.add(zhSaveDTO);
-        StaticResourceSaveDTO enSaveDTO = fillCommonFields(tenantId, enResourceUrl);
+        StaticResourceSaveDTO enSaveDTO = fillCommonFields(tenantId, enResourceUrl, EN_US);
         saveDTOList.add(enSaveDTO);
         return saveDTOList;
     }
 
-    private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl) {
+    private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl, String languageCode) {
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
-        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION);
+        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.buildMetadataRegionCode(languageCode));
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(MetadataConstants.StaticResourceCode.O2MD_REGION_DESCRIPTION);
         saveDTO.setResourceUrl(resourceUrl);
