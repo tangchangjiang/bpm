@@ -31,7 +31,7 @@ public interface StaticResourceRemoteService {
      * @param staticResourceQueryDTO staticResourceQueryDTO
      * @return code&url映射关系
      */
-    @PostMapping("/query-resource-url")
+    @PostMapping("/{organizationId}/static-resources-internal/query-resource-url")
     ResponseEntity<String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO);
 
 
@@ -41,7 +41,7 @@ public interface StaticResourceRemoteService {
      * @param staticResourceSaveDTOList staticResourceSaveDTOList
      * @return code&url映射关系
      */
-    @PostMapping("/save")
+    @PostMapping("/{organizationId}/static-resources-internal/save")
     ResponseEntity<String> saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList);
 
 }

@@ -43,7 +43,7 @@ public class StaticResourceInternalController extends BaseController {
     }
 
 
-    @ApiOperation(value = "查询静态资源文件code&url映射")
+    @ApiOperation(value = "保存静态资源文件code&url映射")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping("/save")
     public ResponseEntity<Boolean> saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
