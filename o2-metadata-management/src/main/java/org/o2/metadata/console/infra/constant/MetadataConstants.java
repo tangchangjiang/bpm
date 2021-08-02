@@ -300,6 +300,10 @@ public interface MetadataConstants {
          * 元数据 - 地区数据文件描述
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
+
+        static String buildMetadataRegionCode(String languageCode) {
+            return String.format("%s_%s", O2MD_REGION, languageCode);
+        }
     }
 
     /**
