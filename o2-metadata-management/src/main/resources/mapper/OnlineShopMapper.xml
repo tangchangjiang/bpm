@@ -176,7 +176,22 @@
                online.online_shop_name,
                tl.online_shop_name
         from o2md_online_shop online
-                 left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
-
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND online.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+        <if test="onlineShopCodes != null and onlineShopCodes.size > 0" >
+            and online.online_shop_code
+            <foreach collection="onlineShopCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+        AND tl.lang =#{lang}
     </select>
 </mapper>

@@ -18,7 +18,7 @@ import java.util.List;
 public class OnlineShopDTO {
 
     @ApiModelProperty(value = "网点编码")
-    private List<String> onlineShopCode;
+    private List<String> onlineShopCodes;
 
 
 }

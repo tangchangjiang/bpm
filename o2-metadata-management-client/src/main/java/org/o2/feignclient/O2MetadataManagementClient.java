@@ -126,12 +126,12 @@ public class O2MetadataManagementClient {
 
     /**
      * 批量查询承运商
-     * @param carrierList 承运商
+     * @param carrierDTO 承运商
      * @param tenantId 租户ID
      * @return map
      */
-    public Map<String, CarrierVO> listCarriers(List<CarrierDTO> carrierList, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierList, tenantId), new TypeReference<Map<String, CarrierVO>>() {
+    public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
         });
     }
 

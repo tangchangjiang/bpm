@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 
 /**
  * 承运商
@@ -21,17 +23,8 @@ public class CarrierDTO {
     private Long carrierId;
 
     @ApiModelProperty(value = "承运商编码")
-    private String carrierCode;
+    private List<String> carrierCodes;
 
     @ApiModelProperty(value = "承运商名称")
-    private String carrierName;
-
-    @ApiModelProperty(value = "承运商类型.值集:O2MD.CARRIER_TYPE")
-    private String carrierTypeCode;
-
-    @ApiModelProperty(value = "是否有效")
-    private Integer activeFlag;
-
-    @ApiModelProperty(value = "组织ID")
-    private Long tenantId;
+    private List<String> carrierNames;
 }

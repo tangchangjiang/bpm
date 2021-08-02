@@ -54,7 +54,7 @@
             </if>
         ORDER BY carrier_code
     </select>
-    <select id="batchSelectByCode" resultType="org.o2.metadata.console.infra.entity.Carrier">
+    <select id="batchSelect" resultType="org.o2.metadata.console.infra.entity.Carrier">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         c.carrier_code,
@@ -70,10 +70,16 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="carrierCodeList != null and carrierCodeList.size > 0" >
+        <if test="carrierCodes != null and carrierCodes.size > 0" >
             and c.carrier_code IN
-            <foreach collection="carrierCodeList" item="code" open="(" separator="," close=")">
+            <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
                 #{code}
+            </foreach>
+        </if>
+        <if test="carrierNames != null and carrierNames.size > 0" >
+            and c.carrier_name IN
+            <foreach collection="carrierNames" item="name" open="(" separator="," close=")">
+                #{name}
             </foreach>
         </if>
         AND t.lang =#{lang}

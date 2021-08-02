@@ -39,8 +39,8 @@ public class CarrierInternalController extends BaseController {
     @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @PostMapping("/list")
-    public ResponseEntity<Map<String, CarrierVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody List<CarrierDTO> carrierDTOList) {
-        return Results.success(carrierService.listCarriers(carrierDTOList,organizationId));
+    public ResponseEntity<Map<String, CarrierVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierDTO carrierDTO) {
+        return Results.success(carrierService.listCarriers(carrierDTO,organizationId));
     }
 
 
