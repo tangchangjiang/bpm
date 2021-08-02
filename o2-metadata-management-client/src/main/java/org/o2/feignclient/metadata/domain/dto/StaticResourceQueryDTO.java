@@ -18,7 +18,4 @@ public class StaticResourceQueryDTO {
     @ApiModelProperty(value = "资源编码列表", required = true)
     private List<String> resourceCodeList;
 
-    @ApiModelProperty(value = "租户Id")
-    private Long tenantId;
-
 }
