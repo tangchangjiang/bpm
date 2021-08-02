@@ -21,10 +21,10 @@ public class PosAddressConvertor {
         }
         PosAddressVO posAddressVO = new PosAddressVO();
         posAddressVO.setPosAddressId(posAddress.getPosAddressId());
-        posAddressVO.setCountryId(posAddress.getCountryId());
-        posAddressVO.setRegionId(posAddress.getRegionId());
-        posAddressVO.setCityId(posAddress.getCityId());
-        posAddressVO.setDistrictId(posAddress.getDistrictId());
+        posAddressVO.setCountryCode(posAddress.getCountryCode());
+        posAddressVO.setRegionCode(posAddress.getRegionCode());
+        posAddressVO.setCityCode(posAddress.getCityCode());
+        posAddressVO.setDistrictCode(posAddress.getDistrictCode());
         posAddressVO.setStreetName(posAddress.getStreetName());
         posAddressVO.setPhoneNumber(posAddress.getPhoneNumber());
         posAddressVO.setPostcode(posAddress.getPostcode());

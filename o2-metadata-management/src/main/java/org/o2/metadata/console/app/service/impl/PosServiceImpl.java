@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
@@ -25,21 +26,31 @@ import java.util.List;
 @Service
 public class PosServiceImpl implements PosService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PosServiceImpl.class);
+
     private final PosRepository posRepository;
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
     private final RegionRepository regionRepository;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private CarrierRepository carrierRepository;
+    private final LovAdapter lovAdapter;
 
 
-    public PosServiceImpl(PosRepository posRepository, PostTimeRepository postTimeRepository, PosAddressRepository posAddressRepository, RegionRepository regionRepository, PosRelCarrierRepository posRelCarrierRepository, CarrierRepository carrierRepository) {
+    public PosServiceImpl(PosRepository posRepository,
+                          PostTimeRepository postTimeRepository,
+                          PosAddressRepository posAddressRepository,
+                          RegionRepository regionRepository,
+                          PosRelCarrierRepository posRelCarrierRepository,
+                          CarrierRepository carrierRepository,
+                          LovAdapter lovAdapter) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionRepository = regionRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRepository = carrierRepository;
+        this.lovAdapter = lovAdapter;
     }
 
     @Override

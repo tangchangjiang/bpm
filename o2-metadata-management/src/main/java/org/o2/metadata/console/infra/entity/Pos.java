@@ -90,7 +90,7 @@ public class Pos extends AuditDomain {
         }
 
         Assert.notNull(this.getAddress(), "pos must contains an address");
-        Assert.notNull(this.getAddress().getDistrictId(), "pos must contains an address");
+        Assert.notNull(this.getAddress().getDistrictCode(), "pos must contains an address");
         Assert.notNull(this.tenantId, "pos must contains tenantId");
         if (MetadataConstants.PosType.WAREHOUSE.equalsIgnoreCase(this.posTypeCode)) {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
