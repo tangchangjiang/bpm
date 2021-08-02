@@ -59,9 +59,8 @@ public class OnlineShopRelWarehouseInternalController {
     @PostMapping("/onlineShop-list")
     public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody OnlineShopDTO onlineShopDTO) {
-
-        List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
         log.info("onlineShopVOList test======test");
+        List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
         if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopCodes())) {
             Map<String, OnlineShopVO> codeMap = onlineShopVOList.stream().collect(Collectors.toMap(OnlineShopVO::getOnlineShopCode, item -> item));
             return Results.success(codeMap);
