@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.infra.entity.Warehouse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
