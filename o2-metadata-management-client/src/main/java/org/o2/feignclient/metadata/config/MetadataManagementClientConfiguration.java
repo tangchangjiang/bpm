@@ -21,7 +21,8 @@ import org.springframework.context.annotation.Configuration;
                 StaticResourceRemoteService.class,
                 FreightRemoteService.class,
                 CatalogVersionRemoteService.class,
-                CarrierRemoteService.class
+                CarrierRemoteService.class,
+                PosRemoteService.class
         }
 )
 @ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
@@ -68,6 +69,11 @@ public class MetadataManagementClientConfiguration {
         return new CarrierRemoteServiceImpl();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public PosRemoteServiceImpl posRemoteServiceFallback() {
+        return new PosRemoteServiceImpl();
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -77,13 +83,15 @@ public class MetadataManagementClientConfiguration {
                                                                  FreightRemoteService freightRemoteService,
                                                                  StaticResourceRemoteService staticResourceRemoteService,
                                                                  CatalogVersionRemoteService catalogVersionRemoteService,
-                                                                 CarrierRemoteService carrierRemoteService) {
+                                                                 CarrierRemoteService carrierRemoteService,
+                                                                 PosRemoteService posRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
                 freightRemoteService,
                 staticResourceRemoteService,
                 catalogVersionRemoteService,
-                carrierRemoteService);
+                carrierRemoteService,
+                posRemoteService);
     }
 }

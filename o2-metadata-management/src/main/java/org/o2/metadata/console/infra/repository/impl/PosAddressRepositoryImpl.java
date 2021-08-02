@@ -1,10 +1,13 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.repository.PosAddressRepository;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 详细地址 资源库实现
@@ -22,5 +25,10 @@ public class PosAddressRepositoryImpl extends BaseRepositoryImpl<PosAddress> imp
     @Override
     public PosAddress findDetailedAddressById(final Long addressId) {
         return posAddressMapper.findDetailedAddressById(addressId);
+    }
+
+    @Override
+    public List<PosAddress> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId) {
+        return posAddressMapper.listPosAddress(posAddressDTO,tenantId);
     }
 }

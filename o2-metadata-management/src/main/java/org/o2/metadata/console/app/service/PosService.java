@@ -1,7 +1,11 @@
 package org.o2.metadata.console.app.service;
 
 
+import org.o2.metadata.console.api.dto.PosAddressDTO;
+import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.infra.entity.Pos;
+
+import java.util.List;
 
 /**
  * 服务点信息应用服务
@@ -33,5 +37,12 @@ public interface PosService {
      * @return Pos
      */
     Pos getPosWithPropertiesInRedisByPosId(Long organizationId, Long posId);
-
+    
+    /**
+     * 查询服务地址
+     * @param posAddressDTO 服务点地址
+     * @param tenantId 租户ID
+     * @return  list
+     */
+    List<PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId);
 }

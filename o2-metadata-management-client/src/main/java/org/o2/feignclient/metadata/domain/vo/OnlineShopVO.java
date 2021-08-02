@@ -22,7 +22,7 @@ public class OnlineShopVO {
     private String onlineShopCode;
 
     @ApiModelProperty(value = "目录编码")
-    private System catalogCode;
+    private String catalogCode;
 
     @ApiModelProperty(value = "目录编码")
     private String catalogVersionCode;
