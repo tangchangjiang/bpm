@@ -6,7 +6,6 @@ import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class O2MetadataManagementClient {
      * 从redis查询系统参数
      *
      * @param paramCode 参数编码
-     * @param tenantId 租户ID
+     * @param tenantId  租户ID
      */
     public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
@@ -57,7 +56,7 @@ public class O2MetadataManagementClient {
      * 从redis查询仓库
      *
      * @param warehouseCodes 仓库编码
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      */
     public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
@@ -67,8 +66,8 @@ public class O2MetadataManagementClient {
     /**
      * 更新系统参数
      *
-     * @param systemParameterDTO  系统
-     * @param tenantId 租户ID
+     * @param systemParameterDTO 系统
+     * @param tenantId           租户ID
      */
     public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterDTO, tenantId), ResponseVO.class);
@@ -76,8 +75,9 @@ public class O2MetadataManagementClient {
 
     /**
      * 从redis查询系统参数
-     *  @param paramCodes 参数编码
-     * @param tenantId 租户ID
+     *
+     * @param paramCodes 参数编码
+     * @param tenantId   租户ID
      * @return map
      */
     public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
@@ -87,8 +87,9 @@ public class O2MetadataManagementClient {
 
     /**
      * 从redis查询网店关联有效的仓库
-     *  @param onlineShopeCode 网店编码
-     * @param tenantId 租户ID
+     *
+     * @param onlineShopeCode 网店编码
+     * @param tenantId        租户ID
      * @return map<warehouseCode, OnlineShopRelWarehouseVO>
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
@@ -108,8 +109,9 @@ public class O2MetadataManagementClient {
 
     /**
      * 查询有效仓库
+     *
      * @param onlineShopCode 网店编码
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      * @return 集合
      */
     public List<WarehouseVO> listActiveWarehouse(String onlineShopCode, Long tenantId) {
@@ -130,8 +132,9 @@ public class O2MetadataManagementClient {
 
     /**
      * 批量查询承运商
+     *
      * @param carrierDTO 承运商
-     * @param tenantId 租户ID
+     * @param tenantId   租户ID
      * @return map
      */
     public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long tenantId) {
@@ -141,10 +144,11 @@ public class O2MetadataManagementClient {
 
     /**
      * 批量查询网店
-     * @param  onlineShopDTO 网店
+     *
+     * @param onlineShopDTO 网店
      * @return map
      */
-    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId){
+    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
         });
     }
@@ -197,8 +201,8 @@ public class O2MetadataManagementClient {
      * @param staticResourceQueryDTO staticResourceQueryDTO
      * @return code&url映射
      */
-    public Map<String, String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.queryResourceCodeUrlMap(staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
+    public Map<String, String> queryResourceCodeUrlMap(final Long organizationId, StaticResourceQueryDTO staticResourceQueryDTO) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.queryResourceCodeUrlMap(organizationId, staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
         });
     }
 
@@ -207,8 +211,8 @@ public class O2MetadataManagementClient {
      *
      * @param staticResourceSaveDTOList staticResourceSaveDTOList
      */
-    public Boolean saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTOList), Boolean.class);
+    public Boolean saveResource(final Long organizationId, List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(organizationId, staticResourceSaveDTOList), Boolean.class);
     }
 
 }
