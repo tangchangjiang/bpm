@@ -23,13 +23,13 @@ import java.util.List;
 public class StaticResourceRemoteServiceImpl implements StaticResourceRemoteService {
 
     @Override
-    public ResponseEntity<String> queryResourceCodeUrlMap(StaticResourceQueryDTO staticResourceQueryDTO) {
-        log.error("Error queryResourceCodeUrlMap, params[resourceCodeList = {}, tenantId = {}]", staticResourceQueryDTO.getResourceCodeList(), staticResourceQueryDTO.getTenantId());
+    public ResponseEntity<String> queryResourceCodeUrlMap(Long tenantId, StaticResourceQueryDTO staticResourceQueryDTO) {
+        log.error("Error queryResourceCodeUrlMap, params[resourceCodeList = {}, tenantId = {}]", staticResourceQueryDTO.getResourceCodeList(), tenantId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
-    public ResponseEntity<String> saveResource(List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+    public ResponseEntity<String> saveResource(Long tenantId, List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
         for (StaticResourceSaveDTO dto : staticResourceSaveDTOList) {
             log.error("Error saveResource, params[resourceCode = {}, resourceUrl = {}, tenantId = {}]",
                     dto.getResourceCode(), dto.getResourceUrl(), dto.getTenantId());
