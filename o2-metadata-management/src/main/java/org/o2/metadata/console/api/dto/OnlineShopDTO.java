@@ -20,5 +20,8 @@ public class OnlineShopDTO {
     @ApiModelProperty(value = "网点编码")
     private List<String> onlineShopCodes;
 
+    @ApiModelProperty(value = "网店名称")
+    private List<String> onlineShopNames;
+
 
 }
