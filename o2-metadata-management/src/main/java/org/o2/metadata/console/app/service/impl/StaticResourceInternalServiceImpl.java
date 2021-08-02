@@ -42,7 +42,6 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         if (CollectionUtils.isEmpty(staticResourceQueryDTO.getResourceCodeList())) {
             return new HashMap<>();
         }
-        // TODO: 后续再查Redis,cache aside
         List<String> resourceCodeList = staticResourceQueryDTO.getResourceCodeList();
         List<StaticResource> resourceList = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
@@ -59,15 +58,18 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         staticResource.setTenantId(DetailsHelper.getUserDetails().getTenantId());
 
         // 根据resource_code查询是否已存在
-        final int count = staticResourceRepository.selectCountByCondition(Condition.builder(StaticResource.class)
+        List<StaticResource> staticResources = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
                         .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
                 ).build());
 
+        int count = staticResources.size();
         if (count <= 0) {
             staticResourceRepository.insertSelective(staticResource);
         } else {
+            StaticResource originResource = staticResources.get(0);
+            staticResource.setObjectVersionNumber(originResource.getObjectVersionNumber());
             staticResourceRepository.updateOptional(staticResource,
                     StaticResource.FIELD_RESOURCE_CODE,
                     StaticResource.FIELD_SOURCE_MODULE_CODE,
@@ -76,8 +78,5 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
                     StaticResource.FIELD_TENANT_ID
             );
         }
-
-        // TODO:最后再添加缓存
-//        syncToRedis(staticResource);
     }
 }
