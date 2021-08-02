@@ -57,7 +57,7 @@ public class SysParameterMetadataInternalController {
 
     @ApiOperation(value = "更新系统参数(map）类型")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<ResponseVO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterDTO systemParameterDTO) {
         return Results.success(sysParamService.updateSysParameter(systemParameterDTO,organizationId));
     }

@@ -53,11 +53,12 @@ public class O2MetadataClient {
     /**
      * 从redis查询系统仓库
      *
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      */
-    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId){
-        return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
+    public Map<String,WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId){
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
+        });
     }
     /**
      * 获取模版

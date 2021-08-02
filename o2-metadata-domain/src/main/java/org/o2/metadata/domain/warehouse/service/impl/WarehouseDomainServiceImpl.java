@@ -5,6 +5,8 @@ import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  *
  * 仓库
@@ -20,7 +22,7 @@ public class WarehouseDomainServiceImpl implements WarehouseDomainService {
     }
 
     @Override
-    public WarehouseDO getWarehouse(String warehouseCode, Long tenantId) {
-        return warehouseDomainRepository.getWarehouse(warehouseCode,tenantId);
+    public List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId);
     }
 }

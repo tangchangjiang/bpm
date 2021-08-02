@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
 import java.util.List;
@@ -42,4 +43,12 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @param tenantId 租户ID
      */
     void updateDefaultShop(@Param("tenantId") final Long tenantId);
+
+    /**
+     * 批量查询网店
+     * @param  onlineShopDTO 网店
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<OnlineShop> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
 }

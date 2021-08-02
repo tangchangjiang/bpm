@@ -4,6 +4,9 @@ import org.o2.metadata.api.vo.WarehouseVO;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 import org.o2.metadata.infra.entity.Warehouse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * 仓库
@@ -76,5 +79,35 @@ public class WarehouseConvertor {
         warehouseVO.setExpressLimitValue(warehouse.getExpressLimitValue());
         warehouseVO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseVO;
+    }
+    /**
+     * PO 转 DO
+     * @param warehouses
+     * @return  list
+     */
+    public static List<WarehouseDO> poToDoListObjects(List<Warehouse> warehouses) {
+        List<WarehouseDO> warehouseDOList = new ArrayList<>();
+        if (warehouses == null) {
+            return warehouseDOList;
+        }
+        for (Warehouse warehouse : warehouses) {
+            warehouseDOList.add(poToDoObject(warehouse));
+        }
+        return warehouseDOList;
+    }
+    /**
+     * DO 转 VO
+     * @param warehouses
+     * @return  list
+     */
+    public static List<WarehouseVO> doToVoListObjects(List<WarehouseDO> warehouses) {
+        List<WarehouseVO> warehouseVOList = new ArrayList<>();
+        if (warehouses == null) {
+            return warehouseVOList;
+        }
+        for (WarehouseDO warehouse : warehouses) {
+            warehouseVOList.add(doToVoObject(warehouse));
+        }
+        return warehouseVOList;
     }
 }

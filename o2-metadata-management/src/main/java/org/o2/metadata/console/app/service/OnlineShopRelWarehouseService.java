@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
@@ -71,4 +73,12 @@ public interface OnlineShopRelWarehouseService {
      * @return list
      */
     List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
+
+    /**
+     * 批量查询网店
+     * @param  onlineShopDTO 网店
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
 }

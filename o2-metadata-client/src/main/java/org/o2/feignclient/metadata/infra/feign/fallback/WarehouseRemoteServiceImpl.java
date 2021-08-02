@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,9 +30,11 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-
     @Override
-    public ResponseEntity<String> getWarehouse(Long organizationId, String warehouseCode) {
+    public ResponseEntity<String> listWarehouses(Long organizationId, List<String> warehouseCodes) {
+        logger.error("Error listWarehouses, params[tenantId = {}, warehouseCodes = {}]", organizationId, warehouseCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+
 }

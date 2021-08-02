@@ -23,12 +23,21 @@ public interface CatalogMapper extends BaseMapper<Catalog> {
      * @throws RuntimeException exception description
      */
     List<CatalogVO> batchFindByIds(@Param(value = "catalogIds") Set<Long> catalogIds, @Param("tenantId") Long tenantId);
+
     /**
      * 查询目录
      * @author yipeng.zhu@hand-china.com
      * @date 2020-01-03
      * @param catalog 目录查询条件
-     * @return  目录列表
+     * @return 目录列表
      */
     List<Catalog> listCatalog(Catalog catalog);
+
+    /**
+     * 通过编码查询目录
+     * @param  catalogCodes 目录编码
+     * @param  tenantId 租户ID
+     * @return 目录
+     */
+    List<Catalog> batchSelectByCodes(@Param(value = "catalogCodes") List<String> catalogCodes, @Param("tenantId") Long tenantId);
 }

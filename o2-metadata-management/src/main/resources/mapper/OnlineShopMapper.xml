@@ -171,4 +171,12 @@
         </where>
         ORDER BY os.online_shop_code
     </select>
+    <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        select online.online_shop_id,
+               online.online_shop_name,
+               tl.online_shop_name
+        from o2md_online_shop online
+                 left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
+
+    </select>
 </mapper>
