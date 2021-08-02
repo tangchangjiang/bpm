@@ -3,10 +3,7 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
-import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
-import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
+import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +32,8 @@ public class O2MetadataManagementClient {
                                       WarehouseRemoteService warehouseRemoteService,
                                       OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                       FreightRemoteService freightRemoteService,
-                                      CatalogVersionRemoteService catalogVersionRemoteService,
+                                      StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService) {
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService, StaticResourceRemoteService staticResourceRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;

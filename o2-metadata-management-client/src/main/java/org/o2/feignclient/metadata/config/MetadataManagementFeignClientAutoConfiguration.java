@@ -19,7 +19,9 @@ import org.springframework.context.annotation.Configuration;
                 WarehouseRemoteService.class,
                 OnlineShopRelWarehouseRemoteService.class,
                 StaticResourceRemoteService.class,
-                FreightRemoteService.class
+                FreightRemoteService.class,
+                CatalogVersionRemoteService.class,
+                CarrierRemoteService.class
         }
 )
 @ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
@@ -56,14 +58,29 @@ public class MetadataManagementFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public CatalogVersionRemoteServiceImpl catalogVersionRemoteServiceFallback() {
+        return new CatalogVersionRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CarrierRemoteServiceImpl carrierRemoteServiceFallback() {
+        return new CarrierRemoteServiceImpl();
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
     public O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                                                  WarehouseRemoteService warehouseRemoteService,
                                                                  OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                                                  FreightRemoteService freightRemoteService,
-                                                                 StaticResourceRemoteService staticResourceRemoteService) {
+                                                                 StaticResourceRemoteService staticResourceRemoteService,
+                                                                 CatalogVersionRemoteService catalogVersionRemoteService,
+                                                                 CarrierRemoteService carrierRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
-                freightRemoteService, staticResourceRemoteService);
+                freightRemoteService, staticResourceRemoteService, catalogVersionRemoteService, carrierRemoteService);
     }
 }
