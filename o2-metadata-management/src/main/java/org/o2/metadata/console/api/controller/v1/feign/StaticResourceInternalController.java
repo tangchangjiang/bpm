@@ -38,6 +38,7 @@ public class StaticResourceInternalController extends BaseController {
     @PostMapping("/query-resource-url")
     public ResponseEntity<Map<String, String>> queryResourceCodeUrlMap(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                        @RequestBody StaticResourceQueryDTO staticResourceQueryDTO) {
+        staticResourceQueryDTO.setTenantId(organizationId);
         return Results.success(staticResourceInternalService.queryResourceCodeUrlMap(staticResourceQueryDTO));
     }
 
