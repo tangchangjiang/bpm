@@ -6,9 +6,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,4 +51,14 @@ public class OnlineShopRelWarehouseInternalController {
         }
         return Results.success(map);
     }
+
+    @ApiOperation(value = "查询网店关联有效仓库")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/onlineShop-list")
+    public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                     @RequestBody OnlineShopDTO onlineShopDTO) {
+        List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
+        return Results.success(null);
+    }
+
 }
