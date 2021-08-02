@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.PlatformMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.Platform">
+        <result column="platform_id" property="platformId" jdbcType="DECIMAL"/>
+        <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
+        <result column="platform_name" property="platformName" jdbcType="VARCHAR"/>
+        <result column="platform_status_code" property="platformStatusCode" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="baseSql">
+        platform_id,
+        platform_code,
+        platform_name,
+        platform_status_code,
+        tenant_id,
+        created_by,
+        last_updated_by,
+        creation_date,
+        last_update_date,
+        object_version_number
+    </sql>
+    <select id="listPlatform" resultType="org.o2.metadata.console.infra.entity.Platform">
+        select
+        <include refid="baseSql"></include>
+        from o2md_platform pf
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND pf.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="platformCode != null and platformCode != ''">
+                <bind name="platformCode" value="'%'+platformCode+'%'"/>
+                and pf.platform_code like #{platformCode}
+            </if>
+            <if test="platformName != null and platformName != ''">
+                <bind name="platformName" value="'%'+platformName+'%'"/>
+                and pf.platform_name like #{platformName}
+            </if>
+        </where>
+    </select>
+</mapper>
