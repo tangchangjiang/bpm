@@ -13,6 +13,7 @@ sonar_check:
       -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dmaven.test.failure.ignore=true -DskipTests=true
   only:
     - sonar
+    - master
 
 maven_package:
   stage: maven_package
