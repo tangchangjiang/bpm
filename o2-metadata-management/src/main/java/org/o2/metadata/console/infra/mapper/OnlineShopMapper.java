@@ -50,5 +50,5 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @param tenantId 租户ID
      * @return list
      */
-    List<OnlineShop> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
+    List<OnlineShop> listOnlineShops(@Param("onlineShopDTO") OnlineShopDTO onlineShopDTO,@Param("tenantId") Long tenantId);
 }
