@@ -190,7 +190,7 @@
                online.catalog_code,
                online.catalog_version_code
         from o2md_online_shop online
-        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
+        inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
         <choose>
             <when test="tenantId != null">
                 AND online.tenant_id = #{tenantId}
