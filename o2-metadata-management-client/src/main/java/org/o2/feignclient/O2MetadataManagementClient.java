@@ -25,6 +25,7 @@ public class O2MetadataManagementClient {
     private final StaticResourceRemoteService staticResourceRemoteService;
     private final CatalogVersionRemoteService catalogVersionRemoteService;
     private final CarrierRemoteService carrierRemoteService;
+    private final PosRemoteService posRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
@@ -32,7 +33,8 @@ public class O2MetadataManagementClient {
                                       OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
-                                      CarrierRemoteService carrierRemoteService) {
+                                      CarrierRemoteService carrierRemoteService,
+                                      PosRemoteService posRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -40,6 +42,7 @@ public class O2MetadataManagementClient {
         this.staticResourceRemoteService = staticResourceRemoteService;
         this.catalogVersionRemoteService = catalogVersionRemoteService;
         this.carrierRemoteService = carrierRemoteService;
+        this.posRemoteService = posRemoteService;
     }
 
     /**
@@ -78,7 +81,7 @@ public class O2MetadataManagementClient {
      *
      * @param paramCodes 参数编码
      * @param tenantId   租户ID
-     * @return map
+     * @return map key:paramCode
      */
     public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
@@ -123,7 +126,7 @@ public class O2MetadataManagementClient {
      * 批量查询目录版本
      * @param catalogVersionDTO 目录版本集合
      * @param tenantId 租户ID
-     * @return map
+     * @return map key:编码 value:名称
      */
     public Map<String, String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long tenantId) {
         return ResponseUtils.getResponse(catalogVersionRemoteService.listCatalogVersions(catalogVersionDTO, tenantId), new TypeReference<Map<String, String>>() {
@@ -135,7 +138,7 @@ public class O2MetadataManagementClient {
      *
      * @param carrierDTO 承运商
      * @param tenantId   租户ID
-     * @return map
+     * @return map key:carrierCode
      */
     public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long tenantId) {
         return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
@@ -146,12 +149,24 @@ public class O2MetadataManagementClient {
      * 批量查询网店
      *
      * @param onlineShopDTO 网店
-     * @return map
+     * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
     public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
         });
     }
+
+    /**
+     * 批量查询服务点地址
+     * @param posAddressDTO 服务点地址
+     * @param tenantId 租户ID
+     * @return string
+     */
+    public Map<String,PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO,Long tenantId) {
+        return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressDTO, tenantId), new TypeReference<Map<String, PosAddressVO>>() {
+        });
+    }
+
 
     /**
      * 获取快递配送接单量到达上限的仓库
