@@ -6,6 +6,8 @@ import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ public class O2MetadataManagementClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
+    private final StaticResourceRemoteService staticResourceRemoteService;
     private final CatalogVersionRemoteService catalogVersionRemoteService;
     private final CarrierRemoteService carrierRemoteService;
 
@@ -29,12 +32,13 @@ public class O2MetadataManagementClient {
                                       WarehouseRemoteService warehouseRemoteService,
                                       OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                       FreightRemoteService freightRemoteService,
-                                      CatalogVersionRemoteService catalogVersionRemoteService,
+                                      StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
+        this.staticResourceRemoteService = staticResourceRemoteService;
         this.catalogVersionRemoteService = catalogVersionRemoteService;
         this.carrierRemoteService = carrierRemoteService;
     }
@@ -154,6 +158,57 @@ public class O2MetadataManagementClient {
     public Set<String> expressLimitWarehouseCollection(final Long organizationId) {
         return ResponseUtils.getResponse(warehouseRemoteService.expressLimitWarehouseCollection(organizationId), new TypeReference<Set<String>>() {
         });
+    }
+
+    /**
+     * 获取自提接单量到达上限的仓库
+     *
+     * @param organizationId 租户id
+     * @return 自提接单量到达上限的仓库集合
+     */
+    public Set<String> pickUpLimitWarehouseCollection(final Long organizationId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.pickUpLimitWarehouseCollection(organizationId), new TypeReference<Set<String>>() {
+        });
+    }
+
+    /**
+     * 重置仓库快递配送接单量值
+     *
+     * @param organizationId 租户ID
+     * @param warehouseCode  仓库编码
+     */
+    public Boolean resetWarehouseExpressLimit(final Long organizationId, final String warehouseCode) {
+        return ResponseUtils.isFailed(warehouseRemoteService.resetWarehouseExpressLimit(organizationId, warehouseCode));
+    }
+
+    /**
+     * 重置仓库自提接单量限制值
+     *
+     * @param organizationId 租户ID
+     * @param warehouseCode  仓库编码
+     */
+    public Boolean resetWarehousePickUpLimit(final Long organizationId, final String warehouseCode) {
+        return ResponseUtils.isFailed(warehouseRemoteService.resetWarehousePickUpLimit(organizationId, warehouseCode));
+    }
+
+    /**
+     * 查询静态资源文件code&url映射
+     *
+     * @param staticResourceQueryDTO staticResourceQueryDTO
+     * @return code&url映射
+     */
+    public Map<String, String> queryResourceCodeUrlMap(@RequestBody StaticResourceQueryDTO staticResourceQueryDTO) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.queryResourceCodeUrlMap(staticResourceQueryDTO), new TypeReference<Map<String, String>>() {
+        });
+    }
+
+    /**
+     * 保存静态资源文件表
+     *
+     * @param staticResourceSaveDTOList staticResourceSaveDTOList
+     */
+    public Boolean saveResource(@RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(staticResourceSaveDTOList), Boolean.class);
     }
 
 }
