@@ -1,13 +1,10 @@
 package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
  * 网店
@@ -27,6 +24,12 @@ public class OnlineShopVO {
 
     @ApiModelProperty(value = "网点名称")
     private String onlineShopName;
+
+    @ApiModelProperty(value = "目录编码")
+    private String catalogCode;
+
+    @ApiModelProperty(value = "目录编码")
+    private String catalogVersionCode;
 
 
 }

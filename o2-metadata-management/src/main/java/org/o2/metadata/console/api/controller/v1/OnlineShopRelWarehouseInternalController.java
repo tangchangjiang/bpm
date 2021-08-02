@@ -54,7 +54,7 @@ public class OnlineShopRelWarehouseInternalController {
 
     @ApiOperation(value = "查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/onlineShop-list")
+    @PostMapping("/onlineShop-list")
     public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody OnlineShopDTO onlineShopDTO) {
         List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
