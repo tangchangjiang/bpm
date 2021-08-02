@@ -28,14 +28,30 @@ public interface MetadataManagementConstants {
         String O2CMS_DECORATION = "O2CMS_DECORATION";
 
         /**
-         * 构造CMS配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
+         * CMS - site站点配置文件
+         */
+        String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
+
+        /**
+         * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
          *
          * @param siteCode     站点编码
          * @param languageCode 语言编码
          * @return CMS配置文件资源编码
          */
-        static String buildCmsResourceCode(String siteCode, String languageCode) {
+        static String buildCmsDecorationResourceCode(String siteCode, String languageCode) {
             return String.format("%s_%s_%s", O2CMS_DECORATION, StringUtils.upperCase(siteCode), languageCode);
+        }
+
+        /**
+         * 构造CMS站点site配置文件资源编码
+         *
+         * @param siteCode     站点编码
+         * @param languageCode 语言编码
+         * @return CMS配置文件资源编码
+         */
+        static String buildCmsSiteResourceCode(String siteCode, String languageCode) {
+            return String.format("%s_%s_%s", O2CMS_SITE_CONFIG, StringUtils.upperCase(siteCode), languageCode);
         }
 
         /**
@@ -53,6 +69,7 @@ public interface MetadataManagementConstants {
         static String buildMetadataRegionCode(String languageCode) {
             return String.format("%s_%s", O2MD_REGION, languageCode);
         }
+
     }
 
     /**
