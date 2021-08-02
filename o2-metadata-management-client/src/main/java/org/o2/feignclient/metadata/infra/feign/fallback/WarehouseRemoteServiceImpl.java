@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *
  * 仓库
@@ -15,9 +17,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
+
+
     @Override
-    public ResponseEntity<String> getWarehouse(Long tenantId, String warehouseCode) {
-        log.error("Error getWarehouse, params[tenantId = {}, warehouseCode = {}]", tenantId, warehouseCode);
+    public ResponseEntity<String> listWarehouses(Long organizationId, List<String> warehouseCodes) {
+        log.error("Error listWarehouses, params[tenantId = {}, warehouseCodes = {}]", organizationId, warehouseCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

@@ -3,13 +3,9 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
+import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
-import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
-import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
-import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
-import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
+import org.o2.feignclient.metadata.infra.feign.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,15 +21,22 @@ public class O2MetadataManagementClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
+    private final CatalogVersionRemoteService catalogVersionRemoteService;
+    private final CarrierRemoteService carrierRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService, FreightRemoteService freightRemoteService) {
+                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
+                                      FreightRemoteService freightRemoteService,
+                                      CatalogVersionRemoteService catalogVersionRemoteService,
+                                      CarrierRemoteService carrierRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
+        this.catalogVersionRemoteService = catalogVersionRemoteService;
+        this.carrierRemoteService = carrierRemoteService;
     }
 
     /**
@@ -42,18 +45,19 @@ public class O2MetadataManagementClient {
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      */
-    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId){
+    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
     }
 
     /**
      * 从redis查询仓库
      *
-     * @param warehouseCode 仓库编码
+     * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      */
-    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId){
-        return ResponseUtils.getResponse(warehouseRemoteService.getWarehouse(tenantId, warehouseCode), WarehouseVO.class);
+    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
+        });
     }
 
     /**
@@ -62,7 +66,7 @@ public class O2MetadataManagementClient {
      * @param systemParameterDTO  系统
      * @param tenantId 租户ID
      */
-    public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId){
+    public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterDTO, tenantId), ResponseVO.class);
     }
 
@@ -76,11 +80,12 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
         });
     }
+
     /**
      * 从redis查询网店关联有效的仓库
      *  @param onlineShopeCode 网店编码
      * @param tenantId 租户ID
-     * @return map<warehouseCode,OnlineShopRelWarehouseVO>
+     * @return map<warehouseCode, OnlineShopRelWarehouseVO>
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
@@ -93,150 +98,51 @@ public class O2MetadataManagementClient {
      * @param freight 运费参数
      * @return 运费结果
      */
-    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId){
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight,tenantId), FreightInfoVO.class);
+    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight, tenantId), FreightInfoVO.class);
     }
+
     /**
      * 查询有效仓库
      * @param onlineShopCode 网店编码
      * @param tenantId 租户ID
      * @return 集合
      */
-    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode,Long tenantId) {
+    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
 
     /**
-     * 保存仓库快递配送接单量限制
-     *
-     * @param organizationId  租户ID
-     * @param warehouseCode   仓库编码
-     * @param expressQuantity 快递配送接单量限制
+     * 批量查询目录版本
+     * @param catalogVersionList 目录版本集合
+     * @param tenantId 租户ID
+     * @return map
      */
-    public Boolean saveExpressQuantity(final Long organizationId, final String warehouseCode, final String expressQuantity) {
-        return ResponseUtils.isFailed(warehouseRemoteService.saveExpressQuantity(organizationId, warehouseCode, expressQuantity));
+    public Map<String, String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList, Long tenantId) {
+        return ResponseUtils.getResponse(catalogVersionRemoteService.batchSelectNameByCode(catalogVersionList, tenantId), new TypeReference<Map<String, String>>() {
+        });
     }
 
     /**
-     * 保存仓库自提接单量限制
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @param pickUpQuantity 自提单量限制
+     * 批量查询承运商
+     * @param carrierList 承运商
+     * @param tenantId 租户ID
+     * @return map
      */
-    public Boolean savePickUpQuantity(final Long organizationId, final String warehouseCode, final String pickUpQuantity) {
-        return ResponseUtils.isFailed(warehouseRemoteService.savePickUpQuantity(organizationId, warehouseCode, pickUpQuantity));
+    public Map<String, CarrierVO> listCarriers(List<CarrierDTO> carrierList, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierList, tenantId), new TypeReference<Map<String, CarrierVO>>() {
+        });
     }
 
     /**
-     * 仓库快递配送接单量增量更新
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @param increment      快递配送接单量增量
+     * 批量查询网店
+     * @param  onlineShopDTO 网店
+     * @return map
      */
-    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
-    }
-
-    /**
-     * 仓库自提接单量增量更新
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @param increment      自提单量增量
-     */
-    public Boolean updatePickUpValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.isFailed(warehouseRemoteService.updatePickUpValue(organizationId, warehouseCode, increment));
-    }
-
-    /**
-     * 获取快递配送接单量限制
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 快递配送接单量限制
-     */
-    public String getExpressLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.getResponse(warehouseRemoteService.getExpressLimit(organizationId, warehouseCode), String.class);
-    }
-
-    /**
-     * 获取自提接单量限制
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 自提接单量限制
-     */
-    public String getPickUpLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.getResponse(warehouseRemoteService.getPickUpLimit(organizationId, warehouseCode), String.class);
-    }
-
-    /**
-     * 获取实际快递配送接单量
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 实际快递配送接单量
-     */
-    public String getExpressValue(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.getResponse(warehouseRemoteService.getExpressValue(organizationId, warehouseCode), String.class);
-    }
-
-    /**
-     * 获取实际自提接单量
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 实际自提接单量
-     */
-    public String getPickUpValue(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.getResponse(warehouseRemoteService.getPickUpValue(organizationId, warehouseCode), String.class);
-    }
-
-    /**
-     * 仓库缓存KEY
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 仓库缓存KEY
-     */
-    public String warehouseCacheKey(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.getResponse(warehouseRemoteService.warehouseCacheKey(organizationId, warehouseCode), String.class);
-    }
-
-    /**
-     * 仓库limit缓存KEY
-     *
-     * @param organizationId 租户ID
-     * @param limit          limit
-     * @return 仓库limit缓存KEY
-     */
-    public String warehouseLimitCacheKey(final Long organizationId, final String limit) {
-        return ResponseUtils.getResponse(warehouseRemoteService.warehouseLimitCacheKey(organizationId, limit), String.class);
-    }
-
-    /**
-     * 是否仓库快递配送接单量到达上限
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 结果(true : 到达上限)
-     */
-    public Boolean isWarehouseExpressLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.isFailed(warehouseRemoteService.isWarehouseExpressLimit(organizationId, warehouseCode));
-    }
-
-    /**
-     * 是否仓库自提接单量到达上限
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @return 结果(true : 到达上限)
-     */
-    public Boolean isWarehousePickUpLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.isFailed(warehouseRemoteService.isWarehousePickUpLimit(organizationId, warehouseCode));
+    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId){
+        return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+        });
     }
 
     /**
@@ -250,34 +156,4 @@ public class O2MetadataManagementClient {
         });
     }
 
-    /**
-     * 获取自提接单量到达上限的仓库
-     *
-     * @param organizationId 租户id
-     * @return 自提接单量到达上限的仓库集合
-     */
-    public Set<String> pickUpLimitWarehouseCollection(final Long organizationId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.pickUpLimitWarehouseCollection(organizationId), new TypeReference<Set<String>>() {
-        });
-    }
-
-    /**
-     * 重置仓库快递配送接单量值
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     */
-    public Boolean resetWarehouseExpressLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.isFailed(warehouseRemoteService.resetWarehouseExpressLimit(organizationId, warehouseCode));
-    }
-
-    /**
-     * 重置仓库自提接单量限制值
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     */
-    public Boolean resetWarehousePickUpLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.isFailed(warehouseRemoteService.resetWarehousePickUpLimit(organizationId, warehouseCode));
-    }
 }

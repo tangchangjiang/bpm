@@ -6,6 +6,7 @@ import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.o2.metadata.infra.convertor.WarehouseConvertor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 /**
@@ -20,7 +21,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseDomainService = warehouseDomainService;
     }
     @Override
-    public WarehouseVO getWarehouse(String warehouseCode, Long tenantId) {
-        return WarehouseConvertor.doToVoObject(warehouseDomainService.getWarehouse(warehouseCode,tenantId));
+    public List<WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return WarehouseConvertor.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseCodes,tenantId));
     }
 }

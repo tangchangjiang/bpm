@@ -1,14 +1,8 @@
 package org.o2.feignclient.metadata.config;
 
 import org.o2.feignclient.O2MetadataManagementClient;
-import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
-import org.o2.feignclient.metadata.infra.feign.OnlineShopRelWarehouseRemoteService;
-import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
-import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
-import org.o2.feignclient.metadata.infra.feign.fallback.FreightServiceRemoteServiceImpl;
-import org.o2.feignclient.metadata.infra.feign.fallback.OnlineShopRelWarehouseRemoteServiceImpl;
-import org.o2.feignclient.metadata.infra.feign.fallback.SysParameterRemoteServiceImpl;
-import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
+import org.o2.feignclient.metadata.infra.feign.*;
+import org.o2.feignclient.metadata.infra.feign.fallback.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +11,12 @@ import org.springframework.context.annotation.Bean;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @EnableFeignClients(
-        basePackageClasses = {SysParameterRemoteService.class, WarehouseRemoteService.class,OnlineShopRelWarehouseRemoteService.class}
+        basePackageClasses = {SysParameterRemoteService.class,
+                WarehouseRemoteService.class,
+                OnlineShopRelWarehouseRemoteService.class,
+                FreightRemoteService.class,
+                CatalogVersionRemoteService.class,
+                CarrierRemoteService.class}
 )
 public class MetadataFeignClientAutoConfiguration {
     @Bean
@@ -46,13 +45,29 @@ public class MetadataFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public CatalogVersionRemoteServiceImpl catalogVersionRemoteServiceFallback() {
+        return new CatalogVersionRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CarrierRemoteServiceImpl carrierRemoteServiceFallback() {
+        return new CarrierRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                                           WarehouseRemoteService warehouseRemoteService,
                                                           OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
-                                                          FreightRemoteService freightRemoteService) {
+                                                          FreightRemoteService freightRemoteService,
+                                                          CatalogVersionRemoteService catalogVersionRemoteService,
+                                                          CarrierRemoteService carrierRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
-                   warehouseRemoteService,
-                   onlineShopRelWarehouseRemoteService,
-                   freightRemoteService);
+                warehouseRemoteService,
+                onlineShopRelWarehouseRemoteService,
+                freightRemoteService,
+                catalogVersionRemoteService,
+                carrierRemoteService);
     }
 }

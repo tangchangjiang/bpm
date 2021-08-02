@@ -74,4 +74,29 @@
             ORDER BY c.catalog_code
         </where>
     </select>
+    <select id="batchSelectByCodes" resultType="org.o2.metadata.console.infra.entity.Catalog">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        c.catalog_code catalogCode,
+        t.catalog_name catalogName
+        FROM
+        o2md_catalog c left join o2md_catalog_tl t on c.catalog_id = t.catalog_id
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND c.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+        <if test="catalogCodes != null and catalogCodes.size > 0" >
+            and c.catalog_code IN
+            <foreach collection="catalogCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+
+        AND t.lang =#{lang}
+    </select>
 </mapper>

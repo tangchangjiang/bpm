@@ -1,7 +1,9 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.CatalogVersionDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
@@ -9,6 +11,11 @@ import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 版本目录应用服务默认实现
@@ -47,4 +54,33 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         }
         catalogVersionRepository.insertSelective(catalogVersion);
     }
+
+    @Override
+    public Map<String, String> batchSelectNameByCode(List<CatalogVersionDTO> list, Long organizationId) {
+        Map<String,String> map = new HashMap<>(16);
+        if (list.isEmpty()) {
+            return map;
+        }
+        List<String> catalogCodes = new ArrayList<>(list.size());
+        List<String> catalogVersionCodes = new ArrayList<>(16);
+        for (CatalogVersionDTO catalog : list) {
+            catalogCodes.add(catalog.getCatalogCode());
+            catalogVersionCodes.addAll(catalog.getCatalogCodeVersionList());
+        }
+        List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogCodes,organizationId);
+        if (CollectionUtils.isNotEmpty(catalogList)) {
+            for (Catalog catalog : catalogList) {
+                map.put(catalog.getCatalogCode(), catalog.getCatalogName());
+            }
+        }
+        List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionCodes,organizationId);
+        if (CollectionUtils.isNotEmpty(catalogVersions)) {
+            for (CatalogVersion catalogVersion : catalogVersions) {
+                map.put(catalogVersion.getCatalogCode(), catalogVersion.getCatalogVersionName());
+            }
+        }
+        return map;
+    }
+
+
 }
