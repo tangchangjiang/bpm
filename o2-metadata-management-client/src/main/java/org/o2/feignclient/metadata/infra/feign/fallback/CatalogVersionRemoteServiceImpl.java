@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 /**
  *
@@ -18,9 +17,10 @@ import java.util.List;
 @Component
 @Slf4j
 public class CatalogVersionRemoteServiceImpl implements CatalogVersionRemoteService {
+
     @Override
-    public ResponseEntity<String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList, Long organizationId) {
-        log.error("Error batchSelectNameByCode, params[catalogVersionList = {}, organizationId = {}]", catalogVersionList,organizationId);
+    public ResponseEntity<String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long organizationId) {
+        log.error("Error batchSelectNameByCode, params[catalogVersionDTO = {}, organizationId = {}]", catalogVersionDTO,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -121,13 +121,12 @@ public class O2MetadataManagementClient {
 
     /**
      * 批量查询目录版本
-     *
-     * @param catalogVersionList 目录版本集合
-     * @param tenantId           租户ID
+     * @param catalogVersionDTO 目录版本集合
+     * @param tenantId 租户ID
      * @return map
      */
-    public Map<String, String> batchSelectNameByCode(List<CatalogVersionDTO> catalogVersionList, Long tenantId) {
-        return ResponseUtils.getResponse(catalogVersionRemoteService.batchSelectNameByCode(catalogVersionList, tenantId), new TypeReference<Map<String, String>>() {
+    public Map<String, String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long tenantId) {
+        return ResponseUtils.getResponse(catalogVersionRemoteService.listCatalogVersions(catalogVersionDTO, tenantId), new TypeReference<Map<String, String>>() {
         });
     }
 

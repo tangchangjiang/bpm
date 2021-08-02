@@ -56,24 +56,19 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     }
 
     @Override
-    public Map<String, String> batchSelectNameByCode(List<CatalogVersionDTO> list, Long organizationId) {
+    public Map<String, String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long organizationId) {
         Map<String,String> map = new HashMap<>(16);
-        if (list.isEmpty()) {
+        if (null == catalogVersionDTO) {
             return map;
         }
-        List<String> catalogCodes = new ArrayList<>(list.size());
-        List<String> catalogVersionCodes = new ArrayList<>(16);
-        for (CatalogVersionDTO catalog : list) {
-            catalogCodes.add(catalog.getCatalogCode());
-            catalogVersionCodes.addAll(catalog.getCatalogCodeVersionList());
-        }
-        List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogCodes,organizationId);
+
+        List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodes(),organizationId);
         if (CollectionUtils.isNotEmpty(catalogList)) {
             for (Catalog catalog : catalogList) {
                 map.put(catalog.getCatalogCode(), catalog.getCatalogName());
             }
         }
-        List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionCodes,organizationId);
+        List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodeVersionCodes(),organizationId);
         if (CollectionUtils.isNotEmpty(catalogVersions)) {
             for (CatalogVersion catalogVersion : catalogVersions) {
                 map.put(catalogVersion.getCatalogCode(), catalogVersion.getCatalogVersionName());
