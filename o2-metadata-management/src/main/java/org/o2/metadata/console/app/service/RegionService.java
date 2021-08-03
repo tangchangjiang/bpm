@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
@@ -72,12 +74,18 @@ public interface RegionService {
      */
     Region getRegionByCode(String regionCode);
 
+
+
+
     /**
-     *  查询地区sql值集
-     * @param  regionCodes 地区编码
-     * @param  tenantId 租户ID
-     * @return map
+     * 查询地区
+     *
+     * @param countryIdOrCode 国家ID或CODE
+     * @param enabledFlag     筛选条件
+     * @param parentRegionId  级联父节点ID
+     * @param organizationId        租户ID
+     * @return 地区列表
      */
-    List<Region> listRegionLov(List<String> regionCodes,Long tenantId);
+    List<RegionVO> listChildren(String countryIdOrCode, Long parentRegionId, int enabledFlag, Long organizationId);
 }
 

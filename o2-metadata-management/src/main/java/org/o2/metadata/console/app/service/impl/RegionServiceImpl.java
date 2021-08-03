@@ -9,9 +9,10 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.PosConstants;
+import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
@@ -178,19 +179,57 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return regionRepository.selectOne(region);
     }
 
+
+
     @Override
-    public List<Region> listRegionLov(List<String> regionCodes,Long tenantId) {
-        List<Region> regionList = new ArrayList<>();
-        Map<String,String> queryParams = new HashMap<>(16);
-        queryParams.put(PosConstants.RegionLov.QUERY_PARAM.getCode(), StringUtils.join(regionCodes, BaseConstants.Symbol.COMMA));
-        List<Map<String,Object>> list = lovAdapter.queryLovData(PosConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
-        if (list.isEmpty()){
-            return regionList;
-        }
-        for (Map<String, Object> map : list) {
-            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Region.class));
-        }
-        return regionList;
+    public List<RegionVO> listChildren(String countryCode, Long parentRegionId, int enabledFlag, Long organizationId) {
+
+        /**
+         *         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+         *         select
+         *         hr.region_id,
+         *         hr.country_id,
+         *         hr.region_code,
+         *         hrt.region_name,
+         *         hr.parent_region_id,
+         *         hr.enabled_flag,
+         *         ora.area_code area_code,
+         *         hr.object_version_number,
+         *         (select count(1) from hpfm_region t where t.parent_region_id=hr.region_id) children_count
+         *         from hpfm_region hr
+         *         join hpfm_country oc on hr.country_id=oc.country_id
+         *         left join hpfm_region_tl hrt on hrt.region_id = hr.region_id and hrt.lang = #{lang}
+         *         left join o2md_region_area ora on ora.region_code = hr.region_code and ora.tenant_id = hr.tenant_id
+         *         where
+         *         1=1
+         *         <choose>
+         *             <when test="tenantId != null">
+         *                 and hr.tenant_id = #{tenantId}
+         *             </when>
+         *             <otherwise>
+         *                 AND hr.tenant_id = 0
+         *             </otherwise>
+         *         </choose>
+         *         <if test="countryIdOrCode != null">
+         *             and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
+         *         </if>
+         *         <if test="parentRegionId != null">
+         *             and hr.parent_region_id = #{parentRegionId}
+         *         </if>
+         *         <if test="parentRegionId == null">
+         *             and hr.parent_region_id is null
+         *         </if>
+         *         <if test="enabledFlag != null">
+         *             and hr.enabled_flag = #{enabledFlag}
+         *         </if>
+         *         order by hr.region_code
+         */
+        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        queryLovDTO.setParentRegionId(parentRegionId);
+        queryLovDTO.setCountryCode(countryCode);
+        queryLovDTO.setEnabledFlag(enabledFlag);
+
+        return null;
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
 
@@ -50,4 +51,11 @@ public interface RegionRepository extends BaseRepository<Region> {
      * @return 地区以及子地区
      */
     List<Region> listRegionChildrenByLevelPath(String levelPath, Long tenantId);
+
+    /**
+     *  查询地区sql值集
+     * @param  RegionQueryLov 查询条件
+     * @param  tenantId 租户ID
+     * @return map     */
+    List<Region> listRegionLov(RegionQueryLovDTO RegionQueryLov, Long tenantId);
 }

@@ -59,7 +59,7 @@ public class RegionController extends BaseController {
         if (countryIdOrCode == null && regionId == null) {
             return Results.success(Collections.emptyList());
         }
-        return Results.success(regionRepository.listChildren(countryIdOrCode, regionId, 1,organizationId));
+        return Results.success(regionService.listChildren(countryIdOrCode, regionId, 1,organizationId));
     }
 
     @ApiOperation("查询国家/地区下的地区列表")
