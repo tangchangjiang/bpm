@@ -16,10 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -35,7 +33,6 @@ public class PosServiceImpl implements PosService {
     private final RegionService regionService;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private CarrierRepository carrierRepository;
-    private final LovAdapter lovAdapter;
 
 
     public PosServiceImpl(PosRepository posRepository,
@@ -43,15 +40,13 @@ public class PosServiceImpl implements PosService {
                           PosAddressRepository posAddressRepository,
                           RegionService regionService,
                           PosRelCarrierRepository posRelCarrierRepository,
-                          CarrierRepository carrierRepository,
-                          LovAdapter lovAdapter) {
+                          CarrierRepository carrierRepository) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionService = regionService;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRepository = carrierRepository;
-        this.lovAdapter = lovAdapter;
     }
 
     @Override
