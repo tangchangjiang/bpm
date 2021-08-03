@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.console.api.dto.RegionDTO;
+import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 import javax.persistence.Transient;
@@ -30,7 +30,7 @@ public class AreaRegionVO implements Serializable, Comparable {
     @Transient
     private String areaMeaning;
 
-    private List<RegionDTO> regionList;
+    private List<RegionBO> regionList;
 
     public AreaRegionVO() {
         this.regionList = new ArrayList<>();
@@ -39,8 +39,8 @@ public class AreaRegionVO implements Serializable, Comparable {
     @Override
     public int compareTo(final Object o) {
         if (o instanceof AreaRegionVO) {
-            final AreaRegionVO areaRegionDTO = (AreaRegionVO) o;
-            return areaRegionDTO.getAreaCode().compareTo(this.getAreaCode());
+            final AreaRegionVO areaRegionVO = (AreaRegionVO) o;
+            return areaRegionVO.getAreaCode().compareTo(this.getAreaCode());
         } else {
             return 1;
         }
