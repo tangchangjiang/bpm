@@ -31,8 +31,8 @@ public interface MetadataConstants {
         String BASIC_DATA_PARENT_NOT_ENABLED = "error.basic_data.parent_disable";
 
 
-        String BASIC_DATA_TENANT_ID_IS_NULL =  "error.basic_data.tenantId.should.is.not.null";
-        String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
+        String BASIC_DATA_TENANT_ID_IS_NULL = "error.basic_data.tenantId.should.is.not.null";
+        String BASIC_DATA_CATALOG_CODE_IS_NULL = "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
         String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
@@ -55,7 +55,6 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.BUSINESS_TYPE";
     }
-
 
 
     /**
@@ -89,9 +88,11 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.AREA_CODE";
     }
-    interface  DefaultShop {
+
+    interface DefaultShop {
         Integer DEFAULT = 1;
     }
+
     interface LuaCode {
 
         ResourceScriptSource BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA =
@@ -110,14 +111,14 @@ public interface MetadataConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_update_redis_hash_value.lua"));
     }
 
-    interface  Path {
+    interface Path {
         String FILE = "file";
 
-        String REGION ="region";
+        String REGION = "region";
 
-        String ZH_CN ="zh_CN";
+        String ZH_CN = "zh_CN";
 
-        String EN_US ="en_US";
+        String EN_US = "en_US";
 
         String FILE_NAME = "country-region";
 
@@ -127,15 +128,16 @@ public interface MetadataConstants {
         String JSON = ".json";
     }
 
-    interface  Status {
+    interface Status {
         String UPDATE = "update";
         String CREATE = "create";
     }
 
-    interface  ActiveFlag {
+    interface ActiveFlag {
         Integer FORBIDDEN = 0;
         Integer ENABLE = 1;
     }
+
     /**
      * 统一时间格式
      */
@@ -149,13 +151,13 @@ public interface MetadataConstants {
 
         /**
          * 时间格式
+         *
          * @return DateFormat
          */
         static DateFormat dateFormat() {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     }
-
 
 
     interface FreightCache {
@@ -176,11 +178,11 @@ public interface MetadataConstants {
 
         /**
          * 运费模板明细redis key(hash): o2md:freight::{tenantId}:{freightCode} ; 注:默认的运费模板{freightCode} 为DEFAULT
-         *
+         * <p>
          * key:
-         *     HEAD ~ 运费模板头信息
-         *     {region} - 地区信息对应模板
-         *     DEFAULT  - 默认运费模板行
+         * HEAD ~ 运费模板头信息
+         * {region} - 地区信息对应模板
+         * DEFAULT  - 默认运费模板行
          */
         String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
 
@@ -227,7 +229,6 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.POS_STATUS";
     }
-
 
 
     /**
@@ -303,8 +304,8 @@ public interface MetadataConstants {
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
 
-        static String buildMetadataRegionCode(String languageCode) {
-            return String.format("%s_%s", O2MD_REGION, languageCode);
+        static String buildMetadataRegionCode() {
+            return String.format("%s", O2MD_REGION);
         }
     }
 
