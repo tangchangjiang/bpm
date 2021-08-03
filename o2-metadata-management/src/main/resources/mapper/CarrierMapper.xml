@@ -70,15 +70,15 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="carrierCodes != null and carrierCodes.size > 0" >
+        <if test="carrierDTO.carrierCodes != null and carrierDTO.carrierCodes.size > 0" >
             and c.carrier_code IN
-            <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
+            <foreach collection="carrierDTO.carrierCodes" item="code" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
-        <if test="carrierNames != null and carrierNames.size > 0" >
+        <if test="carrierDTO.carrierNames != null and carrierDTO.carrierNames.size > 0" >
             and c.carrier_name IN
-            <foreach collection="carrierNames" item="name" open="(" separator="," close=")">
+            <foreach collection="carrierDTO.carrierNames" item="name" open="(" separator="," close=")">
                 #{name}
             </foreach>
         </if>
