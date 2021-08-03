@@ -23,6 +23,9 @@ public enum RegionConstants {
         REGION_NAME("regionName",""),
         REGION_CODE("regionCode",""),
         PARENT_REGION_ID("parentRegionId",""),
+        PARENT_REGION_CODE("parentRegionCode",""),
+        NOT_IN_REGION_CODE("notInRegionCodes",""),
+        PARENT_REGION_IDS("parentRegionIds",""),
         ENABLED_FLAG("enabledFlag",""),
         COUNTRY_CODE("countryCode","");
 

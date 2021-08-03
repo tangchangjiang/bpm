@@ -44,11 +44,10 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     }
 
     @Override
-    public List<Region> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
-        return recursiveBuildRegionTree(
-                regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag,tenantId).stream().collect(Collectors.groupingBy(
-                        item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId())),
-                ROOT_ID, new ArrayList<>());
+    public List<RegionVO> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
+        List<Region> regionList = regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag, tenantId);
+        Map<Long, List<Region>> map = regionList.stream().collect(Collectors.groupingBy(item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId()));
+        return RegionConvertor.poToVoListObjects(recursiveBuildRegionTree(map, ROOT_ID, new ArrayList<>()));
     }
 
     @Override
@@ -60,9 +59,9 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     }
 
     @Override
-    public List<AreaRegionDTO> listAreaRegion(final String countryIdOrCode, final Integer enabledFlag, final Long tenantId) {
+    public List<AreaRegionDTO> listAreaRegion(final String countryCode, final Integer enabledFlag, final Long tenantId) {
         //取出所有省份
-        final List<RegionVO> regionList = regionRepository.listChildren(countryIdOrCode, null, enabledFlag,tenantId);
+        final List<RegionVO> regionList = this.listChildren(countryCode, null, enabledFlag,tenantId);
         final Map<String, List<RegionDTO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionDTO> list;
@@ -74,7 +73,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
                 list = new ArrayList<>();
                 regionMap.put(key, list);
             }
-            List<RegionVO> childrenVO = regionRepository.listChildren(countryIdOrCode, regionVO.getRegionId(), enabledFlag, tenantId);
+            List<RegionVO> childrenVO = this.listChildren(countryCode, regionVO.getRegionId(), enabledFlag, tenantId);
             List<RegionDTO> childrenDTO = null;
             if (CollectionUtils.isNotEmpty(childrenVO)) {
                 childrenDTO = childrenVO.stream().map(m -> {

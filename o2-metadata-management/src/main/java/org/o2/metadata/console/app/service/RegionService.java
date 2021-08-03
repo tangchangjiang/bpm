@@ -19,7 +19,7 @@ public interface RegionService {
      * @param tenantId        租户ID
      * @return 当前节点以及父级ID
      */
-    List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
+    List<RegionVO> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
     /**
      * 查询网店未关联地区

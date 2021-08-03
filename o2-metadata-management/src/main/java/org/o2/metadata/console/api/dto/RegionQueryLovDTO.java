@@ -27,9 +27,15 @@ public class RegionQueryLovDTO {
 
    private Long parentRegionId;
 
+   private String parentRegionCode;
+
    private Integer enabledFlag;
 
    private Long tenantId;
+
+   private List<String> notInRegionCodes;
+
+   private List<Long> parentRegionIds;
 
     /**
      * 地址集合
