@@ -11,6 +11,7 @@ import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
@@ -181,14 +182,14 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     public List<Region> listRegionLov(List<String> regionCodes,Long tenantId) {
         List<Region> regionList = new ArrayList<>();
         Map<String,String> queryParams = new HashMap<>(16);
-        queryParams.put("regionCodes", StringUtils.join(regionCodes, ","));
-        List<Map<String,Object>> list = lovAdapter.queryLovData("O2MD.REGION",tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        queryParams.put(PosConstants.RegionLov.QUERY_PARAM.getCode(), StringUtils.join(regionCodes, BaseConstants.Symbol.COMMA));
+        List<Map<String,Object>> list = lovAdapter.queryLovData(PosConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
         if (list.isEmpty()){
             return regionList;
         }
-        list.forEach(map->{
-            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map),Region.class)) ;
-        });
+        for (Map<String, Object> map : list) {
+            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Region.class));
+        }
         return regionList;
     }
 
