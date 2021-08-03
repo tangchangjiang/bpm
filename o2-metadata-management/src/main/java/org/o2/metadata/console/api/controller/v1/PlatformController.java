@@ -7,6 +7,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.metadata.console.api.dto.PlatformDTO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
@@ -45,7 +46,7 @@ public class PlatformController extends BaseController {
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<Platform>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            Platform platform,
+                                                            PlatformDTO platform,
                                                             @ApiIgnore @SortDefault(value = Platform.FIELD_PLATFORM_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platform.setTenantId(organizationId);

@@ -107,5 +107,45 @@
             </if>
         </where>
     </select>
+    <select id="selectCondition" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+        select
+        inf.platform_inf_mapping_id,
+        inf.inf_type_code,
+        inf.platform_code,
+        inf.inf_code,
+        inf.inf_name,
+        inf.platform_inf_code,
+        inf.platform_inf_name,
+        inf.tenant_id,
+        inf.object_version_number,
+        pf.platform_name
+        from o2md_platform_inf_mapping inf
+        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND inf.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <trim prefix="and">
+                <foreach collection="list" item="item" open="(" separator="or" close=")">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <if test="item.platformCode != null and item.platformCode != ''">
+                            and inf.platform_code = #{item.platformCode}
+                        </if>
+                        <if test="item.infTypeCode != null and item.infTypeCode != ''">
+                            and inf.inf_type_code = #{item.infTypeCode}
+                        </if>
+                        <if test="item.platformInfCode != null and item.platformInfCode != ''">
+                            and platform_inf_code = #{item.platformInfCode}
+                        </if>
+                    </trim>
+                </foreach>
+            </trim>
+        </where>
+    </select>
 
 </mapper>

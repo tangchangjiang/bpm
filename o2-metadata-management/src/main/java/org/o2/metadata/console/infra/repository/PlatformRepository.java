@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.PlatformDTO;
 import org.o2.metadata.console.infra.entity.Platform;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface PlatformRepository extends BaseRepository<Platform> {
      * @param platform 查询条件
      * @return  List<Platform> 查询结果
      */
-    List<Platform> listPlatform(Platform platform);
+    List<Platform> listPlatform(PlatformDTO platform);
 }

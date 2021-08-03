@@ -7,6 +7,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
@@ -46,7 +47,7 @@ public class PlatformInfMappingController extends BaseController {
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<PlatformInfMapping>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            PlatformInfMapping platformInfMapping,
+                                                            InfMappingDTO platformInfMapping,
                                                             @ApiIgnore @SortDefault(value = PlatformInfMapping.FIELD_PLATFORM_INF_MAPPING_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platformInfMapping.setTenantId(organizationId);

@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.PlatformDTO;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.mapper.PlatformMapper;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
@@ -20,7 +21,7 @@ public class PlatformRepositoryImpl extends BaseRepositoryImpl<Platform> impleme
 
     private final PlatformMapper platformMapper;
     @Override
-    public List<Platform> listPlatform(Platform platform) {
+    public List<Platform> listPlatform(PlatformDTO platform) {
         return platformMapper.listPlatform(platform);
     }
 }

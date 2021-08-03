@@ -41,15 +41,13 @@ public class PlatformInfMappingInternalController extends BaseController {
     public ResponseEntity<List<PlatformInfMappingVO>> getPlatformInfMapping(@PathVariable(value = "organizationId") Long organizationId,
                                                          @RequestBody List<PlatformInfMappingDTO> platformInfMapping) {
 
+        validList(platformInfMapping);
         List<PlatformInfMappingVO> mappingVOList = new ArrayList<>();
-        for(PlatformInfMappingDTO platformInfMappingDTO : platformInfMapping) {
-            platformInfMappingDTO.setTenantId(organizationId);
-            validObject(platformInfMappingDTO);
-            PlatformInfMapping mappingResult = platformInfMappingRepository.selectOneMapping(platformInfMappingDTO);
+        List<PlatformInfMapping> list = platformInfMappingRepository.selectCondition(platformInfMapping,organizationId);
+        for(PlatformInfMapping mappingResult : list) {
             PlatformInfMappingVO mappingVO = PlatformInfMappingConvertor.toPlatformInfMappingVO(mappingResult);
             mappingVOList.add(mappingVO);
         }
-
         return Results.success(mappingVOList);
     }
 
