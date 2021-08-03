@@ -1,11 +1,13 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ import java.util.List;
  *
  * @author zhilin.ren@hand-china.com 2021-08-02 11:11:28
  */
+@Api(tags=MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING)
 @RestController("platformInfMappingController.v1")
 @RequestMapping("/v1/{organizationId}/platform-inf-mappings")
 @RequiredArgsConstructor

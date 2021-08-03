@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 
 import java.util.List;
@@ -24,4 +25,11 @@ public interface PlatformInfMappingRepository extends BaseRepository<PlatformInf
      * @return PlatformInfMapping 结果
      */
     PlatformInfMapping selectById(Long id);
+
+    /**
+     * 根据条件查询唯一的匹配项
+     * @param platformInfMapping 条件
+     * @return PlatformInfMapping 结果
+     */
+    PlatformInfMapping selectOneMapping(PlatformInfMappingDTO platformInfMapping);
 }
