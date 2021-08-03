@@ -40,6 +40,8 @@ public class MetadataManagementAutoConfiguration {
     public static final String PLATFORM_UOM = "Platform Uom";
     public static final String CATALOG = "Catalog";
     public static final String REGION_REL_POS = "Region POS Relationship";
+    public static final String PLATFORM = "PLATFORM";
+    public static final String PLATFORM_INF_MAPPING = "PLATFORM INF MAPPING";
 
     @Autowired
     public MetadataManagementAutoConfiguration(final Docket docket) {
@@ -63,7 +65,9 @@ public class MetadataManagementAutoConfiguration {
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE, "运费模板管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE_DETAIL, "运费模板明细管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_UOM, "平台值集管理"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.REGION_REL_POS, "区域关联服务点配置"));
+                .tags(new Tag(MetadataManagementAutoConfiguration.REGION_REL_POS, "区域关联服务点配置"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM,"平台定义管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING,"平台信息匹配管理"));
     }
 
 }

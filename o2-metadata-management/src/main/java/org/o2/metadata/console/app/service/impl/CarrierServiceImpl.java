@@ -110,7 +110,7 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId) {
         Map<String, CarrierVO> map = new HashMap<>(16);
-        if (carrierDTO.getCarrierCodes().isEmpty() || carrierDTO.getCarrierNames().isEmpty()) {
+        if (null == carrierDTO.getCarrierCodes() && null == carrierDTO.getCarrierNames()) {
             return map;
         }
         List<Carrier> carriers = carrierRepository.batchSelect(carrierDTO,organizationId);

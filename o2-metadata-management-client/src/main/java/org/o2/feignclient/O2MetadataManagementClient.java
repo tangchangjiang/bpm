@@ -26,6 +26,7 @@ public class O2MetadataManagementClient {
     private final CatalogVersionRemoteService catalogVersionRemoteService;
     private final CarrierRemoteService carrierRemoteService;
     private final PosRemoteService posRemoteService;
+    private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
@@ -34,7 +35,7 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService) {
+                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -43,6 +44,7 @@ public class O2MetadataManagementClient {
         this.catalogVersionRemoteService = catalogVersionRemoteService;
         this.carrierRemoteService = carrierRemoteService;
         this.posRemoteService = posRemoteService;
+        this.platformInfMappingRemoteService = platformInfMappingRemoteService;
     }
 
     /**
@@ -228,6 +230,17 @@ public class O2MetadataManagementClient {
      */
     public Boolean saveResource(final Long organizationId, List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
         return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(organizationId, staticResourceSaveDTOList), Boolean.class);
+    }
+
+    /**
+     * 查询平台信息匹配
+     * @param organizationId 租户id
+     * @param platformInfMapping 参数
+     * @return PlatformInfMappingVO 结果
+     */
+    public List<PlatformInfMappingVO> getPlatformInfMapping(Long organizationId,
+                                                      List<PlatformInfMappingDTO> platformInfMapping) {
+        return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 
 }
