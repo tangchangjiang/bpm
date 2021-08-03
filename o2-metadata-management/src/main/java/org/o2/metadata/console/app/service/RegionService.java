@@ -78,6 +78,6 @@ public interface RegionService {
      * @param  tenantId 租户ID
      * @return map
      */
-    List<Map<String, Object>> listRegionLov(List<String> regionCodes,Long tenantId);
+    List<Region> listRegionLov(List<String> regionCodes,Long tenantId);
 }
 

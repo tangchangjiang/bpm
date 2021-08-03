@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
@@ -177,11 +178,18 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     }
 
     @Override
-    public List<Map<String, Object>> listRegionLov(List<String> regionCodes,Long tenantId) {
+    public List<Region> listRegionLov(List<String> regionCodes,Long tenantId) {
+        List<Region> regionList = new ArrayList<>();
         Map<String,String> queryParams = new HashMap<>(16);
         queryParams.put("regionCodes", StringUtils.join(regionCodes, ","));
-        List<Map<String, Object>> list =  lovAdapter.queryLovData("O2MD.REGION",tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
-        return null;
+        List<Map<String,Object>> list = lovAdapter.queryLovData("O2MD.REGION",tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        if (list.isEmpty()){
+            return regionList;
+        }
+        list.forEach(map->{
+            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map),Region.class)) ;
+        });
+        return regionList;
     }
 
     /**
