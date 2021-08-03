@@ -1,20 +1,25 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.convertor.PosAddressConvertor;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -24,22 +29,29 @@ import java.util.List;
  */
 @Service
 public class PosServiceImpl implements PosService {
-
     private final PosRepository posRepository;
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
-    private final RegionRepository regionRepository;
+    private final RegionService regionService;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private CarrierRepository carrierRepository;
+    private final LovAdapter lovAdapter;
 
 
-    public PosServiceImpl(PosRepository posRepository, PostTimeRepository postTimeRepository, PosAddressRepository posAddressRepository, RegionRepository regionRepository, PosRelCarrierRepository posRelCarrierRepository, CarrierRepository carrierRepository) {
+    public PosServiceImpl(PosRepository posRepository,
+                          PostTimeRepository postTimeRepository,
+                          PosAddressRepository posAddressRepository,
+                          RegionService regionService,
+                          PosRelCarrierRepository posRelCarrierRepository,
+                          CarrierRepository carrierRepository,
+                          LovAdapter lovAdapter) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
-        this.regionRepository = regionRepository;
+        this.regionService = regionService;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRepository = carrierRepository;
+        this.lovAdapter = lovAdapter;
     }
 
     @Override
@@ -50,10 +62,12 @@ public class PosServiceImpl implements PosService {
 
         Assert.isTrue(!pos.exist(posRepository), BaseConstants.ErrorCode.DATA_EXISTS);
         final PosAddress address = pos.getAddress();
-        if (address != null && address.getRegionId() != null) {
-            final Region region = regionRepository.selectByPrimaryKey(address.getRegionId());
-            if (region != null) {
-                address.setCountryId(region.getCountryId());
+        if (address != null && address.getRegionCode() != null) {
+            List<String> regionCodes = new ArrayList<>();
+            regionCodes.add(address.getRegionCode());
+            List<Region> regionList = regionService.listRegionLov(regionCodes,pos.getTenantId());
+            if (!regionList.isEmpty()) {
+                address.setCountryCode(regionList.get(0).getCountryCode());
             }
             address.setTenantId(pos.getTenantId());
             posAddressRepository.insertSelective(address);
@@ -84,9 +98,12 @@ public class PosServiceImpl implements PosService {
 
         final PosAddress address;
         if ((address = pos.getAddress()) != null) {
-            final Long regionId = address.getRegionId();
-            final Region region = regionRepository.selectByPrimaryKey(regionId);
-            address.setCountryId(region.getCountryId());
+            List<String> regionCodes = new ArrayList<>();
+            regionCodes.add(address.getRegionCode());
+            List<Region> regionList = regionService.listRegionLov(regionCodes,pos.getTenantId());
+            if (!regionList.isEmpty()) {
+                address.setCountryCode(regionList.get(0).getCountryCode());
+            }
             address.setTenantId(pos.getTenantId());
             posAddressRepository.updateByPrimaryKey(address);
         }
@@ -126,7 +143,41 @@ public class PosServiceImpl implements PosService {
 
     @Override
     public List<PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId) {
-        return PosAddressConvertor.poToVoListObjects(posAddressRepository.listPosAddress(posAddressDTO,tenantId));
+        List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressDTO,tenantId);
+        List<String> regionCodes = new ArrayList<>();
+        for (PosAddress address : addresses) {
+            regionCodes.add(address.getCityCode());
+            regionCodes.add(address.getDistrictCode());
+            regionCodes.add(address.getRegionCode());
+        }
+        List<Region> regionList =  regionService.listRegionLov(regionCodes,tenantId);
+        Map<String,Region> regionMap =  Maps.newHashMapWithExpectedSize(regionList.size());
+        for (Region region : regionList) {
+            regionMap.put(region.getRegionCode(),region);
+        }
+        for (PosAddress address : addresses) {
+            //市
+            String cityCode = address.getCityCode();
+            Region city = regionMap.get(cityCode);
+            if (null != city) {
+                address.setCity(city.getRegionName());
+                address.setCountry(city.getCountryName());
+                address.setCountryCode(city.getCountryCode());
+            }
+            //区
+            String districtCode = address.getDistrictCode();
+            Region district = regionMap.get(districtCode);
+            if (null != district) {
+                address.setDistrict(district.getRegionName());
+            }
+            //省
+            String regionCode = address.getRegionCode();
+            Region region = regionMap.get(regionCode);
+            if (null != region) {
+                address.setRegion(region.getRegionName());
+            }
+        }
+        return PosAddressConvertor.poToVoListObjects(addresses);
     }
 
 

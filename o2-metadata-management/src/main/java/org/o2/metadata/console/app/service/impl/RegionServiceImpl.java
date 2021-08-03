@@ -3,11 +3,15 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
@@ -32,11 +36,16 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private RegionRepository regionRepository;
     private RegionAreaRepository regionAreaRepository;
     private RegionRelPosRepository regionRelPosRepository;
+    private LovAdapter lovAdapter;
 
-    public RegionServiceImpl(RegionRepository regionRepository,RegionAreaRepository regionAreaRepository, RegionRelPosRepository regionRelPosRepository) {
+    public RegionServiceImpl(RegionRepository regionRepository,
+                             RegionAreaRepository regionAreaRepository,
+                             RegionRelPosRepository regionRelPosRepository,
+                             LovAdapter lovAdapter) {
         this.regionRepository = regionRepository;
         this.regionAreaRepository = regionAreaRepository;
         this.regionRelPosRepository = regionRelPosRepository;
+        this.lovAdapter = lovAdapter;
     }
 
     @Override
@@ -167,6 +176,21 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         final Region region = new Region();
         region.setRegionCode(regionCode);
         return regionRepository.selectOne(region);
+    }
+
+    @Override
+    public List<Region> listRegionLov(List<String> regionCodes,Long tenantId) {
+        List<Region> regionList = new ArrayList<>();
+        Map<String,String> queryParams = new HashMap<>(16);
+        queryParams.put(PosConstants.RegionLov.QUERY_PARAM.getCode(), StringUtils.join(regionCodes, BaseConstants.Symbol.COMMA));
+        List<Map<String,Object>> list = lovAdapter.queryLovData(PosConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        if (list.isEmpty()){
+            return regionList;
+        }
+        for (Map<String, Object> map : list) {
+            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Region.class));
+        }
+        return regionList;
     }
 
     /**

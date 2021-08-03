@@ -4,6 +4,7 @@ import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -70,5 +71,13 @@ public interface RegionService {
      * @throws RuntimeException exception description
      */
     Region getRegionByCode(String regionCode);
+
+    /**
+     *  查询地区sql值集
+     * @param  regionCodes 地区编码
+     * @param  tenantId 租户ID
+     * @return map
+     */
+    List<Region> listRegionLov(List<String> regionCodes,Long tenantId);
 }
 
