@@ -1,13 +1,18 @@
 package org.o2.metadata.console.infra.repository.impl;
 
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.core.helper.FastJsonHelper;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,30 +23,45 @@ import java.util.stream.Collectors;
 @Component
 public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements RegionRepository {
     private final RegionMapper regionMapper;
+    private final LovAdapter lovAdapter;
 
-    public RegionRepositoryImpl(final RegionMapper regionMapper) {
+    public RegionRepositoryImpl(final RegionMapper regionMapper, LovAdapter lovAdapter) {
         this.regionMapper = regionMapper;
+        this.lovAdapter = lovAdapter;
     }
 
     @Override
-    public List<Region> listRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,Long tenantId) {
-        final Set<Region> regionSet = regionMapper.selectRegion(countryIdOrCode, condition, enabledFlag,tenantId);
+    public List<Region> listRegionWithParent(final String countryCode, final String condition, final Integer enabledFlag,Long tenantId) {
+        //1.查询地区
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setTenantId(tenantId);
+        dto.setEnabledFlag(enabledFlag);
+        dto.setCountryCode(countryCode);
+        dto.setRegionCode(condition);
+        final Set<Region> regionSet = new HashSet<>(this.listRegionLov(dto,tenantId));
+        // 2.地址编码集合
         final Set<String> regionSetCodes = new HashSet<>();
         for (final Region r : regionSet) {
             regionSetCodes.add(r.getRegionCode());
         }
-        if (!CollectionUtils.isEmpty(regionSet) && StringUtils.hasText(condition)) {
+        // 3.查询父地区
+        if (!CollectionUtils.isEmpty(regionSet) && StringUtils.isNotEmpty(condition)) {
+            RegionQueryLovDTO queryParent = new RegionQueryLovDTO();
             Set<Long> parentIds = regionSet.stream().filter(item -> item.getParentRegionId() != null).map(Region::getParentRegionId).collect(Collectors.toSet());
             boolean hasFather = !parentIds.isEmpty();
             while (hasFather) {
-                final Set<Region> fatherList = regionMapper.selectRegionParent(parentIds, enabledFlag);
+                queryParent.setParentRegionIds(new ArrayList<>(parentIds));
+                queryParent.setEnabledFlag(enabledFlag);
+                final Set<Region> fatherList = new HashSet<>(this.listRegionLov(queryParent,tenantId));
                 for (final Region r : fatherList) {
                     if (!regionSetCodes.contains(r.getRegionCode())) {
                         regionSet.add(r);
                         regionSetCodes.add(r.getRegionCode());
                     }
                 }
+                //父ID
                 parentIds = fatherList.stream().filter(item -> item.getParentRegionId() != null).map(Region::getParentRegionId).collect(Collectors.toSet());
+                //是否还有父级
                 hasFather = !parentIds.isEmpty();
             }
         }
@@ -61,6 +81,32 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
     @Override
     public List<Region> listRegionChildrenByLevelPath(final String levelPath,final Long tenantId) {
         return regionMapper.listRegionChildrenByLevelPath(levelPath,tenantId);
+    }
+    @Override
+    public List<Region> listRegionLov(RegionQueryLovDTO regionQueryLov, Long tenantId) {
+        List<Region> regionList = new ArrayList<>();
+        Map<String,String> queryParams = new HashMap<>(16);
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(regionQueryLov.getRegionCodes())){
+            queryParams.put(RegionConstants.RegionLov.REGION_CODES.getCode(), StringUtils.join(regionQueryLov.getRegionCodes(), BaseConstants.Symbol.COMMA));
+        }
+        queryParams.put(RegionConstants.RegionLov.COUNTRY_CODE.getCode(), regionQueryLov.getCountryCode());
+        queryParams.put(RegionConstants.RegionLov.REGION_CODE.getCode(), regionQueryLov.getRegionCode());
+        queryParams.put(RegionConstants.RegionLov.REGION_NAME.getCode(), regionQueryLov.getRegionName());
+        queryParams.put(RegionConstants.RegionLov.PARENT_REGION_ID.getCode(), String.valueOf(regionQueryLov.getParentRegionId()));
+        queryParams.put(RegionConstants.RegionLov.PARENT_REGION_CODE.getCode(), regionQueryLov.getParentRegionCode());
+        queryParams.put(RegionConstants.RegionLov.PARENT_REGION_IDS.getCode(), StringUtils.join(regionQueryLov.getRegionCodes(), BaseConstants.Symbol.COMMA));
+        queryParams.put(RegionConstants.RegionLov.ENABLED_FLAG.getCode(), String.valueOf(regionQueryLov.getEnabledFlag()));
+        queryParams.put(RegionConstants.RegionLov.ENABLED_FLAG.getCode(), String.valueOf(regionQueryLov.getEnabledFlag()));
+        queryParams.put(RegionConstants.RegionLov.NOT_IN_REGION_CODE.getCode(), StringUtils.join(regionQueryLov.getNotInRegionCodes(), BaseConstants.Symbol.COMMA));
+
+        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        if (list.isEmpty()){
+            return regionList;
+        }
+        for (Map<String, Object> map : list) {
+            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Region.class));
+        }
+        return regionList;
     }
 }
 

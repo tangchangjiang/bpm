@@ -1,10 +1,10 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.console.api.dto.AreaRegionDTO;
+import org.o2.metadata.console.api.vo.AreaRegionVO;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -19,7 +19,7 @@ public interface RegionService {
      * @param tenantId        租户ID
      * @return 当前节点以及父级ID
      */
-    List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
+    List<RegionVO> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
     /**
      * 查询网店未关联地区
@@ -33,12 +33,12 @@ public interface RegionService {
     /**
      * 查询各个大区下的省份
      *
-     * @param countryIdOrCode
-     * @param enabledFlag
+     * @param countryCode 国家编码
+     * @param enabledFlag 是否启用
      * @param tenantId 租户ID
-     * @return
+     * @return list
      */
-    List<AreaRegionDTO> listAreaRegion(String countryIdOrCode, Integer enabledFlag, Long tenantId);
+    List<AreaRegionVO> listAreaRegion(String countryCode, Integer enabledFlag, Long tenantId);
 
     /**
      * 创建地区定义
@@ -72,12 +72,26 @@ public interface RegionService {
      */
     Region getRegionByCode(String regionCode);
 
+
+
+
     /**
-     *  查询地区sql值集
-     * @param  regionCodes 地区编码
-     * @param  tenantId 租户ID
-     * @return map
+     * 查询地区
+     *
+     * @param countryIdOrCode 国家ID或CODE
+     * @param enabledFlag     筛选条件
+     * @param parentRegionId  级联父节点ID
+     * @param organizationId        租户ID
+     * @return 地区列表
      */
-    List<Region> listRegionLov(List<String> regionCodes,Long tenantId);
+    List<RegionVO> listChildren(String countryIdOrCode, Long parentRegionId, int enabledFlag, Long organizationId);
+
+    /**
+     * 编码查询地区
+     * @param regionCode  地区编码
+     * @param tenantId  租户ID
+     * @return  地区
+     */
+    RegionVO selectOneByCode(String regionCode, Long tenantId);
 }
 

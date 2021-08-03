@@ -9,12 +9,14 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.core.response.BatchResponse;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionRelPos;
 import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
 import org.o2.metadata.console.infra.mapper.RegionRelPosMapper;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,9 +35,15 @@ import java.util.stream.Collectors;
 public class RegionRelPosRepositoryImpl extends BaseRepositoryImpl<RegionRelPos> implements RegionRelPosRepository {
 
     private RegionRelPosMapper regionRelPosMapper;
+    private RegionRepository regionRepository;
+    private RegionRelPosRepository regionRelPosRepository;
 
-    public RegionRelPosRepositoryImpl(RegionRelPosMapper regionRelPosMapper) {
+    public RegionRelPosRepositoryImpl(RegionRelPosMapper regionRelPosMapper,
+                                      RegionRepository regionRepository,
+                                      RegionRelPosRepository regionRelPosRepository) {
         this.regionRelPosMapper = regionRelPosMapper;
+        this.regionRepository = regionRepository;
+        this.regionRelPosRepository = regionRelPosRepository;
     }
 
     @Override
@@ -45,8 +53,21 @@ public class RegionRelPosRepositoryImpl extends BaseRepositoryImpl<RegionRelPos>
 
     @Override
     public List<Region> listUnbindRegion(Long organizationId, Long onlineStoreId) {
-
-        return regionRelPosMapper.selectUnbindRegionByStoreId(organizationId, onlineStoreId);
+        //获取配置服务点的地区
+        RegionRelPos query = new RegionRelPos();
+        query.setOnlineShopId(onlineStoreId);
+        query.setTenantId(organizationId);
+        List<RegionRelPos> list = regionRelPosRepository.select(query);
+        List<String> notInRegionCodes = new ArrayList<>();
+        if (!list.isEmpty()) {
+            for (RegionRelPos regionRelPos : list) {
+                notInRegionCodes.add(regionRelPos.getRegionCode());
+            }
+        }
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setEnabledFlag(1);
+        dto.setNotInRegionCodes(notInRegionCodes);
+        return regionRepository.listRegionLov(dto,organizationId);
     }
 
     @Override
