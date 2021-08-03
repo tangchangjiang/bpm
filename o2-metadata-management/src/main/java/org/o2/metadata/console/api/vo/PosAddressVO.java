@@ -22,16 +22,16 @@ public class PosAddressVO {
     private Long posAddressId;
 
     @ApiModelProperty(value = "国家")
-    private Long countryId;
+    private String countryCode;
 
     @ApiModelProperty(value = "省")
-    private Long regionId;
+    private String regionCode;
 
     @ApiModelProperty(value = "市")
-    private Long cityId;
+    private String cityCode;
 
     @ApiModelProperty(value = "区")
-    private Long districtId;
+    private String districtCode;
 
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;

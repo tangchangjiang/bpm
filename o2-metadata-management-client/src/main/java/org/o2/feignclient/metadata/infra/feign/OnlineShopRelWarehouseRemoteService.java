@@ -37,11 +37,11 @@ public interface OnlineShopRelWarehouseRemoteService {
                                                        @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long tenantId);
     /**
      * 批量查询网店
-     * @param  onlineShopList 网店
+     * @param  onlineShopDTO 网店
      * @param  organizationId 租户ID
      * @return map
      */
     @PostMapping("/{organizationId}/onlineShopRelWarehouse-internal/onlineShop-list")
-    ResponseEntity<String> listOnlineShops(@RequestBody OnlineShopDTO onlineShopList,
+    ResponseEntity<String> listOnlineShops(@RequestBody OnlineShopDTO onlineShopDTO,
                                            @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
 }

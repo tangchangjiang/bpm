@@ -4,10 +4,10 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.PosAddress">
         <result column="pos_address_id" property="posAddressId" jdbcType="DECIMAL"/>
-        <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
-        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
-        <result column="city_id" property="cityId" jdbcType="DECIMAL"/>
-        <result column="district_id" property="districtId" jdbcType="DECIMAL"/>
+        <result column="country_code" property="countryCode" jdbcType="VARCHAR"/>
+        <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="district_code" property="districtCode" jdbcType="VARCHAR"/>
         <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
         <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR"/>
         <result column="postcode" property="postcode" jdbcType="VARCHAR"/>
@@ -29,10 +29,10 @@
     <select id="findDetailedAddressById" resultType="org.o2.metadata.console.infra.entity.PosAddress">
         SELECT
             da.pos_address_id,
-            da.country_id,
-            da.region_id,
-            da.city_id,
-            da.district_id,
+            da.country_code,
+            da.region_code,
+            da.city_code,
+            da.district_code,
             da.street_name,
             da.phone_number,
             da.postcode,
@@ -45,7 +45,7 @@
                 FROM
                     hpfm_country t
                 WHERE
-                    t.country_id = da.country_id and t.tenant_id = #{tenantId}
+                    t.country_code = da.country_code and t.tenant_id = #{tenantId}
             ) AS country,
             (
                 SELECT
@@ -53,7 +53,7 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.region_id and t.tenant_id = #{tenantId}
+                    t.region_code = da.region_code and t.tenant_id = #{tenantId}
             ) AS region,
             (
                 SELECT
@@ -61,7 +61,7 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.city_id and t.tenant_id = #{tenantId}
+                    t.region_code = da.city_code and t.tenant_id = #{tenantId}
             ) AS city,
             (
                 SELECT
@@ -69,7 +69,7 @@
                 FROM
                     hpfm_region t
                 WHERE
-                    t.region_id = da.district_id and t.tenant_id = #{tenantId}
+                    t.region_code = da.district_code and t.tenant_id = #{tenantId}
             ) AS district
         FROM
             o2md_pos_address da
@@ -88,18 +88,17 @@
         SELECT
 
         address.pos_address_id,
-        address.country_id,
-        address.region_id,
-        address.city_id,
-        address.district_id,
+        address.country_code,
+        address.region_code,
+        address.city_code,
+        address.district_code,
         address.street_name,
         address.phone_number,
-        address.postcode,
+        pos.pos_code as postcode,
         address.contact,
         address.mobile_phone,
         address.longitude,
-        address.latitude,
-        pos.pos_code
+        address.latitude
         FROM
         o2md_pos_address address
         inner join o2md_pos pos on pos.address_id = address.pos_address_id
@@ -112,9 +111,9 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="posCodes != null and posCodes.size > 0" >
+        <if test="posAddressDTO.posCodes != null and posAddressDTO.posCodes.size > 0" >
             and pos.pos_code IN
-            <foreach collection="posCodes" item="code" open="(" separator="," close=")">
+            <foreach collection="posAddressDTO.posCodes" item="code" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
