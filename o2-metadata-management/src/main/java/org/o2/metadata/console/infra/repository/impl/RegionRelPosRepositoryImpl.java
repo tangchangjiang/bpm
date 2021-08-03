@@ -36,14 +36,11 @@ public class RegionRelPosRepositoryImpl extends BaseRepositoryImpl<RegionRelPos>
 
     private RegionRelPosMapper regionRelPosMapper;
     private RegionRepository regionRepository;
-    private RegionRelPosRepository regionRelPosRepository;
 
     public RegionRelPosRepositoryImpl(RegionRelPosMapper regionRelPosMapper,
-                                      RegionRepository regionRepository,
-                                      RegionRelPosRepository regionRelPosRepository) {
+                                      RegionRepository regionRepository) {
         this.regionRelPosMapper = regionRelPosMapper;
         this.regionRepository = regionRepository;
-        this.regionRelPosRepository = regionRelPosRepository;
     }
 
     @Override
@@ -57,7 +54,7 @@ public class RegionRelPosRepositoryImpl extends BaseRepositoryImpl<RegionRelPos>
         RegionRelPos query = new RegionRelPos();
         query.setOnlineShopId(onlineStoreId);
         query.setTenantId(organizationId);
-        List<RegionRelPos> list = regionRelPosRepository.select(query);
+        List<RegionRelPos> list = this.select(query);
         List<String> notInRegionCodes = new ArrayList<>();
         if (!list.isEmpty()) {
             for (RegionRelPos regionRelPos : list) {
