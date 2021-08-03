@@ -3,6 +3,8 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
@@ -32,11 +34,16 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private RegionRepository regionRepository;
     private RegionAreaRepository regionAreaRepository;
     private RegionRelPosRepository regionRelPosRepository;
+    private LovAdapter lovAdapter;
 
-    public RegionServiceImpl(RegionRepository regionRepository,RegionAreaRepository regionAreaRepository, RegionRelPosRepository regionRelPosRepository) {
+    public RegionServiceImpl(RegionRepository regionRepository,
+                             RegionAreaRepository regionAreaRepository,
+                             RegionRelPosRepository regionRelPosRepository,
+                             LovAdapter lovAdapter) {
         this.regionRepository = regionRepository;
         this.regionAreaRepository = regionAreaRepository;
         this.regionRelPosRepository = regionRelPosRepository;
+        this.lovAdapter = lovAdapter;
     }
 
     @Override
@@ -167,6 +174,14 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         final Region region = new Region();
         region.setRegionCode(regionCode);
         return regionRepository.selectOne(region);
+    }
+
+    @Override
+    public List<Map<String, Object>> listRegionLov(List<String> regionCodes,Long tenantId) {
+        Map<String,String> queryParams = new HashMap<>(16);
+        queryParams.put("regionCodes", StringUtils.join(regionCodes, ","));
+        List<Map<String, Object>> list =  lovAdapter.queryLovData("O2MD.REGION",tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        return null;
     }
 
     /**

@@ -6,16 +6,18 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.convertor.PosAddressConvertor;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -25,13 +27,10 @@ import java.util.List;
  */
 @Service
 public class PosServiceImpl implements PosService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PosServiceImpl.class);
-
     private final PosRepository posRepository;
     private final PostTimeRepository postTimeRepository;
     private final PosAddressRepository posAddressRepository;
-    private final RegionRepository regionRepository;
+    private final RegionService regionService;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private CarrierRepository carrierRepository;
     private final LovAdapter lovAdapter;
@@ -40,14 +39,14 @@ public class PosServiceImpl implements PosService {
     public PosServiceImpl(PosRepository posRepository,
                           PostTimeRepository postTimeRepository,
                           PosAddressRepository posAddressRepository,
-                          RegionRepository regionRepository,
+                          RegionService regionService,
                           PosRelCarrierRepository posRelCarrierRepository,
                           CarrierRepository carrierRepository,
                           LovAdapter lovAdapter) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
-        this.regionRepository = regionRepository;
+        this.regionService = regionService;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRepository = carrierRepository;
         this.lovAdapter = lovAdapter;
@@ -61,10 +60,12 @@ public class PosServiceImpl implements PosService {
 
         Assert.isTrue(!pos.exist(posRepository), BaseConstants.ErrorCode.DATA_EXISTS);
         final PosAddress address = pos.getAddress();
-        if (address != null && address.getRegionId() != null) {
-            final Region region = regionRepository.selectByPrimaryKey(address.getRegionId());
-            if (region != null) {
-                address.setCountryId(region.getCountryId());
+        if (address != null && address.getRegionCode() != null) {
+            Map<String,String> queryParams = new HashMap<>(16);
+            queryParams.put("regionCode",address.getRegionCode());
+            List<Map<String, Object>> list =  lovAdapter.queryLovData("O2MD.REGION",pos.getTenantId(), null,  1, 10 , queryParams);
+            if (!list.isEmpty()) {
+                address.setCountryCode(String.valueOf(list.get(0).get("countryCde")));
             }
             address.setTenantId(pos.getTenantId());
             posAddressRepository.insertSelective(address);
@@ -95,9 +96,10 @@ public class PosServiceImpl implements PosService {
 
         final PosAddress address;
         if ((address = pos.getAddress()) != null) {
-            final Long regionId = address.getRegionId();
-            final Region region = regionRepository.selectByPrimaryKey(regionId);
-            address.setCountryId(region.getCountryId());
+            List<String> regionCodes = new ArrayList<>();
+            if (!list.isEmpty()) {
+                address.setCountryCode(String.valueOf(list.get(0).get("countryCde")));
+            }
             address.setTenantId(pos.getTenantId());
             posAddressRepository.updateByPrimaryKey(address);
         }
