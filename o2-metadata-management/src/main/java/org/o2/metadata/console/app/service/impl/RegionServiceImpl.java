@@ -3,16 +3,13 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.helper.FastJsonHelper;
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
 import org.o2.metadata.console.api.dto.RegionDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.RegionConstants;
+import org.o2.metadata.console.infra.convertor.RegionConvertor;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
@@ -37,16 +34,13 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private RegionRepository regionRepository;
     private RegionAreaRepository regionAreaRepository;
     private RegionRelPosRepository regionRelPosRepository;
-    private LovAdapter lovAdapter;
 
     public RegionServiceImpl(RegionRepository regionRepository,
                              RegionAreaRepository regionAreaRepository,
-                             RegionRelPosRepository regionRelPosRepository,
-                             LovAdapter lovAdapter) {
+                             RegionRelPosRepository regionRelPosRepository) {
         this.regionRepository = regionRepository;
         this.regionAreaRepository = regionAreaRepository;
         this.regionRelPosRepository = regionRelPosRepository;
-        this.lovAdapter = lovAdapter;
     }
 
     @Override
@@ -179,57 +173,29 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return regionRepository.selectOne(region);
     }
 
-
-
     @Override
     public List<RegionVO> listChildren(String countryCode, Long parentRegionId, int enabledFlag, Long organizationId) {
-
-        /**
-         *         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-         *         select
-         *         hr.region_id,
-         *         hr.country_id,
-         *         hr.region_code,
-         *         hrt.region_name,
-         *         hr.parent_region_id,
-         *         hr.enabled_flag,
-         *         ora.area_code area_code,
-         *         hr.object_version_number,
-         *         (select count(1) from hpfm_region t where t.parent_region_id=hr.region_id) children_count
-         *         from hpfm_region hr
-         *         join hpfm_country oc on hr.country_id=oc.country_id
-         *         left join hpfm_region_tl hrt on hrt.region_id = hr.region_id and hrt.lang = #{lang}
-         *         left join o2md_region_area ora on ora.region_code = hr.region_code and ora.tenant_id = hr.tenant_id
-         *         where
-         *         1=1
-         *         <choose>
-         *             <when test="tenantId != null">
-         *                 and hr.tenant_id = #{tenantId}
-         *             </when>
-         *             <otherwise>
-         *                 AND hr.tenant_id = 0
-         *             </otherwise>
-         *         </choose>
-         *         <if test="countryIdOrCode != null">
-         *             and (hr.country_id = #{countryIdOrCode} or oc.country_code=#{countryIdOrCode})
-         *         </if>
-         *         <if test="parentRegionId != null">
-         *             and hr.parent_region_id = #{parentRegionId}
-         *         </if>
-         *         <if test="parentRegionId == null">
-         *             and hr.parent_region_id is null
-         *         </if>
-         *         <if test="enabledFlag != null">
-         *             and hr.enabled_flag = #{enabledFlag}
-         *         </if>
-         *         order by hr.region_code
-         */
         RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
         queryLovDTO.setParentRegionId(parentRegionId);
         queryLovDTO.setCountryCode(countryCode);
         queryLovDTO.setEnabledFlag(enabledFlag);
-
-        return null;
+        queryLovDTO.setTenantId(organizationId);
+        List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
+        List<String> regionCodes = new ArrayList<>();
+        for (Region region : regionList) {
+            regionCodes.add(region.getRegionCode());
+        }
+        List<RegionVO> regionVOList = RegionConvertor.poToVoListObjects(regionList);
+        List<RegionArea> regionAreas = regionAreaRepository.batchSelectByCode(regionCodes, organizationId);
+        if (regionAreas.isEmpty()) {
+            return regionVOList;
+        }
+        Map<String,String> regionMap = regionAreas.stream().collect(Collectors.toMap(RegionArea::getRegionCode, RegionArea::getAreaCode));
+        for (RegionVO regionVO : regionVOList) {
+            String regionCode = regionVO.getRegionCode();
+            regionVO.setAreaCode(regionMap.get(regionCode));
+        }
+        return regionVOList;
     }
 
     /**

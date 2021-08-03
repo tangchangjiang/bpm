@@ -43,10 +43,10 @@ public class RegionController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<?> treeRegionWithParent(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                  @RequestParam(value = "countryIdOrCode")final String countryIdOrCode,
+                                                  @RequestParam(value = "countryCode")final String countryCode,
                                                   @RequestParam(required = false) final String condition,
                                                   @RequestParam(required = false) final Integer enabledFlag) {
-        return Results.success(regionService.treeRegionWithParent(countryIdOrCode, condition, enabledFlag,organizationId));
+        return Results.success(regionService.treeRegionWithParent(countryCode, condition, enabledFlag,organizationId));
     }
 
     @ApiOperation("查询国家/地区下的有效地区列表")

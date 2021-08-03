@@ -6,7 +6,7 @@ package org.o2.metadata.console.infra.constant;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-03
  **/
-public enum PosConstants {
+public enum RegionConstants {
     //默认
     DEFUTLT;
 
@@ -14,11 +14,18 @@ public enum PosConstants {
         /**
          * 查询条件
          */
-        QUERY_PARAM("regionCodes", ""),
+        REGION_CODES("regionCodes", ""),
         /**
          * 值集编码
          */
-        LOV_CODE("O2MD.REGION", "");
+        LOV_CODE("O2MD.REGION", ""),
+
+        REGION_NAME("regionName",""),
+        REGION_CODE("regionCode",""),
+        PARENT_REGION_ID("parentRegionId",""),
+        ENABLED_FLAG("enabledFlag",""),
+        COUNTRY_CODE("countryCode","");
+
 
         private String code;
 

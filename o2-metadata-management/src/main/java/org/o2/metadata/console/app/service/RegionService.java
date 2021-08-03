@@ -1,12 +1,10 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.AreaRegionDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
