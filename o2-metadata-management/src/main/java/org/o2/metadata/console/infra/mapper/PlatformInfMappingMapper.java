@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.mapper;
 
+import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -25,4 +26,11 @@ public interface PlatformInfMappingMapper extends BaseMapper<PlatformInfMapping>
      * @return PlatformInfMapping 结果
      */
     PlatformInfMapping selectById(Long id);
+
+    /**
+     * 根据条件查询唯一的匹配项
+     * @param platformInfMapping 条件
+     * @return PlatformInfMapping 结果
+     */
+    PlatformInfMapping selectOneMapping(PlatformInfMappingDTO platformInfMapping);
 }

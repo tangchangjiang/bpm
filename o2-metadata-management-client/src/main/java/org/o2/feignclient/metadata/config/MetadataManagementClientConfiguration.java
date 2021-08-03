@@ -84,7 +84,8 @@ public class MetadataManagementClientConfiguration {
                                                                  StaticResourceRemoteService staticResourceRemoteService,
                                                                  CatalogVersionRemoteService catalogVersionRemoteService,
                                                                  CarrierRemoteService carrierRemoteService,
-                                                                 PosRemoteService posRemoteService) {
+                                                                 PosRemoteService posRemoteService,
+                                                                 PlatformInfMappingRemoteService platformInfMappingRemoteService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
@@ -92,6 +93,6 @@ public class MetadataManagementClientConfiguration {
                 staticResourceRemoteService,
                 catalogVersionRemoteService,
                 carrierRemoteService,
-                posRemoteService);
+                posRemoteService, platformInfMappingRemoteService);
     }
 }
