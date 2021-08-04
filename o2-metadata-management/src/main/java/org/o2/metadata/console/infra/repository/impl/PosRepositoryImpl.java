@@ -6,6 +6,7 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.entity.PostTime;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.PosRepository;
@@ -84,7 +85,35 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
         final Pos pos = posMapper.getPosWithCarrierNameById(tenantId,posId);
 
         if (pos.getAddressId() != null) {
-            pos.setAddress(posAddressMapper.selectByPrimaryKey(pos.getAddressId()));
+            PosAddress posAddress = posAddressMapper.selectByPrimaryKey(pos.getAddressId());
+            pos.setAddress(posAddress);
+            List<String> regionCodes = new ArrayList<>(3);
+            String cityCode = posAddress.getRegionCode();
+            if (StringUtils.isNotEmpty(cityCode)){
+                regionCodes.add(cityCode);
+            }
+            String districtCode = posAddress.getDistrictCode();
+            if (StringUtils.isNotEmpty(districtCode)){
+                regionCodes.add(districtCode);
+            }
+            String regionCode =   posAddress.getRegionCode();
+            if (StringUtils.isNotEmpty(regionCode)){
+                regionCodes.add(regionCode);
+            }
+            RegionQueryLovDTO dto = new RegionQueryLovDTO();
+            dto.setRegionCodes(regionCodes);
+            dto.setTenantId(tenantId);
+            Map<String,String> map = new HashMap<>();
+            List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
+            if (!regionList.isEmpty()) {
+                for (Region region : regionList) {
+                    map.put(region.getRegionCode(), region.getRegionName());
+                }
+                posAddress.setCity(map.get(cityCode));
+                posAddress.setDistrict(map.get(districtCode));
+                posAddress.setRegionCode(map.get(regionCode));
+                posAddress.setCountry(regionList.get(0).getCountryName());
+            }
         }
 
         // 接派单时间
