@@ -6,8 +6,10 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
+import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.convertor.PosAddressConvertor;
+import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Service;
@@ -129,7 +131,7 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public Pos getPosWithPropertiesInRedisByPosId(final Long organizationId,final Long posId) {
+    public PosVO getPosWithPropertiesInRedisByPosId(final Long organizationId, final Long posId) {
         final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(organizationId,posId);
         List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,1);
         if (CollectionUtils.isNotEmpty(posRelCarriers)) {
@@ -137,7 +139,7 @@ public class PosServiceImpl implements PosService {
             pos.setCarrierId(carrier.getCarrierId());
             pos.setCarrierName(carrier.getCarrierName());
         }
-        return pos;
+        return PosConverter.poToVoObject(pos);
     }
 
     @Override

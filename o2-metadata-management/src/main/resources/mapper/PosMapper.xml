@@ -21,26 +21,6 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <resultMap id="PosVOMap" type="org.o2.metadata.console.api.vo.PosVO">
-        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
-        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
-        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
-        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
-        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
-        <result column="region_id" property="regionId" jdbcType="BIGINT"/>
-        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
-        <result column="city_id" property="cityId" jdbcType="BIGINT"/>
-        <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
-        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
-        <result column="district_name" property="districtName" jdbcType="VARCHAR"/>
-        <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
-        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
-        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
-        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
-        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
-        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
-    </resultMap>
-
     <resultMap id="PosResultMap" type="org.o2.metadata.console.infra.entity.Pos" extends="BaseResultMap">
         <association property="address" columnPrefix="address_"
                      resultMap="org.o2.metadata.console.infra.mapper.PosAddressMapper.BaseResultMap"/>
@@ -59,7 +39,7 @@
         address.region_code,
         address.country_code,
         address.district_code,
-        address.region_code,
+        address.city_code,
         address.street_name,
         pos.business_type_code
         from o2md_pos pos

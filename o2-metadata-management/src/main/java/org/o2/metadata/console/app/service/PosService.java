@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
+import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface PosService {
      * @param posId Long
      * @return Pos
      */
-    Pos getPosWithPropertiesInRedisByPosId(Long organizationId, Long posId);
+    PosVO getPosWithPropertiesInRedisByPosId(Long organizationId, Long posId);
     
     /**
      * 查询服务地址
