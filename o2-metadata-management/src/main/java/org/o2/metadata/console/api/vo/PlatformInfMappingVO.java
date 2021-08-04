@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * description 平台匹配结果
@@ -41,7 +40,6 @@ public class PlatformInfMappingVO {
     @NotBlank
     private String platformInfName;
     @ApiModelProperty(value = "租户ID", required = true)
-    @NotNull
     private Long tenantId;
 
     //

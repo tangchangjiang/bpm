@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import io.choerodon.mybatis.common.BaseMapper;
@@ -18,7 +20,7 @@ public interface PlatformInfMappingMapper extends BaseMapper<PlatformInfMapping>
      * @param platformInfMapping 查询条件
      * @return List<PlatformInfMapping> 查询结果
      */
-    List<PlatformInfMapping> listInfMapping(PlatformInfMapping platformInfMapping);
+    List<PlatformInfMapping> listInfMapping(InfMappingDTO platformInfMapping);
 
     /**
      * 根据主键ID查询详情
@@ -33,4 +35,12 @@ public interface PlatformInfMappingMapper extends BaseMapper<PlatformInfMapping>
      * @return PlatformInfMapping 结果
      */
     PlatformInfMapping selectOneMapping(PlatformInfMappingDTO platformInfMapping);
+
+    /**
+     * 批量查询数据
+     * @param platformInfMappingDTOList 批量条件
+     * @param tenantId 租户Id
+     * @return List<PlatformInfMapping> 结果
+     */
+    List<PlatformInfMapping> selectCondition(@Param("list") List<PlatformInfMappingDTO> platformInfMappingDTOList,@Param("tenantId") Long tenantId);
 }
