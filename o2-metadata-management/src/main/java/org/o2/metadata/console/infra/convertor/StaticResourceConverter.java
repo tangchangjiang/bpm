@@ -31,6 +31,7 @@ public class StaticResourceConverter {
         staticResource.setResourceUrl(staticResourceSaveDTO.getResourceUrl());
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
+        staticResource.setLang(staticResourceSaveDTO.getLang());
         return staticResource;
     }
 }

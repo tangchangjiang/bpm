@@ -46,7 +46,8 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         List<StaticResource> resourceList = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
                         .andIn(StaticResource.FIELD_RESOURCE_CODE, resourceCodeList)
-                        .andEqualTo(StaticResource.FIELD_TENANT_ID, Optional.ofNullable(staticResourceQueryDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId())))
+                        .andEqualTo(StaticResource.FIELD_TENANT_ID, Optional.ofNullable(staticResourceQueryDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()))
+                        .andEqualTo(StaticResource.FIELD_LANG, staticResourceQueryDTO.getLang()))
                 .build());
         return resourceList.stream().collect(Collectors.toMap(StaticResource::getResourceCode, StaticResource::getResourceUrl));
     }
@@ -62,6 +63,7 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
                 .andWhere(Sqls.custom()
                         .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
                         .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
+                        .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang())
                 ).build());
 
         int count = staticResources.size();

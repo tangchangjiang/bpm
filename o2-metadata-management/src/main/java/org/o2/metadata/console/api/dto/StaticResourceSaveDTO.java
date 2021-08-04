@@ -31,6 +31,9 @@ public class StaticResourceSaveDTO {
     @ApiModelProperty(value = "静态资源描述")
     private String description;
 
+    @ApiModelProperty(value = "语言")
+    private String lang;
+
     @ApiModelProperty(value = "租户Id", required = true)
     @NotNull
     private Long tenantId;
