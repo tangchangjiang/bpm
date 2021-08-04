@@ -110,6 +110,11 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
             queryParams.put(RegionConstants.RegionLov.NOT_IN_REGION_CODE.getCode(), StringUtils.join(regionQueryLov.getNotInRegionCodes(), BaseConstants.Symbol.COMMA));
         }
 
+        if (!CollectionUtils.isEmpty(regionQueryLov.getRegionIds())) {
+            queryParams.put(RegionConstants.RegionLov.REGION_IDS.getCode(), StringUtils.join(regionQueryLov.getRegionIds(), BaseConstants.Symbol.COMMA));
+
+        }
+
         List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
         if (list.isEmpty()){
             return regionList;

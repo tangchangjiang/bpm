@@ -2,8 +2,10 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.AddressMappingDTO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
 import java.util.List;
 
@@ -16,11 +18,11 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     /**
      * 根据条件查询地址匹配
      *
-     * @param addressMapping 地址匹配
+     * @param addressMappingDTO 地址匹配
      * @param countryCode    国家编码
      * @return 结果集
      */
-    List<RegionTreeChildVO> findAddressMappingByCondition(AddressMapping addressMapping, String countryCode);
+    List<RegionTreeChild> findAddressMappingByCondition(@Param("addressMapping") AddressMappingDTO addressMappingDTO, String countryCode);
 
     /**
      * 根据region_id  type 查询地址内部外部匹配数据
@@ -30,7 +32,7 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @param tenantId 租户ID
      * @return 查询结果集
      */
-    List<RegionTreeChildVO> findAddressMappingById(@Param(value = "id") Long id, @Param(value = "type") String type, @Param(value = "tenantId") Long tenantId);
+    List<RegionTreeChild> findAddressMappingById(@Param(value = "id") Long id, @Param(value = "type") String type, @Param(value = "tenantId") Long tenantId);
 
     /**
      * 根据regionCode  catalogCode查询地址内部外部匹配数据
@@ -52,4 +54,15 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * @throws RuntimeException exception description
      */
     List<AddressMapping> queryAddressByCondition(@Param(value = "catalogCode") String catalogCode, @Param(value = "regionId") Long regionId, @Param(value = "tenantId") Long tenantId);
+
+    /**
+     *  批量查询
+     * @param  regionCodes 地区编码
+     * @param  type 类型
+     * @param  tenantId 租户ID
+     * @return list
+     */
+    List<RegionTreeChild> listAddressMapping(@Param(value = "regionCodes")List<String> regionCodes,
+                                             @Param(value = "type")String type,
+                                             @Param(value = "tenantId") Long tenantId);
 }

@@ -37,6 +37,8 @@ public class RegionQueryLovDTO {
 
    private List<Long> parentRegionIds;
 
+   private List<Long> regionIds;
+
     /**
      * 地址集合
      */
