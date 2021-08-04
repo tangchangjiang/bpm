@@ -61,7 +61,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     @Override
     public List<AreaRegionVO> listAreaRegion(final String countryCode, final Integer enabledFlag, final Long tenantId) {
         //取出所有省份
-        final List<RegionVO> regionList = this.listChildren(countryCode, null, enabledFlag,tenantId);
+        final List<RegionVO> regionList = this.listChildren(countryCode, null,null, enabledFlag,tenantId);
         final Map<String, List<RegionBO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionBO> list;
@@ -73,7 +73,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
                 list = new ArrayList<>();
                 regionMap.put(key, list);
             }
-            List<RegionVO> childrenVO = this.listChildren(countryCode, regionVO.getRegionId(), enabledFlag, tenantId);
+            List<RegionVO> childrenVO = this.listChildren(countryCode, regionVO.getRegionId(),null, enabledFlag, tenantId);
             List<RegionBO> childrenBO = null;
             if (CollectionUtils.isNotEmpty(childrenVO)) {
                 childrenBO = childrenVO.stream().map(m -> {
@@ -172,20 +172,27 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return regionRepository.selectOne(region);
     }
 
+
+
     @Override
-    public List<RegionVO> listChildren(String countryCode, Long parentRegionId, int enabledFlag, Long organizationId) {
+    public List<RegionVO> listChildren(String countryCode,
+                                       Long parentRegionId,
+                                       String parentRegionCode,
+                                       Integer enabledFlag,
+                                       Long organizationId) {
         RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
         queryLovDTO.setParentRegionId(parentRegionId);
         queryLovDTO.setCountryCode(countryCode);
         queryLovDTO.setEnabledFlag(enabledFlag);
         queryLovDTO.setTenantId(organizationId);
+        queryLovDTO.setParentRegionCode(parentRegionCode);
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
-        List<String> regionCodes = new ArrayList<>();
+       /* List<String> regionCodes = new ArrayList<>();
         for (Region region : regionList) {
             regionCodes.add(region.getRegionCode());
-        }
-        List<RegionVO> regionVOList = RegionConvertor.poToVoListObjects(regionList);
-        List<RegionArea> regionAreas = regionAreaRepository.batchSelectByCode(regionCodes, organizationId);
+        }*/
+        return RegionConvertor.poToVoListObjects(regionList);
+/*        List<RegionArea> regionAreas = regionAreaRepository.batchSelectByCode(regionCodes, organizationId);
         if (regionAreas.isEmpty()) {
             return regionVOList;
         }
@@ -194,7 +201,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
             String regionCode = regionVO.getRegionCode();
             regionVO.setAreaCode(regionMap.get(regionCode));
         }
-        return regionVOList;
+        return regionVOList;*/
     }
 
     @Override

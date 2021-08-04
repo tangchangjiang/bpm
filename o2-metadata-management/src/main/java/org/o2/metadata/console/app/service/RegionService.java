@@ -82,9 +82,14 @@ public interface RegionService {
      * @param enabledFlag     筛选条件
      * @param parentRegionId  级联父节点ID
      * @param organizationId        租户ID
+     * @param parentRegionCode       级联父节点Code
      * @return 地区列表
      */
-    List<RegionVO> listChildren(String countryIdOrCode, Long parentRegionId, int enabledFlag, Long organizationId);
+    List<RegionVO> listChildren(String countryIdOrCode,
+                                Long parentRegionId,
+                                String parentRegionCode ,
+                                Integer enabledFlag,
+                                Long organizationId);
 
     /**
      * 编码查询地区
