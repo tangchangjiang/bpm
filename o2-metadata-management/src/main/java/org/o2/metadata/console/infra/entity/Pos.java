@@ -226,4 +226,33 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "组织ID", hidden = true)
     private Long tenantId;
 
+
+    @ApiModelProperty("省id")
+    @Transient
+    private String regionCode;
+
+    @ApiModelProperty(value = "省名称", hidden = true)
+    @Transient
+    private String regionName;
+
+    @ApiModelProperty("市id")
+    @Transient
+    private String cityCode;
+
+    @ApiModelProperty(value = "市名称", hidden = true)
+    @Transient
+    private String cityName;
+
+    @ApiModelProperty(value = "区id")
+    @Transient
+    private String districtCode;
+
+    @ApiModelProperty(value = "区名称", hidden = true)
+    @Transient
+    private String districtName;
+
+    @ApiModelProperty(value = "街道地址", hidden = true)
+    @Transient
+    private String streetName;
+
 }

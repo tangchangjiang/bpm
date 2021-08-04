@@ -2,8 +2,8 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.infra.entity.Pos;
-import org.o2.metadata.console.api.vo.PosVO;
 
 import java.util.List;
 
@@ -22,15 +22,15 @@ public interface PosMapper extends BaseMapper<Pos> {
      * @param pos 服务点信息，包含地址省市区字段
      * @return 带详细地址信息的服务点列表
      */
-    List<PosVO> listPosWithAddressByCondition(PosVO pos);
+    List<Pos> listPosWithAddressByCondition(PosDTO pos);
 
     /**
      * 查询未与网店关联的服务点
      *
      * @param onlineShopId 网店 id
-     * @param posCode
-     * @param posName
-     * @param tenantId
+     * @param posCode 服务点编码
+     * @param posName 服务名称
+     * @param tenantId 租户ID
      * @return 服务点列表
      */
     List<Pos> listUnbindPosList(@Param(value = "onlineShopId") Long onlineShopId,

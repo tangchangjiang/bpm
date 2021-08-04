@@ -14,7 +14,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.helper.UniqueHelper;
-import org.o2.metadata.console.api.vo.PosVO;
+import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Pos;
@@ -48,11 +48,11 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                            final PosVO pos,
+    public ResponseEntity<Page<Pos>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            final PosDTO pos,
                                             @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
-        final Page<PosVO> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+        final Page<Pos> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> posRepository.listPosWithAddressByCondition(pos));
         return Results.success(posList);
     }

@@ -86,18 +86,29 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
     public List<Region> listRegionLov(RegionQueryLovDTO regionQueryLov, Long tenantId) {
         List<Region> regionList = new ArrayList<>();
         Map<String,String> queryParams = new HashMap<>(16);
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(regionQueryLov.getRegionCodes())){
+        if (!CollectionUtils.isEmpty(regionQueryLov.getRegionCodes())){
             queryParams.put(RegionConstants.RegionLov.REGION_CODES.getCode(), StringUtils.join(regionQueryLov.getRegionCodes(), BaseConstants.Symbol.COMMA));
         }
         queryParams.put(RegionConstants.RegionLov.COUNTRY_CODE.getCode(), regionQueryLov.getCountryCode());
         queryParams.put(RegionConstants.RegionLov.REGION_CODE.getCode(), regionQueryLov.getRegionCode());
         queryParams.put(RegionConstants.RegionLov.REGION_NAME.getCode(), regionQueryLov.getRegionName());
-        queryParams.put(RegionConstants.RegionLov.PARENT_REGION_ID.getCode(), String.valueOf(regionQueryLov.getParentRegionId()));
+        Long  parentRegionId = regionQueryLov.getParentRegionId();
+        if (null != parentRegionId) {
+            queryParams.put(RegionConstants.RegionLov.PARENT_REGION_ID.getCode(), String.valueOf(regionQueryLov.getParentRegionId()) );
+
+        }
         queryParams.put(RegionConstants.RegionLov.PARENT_REGION_CODE.getCode(), regionQueryLov.getParentRegionCode());
-        queryParams.put(RegionConstants.RegionLov.PARENT_REGION_IDS.getCode(), StringUtils.join(regionQueryLov.getRegionCodes(), BaseConstants.Symbol.COMMA));
-        queryParams.put(RegionConstants.RegionLov.ENABLED_FLAG.getCode(), String.valueOf(regionQueryLov.getEnabledFlag()));
-        queryParams.put(RegionConstants.RegionLov.ENABLED_FLAG.getCode(), String.valueOf(regionQueryLov.getEnabledFlag()));
-        queryParams.put(RegionConstants.RegionLov.NOT_IN_REGION_CODE.getCode(), StringUtils.join(regionQueryLov.getNotInRegionCodes(), BaseConstants.Symbol.COMMA));
+        if (!CollectionUtils.isEmpty(regionQueryLov.getParentRegionIds())) {
+            queryParams.put(RegionConstants.RegionLov.PARENT_REGION_IDS.getCode(), StringUtils.join(regionQueryLov.getParentRegionIds(), BaseConstants.Symbol.COMMA));
+
+        }
+        if (null != regionQueryLov.getEnabledFlag()) {
+            queryParams.put(RegionConstants.RegionLov.ENABLED_FLAG.getCode(), String.valueOf(regionQueryLov.getEnabledFlag()));
+        }
+
+        if (!CollectionUtils.isEmpty(regionQueryLov.getNotInRegionCodes())) {
+            queryParams.put(RegionConstants.RegionLov.NOT_IN_REGION_CODE.getCode(), StringUtils.join(regionQueryLov.getNotInRegionCodes(), BaseConstants.Symbol.COMMA));
+        }
 
         List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
         if (list.isEmpty()){
