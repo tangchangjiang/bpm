@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.mapper.PlatformInfMappingMapper;
@@ -21,7 +22,7 @@ public class PlatformInfMappingRepositoryImpl extends BaseRepositoryImpl<Platfor
 
     private final PlatformInfMappingMapper platformInfMappingMapper;
     @Override
-    public List<PlatformInfMapping> listInfMapping(PlatformInfMapping platformInfMapping) {
+    public List<PlatformInfMapping> listInfMapping(InfMappingDTO platformInfMapping) {
         return platformInfMappingMapper.listInfMapping(platformInfMapping);
     }
 
@@ -33,5 +34,10 @@ public class PlatformInfMappingRepositoryImpl extends BaseRepositoryImpl<Platfor
     @Override
     public PlatformInfMapping selectOneMapping(PlatformInfMappingDTO platformInfMapping) {
         return platformInfMappingMapper.selectOneMapping(platformInfMapping);
+    }
+
+    @Override
+    public List<PlatformInfMapping> selectCondition(List<PlatformInfMappingDTO> platformInfMappingDTOList,Long tenantId) {
+        return platformInfMappingMapper.selectCondition(platformInfMappingDTOList,tenantId);
     }
 }

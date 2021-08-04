@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 
@@ -17,7 +18,7 @@ public interface PlatformInfMappingRepository extends BaseRepository<PlatformInf
      * @param platformInfMapping 查询条件
      * @return List<PlatformInfMapping> 查询结果
      */
-    List<PlatformInfMapping> listInfMapping(PlatformInfMapping platformInfMapping);
+    List<PlatformInfMapping> listInfMapping(InfMappingDTO platformInfMapping);
 
     /**
      * 根据主键ID查询详情
@@ -32,4 +33,12 @@ public interface PlatformInfMappingRepository extends BaseRepository<PlatformInf
      * @return PlatformInfMapping 结果
      */
     PlatformInfMapping selectOneMapping(PlatformInfMappingDTO platformInfMapping);
+
+    /**
+     * 批量查询数据
+     * @param platformInfMappingDTOList 批量条件
+     * @param tenantId 租户Id
+     * @return List<PlatformInfMapping> 结果
+     */
+    List<PlatformInfMapping> selectCondition(List<PlatformInfMappingDTO> platformInfMappingDTOList,Long tenantId);
 }
