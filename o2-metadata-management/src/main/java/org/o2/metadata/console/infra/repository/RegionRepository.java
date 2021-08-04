@@ -54,8 +54,8 @@ public interface RegionRepository extends BaseRepository<Region> {
 
     /**
      *  查询地区sql值集
-     * @param  RegionQueryLov 查询条件
+     * @param  regionQueryLov 查询条件
      * @param  tenantId 租户ID
      * @return map     */
-    List<Region> listRegionLov(RegionQueryLovDTO RegionQueryLov, Long tenantId);
+    List<Region> listRegionLov(RegionQueryLovDTO regionQueryLov, Long tenantId);
 }
