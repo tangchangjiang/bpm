@@ -4,31 +4,18 @@ import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.infra.entity.PosAddress;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 /**
  *
  * 服务点地址
  *
- * @author yipeng.zhu@hand-china.com 2021-08-04
+ * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
-public class PosAddressConverter{
-    private PosAddressConverter() {
-        // 无需实现
-    }
+public class PosAddressConverter {
 
-    public static List<PosAddressVO> toPosAddressVOList(List<PosAddress> posAddressList) {
-        if (posAddressList == null) {
-            return Collections.emptyList();
-        }
-        List<PosAddressVO> posAddressVOList = new ArrayList<>();
-        for (PosAddress posAddress : posAddressList) {
-            posAddressVOList.add(toPosAddressVO(posAddress));
-        }
-        return posAddressVOList;
-    }
+    public static PosAddressVO poToVoObject(PosAddress posAddress) {
 
-    public static PosAddressVO toPosAddressVO(PosAddress posAddress) {
         if (posAddress == null) {
             return null;
         }
@@ -45,14 +32,33 @@ public class PosAddressConverter{
         posAddressVO.setMobilePhone(posAddress.getMobilePhone());
         posAddressVO.setLongitude(posAddress.getLongitude());
         posAddressVO.setLatitude(posAddress.getLatitude());
-        posAddressVO.setCountry(posAddress.getCountry());
-        posAddressVO.setRegion(posAddress.getRegion());
-        posAddressVO.setCity(posAddress.getCity());
-        posAddressVO.setDistrict(posAddress.getDistrict());
+        posAddressVO.setCountryName(posAddress.getCountryName());
+        posAddressVO.setRegionName(posAddress.getRegionName());
+        posAddressVO.setCityName(posAddress.getCityName());
+        posAddressVO.setDistrictName(posAddress.getDistrictName());
         posAddressVO.setTenantId(posAddress.getTenantId());
+        posAddressVO.setCreationDate(posAddress.getCreationDate());
+        posAddressVO.setCreatedBy(posAddress.getCreatedBy());
+        posAddressVO.setLastUpdateDate(posAddress.getLastUpdateDate());
+        posAddressVO.setLastUpdatedBy(posAddress.getLastUpdatedBy());
         posAddressVO.setObjectVersionNumber(posAddress.getObjectVersionNumber());
         posAddressVO.set_token(posAddress.get_token());
         return posAddressVO;
     }
 
+    /**
+     * PO 转 VO
+     * @param posAddressList 地址
+     * @return  list
+     */
+    public static List<PosAddressVO> poToVoListObjects(List<PosAddress> posAddressList) {
+        List<PosAddressVO> posAddressVOList = new ArrayList<>();
+        if (posAddressList == null) {
+            return posAddressVOList;
+        }
+        for (PosAddress posAddress : posAddressList) {
+            posAddressVOList.add(poToVoObject(posAddress));
+        }
+        return posAddressVOList;
+    }
 }

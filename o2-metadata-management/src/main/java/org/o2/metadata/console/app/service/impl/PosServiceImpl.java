@@ -8,7 +8,7 @@ import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
-import org.o2.metadata.console.infra.convertor.PosAddressConvertor;
+import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
@@ -163,24 +163,24 @@ public class PosServiceImpl implements PosService {
             String cityCode = address.getCityCode();
             Region city = regionMap.get(cityCode);
             if (null != city) {
-                address.setCity(city.getRegionName());
-                address.setCountry(city.getCountryName());
+                address.setCityName(city.getRegionName());
+                address.setCountryName(city.getCountryName());
                 address.setCountryCode(city.getCountryCode());
             }
             //区
             String districtCode = address.getDistrictCode();
             Region district = regionMap.get(districtCode);
             if (null != district) {
-                address.setDistrict(district.getRegionName());
+                address.setDistrictName(district.getRegionName());
             }
             //省
             String regionCode = address.getRegionCode();
             Region region = regionMap.get(regionCode);
             if (null != region) {
-                address.setRegion(region.getRegionName());
+                address.setRegionName(region.getRegionName());
             }
         }
-        return PosAddressConvertor.poToVoListObjects(addresses);
+        return PosAddressConverter.poToVoListObjects(addresses);
     }
 
 
@@ -188,7 +188,7 @@ public class PosServiceImpl implements PosService {
      * 更新默认承运商
      * @param pos pos
      */
-    public void updateCarryIsDefault (Pos pos) {
+    private void updateCarryIsDefault (Pos pos) {
         List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,null);
         posRelCarriers.stream()
                 .filter( c -> c.getDefaultFlag() == 1)

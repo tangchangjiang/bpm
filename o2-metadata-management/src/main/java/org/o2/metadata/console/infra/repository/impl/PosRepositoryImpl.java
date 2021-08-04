@@ -109,10 +109,10 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
                 for (Region region : regionList) {
                     map.put(region.getRegionCode(), region.getRegionName());
                 }
-                posAddress.setCity(map.get(cityCode));
-                posAddress.setDistrict(map.get(districtCode));
-                posAddress.setRegionCode(map.get(regionCode));
-                posAddress.setCountry(regionList.get(0).getCountryName());
+                posAddress.setCityName(map.get(cityCode));
+                posAddress.setDistrictName(map.get(districtCode));
+                posAddress.setRegionName(map.get(regionCode));
+                posAddress.setCountryName(regionList.get(0).getCountryName());
             }
         }
 

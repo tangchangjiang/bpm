@@ -43,7 +43,7 @@ public class PosConverter {
         posVO.setStreetName(pos.getStreetName());
         posVO.setObjectVersionNumber(pos.getObjectVersionNumber());
         posVO.set_token(pos.get_token());
-        posVO.setAddress(PosAddressConverter.toPosAddressVO(pos.getAddress()));
+        posVO.setAddress(PosAddressConverter.poToVoObject(pos.getAddress()));
         posVO.setPostTimes(PostTimeConverter.toPostTimeVOList(pos.getPostTimes()));
         return posVO;
     }

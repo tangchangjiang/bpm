@@ -60,16 +60,16 @@ public class PosAddressVO extends AuditDomain {
 
     @ApiModelProperty(value = "国家")
 
-    private String country;
+    private String countryName;
 
     @ApiModelProperty(value = "省")
-    private String region;
+    private String regionName;
 
     @ApiModelProperty(value = "市")
-    private String city;
+    private String cityName;
 
     @ApiModelProperty(value = "区")
-    private String district;
+    private String districtName;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
