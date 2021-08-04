@@ -55,27 +55,14 @@ public class RegionController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<RegionVO>> listValidRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                           @RequestParam(required = false,value = "countryIdOrCode") final String countryIdOrCode,
-                                                           @RequestParam(required = false,value = "regionId") final Long regionId) {
-        if (countryIdOrCode == null && regionId == null) {
+                                                           @RequestParam(required = false,value = "countryCode") final String countryCode,
+                                                           @RequestParam(required = false,value = "regionCode") final String regionCode) {
+        if (countryCode == null && regionCode == null) {
             return Results.success(Collections.emptyList());
         }
-        return Results.success(regionService.listChildren(countryIdOrCode, regionId, 1,organizationId));
+        return Results.success(regionService.listChildren(countryCode, null, regionCode,1,organizationId));
     }
 
-    @ApiOperation("查询国家/地区下的地区列表")
-    @GetMapping("/all")
-    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<List<RegionVO>> listAllRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                            @RequestParam(required = false) final String countryIdOrCode,
-                                            @RequestParam(required = false) final Long regionId,
-                                            @RequestParam(required = false) final Integer enabledFlag) {
-        if (countryIdOrCode == null && regionId == null) {
-            return Results.success(Collections.emptyList());
-        }
-        return Results.success(regionService.listChildren(countryIdOrCode, regionId, enabledFlag,organizationId));
-    }
 
     @ApiOperation("查询大区下的省份")
     @GetMapping("/area")

@@ -1,9 +1,11 @@
 package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
@@ -12,10 +14,11 @@ import java.math.BigDecimal;
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel("详细地址")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PosAddressVO {
+public class PosAddressVO extends AuditDomain {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
 
