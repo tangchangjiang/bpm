@@ -105,19 +105,19 @@ public class PosAddress extends AuditDomain {
 
     @ApiModelProperty(value = "国家")
     @Transient
-    private String country;
+    private String countryName;
 
     @ApiModelProperty(value = "省")
     @Transient
-    private String region;
+    private String regionName;
 
     @ApiModelProperty(value = "市")
     @Transient
-    private String city;
+    private String cityName;
 
     @ApiModelProperty(value = "区")
     @Transient
-    private String district;
+    private String districtName;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
