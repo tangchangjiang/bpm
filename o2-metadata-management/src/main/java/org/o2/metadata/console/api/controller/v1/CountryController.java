@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.CountryDTO;
+import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.app.service.CountryService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Country;
@@ -54,10 +56,13 @@ public class CountryController extends BaseController {
     @GetMapping
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
     @CustomPageRequest
-    public ResponseEntity<?> pageListCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final Country country,
+    public ResponseEntity<?> pageListCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final CountryDTO country,
                                                @ApiIgnore @SortDefault(value = Country.FIELD_COUNTRY_ID) final PageRequest pageRequest) {
-        country.setTenantId(organizationId);
-        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> countryRepository.select(country)));
+        CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
+        queryLovDTO.setTenantId(organizationId);
+        queryLovDTO.setPage(pageRequest.getPage());
+        queryLovDTO.setSize(pageRequest.getSize());
+        return Results.success(countryRepository.listCountryLov(queryLovDTO,organizationId));
     }
 
     @ApiOperation("获取所有国家")
