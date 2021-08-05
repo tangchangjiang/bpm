@@ -40,7 +40,7 @@ public class OnlineShopInternalController {
                                                                @RequestParam("platformCode") String platformCode,
                                                                @RequestParam("shopName") String shopName){
 
-        List<OnlineShopVO> onlineShopCode = onlineShopService.getOnlineShopCode(platformCode, shopName);
+        List<OnlineShopVO> onlineShopCode = onlineShopService.getOnlineShopCode(platformCode, shopName,organizationId);
         return Results.success(onlineShopCode);
 
 

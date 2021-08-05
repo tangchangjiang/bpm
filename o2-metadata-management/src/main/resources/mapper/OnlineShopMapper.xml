@@ -218,7 +218,7 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND online.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 =0

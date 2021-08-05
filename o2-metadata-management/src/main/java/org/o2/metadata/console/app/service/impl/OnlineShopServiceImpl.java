@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
@@ -20,7 +18,6 @@ import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -105,12 +102,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName) {
+    public List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName,Long tenantId) {
         if (StringUtils.isEmpty(platformCode) || StringUtils.isEmpty(shopName)) {
             throw new CommonException("parameter cannot be empty");
         }
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.setOnlineShopName(shopName);
+        onlineShop.setTenantId(tenantId);
         onlineShop.setPlatformCode(platformCode);
         List<OnlineShop> shopCode = onlineShopRepository.getShopCode(onlineShop);
         return OnlineShopConvertor.poToVoListObjects(shopCode);

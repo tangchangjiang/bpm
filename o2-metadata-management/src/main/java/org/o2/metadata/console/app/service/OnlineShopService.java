@@ -29,5 +29,5 @@ public interface OnlineShopService {
      * @param shopName 店铺名称
      * @return List<OnlineShopVO> 查询结果
      */
-    List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName);
+    List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName,Long tenantId);
 }
