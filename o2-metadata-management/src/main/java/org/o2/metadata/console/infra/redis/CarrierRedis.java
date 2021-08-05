@@ -1,7 +1,9 @@
 package org.o2.metadata.console.infra.redis;
 
 
+import org.o2.metadata.console.infra.entity.Carrier;
 
+import java.util.List;
 
 /**
  *
@@ -15,4 +17,10 @@ public interface CarrierRedis {
      * @param tenantId 租户ID
      */
     void batchUpdateRedis(Long tenantId);
+
+    /**
+     * 删除redis
+     * @param list  承运商I
+     */
+    void deleteRedis(List<Carrier> list,Long tenantId);
 }

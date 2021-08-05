@@ -11,6 +11,7 @@ import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,5 +56,15 @@ public class CarrierRedisImpl implements CarrierRedis {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(CarrierConstants.Redis.CARRIER_CACHE_LUA);
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), FastJsonHelper.objectToString(hashMap),FastJsonHelper.objectToString(deleteMap));
+    }
+
+    @Override
+    public void deleteRedis(List<Carrier> list, Long tenantId) {
+       List<String> deleteList = new ArrayList<>(list.size());
+        for (Carrier carrier : list) {
+            deleteList.add(carrier.getCarrierCode());
+        }
+        String key = CarrierConstants.Redis.getCarrierKey(tenantId);
+        redisCacheClient.opsForHash().delete(key,deleteList);
     }
 }
