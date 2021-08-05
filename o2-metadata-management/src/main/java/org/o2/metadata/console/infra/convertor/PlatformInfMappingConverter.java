@@ -9,6 +9,15 @@ import org.o2.metadata.console.infra.entity.PlatformInfMapping;
  * @author zhilin.ren@hand-china.com 2021/08/02 21:55
  */
 public class PlatformInfMappingConverter {
+
+    private PlatformInfMappingConverter() {
+    }
+
+    /**
+     * po ->vo
+     * @param platformInfMapping 平台信息pojo转换器
+     * @return  vo
+     */
     public static PlatformInfMappingVO toPlatformInfMappingVO(PlatformInfMapping platformInfMapping) {
         if (platformInfMapping == null) {
             return null;

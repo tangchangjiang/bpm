@@ -13,13 +13,16 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
-public class WarehouseConvertor {
+public class WarehouseConverter {
+    private WarehouseConverter() {
+    }
+
     /**
      * po 转 do
      * @param warehouse po
      * @return do
      */
-    public static WarehouseDO poToDoObject(Warehouse warehouse) {
+    private static WarehouseDO poToDoObject(Warehouse warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -49,8 +52,12 @@ public class WarehouseConvertor {
         warehouseDO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseDO;
     }
-
-    public static WarehouseVO doToVoObject(WarehouseDO warehouse) {
+   /**
+    * do 转 vo
+    * @param warehouse 仓库
+    * @return vo
+    */
+    private static WarehouseVO doToVoObject(WarehouseDO warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -113,7 +120,7 @@ public class WarehouseConvertor {
     }
     /**
      * PO 转 vO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseVO> poToVoListObjects(List<Warehouse> warehouses) {
@@ -129,7 +136,7 @@ public class WarehouseConvertor {
 
     /**
      * PO 转 DO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseDO> poToDoListObjects(List<Warehouse> warehouses) {
@@ -145,7 +152,7 @@ public class WarehouseConvertor {
 
     /**
      * DO 转 VO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseVO> doToVoListObjects(List<WarehouseDO> warehouses) {

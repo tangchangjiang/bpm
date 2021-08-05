@@ -15,6 +15,13 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-08-03
  **/
 public class RegionConverter {
+    private RegionConverter() {
+    }
+    /**
+     * po 转 vo
+     * @param region
+     * @return  vo
+     */
     public static RegionVO poToVoObject(Region region){
 
         if (region == null) {

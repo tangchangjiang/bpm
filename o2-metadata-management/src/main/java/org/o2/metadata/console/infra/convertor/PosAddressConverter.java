@@ -13,7 +13,15 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
 public class PosAddressConverter {
+    private PosAddressConverter() {
+    }
 
+    /**
+     * po 转 vo
+     * @date 2021-08-05
+     * @param posAddress 服务点地址
+     * @return  vo
+     */
     public static PosAddressVO poToVoObject(PosAddress posAddress) {
 
         if (posAddress == null) {

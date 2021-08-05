@@ -14,6 +14,9 @@ import java.util.List;
  **/
 public class OnlineShopConverter {
 
+    private OnlineShopConverter() {
+    }
+
     public static OnlineShopVO poToVoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {

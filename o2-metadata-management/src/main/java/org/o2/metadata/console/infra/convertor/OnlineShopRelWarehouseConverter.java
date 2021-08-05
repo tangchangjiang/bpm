@@ -14,12 +14,16 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
 public class OnlineShopRelWarehouseConverter {
+
+    private OnlineShopRelWarehouseConverter() {
+    }
+
     /**
      * po 转 do
      * @param warehouse 仓库
      * @return do
      */
-    public static OnlineShopRelWarehouseDO poToDoObject(OnlineShopRelWarehouse warehouse) {
+    private static OnlineShopRelWarehouseDO poToDoObject(OnlineShopRelWarehouse warehouse) {
         if (warehouse == null) {
             return null;
         }
@@ -34,12 +38,13 @@ public class OnlineShopRelWarehouseConverter {
         onlineShopRelWarehouseDO.setWarehouseCode(warehouse.getWarehouseCode());
         return onlineShopRelWarehouseDO;
     }
+
     /**
      * do 转 vo
      * @param  warehouseDO 网店关联仓库
-     * @return  vo
+     * @return vo
      */
-    public static OnlineShopRelWarehouseVO doToVoObject(OnlineShopRelWarehouseDO warehouseDO) {
+    private static OnlineShopRelWarehouseVO doToVoObject(OnlineShopRelWarehouseDO warehouseDO) {
 
         if (warehouseDO == null) {
             return null;
@@ -55,10 +60,11 @@ public class OnlineShopRelWarehouseConverter {
         onlineShopRelWarehouseVO.setWarehouseCode(warehouseDO.getWarehouseCode());
         return onlineShopRelWarehouseVO;
     }
+
     /**
      * DO 转 VO
      * @param onlineShopRelWarehouseDOList 网店关联仓库集合
-     * @return  list
+     * @return list
      */
     public static List<OnlineShopRelWarehouseVO> doToVoListObjects(List<OnlineShopRelWarehouseDO> onlineShopRelWarehouseDOList) {
         List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
@@ -74,7 +80,7 @@ public class OnlineShopRelWarehouseConverter {
     /**
      * PO 转 DO
      * @param onlineShopRelWarehouseList 网店关联仓库集合
-     * @return  list
+     * @return list
      */
     public static List<OnlineShopRelWarehouseDO> poToDoListObjects(List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
         List<OnlineShopRelWarehouseDO> onlineShopRelWarehouseDOList = new ArrayList<>();

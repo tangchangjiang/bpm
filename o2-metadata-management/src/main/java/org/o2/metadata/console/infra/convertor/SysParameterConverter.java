@@ -19,6 +19,9 @@ import java.util.Set;
  * @author yipeng.zhu@hand-china.com 2021-07-09
  **/
 public class SysParameterConverter {
+    public SysParameterConverter() {
+    }
+
     /**
      * DO 转 VO
      * @param systemParameterDO 系统参数
