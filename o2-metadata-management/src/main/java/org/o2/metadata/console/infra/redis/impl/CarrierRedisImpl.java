@@ -8,8 +8,10 @@ import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +37,10 @@ public class CarrierRedisImpl implements CarrierRedis {
         query.setTenantId(tenantId);
         query.setActiveFlag(1);
         List<Carrier> carriers = carrierRepository.select(query);
-        Map<String,String> hashMap = Maps.newHashMapWithExpectedSize(carriers.size());
+        query.setActiveFlag(0);
+        List<Carrier> deletes = carrierRepository.select(query);
+        Map<String, String> hashMap = Maps.newHashMapWithExpectedSize(carriers.size());
+        Map<String, String> deleteMap = Maps.newHashMapWithExpectedSize(deletes.size());
         CarrierRedisBO bo = new CarrierRedisBO();
         for (Carrier carrier : carriers) {
             bo.setCarrierCode(carrier.getCarrierCode());
@@ -43,8 +48,12 @@ public class CarrierRedisImpl implements CarrierRedis {
             bo.setCarrierTypeCode(carrier.getCarrierTypeCode());
             hashMap.put(carrier.getCarrierCode(), FastJsonHelper.objectToString(bo));
         }
-       String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-        redisCacheClient.opsForHash().putAll(key,hashMap);
-
+        for (Carrier carrier : deletes) {
+            deleteMap.put(carrier.getCarrierCode(),String.valueOf(tenantId));
+        }
+        String key = CarrierConstants.Redis.getCarrierKey(tenantId);
+        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(CarrierConstants.Redis.CARRIER_CACHE_LUA);
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), FastJsonHelper.objectToString(hashMap),FastJsonHelper.objectToString(deleteMap));
     }
 }
