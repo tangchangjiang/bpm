@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,14 +14,11 @@ import java.io.Serializable;
 public class RegionCacheVO  implements Serializable {
     private String regionName;
 
-    private Long countryId;
+    private Long tenantId;
 
     private Long parentRegionId;
 
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
 
-    private Long regionId;
 
     private String regionCode;
 
