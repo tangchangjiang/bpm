@@ -60,11 +60,14 @@ public class CarrierRedisImpl implements CarrierRedis {
 
     @Override
     public void deleteRedis(List<Carrier> list, Long tenantId) {
+        if (list.isEmpty()) {
+            return;
+        }
        List<String> deleteList = new ArrayList<>(list.size());
         for (Carrier carrier : list) {
             deleteList.add(carrier.getCarrierCode());
         }
         String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-        redisCacheClient.opsForHash().delete(key,deleteList);
+        redisCacheClient.opsForHash().delete(key,deleteList.toArray());
     }
 }
