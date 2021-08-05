@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -49,9 +50,9 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
-        carrierList.forEach(carrier -> {
+        for (Carrier carrier : carrierList) {
             carrier.setTenantId(organizationId);
-        });
+        }
         checkData(carrierList, true);
         List<Carrier> list = carrierRepository.batchUpdateByPrimaryKey(carrierList);
         carrierRedis.batchUpdateRedis(organizationId);
@@ -97,8 +98,10 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(Long organizationId, List<Carrier> carrierList) {
+        List<Long> ids = new ArrayList<>(carrierList.size());
         for (final Carrier carrier : carrierList) {
             carrier.setTenantId(organizationId);
+            ids.add(carrier.getCarrierId());
             if (carrier.getCarrierId() != null) {
                 Long carrierId = carrier.getCarrierId();
                 //删除承运商送达范围
@@ -112,8 +115,9 @@ public class CarrierServiceImpl implements CarrierService {
                 posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrierList);
             }
         }
+        List<Carrier> carriers = carrierRepository.selectByIds(StringUtils.join(ids, ","));
         carrierRepository.batchDeleteByPrimaryKey(carrierList);
-        carrierRedis.batchUpdateRedis(organizationId);
+        carrierRedis.deleteRedis(carriers,organizationId);
     }
 
     @Override
@@ -138,8 +142,8 @@ public class CarrierServiceImpl implements CarrierService {
     /**
      * 校验查重
      *
-     * @param carrieies
-     * @param isCheckId
+     * @param carrieies 承运商
+     * @param isCheckId 是否
      */
     private void checkData(final List<Carrier> carrieies, final boolean isCheckId) {
         final Map<String, Object> map = new HashMap<>(carrieies.size());
