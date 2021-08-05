@@ -8,7 +8,7 @@ import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
-import org.o2.metadata.console.infra.convertor.RegionConvertor;
+import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
@@ -95,7 +95,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         //递归获取树形结构数据
         getParent(collect, tree, addressMappingDTO.getCatalogCode(),addressMappingDTO.getTenantId());
         sortList(tree);
-        return RegionConvertor.poToVoChildObjects(tree);
+        return RegionConverter.poToVoChildObjects(tree);
     }
 
     @Override

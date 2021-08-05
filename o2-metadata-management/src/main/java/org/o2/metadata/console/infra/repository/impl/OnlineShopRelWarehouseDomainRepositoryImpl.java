@@ -1,6 +1,6 @@
-package org.o2.metadata.console.domain.repository.impl;
+package org.o2.metadata.console.infra.repository.impl;
 
-import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConvertor;
+import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
 import org.o2.metadata.domain.onlineshop.domain.OnlineShopRelWarehouseDO;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
@@ -24,6 +24,6 @@ public class OnlineShopRelWarehouseDomainRepositoryImpl implements OnlineShopRel
 
     @Override
     public List<OnlineShopRelWarehouseDO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return OnlineShopRelWarehouseConvertor.poToDoListObjects(onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCode,tenantId));
+        return OnlineShopRelWarehouseConverter.poToDoListObjects(onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCode,tenantId));
     }
 }

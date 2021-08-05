@@ -1,6 +1,6 @@
-package org.o2.metadata.console.domain.repository.impl;
+package org.o2.metadata.console.infra.repository.impl;
 
-import org.o2.metadata.console.infra.convertor.SysParameterConvertor;
+import org.o2.metadata.console.infra.convertor.SysParameterConverter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.domain.systemparameter.repository.SystemParameterDomainRepository;
@@ -25,12 +25,12 @@ public class SystemParameterDomainRepositoryImpl implements SystemParameterDomai
 
     @Override
     public List<SystemParameterDO> listSystemParameters(List<String> paramCodeList, Long tenantId) {
-        return SysParameterConvertor.poToDoListObjects(systemParameterRedis.listSystemParameters(paramCodeList,tenantId));
+        return SysParameterConverter.poToDoListObjects(systemParameterRedis.listSystemParameters(paramCodeList,tenantId));
     }
 
     @Override
     public SystemParameterDO getSystemParameter(String paramCode, Long tenantId) {
-        return SysParameterConvertor.poToDoObject( systemParameterRedis.getSystemParameter(paramCode,tenantId));
+        return SysParameterConverter.poToDoObject( systemParameterRedis.getSystemParameter(paramCode,tenantId));
 
     }
 }

@@ -1,8 +1,8 @@
-package org.o2.metadata.infra.convertor;
+package org.o2.metadata.console.infra.convertor;
 
-import org.o2.metadata.api.vo.WarehouseVO;
+import org.o2.metadata.console.api.vo.WarehouseVO;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
-import org.o2.metadata.infra.entity.Warehouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,16 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
-public class WarehouseConvertor {
+public class WarehouseConverter {
+    private WarehouseConverter() {
+    }
+
     /**
      * po 转 do
      * @param warehouse po
      * @return do
      */
-    public static WarehouseDO poToDoObject(Warehouse warehouse) {
+    private static WarehouseDO poToDoObject(Warehouse warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -49,8 +52,12 @@ public class WarehouseConvertor {
         warehouseDO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseDO;
     }
-
-    public static WarehouseVO doToVoObject(WarehouseDO warehouse) {
+   /**
+    * do 转 vo
+    * @param warehouse 仓库
+    * @return vo
+    */
+    private static WarehouseVO doToVoObject(WarehouseDO warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -80,9 +87,56 @@ public class WarehouseConvertor {
         warehouseVO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseVO;
     }
+    public static WarehouseVO poToVoObject(Warehouse warehouse) {
+
+        if (warehouse == null) {
+            return null;
+        }
+        WarehouseVO warehouseVO = new WarehouseVO();
+        warehouseVO.setWarehouseId(warehouse.getWarehouseId());
+        warehouseVO.setPosId(warehouse.getPosId());
+        warehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
+        warehouseVO.setWarehouseName(warehouse.getWarehouseName());
+        warehouseVO.setWarehouseStatusCode(warehouse.getWarehouseStatusCode());
+        warehouseVO.setWarehouseTypeCode(warehouse.getWarehouseTypeCode());
+        warehouseVO.setPickUpQuantity(warehouse.getPickUpQuantity());
+        warehouseVO.setExpressedQuantity(warehouse.getExpressedQuantity());
+        warehouseVO.setPickedUpFlag(warehouse.getPickedUpFlag());
+        warehouseVO.setExpressedFlag(warehouse.getExpressedFlag());
+        warehouseVO.setScore(warehouse.getScore());
+        warehouseVO.setActivedDateFrom(warehouse.getActivedDateFrom());
+        warehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
+        warehouseVO.setInvOrganizationCode(warehouse.getInvOrganizationCode());
+        warehouseVO.setTenantId(warehouse.getTenantId());
+        warehouseVO.setActiveFlag(warehouse.getActiveFlag());
+        warehouseVO.setPosCode(warehouse.getPosCode());
+        warehouseVO.setPosName(warehouse.getPosName());
+        warehouseVO.setWarehouseStatusMeaning(warehouse.getWarehouseStatusMeaning());
+        warehouseVO.setWarehouseTypeMeaning(warehouse.getWarehouseTypeMeaning());
+        warehouseVO.setExpressLimitValue(warehouse.getExpressLimitValue());
+        warehouseVO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        warehouseVO.setWarehouseStatus(warehouse.getWarehouseStatus());
+        return warehouseVO;
+    }
+    /**
+     * PO 转 vO
+     * @param warehouses 仓库
+     * @return  list
+     */
+    public static List<WarehouseVO> poToVoListObjects(List<Warehouse> warehouses) {
+        List<WarehouseVO> warehouseVOList = new ArrayList<>();
+        if (warehouses == null) {
+            return warehouseVOList;
+        }
+        for (Warehouse warehouse : warehouses) {
+            warehouseVOList.add(poToVoObject(warehouse));
+        }
+        return warehouseVOList;
+    }
+
     /**
      * PO 转 DO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseDO> poToDoListObjects(List<Warehouse> warehouses) {
@@ -95,9 +149,10 @@ public class WarehouseConvertor {
         }
         return warehouseDOList;
     }
+
     /**
      * DO 转 VO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseVO> doToVoListObjects(List<WarehouseDO> warehouses) {

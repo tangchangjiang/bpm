@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 
 import java.util.List;
@@ -15,12 +16,9 @@ public interface NeighboringRegionRepository extends BaseRepository<NeighboringR
     /**
      * 查询临近省结果集
      *
-     * @param posTypeCode    服务点类型
-     * @param sourceRegionId 发货省
-     * @param targetRegionId 收货省
-     * @param tenantId 租户ID
+     * @param neighboringRegionDTO 查询条件
      * @return 查询结果集
      */
-    List<NeighboringRegion> findNeighboringRegions(String posTypeCode, Long sourceRegionId, Long targetRegionId, Long tenantId);
+    List<NeighboringRegion> findNeighboringRegions(NeighboringRegionDTO neighboringRegionDTO);
 
 }

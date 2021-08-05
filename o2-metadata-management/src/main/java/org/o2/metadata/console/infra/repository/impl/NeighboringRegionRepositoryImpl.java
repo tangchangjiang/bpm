@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.o2.metadata.console.infra.mapper.NeighboringRegionMapper;
@@ -22,10 +23,7 @@ public class NeighboringRegionRepositoryImpl extends BaseRepositoryImpl<Neighbor
     }
 
     @Override
-    public List<NeighboringRegion> findNeighboringRegions(final String posTypeCode,
-                                                          final Long sourceRegionId,
-                                                          final Long targetRegionId,
-                                                          final Long tenantId) {
-        return neighboringRegionMapper.findNeighboringRegions(posTypeCode, sourceRegionId, targetRegionId,tenantId);
+    public List<NeighboringRegion> findNeighboringRegions(NeighboringRegionDTO neighboringRegionDTO) {
+        return neighboringRegionMapper.findNeighboringRegions(neighboringRegionDTO);
     }
 }

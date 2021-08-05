@@ -6,7 +6,12 @@ import org.o2.metadata.console.infra.entity.RegionTreeChild;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ *
+ * 地区
+ *
+ * @author yipeng.zhu@hand-china.com 2021-08-04
+ **/
 public class RegionTreeChildConverter{
     private RegionTreeChildConverter() {
         // 无需实现

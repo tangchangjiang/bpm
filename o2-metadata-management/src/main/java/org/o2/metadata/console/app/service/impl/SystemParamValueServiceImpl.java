@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
-import org.o2.metadata.console.infra.convertor.SystemParamValueConvertor;
+import org.o2.metadata.console.infra.convertor.SystemParamValueConverter;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -70,7 +70,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
+        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.insertSelective(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -79,7 +79,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
+        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.updateByPrimaryKey(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -95,7 +95,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public void systemParamValueValidate(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConvertor.dtoToPoObject(systemParamValueDTO);
+        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         if (SystemParameterConstants.ParamType.MAP.equals(systemParameter.getParamTypeCode())){
            String key =  systemParamValueDTO.getParamKey();

@@ -17,7 +17,11 @@ public class PostTimeConverter{
         // 无需实现
     }
 
-
+    /**
+     *  po 转 vo
+     * @param postTimeList 服务点时间集合
+     * @return  list
+     */
     public static List<PostTimeVO> toPostTimeVOList(List<PostTime> postTimeList) {
         if (postTimeList == null) {
             return Collections.emptyList();
@@ -28,8 +32,12 @@ public class PostTimeConverter{
         }
         return postTimeVOList;
     }
-
-    public static PostTimeVO toPostTimeVO(PostTime postTime) {
+   /**
+    * po 转 vo
+    * @param postTime 服务点时间
+    * @return  vo
+    */
+    private static PostTimeVO toPostTimeVO(PostTime postTime) {
         if (postTime == null) {
             return null;
         }

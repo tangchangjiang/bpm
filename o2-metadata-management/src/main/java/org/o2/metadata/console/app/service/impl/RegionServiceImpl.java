@@ -10,7 +10,7 @@ import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.convertor.RegionConvertor;
+import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
 import org.o2.metadata.console.infra.repository.RegionAreaRepository;
@@ -48,7 +48,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     public List<RegionVO> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
         List<Region> regionList = regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag, tenantId);
         Map<Long, List<Region>> map = regionList.stream().collect(Collectors.groupingBy(item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId()));
-        return RegionConvertor.poToVoListObjects(recursiveBuildRegionTree(map, ROOT_ID, new ArrayList<>()));
+        return RegionConverter.poToVoListObjects(recursiveBuildRegionTree(map, ROOT_ID, new ArrayList<>()));
     }
 
     @Override
@@ -190,7 +190,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         queryLovDTO.setParentRegionCode(regionQueryDTO.getParentRegionCode());
         queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
-        return RegionConvertor.poToVoListObjects(regionList);
+        return RegionConverter.poToVoListObjects(regionList);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         if (regionList.isEmpty()){
             return new RegionVO();
         }
-        return RegionConvertor.poToVoObject(regionList.get(0));
+        return RegionConverter.poToVoObject(regionList.get(0));
     }
 
     /**

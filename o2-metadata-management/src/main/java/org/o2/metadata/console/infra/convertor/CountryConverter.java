@@ -13,6 +13,10 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-08-04
  **/
 public class CountryConverter {
+
+    private CountryConverter() {
+    }
+
     /**
      * po -> vo
      * @param country 国家

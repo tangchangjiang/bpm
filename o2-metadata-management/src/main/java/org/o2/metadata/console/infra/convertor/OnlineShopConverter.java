@@ -12,7 +12,10 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
-public class OnlineShopConvertor {
+public class OnlineShopConverter {
+
+    private OnlineShopConverter() {
+    }
 
     public static OnlineShopVO poToVoObject(OnlineShop onlineShop) {
 

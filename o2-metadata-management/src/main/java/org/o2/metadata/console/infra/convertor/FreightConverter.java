@@ -1,14 +1,16 @@
-package org.o2.metadata.infra.convertor;
+package org.o2.metadata.console.infra.convertor;
 
-        import org.o2.metadata.api.vo.FreightInfoVO;
-        import org.o2.metadata.api.vo.FreightTemplateDetailVO;
-        import org.o2.metadata.api.vo.FreightTemplateVO;
-        import org.o2.metadata.domain.freight.domain.FreightInfoDO;
-        import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
-        import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
-        import org.o2.metadata.infra.entity.FreightInfo;
-        import org.o2.metadata.infra.entity.FreightTemplate;
-        import org.o2.metadata.infra.entity.FreightTemplateDetail;
+
+import org.o2.metadata.console.api.vo.FreightInfoVO;
+import org.o2.metadata.console.api.vo.FreightTemplateDetailVO;
+import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.infra.entity.FreightInfo;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.domain.freight.domain.FreightInfoDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
+
 
 /**
  *
@@ -16,10 +18,14 @@ package org.o2.metadata.infra.convertor;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
-public class FreightConvertor {
+public class FreightConverter {
+    private FreightConverter() {
+    }
+
     /**
-     * 
-     * @param 
+     * po转do
+     * @param freightInfo 运费模版头
+     * @return  do 运费模版头
      */
     public static FreightInfoDO poToDoObject(FreightInfo freightInfo) {
 
@@ -32,11 +38,11 @@ public class FreightConvertor {
         freightInfoDO.setRegionTemplate(toFreightTemplateDetailDO(freightInfo.getRegionTemplate()));
         return freightInfoDO;
     }
+
     /**
-     *
-     * @date 2021-07-20
-     * @param 
-     * @return 
+     * do转vo
+     * @param freightInfoDO 运费模版头
+     * @return  vo 运费模版头
      */
     public static FreightInfoVO doToVoObject(FreightInfoDO freightInfoDO) {
 
@@ -49,11 +55,11 @@ public class FreightConvertor {
         freightInfoVO.setRegionTemplate(toFreightTemplateDetailVO(freightInfoDO.getRegionTemplate()));
         return freightInfoVO;
     }
+
     /**
-     *
-     * @date 2021-07-20
-     * @param 
-     * @return 
+     * do转vo
+     * @param freightTemplateDO 运费模详情
+     * @return  vo 运费模版详情
      */
     private static FreightTemplateVO toFreightTemplateVO(FreightTemplateDO freightTemplateDO) {
         if (freightTemplateDO == null) {
@@ -73,10 +79,9 @@ public class FreightConvertor {
         return freightTemplateVO;
     }
     /**
-     *
-     * @date 2021-07-20
-     * @param
-     * @return 
+     * do转vo
+     * @param freightTemplateDetailDO 运费模详情
+     * @return  vo 运费模版详情
      */
     private static FreightTemplateDetailVO toFreightTemplateDetailVO(FreightTemplateDetailDO freightTemplateDetailDO) {
         if (freightTemplateDetailDO == null) {
@@ -97,11 +102,11 @@ public class FreightConvertor {
         freightTemplateDetailVO.setTransportTypeMeaning(freightTemplateDetailDO.getTransportTypeMeaning());
         return freightTemplateDetailVO;
     }
+
     /**
-     *
-     * @date 2021-07-20
-     * @param 
-     * @return 
+     * 运费模版头 po转do
+     * @param freightTemplate 运费模版头
+     * @return do
      */
     private static FreightTemplateDO toFreightTemplateDO(FreightTemplate freightTemplate) {
         if (freightTemplate == null) {
@@ -120,11 +125,11 @@ public class FreightConvertor {
         freightTemplateDO.setValuationUomMeaning(freightTemplate.getValuationUomMeaning());
         return freightTemplateDO;
     }
+
     /**
-     *
-     * @date 2021-07-20
-     * @param 
-     * @return 
+     * 运费模详情 po转do
+     * @param freightTemplateDetail 运费模详情
+     * @return do
      */
     private static FreightTemplateDetailDO toFreightTemplateDetailDO(FreightTemplateDetail freightTemplateDetail) {
         if (freightTemplateDetail == null) {
