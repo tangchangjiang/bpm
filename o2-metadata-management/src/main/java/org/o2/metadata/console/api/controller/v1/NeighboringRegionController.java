@@ -15,8 +15,10 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.convertor.NeighboringRegionConverter;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +49,8 @@ public class NeighboringRegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegion neighboringRegion,
-                                  @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_ID,
+    public ResponseEntity<Page<NeighboringRegion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegionDTO neighboringRegion,
+                                  @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_CODE,
                                           direction = Sort.Direction.ASC) final PageRequest pageRequest) {
         neighboringRegion.setTenantId(organizationId);
         final Page<NeighboringRegion> result = PageHelper.doPageAndSort(pageRequest,
@@ -59,16 +61,16 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "创建临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
-        return Results.success(neighboringRegionService.batchInsert(organizationId,neighboringRegion));
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegionDTO> neighboringRegion) {
+        return Results.success(neighboringRegionService.batchInsert(organizationId, NeighboringRegionConverter.dtoToPoListObjects(neighboringRegion)));
     }
 
     @ApiOperation(value = "批量删除临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
+    public ResponseEntity<?> remove(@RequestBody final List<NeighboringRegionDTO> neighboringRegions) {
         SecurityTokenHelper.validToken(neighboringRegions);
-        neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
+        neighboringRegionRepository.batchDeleteByPrimaryKey(NeighboringRegionConverter.dtoToPoListObjects(neighboringRegions));
         return Results.success();
     }
 }

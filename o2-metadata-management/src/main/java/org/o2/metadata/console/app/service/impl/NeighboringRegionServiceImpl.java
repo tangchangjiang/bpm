@@ -1,13 +1,20 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.collect.Maps;
+import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 临近省应用服务默认实现
@@ -17,9 +24,12 @@ import java.util.List;
 @Service
 public class NeighboringRegionServiceImpl implements NeighboringRegionService {
     private final NeighboringRegionRepository neighboringRegionRepository;
+    private final RegionRepository regionRepository;
 
-    public NeighboringRegionServiceImpl(final NeighboringRegionRepository neighboringRegionRepository) {
+    public NeighboringRegionServiceImpl(final NeighboringRegionRepository neighboringRegionRepository,
+                                        RegionRepository regionRepository) {
         this.neighboringRegionRepository = neighboringRegionRepository;
+        this.regionRepository = regionRepository;
     }
 
     @Override
@@ -37,11 +47,37 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
 
 
     @Override
-    public List<NeighboringRegion> findNeighboringRegions(final NeighboringRegion neighboringRegion) {
-        return neighboringRegionRepository.findNeighboringRegions(
-                neighboringRegion.getPosTypeCode(),
-                neighboringRegion.getSourceRegionId(),
-                neighboringRegion.getTargetRegionId(),
-                neighboringRegion.getTenantId());
+    public List<NeighboringRegion> findNeighboringRegions(final NeighboringRegionDTO neighboringRegion) {
+        List<NeighboringRegion> list = neighboringRegionRepository.findNeighboringRegions(neighboringRegion);
+        List<String> regionCodes = new ArrayList<>();
+        for (NeighboringRegion bean : list) {
+            regionCodes.add(bean.getSourceRegionCode());
+            regionCodes.add(bean.getTargetRegionCode());
+        }
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setTenantId(neighboringRegion.getTenantId());
+        dto.setRegionCodes(regionCodes);
+        List<Region> regionList = regionRepository.listRegionLov(dto, neighboringRegion.getTenantId());
+        Map<String,Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        for (Region region : regionList) {
+            regionMap.put(region.getRegionCode(), region);
+        }
+        for (NeighboringRegion bean : list) {
+            String sourceCode = bean.getSourceRegionCode();
+            Region sourceRegion = regionMap.get(sourceCode);
+            String targetCode  = bean.getTargetRegionCode();
+            Region targetRegion = regionMap.get(targetCode);
+            if (null != targetRegion) {
+                bean.setTargetCountryCode(targetRegion.getCountryCode());
+                bean.setTargetCountryName(targetRegion.getCountryName());
+                bean.setTargetRegionName(targetRegion.getRegionName());
+            }
+            if (null != sourceRegion) {
+                bean.setSourceCountryCode(sourceRegion.getCountryCode());
+                bean.setSourceCountryName(sourceRegion.getCountryName());
+            }
+
+        }
+        return list;
     }
 }

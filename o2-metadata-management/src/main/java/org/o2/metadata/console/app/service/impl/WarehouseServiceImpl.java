@@ -15,7 +15,7 @@ import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
-import org.o2.metadata.console.infra.convertor.WarehouseConvertor;
+import org.o2.metadata.console.infra.convertor.WarehouseConverter;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -25,7 +25,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.scripting.support.ResourceScriptSource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -147,7 +146,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         if (warehouseCodes.isEmpty()){
             return new ArrayList<>();
         }
-        return WarehouseConvertor.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseCodes,tenantId));
+        return WarehouseConverter.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseCodes,tenantId));
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
@@ -335,7 +334,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId) {
-        return WarehouseConvertor.poToVoListObjects(warehouseRepository.listActiveWarehouses(onlineShopCode,organizationId));
+        return WarehouseConverter.poToVoListObjects(warehouseRepository.listActiveWarehouses(onlineShopCode,organizationId));
     }
 
     private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {

@@ -10,6 +10,15 @@ import org.o2.metadata.console.infra.entity.Pos;
  * @author yipeng.zhu@hand-china.com 2021-08-04
  **/
 public class PosConverter {
+    private PosConverter() {
+    }
+
+    /**
+     *  po 转 vo
+     * @date 2021-08-05
+     * @param pos 服务点
+     * @return  vo
+     */
     public static PosVO poToVoObject(Pos pos) {
 
         if (pos == null) {

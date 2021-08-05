@@ -10,6 +10,13 @@ import org.o2.metadata.console.infra.entity.AddressMapping;
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
 public class AddressMappingConverter {
+    private AddressMappingConverter() {
+    }
+    /**
+     * po -> vo
+     * @param addressMapping 地址匹配
+     * @return  vo
+     */
     public static AddressMappingVO poToVoObject(AddressMapping addressMapping) {
 
         if (addressMapping == null) {

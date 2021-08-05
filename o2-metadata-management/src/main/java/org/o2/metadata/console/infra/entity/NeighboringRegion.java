@@ -32,11 +32,11 @@ public class NeighboringRegion extends AuditDomain {
 
     public static final String FIELD_NEIGHBORING_REGION_ID = "neighboringRegionId";
     public static final String FIELD_POS_TYPE_CODE = "posTypeCode";
-    public static final String FIELD_SOURCE_COUNTRY_ID = "sourceCountryId";
-    public static final String FIELD_SOURCE_REGION_ID = "sourceRegionId";
-    public static final String FIELD_TARGET_COUNTRY_ID = "targetCountryId";
-    public static final String FIELD_TARGET_REGION_ID = "targetRegionId";
-    public static final String FIELD_COUNTRY_ID = "countryId";
+    public static final String FIELD_SOURCE_COUNTRY_CODE = "sourceCountryCode";
+    public static final String FIELD_SOURCE_REGION_CODE = "sourceRegionCode";
+    public static final String FIELD_TARGET_COUNTRY_CODE = "targetCountryCode";
+    public static final String FIELD_TARGET_REGION_CODE = "targetRegionCode";
+    public static final String FIELD_COUNTRY_CODE = "countryCode";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -53,13 +53,13 @@ public class NeighboringRegion extends AuditDomain {
         if (o == null || getClass() != o.getClass()) {return false;}
         final NeighboringRegion that = (NeighboringRegion) o;
         return posTypeCode.equals(that.posTypeCode) &&
-                sourceRegionId.equals(that.sourceRegionId) &&
-                targetRegionId.equals(that.targetRegionId);
+                sourceRegionCode.equals(that.sourceRegionCode) &&
+                targetRegionCode.equals(that.targetRegionCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(posTypeCode, sourceRegionId, targetRegionId);
+        return Objects.hash(posTypeCode, sourceRegionCode, targetRegionCode);
     }
     //
     // 数据库字段
@@ -77,19 +77,19 @@ public class NeighboringRegion extends AuditDomain {
 
     @ApiModelProperty(value = "发货国家")
     @NotNull
-    private Long sourceCountryId;
+    private String sourceCountryCode;
 
     @ApiModelProperty(value = "发货省")
     @NotNull
-    private Long sourceRegionId;
+    private String sourceRegionCode;
 
     @ApiModelProperty(value = "收货国家")
     @NotNull
-    private Long targetCountryId;
+    private String targetCountryCode;
 
     @ApiModelProperty(value = "收货省")
     @NotNull
-    private Long targetRegionId;
+    private String targetRegionCode;
 
     //
     // 非数据库字段
@@ -110,15 +110,7 @@ public class NeighboringRegion extends AuditDomain {
 
     @ApiModelProperty(hidden = true)
     @Transient
-    private String sourceCountryCode;
-
-    @ApiModelProperty(hidden = true)
-    @Transient
     private String sourceCountryName;
-
-    @ApiModelProperty(hidden = true)
-    @Transient
-    private String targetCountryCode;
 
     @ApiModelProperty(hidden = true)
     @Transient

@@ -9,8 +9,15 @@ import org.o2.metadata.console.infra.entity.SystemParamValue;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-23
  **/
-public class SystemParamValueConvertor {
+public class SystemParamValueConverter {
+    private SystemParamValueConverter() {
+    }
 
+    /**
+     * dto 转 po
+     * @param systemParamValueDTO 系统参数
+     * @return  po
+     */
     public static SystemParamValue dtoToPoObject(SystemParamValueDTO systemParamValueDTO){
 
 
