@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 
 import java.util.List;
@@ -21,5 +22,13 @@ public interface AddressMappingService {
      */
 
     List<RegionTreeChildVO> findAddressMappingGroupByCondition(AddressMappingDTO addressMappingDTO, String countryCode);
-
+   
+    /**
+     * 详情
+     * @param addressMappingId 主键
+     * @param countryCode 国家编码
+     * @param tenantId 租户ID
+     * @return 地址匹配
+     */
+    AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode,Long tenantId);
 }

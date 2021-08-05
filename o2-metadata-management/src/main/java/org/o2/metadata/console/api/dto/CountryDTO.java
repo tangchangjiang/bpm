@@ -1,24 +1,13 @@
 package org.o2.metadata.console.api.dto;
 
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.MultiLanguage;
-import io.choerodon.mybatis.annotation.VersionAudit;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.persistence.Table;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@VersionAudit
-@ModifyAudit
-@MultiLanguage
-@Table(name = "hpfm_country")
 public class CountryDTO{
 
     @ApiModelProperty("国家ID")
