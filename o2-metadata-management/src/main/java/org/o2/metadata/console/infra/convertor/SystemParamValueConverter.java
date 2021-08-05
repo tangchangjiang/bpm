@@ -9,7 +9,7 @@ import org.o2.metadata.console.infra.entity.SystemParamValue;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-23
  **/
-public class SystemParamValueConvertor {
+public class SystemParamValueConverter {
 
     public static SystemParamValue dtoToPoObject(SystemParamValueDTO systemParamValueDTO){
 

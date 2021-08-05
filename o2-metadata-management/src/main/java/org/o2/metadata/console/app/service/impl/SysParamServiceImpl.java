@@ -7,7 +7,7 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.SystemParameterDTO;
 import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.app.service.SysParamService;
-import org.o2.metadata.console.infra.convertor.SysParameterConvertor;
+import org.o2.metadata.console.infra.convertor.SysParameterConverter;
 
 import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
@@ -53,12 +53,12 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO = systemParameterDomainService.getSystemParameter(paramCode, tenantId);
-        return SysParameterConvertor.doToVoObject(systemParameterDO);
+        return SysParameterConverter.doToVoObject(systemParameterDO);
     }
 
     @Override
     public List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return SysParameterConvertor.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, tenantId));
+        return SysParameterConverter.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, tenantId));
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
-public class OnlineShopRelWarehouseConvertor {
+public class OnlineShopRelWarehouseConverter {
     /**
      * po 转 do
      * @param warehouse 仓库

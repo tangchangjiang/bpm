@@ -18,7 +18,10 @@ import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
-public class FreightConvertor {
+public class FreightConverter {
+    private FreightConverter() {
+    }
+
     /**
      * po转do
      * @param freightInfo 运费模版头
