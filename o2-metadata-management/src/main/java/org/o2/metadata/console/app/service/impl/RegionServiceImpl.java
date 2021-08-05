@@ -4,6 +4,7 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
@@ -61,7 +62,11 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     @Override
     public List<AreaRegionVO> listAreaRegion(final String countryCode, final Integer enabledFlag, final Long tenantId) {
         //取出所有省份
-        final List<RegionVO> regionList = this.listChildren(countryCode, null,null, enabledFlag,tenantId);
+        RegionQueryDTO queryDTO = new RegionQueryDTO();
+        queryDTO.setCountryCode(countryCode);
+        queryDTO.setEnabledFlag(enabledFlag);
+
+        final List<RegionVO> regionList = this.listChildren(queryDTO,tenantId);
         final Map<String, List<RegionBO>> regionMap = new HashMap<>(16);
         String key;
         List<RegionBO> list;
@@ -73,7 +78,8 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
                 list = new ArrayList<>();
                 regionMap.put(key, list);
             }
-            List<RegionVO> childrenVO = this.listChildren(countryCode, regionVO.getRegionId(),null, enabledFlag, tenantId);
+            queryDTO.setParentRegionId(regionVO.getRegionId());
+            List<RegionVO> childrenVO = this.listChildren(queryDTO, tenantId);
             List<RegionBO> childrenBO = null;
             if (CollectionUtils.isNotEmpty(childrenVO)) {
                 childrenBO = childrenVO.stream().map(m -> {
@@ -175,33 +181,16 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
 
 
     @Override
-    public List<RegionVO> listChildren(String countryCode,
-                                       Long parentRegionId,
-                                       String parentRegionCode,
-                                       Integer enabledFlag,
-                                       Long organizationId) {
+    public List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO, Long organizationId) {
         RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
-        queryLovDTO.setParentRegionId(parentRegionId);
-        queryLovDTO.setCountryCode(countryCode);
-        queryLovDTO.setEnabledFlag(enabledFlag);
+        queryLovDTO.setParentRegionId(regionQueryDTO.getParentRegionId());
+        queryLovDTO.setCountryCode(regionQueryDTO.getCountryCode());
+        queryLovDTO.setEnabledFlag(regionQueryDTO.getEnabledFlag());
         queryLovDTO.setTenantId(organizationId);
-        queryLovDTO.setParentRegionCode(parentRegionCode);
+        queryLovDTO.setParentRegionCode(regionQueryDTO.getParentRegionCode());
+        queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
-       /* List<String> regionCodes = new ArrayList<>();
-        for (Region region : regionList) {
-            regionCodes.add(region.getRegionCode());
-        }*/
         return RegionConvertor.poToVoListObjects(regionList);
-/*        List<RegionArea> regionAreas = regionAreaRepository.batchSelectByCode(regionCodes, organizationId);
-        if (regionAreas.isEmpty()) {
-            return regionVOList;
-        }
-        Map<String,String> regionMap = regionAreas.stream().collect(Collectors.toMap(RegionArea::getRegionCode, RegionArea::getAreaCode));
-        for (RegionVO regionVO : regionVOList) {
-            String regionCode = regionVO.getRegionCode();
-            regionVO.setAreaCode(regionMap.get(regionCode));
-        }
-        return regionVOList;*/
     }
 
     @Override

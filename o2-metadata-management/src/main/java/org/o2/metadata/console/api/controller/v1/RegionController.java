@@ -5,10 +5,12 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.service.RegionService;
@@ -60,7 +62,15 @@ public class RegionController extends BaseController {
         if (countryCode == null && regionCode == null) {
             return Results.success(Collections.emptyList());
         }
-        return Results.success(regionService.listChildren(countryCode, null, regionCode,1,organizationId));
+        RegionQueryDTO queryDTO =  new  RegionQueryDTO();
+        if (StringUtils.isNotEmpty(countryCode)){
+            queryDTO.setCountryCode(countryCode);
+            queryDTO.setLevelNumber(1);
+        }
+        queryDTO.setParentRegionCode(regionCode);
+        queryDTO.setEnabledFlag(1);
+
+        return Results.success(regionService.listChildren(queryDTO,organizationId));
     }
 
 
@@ -69,9 +79,9 @@ public class RegionController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<AreaRegionVO>> listAreaRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                              @RequestParam final String countryIdOrCode,
+                                                              @RequestParam final String countryCode,
                                                               @RequestParam(required = false) final Integer enabledFlag) {
-        return Results.success(regionService.listAreaRegion(countryIdOrCode, enabledFlag,organizationId));
+        return Results.success(regionService.listAreaRegion(countryCode, enabledFlag,organizationId));
     }
 
     @ApiOperation("根据ID查询指定地区")

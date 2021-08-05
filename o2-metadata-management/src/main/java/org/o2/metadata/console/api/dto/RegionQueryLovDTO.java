@@ -39,6 +39,8 @@ public class RegionQueryLovDTO {
 
    private List<Long> regionIds;
 
+   private Integer levelNumber;
+
     /**
      * 地址集合
      */
