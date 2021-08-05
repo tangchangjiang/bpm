@@ -1,4 +1,4 @@
-package org.o2.metadata.console.infra.constant;
+package org.o2.metadata.infra.constants;
 
 /**
  *
@@ -7,26 +7,6 @@ package org.o2.metadata.console.infra.constant;
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
 public interface CarrierConstants {
-
-    /**
-     * 承运商类型
-     */
-    interface CarrierType {
-        /**
-         * 物流
-         */
-        String LOGISTICS = "LOGISTICS";
-        /**
-         * 快递
-         */
-        String EXPRESS = "EXPRESS";
-
-        String LOV_CODE = "O2MD.CARRIER_TYPE";
-    }
-
-    interface ErrorCode {
-        String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
-    }
 
     interface Redis {
         /**
@@ -37,7 +17,7 @@ public interface CarrierConstants {
          * GetFreightDefaultKey
          *
          * @param tenantId 租户ID
-         * @return
+         * @return key
          */
         static String getCarrierKey(Long tenantId) {
             return String.format(CARRIER_KEY, tenantId);
