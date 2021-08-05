@@ -4,13 +4,16 @@ import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.metadata.console.api.dto.AddressMappingDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConvertor;
-import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
-import org.o2.metadata.console.infra.entity.RegionTreeChild;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
+import org.o2.metadata.console.infra.repository.AddressMappingRepository;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +29,17 @@ import java.util.stream.Collectors;
 public class AddressMappingServiceImpl implements AddressMappingService {
     private final AddressMappingMapper addressMappingMapper;
     private final RegionRepository regionRepository;
+    private final AddressMappingRepository addressMappingRepository;
+    private final CatalogRepository catalogRepository;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
-                                     RegionRepository regionRepository) {
+                                     RegionRepository regionRepository,
+                                     AddressMappingRepository addressMappingRepository,
+                                     CatalogRepository catalogRepository) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
+        this.addressMappingRepository = addressMappingRepository;
+        this.catalogRepository = catalogRepository;
     }
 
     /**
@@ -87,6 +96,27 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         getParent(collect, tree, addressMappingDTO.getCatalogCode(),addressMappingDTO.getTenantId());
         sortList(tree);
         return RegionConvertor.poToVoChildObjects(tree);
+    }
+
+    @Override
+    public AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode, Long tenantId) {
+        final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
+        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        queryLovDTO.setCountryCode(countryCode);
+        queryLovDTO.setRegionCode(addressMapping.getRegionCode());
+        queryLovDTO.setTenantId(tenantId);
+        List<Region> regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
+        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
+        addressMapping.setCatalogCode(catalog.getCatalogCode());
+        addressMapping.setCatalogName(catalog.getCatalogName());
+        if (!regionList.isEmpty()) {
+            Region region = regionList.get(0);
+            addressMapping.setRegionName(region.getRegionName());
+            addressMapping.getRegionPathIds().add(region.getCountryId());
+            addressMapping.getRegionPathCodes().add(region.getCountryCode());
+            addressMapping.getRegionPathNames().add(region.getCountryName());
+        }
+        return AddressMappingConverter.poToVoObject(addressMapping);
     }
 
     /**

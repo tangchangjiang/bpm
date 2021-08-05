@@ -84,22 +84,5 @@ public class RegionController extends BaseController {
         return Results.success(regionService.listAreaRegion(countryCode, enabledFlag,organizationId));
     }
 
-    @ApiOperation("根据ID查询指定地区")
-    @GetMapping("/query-by-id")
-    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<?> queryRegionById(@RequestParam final Long regionId) {
-        return Results.success(regionRepository.selectByPrimaryKey(regionId));
-    }
-
-    @ApiOperation("根据CODE查询指定地区")
-    @GetMapping("/query-by-code")
-    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<RegionVO> queryRegionByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                               @RequestParam final String regionCode) {
-        return Results.success(regionService.selectOneByCode(regionCode,organizationId));
-    }
-
 }
 
