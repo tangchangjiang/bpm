@@ -6,12 +6,15 @@ package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hzero.mybatis.domian.SecurityToken;
+import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.core.O2CoreConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -19,8 +22,64 @@ import java.util.Objects;
 @ApiModel("地区父子关系视图")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class RegionTreeChildVO extends AddressMapping implements Comparable<RegionTreeChildVO> {
+public class RegionTreeChildVO {
 
+    @ApiModelProperty("表ID，主键，供其他表做外键")
+    private Long addressMappingId;
+
+    @ApiModelProperty(value = "region 关联")
+    private String regionCode;
+
+    @ApiModelProperty(value = "地址类型.值集:O2MD.ADDRESS_TYPE")
+    @LovValue(lovCode = O2CoreConstants.AddressType.LOV_CODE)
+    private String addressTypeCode;
+
+
+
+    @ApiModelProperty(value = "外部区域代码")
+    private String externalCode;
+
+    @ApiModelProperty(value = "外部区域名称")
+    private String externalName;
+
+    @ApiModelProperty(value = "是否启用")
+    private Integer activeFlag;
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
+
+    @ApiModelProperty(value = "版本ID")
+    private Long catalogId;
+
+    @ApiModelProperty(value = "查询条件 内部区域名称")
+    private String regionName;
+
+    @ApiModelProperty(value = "平台类型含义", hidden = true)
+    private String platformTypeMeaning;
+
+    @Transient
+    @ApiModelProperty(value = "地址类型含义", hidden = true)
+    private String addressTypeMeaning;
+
+
+    /**
+     * 显示region的层级目录结构，只在详情里展示
+     */
+    @ApiModelProperty(hidden = true)
+    private List<Long> regionPathIds = new ArrayList<>(4);
+
+    @ApiModelProperty(hidden = true)
+    private List<String> regionPathCodes = new ArrayList<>(4);
+
+    @ApiModelProperty(hidden = true)
+    private List<String> regionPathNames = new ArrayList<>(4);
+
+    @ApiModelProperty(value = "版本编码")
+    private String catalogCode;
+
+    @ApiModelProperty(value = "版本名称",required = true)
+    private String catalogName;
     /**
      * 地区父节点id
      */
@@ -33,26 +92,6 @@ public class RegionTreeChildVO extends AddressMapping implements Comparable<Regi
 
     private String levelPath;
 
-    @Override
-    public boolean equals(final Object o) {
-        if (o instanceof RegionTreeChildVO) {
-            return ((RegionTreeChildVO) o).getRegionId().longValue() == this.getRegionId().longValue();
-        }
-        return false;
-    }
+    private Long regionId;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), parentRegionId, children);
-    }
-
-    @Override
-    public Class<? extends SecurityToken> associateEntityClass() {
-        return AddressMapping.class;
-    }
-
-    @Override
-    public int compareTo(final RegionTreeChildVO o) {
-        return this.getRegionId().intValue() - o.getRegionId().intValue();
-    }
 }

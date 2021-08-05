@@ -1,7 +1,9 @@
 package org.o2.metadata.console.infra.convertor;
 
+import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,4 +61,51 @@ public class RegionConvertor {
         }
         return regionVOList;
     }
+
+    public static RegionTreeChildVO poToVoObject(RegionTreeChild regionTreeChild) {
+
+        if (regionTreeChild == null) {
+            return null;
+        }
+        RegionTreeChildVO regionTreeChildVO = new RegionTreeChildVO();
+        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
+        regionTreeChildVO.setRegionCode(regionTreeChild.getRegionCode());
+        regionTreeChildVO.setAddressTypeCode(regionTreeChild.getAddressTypeCode());
+        regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());
+        regionTreeChildVO.setExternalName(regionTreeChild.getExternalName());
+        regionTreeChildVO.setActiveFlag(regionTreeChild.getActiveFlag());
+        regionTreeChildVO.setTenantId(regionTreeChild.getTenantId());
+        regionTreeChildVO.setCatalogId(regionTreeChild.getCatalogId());
+        regionTreeChildVO.setRegionName(regionTreeChild.getRegionName());
+        regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
+        regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
+        regionTreeChildVO.setRegionPathIds(regionTreeChild.getRegionPathIds());
+        regionTreeChildVO.setRegionPathCodes(regionTreeChild.getRegionPathCodes());
+        regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
+        regionTreeChildVO.setCatalogCode(regionTreeChild.getCatalogCode());
+        regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
+        regionTreeChildVO.setParentRegionId(regionTreeChild.getParentRegionId());
+        regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
+        regionTreeChildVO.setRegionId(regionTreeChild.getRegionId());
+        regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
+
+        return regionTreeChildVO;
+    }
+
+    /**
+     * PO 转 VO
+     * @param regionTreeChildrenList 地区树
+     * @return  list
+     */
+    public static List<RegionTreeChildVO> poToVoChildObjects(List<RegionTreeChild> regionTreeChildrenList) {
+        List<RegionTreeChildVO> regionTreeChildVOList = new ArrayList<>();
+        if (regionTreeChildrenList == null) {
+            return regionTreeChildVOList;
+        }
+        for (RegionTreeChild regionTreeChild : regionTreeChildrenList) {
+            regionTreeChildVOList.add(poToVoObject(regionTreeChild));
+        }
+        return regionTreeChildVOList;
+    }
+
 }
