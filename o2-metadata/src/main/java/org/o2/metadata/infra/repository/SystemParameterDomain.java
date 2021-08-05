@@ -1,4 +1,4 @@
-package org.o2.metadata.domain.repository;
+package org.o2.metadata.infra.repository;
 
 /**
  *

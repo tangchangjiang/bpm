@@ -1,4 +1,4 @@
-package org.o2.metadata.domain.repository.impl;
+package org.o2.metadata.infra.repository.impl;
 
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
