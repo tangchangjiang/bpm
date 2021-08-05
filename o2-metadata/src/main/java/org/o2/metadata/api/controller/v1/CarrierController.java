@@ -20,7 +20,7 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 @RestController("carrierController.v1")
-@RequestMapping({"v1/carrier"})
+    @RequestMapping({"v1/carriers"})
 public class CarrierController {
     private final CarrierService carrierService;
 
