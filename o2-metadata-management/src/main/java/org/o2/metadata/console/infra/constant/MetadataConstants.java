@@ -19,6 +19,7 @@ public interface MetadataConstants {
         String COUNTRY_ALL = "$ALL$";
         String ADDRESS_SPLIT = ".";
         String ADDRESS_SPLIT_REGEX = "\\.";
+        String MODE_NAME = "METADATA";
     }
 
     interface ErrorCode {
@@ -37,6 +38,8 @@ public interface MetadataConstants {
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
         String O2MD_ERROR_CHECK_FAILED = "active platform_code must be unique";
         String O2MD_ERROR_CHECK_ERROR = "Failed to save. The platform inf code already exists";
+
+        String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
     }
 
     /**
@@ -269,5 +272,18 @@ public interface MetadataConstants {
         String METADATA = "METADATA";
         String PCM = "PRODUCT";
         String CMS = "CMS";
+    }
+
+
+    interface MallLangPromptConstants{
+        String LOV_CODE = "O2CMS.APPROVE_STATUS";
+
+        String MALL_LANG_LOCK_KEY = "o2md:mallLang:static:file:lock";
+
+        String NAME = "mallLang";
+
+        String RESOURCE_CODE = "MALL_LANG_FILE";
+
+        String DESCRIPTION = "o2md.mallLang.static_file_description";
     }
 }

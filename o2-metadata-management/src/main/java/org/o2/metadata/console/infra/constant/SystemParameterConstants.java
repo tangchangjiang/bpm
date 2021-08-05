@@ -47,6 +47,7 @@ public interface SystemParameterConstants {
          * KEY VALUE
          */
         String MAP = "MAP";
+
         /**
          * 值集编码
          */
@@ -69,5 +70,17 @@ public interface SystemParameterConstants {
        String DEFAULT_WH_SAFETY_STOCK = "DEFAULT_WH_SAFETY_STOCK";
        String DEFAULT_SHOP_UPLOAD_RATIO = "DEFAULT_SHOP_UPLOAD_RATIO";
        String DEFAULT_SHOP_SAFETY_STOCK = "DEFAULT_SHOP_SAFETY_STOCK";
+    }
+
+
+    interface FileConfig{
+        String FILE_SUFFIX_JSON = ".json";
+
+        String FILE_JSON_TYPE = "application/json";
+
+        /**
+         * 上传路径
+         */
+        String FILE_PREFIX = "FILE_PREFIX";
     }
 }
