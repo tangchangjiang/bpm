@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.springframework.util.Assert;
@@ -77,7 +78,7 @@ public class Carrier extends AuditDomain {
     private String carrierName;
 
     @ApiModelProperty(value = "承运商类型.值集:O2MD.CARRIER_TYPE")
-    @LovValue(lovCode = MetadataConstants.CarrierType.LOV_CODE)
+    @LovValue(lovCode = CarrierConstants.CarrierType.LOV_CODE)
     private String carrierTypeCode;
 
     @ApiModelProperty(value = "是否有效")
