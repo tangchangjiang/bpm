@@ -16,7 +16,7 @@ package org.o2.metadata.infra.convertor;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
-public class FreightConvertor {
+public class FreightConverter {
     /**
      * 
      * @param 

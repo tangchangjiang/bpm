@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
-public class WarehouseConvertor {
+public class WarehouseConverter {
     /**
      * po 转 do
      * @param warehouse po

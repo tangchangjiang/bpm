@@ -2,7 +2,7 @@ package org.o2.metadata.infra.repository.impl;
 
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
-import org.o2.metadata.infra.convertor.FreightConvertor;
+import org.o2.metadata.infra.convertor.FreightConverter;
 import org.o2.metadata.infra.redis.FreightRedis;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +22,6 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
 
     @Override
     public FreightInfoDO getFreightTemplate(String regionCode, String templateCode, Long tenantId) {
-        return FreightConvertor.poToDoObject(freightRedis.getFreightTemplate(regionCode,templateCode,tenantId));
+        return FreightConverter.poToDoObject(freightRedis.getFreightTemplate(regionCode,templateCode,tenantId));
     }
 }
