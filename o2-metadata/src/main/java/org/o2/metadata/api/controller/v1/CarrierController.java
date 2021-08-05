@@ -10,6 +10,8 @@ import org.o2.metadata.app.service.CarrierService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  *
@@ -18,18 +20,18 @@ import org.springframework.web.bind.annotation.*;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 @RestController("carrierInternalController.v1")
-@RequestMapping({"v1/carrier-internal"})
-public class CarrierInternalController {
+@RequestMapping({"v1/carrier"})
+public class CarrierController {
     private final CarrierService carrierService;
 
-    public CarrierInternalController(CarrierService carrierService) {
+    public CarrierController(CarrierService carrierService) {
         this.carrierService = carrierService;
     }
 
     @ApiOperation(value = "查询承运商信息")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/template")
-    public ResponseEntity<CarrierVO> getFreightTemplate() {
+    @PostMapping("/list")
+    public ResponseEntity<List<CarrierVO>> getFreightTemplate() {
         return Results.success(carrierService.listCarriers(UserHelper.getTenantId()));
     }
 }

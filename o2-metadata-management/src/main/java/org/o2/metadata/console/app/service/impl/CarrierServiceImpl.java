@@ -12,6 +12,7 @@ import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
+import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
@@ -32,26 +33,33 @@ public class CarrierServiceImpl implements CarrierService {
     private final CarrierRepository carrierRepository;
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final PosRelCarrierRepository posRelCarrierRepository;
+    private final CarrierRedis carrierRedis;
 
 
     public CarrierServiceImpl(final CarrierRepository carrierRepository,
                               final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
-                              final PosRelCarrierRepository posRelCarrierRepository) {
+                              final PosRelCarrierRepository posRelCarrierRepository,
+                              CarrierRedis carrierRedis) {
         this.carrierRepository = carrierRepository;
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
+        this.carrierRedis = carrierRedis;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
         carrierList.forEach(carrier -> {
             carrier.setTenantId(organizationId);
         });
         checkData(carrierList, true);
-        return carrierRepository.batchUpdateByPrimaryKey(carrierList);
+        List<Carrier> list = carrierRepository.batchUpdateByPrimaryKey(carrierList);
+        carrierRedis.batchUpdateRedis(organizationId);
+        return list;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
         List<Carrier> unique = carrierList.stream().collect(
                 Collectors.collectingAndThen(
@@ -82,6 +90,7 @@ public class CarrierServiceImpl implements CarrierService {
         if (CollectionUtils.isNotEmpty(insertList)) {
             resultList.addAll(carrierRepository.batchInsertSelective(insertList));
         }
+        carrierRedis.batchUpdateRedis(organizationId);
         return resultList;
     }
 
@@ -104,6 +113,7 @@ public class CarrierServiceImpl implements CarrierService {
             }
         }
         carrierRepository.batchDeleteByPrimaryKey(carrierList);
+        carrierRedis.batchUpdateRedis(organizationId);
     }
 
     @Override

@@ -2,6 +2,8 @@ package org.o2.metadata.infra.repository.impl;
 
 import org.o2.metadata.domain.carrier.domain.CarrierDO;
 import org.o2.metadata.domain.carrier.repository.CarrierDomainRepository;
+import org.o2.metadata.infra.convertor.CarrierConverter;
+import org.o2.metadata.infra.redis.CarrierRedis;
 
 import java.util.List;
 
@@ -13,8 +15,14 @@ import java.util.List;
  **/
 
 public class CarrierDomainRepositoryImpl implements CarrierDomainRepository {
+    private final  CarrierRedis carrierRedis;
+
+    public CarrierDomainRepositoryImpl(CarrierRedis carrierRedis) {
+        this.carrierRedis = carrierRedis;
+    }
+
     @Override
     public List<CarrierDO> listCarriers(Long tenantId) {
-        return null;
+        return CarrierConverter.poToDoListObjects(carrierRedis.listCarriers(tenantId));
     }
 }
