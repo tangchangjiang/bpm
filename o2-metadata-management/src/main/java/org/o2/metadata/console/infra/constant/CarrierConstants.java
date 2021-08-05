@@ -1,5 +1,8 @@
 package org.o2.metadata.console.infra.constant;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.scripting.support.ResourceScriptSource;
+
 /**
  *
  * 承运商
@@ -42,5 +45,9 @@ public interface CarrierConstants {
         static String getCarrierKey(Long tenantId) {
             return String.format(CARRIER_KEY, tenantId);
         }
+
+
+        ResourceScriptSource CARRIER_CACHE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/carrier/batch_update_redis_hash_value.lua"));
     }
 }
