@@ -51,4 +51,11 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      * @return list
      */
     List<OnlineShop> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
+
+    /**
+     * 根据网店名称查询网店code
+     * @param onlineShop 查询条件
+     * @return List<OnlineShop> 结果
+     */
+    List<OnlineShop> getShopCode(OnlineShop onlineShop);
 }

@@ -316,4 +316,13 @@ public interface MetadataConstants {
         String PCM = "PRODUCT";
         String CMS = "CMS";
     }
+
+    /**
+     * InfName 值集编码
+     */
+    interface InfNameCode {
+        String REFUND_STATUS = "O2RF.REFUND_STATUS";
+        String ORDER_STATUS = "O2TF.ORDER_STATUS";
+        String REFUND_REASON = "O2RF.REFUND_REASON";
+    }
 }

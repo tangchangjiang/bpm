@@ -1,5 +1,8 @@
 package org.o2.metadata.console.app.service;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import java.util.List;
 
@@ -28,4 +31,13 @@ public interface PlatformInfMappingService {
      * @return 平台信息匹配表对象
      */
     PlatformInfMapping save(PlatformInfMapping platformInfMapping);
+
+
+    /**
+     * 分页查询信息匹配
+     * @param platformInfMapping 条件
+     * @param pageRequest 分页
+     * @return Page<PlatformInfMapping> 结果
+     */
+    Page<PlatformInfMapping> page(InfMappingDTO platformInfMapping, PageRequest pageRequest);
 }
