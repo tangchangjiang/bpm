@@ -21,6 +21,7 @@ public interface CarrierRedis {
     /**
      * 删除redis
      * @param list  承运商I
+     * @param tenantId  租户id
      */
     void deleteRedis(List<Carrier> list,Long tenantId);
 }
