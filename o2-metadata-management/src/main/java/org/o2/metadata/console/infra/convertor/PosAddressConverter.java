@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
-public class PosAddressConvertor {
+public class PosAddressConverter {
 
     public static PosAddressVO poToVoObject(PosAddress posAddress) {
 
@@ -32,11 +32,17 @@ public class PosAddressConvertor {
         posAddressVO.setMobilePhone(posAddress.getMobilePhone());
         posAddressVO.setLongitude(posAddress.getLongitude());
         posAddressVO.setLatitude(posAddress.getLatitude());
-        posAddressVO.setCountry(posAddress.getCountry());
-        posAddressVO.setRegion(posAddress.getRegion());
-        posAddressVO.setCity(posAddress.getCity());
-        posAddressVO.setDistrict(posAddress.getDistrict());
+        posAddressVO.setCountryName(posAddress.getCountryName());
+        posAddressVO.setRegionName(posAddress.getRegionName());
+        posAddressVO.setCityName(posAddress.getCityName());
+        posAddressVO.setDistrictName(posAddress.getDistrictName());
         posAddressVO.setTenantId(posAddress.getTenantId());
+        posAddressVO.setCreationDate(posAddress.getCreationDate());
+        posAddressVO.setCreatedBy(posAddress.getCreatedBy());
+        posAddressVO.setLastUpdateDate(posAddress.getLastUpdateDate());
+        posAddressVO.setLastUpdatedBy(posAddress.getLastUpdatedBy());
+        posAddressVO.setObjectVersionNumber(posAddress.getObjectVersionNumber());
+        posAddressVO.set_token(posAddress.get_token());
         return posAddressVO;
     }
 

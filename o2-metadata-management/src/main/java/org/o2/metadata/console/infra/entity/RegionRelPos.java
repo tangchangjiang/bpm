@@ -10,6 +10,7 @@ import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotNull;
  *
  * @author wei.cai@hand-china.com 2020-01-09 15:41:36
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel("默认服务点配置")
 @VersionAudit
@@ -69,10 +71,10 @@ public class RegionRelPos extends AuditDomain {
     private Long onlineShopId;
     @ApiModelProperty(value = "大区，值集O2MD.AREA_CODE")
     private String areaCode;
-    @ApiModelProperty(value = "区域id，关联hpfm_region.region_id")
+    @ApiModelProperty(value = "区域id，关联hpfm_region.region_code")
     @NotNull
     @Unique
-    private Long regionId;
+    private String regionCode;
     @ApiModelProperty(value = "区域描述")
     @NotBlank
     @MultiLanguageField
@@ -112,104 +114,5 @@ public class RegionRelPos extends AuditDomain {
     //
     // getter/setter
     // ------------------------------------------------------------------------------
-
-    /**
-     * @return 表ID，主键
-     */
-    public Long getRegionRelPosId() {
-        return regionRelPosId;
-    }
-
-    public void setRegionRelPosId(Long regionRelPosId) {
-        this.regionRelPosId = regionRelPosId;
-    }
-
-    /**
-     * @return 网店id，关联o2md_online_shop.online_shop_id
-     */
-    public Long getOnlineShopId() {
-        return onlineShopId;
-    }
-
-    public void setOnlineShopId(Long onlineShopId) {
-        this.onlineShopId = onlineShopId;
-    }
-
-    /**
-     * @return 大区，值集O2MD.AREA_CODE
-     */
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    /**
-     * @return 区域id，关联hpfm_region.region_id
-     */
-    public Long getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(Long regionId) {
-        this.regionId = regionId;
-    }
-
-    /**
-     * @return 区域描述
-     */
-    public String getRegionDescription() {
-        return regionDescription;
-    }
-
-    public void setRegionDescription(String regionDescription) {
-        this.regionDescription = regionDescription;
-    }
-
-    /**
-     * @return 服务点id, 关联o2md_pos.pos_id
-     */
-    public Long getPosId() {
-        return posId;
-    }
-
-    public void setPosId(Long posId) {
-        this.posId = posId;
-    }
-
-    /**
-     * @return 是否有效
-     */
-    public Integer getActiveFlag() {
-        return activeFlag;
-    }
-
-    public void setActiveFlag(Integer activeFlag) {
-        this.activeFlag = activeFlag;
-    }
-
-    /**
-     * @return 优先级
-     */
-    public Long getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Long priority) {
-        this.priority = priority;
-    }
-
-    /**
-     * @return 租户ID
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 
 }

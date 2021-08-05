@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository;
 
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
@@ -26,7 +27,7 @@ public interface PosRepository extends BaseRepository<Pos> {
      * @param pos 服务点对象，包含地址信息
      * @return list of pos
      */
-    List<PosVO> listPosWithAddressByCondition(PosVO pos);
+    List<Pos> listPosWithAddressByCondition(PosDTO pos);
 
     /**
      * 主键查询

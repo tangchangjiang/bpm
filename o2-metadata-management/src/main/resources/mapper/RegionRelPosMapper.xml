@@ -6,7 +6,7 @@
         <result column="region_rel_pos_id" property="regionRelPosId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="area_code" property="areaCode" jdbcType="VARCHAR"/>
-        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="region_id" property="regionCode" jdbcType="DECIMAL"/>
         <result column="region_description" property="regionDescription" jdbcType="VARCHAR"/>
         <result column="pos_id" property="posId" jdbcType="DECIMAL"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
@@ -29,7 +29,7 @@
         rrp.online_shop_id,
         rrp.region_id,
         rrp_tl.region_description,
-        <if test="regionId != null">
+        <if test="regionCode != null">
             rrp.region_rel_pos_id,
             rrp.pos_id,
             pos.pos_name,
@@ -43,7 +43,7 @@
         FROM o2md_region_rel_pos rrp
         LEFT JOIN o2md_region_rel_pos_tl rrp_tl ON rrp_tl.region_rel_pos_id=rrp.region_rel_pos_id AND rrp_tl.lang =
         #{lang}
-        <if test="regionId != null">
+        <if test="regionCode != null">
             LEFT JOIN o2md_pos pos ON rrp.pos_id = pos.pos_id
             LEFT JOIN o2md_pos_tl pos_tl ON pos_tl.pos_id = pos.pos_id AND rrp_tl.lang = #{lang}
         </if>
@@ -51,8 +51,8 @@
             <if test="onlineShopId != null">
                 AND rrp.online_shop_id = #{onlineShopId}
             </if>
-            <if test="regionId != null">
-                AND rrp.region_id = #{regionId}
+            <if test="regionCode != null">
+                AND rrp.region_code = #{regionCode}
                 <choose>
                     <when test="tenantId != null">
                         and pos.tenant_id = #{tenantId}
@@ -123,7 +123,7 @@
         o2md_pos p
         where not exists(
         select 1 from o2md_region_rel_pos rrp where rrp.pos_id = p.pos_id and rrp.online_shop_id = #{onlineShopId} and
-        rrp.region_id = #{regionId}
+        rrp.region_code = #{regionCode}
         <choose>
             <when test="tenantId != null">
                 and rrp.tenant_id = #{tenantId}

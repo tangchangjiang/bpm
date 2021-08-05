@@ -71,15 +71,15 @@ public class RegionRelPosController extends BaseController {
     @ApiOperation(value = "通过网店id以及地区id获取默认服务点配置列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @CustomPageRequest
-    @GetMapping("/{onlineStoreId}/regions/{regionId}/pos")
+    @GetMapping("/{onlineStoreId}/regions/{regionCode}/pos")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<RegionRelPos>> listByRegionId(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @PathVariable @ApiParam(value = "网店ID", required = true) Long onlineStoreId,
-                                                   @PathVariable @ApiParam(value = "地区ID", required = true) Long regionId,
+                                                   @PathVariable @ApiParam(value = "地区code", required = true) String regionCode,
                                                    @ApiIgnore @SortDefault(value = RegionRelPos.FIELD_REGION_REL_POS_ID, direction = Sort.Direction.DESC) PageRequest pageRequest) {
         final RegionRelPos regionRelPos = new RegionRelPos();
         regionRelPos.setOnlineShopId(onlineStoreId);
-        regionRelPos.setRegionId(regionId);
+        regionRelPos.setRegionCode(regionCode);
         regionRelPos.setTenantId(organizationId);
         return Results.success(regionRelPosRepository.listByCondition(pageRequest, regionRelPos));
     }
@@ -87,16 +87,16 @@ public class RegionRelPosController extends BaseController {
     @ApiOperation(value = "通过网店id以及地区id获取未关联服务点配置列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @CustomPageRequest
-    @GetMapping("/{onlineShopId}/regions/{regionId}/unbind-pos")
+    @GetMapping("/{onlineShopId}/regions/{regionCode}/unbind-pos")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<Pos>> listUnbindByRegionId(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                           @PathVariable @ApiParam(value = "网店ID", required = true) final Long onlineShopId,
-                                                          @PathVariable @ApiParam(value = "地区ID", required = true)final Long regionId,
+                                                          @PathVariable @ApiParam(value = "地区code", required = true)final String regionCode,
                                                           final  RegionRelPos regionRelPos,
                                                           @ApiIgnore @SortDefault(value = RegionRelPos.FIELD_REGION_REL_POS_ID, direction = Sort.Direction.DESC) PageRequest pageRequest) {
         regionRelPos.setOnlineShopId(onlineShopId);
         regionRelPos.setTenantId(organizationId);
-        regionRelPos.setRegionId(regionId);
+        regionRelPos.setRegionCode(regionCode);
         return Results.success(regionRelPosRepository.listUnbindPos(pageRequest, regionRelPos));
     }
 

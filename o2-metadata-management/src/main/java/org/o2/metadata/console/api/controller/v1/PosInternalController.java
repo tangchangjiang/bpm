@@ -11,7 +11,6 @@ import org.o2.metadata.console.api.dto.PosAddressDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.entity.PosAddress;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,28 +1,30 @@
-/*
- * Copyright (C) HAND Enterprise Solutions Company Ltd.
- */
-
 package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.infra.entity.AddressMapping;
-
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 地址匹配
+ *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
-@ApiModel("地区父子关系视图")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class RegionTreeChildVO {
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel("地址匹配")
+@VersionAudit
+@ModifyAudit
+public class AddressMappingVO extends AuditDomain {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long addressMappingId;
@@ -58,7 +60,6 @@ public class RegionTreeChildVO {
     @ApiModelProperty(value = "平台类型含义", hidden = true)
     private String platformTypeMeaning;
 
-    @Transient
     @ApiModelProperty(value = "地址类型含义", hidden = true)
     private String addressTypeMeaning;
 
@@ -68,10 +69,8 @@ public class RegionTreeChildVO {
      */
     @ApiModelProperty(hidden = true)
     private List<Long> regionPathIds = new ArrayList<>(4);
-
     @ApiModelProperty(hidden = true)
     private List<String> regionPathCodes = new ArrayList<>(4);
-
     @ApiModelProperty(hidden = true)
     private List<String> regionPathNames = new ArrayList<>(4);
 
@@ -80,18 +79,4 @@ public class RegionTreeChildVO {
 
     @ApiModelProperty(value = "版本名称",required = true)
     private String catalogName;
-    /**
-     * 地区父节点id
-     */
-    private Long parentRegionId;
-
-    /**
-     * 地区子节点集合
-     */
-    private List<RegionTreeChildVO> children;
-
-    private String levelPath;
-
-    private Long regionId;
-
 }

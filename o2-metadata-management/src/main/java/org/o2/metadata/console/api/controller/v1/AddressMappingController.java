@@ -12,19 +12,19 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
+import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
-import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.Country;
-import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
-import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,22 +43,16 @@ import java.util.List;
 @Api(tags = MetadataManagementAutoConfiguration.ADDRESS_MAPPING)
 public class AddressMappingController extends BaseController {
     private final AddressMappingRepository addressMappingRepository;
-    private final RegionRepository regionRepository;
     private final AddressMappingService addressMappingService;
-    private final RegionService regionService;
     private final CountryRepository countryRepository;
     private final CatalogRepository catalogRepository;
 
     public AddressMappingController(AddressMappingRepository addressMappingRepository,
-                                    RegionRepository regionRepository,
                                     AddressMappingService addressMappingService,
-                                    RegionService regionService,
                                     CountryRepository countryRepository,
                                     CatalogRepository catalogRepository) {
         this.addressMappingRepository = addressMappingRepository;
-        this.regionRepository = regionRepository;
         this.addressMappingService = addressMappingService;
-        this.regionService = regionService;
         this.countryRepository = countryRepository;
         this.catalogRepository = catalogRepository;
     }
@@ -66,26 +60,30 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "地址匹配列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity<List<RegionTreeChildVO>> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final AddressMapping condition, final String countryCode) {
-        condition.setTenantId(organizationId);
+    public ResponseEntity<List<RegionTreeChildVO>> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                          final AddressMappingDTO addressMappingDTO,
+                                                                          final String countryCode) {
+        addressMappingDTO.setTenantId(organizationId);
         if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
-            final List<Country> countryList = countryRepository.select(Country.builder().enabledFlag(1).tenantId(condition.getTenantId()).build());
+            CountryQueryLovDTO dto= new CountryQueryLovDTO();
+            dto.setTenantId(organizationId);
+            final List<Country> countryList = countryRepository.listCountryLov(dto,organizationId);
             for (final Country country : countryList) {
                 final RegionTreeChildVO treeChildVO = new RegionTreeChildVO();
                 //负数，防止与regionId重复
-                treeChildVO.setRegionId(0 - country.getCountryId());
+                treeChildVO.setRegionCode(country.getCountryCode());
                 treeChildVO.setRegionCode(country.getCountryCode());
                 treeChildVO.setRegionName(country.getCountryName());
-                treeChildVO.setChildren(addressMappingService.findAddressMappingGroupByCondition(condition, country.getCountryCode()));
+                treeChildVO.setChildren(addressMappingService.findAddressMappingGroupByCondition(addressMappingDTO, country.getCountryCode()));
                 if (!treeChildVO.getChildren().isEmpty()) {
                     results.add(treeChildVO);
                 }
             }
             return Results.success(results);
         } else {
-            return Results.success(addressMappingService.findAddressMappingGroupByCondition(condition, countryCode));
+            return Results.success(addressMappingService.findAddressMappingGroupByCondition(addressMappingDTO, countryCode));
         }
 
     }
@@ -94,30 +92,10 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/detail")
-    public ResponseEntity<AddressMapping> detail(final Long addressMappingId, final String countryCode) {
-        final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
-        final Region region = regionRepository.selectByPrimaryKey(addressMapping.getRegionId());
-        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
-        addressMapping.setCatalogCode(catalog.getCatalogCode());
-        addressMapping.setCatalogName(catalog.getCatalogName());
-        if (region != null) {
-            addressMapping.setRegionName(region.getRegionName());
-            //通过路径path，获取
-            if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
-                final Country country = countryRepository.selectByPrimaryKey(region.getCountryId());
-                addressMapping.getRegionPathIds().add(country == null ? -100L : country.getCountryId());
-                addressMapping.getRegionPathCodes().add(country == null ? "NULL" : country.getCountryCode());
-                addressMapping.getRegionPathNames().add(country == null ? "NULL" : country.getCountryName());
-            }
-            final String[] regionPaths = region.getLevelPath().split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
-            for (final String code : regionPaths) {
-                final Region region1 = regionService.getRegionByCode(code);
-                addressMapping.getRegionPathIds().add(region1 == null ? -100L : region1.getRegionId());
-                addressMapping.getRegionPathCodes().add(region1 == null ? "NULL" : region1.getRegionCode());
-                addressMapping.getRegionPathNames().add(region1 == null ? "NULL" : region1.getRegionName());
-            }
-        }
-        return Results.success(addressMapping);
+    public ResponseEntity<AddressMappingVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                 final Long addressMappingId,
+                                                 final String countryCode) {
+        return Results.success(addressMappingService.addressMappingDetail(addressMappingId,countryCode,organizationId));
     }
 
     @ApiOperation(value = "创建地址匹配")
