@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
-@RestController("carrierInternalController.v1")
+@RestController("carrierController.v1")
 @RequestMapping({"v1/carrier"})
 public class CarrierController {
     private final CarrierService carrierService;
@@ -30,7 +30,7 @@ public class CarrierController {
 
     @ApiOperation(value = "查询承运商信息")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<List<CarrierVO>> getFreightTemplate() {
         return Results.success(carrierService.listCarriers(UserHelper.getTenantId()));
     }

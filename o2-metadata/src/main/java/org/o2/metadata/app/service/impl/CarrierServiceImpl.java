@@ -4,6 +4,7 @@ import org.o2.metadata.api.vo.CarrierVO;
 import org.o2.metadata.app.service.CarrierService;
 import org.o2.metadata.domain.carrier.repository.CarrierDomainRepository;
 import org.o2.metadata.infra.convertor.CarrierConverter;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
+@Service
 public class CarrierServiceImpl implements CarrierService {
     private CarrierDomainRepository carrierDomainRepository;
 

@@ -4,6 +4,7 @@ import org.o2.metadata.domain.carrier.domain.CarrierDO;
 import org.o2.metadata.domain.carrier.repository.CarrierDomainRepository;
 import org.o2.metadata.infra.convertor.CarrierConverter;
 import org.o2.metadata.infra.redis.CarrierRedis;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
-
+@Component
 public class CarrierDomainRepositoryImpl implements CarrierDomainRepository {
     private final  CarrierRedis carrierRedis;
 
