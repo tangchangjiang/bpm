@@ -18,7 +18,8 @@ public enum RegionConstants {
         /**
          * 值集编码
          */
-        LOV_CODE("O2MD.REGION", ""),
+        REGION_LOV_CODE("O2MD.REGION", ""),
+        COUNTRY_LOV_CODE("O2MD.COUNTRY", ""),
         LEVEL_NUMBER("levelNumber", ""),
         REGION_NAME("regionName",""),
         REGION_CODE("regionCode",""),

@@ -117,7 +117,7 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
             queryParams.put(RegionConstants.RegionLov.LEVEL_NUMBER.getCode(),String.valueOf(regionQueryLov.getLevelNumber()));
         }
 
-        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.REGION_LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
         if (list.isEmpty()){
             return regionList;
         }
