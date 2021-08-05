@@ -7,11 +7,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.dto.CountryDTO;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.CountryVO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.convertor.CountryConverter;
-import org.o2.metadata.console.infra.entity.Country;
 import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +39,7 @@ public class CountryController extends BaseController {
     @ApiOperation("获取所有有效国家")
     @GetMapping("/valid")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    public ResponseEntity<List<CountryVO>> listValidCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final Country country) {
+    public ResponseEntity<List<CountryVO>> listValidCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CountryDTO country) {
         country.setTenantId(organizationId);
         country.setEnabledFlag(1);
         CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
