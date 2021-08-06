@@ -42,9 +42,9 @@ public class FreightTemplateDetailController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/default/{templateId}")
-    public ResponseEntity<?> queryDefaultFreightTemplateDetail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId, final PageRequest pageRequest) {
+    public ResponseEntity<Page<FreightTemplateDetail>> queryDefaultFreightTemplateDetail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId, final PageRequest pageRequest) {
         final Page<FreightTemplateDetail> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId));
+                () -> freightTemplateDetailService.queryDefaultFreightTemplateDetail(templateId));
         return Results.success(list);
     }
 
@@ -54,7 +54,7 @@ public class FreightTemplateDetailController extends BaseController {
     @GetMapping("/region/{templateId}")
     public ResponseEntity<?> queryRegionFreightTemplateDetail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId, final PageRequest pageRequest) {
         final Page<FreightTemplateDetail> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> freightTemplateDetailRepository.queryRegionFreightTemplateDetail(templateId));
+                () -> freightTemplateDetailService.queryRegionFreightTemplateDetail(templateId));
         return Results.success(list);
     }
 

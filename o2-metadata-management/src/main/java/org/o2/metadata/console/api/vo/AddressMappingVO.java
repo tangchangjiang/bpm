@@ -1,8 +1,7 @@
 package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
+
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,8 +21,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel("地址匹配")
-@VersionAudit
-@ModifyAudit
 public class AddressMappingVO extends AuditDomain {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")

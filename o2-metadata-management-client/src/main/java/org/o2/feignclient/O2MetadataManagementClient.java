@@ -28,6 +28,7 @@ public class O2MetadataManagementClient {
     private final PosRemoteService posRemoteService;
     private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
     private final OnlineShopRemoteService onlineShopRemoteService;
+    private final AddressMappingRemoteService addressMappingRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
@@ -36,7 +37,8 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, OnlineShopRemoteService onlineShopRemoteService) {
+                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, OnlineShopRemoteService onlineShopRemoteService,
+                                      AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -47,6 +49,7 @@ public class O2MetadataManagementClient {
         this.posRemoteService = posRemoteService;
         this.platformInfMappingRemoteService = platformInfMappingRemoteService;
         this.onlineShopRemoteService = onlineShopRemoteService;
+        this.addressMappingRemoteService = addressMappingRemoteService;
     }
 
     /**
@@ -252,8 +255,20 @@ public class O2MetadataManagementClient {
      * @param shopName 网店
      * @return List<OnlineShopVO> 结果
      */
-   public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>(){});
-   }
+    public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>() {});
+    }
+
+    /**
+     * 批量查询承运商
+     *
+     * @param addressMappingQueryIntDTOList 地址匹配
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryIntDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+        });
+    }
 
 }

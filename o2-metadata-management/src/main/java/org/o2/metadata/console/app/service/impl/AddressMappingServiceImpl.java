@@ -2,7 +2,8 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
-import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
@@ -45,21 +46,21 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     /**
      * 地址匹配逆向递归 树状数据结构（根据parent id 分组 减少没必要的递归）
      *
-     * @param addressMappingDTO 地址匹配查询条件
+     * @param addressMappingQueryDTO 地址匹配查询条件
      * @return 地址匹配树状结果集
      */
     @Override
-    public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingDTO addressMappingDTO, final String countryCode) {
-        if (addressMappingDTO.getCatalogCode() == null || "".equals(addressMappingDTO.getCatalogCode())) {
+    public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingQueryDTO addressMappingQueryDTO, final String countryCode) {
+        if (addressMappingQueryDTO.getCatalogCode() == null || "".equals(addressMappingQueryDTO.getCatalogCode())) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
         }
-        if (null == addressMappingDTO.getTenantId()) {
+        if (null == addressMappingQueryDTO.getTenantId()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         }
-        List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingDTO, countryCode);
+        List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingQueryDTO, countryCode);
         List<String> regionCodes = new ArrayList<>();
         for (RegionTreeChild regionTreeChild : regionTreeChildList) {
             if (StringUtils.isNotEmpty(regionTreeChild.getRegionCode())) {
@@ -68,10 +69,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         }
         //获取地区
         RegionQueryLovDTO dto = new RegionQueryLovDTO();
-        dto.setTenantId(addressMappingDTO.getTenantId());
+        dto.setTenantId(addressMappingQueryDTO.getTenantId());
         dto.setRegionCodes(regionCodes);
         dto.setCountryCode(countryCode);
-        List<Region> regionList = regionRepository.listRegionLov(dto,addressMappingDTO.getTenantId());
+        List<Region> regionList = regionRepository.listRegionLov(dto, addressMappingQueryDTO.getTenantId());
         Map<String,Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region));
         for (RegionTreeChild regionTreeChild : regionTreeChildList) {
             Region region = regionMap.get(regionTreeChild.getRegionCode());
@@ -93,7 +94,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final List<RegionTreeChild> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, addressMappingDTO.getCatalogCode(),addressMappingDTO.getTenantId());
+        getParent(collect, tree, addressMappingQueryDTO.getCatalogCode(), addressMappingQueryDTO.getTenantId());
         sortList(tree);
         return RegionConverter.poToVoChildObjects(tree);
     }
@@ -117,6 +118,19 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             addressMapping.getRegionPathNames().add(region.getCountryName());
         }
         return AddressMappingConverter.poToVoObject(addressMapping);
+    }
+
+    @Override
+    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryInts, Long tenantId) {
+        List<String> externalCodes = new ArrayList<>();
+        List<String> addressTypeCodes = new ArrayList<>();
+        List<String> externalNames = new ArrayList<>();
+        for (AddressMappingQueryIntDTO addressMappingQueryIntDTO : addressMappingQueryInts) {
+            externalCodes.add(addressMappingQueryIntDTO.getExternalCode());
+            externalNames.add(addressMappingQueryIntDTO.getExternalName());
+            addressTypeCodes.add(addressMappingQueryIntDTO.getAddressTypeCode());
+        }
+        return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
     }
 
     /**
