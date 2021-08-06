@@ -86,10 +86,6 @@ public class PlatformInfMapping extends AuditDomain {
     @ApiModelProperty(value = "信息类型")
     private String infTypeMeaning;
 
-    @Transient
-    @ApiModelProperty(value = "信息名称")
-    private String infNameMeaning;
-
 
     //
     // getter/setter
