@@ -21,7 +21,7 @@ import java.util.List;
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2md_address_mapping")
-public class AddressMappingDTO  {
+public class AddressMappingQueryDTO {
 
     @ApiModelProperty(value = "region 关联")
     private String regionCode;
