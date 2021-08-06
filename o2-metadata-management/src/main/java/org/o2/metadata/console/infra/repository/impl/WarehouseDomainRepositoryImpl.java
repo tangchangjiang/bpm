@@ -27,4 +27,9 @@ public class WarehouseDomainRepositoryImpl implements WarehouseDomainRepository 
     public List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
         return WarehouseConverter.poToDoListObjects(warehouseRedis.listWarehouses(warehouseCodes,tenantId));
     }
+
+    @Override
+    public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
+
+    }
 }

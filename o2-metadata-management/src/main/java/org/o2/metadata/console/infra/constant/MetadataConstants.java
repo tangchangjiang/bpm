@@ -38,6 +38,8 @@ public interface MetadataConstants {
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
         String O2MD_ERROR_CHECK_FAILED = "active platform_code must be unique";
         String O2MD_ERROR_CHECK_ERROR = "Failed to save. The platform inf code already exists";
+        String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
+
     }
 
     /**
