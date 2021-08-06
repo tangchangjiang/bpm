@@ -22,13 +22,12 @@
     </resultMap>
     <!-- SQL 要优化 都是一个SQL  -->
 
-    <select id="queryDefaultFreightTemplateDetails" resultMap="freightTemplateDetailResultMap">
+    <select id="queryDefaultFreightTemplateDetails" resultType="org.o2.metadata.console.infra.entity.FreightTemplateDetail">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
          SELECT
              oftd.template_detail_id,
-             oftd.region_id,
-             rg.region_name ,
+             oftd.region_code,
              oftd.transport_type_code,
              oftd.first_piece_weight,
              oftd.first_price,
@@ -42,9 +41,7 @@
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
-        FROM o2md_freight_template_detail oftd
-			left join  hpfm_region rg on  oftd.region_id = rg.region_id and  rg.tenant_id = #{tenantId}
-			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
+         FROM o2md_freight_template_detail oftd
 		 WHERE    oftd.default_flag =1 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
     </select>
 
