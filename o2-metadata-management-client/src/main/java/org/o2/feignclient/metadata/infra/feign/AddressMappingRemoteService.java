@@ -3,7 +3,7 @@ package org.o2.feignclient.metadata.infra.feign;
 import io.swagger.annotations.ApiParam;
 import org.o2.feignclient.metadata.domain.dto.AddressMappingQueryIntDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
-import org.o2.feignclient.metadata.infra.feign.fallback.CarrierRemoteServiceImpl;
+import org.o2.feignclient.metadata.infra.feign.fallback.AddressMappingRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +21,7 @@ import java.util.List;
 @FeignClient(
         value = O2Service.Metadata.NAME,
         path = "/v1",
-        fallback = CarrierRemoteServiceImpl.class
+        fallback = AddressMappingRemoteServiceImpl.class
 )
 public interface AddressMappingRemoteService {
     /**
