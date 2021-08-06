@@ -10,7 +10,7 @@ import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.convertor.OnlineShopConvertor;
+import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -111,6 +111,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShop.setTenantId(tenantId);
         onlineShop.setPlatformCode(platformCode);
         List<OnlineShop> shopCode = onlineShopRepository.getShopCode(onlineShop);
-        return OnlineShopConvertor.poToVoListObjects(shopCode);
+        return OnlineShopConverter.poToVoListObjects(shopCode);
     }
 }
