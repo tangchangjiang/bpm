@@ -43,4 +43,13 @@ public class WarehouseMetadataInternalController {
         }
         return  Results.success(map);
     }
+    @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @PostMapping({"/internal/updateExpressValue"})
+    public ResponseEntity<Void> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+                                                @RequestParam(value = "warehouseCode") String warehouseCode,
+                                                @RequestParam(value = "increment") String increment) {
+        warehouseService.updateExpressValue(warehouseCode, increment, organizationId);
+        return Results.success();
+    }
 }

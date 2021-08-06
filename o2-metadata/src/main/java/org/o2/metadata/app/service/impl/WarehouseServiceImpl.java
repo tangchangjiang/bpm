@@ -2,7 +2,7 @@ package org.o2.metadata.app.service.impl;
 
 import org.o2.metadata.api.vo.WarehouseVO;
 import org.o2.metadata.app.service.WarehouseService;
-import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
+import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.o2.metadata.infra.convertor.WarehouseConverter;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,19 @@ import java.util.List;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 
-    private final WarehouseDomainService warehouseDomainService;
+    private final WarehouseDomainRepository warehouseDomainRepository;
 
-    public WarehouseServiceImpl(WarehouseDomainService warehouseDomainService) {
-        this.warehouseDomainService = warehouseDomainService;
+    public WarehouseServiceImpl(WarehouseDomainRepository warehouseDomainRepository) {
+        this.warehouseDomainRepository = warehouseDomainRepository;
     }
     @Override
     public List<WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return WarehouseConverter.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseCodes,tenantId));
+        return WarehouseConverter.doToVoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId));
     }
+
+    @Override
+    public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
+        warehouseDomainRepository.updateExpressValue(warehouseCode,increment,tenantId);
+    }
+
 }
