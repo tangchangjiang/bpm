@@ -254,5 +254,7 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "街道地址", hidden = true)
     @Transient
     private String streetName;
+    @Transient
+    private String countryCode;
 
 }

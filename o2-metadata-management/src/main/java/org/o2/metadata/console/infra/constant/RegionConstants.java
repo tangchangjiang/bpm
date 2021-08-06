@@ -30,7 +30,8 @@ public enum RegionConstants {
         PARENT_REGION_IDS("parentRegionIds",""),
         ENABLED_FLAG("enabledFlag",""),
         COUNTRY_CODE("countryCode",""),
-        TENANT_ID("tenantId","");
+        TENANT_ID("tenantId",""),
+        LANG("lang","");
 
 
         private String code;
