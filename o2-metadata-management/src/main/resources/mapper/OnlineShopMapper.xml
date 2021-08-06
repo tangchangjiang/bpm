@@ -213,4 +213,24 @@
         </if>
         AND tl.lang =#{lang}
     </select>
+    <select id="getShopCode" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        select os.online_shop_code
+        from o2md_online_shop os
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 =0
+                </otherwise>
+            </choose>
+            <if test="onlineShopName!=null and onlineShopName!=''">
+                AND os.online_shop_name = #{onlineShopName}
+            </if>
+            <if test="platformCode !=null and platformCode !=''">
+                and os.platform_code = #{platformCode}
+            </if>
+        </where>
+    </select>
 </mapper>

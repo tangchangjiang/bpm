@@ -1,9 +1,15 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
+import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
@@ -28,6 +34,10 @@ import java.util.List;
 public class PlatformInfMappingServiceImpl implements PlatformInfMappingService {
 
     private final PlatformInfMappingRepository platformInfMappingRepository;
+    private final LovAdapter lovAdapter;
+    public static final String REFUND_STATUS = "REFUND_STATUS";
+    public static final String ORDER_STATUS = "ORDER_STATUS";
+    public static final String REFUND_REASON = "REFUND_REASON";
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,14 +78,24 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
                 .andEqualTo(PlatformInfMapping.FIELD_INF_TYPE_CODE, platformInfMapping.getInfTypeCode())
                 .andEqualTo(PlatformInfMapping.FIELD_PLATFORM_INF_CODE, platformInfMapping.getPlatformInfCode()))
                 .build();
-        int count = platformInfMappingRepository.selectCountByCondition(condition);
-        if (count > 0 ){
-            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
-        }
+        List<PlatformInfMapping> list = platformInfMappingRepository.selectByCondition(condition);
         //保存平台信息匹配表
         if (platformInfMapping.getPlatformInfMappingId() == null) {
+            //判断是否重复
+            if (CollectionUtils.isNotEmpty(list)){
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
+            }
+            setLovMeaning(platformInfMapping);
             platformInfMappingRepository.insertSelective(platformInfMapping);
         } else {
+            if (CollectionUtils.isNotEmpty(list)){
+                // 判断是否重复
+                PlatformInfMapping result = list.get(0);
+                if (!result.getPlatformInfMappingId().equals(platformInfMapping.getPlatformInfMappingId())) {
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
+                }
+            }
+            setLovMeaning(platformInfMapping);
             platformInfMappingRepository.updateOptional(platformInfMapping,
                     PlatformInfMapping.FIELD_INF_TYPE_CODE,
                     PlatformInfMapping.FIELD_PLATFORM_CODE,
@@ -87,5 +107,34 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
             );
         }
         return platformInfMapping;
+    }
+
+    @Override
+    public Page<PlatformInfMapping> page(InfMappingDTO platformInfMapping, PageRequest pageRequest) {
+        return PageHelper.doPageAndSort(pageRequest,
+                () -> platformInfMappingRepository.listInfMapping(platformInfMapping));
+    }
+
+    /**
+     * 动态查询值集
+     * @param platformInfMapping
+     */
+    private void setLovMeaning(PlatformInfMapping platformInfMapping) {
+        String infTypeCode = platformInfMapping.getInfTypeCode();
+        String lovValue = "";
+        if (REFUND_STATUS.equalsIgnoreCase(infTypeCode)) {
+            // 退款状态
+            lovValue = MetadataConstants.InfNameCode.REFUND_STATUS;
+        }else if (REFUND_REASON.equalsIgnoreCase(infTypeCode)) {
+            // 退款原因
+            lovValue = MetadataConstants.InfNameCode.REFUND_REASON;
+        }else {
+            // 订单状态
+            lovValue = MetadataConstants.InfNameCode.ORDER_STATUS;
+        }
+        String lovMeaning = lovAdapter.queryLovMeaning(lovValue,
+                platformInfMapping.getTenantId(), platformInfMapping.getInfCode());
+        platformInfMapping.setInfName(lovMeaning);
+
     }
 }

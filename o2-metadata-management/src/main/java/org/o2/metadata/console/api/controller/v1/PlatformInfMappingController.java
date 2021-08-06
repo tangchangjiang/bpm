@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
@@ -51,8 +50,7 @@ public class PlatformInfMappingController extends BaseController {
                                                             @ApiIgnore @SortDefault(value = PlatformInfMapping.FIELD_PLATFORM_INF_MAPPING_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platformInfMapping.setTenantId(organizationId);
-        Page<PlatformInfMapping> list = PageHelper.doPageAndSort(pageRequest,
-                () -> platformInfMappingRepository.listInfMapping(platformInfMapping));
+        Page<PlatformInfMapping> list = platformInfMappingService.page(platformInfMapping, pageRequest);
         return Results.success(list);
     }
 
@@ -105,10 +103,13 @@ public class PlatformInfMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody PlatformInfMapping platformInfMapping) {
-        platformInfMapping.setTenantId(organizationId);
+                                       @RequestBody List<PlatformInfMapping> platformInfMapping) {
+        for (PlatformInfMapping infMapping : platformInfMapping) {
+            infMapping.setTenantId(organizationId);
+        }
         SecurityTokenHelper.validToken(platformInfMapping);
-        platformInfMappingRepository.deleteByPrimaryKey(platformInfMapping);
+
+        platformInfMappingRepository.batchDeleteByPrimaryKey(platformInfMapping);
         return Results.success();
     }
 

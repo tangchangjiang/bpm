@@ -104,9 +104,14 @@ public class PlatformController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody Platform platform) {
-        SecurityTokenHelper.validToken(platform);
-        platformRepository.deleteByPrimaryKey(platform);
+                                       @RequestBody List<Platform> platforms) {
+
+        SecurityTokenHelper.validToken(platforms);
+        for (Platform platform : platforms) {
+            platform.setTenantId(organizationId);
+        }
+        platformRepository.batchDeleteByPrimaryKey(platforms);
+
         return Results.success();
     }
 

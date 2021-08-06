@@ -274,6 +274,15 @@ public interface MetadataConstants {
         String CMS = "CMS";
     }
 
+    /**
+     * InfName 值集编码
+     */
+    interface InfNameCode {
+        String REFUND_STATUS = "O2RF.REFUND_STATUS";
+        String ORDER_STATUS = "O2TF.ORDER_STATUS";
+        String REFUND_REASON = "O2RF.REFUND_REASON";
+    }
+
 
     interface MallLangPromptConstants{
         String LOV_CODE = "O2CMS.APPROVE_STATUS";

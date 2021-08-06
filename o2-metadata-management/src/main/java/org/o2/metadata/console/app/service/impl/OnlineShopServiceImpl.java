@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.base.BaseConstants;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.convertor.OnlineShopConvertor;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -17,8 +19,10 @@ import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 网店应用服务默认实现
@@ -95,5 +99,18 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             // 触发渠道可用库存计算
             o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }
+    }
+
+    @Override
+    public List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName,Long tenantId) {
+        if (StringUtils.isEmpty(platformCode) || StringUtils.isEmpty(shopName)) {
+            throw new CommonException("parameter cannot be empty");
+        }
+        OnlineShop onlineShop = new OnlineShop();
+        onlineShop.setOnlineShopName(shopName);
+        onlineShop.setTenantId(tenantId);
+        onlineShop.setPlatformCode(platformCode);
+        List<OnlineShop> shopCode = onlineShopRepository.getShopCode(onlineShop);
+        return OnlineShopConvertor.poToVoListObjects(shopCode);
     }
 }
