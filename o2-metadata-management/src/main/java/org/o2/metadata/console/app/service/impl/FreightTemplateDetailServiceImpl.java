@@ -1,12 +1,15 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
@@ -26,13 +29,16 @@ import java.util.*;
 public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperation implements FreightTemplateDetailService {
     private FreightTemplateDetailRepository freightTemplateDetailRepository;
     private FreightCacheService freightCacheService;
+    private RegionRepository regionRepository;
 
     public FreightTemplateDetailServiceImpl(FreightTemplateDetailRepository freightTemplateDetailRepository,
                                             FreightCacheService freightCacheService,
                                             RegionRepository regionRepository,
-                                            FreightTemplateRepository freightTemplateRepository) {
+                                            FreightTemplateRepository freightTemplateRepository,
+                                            RegionRepository regionRepository1) {
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightCacheService = freightCacheService;
+        this.regionRepository = regionRepository1;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -87,6 +93,33 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         deleteFreightDetailCache(regionDetailListInput);
     }
 
+    @Override
+    public List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId) {
+        List<FreightTemplateDetail> details = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
+        List<String> regionCodes = new ArrayList<>();
+        for (FreightTemplateDetail detail : details) {
+            regionCodes.add(detail.getRegionCode());
+        }
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setRegionCodes(regionCodes);
+        Long tenantId =  details.get(0).getTenantId();
+        dto.setTenantId(tenantId);
+        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
+        Map<String,String> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        for (Region region : regionList) {
+            regionMap.put(region.getRegionCode(), region.getRegionName());
+        }
+        for (FreightTemplateDetail detail : details) {
+            detail.setRegionName(regionMap.get(detail.getRegionCode()));
+        }
+        return details;
+    }
+
+    @Override
+    public List<FreightTemplateDetail> queryRegionFreightTemplateDetail(Long templateId) {
+        return null;
+    }
+
     /**
      * 批量更新运费模板明细
      *
@@ -108,7 +141,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key = String.valueOf(detail.getRegionId()) + String.valueOf(detail.getTemplateId());
+            String key = String.valueOf(detail.getRegionCode()) + String.valueOf(detail.getTemplateId());
             Assert.isTrue(map.get(key) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
@@ -158,7 +191,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key =  String.valueOf(freightTemplateDetail.getRegionId()+"") + String.valueOf(freightTemplateDetail.getTemplateId());
+            String key =  String.valueOf(freightTemplateDetail.getRegionCode()+"") + String.valueOf(freightTemplateDetail.getTemplateId());
             Assert.isTrue(map.get(key) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 

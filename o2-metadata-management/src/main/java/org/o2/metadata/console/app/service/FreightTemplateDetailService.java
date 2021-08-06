@@ -35,4 +35,21 @@ public interface FreightTemplateDetailService {
      * @param freightTemplateDetailList 待删除的运费模板明细列表
      */
     void batchDelete(final List<FreightTemplateDetail> freightTemplateDetailList);
+
+    /**
+     * 根据运费模板ID，查询默认运费模板明细
+     *
+     * @param templateId 运费模板ID
+     * @return 运费模板明细列表
+     */
+    List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId);
+
+
+    /**
+     * 根据运费模板ID，查询指定地区运费模板明细
+     *
+     * @param templateId 运费模板ID
+     * @return 地区运费模板明细列表
+     */
+    List<FreightTemplateDetail> queryRegionFreightTemplateDetail(Long templateId);
 }

@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
@@ -18,11 +18,11 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     /**
      * 根据条件查询地址匹配
      *
-     * @param addressMappingDTO 地址匹配
+     * @param addressMappingQueryDTO 地址匹配
      * @param countryCode    国家编码
      * @return 结果集
      */
-    List<RegionTreeChild> findAddressMappingByCondition(@Param("addressMapping") AddressMappingDTO addressMappingDTO, String countryCode);
+    List<RegionTreeChild> findAddressMappingByCondition(@Param("addressMapping") AddressMappingQueryDTO addressMappingQueryDTO, String countryCode);
 
     /**
      * 根据region_id  type 查询地址内部外部匹配数据
@@ -65,4 +65,18 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     List<RegionTreeChild> listAddressMapping(@Param(value = "regionCodes")List<String> regionCodes,
                                              @Param(value = "type")String type,
                                              @Param(value = "tenantId") Long tenantId);
+
+
+    /**
+     * 内部方法 批量查询地址匹配
+     * @param externalCodes 外部编码
+     * @param addressTypeCodes 类型
+     * @param externalNames 外部名称
+     * @param tenantId 租户ID
+     * @return  list
+     */
+    List<AddressMapping> listAddressMappings(@Param("externalCodes") List<String> externalCodes,
+                                             @Param("addressTypeCodes") List<String> addressTypeCodes,
+                                             @Param("externalNames") List<String> externalNames,
+                                             @Param("tenantId") Long tenantId);
 }

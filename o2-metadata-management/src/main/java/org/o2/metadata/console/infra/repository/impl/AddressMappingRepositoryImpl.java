@@ -33,4 +33,13 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
     public List<AddressMapping> queryAddressByCondition(String catalogCode, Long regionId,Long tenantId) {
         return addressMappingMapper.queryAddressByCondition(catalogCode,regionId,tenantId);
     }
+
+    @Override
+    public List<AddressMapping> listAddressMappings(List<String> externalCodes,
+                                                    List<String> addressTypeCodes,
+                                                    List<String> externalNames,
+                                                    Long tenantId) {
+        return addressMappingMapper.listAddressMappings(externalCodes,addressTypeCodes,externalNames,tenantId);
+    }
+
 }
