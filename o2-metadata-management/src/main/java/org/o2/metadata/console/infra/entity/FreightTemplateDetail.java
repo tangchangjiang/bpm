@@ -78,6 +78,8 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "租户ID",required = true)
     @NotNull
     private Long tenantId;
+    @ApiModelProperty(value = "目的地")
+    private Long regionId;
 
     //
     // 非数据库字段
