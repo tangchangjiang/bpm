@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -64,14 +65,21 @@ public class PlatformServiceImpl implements PlatformService {
         // 唯一性校验
         Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())
                 .andEqualTo(Platform.FIELD_PLATFORM_STATUS_CODE,platform.getPlatformStatusCode())).build();
-        int count = platformRepository.selectCountByCondition(condition);
-        if (count > 0) {
-            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
-        }
+        List<Platform> platforms = platformRepository.selectByCondition(condition);
         //保存平台定义表
         if (platform.getPlatformId() == null) {
+            if (CollectionUtils.isNotEmpty(platforms)) {
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
+            }
             platformRepository.insertSelective(platform);
         } else {
+            if (CollectionUtils.isNotEmpty(platforms)) {
+                Platform temp = platforms.get(0);
+                if (!temp.getPlatformId().equals(platform.getPlatformId())) {
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
+                }
+
+            }
             platformRepository.updateOptional(platform,
                     Platform.FIELD_PLATFORM_CODE,
                     Platform.FIELD_PLATFORM_NAME,
