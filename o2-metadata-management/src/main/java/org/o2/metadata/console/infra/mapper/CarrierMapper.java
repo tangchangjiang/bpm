@@ -28,5 +28,5 @@ public interface CarrierMapper extends BaseMapper<Carrier> {
      * @param tenantId 租户ID
      * @return list
      */
-    List<Carrier> batchSelect(CarrierDTO carrierDTO, @Param("tenantId") Long tenantId);
+    List<Carrier> batchSelect(@Param("carrierDTO")CarrierDTO carrierDTO, @Param("tenantId") Long tenantId);
 }

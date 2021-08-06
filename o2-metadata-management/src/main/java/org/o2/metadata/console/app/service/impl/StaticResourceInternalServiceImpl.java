@@ -42,12 +42,12 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         if (CollectionUtils.isEmpty(staticResourceQueryDTO.getResourceCodeList())) {
             return new HashMap<>();
         }
-        // TODO: 后续再查Redis,cache aside
         List<String> resourceCodeList = staticResourceQueryDTO.getResourceCodeList();
         List<StaticResource> resourceList = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
                         .andIn(StaticResource.FIELD_RESOURCE_CODE, resourceCodeList)
-                        .andEqualTo(StaticResource.FIELD_TENANT_ID, Optional.ofNullable(staticResourceQueryDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId())))
+                        .andEqualTo(StaticResource.FIELD_TENANT_ID, Optional.ofNullable(staticResourceQueryDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()))
+                        .andEqualTo(StaticResource.FIELD_LANG, staticResourceQueryDTO.getLang()))
                 .build());
         return resourceList.stream().collect(Collectors.toMap(StaticResource::getResourceCode, StaticResource::getResourceUrl));
     }
@@ -59,25 +59,21 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         staticResource.setTenantId(DetailsHelper.getUserDetails().getTenantId());
 
         // 根据resource_code查询是否已存在
-        final int count = staticResourceRepository.selectCountByCondition(Condition.builder(StaticResource.class)
+        List<StaticResource> staticResources = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
                         .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
+                        .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang())
                 ).build());
 
+        int count = staticResources.size();
         if (count <= 0) {
             staticResourceRepository.insertSelective(staticResource);
         } else {
-            staticResourceRepository.updateOptional(staticResource,
-                    StaticResource.FIELD_RESOURCE_CODE,
-                    StaticResource.FIELD_SOURCE_MODULE_CODE,
-                    StaticResource.FIELD_RESOURCE_URL,
-                    StaticResource.FIELD_DESCRIPTION,
-                    StaticResource.FIELD_TENANT_ID
-            );
+            StaticResource originResource = staticResources.get(0);
+            staticResource.setObjectVersionNumber(originResource.getObjectVersionNumber());
+            staticResource.setResourceId(originResource.getResourceId());
+            staticResourceRepository.updateByPrimaryKey(staticResource);
         }
-
-        // TODO:最后再添加缓存
-//        syncToRedis(staticResource);
     }
 }

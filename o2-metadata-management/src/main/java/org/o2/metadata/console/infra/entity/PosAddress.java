@@ -31,10 +31,10 @@ import java.math.BigDecimal;
 public class PosAddress extends AuditDomain {
 
     public static final String FIELD_POS_ADDRESS_ID = "posAddressId";
-    public static final String FIELD_COUNTRY_ID = "countryId";
-    public static final String FIELD_REGION_ID = "regionId";
-    public static final String FIELD_CITY_ID = "cityId";
-    public static final String FIELD_DISTRICT_ID = "districtId";
+    public static final String FIELD_COUNTRY_CODE = "countryCode";
+    public static final String FIELD_REGION_CODE = "regionCode";
+    public static final String FIELD_CITY_CODE = "cityCode";
+    public static final String FIELD_DISTRICT_CODE = "districtCode";
     public static final String FIELD_STREET_NAME = "streetName";
     public static final String FIELD_PHONE_NUMBER = "phoneNumber";
     public static final String FIELD_POSTCODE = "postcode";
@@ -48,9 +48,9 @@ public class PosAddress extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     public boolean isInvalid() {
-        return StringUtils.isEmpty(this.regionId)
-                || StringUtils.isEmpty(this.cityId)
-                || StringUtils.isEmpty(this.districtId);
+        return StringUtils.isEmpty(this.regionCode)
+                || StringUtils.isEmpty(this.cityCode)
+                || StringUtils.isEmpty(this.districtCode);
     }
 
     //
@@ -63,16 +63,16 @@ public class PosAddress extends AuditDomain {
     private Long posAddressId;
 
     @ApiModelProperty(value = "国家")
-    private Long countryId;
+    private String countryCode;
 
     @ApiModelProperty(value = "省")
-    private Long regionId;
+    private String regionCode;
 
     @ApiModelProperty(value = "市")
-    private Long cityId;
+    private String cityCode;
 
     @ApiModelProperty(value = "区")
-    private Long districtId;
+    private String districtCode;
 
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;
@@ -105,19 +105,19 @@ public class PosAddress extends AuditDomain {
 
     @ApiModelProperty(value = "国家")
     @Transient
-    private String country;
+    private String countryName;
 
     @ApiModelProperty(value = "省")
     @Transient
-    private String region;
+    private String regionName;
 
     @ApiModelProperty(value = "市")
     @Transient
-    private String city;
+    private String cityName;
 
     @ApiModelProperty(value = "区")
     @Transient
-    private String district;
+    private String districtName;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;

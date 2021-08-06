@@ -1,9 +1,11 @@
 package org.o2.metadata.console.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
@@ -12,26 +14,27 @@ import java.math.BigDecimal;
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel("详细地址")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PosAddressVO {
+public class PosAddressVO extends AuditDomain {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
 
     private Long posAddressId;
 
     @ApiModelProperty(value = "国家")
-    private Long countryId;
+    private String countryCode;
 
     @ApiModelProperty(value = "省")
-    private Long regionId;
+    private String regionCode;
 
     @ApiModelProperty(value = "市")
-    private Long cityId;
+    private String cityCode;
 
     @ApiModelProperty(value = "区")
-    private Long districtId;
+    private String districtCode;
 
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;
@@ -57,16 +60,16 @@ public class PosAddressVO {
 
     @ApiModelProperty(value = "国家")
 
-    private String country;
+    private String countryName;
 
     @ApiModelProperty(value = "省")
-    private String region;
+    private String regionName;
 
     @ApiModelProperty(value = "市")
-    private String city;
+    private String cityName;
 
     @ApiModelProperty(value = "区")
-    private String district;
+    private String districtName;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;

@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
@@ -57,7 +58,6 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         regionCacheVO.setLang(MetadataConstants.Path.EN_US);
         final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
-        // FXIME：区分语言 OSS url
         String enResourceUrl = this.staticFile(enList, MetadataConstants.Path.EN_US, tenantId, countryCode);
 
         //  更新静态文件资源表
@@ -104,12 +104,34 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     }
 
     private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl, String languageCode) {
+        String trimResourceUrl = trimDomainPrefix(resourceUrl);
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
-        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.buildMetadataRegionCode(languageCode));
+        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.buildMetadataRegionCode());
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(MetadataConstants.StaticResourceCode.O2MD_REGION_DESCRIPTION);
-        saveDTO.setResourceUrl(resourceUrl);
+        saveDTO.setResourceUrl(trimResourceUrl);
+        saveDTO.setLang(languageCode);
         return saveDTO;
+    }
+
+    /**
+     * 裁剪掉域名 + 端口
+     *
+     * @param resourceUrl resourceUrl
+     * @return result
+     */
+    private static String trimDomainPrefix(String resourceUrl) {
+        if (StringUtils.isBlank(resourceUrl)) {
+            return "";
+        }
+
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return resourceUrl;
+        }
+
+        String domainSuffix = httpSplits[1];
+        return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
     }
 }

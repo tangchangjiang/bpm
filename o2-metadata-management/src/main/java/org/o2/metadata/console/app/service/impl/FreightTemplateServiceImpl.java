@@ -16,7 +16,7 @@ import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.constant.FreightConstants;
-import org.o2.metadata.console.infra.convertor.FreightConvertor;
+import org.o2.metadata.console.infra.convertor.FreightConverter;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
@@ -112,7 +112,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public FreightInfoVO getFreightTemplate(FreightDTO freight) {
-        return FreightConvertor.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
+        return FreightConverter.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {

@@ -28,31 +28,50 @@ public interface MetadataManagementConstants {
         String O2CMS_DECORATION = "O2CMS_DECORATION";
 
         /**
-         * 构造CMS配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
+         * CMS - site站点配置文件
+         */
+        String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
+
+        /**
+         * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
          *
-         * @param siteCode     站点编码
-         * @param languageCode 语言编码
+         * @param siteCode 站点编码
          * @return CMS配置文件资源编码
          */
-        static String buildCmsResourceCode(String siteCode, String languageCode) {
-            return String.format("%s_%s_%s", O2CMS_DECORATION, StringUtils.upperCase(siteCode), languageCode);
+        static String buildCmsDecorationResourceCode(String siteCode) {
+            return String.format("%s_%s", O2CMS_DECORATION, StringUtils.upperCase(siteCode));
+        }
+
+        /**
+         * 构造CMS站点site配置文件资源编码
+         *
+         * @param siteCode     站点编码
+         * @return CMS配置文件资源编码
+         */
+        static String buildCmsSiteResourceCode(String siteCode) {
+            return String.format("%s_%s", O2CMS_SITE_CONFIG, StringUtils.upperCase(siteCode));
         }
 
         /**
          * 构造商品模块资源编码
          *
          * @param catalogCode        目录编码
-         * @param languageCode       语言编码
          * @param catalogVersionCode 目录版本编码
          * @return 商品类别文件资源编码
          */
-        static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode, String languageCode) {
-            return String.format("%s_%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode, languageCode);
+        static String buildPcmCategoryCode(String catalogCode, String catalogVersionCode) {
+            return String.format("%s_%s_%s", O2PCM_CATEGORY, catalogCode, catalogVersionCode);
         }
 
-        static String buildMetadataRegionCode(String languageCode) {
-            return String.format("%s_%s", O2MD_REGION, languageCode);
+        /**
+         * 构建元数据地区资源编码
+         *
+         * @return
+         */
+        static String buildMetadataRegionCode() {
+            return String.format("%s", O2MD_REGION);
         }
+
     }
 
     /**

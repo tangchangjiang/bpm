@@ -32,7 +32,9 @@ public class WarehouseRedisImpl implements WarehouseRedis {
             String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, code);
             Map<Object,Object> wareHouseMap = redisCacheClient.opsForHash().entries(key);
             String jsonStr = FastJsonHelper.mapToString(wareHouseMap);
-            list.add(FastJsonHelper.stringToObject(jsonStr,Warehouse.class));
+            Warehouse warehouse  = FastJsonHelper.stringToObject(jsonStr,Warehouse.class);
+            warehouse.setWarehouseCode(code);
+            list.add(warehouse);
         }
         return list;
     }

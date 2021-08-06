@@ -21,32 +21,12 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <resultMap id="PosVOMap" type="org.o2.metadata.console.api.vo.PosVO">
-        <id column="pos_id" property="posId" jdbcType="DECIMAL"/>
-        <result column="pos_code" property="posCode" jdbcType="VARCHAR"/>
-        <result column="pos_name" property="posName" jdbcType="VARCHAR"/>
-        <result column="pos_status_code" property="posStatusCode" jdbcType="VARCHAR"/>
-        <result column="pos_type_code" property="posTypeCode" jdbcType="VARCHAR"/>
-        <result column="region_id" property="regionId" jdbcType="BIGINT"/>
-        <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
-        <result column="city_id" property="cityId" jdbcType="BIGINT"/>
-        <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
-        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
-        <result column="district_name" property="districtName" jdbcType="VARCHAR"/>
-        <result column="street_name" property="streetName" jdbcType="VARCHAR"/>
-        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
-        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
-        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
-        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
-        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
-    </resultMap>
-
     <resultMap id="PosResultMap" type="org.o2.metadata.console.infra.entity.Pos" extends="BaseResultMap">
         <association property="address" columnPrefix="address_"
                      resultMap="org.o2.metadata.console.infra.mapper.PosAddressMapper.BaseResultMap"/>
     </resultMap>
 
-    <select id="listPosWithAddressByCondition" resultMap="PosVOMap">
+    <select id="listPosWithAddressByCondition" resultType="org.o2.metadata.console.infra.entity.Pos">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         pos.tenant_id,
@@ -56,20 +36,16 @@
         pos.pos_status_code,
         pos.pos_type_code,
         pos.OBJECT_VERSION_NUMBER,
-        address.region_id,
-        regiont.region_name region_name,
-        address.city_id,
-        cityt.region_name city_name,
-        address.district_id,
-        districtt.region_name district_name,
+        address.region_code,
+        address.country_code,
+        address.district_code,
+        address.city_code,
         address.street_name,
         pos.business_type_code
         from o2md_pos pos
         left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang}
         left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
-        left join hpfm_region_tl regiont on regiont.region_id = address.region_id and regiont.lang = #{lang}
-        left join hpfm_region_tl cityt on cityt.region_id = address.city_id and  cityt.lang = #{lang}
-        left join hpfm_region_tl districtt on districtt.region_id = address.district_id and districtt.lang = #{lang}
+
         where 1=1
         <choose>
             <when test="tenantId != null">
@@ -93,16 +69,7 @@
         <if test="posTypeCode != null and posTypeCode != ''">
             and pos.pos_type_code = #{posTypeCode}
         </if>
-        <if test="regionId != null and regionId != ''">
-            and address.region_id = #{regionId}
-        </if>
-        <if test="cityId != null and cityId != ''">
-            and address.city_Id = #{cityId}
-        </if>
-        <if test="districtId != null and districtId != ''">
-            and address.district_Id = #{districtId}
-        </if>
-        order by pos.pos_code ASC
+        order by pos.pos_code
     </select>
 
     <select id="listUnbindPosList" resultMap="BaseResultMap">
@@ -132,7 +99,7 @@
             <bind name="posNameLike" value="'%' + posName + '%'"/>
             and p.pos_name LIKE #{posNameLike}
         </if>
-        order by p.pos_code asc
+        order by p.pos_code
     </select>
     <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">
         SELECT
@@ -199,6 +166,6 @@
                 </otherwise>
             </choose>
         </where>
-        ORDER BY p.pos_code ASC
+        ORDER BY p.pos_code
     </select>
 </mapper>

@@ -97,5 +97,12 @@ public class Region extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     @MultiLanguageField
     private Long tenantId;
+
+    @Transient
+    private String countryCode;
+
+    @Transient
+    private String countryName;
+
 }
 

@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.console.api.dto.AreaRegionDTO;
+import org.o2.metadata.console.api.dto.RegionQueryDTO;
+import org.o2.metadata.console.api.vo.AreaRegionVO;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface RegionService {
      * @param tenantId        租户ID
      * @return 当前节点以及父级ID
      */
-    List<Region> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
+    List<RegionVO> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
     /**
      * 查询网店未关联地区
@@ -32,12 +34,12 @@ public interface RegionService {
     /**
      * 查询各个大区下的省份
      *
-     * @param countryIdOrCode
-     * @param enabledFlag
+     * @param countryCode 国家编码
+     * @param enabledFlag 是否启用
      * @param tenantId 租户ID
-     * @return
+     * @return list
      */
-    List<AreaRegionDTO> listAreaRegion(String countryIdOrCode, Integer enabledFlag, Long tenantId);
+    List<AreaRegionVO> listAreaRegion(String countryCode, Integer enabledFlag, Long tenantId);
 
     /**
      * 创建地区定义
@@ -70,5 +72,25 @@ public interface RegionService {
      * @throws RuntimeException exception description
      */
     Region getRegionByCode(String regionCode);
+
+
+
+
+    /**
+     * 查询地区
+     *
+     * @param regionQueryDTO 查询条件
+     * @param tenantId 租户ID
+     * @return 地区列表
+     */
+    List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO,Long tenantId);
+
+    /**
+     * 编码查询地区
+     * @param regionCode  地区编码
+     * @param tenantId  租户ID
+     * @return  地区
+     */
+    RegionVO selectOneByCode(String regionCode, Long tenantId);
 }
 

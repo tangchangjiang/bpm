@@ -1,15 +1,20 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.lang3.StringUtils;
+import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.entity.AddressMapping;
-import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
+import org.o2.metadata.console.infra.convertor.RegionConverter;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
-import org.o2.metadata.console.infra.mapper.RegionMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.o2.metadata.console.infra.repository.AddressMappingRepository;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,118 +27,114 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AddressMappingServiceImpl implements AddressMappingService {
-    private static final Logger LOG = LoggerFactory.getLogger(AddressMappingServiceImpl.class);
     private final AddressMappingMapper addressMappingMapper;
-    private final RegionMapper regionMapper;
+    private final RegionRepository regionRepository;
+    private final AddressMappingRepository addressMappingRepository;
+    private final CatalogRepository catalogRepository;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
-                                     final RegionMapper regionMapper) {
+                                     RegionRepository regionRepository,
+                                     AddressMappingRepository addressMappingRepository,
+                                     CatalogRepository catalogRepository) {
         this.addressMappingMapper = addressMappingMapper;
-        this.regionMapper = regionMapper;
+        this.regionRepository = regionRepository;
+        this.addressMappingRepository = addressMappingRepository;
+        this.catalogRepository = catalogRepository;
     }
 
     /**
      * 地址匹配逆向递归 树状数据结构（根据parent id 分组 减少没必要的递归）
      *
-     * @param condition 地址匹配查询条件
+     * @param addressMappingDTO 地址匹配查询条件
      * @return 地址匹配树状结果集
      */
     @Override
-    public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMapping condition, final String countryCode) {
-        if (condition.getCatalogCode() == null || "".equals(condition.getCatalogCode())) {
+    public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingDTO addressMappingDTO, final String countryCode) {
+        if (addressMappingDTO.getCatalogCode() == null || "".equals(addressMappingDTO.getCatalogCode())) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
         }
-        if (null == condition.getTenantId()) {
+        if (null == addressMappingDTO.getTenantId()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         }
-        final List<RegionTreeChildVO> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(condition, countryCode);
-
+        List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingDTO, countryCode);
+        List<String> regionCodes = new ArrayList<>();
+        for (RegionTreeChild regionTreeChild : regionTreeChildList) {
+            if (StringUtils.isNotEmpty(regionTreeChild.getRegionCode())) {
+                regionCodes.add(regionTreeChild.getRegionCode());
+            }
+        }
+        //获取地区
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setTenantId(addressMappingDTO.getTenantId());
+        dto.setRegionCodes(regionCodes);
+        dto.setCountryCode(countryCode);
+        List<Region> regionList = regionRepository.listRegionLov(dto,addressMappingDTO.getTenantId());
+        Map<String,Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region));
+        for (RegionTreeChild regionTreeChild : regionTreeChildList) {
+            Region region = regionMap.get(regionTreeChild.getRegionCode());
+            if (null == region) {
+                continue;
+            }
+            regionTreeChild.setRegionName(region.getRegionName());
+            regionTreeChild.setLevelPath(region.getLevelPath());
+            regionTreeChild.setParentRegionId(region.getParentRegionId());
+        }
         //根据parent id 分组
-        final Map<Long, List<RegionTreeChildVO>> collect = regionTreeChildList.stream().peek(node -> {
+        final Map<Long, List<RegionTreeChild>> collect = regionTreeChildList.stream().peek(node -> {
             // 将parent id 为null 的替换成-1
             if (node.getParentRegionId() == null) {
                 node.setParentRegionId(-1L);
             }
-        }).collect(Collectors.groupingBy(RegionTreeChildVO::getParentRegionId));
+        }).collect(Collectors.groupingBy(RegionTreeChild::getParentRegionId));
 
-        final List<RegionTreeChildVO> tree = new ArrayList<>();
+        final List<RegionTreeChild> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, condition.getCatalogCode(),condition.getTenantId());
+        getParent(collect, tree, addressMappingDTO.getCatalogCode(),addressMappingDTO.getTenantId());
         sortList(tree);
-        return tree;
+        return RegionConverter.poToVoChildObjects(tree);
     }
 
-
-    /**
-     * 从获取的list，处理数据，形成树状结构
-     * @param regionTreeChildList meaning
-     * @return the return
-     * @throws RuntimeException exception description
-     */
-    private List<RegionTreeChildVO> processRegionData(final List<RegionTreeChildVO> regionTreeChildList, final String catalogCode,Long tenantId) {
-        // 省市区三级,用map存储，提高效率，key=regionCode，value=children
-        final Map<String, List<RegionTreeChildVO>> map = new HashMap<>(16);
-        final List<RegionTreeChildVO> tree = new ArrayList<>();
-        LOG.info("regionTreeChildList.size:" + regionTreeChildList.size());
-        //按照levelPath进行分组，获得省市区
-        for (final RegionTreeChildVO regionTreeChildVO : regionTreeChildList) {
-            final String[] regionPaths = regionTreeChildVO.getLevelPath().split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
-            LOG.info("regionPaths:" + regionPaths);
-            LOG.info("regionPaths.length:" + regionPaths.length);
-            for (int i = regionPaths.length - 1; i >= 0; i--) {
-                LOG.info("i:" + i);
-                LOG.info("regionPaths[i]:" + regionPaths[i]);
-                // 判断map是否包含
-                if (!map.containsKey(regionPaths[i])) {
-                    final RegionTreeChildVO regionTree;
-                    if (i == regionPaths.length - 1) {
-                        regionTree = regionTreeChildVO;
-                    } else {
-                        regionTree = addressMappingMapper.findAddressMappingByCode(regionPaths[i], catalogCode,tenantId);
-                    }
-                    LOG.info("regionTree:" + regionTree);
-                    // 父类是否包含
-                    if (i != 0) {
-                        if (map.containsKey(regionPaths[i - 1])) {
-                            map.get(regionPaths[i - 1]).add(regionTree);
-                        } else {
-                            final List<RegionTreeChildVO> temp = new ArrayList<>();
-                            temp.add(regionTree);
-                            map.put(regionPaths[i - 1], temp);
-                        }
-                    } else {
-                        // 如果是根节点，加入tree
-                        tree.add(regionTree);
-                    }
-                } else {
-                    // map.get(regionPaths[i]).add()
-                }
-            }
+    @Override
+    public AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode, Long tenantId) {
+        final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
+        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        queryLovDTO.setCountryCode(countryCode);
+        queryLovDTO.setRegionCode(addressMapping.getRegionCode());
+        queryLovDTO.setTenantId(tenantId);
+        List<Region> regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
+        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
+        addressMapping.setCatalogCode(catalog.getCatalogCode());
+        addressMapping.setCatalogName(catalog.getCatalogName());
+        if (!regionList.isEmpty()) {
+            Region region = regionList.get(0);
+            addressMapping.setRegionName(region.getRegionName());
+            addressMapping.getRegionPathIds().add(region.getCountryId());
+            addressMapping.getRegionPathCodes().add(region.getCountryCode());
+            addressMapping.getRegionPathNames().add(region.getCountryName());
         }
-        return tree;
+        return AddressMappingConverter.poToVoObject(addressMapping);
     }
-
 
     /**
      * 排序返回结果集
      *
      * @param tree 树形返回结果集
      */
-    private void sortList(final List<RegionTreeChildVO> tree) {
+    private void sortList(final List<RegionTreeChild> tree) {
         //省排序
         Collections.sort(tree);
         //市排序
-        for (final RegionTreeChildVO regionTreeChild : tree) {
+        for (final RegionTreeChild regionTreeChild : tree) {
             if (regionTreeChild.getChildren() != null && regionTreeChild.getChildren().size() > 1) {
                 Collections.sort(regionTreeChild.getChildren());
             }
             //区排序
             if (regionTreeChild.getChildren() != null) {
-                for (final RegionTreeChildVO cityTreeChild : regionTreeChild.getChildren()) {
+                for (final RegionTreeChild cityTreeChild : regionTreeChild.getChildren()) {
                     if (cityTreeChild.getChildren() != null && cityTreeChild.getChildren().size() > 1) {
                         Collections.sort(cityTreeChild.getChildren());
                     }
@@ -141,7 +142,54 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
         }
     }
+    /**
+     * 父级的地址匹配数据
+     * @param parentRegions 父地区
+     * @param type 类型
+     * @param tenantId 租户ID
+     * @return map
+     */
+    private Map<Long,List<RegionTreeChild>> getParentAddress(List<Region> parentRegions,
+                                                             String type,
+                                                             Long tenantId) {
 
+        Map<String,Region> maps = parentRegions.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region));
+        List<String> regionCodes = new ArrayList<>();
+        for (Region parentRegion : parentRegions) {
+            regionCodes.add(parentRegion.getRegionCode());
+        }
+        List<RegionTreeChild> queryList = addressMappingMapper.listAddressMapping(regionCodes,type,tenantId);
+        for (RegionTreeChild regionTreeChild : queryList) {
+            Region region = maps.get(regionTreeChild.getRegionCode());
+            if (null == region) {
+                continue;
+            }
+            regionTreeChild.setRegionName(region.getRegionName());
+            regionTreeChild.setLevelPath(region.getLevelPath());
+            regionTreeChild.setParentRegionId(region.getParentRegionId());
+            regionTreeChild.setRegionId(region.getRegionId());
+        }
+        return queryList.stream().collect(Collectors.groupingBy(RegionTreeChild::getRegionId));
+    }
+    /**
+     * 获取父级地区
+     * @param map 分组数据
+     * @param tenantId 租户ID
+     * @return
+     */
+    private List<Region> parentRegion(Map<Long, List<RegionTreeChild>> map,Long tenantId) {
+        List<Long> parentRegionIds = new ArrayList<>();
+        map.forEach((k,v)->{
+            if (k != -1) {
+                parentRegionIds.add(k);
+            }
+        });
+        //fu
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setTenantId(tenantId);
+        dto.setRegionIds(parentRegionIds);
+        return regionRepository.listRegionLov(dto,tenantId);
+    }
     /**
      * 获取父节点
      *
@@ -149,29 +197,38 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @param tree    树形返回数据
      * @param type    平台类型
      */
-    private void getParent(final Map<Long, List<RegionTreeChildVO>> collect, final List<RegionTreeChildVO> tree, final String type,final Long tenantId) {
-        final List<RegionTreeChildVO> result = new ArrayList<>();
+    private void getParent(final Map<Long, List<RegionTreeChild>> collect,
+                           final List<RegionTreeChild> tree,
+                           final String type,
+                           final Long tenantId) {
 
-        collect.keySet().forEach(key -> {
+        List<Region> parentRegions = parentRegion(collect,tenantId);
+        Map<Long,Region> parentRegionMap = parentRegions.stream().collect(Collectors.toMap(Region::getRegionId, region -> region));
+        Map<Long,List<RegionTreeChild>> map = getParentAddress(parentRegions,type,tenantId);
+
+        final List<RegionTreeChild> result = new ArrayList<>();
+        for (Long key : collect.keySet()) {
             //根节点
             if (key == -1L) {
                 tree.addAll(collect.get(key));
-                return;
+                continue;
             }
             //查询父节点
-            final List<RegionTreeChildVO> parents = addressMappingMapper.findAddressMappingById(key, type,tenantId);
+            final List<RegionTreeChild> parents = map.get(key);
             //处理不同平台同一数据
-            RegionTreeChildVO parent = new RegionTreeChildVO();
-            if (parents.size() == 1) {
-                parent = parents.get(0);
-            } else if (parents.isEmpty()) {
-                final Region region = regionMapper.findRegionByPrimaryKey(key);
+            RegionTreeChild parent = new RegionTreeChild();
+            if (null == parents || parents.isEmpty()) {
+                final Region region = parentRegionMap.get(key);
                 parent.setParentRegionId(region.getParentRegionId());
                 parent.setRegionCode(region.getRegionCode());
                 parent.setRegionId(region.getRegionId());
                 parent.setRegionName(region.getRegionName());
+                continue;
+            }
+            if (parents.size() == 1) {
+                parent = parents.get(0);
             } else {
-                for (final RegionTreeChildVO treeChild : parents) {
+                for (final RegionTreeChild treeChild : parents) {
                     if (type.equals(treeChild.getCatalogCode())) {
                         parent = treeChild;
                     }
@@ -180,19 +237,18 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             //如果tree 集合中有了这个父节点，直接赋值tree 集合中父节点的 children字段
             if (tree.contains(parent)) {
                 tree.get(tree.indexOf(parent)).setChildren(collect.get(key));
-                return;
+                continue;
             }
             parent.setChildren(collect.get(key));
             result.add(parent);
-            //return;
-        });
+        }
         //如果没有父节点 退出递归
         if (result.isEmpty()) {
             return;
         }
         //分组下一次数据
-        final Map<Long, List<RegionTreeChildVO>> parentMap = new HashMap<>();
-        for (RegionTreeChildVO node : result) {
+        final Map<Long, List<RegionTreeChild>> parentMap = new HashMap<>();
+        for (RegionTreeChild node : result) {
             if (node.getParentRegionId() == null) {
                 node.setParentRegionId(-1L);
             }

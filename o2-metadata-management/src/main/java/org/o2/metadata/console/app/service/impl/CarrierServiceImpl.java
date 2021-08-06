@@ -1,18 +1,19 @@
 package org.o2.metadata.console.app.service.impl;
 
-import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.CarrierDTO;
 import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.app.service.CarrierService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
+import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
@@ -33,32 +34,39 @@ public class CarrierServiceImpl implements CarrierService {
     private final CarrierRepository carrierRepository;
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final PosRelCarrierRepository posRelCarrierRepository;
+    private final CarrierRedis carrierRedis;
 
 
     public CarrierServiceImpl(final CarrierRepository carrierRepository,
                               final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
-                              final PosRelCarrierRepository posRelCarrierRepository) {
+                              final PosRelCarrierRepository posRelCarrierRepository,
+                              CarrierRedis carrierRedis) {
         this.carrierRepository = carrierRepository;
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
+        this.carrierRedis = carrierRedis;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
-        carrierList.forEach(carrier -> {
+        for (Carrier carrier : carrierList) {
             carrier.setTenantId(organizationId);
-        });
+        }
         checkData(carrierList, true);
-        return carrierRepository.batchUpdateByPrimaryKey(carrierList);
+        List<Carrier> list = carrierRepository.batchUpdateByPrimaryKey(carrierList);
+        carrierRedis.batchUpdateRedis(organizationId);
+        return list;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
         List<Carrier> unique = carrierList.stream().collect(
                 Collectors.collectingAndThen(
                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Carrier::getCarrierCode))), ArrayList::new));
         if (unique.size() != carrierList.size()) {
-            throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+            throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
         }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
@@ -71,7 +79,7 @@ public class CarrierServiceImpl implements CarrierService {
                 updateList.add(carrier);
             } else {
                 if (carrier.exist(carrierRepository)) {
-                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
+                    throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
                 }
                 insertList.add(carrier);
             }
@@ -83,14 +91,17 @@ public class CarrierServiceImpl implements CarrierService {
         if (CollectionUtils.isNotEmpty(insertList)) {
             resultList.addAll(carrierRepository.batchInsertSelective(insertList));
         }
+        carrierRedis.batchUpdateRedis(organizationId);
         return resultList;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(Long organizationId, List<Carrier> carrierList) {
+        List<Long> ids = new ArrayList<>(carrierList.size());
         for (final Carrier carrier : carrierList) {
             carrier.setTenantId(organizationId);
+            ids.add(carrier.getCarrierId());
             if (carrier.getCarrierId() != null) {
                 Long carrierId = carrier.getCarrierId();
                 //删除承运商送达范围
@@ -104,13 +115,15 @@ public class CarrierServiceImpl implements CarrierService {
                 posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrierList);
             }
         }
+        List<Carrier> carriers = carrierRepository.selectByIds(StringUtils.join(ids, ","));
         carrierRepository.batchDeleteByPrimaryKey(carrierList);
+        carrierRedis.deleteRedis(carriers,organizationId);
     }
 
     @Override
     public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId) {
         Map<String, CarrierVO> map = new HashMap<>(16);
-        if (carrierDTO.getCarrierCodes().isEmpty() || carrierDTO.getCarrierNames().isEmpty()) {
+        if (null == carrierDTO.getCarrierCodes() && null == carrierDTO.getCarrierNames()) {
             return map;
         }
         List<Carrier> carriers = carrierRepository.batchSelect(carrierDTO,organizationId);
@@ -129,8 +142,8 @@ public class CarrierServiceImpl implements CarrierService {
     /**
      * 校验查重
      *
-     * @param carrieies
-     * @param isCheckId
+     * @param carrieies 承运商
+     * @param isCheckId 是否
      */
     private void checkData(final List<Carrier> carrieies, final boolean isCheckId) {
         final Map<String, Object> map = new HashMap<>(carrieies.size());

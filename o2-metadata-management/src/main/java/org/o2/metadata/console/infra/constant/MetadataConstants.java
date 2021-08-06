@@ -31,10 +31,9 @@ public interface MetadataConstants {
         String BASIC_DATA_PARENT_NOT_ENABLED = "error.basic_data.parent_disable";
 
 
-        String BASIC_DATA_TENANT_ID_IS_NULL =  "error.basic_data.tenantId.should.is.not.null";
-        String BASIC_DATA_CATALOG_CODE_IS_NULL =  "error.basic_data.catalogCode.should.is.not.null";
+        String BASIC_DATA_TENANT_ID_IS_NULL = "error.basic_data.tenantId.should.is.not.null";
+        String BASIC_DATA_CATALOG_CODE_IS_NULL = "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
-        String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
         String O2MD_ERROR_CHECK_FAILED = "active platform_code must be unique";
         String O2MD_ERROR_CHECK_ERROR = "Failed to save. The platform inf code already exists";
@@ -58,21 +57,6 @@ public interface MetadataConstants {
 
 
 
-    /**
-     * 承运商类型
-     */
-    interface CarrierType {
-        /**
-         * 物流
-         */
-        String LOGISTICS = "LOGISTICS";
-        /**
-         * 快递
-         */
-        String EXPRESS = "EXPRESS";
-
-        String LOV_CODE = "O2MD.CARRIER_TYPE";
-    }
 
     /**
      * 大区定义
@@ -89,9 +73,11 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.AREA_CODE";
     }
-    interface  DefaultShop {
+
+    interface DefaultShop {
         Integer DEFAULT = 1;
     }
+
     interface LuaCode {
 
         ResourceScriptSource BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA =
@@ -110,14 +96,14 @@ public interface MetadataConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_update_redis_hash_value.lua"));
     }
 
-    interface  Path {
+    interface Path {
         String FILE = "file";
 
-        String REGION ="region";
+        String REGION = "region";
 
-        String ZH_CN ="zh_CN";
+        String ZH_CN = "zh_CN";
 
-        String EN_US ="en_US";
+        String EN_US = "en_US";
 
         String FILE_NAME = "country-region";
 
@@ -127,15 +113,16 @@ public interface MetadataConstants {
         String JSON = ".json";
     }
 
-    interface  Status {
+    interface Status {
         String UPDATE = "update";
         String CREATE = "create";
     }
 
-    interface  ActiveFlag {
+    interface ActiveFlag {
         Integer FORBIDDEN = 0;
         Integer ENABLE = 1;
     }
+
     /**
      * 统一时间格式
      */
@@ -149,6 +136,7 @@ public interface MetadataConstants {
 
         /**
          * 时间格式
+         *
          * @return DateFormat
          */
         static DateFormat dateFormat() {
@@ -158,39 +146,6 @@ public interface MetadataConstants {
 
 
 
-    interface FreightCache {
-
-        /***
-         * 运费模板默认运费行KEY
-         */
-        String FREIGHT_DEFAULT_LINE_KEY = "DEFAULT";
-        /***
-         * 默认运费模板KEY
-         */
-        String FREIGHT_DEFAULT_KEY = "DEFAULT";
-        /***
-         *运费模板头KEY
-         */
-        String FREIGHT_HEAD_KEY = "HEAD";
-
-
-        /**
-         * 运费模板明细redis key(hash): o2md:freight::{tenantId}:{freightCode} ; 注:默认的运费模板{freightCode} 为DEFAULT
-         *
-         * key:
-         *     HEAD ~ 运费模板头信息
-         *     {region} - 地区信息对应模板
-         *     DEFAULT  - 默认运费模板行
-         */
-        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
-
-
-        ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
-
-        ResourceScriptSource DELETE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/delete_freight_detail_cache.lua"));
-    }
 
     /**
      * 服务点类型
@@ -227,7 +182,6 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.POS_STATUS";
     }
-
 
 
     /**
@@ -303,8 +257,8 @@ public interface MetadataConstants {
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
 
-        static String buildMetadataRegionCode(String languageCode) {
-            return String.format("%s_%s", O2MD_REGION, languageCode);
+        static String buildMetadataRegionCode() {
+            return String.format("%s", O2MD_REGION);
         }
     }
 

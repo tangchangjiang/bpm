@@ -90,7 +90,7 @@ public class Pos extends AuditDomain {
         }
 
         Assert.notNull(this.getAddress(), "pos must contains an address");
-        Assert.notNull(this.getAddress().getDistrictId(), "pos must contains an address");
+        Assert.notNull(this.getAddress().getDistrictCode(), "pos must contains an address");
         Assert.notNull(this.tenantId, "pos must contains tenantId");
         if (MetadataConstants.PosType.WAREHOUSE.equalsIgnoreCase(this.posTypeCode)) {
             Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
@@ -225,5 +225,34 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "组织ID", hidden = true)
     private Long tenantId;
+
+
+    @ApiModelProperty("省id")
+    @Transient
+    private String regionCode;
+
+    @ApiModelProperty(value = "省名称", hidden = true)
+    @Transient
+    private String regionName;
+
+    @ApiModelProperty("市id")
+    @Transient
+    private String cityCode;
+
+    @ApiModelProperty(value = "市名称", hidden = true)
+    @Transient
+    private String cityName;
+
+    @ApiModelProperty(value = "区id")
+    @Transient
+    private String districtCode;
+
+    @ApiModelProperty(value = "区名称", hidden = true)
+    @Transient
+    private String districtName;
+
+    @ApiModelProperty(value = "街道地址", hidden = true)
+    @Transient
+    private String streetName;
 
 }

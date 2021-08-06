@@ -8,7 +8,6 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
-import org.o2.metadata.console.api.dto.SystemParameterDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
