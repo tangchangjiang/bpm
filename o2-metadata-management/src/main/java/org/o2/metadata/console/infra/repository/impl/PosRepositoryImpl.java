@@ -48,7 +48,7 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
         List<Pos> posList =  posMapper.listPosWithAddressByCondition(pos);
         List<String> regionCodes = new ArrayList<>();
         if (posList.isEmpty()){
-            return new ArrayList<>();
+            return posList;
         }
         posList.forEach(bean->{
             if (StringUtils.isNotEmpty(bean.getRegionCode())){

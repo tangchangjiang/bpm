@@ -41,6 +41,8 @@ public class RegionQueryLovDTO {
 
    private Integer levelNumber;
 
+   private String lang;
+
     /**
      * 地址集合
      */
