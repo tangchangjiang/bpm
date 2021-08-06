@@ -253,7 +253,7 @@ public class O2MetadataManagementClient {
      * @return List<OnlineShopVO> 结果
      */
    public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>() {});
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>(){});
    }
 
 }
