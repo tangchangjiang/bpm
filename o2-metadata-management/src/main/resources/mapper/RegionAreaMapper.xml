@@ -16,5 +16,26 @@
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <select id="batchSelectByCode" resultType="org.o2.metadata.console.infra.entity.RegionArea">
+        select
+        area.area_code
+        from o2md_region_area area
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND area.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+
+        <if test="regionCodes != null and regionCodes > 0" >
+            and area.area_code  IN
+            <foreach collection="regionCodes" item="name" open="(" separator="," close=")">
+                #{name}
+            </foreach>
+        </if>
+    </select>
 
 </mapper>

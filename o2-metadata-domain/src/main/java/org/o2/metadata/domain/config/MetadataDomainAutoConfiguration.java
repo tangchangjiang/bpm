@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
         "org.o2.metadata.domain.config",
         "org.o2.metadata.domain.systemparameter",
         "org.o2.metadata.domain.warehouse",
-        "org.o2.metadata.domain.onlineshop"
+        "org.o2.metadata.domain.onlineshop",
+        "org.o2.metadata.domain.carrier"
 })
 @Configuration
 public class MetadataDomainAutoConfiguration implements InitializingBean {

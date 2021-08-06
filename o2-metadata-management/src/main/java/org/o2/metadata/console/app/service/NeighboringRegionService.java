@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 
 import java.util.List;
@@ -26,6 +27,6 @@ public interface NeighboringRegionService {
      * @param neighboringRegion 临近省查询条件
      * @return 查询结果集
      */
-    List<NeighboringRegion> findNeighboringRegions(NeighboringRegion neighboringRegion);
+    List<NeighboringRegion> findNeighboringRegions(NeighboringRegionDTO neighboringRegion);
 
 }

@@ -12,7 +12,7 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.api.vo.PlatformInfMappingVO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.convertor.PlatformInfMappingConvertor;
+import org.o2.metadata.console.infra.convertor.PlatformInfMappingConverter;
 import org.o2.metadata.console.infra.entity.PlatformInfMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class PlatformInfMappingInternalController extends BaseController {
         List<PlatformInfMappingVO> mappingVOList = new ArrayList<>();
         List<PlatformInfMapping> list = platformInfMappingRepository.selectCondition(platformInfMapping,organizationId);
         for(PlatformInfMapping mappingResult : list) {
-            PlatformInfMappingVO mappingVO = PlatformInfMappingConvertor.toPlatformInfMappingVO(mappingResult);
+            PlatformInfMappingVO mappingVO = PlatformInfMappingConverter.toPlatformInfMappingVO(mappingResult);
             mappingVOList.add(mappingVO);
         }
         return Results.success(mappingVOList);

@@ -19,7 +19,6 @@ public interface MetadataConstants {
         String COUNTRY_ALL = "$ALL$";
         String ADDRESS_SPLIT = ".";
         String ADDRESS_SPLIT_REGEX = "\\.";
-        String MODE_NAME = "METADATA";
     }
 
     interface ErrorCode {
@@ -35,12 +34,9 @@ public interface MetadataConstants {
         String BASIC_DATA_TENANT_ID_IS_NULL = "error.basic_data.tenantId.should.is.not.null";
         String BASIC_DATA_CATALOG_CODE_IS_NULL = "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
-        String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
         String O2MD_ERROR_CHECK_FAILED = "active platform_code must be unique";
         String O2MD_ERROR_CHECK_ERROR = "Failed to save. The platform inf code already exists";
-
-        String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
     }
 
     /**
@@ -60,21 +56,7 @@ public interface MetadataConstants {
     }
 
 
-    /**
-     * 承运商类型
-     */
-    interface CarrierType {
-        /**
-         * 物流
-         */
-        String LOGISTICS = "LOGISTICS";
-        /**
-         * 快递
-         */
-        String EXPRESS = "EXPRESS";
 
-        String LOV_CODE = "O2MD.CARRIER_TYPE";
-    }
 
     /**
      * 大区定义
@@ -163,39 +145,7 @@ public interface MetadataConstants {
     }
 
 
-    interface FreightCache {
 
-        /***
-         * 运费模板默认运费行KEY
-         */
-        String FREIGHT_DEFAULT_LINE_KEY = "DEFAULT";
-        /***
-         * 默认运费模板KEY
-         */
-        String FREIGHT_DEFAULT_KEY = "DEFAULT";
-        /***
-         *运费模板头KEY
-         */
-        String FREIGHT_HEAD_KEY = "HEAD";
-
-
-        /**
-         * 运费模板明细redis key(hash): o2md:freight::{tenantId}:{freightCode} ; 注:默认的运费模板{freightCode} 为DEFAULT
-         * <p>
-         * key:
-         * HEAD ~ 运费模板头信息
-         * {region} - 地区信息对应模板
-         * DEFAULT  - 默认运费模板行
-         */
-        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
-
-
-        ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
-
-        ResourceScriptSource DELETE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/delete_freight_detail_cache.lua"));
-    }
 
     /**
      * 服务点类型
@@ -321,16 +271,12 @@ public interface MetadataConstants {
         String CMS = "CMS";
     }
 
-
-    interface MallLangPromptConstants{
-        String LOV_CODE = "O2CMS.APPROVE_STATUS";
-
-        String MALL_LANG_LOCK_KEY = "o2md:mallLang:static:file:lock";
-
-        String NAME = "mallLang";
-
-        String RESOURCE_CODE = "MALL_LANG_FILE";
-
-        String DESCRIPTION = "o2md.mallLang.static_file_description";
+    /**
+     * InfName 值集编码
+     */
+    interface InfNameCode {
+        String REFUND_STATUS = "O2RF.REFUND_STATUS";
+        String ORDER_STATUS = "O2TF.ORDER_STATUS";
+        String REFUND_REASON = "O2RF.REFUND_REASON";
     }
 }

@@ -1,5 +1,8 @@
 package org.o2.metadata.console.infra.constant;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.scripting.support.ResourceScriptSource;
+
 /**
  *
  *  运费常量
@@ -57,6 +60,39 @@ public interface FreightConstants {
         }
     }
 
+    interface FreightCache {
+
+        /***
+         * 运费模板默认运费行KEY
+         */
+        String FREIGHT_DEFAULT_LINE_KEY = "DEFAULT";
+        /***
+         * 默认运费模板KEY
+         */
+        String FREIGHT_DEFAULT_KEY = "DEFAULT";
+        /***
+         *运费模板头KEY
+         */
+        String FREIGHT_HEAD_KEY = "HEAD";
+
+
+        /**
+         * 运费模板明细redis key(hash): o2md:freight::{tenantId}:{freightCode} ; 注:默认的运费模板{freightCode} 为DEFAULT
+         * <p>
+         * key:
+         * HEAD ~ 运费模板头信息
+         * {region} - 地区信息对应模板
+         * DEFAULT  - 默认运费模板行
+         */
+        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
+
+
+        ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
+
+        ResourceScriptSource DELETE_FREIGHT_DETAIL_CACHE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/freight/delete_freight_detail_cache.lua"));
+    }
     /**
      * 运费模版类型
      */

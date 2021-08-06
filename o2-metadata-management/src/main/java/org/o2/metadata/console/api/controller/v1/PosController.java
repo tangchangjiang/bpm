@@ -14,6 +14,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.helper.UniqueHelper;
+import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -48,11 +49,11 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                            final PosVO pos,
+    public ResponseEntity<Page<Pos>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            final PosDTO pos,
                                             @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
-        final Page<PosVO> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+        final Page<Pos> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> posRepository.listPosWithAddressByCondition(pos));
         return Results.success(posList);
     }
@@ -61,16 +62,15 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{posId}")
-    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                      @PathVariable final Long posId) {
-        final Pos pos = posService.getPosWithPropertiesInRedisByPosId(organizationId,posId);
-        return Results.success(pos);
+    public ResponseEntity<PosVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                        @PathVariable final Long posId) {
+        return Results.success(posService.getPosWithPropertiesInRedisByPosId(organizationId,posId));
     }
 
     @ApiOperation(value = "创建服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
+    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosDTO pos) {
         pos.setTenantId(organizationId);
         validObject(pos);
         if (!UniqueHelper.valid(pos)) {
@@ -83,7 +83,7 @@ public class PosController extends BaseController {
     @ApiOperation(value = "修改服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosDTO pos) {
         SecurityTokenHelper.validToken(pos, true, true);
         this.validObject(pos);
         pos.setTenantId(organizationId);

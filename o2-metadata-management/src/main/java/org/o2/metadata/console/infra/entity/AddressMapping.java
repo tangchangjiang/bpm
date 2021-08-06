@@ -47,7 +47,7 @@ public class AddressMapping extends AuditDomain {
         if (this.addressMappingId != null) {
             return addressMappingRepository.existsWithPrimaryKey(this);
         } else {
-            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.catalogCode,this.regionId,this.tenantId);
+            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.catalogCode,null,this.tenantId);
             return !addressMappings.isEmpty();
         }
     }
@@ -61,16 +61,14 @@ public class AddressMapping extends AuditDomain {
     @GeneratedValue
     private Long addressMappingId;
 
-    @ApiModelProperty(value = "region 表id关联")
-    private Long regionId;
+    @ApiModelProperty(value = "region 关联")
+    private String regionCode;
 
     @ApiModelProperty(value = "地址类型.值集:O2MD.ADDRESS_TYPE")
     @LovValue(lovCode = O2CoreConstants.AddressType.LOV_CODE)
     private String addressTypeCode;
 
-    @ApiModelProperty(value = "版本ID")
-    @Transient
-    private Long catalogId;
+
 
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;
@@ -81,14 +79,17 @@ public class AddressMapping extends AuditDomain {
     @ApiModelProperty(value = "是否启用")
     private Integer activeFlag;
 
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
+    @ApiModelProperty(value = "版本ID")
     @Transient
-    @ApiModelProperty(value = "查询条件 内部区域代码")
-    private String regionCode;
-
+    private Long catalogId;
     @Transient
     @ApiModelProperty(value = "查询条件 内部区域名称")
     private String regionName;
@@ -101,8 +102,6 @@ public class AddressMapping extends AuditDomain {
     @ApiModelProperty(value = "地址类型含义", hidden = true)
     private String addressTypeMeaning;
 
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
 
     /**
      * 显示region的层级目录结构，只在详情里展示
