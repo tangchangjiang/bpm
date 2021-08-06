@@ -27,6 +27,7 @@ public class O2MetadataManagementClient {
     private final CarrierRemoteService carrierRemoteService;
     private final PosRemoteService posRemoteService;
     private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
+    private final OnlineShopRemoteService onlineShopRemoteService;
     private final AddressMappingRemoteService addressMappingRemoteService;
 
 
@@ -36,7 +37,8 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, AddressMappingRemoteService addressMappingRemoteService) {
+                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, OnlineShopRemoteService onlineShopRemoteService,
+                                      AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -46,6 +48,7 @@ public class O2MetadataManagementClient {
         this.carrierRemoteService = carrierRemoteService;
         this.posRemoteService = posRemoteService;
         this.platformInfMappingRemoteService = platformInfMappingRemoteService;
+        this.onlineShopRemoteService = onlineShopRemoteService;
         this.addressMappingRemoteService = addressMappingRemoteService;
     }
 
@@ -243,6 +246,17 @@ public class O2MetadataManagementClient {
     public List<PlatformInfMappingVO> getPlatformInfMapping(Long organizationId,
                                                       List<PlatformInfMappingDTO> platformInfMapping) {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
+    }
+
+    /**
+     * 根据平台code和网店名称查询网店code
+     * @param organizationId 租户ID
+     * @param platformCode 平台code
+     * @param shopName 网店
+     * @return List<OnlineShopVO> 结果
+     */
+    public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>() {});
     }
 
     /**
