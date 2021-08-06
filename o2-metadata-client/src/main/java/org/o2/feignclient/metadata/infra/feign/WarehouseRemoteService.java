@@ -27,10 +27,10 @@ public interface WarehouseRemoteService {
     /**
      * 保存
      *
-     * @param organizationId
-     * @param warehouseCode
-     * @param hashMap
-     * @return
+     * @param organizationId  租户ID
+     * @param warehouseCode 仓库
+     * @param hashMap  map
+     * @return string
      */
     @PostMapping({"/{organizationId}/internal/saveWarehouse"})
     ResponseEntity<String> saveWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
@@ -39,9 +39,9 @@ public interface WarehouseRemoteService {
 
     /**
      * 更新
-     * @param organizationId
-     * @param warehouseCode
-     * @param hashMap
+     * @param organizationId 租户ID
+     * @param warehouseCode 仓库编码
+     * @param hashMap map
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/internal/updateWarehouse"})
@@ -60,5 +60,15 @@ public interface WarehouseRemoteService {
     @GetMapping("/{organizationId}/internal/list")
     ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCodes") List<String> warehouseCodes);
-
+    /**
+     * 仓库快递配送接单量增量更新
+     * @param organizationId 租户ID
+     * @param warehouseCode 仓库编码
+     * @param increment 增长量
+     * @return ResponseEntity
+     */
+    @PostMapping({"/{organizationId}/internal/updateExpressValue"})
+    ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+                                              @RequestParam(value = "warehouseCode") String warehouseCode,
+                                              @RequestParam(value = "increment") String increment);
 }

@@ -36,5 +36,11 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> updateExpressValue(Long organizationId, String warehouseCode, String increment) {
+        logger.error("Error updateExpressValue, params[tenantId = {}, warehouseCodes = {}, increment = {}]", organizationId, warehouseCode, increment);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 
 }
