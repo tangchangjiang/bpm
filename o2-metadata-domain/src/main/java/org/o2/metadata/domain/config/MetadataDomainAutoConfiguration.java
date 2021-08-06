@@ -19,7 +19,7 @@ public class MetadataDomainAutoConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        MessageAccessor.addBasenames("classpath:messages/o2md_core");
+        MessageAccessor.addBasenames("classpath:messages/o2md_domain");
     }
 }
 
