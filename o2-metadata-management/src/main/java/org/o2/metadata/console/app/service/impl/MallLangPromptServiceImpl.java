@@ -158,6 +158,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             staticResourceRepository.insertSelective(resource);
         }else{
             resource.setResourceId(staticResource.get(0).getResourceId());
+            resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
             staticResourceRepository.updateByPrimaryKeySelective(resource);
         }
         mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
@@ -174,8 +175,8 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         final String storageCode = fileStorageProperties.getStorageCode();
         final String jsonFile = mallLangPrompt.getPromptDetail();
         // 上传路径全小写
-        String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                fileStorageProperties.getStoragePath(), MetadataConstants.MallLangPromptConstants.NAME,mallLangPrompt.getMallType(),
+        String directory = fileStorageProperties.getStoragePath() + Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
+                 MetadataConstants.MallLangPromptConstants.NAME,mallLangPrompt.getMallType(),
                 mallLangPrompt.getLang()).toLowerCase();
         // 下载
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
@@ -201,7 +202,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         resource.setResourceCode(MetadataConstants.Constants.MODE_NAME + "_" + MetadataConstants.MallLangPromptConstants.RESOURCE_CODE + "_" + fileName);
         resource.setSourceModuleCode(MetadataConstants.Constants.MODE_NAME);
         resource.setResourceUrl(relativeUrl);
-        resource.setDescription(MessageAccessor.getMessage(MetadataConstants.MallLangPromptConstants.DESCRIPTION).desc());
+        resource.setDescription(MessageAccessor.getMessage(MetadataConstants.MallLangPromptConstants.DESCRIPTION).getDesc());
         resource.setLang(mallLangPrompt.getLang());
         resource.setTenantId(tenantId);
         return true;
