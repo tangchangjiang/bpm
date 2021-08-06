@@ -3,7 +3,6 @@ package org.o2.metadata.console.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * description 平台匹配查询条件
@@ -22,6 +21,5 @@ public class PlatformInfMappingDTO {
     @NotBlank
     private String platformInfCode;
     @ApiModelProperty(value = "租户ID", required = true)
-    @NotNull
     private Long tenantId;
 }
