@@ -61,7 +61,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @NotNull
     private String transportTypeCode;
     @ApiModelProperty(value = "目的地")
-    private Long regionId;
+    private String regionCode;
     @ApiModelProperty(value = "首件/千克设置")
     private BigDecimal firstPieceWeight;
     @ApiModelProperty(value = "首件/千克价格")
@@ -115,12 +115,12 @@ public class FreightTemplateDetail extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     public void defaultDetailValidate() {
-        Assert.isNull(this.regionId, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
+        Assert.isNull(this.regionCode, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
     public void regionDetailValidate() {
-        Assert.notNull(this.regionId, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
+        Assert.notNull(this.regionCode, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
@@ -136,7 +136,7 @@ public class FreightTemplateDetail extends AuditDomain {
         if (!isRegion) { return false;}
         final Sqls sqls = Sqls.custom();
         sqls.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, this.getTemplateId());
-            sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_ID, this.getRegionId());
+            sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_ID, this.getRegionCode());
 
         // 更新操作时，验证更新后的数据不与数据库中其他行重复
         if (this.getTemplateDetailId() != null) {

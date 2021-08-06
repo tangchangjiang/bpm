@@ -29,7 +29,8 @@ public enum RegionConstants {
         NOT_IN_REGION_CODE("notInRegionCodes",""),
         PARENT_REGION_IDS("parentRegionIds",""),
         ENABLED_FLAG("enabledFlag",""),
-        COUNTRY_CODE("countryCode","");
+        COUNTRY_CODE("countryCode",""),
+        TENANT_ID("tenantId","");
 
 
         private String code;

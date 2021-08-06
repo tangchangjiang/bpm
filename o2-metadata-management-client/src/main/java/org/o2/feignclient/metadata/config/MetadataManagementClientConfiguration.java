@@ -23,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
                 CatalogVersionRemoteService.class,
                 CarrierRemoteService.class,
                 PosRemoteService.class,
+                PlatformInfMappingRemoteService.class,
+                OnlineShopRemoteService.class,
                 AddressMappingRemoteService.class
         }
 )
@@ -78,6 +80,19 @@ public class MetadataManagementClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public PlatformInfMappingRemoteServiceImpl platformInfMappingRemoteServiceFallback() {
+        return new PlatformInfMappingRemoteServiceImpl();
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OnlineShopRemoteServiceImpl onlineShopRemoteServiceFallback() {
+        return new OnlineShopRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public AddressMappingRemoteServiceImpl addressMappingRemoteServiceFallback() {
         return new AddressMappingRemoteServiceImpl();
     }
@@ -93,6 +108,7 @@ public class MetadataManagementClientConfiguration {
                                                                  CarrierRemoteService carrierRemoteService,
                                                                  PosRemoteService posRemoteService,
                                                                  PlatformInfMappingRemoteService platformInfMappingRemoteService,
+                                                                 OnlineShopRemoteService onlineShopRemoteService,
                                                                  AddressMappingRemoteService addressMappingService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
@@ -101,6 +117,9 @@ public class MetadataManagementClientConfiguration {
                 staticResourceRemoteService,
                 catalogVersionRemoteService,
                 carrierRemoteService,
-                posRemoteService, platformInfMappingRemoteService, addressMappingService);
+                posRemoteService,
+                platformInfMappingRemoteService,
+                onlineShopRemoteService,
+                addressMappingService);
     }
 }
