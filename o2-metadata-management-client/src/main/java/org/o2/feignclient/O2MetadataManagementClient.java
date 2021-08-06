@@ -271,4 +271,16 @@ public class O2MetadataManagementClient {
         });
     }
 
+    /**
+     * 仓库快递配送接单量增量更新
+     *
+     * @param organizationId 租户ID
+     * @param warehouseCode  仓库编码
+     * @param increment      快递配送接单量增量
+     */
+    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
+        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
+    }
+
+
 }
