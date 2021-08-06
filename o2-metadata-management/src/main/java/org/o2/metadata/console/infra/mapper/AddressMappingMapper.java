@@ -65,4 +65,18 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     List<RegionTreeChild> listAddressMapping(@Param(value = "regionCodes")List<String> regionCodes,
                                              @Param(value = "type")String type,
                                              @Param(value = "tenantId") Long tenantId);
+
+
+    /**
+     * 内部方法 批量查询地址匹配
+     * @param externalCodes 外部编码
+     * @param addressTypeCodes 类型
+     * @param externalNames 外部名称
+     * @param tenantId 租户ID
+     * @return  list
+     */
+    List<AddressMapping> listAddressMappings(@Param("externalCodes") List<String> externalCodes,
+                                             @Param("addressTypeCodes") List<String> addressTypeCodes,
+                                             @Param("externalNames") List<String> externalNames,
+                                             @Param("tenantId") Long tenantId);
 }

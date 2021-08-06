@@ -27,6 +27,7 @@ public class O2MetadataManagementClient {
     private final CarrierRemoteService carrierRemoteService;
     private final PosRemoteService posRemoteService;
     private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
+    private final AddressMappingRemoteService addressMappingRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
@@ -35,7 +36,7 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService) {
+                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -45,6 +46,7 @@ public class O2MetadataManagementClient {
         this.carrierRemoteService = carrierRemoteService;
         this.posRemoteService = posRemoteService;
         this.platformInfMappingRemoteService = platformInfMappingRemoteService;
+        this.addressMappingRemoteService = addressMappingRemoteService;
     }
 
     /**
@@ -241,6 +243,18 @@ public class O2MetadataManagementClient {
     public List<PlatformInfMappingVO> getPlatformInfMapping(Long organizationId,
                                                       List<PlatformInfMappingDTO> platformInfMapping) {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
+    }
+
+    /**
+     * 批量查询承运商
+     *
+     * @param addressMappingQueryIntDTOList 地址匹配
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryIntDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+        });
     }
 
 }

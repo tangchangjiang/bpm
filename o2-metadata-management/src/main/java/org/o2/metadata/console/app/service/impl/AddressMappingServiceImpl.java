@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
@@ -117,6 +118,19 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             addressMapping.getRegionPathNames().add(region.getCountryName());
         }
         return AddressMappingConverter.poToVoObject(addressMapping);
+    }
+
+    @Override
+    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryInts, Long tenantId) {
+        List<String> externalCodes = new ArrayList<>();
+        List<String> addressTypeCodes = new ArrayList<>();
+        List<String> externalNames = new ArrayList<>();
+        for (AddressMappingQueryIntDTO addressMappingQueryIntDTO : addressMappingQueryInts) {
+            externalCodes.add(addressMappingQueryIntDTO.getExternalCode());
+            externalNames.add(addressMappingQueryIntDTO.getExternalName());
+            addressTypeCodes.add(addressMappingQueryIntDTO.getAddressTypeCode());
+        }
+        return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
     }
 
     /**

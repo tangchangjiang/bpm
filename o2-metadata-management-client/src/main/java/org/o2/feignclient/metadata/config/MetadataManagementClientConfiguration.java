@@ -22,7 +22,8 @@ import org.springframework.context.annotation.Configuration;
                 FreightRemoteService.class,
                 CatalogVersionRemoteService.class,
                 CarrierRemoteService.class,
-                PosRemoteService.class
+                PosRemoteService.class,
+                AddressMappingRemoteService.class
         }
 )
 @ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
@@ -77,6 +78,12 @@ public class MetadataManagementClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public AddressMappingRemoteServiceImpl addressMappingRemoteServiceFallback() {
+        return new AddressMappingRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                                                  WarehouseRemoteService warehouseRemoteService,
                                                                  OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
@@ -85,7 +92,8 @@ public class MetadataManagementClientConfiguration {
                                                                  CatalogVersionRemoteService catalogVersionRemoteService,
                                                                  CarrierRemoteService carrierRemoteService,
                                                                  PosRemoteService posRemoteService,
-                                                                 PlatformInfMappingRemoteService platformInfMappingRemoteService) {
+                                                                 PlatformInfMappingRemoteService platformInfMappingRemoteService,
+                                                                 AddressMappingRemoteService addressMappingService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
                 onlineShopRelWarehouseRemoteService,
@@ -93,6 +101,6 @@ public class MetadataManagementClientConfiguration {
                 staticResourceRemoteService,
                 catalogVersionRemoteService,
                 carrierRemoteService,
-                posRemoteService, platformInfMappingRemoteService);
+                posRemoteService, platformInfMappingRemoteService, addressMappingService);
     }
 }

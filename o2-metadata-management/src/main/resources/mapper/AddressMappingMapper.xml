@@ -234,4 +234,41 @@
             </choose>
         </where>
     </select>
+    <select id="listAddressMappings" resultType="org.o2.metadata.console.infra.entity.AddressMapping">
+        SELECT
+        ad.region_code,
+        ad.address_type_code,
+        ad.external_code,
+        ad.external_name,
+        FROM
+        o2md_address_mapping ad
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND ad.tenant_id = #{addressMapping.tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+        <if test="externalCodes!=null and externalCodes.size > 0">
+        and ad.external_code in
+            <foreach collection="externalCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+        <if test="addressTypeCodes!=null and addressTypeCodes.size > 0">
+            and ad.address_type_code in
+            <foreach collection="addressTypeCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
+        <if test="externalNames!=null and externalNames.size > 0">
+            and ad.external_name in
+            <foreach collection="externalNames" item="name" open="(" separator="," close=")">
+                #{name}
+            </foreach>
+        </if>
+
+    </select>
 </mapper>
