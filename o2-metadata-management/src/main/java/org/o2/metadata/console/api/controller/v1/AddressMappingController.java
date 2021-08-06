@@ -12,7 +12,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.dto.AddressMappingDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
@@ -61,9 +61,9 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
     public ResponseEntity<List<RegionTreeChildVO>> listAllAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                          final AddressMappingDTO addressMappingDTO,
+                                                                          final AddressMappingQueryDTO addressMappingQueryDTO,
                                                                           final String countryCode) {
-        addressMappingDTO.setTenantId(organizationId);
+        addressMappingQueryDTO.setTenantId(organizationId);
         if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
@@ -76,14 +76,14 @@ public class AddressMappingController extends BaseController {
                 treeChildVO.setRegionCode(country.getCountryCode());
                 treeChildVO.setRegionCode(country.getCountryCode());
                 treeChildVO.setRegionName(country.getCountryName());
-                treeChildVO.setChildren(addressMappingService.findAddressMappingGroupByCondition(addressMappingDTO, country.getCountryCode()));
+                treeChildVO.setChildren(addressMappingService.findAddressMappingGroupByCondition(addressMappingQueryDTO, country.getCountryCode()));
                 if (!treeChildVO.getChildren().isEmpty()) {
                     results.add(treeChildVO);
                 }
             }
             return Results.success(results);
         } else {
-            return Results.success(addressMappingService.findAddressMappingGroupByCondition(addressMappingDTO, countryCode));
+            return Results.success(addressMappingService.findAddressMappingGroupByCondition(addressMappingQueryDTO, countryCode));
         }
 
     }

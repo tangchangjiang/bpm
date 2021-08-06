@@ -27,7 +27,7 @@ public class O2MetadataManagementClient {
     private final CarrierRemoteService carrierRemoteService;
     private final PosRemoteService posRemoteService;
     private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
-    private final OnlineShopRemoteService onlineShopRemoteService;
+    private final AddressMappingRemoteService addressMappingRemoteService;
 
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
@@ -36,7 +36,7 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, OnlineShopRemoteService onlineShopRemoteService) {
+                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
@@ -46,7 +46,7 @@ public class O2MetadataManagementClient {
         this.carrierRemoteService = carrierRemoteService;
         this.posRemoteService = posRemoteService;
         this.platformInfMappingRemoteService = platformInfMappingRemoteService;
-        this.onlineShopRemoteService = onlineShopRemoteService;
+        this.addressMappingRemoteService = addressMappingRemoteService;
     }
 
     /**
@@ -246,14 +246,15 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 根据平台code和网店名称查询网店code
-     * @param organizationId 租户ID
-     * @param platformCode 平台code
-     * @param shopName 网店
-     * @return List<OnlineShopVO> 结果
+     * 批量查询承运商
+     *
+     * @param addressMappingQueryIntDTOList 地址匹配
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
      */
-   public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>() {});
-   }
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryIntDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+        });
+    }
 
 }

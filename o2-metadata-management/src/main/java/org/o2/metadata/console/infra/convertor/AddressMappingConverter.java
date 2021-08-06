@@ -3,6 +3,9 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * 地址匹配
@@ -47,5 +50,22 @@ public class AddressMappingConverter {
         addressMappingVO.set_token(addressMapping.get_token());
         return addressMappingVO;
     }
+
+    /**
+     * PO 转 VO
+     * @param addressMappings 地址匹配
+     * @return  list
+     */
+    public static List<AddressMappingVO> poToVoListObjects(List<AddressMapping> addressMappings) {
+        List<AddressMappingVO> addressMappingVOList = new ArrayList<>();
+        if (addressMappings == null) {
+            return addressMappingVOList;
+        }
+        for (AddressMapping addressMapping : addressMappings) {
+            addressMappingVOList.add(poToVoObject(addressMapping));
+        }
+        return addressMappingVOList;
+    }
+
 
 }
