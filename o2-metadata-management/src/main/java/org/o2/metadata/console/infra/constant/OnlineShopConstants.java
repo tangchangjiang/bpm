@@ -23,4 +23,21 @@ public interface OnlineShopConstants {
             add(FIELD_WAREHOUSE_CODE);
         }};
     }
+
+    interface  Redis {
+        /**
+         *  o2md:onlineShop:[tenantId]:[shopCode]
+         */
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:%s:{%d}";
+        
+        /**
+         *  获取key
+         * @param tenantId 租户ID
+         * @param shopCode 网店编码
+         * @return key
+         */
+        static String getOnlineShopKey(Long tenantId, String shopCode) {
+            return String.format(ONLINE_SHOP_KEY, tenantId, shopCode);
+        }
+    }
 }
