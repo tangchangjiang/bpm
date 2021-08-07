@@ -1,10 +1,15 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -21,9 +26,47 @@ import java.util.Map;
 @Service
 public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeService {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
+    private final RegionRepository regionRepository;
 
-    public CarrierDeliveryRangeServiceImpl(final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository) {
+    public CarrierDeliveryRangeServiceImpl(final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
+                                           RegionRepository regionRepository) {
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
+        this.regionRepository = regionRepository;
+    }
+
+    @Override
+    public List<CarrierDeliveryRange> listCarrierDeliveryRanges(CarrierDeliveryRange carrierDeliveryRange) {
+        List<CarrierDeliveryRange> list =  carrierDeliveryRangeRepository.list(carrierDeliveryRange);
+        if (list.isEmpty()) {
+            return list;
+        }
+        List<String> regionCodes = new ArrayList<>();
+        for (CarrierDeliveryRange deliveryRange : list) {
+            regionCodes.add(deliveryRange.getRegionCode());
+            regionCodes.add(deliveryRange.getCityCode());
+            regionCodes.add(deliveryRange.getDistrictCode());
+
+        }
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setRegionCodes(regionCodes);
+        dto.setTenantId(carrierDeliveryRange.getTenantId());
+        List<Region> regionList = regionRepository.listRegionLov(dto,carrierDeliveryRange.getTenantId());
+        if (regionList.isEmpty()) {
+            return list;
+        }
+        Map<String,String> map = Maps.newHashMapWithExpectedSize(regionCodes.size());
+        for (Region region : regionList) {
+            map.put(region.getRegionCode(),region.getRegionName());
+        }
+        map.put(regionList.get(0).getCountryCode(),regionList.get(0).getCountryName());
+        for (CarrierDeliveryRange bean : list) {
+            bean.setRegionName(map.get(bean.getRegionCode()));
+            bean.setCityName(map.get(bean.getCityCode()));
+            bean.setDistrictName(map.get(bean.getDistrictCode()));
+            bean.setCountryName(map.get(bean.getCountryCode()));
+
+        }
+        return list;
     }
 
     @Override
@@ -38,8 +81,8 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
             // 数据库查重
             Assert.isTrue(!carrierDeliveryRange.exist(carrierDeliveryRangeRepository), "该省市区范围内已有承运商");
             // list查重
-            final String key = carrierDeliveryRange.getRegionId() + "-"
-                    + carrierDeliveryRange.getCityId() + "-" + carrierDeliveryRange.getDistrictId();
+            final String key = carrierDeliveryRange.getRegionCode() + "-"
+                    + carrierDeliveryRange.getCityCode() + "-" + carrierDeliveryRange.getDistrictCode();
             Assert.isTrue(map.get(key) == null, "该省市区范围内已有承运商");
             if (carrierDeliveryRange.getDeliveryRangeId() != null) {
                 SecurityTokenHelper.validToken(carrierDeliveryRange);
@@ -57,5 +100,14 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
             resultList.addAll(carrierDeliveryRangeRepository.batchInsertSelective(insertList));
         }
         return resultList;
+    }
+
+    @Override
+    public CarrierDeliveryRange carrierDeliveryRangeDetail(Long deliveryRangeId, Long tenantId) {
+        CarrierDeliveryRange query = new CarrierDeliveryRange();
+        query.setDeliveryRangeId(deliveryRangeId);
+        query.setTenantId(tenantId);
+        List<CarrierDeliveryRange> list = this.listCarrierDeliveryRanges(query);
+        return list.size() > 0 ? list.get(0) : null;
     }
 }
