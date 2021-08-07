@@ -43,9 +43,10 @@ public interface FreightTemplateService {
      * 批量删除运费模板和运费模板明细
      *
      * @param freightTemplateList 待删除的运费模板列表
+     * @param tenantId 租户ID
      * @return boolean  是否删除成功
      */
-    Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList);
+    Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList, Long tenantId);
 
     /**
      * 新增运费模板
