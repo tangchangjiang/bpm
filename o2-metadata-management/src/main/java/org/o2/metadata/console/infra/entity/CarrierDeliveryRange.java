@@ -36,10 +36,10 @@ import javax.validation.constraints.NotNull;
 public class CarrierDeliveryRange extends AuditDomain {
 
     public static final String FIELD_DELIVERY_RANGE_ID = "deliveryRangeId";
-    public static final String FIELD_COUNTRY_ID = "countryId";
-    public static final String FIELD_REGION_ID = "regionId";
-    public static final String FIELD_CITY_ID = "cityId";
-    public static final String FIELD_DISTRICT_ID = "districtId";
+    public static final String FIELD_COUNTRY_CODE = "countryCode";
+    public static final String FIELD_REGION_CODE = "regionCode";
+    public static final String FIELD_CITY_CODE = "cityCode";
+    public static final String FIELD_DISTRICT_CODE = "districtCode";
     public static final String FIELD_CARRIER_ID = "carrierId";
     public static final String FIELD_TENANT_ID = "tenantId";
 
@@ -48,7 +48,7 @@ public class CarrierDeliveryRange extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     public boolean exist(final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository) {
-        final Sqls sqls = Sqls.custom().andEqualTo(CarrierDeliveryRange.FIELD_REGION_ID, this.getRegionId());
+        final Sqls sqls = Sqls.custom().andEqualTo(CarrierDeliveryRange.FIELD_REGION_CODE, this.getRegionCode());
         if (this.getDeliveryRangeId() != null) {
             sqls.andNotEqualTo(CarrierDeliveryRange.FIELD_DELIVERY_RANGE_ID, this.getDeliveryRangeId());
         }
@@ -56,26 +56,26 @@ public class CarrierDeliveryRange extends AuditDomain {
             sqls.andEqualTo(CarrierDeliveryRange.FIELD_CARRIER_ID, this.getCarrierId());
         }
 
-        if (this.getCountryId() != null) {
-            sqls.andEqualTo(CarrierDeliveryRange.FIELD_COUNTRY_ID, this.getCountryId());
+        if (this.getCountryCode() != null) {
+            sqls.andEqualTo(CarrierDeliveryRange.FIELD_COUNTRY_CODE, this.getCountryCode());
         } else {
-            sqls.andIsNull(CarrierDeliveryRange.FIELD_COUNTRY_ID);
+            sqls.andIsNull(CarrierDeliveryRange.FIELD_COUNTRY_CODE);
         }
-        if (this.getRegionId() != null) {
-            sqls.andEqualTo(CarrierDeliveryRange.FIELD_REGION_ID, this.getRegionId());
+        if (this.getRegionCode() != null) {
+            sqls.andEqualTo(CarrierDeliveryRange.FIELD_REGION_CODE, this.getRegionCode());
         } else {
-            sqls.andIsNull(CarrierDeliveryRange.FIELD_REGION_ID);
+            sqls.andIsNull(CarrierDeliveryRange.FIELD_REGION_CODE);
         }
 
-        if (this.getCityId() != null) {
-            sqls.andEqualTo(CarrierDeliveryRange.FIELD_CITY_ID, this.getCityId());
+        if (this.getCityCode() != null) {
+            sqls.andEqualTo(CarrierDeliveryRange.FIELD_CITY_CODE, this.getCityCode());
         } else {
-            sqls.andIsNull(CarrierDeliveryRange.FIELD_CITY_ID);
+            sqls.andIsNull(CarrierDeliveryRange.FIELD_CITY_CODE);
         }
-        if (this.getDistrictId() != null) {
-            sqls.andEqualTo(CarrierDeliveryRange.FIELD_DISTRICT_ID, this.getDistrictId());
+        if (this.getDistrictCode() != null) {
+            sqls.andEqualTo(CarrierDeliveryRange.FIELD_DISTRICT_CODE, this.getDistrictCode());
         } else {
-            sqls.andIsNull(CarrierDeliveryRange.FIELD_DISTRICT_ID);
+            sqls.andIsNull(CarrierDeliveryRange.FIELD_DISTRICT_CODE);
         }
         return carrierDeliveryRangeRepository.selectCountByCondition(
                 Condition.builder(CarrierDeliveryRange.class).andWhere(sqls).build()) > 0;
@@ -84,8 +84,8 @@ public class CarrierDeliveryRange extends AuditDomain {
     public void baseValidate() {
         Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商不能为空");
-        Assert.notNull(this.countryId, "国家不能为空");
-        Assert.notNull(this.regionId, "省不能为空");
+        Assert.notNull(this.countryCode, "国家不能为空");
+        Assert.notNull(this.regionCode, "省不能为空");
 
     }
     //
@@ -99,17 +99,17 @@ public class CarrierDeliveryRange extends AuditDomain {
 
     @ApiModelProperty(value = "国家,id")
     @NotNull
-    private Long countryId;
+    private String countryCode;
 
     @ApiModelProperty(value = "省,id")
     @NotNull
-    private Long regionId;
+    private String regionCode;
 
     @ApiModelProperty(value = "市,id")
-    private Long cityId;
+    private String cityCode;
 
     @ApiModelProperty(value = "区,id")
-    private Long districtId;
+    private String districtCode;
 
     @ApiModelProperty(value = "承运商id")
     @NotNull

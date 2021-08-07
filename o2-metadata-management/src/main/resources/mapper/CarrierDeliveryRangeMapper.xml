@@ -23,36 +23,14 @@
         rel.carrier_id,
         rel.OBJECT_VERSION_NUMBER,
         c.carrier_name,
-        rel.country_id,
-        (
-        SELECT
-        t.country_name
-        FROM
-        hpfm_country t
-        WHERE
-        t.country_id = rel.country_id and t.tenant_id = #{tenantId}
-        ) AS country_name,
-        r.region_name,
-        (
-        SELECT
-        t.region_name
-        FROM
-        hpfm_region t
-        WHERE
-        t.region_id = rel.city_id and t.tenant_id = #{tenantId}
-        ) AS city_name,
-        (
-        SELECT
-        t.region_name
-        FROM
-        hpfm_region t
-        WHERE
-        t.region_id = rel.district_id and t.tenant_id = #{tenantId}
-        ) AS district_name
+        rel.city_code,
+        rel.region_code,
+        rel.district_code,
+        rel.country_code
+
         FROM
         o2md_carrier_delivery_range rel
         JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id  and c.tenant_id = #{tenantId}
-        JOIN hpfm_region r on rel.region_id = r.region_id and r.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -69,6 +47,5 @@
                 and rel.carrier_id = #{carrierId}
             </if>
         </where>
-        order by r.region_code
     </select>
 </mapper>
