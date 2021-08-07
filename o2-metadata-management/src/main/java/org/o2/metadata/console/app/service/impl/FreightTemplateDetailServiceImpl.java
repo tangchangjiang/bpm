@@ -1,9 +1,9 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.collect.Maps;
-import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
@@ -13,12 +13,14 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 运费模板明细默认实现
@@ -62,7 +64,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         if (defaultDetail != null) {
             List<FreightTemplateDetail> otherDetailtList = freightTemplateDetailRepository.queryOtherDefaultFreightTemplateDetail(defaultDetail);
             otherDetailtList.forEach(item -> {
-                item.setDefaultFlag(Integer.valueOf(0));
+                item.setDefaultFlag(0);
             });
             freightTemplateDetailRepository.batchUpdateByPrimaryKey(otherDetailtList);
         }
@@ -96,28 +98,24 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     @Override
     public List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId) {
         List<FreightTemplateDetail> details = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
-        List<String> regionCodes = new ArrayList<>();
+        Map<String,Region>  map = getRegionMap(details);
         for (FreightTemplateDetail detail : details) {
-            regionCodes.add(detail.getRegionCode());
-        }
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
-        dto.setRegionCodes(regionCodes);
-        Long tenantId =  details.get(0).getTenantId();
-        dto.setTenantId(tenantId);
-        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
-        Map<String,String> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
-        for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(), region.getRegionName());
-        }
-        for (FreightTemplateDetail detail : details) {
-            detail.setRegionName(regionMap.get(detail.getRegionCode()));
+            Region region = map.get(detail.getRegionCode());
+            detail.setRegionName(region.getRegionName());
         }
         return details;
     }
 
     @Override
     public List<FreightTemplateDetail> queryRegionFreightTemplateDetail(Long templateId) {
-        return null;
+        List<FreightTemplateDetail> details = freightTemplateDetailRepository.queryRegionFreightTemplateDetail(templateId);
+        Map<String,Region>  map = getRegionMap(details);
+        for (FreightTemplateDetail detail : details) {
+            Region region = map.get(detail.getRegionCode());
+            detail.setRegionName(region.getRegionName());
+            detail.setParentRegionName(region.getParentRegionName());
+        }
+        return details;
     }
 
     /**
@@ -215,16 +213,12 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         int defaultCount = 0;
         FreightTemplateDetail defaultFreightTemplateDetail = null;
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
-            if (detail.getDefaultFlag() != null && detail.getDefaultFlag().intValue() == 1) {
+            if (detail.getDefaultFlag() != null && detail.getDefaultFlag() == 1) {
                 defaultFreightTemplateDetail = detail;
             }
         }
 
-        if (defaultCount > 1) {
-            throw new CommonException(FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
-        } else {
-            return defaultFreightTemplateDetail;
-        }
+        return defaultFreightTemplateDetail;
     }
 
     /**
@@ -246,4 +240,29 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         List<FreightDetailBO> freightDetailList = convertToFreightDetail(freightTemplateDetailList);
         freightCacheService.deleteFreightDetails(freightDetailList);
     }
+
+    /**
+     *  地区分组
+     * @date 2021-08-07
+     * @param freightTemplateDetails 运费模版详情
+     * @return  map
+     */
+    private Map<String, Region> getRegionMap(List<FreightTemplateDetail> freightTemplateDetails) {
+        List<String> regionCodes = new ArrayList<>();
+        for (FreightTemplateDetail detail : freightTemplateDetails) {
+            regionCodes.add(detail.getRegionCode());
+        }
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setRegionCodes(regionCodes);
+        Long tenantId = freightTemplateDetails.get(0).getTenantId();
+        dto.setTenantId(tenantId);
+        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
+        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        for (Region region : regionList) {
+            regionMap.put(region.getRegionCode(), region);
+
+        }
+        return regionMap;
+    }
+
 }

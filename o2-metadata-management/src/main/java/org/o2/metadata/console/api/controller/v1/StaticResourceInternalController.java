@@ -1,4 +1,4 @@
-package org.o2.metadata.console.api.controller.v1.feign;
+package org.o2.metadata.console.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
