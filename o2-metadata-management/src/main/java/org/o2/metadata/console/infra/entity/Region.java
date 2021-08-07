@@ -30,6 +30,8 @@ public class Region  {
 
     private String parentRegionCode;
 
+    private String parentRegionName;
+
     @ApiModelProperty("等级路径")
     private String levelPath;
 
