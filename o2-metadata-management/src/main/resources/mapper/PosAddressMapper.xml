@@ -15,10 +15,6 @@
         <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
         <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
         <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR"/>
-        <result column="country" property="country" jdbcType="VARCHAR"/>
-        <result column="region" property="region" jdbcType="VARCHAR"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="district" property="district" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -38,39 +34,7 @@
             da.postcode,
             da.contact,
             da.mobile_phone,
-            da.OBJECT_VERSION_NUMBER,
-            (
-                SELECT
-                    t.country_name
-                FROM
-                    hpfm_country t
-                WHERE
-                    t.country_code = da.country_code and t.tenant_id = #{tenantId}
-            ) AS country,
-            (
-                SELECT
-                    t.region_name
-                FROM
-                    hpfm_region t
-                WHERE
-                    t.region_code = da.region_code and t.tenant_id = #{tenantId}
-            ) AS region,
-            (
-                SELECT
-                    t.region_name
-                FROM
-                    hpfm_region t
-                WHERE
-                    t.region_code = da.city_code and t.tenant_id = #{tenantId}
-            ) AS city,
-            (
-                SELECT
-                    t.region_name
-                FROM
-                    hpfm_region t
-                WHERE
-                    t.region_code = da.district_code and t.tenant_id = #{tenantId}
-            ) AS district
+            da.OBJECT_VERSION_NUMBER
         FROM
             o2md_pos_address da
         WHERE 1=1
