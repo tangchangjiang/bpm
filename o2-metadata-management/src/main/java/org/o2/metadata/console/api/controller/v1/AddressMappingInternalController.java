@@ -43,11 +43,12 @@ public class AddressMappingInternalController {
     @PostMapping("/list")
     public ResponseEntity<Map<String, AddressMappingVO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                              @RequestBody List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList){
+        Map<String,AddressMappingVO> maps = new HashMap<>(16);
         List<AddressMappingVO> list =  addressMappingService.listAddressMappings(addressMappingQueryIntDTOList,organizationId);
         if (list.isEmpty()) {
-            return Results.success(new HashMap<>(16));
+            return Results.success(maps);
         }
-        Map<String, AddressMappingVO> maps = list.stream().collect(Collectors.toMap(AddressMappingVO::getAddressTypeCode, Function.identity(), (v1, v2)->v1));
+        maps = list.stream().collect(Collectors.toMap(AddressMappingVO::getAddressTypeCode, Function.identity(), (v1, v2)->v1));
         return  Results.success(maps);
     }
 
