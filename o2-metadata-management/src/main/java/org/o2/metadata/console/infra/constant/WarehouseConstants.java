@@ -37,6 +37,7 @@ public interface WarehouseConstants {
         String PICKUP_FLAG = "pickedUpFlag";
         String EXPRESSED_FLAG = "expressedFlag";
         String SCORE = "score";
+        String WAREHOUSE_NAME = "warehouseName";
         String ACTIVE_DATE_FROM = "activedDateFrom";
         String ACTIVE_DATE_TO = "activedDateTo";
         String INV_ORGANIZATION_CODE = "invOrganizationCode";
