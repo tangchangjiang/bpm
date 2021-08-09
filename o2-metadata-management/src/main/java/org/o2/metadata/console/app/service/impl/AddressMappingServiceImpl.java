@@ -83,6 +83,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             regionTreeChild.setRegionName(region.getRegionName());
             regionTreeChild.setLevelPath(region.getLevelPath());
             regionTreeChild.setParentRegionCode(region.getParentRegionCode());
+            regionTreeChild.setRegionId(region.getRegionId());
         }
         //根据parent id 分组
         final Map<String, List<RegionTreeChild>> collect = new HashMap<>();
@@ -193,6 +194,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             regionTreeChild.setRegionName(parentRegion.getRegionName());
             regionTreeChild.setRegionId(parentRegion.getRegionId());
             regionTreeChild.setLevelPath(parentRegion.getLevelPath());
+            regionTreeChild.setRegionId(parentRegion.getRegionId());
             result.add(regionTreeChild);
         }
         List<RegionTreeChild> queryList = addressMappingMapper.listAddressMapping(regionCodes,type,tenantId);
