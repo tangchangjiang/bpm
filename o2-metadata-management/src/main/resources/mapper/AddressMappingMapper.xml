@@ -166,13 +166,13 @@
         ad.region_code,
         ad.address_type_code,
         ad.external_code,
-        ad.external_name,
+        ad.external_name
         FROM
         o2md_address_mapping ad
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
-                AND ad.tenant_id = #{addressMapping.tenantId}
+                AND ad.tenant_id = #{tenantId}
             </when>
             <otherwise>
                 AND 1 =0

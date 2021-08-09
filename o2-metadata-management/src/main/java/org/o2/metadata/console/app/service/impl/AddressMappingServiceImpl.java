@@ -127,9 +127,21 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         List<String> addressTypeCodes = new ArrayList<>();
         List<String> externalNames = new ArrayList<>();
         for (AddressMappingQueryIntDTO addressMappingQueryIntDTO : addressMappingQueryInts) {
-            externalCodes.add(addressMappingQueryIntDTO.getExternalCode());
-            externalNames.add(addressMappingQueryIntDTO.getExternalName());
-            addressTypeCodes.add(addressMappingQueryIntDTO.getAddressTypeCode());
+            String externalCode = addressMappingQueryIntDTO.getExternalCode();
+            if(StringUtils.isNotEmpty(externalCode)){
+                externalCodes.add(externalCode);
+            }
+
+            String  externalName = addressMappingQueryIntDTO.getExternalName();
+            if (StringUtils.isNotEmpty(externalName)) {
+                externalNames.add(externalName);
+            }
+
+            String addressTypeCode = addressMappingQueryIntDTO.getAddressTypeCode();
+            if (StringUtils.isNotEmpty(addressTypeCode)) {
+                addressTypeCodes.add(addressTypeCode);
+            }
+
         }
         return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
     }
