@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.hzero.mybatis.domian.SecurityToken;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -36,20 +37,10 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+        if (o instanceof RegionTreeChild) {
+            return ((RegionTreeChild) o).getRegionCode().equals(this.getRegionCode());
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        RegionTreeChild that = (RegionTreeChild) o;
-        return Objects.equals(parentRegionCode, that.parentRegionCode) &&
-                Objects.equals(children, that.children) &&
-                Objects.equals(levelPath, that.levelPath) &&
-                Objects.equals(regionId, that.regionId);
+        return false;
     }
 
     @Override
