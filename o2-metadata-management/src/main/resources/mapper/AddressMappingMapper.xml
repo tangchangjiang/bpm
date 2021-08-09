@@ -105,7 +105,7 @@
     <!--更据catalogCode和regionId查询地址匹配数量-->
     <select id="queryAddressByCondition" resultType="org.o2.metadata.console.infra.entity.AddressMapping">
         SELECT ad.address_mapping_id,
-        ad.region_id,
+        ad.region_code,
         ad.address_type_code,
         ad.catalog_code,
         ad.external_code,
@@ -123,8 +123,8 @@
                 AND ad.tenant_id = 0
             </otherwise>
         </choose>
-        <if test="regionId!=null ">
-            AND ad.region_id = #{regionId}
+        <if test="regionCode!=null ">
+            AND ad.region_code = #{regionId}
         </if>
         <if test="catalogCode!=null and catalogCode!=''">
             AND ad.catalog_code = #{catalogCode}
@@ -161,79 +161,6 @@
         AND ad.catalog_code=#{type}
     </select>
 
-    <select id="">
-
-        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        SELECT
-        hr.region_code,
-        hr.parent_region_id,
-        hr.level_path,
-        hr.level_number,
-        hrt.region_name,
-        hc.country_code,
-        hc.country_name,
-        hr.region_id
-        FROM hpfm_region hr
-        JOIN hpfm_region_tl hrt ON hr.region_id = hrt.region_id AND hrt.lang = #{lang}
-        JOIN hpfm_country  hc On hc.country_id = hr.country_id
-        <where>
-            hr.enabled_flag = 1
-            <if test="regionName != null and regionName != ''">
-                <bind name="regionName" value="'%' +regionName + '%' "/>
-                AND hr.region_name like #{regionName}
-            </if>
-            <if test="regionCode != null and regionCode != ''">
-                <bind name="regionCode" value="'%' +regionCode + '%' "/>
-                AND hr.region_code like #{regionCode}
-            </if>
-            <if test="countryCode != null and countryCode != ''">
-                AND hc.country_code = #{countryCode}
-            </if>
-            <if test="parentRegionId != null and parentRegionId != ''">
-                AND hr.parent_region_id = #{parentRegionId}
-            </if>
-            <if test="parentRegionCode != null and parentRegionCode != ''">
-                AND hr.parent_region_id = (select region_id from hpfm_region where region_code = #{parentRegionCode} and tenant_id = #{tenantId})
-            </if>
-            <if test="enabledFlag != null">
-                AND hr.enabled_flag = #{enabledFlag}
-            </if>
-            <if test="regionCodes != null " >
-                and hr.region_code IN
-                <foreach item="code" collection="regionCodes.split(',')" open="(" separator="," close=")">
-                    #{code}
-                </foreach>
-            </if>
-
-            <if test="notInRegionCodes != null " >
-                and hr.region_code not IN
-                <foreach item="code" collection="notInRegionCodes.split(',')" open="(" separator="," close=")">
-                    #{code}
-                </foreach>
-            </if>
-
-            <if test="parentRegionIds != null " >
-                and hr.region_id  IN
-                <foreach item="id" collection="parentRegionIds.split(',')" open="(" separator="," close=")">
-                    #{id}
-                </foreach>
-            </if>
-            <if test="regionIds != null " >
-                and hr.region_id  IN
-                <foreach item="id" collection="regionIds.split(',')" open="(" separator="," close=")">
-                    #{id}
-                </foreach>
-            </if>
-            <choose>
-                <when test="tenantId != null">
-                    AND hr.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
-        </where>
-    </select>
     <select id="listAddressMappings" resultType="org.o2.metadata.console.infra.entity.AddressMapping">
         SELECT
         ad.region_code,
