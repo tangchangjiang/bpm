@@ -122,7 +122,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "修改地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
+    public ResponseEntity<?> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         if (!addressMapping.exist(addressMappingRepository)) {
@@ -135,7 +136,8 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "删除地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final AddressMapping addressMapping) {
+    public ResponseEntity<Void> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                     @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);

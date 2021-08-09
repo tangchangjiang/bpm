@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class RegionTreeChildVO {
     /**
      * 地区父节点id
      */
-    private Long parentRegionId;
+    private String parentRegionCode;
 
     /**
      * 地区子节点集合
@@ -92,6 +91,6 @@ public class RegionTreeChildVO {
 
     private String levelPath;
 
-    private Long regionId;
+    private String _token;
 
 }

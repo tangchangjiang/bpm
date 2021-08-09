@@ -106,10 +106,10 @@ public class RegionConverter {
         regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
         regionTreeChildVO.setCatalogCode(regionTreeChild.getCatalogCode());
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
-        regionTreeChildVO.setParentRegionId(regionTreeChild.getParentRegionId());
+        regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
-        regionTreeChildVO.setRegionId(regionTreeChild.getRegionId());
         regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
+        regionTreeChildVO.set_token(regionTreeChild.get_token());
 
         return regionTreeChildVO;
     }
