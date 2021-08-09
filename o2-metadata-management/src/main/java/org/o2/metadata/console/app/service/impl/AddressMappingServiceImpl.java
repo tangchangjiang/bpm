@@ -252,7 +252,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         Map<String,List<RegionTreeChild>> map = getParentAddressMapping(parentRegions,type,tenantId);
 
         final List<RegionTreeChild> result = new ArrayList<>();
-        for (Map.Entry<String,List<RegionTreeChild>> entry : map.entrySet()) {
+        for (Map.Entry<String,List<RegionTreeChild>> entry : collect.entrySet()) {
             String key = entry.getKey();
             //根节点
             if (RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(key)) {
@@ -277,13 +277,12 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             return;
         }
         //分组下一次数据
-        final Map<String, List<RegionTreeChild>> parentMap = new HashMap<>();
-        for (RegionTreeChild node : result) {
+        final Map<String, List<RegionTreeChild>> parentMap = result.stream().map(node -> {
             if (node.getParentRegionCode() == null) {
                 node.setParentRegionCode(RegionConstants.RegionLov.DEFAULT_CODE.getCode());
             }
-            parentMap.computeIfAbsent(node.getParentRegionCode(), k -> new ArrayList<>()).add(node);
-        }
+            return node;
+        }).collect(Collectors.groupingBy(RegionTreeChild::getParentRegionCode));
         //递归调用
         getParent(parentMap, tree, type,tenantId);
     }
