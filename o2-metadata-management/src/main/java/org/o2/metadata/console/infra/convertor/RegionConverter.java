@@ -97,14 +97,13 @@ public class RegionConverter {
         regionTreeChildVO.setExternalName(regionTreeChild.getExternalName());
         regionTreeChildVO.setActiveFlag(regionTreeChild.getActiveFlag());
         regionTreeChildVO.setTenantId(regionTreeChild.getTenantId());
-        regionTreeChildVO.setCatalogId(regionTreeChild.getCatalogId());
         regionTreeChildVO.setRegionName(regionTreeChild.getRegionName());
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setRegionPathIds(regionTreeChild.getRegionPathIds());
         regionTreeChildVO.setRegionPathCodes(regionTreeChild.getRegionPathCodes());
         regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
-        regionTreeChildVO.setCatalogCode(regionTreeChild.getCatalogCode());
+        regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());

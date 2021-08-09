@@ -66,7 +66,7 @@ public class CarrierMapping extends AuditDomain {
     }
 
     public void baseValidate() {
-        Preconditions.checkArgument(null != this.catalogCode, MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+        Preconditions.checkArgument(null != this.catalogCode, MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商id不能为空");
         Assert.notNull(this.externalCarrierCode, "平台承运商编码不能为空");

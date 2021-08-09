@@ -48,8 +48,6 @@ public class RegionTreeChildVO {
     private Long tenantId;
 
 
-    @ApiModelProperty(value = "版本ID")
-    private Long catalogId;
 
     @ApiModelProperty(value = "查询条件 内部区域名称")
     private String regionName;
@@ -75,7 +73,7 @@ public class RegionTreeChildVO {
     private List<String> regionPathNames = new ArrayList<>(4);
 
     @ApiModelProperty(value = "版本编码")
-    private String catalogCode;
+    private String platformCode;
 
     @ApiModelProperty(value = "版本名称",required = true)
     private String catalogName;

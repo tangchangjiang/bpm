@@ -107,10 +107,10 @@ public class AddressMappingController extends BaseController {
             return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
         }
         try {
-            Preconditions.checkArgument(null != addressMapping.getCatalogCode(), MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+            Preconditions.checkArgument(null != addressMapping.getPlatformCode(), MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
             Preconditions.checkArgument(null != addressMapping.getTenantId(), MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
-            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getCatalogCode() + "or tenantId:" + addressMapping.getTenantId());
+            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getPlatformCode()).tenantId(addressMapping.getTenantId()).build());
+            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getPlatformCode() + "or tenantId:" + addressMapping.getTenantId());
             addressMapping.setCatalogId(catalog.getCatalogId());
             addressMappingRepository.insertSelective(addressMapping);
             return Results.success(addressMapping);
