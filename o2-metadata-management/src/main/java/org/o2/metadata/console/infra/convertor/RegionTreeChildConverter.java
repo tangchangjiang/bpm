@@ -35,7 +35,6 @@ public class RegionTreeChildConverter{
         RegionTreeChild regionTreeChild = new RegionTreeChild();
         regionTreeChild.setParentRegionCode(regionTreeChildVO.getParentRegionCode());
         regionTreeChild.setLevelPath(regionTreeChildVO.getLevelPath());
-        regionTreeChild.setAddressMappingId(regionTreeChildVO.getAddressMappingId());
         regionTreeChild.setRegionCode(regionTreeChildVO.getRegionCode());
         regionTreeChild.setAddressTypeCode(regionTreeChildVO.getAddressTypeCode());
         regionTreeChild.setExternalCode(regionTreeChildVO.getExternalCode());
@@ -70,7 +69,6 @@ public class RegionTreeChildConverter{
             return null;
         }
         RegionTreeChildVO regionTreeChildVO = new RegionTreeChildVO();
-        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setRegionCode(regionTreeChild.getRegionCode());
         regionTreeChildVO.setAddressTypeCode(regionTreeChild.getAddressTypeCode());
         regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());

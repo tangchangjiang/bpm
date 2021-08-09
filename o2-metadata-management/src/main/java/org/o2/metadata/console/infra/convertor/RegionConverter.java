@@ -90,7 +90,6 @@ public class RegionConverter {
             return null;
         }
         RegionTreeChildVO regionTreeChildVO = new RegionTreeChildVO();
-        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setRegionCode(regionTreeChild.getRegionCode());
         regionTreeChildVO.setAddressTypeCode(regionTreeChild.getAddressTypeCode());
         regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());

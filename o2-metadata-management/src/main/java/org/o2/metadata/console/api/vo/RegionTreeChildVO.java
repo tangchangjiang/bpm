@@ -23,8 +23,6 @@ import java.util.List;
 @Data
 public class RegionTreeChildVO {
 
-    @ApiModelProperty("表ID，主键，供其他表做外键")
-    private Long addressMappingId;
 
     @ApiModelProperty(value = "region 关联")
     private String regionCode;
