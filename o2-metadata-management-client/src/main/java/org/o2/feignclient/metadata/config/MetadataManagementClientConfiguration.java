@@ -6,7 +6,6 @@ import org.o2.feignclient.metadata.infra.feign.fallback.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -28,7 +27,6 @@ import org.springframework.context.annotation.Configuration;
                 AddressMappingRemoteService.class
         }
 )
-@ComponentScan(basePackages = "org.o2.feignclient.metadata.infra.feign")
 public class MetadataManagementClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
@@ -56,7 +54,7 @@ public class MetadataManagementClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public StaticResourceRemoteService staticResourceRemoteServiceFallback() {
+    public StaticResourceRemoteServiceImpl staticResourceRemoteServiceFallback() {
         return new StaticResourceRemoteServiceImpl();
     }
 
