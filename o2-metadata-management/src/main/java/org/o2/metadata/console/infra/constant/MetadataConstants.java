@@ -281,6 +281,7 @@ public interface MetadataConstants {
         String REFUND_STATUS = "O2RF.REFUND_STATUS";
         String ORDER_STATUS = "O2TF.ORDER_STATUS";
         String REFUND_REASON = "O2RF.REFUND_REASON";
+        String SHELF_STATUS = "O2PCM.SHELF_STATUS";
     }
 
 
