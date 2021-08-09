@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.constant;
 
+
 /**
  *
  * 服务点常量
