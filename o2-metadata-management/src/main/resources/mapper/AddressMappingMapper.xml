@@ -126,8 +126,8 @@
         <if test="regionCode!=null ">
             AND ad.region_code = #{regionCode}
         </if>
-        <if test="catalogCode!=null and catalogCode!=''">
-            AND ad.platform_code = #{catalogCode}
+        <if test="platformCode!=null and platformCode!=''">
+            AND ad.platform_code = #{platformCode}
         </if>
     </select>
     <select id="listAddressMapping" resultType="org.o2.metadata.console.infra.entity.RegionTreeChild">
