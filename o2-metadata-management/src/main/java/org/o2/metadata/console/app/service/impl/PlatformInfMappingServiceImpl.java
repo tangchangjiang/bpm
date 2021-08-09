@@ -37,6 +37,7 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
     private final LovAdapter lovAdapter;
     public static final String REFUND_STATUS = "REFUND_STATUS";
     public static final String ORDER_STATUS = "ORDER_STATUS";
+    public static final String SHELF_STATUS= "SHELF_STATUS";
     public static final String REFUND_REASON = "REFUND_REASON";
     
     @Override
@@ -128,9 +129,12 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
         }else if (REFUND_REASON.equalsIgnoreCase(infTypeCode)) {
             // 退款原因
             lovValue = MetadataConstants.InfNameCode.REFUND_REASON;
-        }else {
+        }else if (ORDER_STATUS.equalsIgnoreCase(infTypeCode)){
             // 订单状态
             lovValue = MetadataConstants.InfNameCode.ORDER_STATUS;
+        }else {
+            // 上下架状态
+            lovValue = MetadataConstants.InfNameCode.SHELF_STATUS;
         }
         String lovMeaning = lovAdapter.queryLovMeaning(lovValue,
                 platformInfMapping.getTenantId(), platformInfMapping.getInfCode());
