@@ -113,9 +113,15 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
         if (!CollectionUtils.isEmpty(regionQueryLov.getRegionIds())) {
             queryParams.put(RegionConstants.RegionLov.REGION_IDS.getCode(), StringUtils.join(regionQueryLov.getRegionIds(), BaseConstants.Symbol.COMMA));
         }
+
+        if (!CollectionUtils.isEmpty(regionQueryLov.getParentRegionCodes())) {
+            queryParams.put(RegionConstants.RegionLov.PARENT_REGION_CODES.getCode(), StringUtils.join(regionQueryLov.getParentRegionCodes(), BaseConstants.Symbol.COMMA));
+        }
+
         if (null != regionQueryLov.getLevelNumber()) {
             queryParams.put(RegionConstants.RegionLov.LEVEL_NUMBER.getCode(),String.valueOf(regionQueryLov.getLevelNumber()));
         }
+
         if (StringUtils.isNotEmpty(regionQueryLov.getLang())) {
             queryParams.put(RegionConstants.RegionLov.LANG.getCode(),regionQueryLov.getLang());
         }

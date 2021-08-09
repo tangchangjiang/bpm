@@ -22,7 +22,7 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
     /**
      * 地区父节点id
      */
-    private Long parentRegionId;
+    private String parentRegionCode;
 
     /**
      * 地区子节点集合
@@ -46,7 +46,7 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
             return false;
         }
         RegionTreeChild that = (RegionTreeChild) o;
-        return Objects.equals(parentRegionId, that.parentRegionId) &&
+        return Objects.equals(parentRegionCode, that.parentRegionCode) &&
                 Objects.equals(children, that.children) &&
                 Objects.equals(levelPath, that.levelPath) &&
                 Objects.equals(regionId, that.regionId);
@@ -54,7 +54,7 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), parentRegionId, children);
+        return Objects.hash(super.hashCode(), parentRegionCode, children);
     }
 
     @Override

@@ -29,6 +29,8 @@ public class RegionQueryLovDTO {
 
    private String parentRegionCode;
 
+   private List<String> parentRegionCodes;
+
    private Integer enabledFlag;
 
    private Long tenantId;
