@@ -282,5 +282,17 @@ public class O2MetadataManagementClient {
         return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
     }
 
+    /**
+     * 查询平台信息匹配
+     * @param organizationId 租户id
+     * @param platformCode 平台code
+     * @param infTypeCode 类型
+     * @return List<PlatformInfMappingVO> 结果
+     */
+    public List<PlatformInfMappingVO> getPlatformInfMappingList(Long organizationId,
+                                                            String platformCode,String infTypeCode) {
+        return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformInfMapping(organizationId,platformCode,infTypeCode),new TypeReference<List<PlatformInfMappingVO>>(){});
+    }
+
 
 }

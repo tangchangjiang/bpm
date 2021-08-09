@@ -5,9 +5,7 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.PlatformInfMappingRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ import java.util.List;
 )
 public interface PlatformInfMappingRemoteService {
     /**
-     * 内部调用获取平台信息匹配结果
+     * 批量，内部调用获取平台信息匹配结果
      * @param organizationId 租户id
      * @param platformInfMapping 条件
      * @return String 结果
@@ -31,5 +29,17 @@ public interface PlatformInfMappingRemoteService {
     @PostMapping("/{organizationId}/platform-inf-mappings-internal")
     ResponseEntity<String> getPlatformMapping(@PathVariable(value = "organizationId") Long organizationId,
                                               @RequestBody List<PlatformInfMappingDTO> platformInfMapping);
+
+    /**
+     * 内部调用获取平台信息匹配结果
+     * @param organizationId 租户id
+     * @param platformCode 平台code
+     * @param infTypeCode 类型
+     * @return String 结果
+     */
+    @GetMapping("/{organizationId}/platform-inf-mappings-internal")
+    ResponseEntity<String> getPlatformInfMapping(@PathVariable(value = "organizationId") Long organizationId,
+                                                 @RequestParam("platformCode") String platformCode,
+                                                 @RequestParam("infTypeCode") String infTypeCode);
 
 }

@@ -18,7 +18,6 @@ public class PlatformInfMappingDTO {
     @NotBlank
     private String platformCode;
     @ApiModelProperty(value = "平台信息编码", required = true)
-    @NotBlank
     private String platformInfCode;
     @ApiModelProperty(value = "租户ID", required = true)
     private Long tenantId;

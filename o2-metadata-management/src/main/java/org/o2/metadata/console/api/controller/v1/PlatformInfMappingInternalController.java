@@ -9,6 +9,8 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
 import org.o2.metadata.console.api.vo.PlatformInfMappingVO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -38,7 +40,7 @@ public class PlatformInfMappingInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<List<PlatformInfMappingVO>> getPlatformInfMapping(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<List<PlatformInfMappingVO>> getPlatformInfMappings(@PathVariable(value = "organizationId") Long organizationId,
                                                          @RequestBody List<PlatformInfMappingDTO> platformInfMapping) {
 
         validList(platformInfMapping);
@@ -50,6 +52,26 @@ public class PlatformInfMappingInternalController extends BaseController {
         }
         return Results.success(mappingVOList);
     }
+
+    @ApiOperation(value = "查询平台信息匹配结果")
+    @Permission(level = ResourceLevel.ORGANIZATION,permissionWithin = true)
+    @GetMapping
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    public ResponseEntity<List<PlatformInfMappingVO>> getPlatformInfMapping(@PathVariable(value = "organizationId") Long organizationId,
+                                                                            @RequestParam("platformCode") String platformCode,
+                                                                            @RequestParam("infTypeCode") String infTypeCode) {
+        Condition condition = Condition.builder(PlatformInfMapping.class).andWhere(Sqls.custom().andEqualTo(PlatformInfMapping.FIELD_PLATFORM_CODE, platformCode)
+                .andEqualTo(PlatformInfMapping.FIELD_INF_TYPE_CODE, infTypeCode)).build();
+        List<PlatformInfMapping> infMappings = platformInfMappingRepository.selectByCondition(condition);
+        List<PlatformInfMappingVO> mappingVOList = new ArrayList<>();
+        for(PlatformInfMapping mappingResult : infMappings) {
+            PlatformInfMappingVO mappingVO = PlatformInfMappingConverter.toPlatformInfMappingVO(mappingResult);
+            mappingVOList.add(mappingVO);
+        }
+        return Results.success(mappingVOList);
+    }
+
+
 
 
 }
