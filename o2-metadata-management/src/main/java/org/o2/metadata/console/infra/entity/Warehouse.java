@@ -20,7 +20,6 @@ import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scripting.support.ResourceScriptSource;
-import sun.rmi.runtime.Log;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

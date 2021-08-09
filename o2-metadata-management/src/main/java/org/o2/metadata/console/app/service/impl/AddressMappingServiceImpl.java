@@ -52,8 +52,8 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      */
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingQueryDTO addressMappingQueryDTO, final String countryCode) {
-        if (addressMappingQueryDTO.getCatalogCode() == null || "".equals(addressMappingQueryDTO.getCatalogCode())) {
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
+        if (addressMappingQueryDTO.getPlatformCode() == null || "".equals(addressMappingQueryDTO.getPlatformCode())) {
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         }
         if (countryCode == null || "".equals(countryCode)) {
             throw new CommonException("countryCode is null");
@@ -97,7 +97,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final List<RegionTreeChild> tree = new ArrayList<>();
 
         //递归获取树形结构数据
-        getParent(collect, tree, addressMappingQueryDTO.getCatalogCode(), addressMappingQueryDTO.getTenantId());
+        getParent(collect, tree, addressMappingQueryDTO.getPlatformCode(), addressMappingQueryDTO.getTenantId());
         sortList(tree);
         return RegionConverter.poToVoChildObjects(tree);
     }
@@ -110,8 +110,8 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         queryLovDTO.setRegionCode(addressMapping.getRegionCode());
         queryLovDTO.setTenantId(tenantId);
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
-        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getCatalogCode()).tenantId(addressMapping.getTenantId()).build());
-        addressMapping.setCatalogCode(catalog.getCatalogCode());
+        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getPlatformCode()).tenantId(addressMapping.getTenantId()).build());
+        addressMapping.setPlatformCode(catalog.getCatalogCode());
         addressMapping.setCatalogName(catalog.getCatalogName());
         if (!regionList.isEmpty()) {
             Region region = regionList.get(0);
@@ -209,7 +209,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
             regionTreeChild.setActiveFlag(queryAddressMapping.getActiveFlag());
             regionTreeChild.setExternalCode(queryAddressMapping.getExternalCode());
-            regionTreeChild.setCatalogCode(queryAddressMapping.getCatalogCode());
+            regionTreeChild.setPlatformCode(queryAddressMapping.getPlatformCode());
             regionTreeChild.setExternalName(queryAddressMapping.getExternalName());
         }
         return result.stream().collect(Collectors.groupingBy(RegionTreeChild::getRegionCode));
@@ -266,10 +266,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             //如果tree 集合中有了这个RegionTreeChild，直接赋值tree 集合中父节点的 children字段
             if (tree.contains(parent)) {
                 tree.get(tree.indexOf(parent)).setChildren(collect.get(key));
-            } else {
-                parent.setChildren(collect.get(key));
-                result.add(parent);
+                continue;
             }
+            parent.setChildren(collect.get(key));
+            result.add(parent);
 
         }
         //如果没有父节点 退出递归
@@ -309,7 +309,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             parent = parents.get(0);
         } else {
             for (final RegionTreeChild treeChild : parents) {
-                if (type.equals(treeChild.getCatalogCode())) {
+                if (type.equals(treeChild.getPlatformCode())) {
                     parent = treeChild;
                 }
             }

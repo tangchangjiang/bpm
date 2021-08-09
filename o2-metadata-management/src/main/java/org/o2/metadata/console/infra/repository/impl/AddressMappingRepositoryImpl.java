@@ -24,15 +24,15 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
 
     /**
      * 更据catalogCode和regionId查询地址匹配数量
-     * @param catalogCode 目录编码
+     * @param platformCode 目录编码
      * @param regionCode 地区编码
      * @param tenantId 租户ID
      * @return the list
      * @throws RuntimeException exception description
      */
     @Override
-    public List<AddressMapping> queryAddressByCondition(String catalogCode, String regionCode,Long tenantId) {
-        return addressMappingMapper.queryAddressByCondition(catalogCode,regionCode,tenantId);
+    public List<AddressMapping> queryAddressByCondition(String platformCode, String regionCode,Long tenantId) {
+        return addressMappingMapper.queryAddressByCondition(platformCode,regionCode,tenantId);
     }
 
     @Override
