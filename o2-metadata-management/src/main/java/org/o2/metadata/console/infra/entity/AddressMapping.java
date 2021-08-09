@@ -47,7 +47,7 @@ public class AddressMapping extends AuditDomain {
         if (this.addressMappingId != null) {
             return addressMappingRepository.existsWithPrimaryKey(this);
         } else {
-            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.catalogCode,null,this.tenantId);
+            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.catalogCode,this.regionCode,this.tenantId);
             return !addressMappings.isEmpty();
         }
     }

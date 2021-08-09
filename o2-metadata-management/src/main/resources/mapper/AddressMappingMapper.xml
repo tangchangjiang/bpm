@@ -124,7 +124,7 @@
             </otherwise>
         </choose>
         <if test="regionCode!=null ">
-            AND ad.region_code = #{regionId}
+            AND ad.region_code = #{regionCode}
         </if>
         <if test="catalogCode!=null and catalogCode!=''">
             AND ad.catalog_code = #{catalogCode}
