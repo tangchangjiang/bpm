@@ -20,7 +20,13 @@ public class PlatformInfMappingRemoteServiceImpl implements PlatformInfMappingRe
 
     @Override
     public ResponseEntity<String> getPlatformMapping(Long organizationId, List<PlatformInfMappingDTO> platformInfMapping) {
-        log.error("request error params[tenantId = {}", organizationId);
+        log.error("request error params[tenantId = {}]", organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> getPlatformInfMapping(Long organizationId, String platformCode, String infTypeCode) {
+        log.error("request error params[tenantId = {},platformCode = {},infTypeCode = {}]", organizationId,platformCode,infTypeCode);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
