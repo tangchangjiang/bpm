@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
+import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -68,14 +69,14 @@ public class PlatformServiceImpl implements PlatformService {
         //保存平台定义表
         if (platform.getPlatformId() == null) {
             if (CollectionUtils.isNotEmpty(platforms)) {
-                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED,MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED).desc());
             }
             platformRepository.insertSelective(platform);
         } else {
             if (CollectionUtils.isNotEmpty(platforms)) {
                 Platform temp = platforms.get(0);
                 if (!temp.getPlatformId().equals(platform.getPlatformId())) {
-                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED);
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED, MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED).desc());
                 }
 
             }
