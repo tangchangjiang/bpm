@@ -6,8 +6,8 @@
         <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
         <result column="platform_code" property="platformCode" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
-        <result column="external_carrier_code" property="externalCarrierCode" jdbcType="VARCHAR"/>
-        <result column="external_carrier_Name" property="externalCarrierName" jdbcType="VARCHAR"/>
+        <result column="platform_carrier_code" property="platformCarrierCode" jdbcType="VARCHAR"/>
+        <result column="platform_carrier_Name" property="platformCarrierName" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -29,8 +29,8 @@
         cm.carrier_id,
         c.carrier_code,
         oct.carrier_name,
-        cm.external_carrier_code,
-        cm.external_carrier_Name,
+        cm.platform_carrier_code,
+        cm.platform_carrier_Name,
         cm.object_version_number,
         cm.creation_date,
         cm.created_by,
@@ -58,9 +58,9 @@
             <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
             AND c.carrier_code LIKE #{carrierCode}
         </if>
-        <if test="externalCarrierCode != null and externalCarrierCode != ''">
-            <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
-            and cm.external_carrier_code like #{externalCarrierCodeLike}
+        <if test="platformCarrierCode != null and platformCarrierCode != ''">
+            <bind name="platformCarrierCodeLike" value="'%' + platformCarrierCode + '%'"/>
+            and cm.platform_carrier_code like #{platformCarrierCodeLike}
         </if>
         ORDER BY cm.platform_code, c.carrier_code
     </select>

@@ -3,11 +3,9 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.base.Preconditions;
 import org.o2.metadata.console.app.service.CarrierMappingService;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
-import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.mapper.PlatformMapper;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
-import org.o2.metadata.console.infra.mapper.CatalogMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

@@ -11,28 +11,20 @@ import lombok.Data;
 @Data
 public class CarrierMappingQueryDTO{
 
-    @ApiModelProperty("承运商编码")
-    private String carrierCode;
-    @ApiModelProperty("承运商名称")
-    private String carrierName;
-
     private Long carrierMappingId;
 
 
     @ApiModelProperty(value = "平台id")
     private Long platformId;
 
-    @ApiModelProperty(value = "承运商id")
-    private Long carrierId;
+    @ApiModelProperty(value = "承运商")
+    private String carrierCode;
 
     @ApiModelProperty(value = "平台承运商编码")
-    private String externalCarrierCode;
+    private String platformCarrierCode;
 
     @ApiModelProperty(value = "平台承运商名称")
-    private String externalCarrierName;
-
-    @ApiModelProperty(value = "归属电商平台含义")
-    private String platformTypeMeaning;
+    private String platformCarrierName;
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
