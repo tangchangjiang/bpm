@@ -26,7 +26,7 @@
         SELECT
         cm.carrier_mapping_id,
         cm.platform_code,
-        cm.carrier_id,
+        oct.carrier_name,
         c.carrier_code,
         oct.carrier_name,
         cm.platform_carrier_code,
@@ -59,7 +59,7 @@
             AND c.carrier_code LIKE #{carrierCode}
         </if>
         <if test="platformCarrierCode != null and platformCarrierCode != ''">
-            <bind name="platformCarrierCodeLike" value="'%' + platformCarrierCode + '%'"/>
+            <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>
             and cm.platform_carrier_code like #{platformCarrierCodeLike}
         </if>
         ORDER BY cm.platform_code, c.carrier_code
