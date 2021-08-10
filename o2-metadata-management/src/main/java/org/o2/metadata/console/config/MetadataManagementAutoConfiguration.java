@@ -1,5 +1,7 @@
 package org.o2.metadata.console.config;
 
+import org.hzero.core.message.MessageAccessor;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,7 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.metadata.console.infra",
         "org.o2.metadata.console.domain",
 })
-public class MetadataManagementAutoConfiguration {
+public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String ADDRESS_MAPPING = "Address Mapping";
     public static final String CARRIER = "Carrier";
     public static final String CARRIER_DELIVERY_RANGE = "Carrier Delivery Range";
@@ -70,4 +72,8 @@ public class MetadataManagementAutoConfiguration {
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING,"平台信息匹配管理"));
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        MessageAccessor.addBasenames("classpath:messages/metadata");
+    }
 }
