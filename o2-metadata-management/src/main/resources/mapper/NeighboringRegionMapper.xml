@@ -23,7 +23,9 @@
         n.neighboring_region_id,
         n.pos_type_code,
         n.source_country_code,
-        n.source_region_code,
+        n.source_region_code
+        n.target_region_code,
+        n.target_country_code,
         n.OBJECT_VERSION_NUMBER
         FROM
         o2md_neighboring_region n
