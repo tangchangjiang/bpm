@@ -38,7 +38,7 @@ public class OnlineShopInternalController {
 
 
     @ApiOperation(value = "查询网店")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShop-list")
     public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody OnlineShopDTO onlineShopDTO) {
@@ -46,7 +46,7 @@ public class OnlineShopInternalController {
     }
 
     @ApiOperation(value = "目录+目录版本批量查询网店")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShops")
     public ResponseEntity<Map<String, List<OnlineShopVO>>> listOnlineShopList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody List<OnlineShopCatalogVersionDTO> onlineShopDTO) {
