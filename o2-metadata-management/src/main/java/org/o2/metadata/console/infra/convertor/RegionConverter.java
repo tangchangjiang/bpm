@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.api.vo.RegionVO;
+import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
@@ -19,7 +20,7 @@ public class RegionConverter {
     }
     /**
      * po 转 vo
-     * @param region
+     * @param region 地区
      * @return  vo
      */
     public static RegionVO poToVoObject(Region region){
@@ -41,18 +42,32 @@ public class RegionConverter {
         regionVO.setTenantId(region.getTenantId());
         regionVO.setCountryCode(region.getCountryCode());
         regionVO.setCountryName(region.getCountryName());
-        regionVO.setCreationDate(region.getCreationDate());
-        regionVO.setCreatedBy(region.getCreatedBy());
-        regionVO.setLastUpdateDate(region.getLastUpdateDate());
-        regionVO.setLastUpdatedBy(region.getLastUpdatedBy());
-        regionVO.setObjectVersionNumber(region.getObjectVersionNumber());
-        regionVO.setTableId(region.getTableId());
-        regionVO.set_tls(region.get_tls());
-        regionVO.set_status(region.get_status());
-        regionVO.setFlex(region.getFlex());
         return regionVO;
     }
 
+    private static RegionCacheBO poToBoObject(Region region) {
+
+        if (region == null) {
+            return null;
+        }
+        RegionCacheBO regionCacheBO = new RegionCacheBO();
+        regionCacheBO.setRegionName(region.getRegionName());
+        regionCacheBO.setParentRegionCode(region.getParentRegionCode());
+        regionCacheBO.setRegionCode(region.getRegionCode());
+        regionCacheBO.setCountryCode(region.getCountryCode());
+        return regionCacheBO;
+    }
+
+    public static List<RegionCacheBO> poToBoListObjects(List<Region> regions) {
+        List<RegionCacheBO> regionCacheBOList = new ArrayList<>();
+        if (regions.isEmpty()) {
+            return  regionCacheBOList;
+        }
+        for (Region region : regions) {
+            regionCacheBOList.add(poToBoObject(region));
+        }
+        return regionCacheBOList;
+    }
     /**
      * PO 转 VO
      * @param regionList 地址
@@ -75,26 +90,24 @@ public class RegionConverter {
             return null;
         }
         RegionTreeChildVO regionTreeChildVO = new RegionTreeChildVO();
-        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setRegionCode(regionTreeChild.getRegionCode());
         regionTreeChildVO.setAddressTypeCode(regionTreeChild.getAddressTypeCode());
         regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());
         regionTreeChildVO.setExternalName(regionTreeChild.getExternalName());
         regionTreeChildVO.setActiveFlag(regionTreeChild.getActiveFlag());
         regionTreeChildVO.setTenantId(regionTreeChild.getTenantId());
-        regionTreeChildVO.setCatalogId(regionTreeChild.getCatalogId());
         regionTreeChildVO.setRegionName(regionTreeChild.getRegionName());
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setRegionPathIds(regionTreeChild.getRegionPathIds());
         regionTreeChildVO.setRegionPathCodes(regionTreeChild.getRegionPathCodes());
         regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
-        regionTreeChildVO.setCatalogCode(regionTreeChild.getCatalogCode());
+        regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
-        regionTreeChildVO.setParentRegionId(regionTreeChild.getParentRegionId());
+        regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
-        regionTreeChildVO.setRegionId(regionTreeChild.getRegionId());
         regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
+        regionTreeChildVO.set_token(regionTreeChild.get_token());
 
         return regionTreeChildVO;
     }

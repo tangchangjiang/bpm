@@ -1,9 +1,11 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -24,6 +26,7 @@ import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
+import org.o2.product.management.client.O2ProductClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -44,6 +47,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightCacheService freightCacheService;
     private final FreightTemplateDomainRepository freightTemplateDomainRepository;
     private  final LovSqlHandler lovSqlHandler;
+    private final O2ProductClient o2ProductClient;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
                                       final FreightTemplateDetailRepository freightTemplateDetailRepository,
@@ -51,13 +55,14 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightCacheService freightCacheService,
                                       final RegionRepository regionRepository,
                                       FreightTemplateDomainRepository freightTemplateDomainRepository,
-                                      LovSqlHandler lovSqlHandler) {
+                                      LovSqlHandler lovSqlHandler, O2ProductClient o2ProductClient) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
         this.freightTemplateDomainRepository = freightTemplateDomainRepository;
         this.lovSqlHandler = lovSqlHandler;
+        this.o2ProductClient = o2ProductClient;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -206,14 +211,14 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList) {
+    public Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList,Long tenantId) {
         SecurityTokenHelper.validToken(freightTemplateList);
-        checkProductRelate(freightTemplateList);
+        checkProductRelate(freightTemplateList,tenantId);
 
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             // 清除缓存
             deleteFreightCache(freightTemplate);
-            freightTemplate.setActiveFlag(Integer.valueOf(0));
+            freightTemplate.setActiveFlag(0);
             freightTemplateRepository.updateOptional(freightTemplate,FreightTemplate.FIELD_ACTIVE_FLAG);
         }
 
@@ -274,7 +279,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             // 如果当前行是默认运费模板,将原来的默认运费模板替换；
             if (freightTemplate.getDafaultFlag()==1){
                 final Sqls sqls2 = Sqls.custom();
-                    sqls2.andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1));
+                    sqls2.andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, 1);
                     sqls2.andEqualTo(FreightTemplate.FIELD_TENANT_ID,  freightTemplate.getTenantId());
                     List<FreightTemplate> defaultTempList = freightTemplateRepository.selectByCondition( Condition.builder(FreightTemplate.class).andWhere(sqls2).build());
                     FreightTemplate oldDefTemp  ;
@@ -310,14 +315,14 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         if (freightTemplate == null) {
             return true;
         }
-        if (freightTemplate.getDeliveryFreeFlag() != null && freightTemplate.getDeliveryFreeFlag().intValue() == 1) {
+        if (freightTemplate.getDeliveryFreeFlag() != null && freightTemplate.getDeliveryFreeFlag() == 1) {
             return true;
         }
 
         // 如果运费模板不包邮，验证有且只有一个默认运费行
         final Sqls sqlcommand = Sqls.custom();
         sqlcommand.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, templateId)
-                .andEqualTo(FreightTemplateDetail.FIELD_DEFAULT_FLAG, Integer.valueOf(1));
+                .andEqualTo(FreightTemplateDetail.FIELD_DEFAULT_FLAG, 1);
 
         final Condition cond = Condition.builder(FreightTemplateDetail.class).andWhere(sqlcommand).build();
 
@@ -376,8 +381,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 验重
      *
-     * @param freightTemplates
-     * @param isCheckId
+     * @param freightTemplates 运费模版
+     * @param isCheckId 是否检测
      */
     private <T extends FreightTemplate> void checkData(final List<T> freightTemplates, final boolean isCheckId) {
         final Map<String, Object> map = new HashMap<>(freightTemplates.size());
@@ -402,10 +407,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 设置templateId并保存运费模板明细
      *
-     * @param freightTemplateDetailList
-     * @param templateId
-     * @param isRegion
-     * @return
+     * @param freightTemplateDetailList 运费模版
+     * @param templateId 模版ID
+     * @param isRegion 地区
+     * @return 集合
      */
     private List<FreightTemplateDetail> setTemplateIdAndSave(final List<FreightTemplateDetail> freightTemplateDetailList, final Long templateId, final boolean isRegion) {
         long tenantId =DetailsHelper.getUserDetails().getTenantId();
@@ -420,7 +425,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 免运费可以没有模板行；其他验证默认运费模板行有否有且只有一；
      *
-     * @param freightTemplate
+     * @param freightTemplate 运费模版
      */
     private void checkUniqueDefault(final FreightTemplate freightTemplate) {
         Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
@@ -429,14 +434,25 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 检查运费模板是否关联了平台产品
      *
-     * @param freightTemplateList
-     * @return
+     * @param freightTemplateList 运费模版
+     * @param tenantId 租户ID
      */
-    private void checkProductRelate(final List<FreightTemplate> freightTemplateList) {
-        for (final FreightTemplate freightTemplate : freightTemplateList) {
-            final boolean relateFlag = freightTemplateRepository.isFreightTemplateRelatePro(freightTemplate);
-            Assert.isTrue(!relateFlag, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
+    private void checkProductRelate(final List<FreightTemplate> freightTemplateList, Long tenantId) {
+        List<String> codes = new ArrayList<>();
+        for (FreightTemplate template : freightTemplateList) {
+            codes.add(template.getTemplateCode());
         }
+        Map<String, Boolean> map = o2ProductClient.queryTemplate(tenantId,codes);
+        if (map.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+            Boolean v = entry.getValue();
+            if (Boolean.TRUE.equals(v)) {
+                throw new CommonException(FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_CAN_NOT_REMOVE);
+            }
+        }
+
     }
 
     /**

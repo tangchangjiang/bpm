@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.constant;
 
+
 /**
  *
  * 服务点常量
@@ -28,9 +29,12 @@ public enum RegionConstants {
         PARENT_REGION_CODE("parentRegionCode",""),
         NOT_IN_REGION_CODE("notInRegionCodes",""),
         PARENT_REGION_IDS("parentRegionIds",""),
+        PARENT_REGION_CODES("parentRegionCodes",""),
         ENABLED_FLAG("enabledFlag",""),
         COUNTRY_CODE("countryCode",""),
-        TENANT_ID("tenantId","");
+        TENANT_ID("tenantId",""),
+        LANG("lang",""),
+        DEFAULT_CODE("-1","");
 
 
         private String code;

@@ -33,24 +33,21 @@ public class RegionTreeChildConverter{
             return null;
         }
         RegionTreeChild regionTreeChild = new RegionTreeChild();
-        regionTreeChild.setParentRegionId(regionTreeChildVO.getParentRegionId());
+        regionTreeChild.setParentRegionCode(regionTreeChildVO.getParentRegionCode());
         regionTreeChild.setLevelPath(regionTreeChildVO.getLevelPath());
-        regionTreeChild.setRegionId(regionTreeChildVO.getRegionId());
-        regionTreeChild.setAddressMappingId(regionTreeChildVO.getAddressMappingId());
         regionTreeChild.setRegionCode(regionTreeChildVO.getRegionCode());
         regionTreeChild.setAddressTypeCode(regionTreeChildVO.getAddressTypeCode());
         regionTreeChild.setExternalCode(regionTreeChildVO.getExternalCode());
         regionTreeChild.setExternalName(regionTreeChildVO.getExternalName());
         regionTreeChild.setActiveFlag(regionTreeChildVO.getActiveFlag());
         regionTreeChild.setTenantId(regionTreeChildVO.getTenantId());
-        regionTreeChild.setCatalogId(regionTreeChildVO.getCatalogId());
         regionTreeChild.setRegionName(regionTreeChildVO.getRegionName());
         regionTreeChild.setPlatformTypeMeaning(regionTreeChildVO.getPlatformTypeMeaning());
         regionTreeChild.setAddressTypeMeaning(regionTreeChildVO.getAddressTypeMeaning());
         regionTreeChild.setRegionPathIds(regionTreeChildVO.getRegionPathIds());
         regionTreeChild.setRegionPathCodes(regionTreeChildVO.getRegionPathCodes());
         regionTreeChild.setRegionPathNames(regionTreeChildVO.getRegionPathNames());
-        regionTreeChild.setCatalogCode(regionTreeChildVO.getCatalogCode());
+        regionTreeChild.setPlatformCode(regionTreeChildVO.getPlatformCode());
         regionTreeChild.setCatalogName(regionTreeChildVO.getCatalogName());
         regionTreeChild.setChildren(RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren()));
         return regionTreeChild;
@@ -72,26 +69,24 @@ public class RegionTreeChildConverter{
             return null;
         }
         RegionTreeChildVO regionTreeChildVO = new RegionTreeChildVO();
-        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setRegionCode(regionTreeChild.getRegionCode());
         regionTreeChildVO.setAddressTypeCode(regionTreeChild.getAddressTypeCode());
         regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());
         regionTreeChildVO.setExternalName(regionTreeChild.getExternalName());
         regionTreeChildVO.setActiveFlag(regionTreeChild.getActiveFlag());
         regionTreeChildVO.setTenantId(regionTreeChild.getTenantId());
-        regionTreeChildVO.setCatalogId(regionTreeChild.getCatalogId());
         regionTreeChildVO.setRegionName(regionTreeChild.getRegionName());
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setRegionPathIds(regionTreeChild.getRegionPathIds());
         regionTreeChildVO.setRegionPathCodes(regionTreeChild.getRegionPathCodes());
         regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
-        regionTreeChildVO.setCatalogCode(regionTreeChild.getCatalogCode());
+        regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
-        regionTreeChildVO.setParentRegionId(regionTreeChild.getParentRegionId());
+        regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
-        regionTreeChildVO.setRegionId(regionTreeChild.getRegionId());
         regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
+        regionTreeChildVO.set_token(regionTreeChild.get_token());
 
         return regionTreeChildVO;
     }

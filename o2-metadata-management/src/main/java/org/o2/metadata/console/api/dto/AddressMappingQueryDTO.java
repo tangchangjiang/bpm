@@ -45,7 +45,7 @@ public class AddressMappingQueryDTO {
     private String regionName;
 
     @ApiModelProperty(value = "版本编码")
-    private String catalogCode;
+    private String platformCode;
 
     @ApiModelProperty(value = "版本名称")
     private String catalogName;

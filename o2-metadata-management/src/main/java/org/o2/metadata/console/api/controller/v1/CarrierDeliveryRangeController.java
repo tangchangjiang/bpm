@@ -59,15 +59,16 @@ public class CarrierDeliveryRangeController extends BaseController {
                                           direction = Sort.Direction.DESC) final PageRequest pageRequest) {
         carrierDeliveryRange.setTenantId(organizationId);
         final Page<CarrierDeliveryRange> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> carrierDeliveryRangeRepository.list(carrierDeliveryRange));
+                () -> carrierDeliveryRangeService.listCarrierDeliveryRanges(carrierDeliveryRange));
         return Results.success(list);
     }
 
     @ApiOperation(value = "承运商送达范围明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/detail")
-    public ResponseEntity<?> detail(@RequestParam final Long deliveryRangeId) {
-        return Results.success(carrierDeliveryRangeRepository.detail(deliveryRangeId));
+    public ResponseEntity<?> detail(@RequestParam final Long deliveryRangeId,
+                                    @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+        return Results.success(carrierDeliveryRangeService.carrierDeliveryRangeDetail(deliveryRangeId,organizationId));
     }
 
     @ApiOperation(value = "批量创建或新增承运商送达范围")

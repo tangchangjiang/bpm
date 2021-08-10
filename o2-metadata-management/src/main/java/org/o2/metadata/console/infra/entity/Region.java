@@ -65,6 +65,9 @@ public class Region extends AuditDomain {
     @ApiModelProperty("父地区ID")
     private Long parentRegionId;
 
+    private String parentRegionCode;
+    private String parentRegionName;
+
     @ApiModelProperty("等级路径")
     @JsonIgnore
     private String levelPath;

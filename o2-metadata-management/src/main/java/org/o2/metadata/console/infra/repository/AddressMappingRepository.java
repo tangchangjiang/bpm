@@ -16,12 +16,12 @@ public interface AddressMappingRepository extends BaseRepository<AddressMapping>
     /**
      * 更据catalogCode和regionId查询地址匹配数量
      * @param catalogCode meaning
-     * @param regionId meaning
+     * @param regionCode meaning
      * @param tenantId meaning
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<AddressMapping> queryAddressByCondition(String catalogCode, Long regionId, Long tenantId);
+    List<AddressMapping> queryAddressByCondition(String catalogCode, String regionCode, Long tenantId);
 
 
     /**

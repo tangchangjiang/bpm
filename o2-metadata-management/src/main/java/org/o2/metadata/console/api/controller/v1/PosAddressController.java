@@ -29,6 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class PosAddressController extends BaseController {
     private final PosAddressRepository posAddressRepository;
 
+
     public PosAddressController(final PosAddressRepository posAddressRepository) {
         this.posAddressRepository = posAddressRepository;
     }

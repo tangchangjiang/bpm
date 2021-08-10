@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import java.util.List;
 @Data
 public class RegionTreeChildVO {
 
-    @ApiModelProperty("表ID，主键，供其他表做外键")
-    private Long addressMappingId;
 
     @ApiModelProperty(value = "region 关联")
     private String regionCode;
@@ -49,8 +46,6 @@ public class RegionTreeChildVO {
     private Long tenantId;
 
 
-    @ApiModelProperty(value = "版本ID")
-    private Long catalogId;
 
     @ApiModelProperty(value = "查询条件 内部区域名称")
     private String regionName;
@@ -76,14 +71,14 @@ public class RegionTreeChildVO {
     private List<String> regionPathNames = new ArrayList<>(4);
 
     @ApiModelProperty(value = "版本编码")
-    private String catalogCode;
+    private String platformCode;
 
     @ApiModelProperty(value = "版本名称",required = true)
     private String catalogName;
     /**
      * 地区父节点id
      */
-    private Long parentRegionId;
+    private String parentRegionCode;
 
     /**
      * 地区子节点集合
@@ -92,6 +87,6 @@ public class RegionTreeChildVO {
 
     private String levelPath;
 
-    private Long regionId;
+    private String _token;
 
 }

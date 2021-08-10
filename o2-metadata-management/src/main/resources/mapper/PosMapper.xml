@@ -69,6 +69,16 @@
         <if test="posTypeCode != null and posTypeCode != ''">
             and pos.pos_type_code = #{posTypeCode}
         </if>
+        <if test="countryCode != null and countryCode != ''">
+            and address.country_code = #{countryCode}
+        </if>
+        <if test="regionCode != null and regionCode != ''">
+            and address.region_code = #{regionCode}
+        </if>
+
+        <if test="districtCode != null and districtCode != ''">
+            and address.district_code = #{districtCode}
+        </if>
         order by pos.pos_code
     </select>
 

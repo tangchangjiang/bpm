@@ -88,7 +88,7 @@ public class FreightTemplateController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
-        freightTemplateService.removeTemplateAndDetails(freightTemplateList);
+        freightTemplateService.removeTemplateAndDetails(freightTemplateList,organizationId);
         return Results.success();
     }
 

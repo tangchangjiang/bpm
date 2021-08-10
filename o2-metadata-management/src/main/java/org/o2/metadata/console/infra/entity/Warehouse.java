@@ -188,6 +188,7 @@ public class Warehouse extends AuditDomain {
         warehouseMap.put(WarehouseConstants.WarehouseCache.PICKUP_FLAG,this.pickedUpFlag);
         warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESSED_FLAG,this.expressedFlag);
         warehouseMap.put(WarehouseConstants.WarehouseCache.SCORE,this.score);
+        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_NAME,this.warehouseName);
         warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_FROM,
                 (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
         warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_TO,
@@ -237,8 +238,6 @@ public class Warehouse extends AuditDomain {
                               final RedisCacheClient redisCacheClient) {
         Map<Integer, List<Warehouse>> warehouseMap  = this.warehouseGroupMap(warehouseList);
         for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
-//            List<String> keyList = new ArrayList<>();
-//            Map<String, Map<String, Object>> filedMaps = new HashMap<>();
             for (Warehouse warehouse : warehouseEntry.getValue()) {
                 final String hashKey = warehouse.buildRedisHashKey(warehouse.getWarehouseCode(), tenantId);
                 if (warehouseEntry.getKey() == 1) {
@@ -246,20 +245,12 @@ public class Warehouse extends AuditDomain {
                         redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(FastJsonHelper.objectToString(warehouse.buildRedisHashMap()), new TypeReference<Map<String, String>>() {
                         }));
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
                 } else {
                     redisCacheClient.opsForHash().delete(hashKey, warehouse.buildRedisHashMap().keySet().toArray());
                 }
-
-//                keyList.add(hashKey);
-//                filedMaps.put(hashKey, warehouse.buildRedisHashMap());
             }
-//            if (warehouseEntry.getKey() == 1) {
-//                this.executeScript(filedMaps, keyList, saveResourceScriptSource,redisCacheClient);
-//            } else {
-//                this.executeScript(filedMaps, keyList,deleteResourceScriptSource,redisCacheClient);
-//            }
         }
     }
 

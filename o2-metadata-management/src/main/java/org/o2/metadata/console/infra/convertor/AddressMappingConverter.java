@@ -33,14 +33,13 @@ public class AddressMappingConverter {
         addressMappingVO.setExternalName(addressMapping.getExternalName());
         addressMappingVO.setActiveFlag(addressMapping.getActiveFlag());
         addressMappingVO.setTenantId(addressMapping.getTenantId());
-        addressMappingVO.setCatalogId(addressMapping.getCatalogId());
         addressMappingVO.setRegionName(addressMapping.getRegionName());
         addressMappingVO.setPlatformTypeMeaning(addressMapping.getPlatformTypeMeaning());
         addressMappingVO.setAddressTypeMeaning(addressMapping.getAddressTypeMeaning());
         addressMappingVO.setRegionPathIds(addressMapping.getRegionPathIds());
         addressMappingVO.setRegionPathCodes(addressMapping.getRegionPathCodes());
         addressMappingVO.setRegionPathNames(addressMapping.getRegionPathNames());
-        addressMappingVO.setCatalogCode(addressMapping.getCatalogCode());
+        addressMappingVO.setPlatformCode(addressMapping.getPlatformCode());
         addressMappingVO.setCatalogName(addressMapping.getCatalogName());
         addressMappingVO.setCreationDate(addressMapping.getCreationDate());
         addressMappingVO.setCreatedBy(addressMapping.getCreatedBy());

@@ -47,13 +47,16 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
     /**
      * 更据catalogCode和regionId查询地址匹配数量
      *
-     * @param catalogCode meaning
-     * @param regionId    meaning
+     * @param platformCode meaning
+     * @param regionCode    meaning
      * @param tenantId    meaning
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<AddressMapping> queryAddressByCondition(@Param(value = "catalogCode") String catalogCode, @Param(value = "regionId") Long regionId, @Param(value = "tenantId") Long tenantId);
+    List<AddressMapping> queryAddressByCondition(@Param(value = "platformCode") String platformCode,
+                                                 @Param(value = "regionCode") String regionCode,
+                                                 @Param(value = "tenantId") Long tenantId);
+
 
     /**
      *  批量查询

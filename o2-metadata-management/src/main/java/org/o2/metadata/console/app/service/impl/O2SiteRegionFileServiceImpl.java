@@ -7,12 +7,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
+import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
+import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.convertor.RegionConverter;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -32,17 +37,18 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     private static final String ZH_CN = "zh_CN";
     private static final String EN_US = "en_US";
 
-    private final RegionMapper regionMapper;
     private final FileStorageProperties fileStorageProperties;
+    private final RegionRepository regionRepository;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
 
 
-    public O2SiteRegionFileServiceImpl(RegionMapper regionMapper,
-                                       FileStorageProperties fileStorageProperties,
-                                       FileClient fileClient, StaticResourceInternalService staticResourceInternalService) {
-        this.regionMapper = regionMapper;
+    public O2SiteRegionFileServiceImpl(FileStorageProperties fileStorageProperties,
+                                       RegionRepository regionRepository,
+                                       FileClient fileClient,
+                                       StaticResourceInternalService staticResourceInternalService) {
         this.fileStorageProperties = fileStorageProperties;
+        this.regionRepository = regionRepository;
         this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
     }
@@ -53,12 +59,18 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         log.info("static params are : {},{}", tenantId, regionCacheVO.getCountryCode());
         final String countryCode = regionCacheVO.getCountryCode();
         regionCacheVO.setLang(MetadataConstants.Path.ZH_CN);
-        final List<RegionCacheVO> zhList = regionMapper.selectRegionList(regionCacheVO);
-        String zhResourceUrl = this.staticFile(zhList, MetadataConstants.Path.ZH_CN, tenantId, countryCode);
 
-        regionCacheVO.setLang(MetadataConstants.Path.EN_US);
-        final List<RegionCacheVO> enList = regionMapper.selectRegionList(regionCacheVO);
-        String enResourceUrl = this.staticFile(enList, MetadataConstants.Path.EN_US, tenantId, countryCode);
+        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        dto.setLang(MetadataConstants.Path.ZH_CN);
+        dto.setTenantId(tenantId);
+        dto.setCountryCode(countryCode);
+
+        final List<Region> zhList = regionRepository.listRegionLov(dto,tenantId);
+        String zhResourceUrl = this.staticFile(RegionConverter.poToBoListObjects(zhList), MetadataConstants.Path.ZH_CN, tenantId, countryCode);
+
+        dto.setLang(MetadataConstants.Path.EN_US);
+        final List<Region> enList = regionRepository.listRegionLov(dto,tenantId);
+        String enResourceUrl = this.staticFile(RegionConverter.poToBoListObjects(enList), MetadataConstants.Path.EN_US, tenantId, countryCode);
 
         //  更新静态文件资源表
         List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, zhResourceUrl, enResourceUrl);
@@ -73,7 +85,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
      * @param list 静态文件数据实体
      */
     // TODO：文件上传需要分布式锁
-    private String staticFile(final List<RegionCacheVO> list,
+    private String staticFile(final List<RegionCacheBO> list,
                               final String lang,
                               final Long tenantId,
                               final String countryCode) {
