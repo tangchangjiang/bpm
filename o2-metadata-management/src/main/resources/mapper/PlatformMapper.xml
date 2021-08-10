@@ -47,6 +47,9 @@
                 <bind name="platformName" value="'%'+platformName+'%'"/>
                 and pf.platform_name like #{platformName}
             </if>
+            <if test="platformStatusCode != null">
+                and pf.platform_status_code = #{platformStatusCode}
+            </if>
         </where>
     </select>
 </mapper>

@@ -19,5 +19,7 @@ public class PlatformDTO {
     private String platformName;
     @ApiModelProperty(value = "租户id", required = true)
     private Long tenantId;
+    @ApiModelProperty(value = "启用标志")
+    private Integer platformStatusCode;
 
 }
