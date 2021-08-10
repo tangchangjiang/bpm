@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.mybatis.annotation.ModifyAudit;
@@ -12,7 +11,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hzero.boot.platform.lov.annotation.LovValue;
 
 /**
  * 平台定义表
@@ -52,10 +50,9 @@ public class Platform extends AuditDomain {
     @ApiModelProperty(value = "平台名称")
     @NotNull
     private String platformName;
-    @ApiModelProperty(value = "平台状态，值集：O2MD.PLATFORM_STATUS")
-    @LovValue(lovCode = "O2MD.PLATFORM_STATUS")
+    @ApiModelProperty(value = "平台状态")
     @NotNull
-    private String platformStatusCode;
+    private Integer platformStatusCode;
     @ApiModelProperty(value = "租户id", required = true)
     @NotNull
     private Long tenantId;
@@ -63,10 +60,6 @@ public class Platform extends AuditDomain {
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
-
-    @Transient
-    @ApiModelProperty(value = "平台状态说明")
-    private String platformStatusMeaning;
     //
     // getter/setter
     // ------------------------------------------------------------------------------
