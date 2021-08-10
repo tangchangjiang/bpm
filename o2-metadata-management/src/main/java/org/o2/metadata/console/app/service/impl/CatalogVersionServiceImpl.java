@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.CatalogVersionDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
@@ -60,21 +61,24 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         if (null == catalogVersionDTO) {
             return map;
         }
+        if (CollectionUtils.isNotEmpty(catalogVersionDTO.getCatalogCodes())) {
+            List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodes(),organizationId);
+            if (CollectionUtils.isNotEmpty(catalogList)) {
+                for (Catalog catalog : catalogList) {
+                    map.put(catalog.getCatalogCode(), catalog.getCatalogName());
+                }
+            }
+        }
 
-        List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodes(),organizationId);
-        if (CollectionUtils.isNotEmpty(catalogList)) {
-            for (Catalog catalog : catalogList) {
-                map.put(catalog.getCatalogCode(), catalog.getCatalogName());
+        if (CollectionUtils.isNotEmpty(catalogVersionDTO.getCatalogCodeVersionCodes())) {
+            List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodeVersionCodes(),organizationId);
+            if (CollectionUtils.isNotEmpty(catalogVersions)) {
+                for (CatalogVersion catalogVersion : catalogVersions) {
+                    map.put(catalogVersion.getCatalogVersionCode(), catalogVersion.getCatalogVersionName());
+                }
             }
         }
-        List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodeVersionCodes(),organizationId);
-        if (CollectionUtils.isNotEmpty(catalogVersions)) {
-            for (CatalogVersion catalogVersion : catalogVersions) {
-                map.put(catalogVersion.getCatalogCode(), catalogVersion.getCatalogVersionName());
-            }
-        }
+
         return map;
     }
-
-
 }

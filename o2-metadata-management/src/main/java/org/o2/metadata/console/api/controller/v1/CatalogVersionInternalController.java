@@ -29,7 +29,7 @@ public class CatalogVersionInternalController{
     }
 
     @ApiOperation(value = "目录版本")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/select-name")
     public ResponseEntity<Map<String,String>> listCatalogVersions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersionDTO catalogVersionDTO) {
         return Results.success(catalogVersionService.listCatalogVersions(catalogVersionDTO,organizationId));
