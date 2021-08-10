@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Slf4j
-public class FreightServiceRemoteServiceImpl implements FreightRemoteService {
+public class FreightRemoteServiceImpl implements FreightRemoteService {
 
     @Override
     public ResponseEntity<String> getFreightTemplate(FreightDTO freight,Long organizationId) {

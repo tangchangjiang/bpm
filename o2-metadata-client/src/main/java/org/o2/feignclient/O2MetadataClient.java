@@ -5,9 +5,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
+import org.o2.feignclient.metadata.domain.vo.OnlineShopVO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
 import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
+import org.o2.feignclient.metadata.infra.feign.OnlineShopRemoteService;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 
@@ -22,13 +24,15 @@ public class O2MetadataClient {
     private final SysParameterRemoteService sysParameterRemoteService;
     private final WarehouseRemoteService warehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
+    private final OnlineShopRemoteService onlineShopRemoteService;
 
     public O2MetadataClient(SysParameterRemoteService sysParameterRemoteService,
                             WarehouseRemoteService warehouseRemoteService,
-                            FreightRemoteService freightRemoteService) {
+                            FreightRemoteService freightRemoteService, OnlineShopRemoteService onlineShopRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
+        this.onlineShopRemoteService = onlineShopRemoteService;
     }
 
     /**
@@ -79,5 +83,15 @@ public class O2MetadataClient {
      */
     public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
         return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
+    }
+
+    /**
+     *
+     * @date 2021-08-10
+     * @param onlineShopCode  网店编码
+     * @return 网店
+     */
+    public OnlineShopVO getOnlineShop(String onlineShopCode) {
+       return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode),OnlineShopVO.class);
     }
 }
