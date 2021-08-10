@@ -1,4 +1,4 @@
-package org.o2.metadata.console.app.bo;
+package org.o2.metadata.infra.entity;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-08-06
  **/
 @Data
-public class OnlineShopRedisBO {
+public class OnlineShop {
     /**
      * 平台编码
      */
@@ -30,20 +30,7 @@ public class OnlineShopRedisBO {
      */
     private String platformShopCode;
 
-    /**
-     * 目录
-     */
-    private String catalogCode;
-
-    /**
-     * 目标编码
-     */
-    private String catalogVersionCode;
-
-    /**
-     * 仓库编码
-     */
-    private String warehouseCode;
-
     private Long tenantId;
+
+
 }

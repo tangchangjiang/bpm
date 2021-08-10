@@ -28,16 +28,15 @@ public interface OnlineShopConstants {
         /**
          *  o2md:onlineShop:[tenantId]:[shopCode]
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:%s:{%d}";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%s}";
         
         /**
          *  获取key
-         * @param tenantId 租户ID
          * @param shopCode 网店编码
          * @return key
          */
-        static String getOnlineShopKey(Long tenantId, String shopCode) {
-            return String.format(ONLINE_SHOP_KEY, tenantId, shopCode);
+        static String getOnlineShopKey(String shopCode) {
+            return String.format(ONLINE_SHOP_KEY,shopCode);
         }
     }
 }
