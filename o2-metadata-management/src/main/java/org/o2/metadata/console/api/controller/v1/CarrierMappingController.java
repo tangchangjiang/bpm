@@ -14,7 +14,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.vo.CarrierMappingVO;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
 import org.o2.metadata.console.app.service.CarrierMappingService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
@@ -48,10 +48,10 @@ public class CarrierMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierMappingVO carrierMappingVO, @ApiIgnore final PageRequest pageRequest) {
-        carrierMappingVO.setTenantId(organizationId);
-        final Page<CarrierMappingVO> list = PageHelper.doPageAndSort(pageRequest,
-                () -> carrierMappingRepository.listCarrierMappingByCondition(carrierMappingVO));
+    public ResponseEntity<Page<CarrierMapping>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierMappingQueryDTO carrierMappingQueryDTO, @ApiIgnore final PageRequest pageRequest) {
+        carrierMappingQueryDTO.setTenantId(organizationId);
+        final Page<CarrierMapping> list = PageHelper.doPageAndSort(pageRequest,
+                () -> carrierMappingRepository.listCarrierMappingByCondition(carrierMappingQueryDTO));
         return Results.success(list);
     }
 
