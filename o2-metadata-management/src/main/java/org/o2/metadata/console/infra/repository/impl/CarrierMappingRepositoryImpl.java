@@ -1,9 +1,9 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
-import org.o2.metadata.console.api.vo.CarrierMappingVO;
 import org.o2.metadata.console.infra.mapper.CarrierMappingMapper;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class CarrierMappingRepositoryImpl extends BaseRepositoryImpl<CarrierMapp
     }
 
     @Override
-    public List<CarrierMappingVO> listCarrierMappingByCondition(final CarrierMappingVO carrierMappingVO) {
-        return carrierMappingMapper.listCarrierMappingByCondition(carrierMappingVO);
+    public List<CarrierMapping> listCarrierMappingByCondition(final CarrierMappingQueryDTO carrierMappingQueryDTO) {
+        return carrierMappingMapper.listCarrierMappingByCondition(carrierMappingQueryDTO);
     }
 }
