@@ -30,5 +30,8 @@ public class OnlineShopVO {
     @ApiModelProperty(value = "网点名称")
     private String onlineShopName;
 
+    @ApiModelProperty(value = "是否有效")
+    private Integer activeFlag;
+
 
 }

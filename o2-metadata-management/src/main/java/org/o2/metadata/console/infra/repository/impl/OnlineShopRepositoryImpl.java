@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.repository.impl;
 import com.google.common.base.Preconditions;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -68,7 +69,8 @@ class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements
     }
 
     @Override
-    public List<OnlineShop> getShopCode(OnlineShop onlineShop) {
-        return onlineShopMapper.getShopCode(onlineShop);
+    public List<OnlineShop> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersions, Long tenantId) {
+        return onlineShopMapper.listOnlineShopByCatalogCodes(onlineShopCatalogVersions,tenantId);
     }
+
 }

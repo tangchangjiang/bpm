@@ -12,13 +12,10 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.inventory.management.client.O2InventoryClient;
-import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
+import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
-import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
@@ -228,11 +225,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     @Override
     public List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return OnlineShopRelWarehouseConverter.doToVoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
-    }
-
-    @Override
-    public List<OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopDTO,tenantId));
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {

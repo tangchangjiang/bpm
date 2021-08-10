@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * description
@@ -33,19 +36,20 @@ public class OnlineShopInternalController {
         this.onlineShopService = onlineShopService;
     }
 
-    @ApiOperation(value = "内部接口,根据网店名称查询网店code")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping
-    public ResponseEntity<List<OnlineShopVO>> getOnlineShopCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                               @RequestParam("platformCode") String platformCode,
-                                                               @RequestParam("shopName") String shopName){
 
-        List<OnlineShopVO> onlineShopCode = onlineShopService.getOnlineShopCode(platformCode, shopName,organizationId);
-        return Results.success(onlineShopCode);
-
-
+    @ApiOperation(value = "查询网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/onlineShop-list")
+    public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                     @RequestBody OnlineShopDTO onlineShopDTO) {
+        return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
     }
 
-
-
+    @ApiOperation(value = "目录+目录版本批量查询网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/onlineShops")
+    public ResponseEntity<Map<String, List<OnlineShopVO>>> listOnlineShopList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                     @RequestBody List<OnlineShopCatalogVersionDTO> onlineShopDTO) {
+        return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
+    }
 }
