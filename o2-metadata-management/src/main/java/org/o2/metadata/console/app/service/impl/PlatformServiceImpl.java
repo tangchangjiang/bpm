@@ -63,8 +63,7 @@ public class PlatformServiceImpl implements PlatformService {
     @Transactional(rollbackFor = Exception.class)
     public Platform save(Platform platform) {
         // 唯一性校验
-        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())
-                .andEqualTo(Platform.FIELD_PLATFORM_STATUS_CODE,platform.getPlatformStatusCode())).build();
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())).build();
         List<Platform> platforms = platformRepository.selectByCondition(condition);
         //保存平台定义表
         if (platform.getPlatformId() == null) {
