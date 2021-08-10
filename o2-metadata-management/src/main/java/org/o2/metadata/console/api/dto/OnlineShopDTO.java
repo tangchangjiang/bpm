@@ -16,12 +16,14 @@ import java.util.List;
 @ApiModel("网店基础设置")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopDTO {
+    /**
+     * 查询条件  onlineShopCodes  or  onlineShopNames
+     */
 
     @ApiModelProperty(value = "网点编码")
     private List<String> onlineShopCodes;
 
     @ApiModelProperty(value = "网店名称")
     private List<String> onlineShopNames;
-
 
 }

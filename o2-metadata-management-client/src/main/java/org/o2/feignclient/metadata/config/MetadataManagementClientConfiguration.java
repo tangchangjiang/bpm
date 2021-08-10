@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
         basePackageClasses = {
                 SysParameterRemoteService.class,
                 WarehouseRemoteService.class,
-                OnlineShopRelWarehouseRemoteService.class,
                 StaticResourceRemoteService.class,
                 FreightRemoteService.class,
                 CatalogVersionRemoteService.class,
@@ -38,12 +37,6 @@ public class MetadataManagementClientConfiguration {
     @ConditionalOnMissingBean
     public WarehouseRemoteServiceImpl warehouseRemoteServiceFallback() {
         return new WarehouseRemoteServiceImpl();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public OnlineShopRelWarehouseRemoteServiceImpl onlineShopRelWarehouseRemoteServiceFallback() {
-        return new OnlineShopRelWarehouseRemoteServiceImpl();
     }
 
     @Bean
@@ -99,7 +92,6 @@ public class MetadataManagementClientConfiguration {
     @ConditionalOnMissingBean
     public O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                                                  WarehouseRemoteService warehouseRemoteService,
-                                                                 OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                                                  FreightRemoteService freightRemoteService,
                                                                  StaticResourceRemoteService staticResourceRemoteService,
                                                                  CatalogVersionRemoteService catalogVersionRemoteService,
@@ -110,7 +102,6 @@ public class MetadataManagementClientConfiguration {
                                                                  AddressMappingRemoteService addressMappingService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
                 warehouseRemoteService,
-                onlineShopRelWarehouseRemoteService,
                 freightRemoteService,
                 staticResourceRemoteService,
                 catalogVersionRemoteService,

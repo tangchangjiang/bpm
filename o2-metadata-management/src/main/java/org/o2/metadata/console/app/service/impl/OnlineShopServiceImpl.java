@@ -3,9 +3,12 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
@@ -21,10 +24,8 @@ import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 网店应用服务默认实现
@@ -107,15 +108,46 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName,Long tenantId) {
-        if (StringUtils.isEmpty(platformCode) || StringUtils.isEmpty(shopName)) {
-            throw new CommonException("parameter cannot be empty");
+    public Map<String,OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
+        Map<String,OnlineShopVO> map = new HashMap<>(16);
+       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopDTO,tenantId));
+        if (voList.isEmpty()) {
+           return map;
         }
-        OnlineShop onlineShop = new OnlineShop();
-        onlineShop.setOnlineShopName(shopName);
-        onlineShop.setTenantId(tenantId);
-        onlineShop.setPlatformCode(platformCode);
-        List<OnlineShop> shopCode = onlineShopRepository.getShopCode(onlineShop);
-        return OnlineShopConverter.poToVoListObjects(shopCode);
+        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopCodes())) {
+            for (OnlineShopVO vo : voList) {
+                map.put(vo.getOnlineShopCode(),vo);
+            }
+            return  map;
+        }
+        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopNames())) {
+            for (OnlineShopVO vo : voList) {
+                map.put(vo.getOnlineShopName(),vo);
+            }
+            return  map;
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
+        Map<String,List<OnlineShopVO>> map = new HashMap<>(16);
+        List<OnlineShopVO> voList = OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList,tenantId));
+        if (voList.isEmpty()) {
+            return map;
+        }
+        for (OnlineShopVO vo : voList) {
+            String key = vo.getCatalogCode() + "-" + vo.getCatalogVersionCode();
+            List<OnlineShopVO> list = map.get(key);
+            if (null == list) {
+                List<OnlineShopVO> onlineShops = new ArrayList<>();
+                onlineShops.add(vo);
+                map.put(key,onlineShops);
+                continue;
+            }
+            list.add(vo);
+            map.put(key,list);
+        }
+        return map;
     }
 }
