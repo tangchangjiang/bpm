@@ -240,9 +240,13 @@
                 </otherwise>
             </choose>
             <if test="onlineShopCatalogVersions != null and onlineShopCatalogVersions.size() > 0">
-                and (online.catalog_code,online.catalog_version_code) in
-                <foreach collection="onlineShopCatalogVersions" item="item" open="(" close=")">
-                    (#{item.catalogCode},#{item.catalogVersionCode})
+                and online.catalog_code in
+                <foreach collection="onlineShopCatalogVersions" item="item" open="(" separator="," close=")">
+                    #{item.catalogCode}
+                </foreach>
+                and online.catalog_version_code in
+                <foreach collection="onlineShopCatalogVersions" item="item" open="(" separator="," close=")">
+                    #{item.catalogVersionCode}
                 </foreach>
             </if>
             AND tl.lang =#{lang}

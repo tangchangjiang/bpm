@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.inventory.management.client.O2InventoryClient;
-import org.o2.inventory.management.client.infra.constants.O2InventoryConstant;
+import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
