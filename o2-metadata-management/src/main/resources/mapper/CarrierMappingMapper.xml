@@ -4,7 +4,7 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.CarrierMapping">
         <result column="carrier_mapping_id" property="carrierMappingId" jdbcType="DECIMAL"/>
-        <result column="catalog_code" property="catalogCode" jdbcType="DECIMAL"/>
+        <result column="platform_code" property="platformCode" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="external_carrier_code" property="externalCarrierCode" jdbcType="VARCHAR"/>
         <result column="external_carrier_Name" property="externalCarrierName" jdbcType="VARCHAR"/>
@@ -25,7 +25,7 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         cm.carrier_mapping_id,
-        cm.catalog_code,
+        cm.platform_code,
         cm.carrier_id,
         c.carrier_code,
         oct.carrier_name,
@@ -40,7 +40,7 @@
         FROM
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
-        join o2md_catalog  ca on ca.catalog_code = cm.catalog_code AND ca.tenant_id = #{tenantId}
+        join o2md_catalog  ca on ca.catalog_code = cm.platform_code AND ca.tenant_id = #{tenantId}
         left join  o2md_catalog_tl cat on cat.catalog_id = ca.catalog_id  and cat.lang = #{lang}
         left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang}
         where 1 = 1
@@ -52,8 +52,8 @@
                 AND 1 = 0
             </otherwise>
         </choose>
-        <if test="catalogCode!=null and catalogCode!=''">
-            AND cm.catalog_code = #{catalogCode}
+        <if test="platformCode!=null and platformCode!=''">
+            AND cm.platform_code = #{platformCode}
         </if>
         <if test="carrierCode!=null and carrierCode!=''">
             <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
@@ -63,6 +63,6 @@
             <bind name="externalCarrierCodeLike" value="'%' + externalCarrierCode + '%'"/>
             and cm.external_carrier_code like #{externalCarrierCodeLike}
         </if>
-        ORDER BY cm.catalog_code, c.carrier_code
+        ORDER BY cm.platform_code, c.carrier_code
     </select>
 </mapper>
