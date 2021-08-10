@@ -7,6 +7,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.lov.adapter.LovAdapter;
+import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
@@ -84,7 +85,7 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
         if (platformInfMapping.getPlatformInfMappingId() == null) {
             //判断是否重复
             if (CollectionUtils.isNotEmpty(list)){
-                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR, MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
             }
             setLovMeaning(platformInfMapping);
             platformInfMappingRepository.insertSelective(platformInfMapping);
@@ -93,7 +94,7 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
                 // 判断是否重复
                 PlatformInfMapping result = list.get(0);
                 if (!result.getPlatformInfMappingId().equals(platformInfMapping.getPlatformInfMappingId())) {
-                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR);
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR,MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
                 }
             }
             setLovMeaning(platformInfMapping);
