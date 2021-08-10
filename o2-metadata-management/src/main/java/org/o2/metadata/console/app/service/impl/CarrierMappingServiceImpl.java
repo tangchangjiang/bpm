@@ -43,7 +43,7 @@ public class CarrierMappingServiceImpl implements CarrierMappingService {
             query.setPlatformCode(carrierMapping.getPlatformCode());
             query.setTenantId(carrierMapping.getTenantId());
             Platform platform = platformMapper.selectOne(query);
-            Preconditions.checkArgument(null != platform, "unrecognized catalogCode:" + carrierMapping.getPlatformCode() + "or tenantId:" + carrierMapping.getTenantId());
+            Preconditions.checkArgument(null != platform, "unrecognized platformCode:" + carrierMapping.getPlatformCode() + "or tenantId:" + carrierMapping.getTenantId());
             // 平台和承运商编码是否重复
             carrierMapping.setPlatformId(platform.getPlatformId());
             final boolean exist = carrierMapping.exist(carrierMappingRepository);

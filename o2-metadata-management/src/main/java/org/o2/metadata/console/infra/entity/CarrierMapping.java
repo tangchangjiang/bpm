@@ -83,10 +83,6 @@ public class CarrierMapping extends AuditDomain {
     private Long carrierMappingId;
 
 
-    @Transient
-    @ApiModelProperty(value = "平台id")
-    private Long platformId;
-
     @ApiModelProperty(value = "承运商id")
     @NotNull
     private Long carrierId;
@@ -99,6 +95,10 @@ public class CarrierMapping extends AuditDomain {
     @NotBlank
     private String platformCarrierName;
 
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -107,8 +107,6 @@ public class CarrierMapping extends AuditDomain {
     @Transient
     private String platformTypeMeaning;
 
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
 
     @ApiModelProperty(value = "版本编码")
     private String platformCode;
@@ -116,4 +114,19 @@ public class CarrierMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "版本名称")
     private String platformName;
+
+    @Transient
+    @ApiModelProperty(value = "承运商编码")
+    private String carrierCode;
+
+    @Transient
+    @ApiModelProperty(value = "承运商名称")
+    private String carrierName;
+
+
+    @Transient
+    @ApiModelProperty(value = "平台id")
+    private Long platformId;
+
+
 }
