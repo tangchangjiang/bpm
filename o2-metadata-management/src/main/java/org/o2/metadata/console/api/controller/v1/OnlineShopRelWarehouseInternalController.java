@@ -1,4 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
+
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -7,18 +8,18 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -52,24 +53,6 @@ public class OnlineShopRelWarehouseInternalController {
             map.put(vo.getWarehouseCode(), vo);
         }
         return Results.success(map);
-    }
-
-    @ApiOperation(value = "查询网店")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/onlineShop-list")
-    public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                     @RequestBody OnlineShopDTO onlineShopDTO) {
-        log.info("onlineShopVOList test======test");
-        List<OnlineShopVO> onlineShopVOList = onlineShopRelWarehouseService.listOnlineShops(onlineShopDTO, organizationId);
-        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopCodes())) {
-            Map<String, OnlineShopVO> codeMap = onlineShopVOList.stream().collect(Collectors.toMap(OnlineShopVO::getOnlineShopCode, item -> item));
-            return Results.success(codeMap);
-        }
-        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopNames())) {
-            Map<String, OnlineShopVO> nameMap = onlineShopVOList.stream().collect(Collectors.toMap(OnlineShopVO::getOnlineShopName, item -> item));
-            return Results.success(nameMap);
-        }
-        return Results.success(new HashMap<String, OnlineShopVO>(16));
     }
 
 }

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -60,10 +61,13 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      */
     List<OnlineShop> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
 
+
     /**
-     * 根据网店名称查询网店code
-     * @param onlineShop
-     * @return List<OnlineShop> 结果
+     * 目录+ 目录版 批量查询网店
+     * @param onlineShopCatalogVersions 目录版本
+     * @param tenantId 租户ID
+     * @return list
      */
-    List<OnlineShop> getShopCode(OnlineShop onlineShop);
+    List<OnlineShop> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersions, Long tenantId);
+
 }

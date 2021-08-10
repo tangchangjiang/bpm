@@ -20,7 +20,6 @@ public class O2MetadataManagementClient {
 
     private final SysParameterRemoteService sysParameterRemoteService;
     private final WarehouseRemoteService warehouseRemoteService;
-    private final OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
     private final StaticResourceRemoteService staticResourceRemoteService;
     private final CatalogVersionRemoteService catalogVersionRemoteService;
@@ -33,7 +32,6 @@ public class O2MetadataManagementClient {
 
     public O2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
                                       WarehouseRemoteService warehouseRemoteService,
-                                      OnlineShopRelWarehouseRemoteService onlineShopRelWarehouseRemoteService,
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
@@ -41,7 +39,6 @@ public class O2MetadataManagementClient {
                                       AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
-        this.onlineShopRelWarehouseRemoteService = onlineShopRelWarehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
         this.staticResourceRemoteService = staticResourceRemoteService;
         this.catalogVersionRemoteService = catalogVersionRemoteService;
@@ -103,7 +100,7 @@ public class O2MetadataManagementClient {
      * @return map<warehouseCode, OnlineShopRelWarehouseVO>
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
         });
     }
 
@@ -159,7 +156,19 @@ public class O2MetadataManagementClient {
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
     public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRelWarehouseRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+        });
+    }
+
+
+    /**
+     * 目录版本+ 目录 批量查询网店
+     *
+     * @param onlineShopCatalogVersionList 网店
+     * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
+     */
+    public Map<String, List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopVO>>>() {
         });
     }
 

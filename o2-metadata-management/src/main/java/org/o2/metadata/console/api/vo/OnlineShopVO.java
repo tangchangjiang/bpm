@@ -31,5 +31,8 @@ public class OnlineShopVO {
     @ApiModelProperty(value = "目录编码")
     private String catalogVersionCode;
 
+    @ApiModelProperty(value = "是否有效")
+    private Integer activeFlag;
+
 
 }
