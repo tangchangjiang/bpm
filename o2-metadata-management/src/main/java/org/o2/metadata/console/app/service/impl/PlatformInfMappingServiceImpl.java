@@ -118,24 +118,10 @@ public class PlatformInfMappingServiceImpl implements PlatformInfMappingService 
 
     /**
      * 动态查询值集
-     * @param platformInfMapping
+     * @param platformInfMapping 参数
      */
     private void setLovMeaning(PlatformInfMapping platformInfMapping) {
-        String infTypeCode = platformInfMapping.getInfTypeCode();
-        String lovValue = "";
-        if (REFUND_STATUS.equalsIgnoreCase(infTypeCode)) {
-            // 退款状态
-            lovValue = MetadataConstants.InfNameCode.REFUND_STATUS;
-        }else if (REFUND_REASON.equalsIgnoreCase(infTypeCode)) {
-            // 退款原因
-            lovValue = MetadataConstants.InfNameCode.REFUND_REASON;
-        }else if (ORDER_STATUS.equalsIgnoreCase(infTypeCode)){
-            // 订单状态
-            lovValue = MetadataConstants.InfNameCode.ORDER_STATUS;
-        }else {
-            // 上下架状态
-            lovValue = MetadataConstants.InfNameCode.SHELF_STATUS;
-        }
+        String lovValue = platformInfMapping.getInfTypeCode();
         String lovMeaning = lovAdapter.queryLovMeaning(lovValue,
                 platformInfMapping.getTenantId(), platformInfMapping.getInfCode());
         platformInfMapping.setInfName(lovMeaning);

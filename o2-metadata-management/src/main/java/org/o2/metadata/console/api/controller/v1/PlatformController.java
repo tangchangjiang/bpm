@@ -55,6 +55,8 @@ public class PlatformController extends BaseController {
         return Results.success(list);
     }
 
+
+
     @ApiOperation(value = "平台定义表维护-查询平台定义表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{platformId}")
