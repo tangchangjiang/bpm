@@ -40,7 +40,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             return;
         }
         OnlineShop onlineShop = list.get(0);
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId,onlineShopCode);
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(onlineShopCode);
         if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
             redisCacheClient.delete(key);
             return;
@@ -52,6 +52,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         bo.setOnlineShopName(onlineShop.getOnlineShopName());
         bo.setPlatformCode(onlineShop.getPlatformCode());
         bo.setPlatformShopCode(onlineShop.getPlatformShopCode());
+        bo.setTenantId(onlineShop.getTenantId());
         Map<Object, Object> map = FastJsonHelper.stringToMap(FastJsonHelper.objectToString(bo));
         redisCacheClient.opsForHash().putAll(key,map);
     }

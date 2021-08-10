@@ -14,11 +14,13 @@ import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Collections;
@@ -26,7 +28,7 @@ import java.util.List;
 
 /**
  * 网店应用服务默认实现
- * @author: yipeng.zhu@hand-china.com 2020-06-03 09:53
+ * @author yipeng.zhu@hand-china.com 2020-06-03 09:53
  **/
 @Slf4j
 @Service
@@ -36,27 +38,27 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
     private O2InventoryClient o2InventoryClient;
+    private final OnlineShopRedis onlineShopRedis;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
-                                OnlineShopRelWarehouseService onlineShopRelWarehouseService,
-                                CatalogRepository catalogRepository,
-                                CatalogVersionRepository catalogVersionRepository,
-                                 O2InventoryClient o2InventoryClient) {
+                                 OnlineShopRelWarehouseService onlineShopRelWarehouseService,
+                                 CatalogRepository catalogRepository,
+                                 CatalogVersionRepository catalogVersionRepository,
+                                 O2InventoryClient o2InventoryClient, OnlineShopRedis onlineShopRedis) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
         this.o2InventoryClient = o2InventoryClient;
+        this.onlineShopRedis = onlineShopRedis;
     }
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createOnlineShop(OnlineShop onlineShop) {
         if (null == onlineShop.getCatalogCode()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
-//        if (onlineShop.exist(onlineShopRepository)) {
-//            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_U_INDEX);
-//        }
         try {
             onlineShop.setCatalogId(catalog.getCatalogId());
             CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
@@ -66,6 +68,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             this.onlineShopRepository.insertSelective(onlineShop);
+            onlineShopRedis.batchUpdateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
         } catch (final DuplicateKeyException e) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,
                     "OnlineShop(" + onlineShop.getOnlineShopId() + ")");
@@ -73,6 +76,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateOnlineShop(OnlineShop onlineShop) {
         Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
         Preconditions.checkArgument(null != catalog, "illegal combination catalogCode && organizationId");
@@ -92,13 +96,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         if (flag) {
             onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
         }
-        final int result = onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
+        onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
             //触发网店关联仓库更新
             onlineShopRelWarehouseService.updateByShop(onlineShop.getOnlineShopId(), origin.getOnlineShopCode(), onlineShop.getActiveFlag(), onlineShop.getTenantId());
             // 触发渠道可用库存计算
             o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }
+        onlineShopRedis.batchUpdateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
     }
 
     @Override

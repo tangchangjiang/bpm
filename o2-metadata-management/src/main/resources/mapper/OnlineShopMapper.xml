@@ -186,9 +186,7 @@
         select online.online_shop_id,
                online.platform_code,
                tl.online_shop_name,
-               online.online_shop_code,
-               online.catalog_code,
-               online.catalog_version_code
+               online.online_shop_code
         from o2md_online_shop online
         inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
         <choose>
