@@ -1,13 +1,16 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.console.api.dto.OnlineShopDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网店应用服务
- * @author: yipeng.zhu@hand-china.com 2020-06-03 09:50
+ * @author yipeng.zhu@hand-china.com 2020-06-03 09:50
  **/
 public interface OnlineShopService {
     /**
@@ -24,10 +27,18 @@ public interface OnlineShopService {
     void updateOnlineShop(final  OnlineShop onlineShop);
 
     /**
-     * 查询网店code
-     * @param platformCode 平台
-     * @param shopName 店铺名称
-     * @return List<OnlineShopVO> 查询结果
+     * 批量查询网店
+     * @param  onlineShopDTO 网店
+     * @param tenantId 租户ID
+     * @return list
      */
-    List<OnlineShopVO> getOnlineShopCode(String platformCode, String shopName,Long tenantId);
+    Map<String,OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
+
+    /**
+     * 目录版本+目录 批量查询网店
+     * @param onlineShopCatalogVersionList 目录版本
+     * @param tenantId 租户id
+     * @return list
+     */
+    Map<String,List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId);
 }

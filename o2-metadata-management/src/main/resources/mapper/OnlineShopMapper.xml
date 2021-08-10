@@ -25,7 +25,10 @@
         <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
     </resultMap>
     <update id="updateDefaultShop">
-        update o2md_online_shop set is_default = 0 where is_default  = 1 and tenant_id = #{tenantId}
+        update o2md_online_shop
+        set is_default = 0
+        where is_default = 1
+          and tenant_id = #{tenantId}
     </update>
 
     <select id="findByCondition" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
@@ -61,9 +64,9 @@
         #{tenantId}
         left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang =
         #{lang}
-        left join  hpfm_currency  hc on hc.currency_code = os.default_currency and hc.tenant_id = #{tenantId}
-        left join  hpfm_currency_tl hcl on hcl.currency_id = hc.currency_id  and   hcl.lang = #{lang}
-        left join  o2md_platform pf on pf.platform_code = os.platform_code
+        left join hpfm_currency hc on hc.currency_code = os.default_currency and hc.tenant_id = #{tenantId}
+        left join hpfm_currency_tl hcl on hcl.currency_id = hc.currency_id and hcl.lang = #{lang}
+        left join o2md_platform pf on pf.platform_code = os.platform_code
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -79,7 +82,7 @@
             </if>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
-                AND os.online_shop_code   LIKE upper(#{onlineShopCodeLike})
+                AND os.online_shop_code LIKE upper(#{onlineShopCodeLike})
             </if>
             <if test="onlineShopName != null">
                 <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
@@ -184,51 +187,65 @@
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select online.online_shop_id,
-               online.platform_code,
-               tl.online_shop_name,
-               online.online_shop_code
+        online.platform_code,
+        tl.online_shop_name,
+        online.online_shop_code,
+        online.catalog_code,
+        online.catalog_version_code,
+        online.active_flag
         from o2md_online_shop online
         inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
-        <choose>
-            <when test="tenantId != null">
-                AND online.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 =0
-            </otherwise>
-        </choose>
-        <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0" >
-            and online.online_shop_code in
-            <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
-                #{code}
-            </foreach>
-        </if>
-        <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size > 0" >
-            and tl.online_shop_name in
-            <foreach collection="onlineShopDTO.onlineShopNames" item="name" open="(" separator="," close=")">
-                #{name}
-            </foreach>
-        </if>
-        AND tl.lang =#{lang}
-    </select>
-    <select id="getShopCode" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
-        select os.online_shop_code
-        from o2md_online_shop os
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
+                    AND online.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 =0
                 </otherwise>
             </choose>
-            <if test="onlineShopName!=null and onlineShopName!=''">
-                AND os.online_shop_name = #{onlineShopName}
+            <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0">
+                and online.online_shop_code in
+                <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
             </if>
-            <if test="platformCode !=null and platformCode !=''">
-                and os.platform_code = #{platformCode}
+            <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size > 0">
+                and tl.online_shop_name in
+                <foreach collection="onlineShopDTO.onlineShopNames" item="name" open="(" separator="," close=")">
+                    #{name}
+                </foreach>
             </if>
+            AND tl.lang =#{lang}
+        </where>
+    </select>
+    <select id="listOnlineShopByCatalogCodes" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select online.online_shop_id,
+        online.platform_code,
+        tl.online_shop_name,
+        online.online_shop_code,
+        online.catalog_code,
+        online.catalog_version_code,
+        online.active_flag
+        from o2md_online_shop online
+        inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND online.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 =0
+                </otherwise>
+            </choose>
+            <if test="onlineShopCatalogVersions != null and onlineShopCatalogVersions.size() > 0">
+                and (online.catalog_code,online.catalog_version_code) in
+                <foreach collection="onlineShopCatalogVersions" item="item" open="(" close=")">
+                    (#{item.catalogCode},#{item.catalogVersionCode})
+                </foreach>
+            </if>
+            AND tl.lang =#{lang}
         </where>
     </select>
 </mapper>
