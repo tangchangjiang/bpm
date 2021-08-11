@@ -12,6 +12,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.FreightDTO;
 import org.o2.metadata.console.api.vo.FreightInfoVO;
+import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
@@ -118,6 +119,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public FreightInfoVO getFreightTemplate(FreightDTO freight) {
         return FreightConverter.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
+    }
+
+    @Override
+    public FreightTemplateVO getDefaultTemplate(Long organizationId) {
+        return  FreightConverter.poToVoObject(freightTemplateRepository.getDefaultTemplate(organizationId));
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {

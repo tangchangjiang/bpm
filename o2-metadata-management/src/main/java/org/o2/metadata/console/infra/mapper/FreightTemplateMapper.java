@@ -37,4 +37,11 @@ public interface FreightTemplateMapper extends BaseMapper<FreightTemplate> {
      * @return
      */
     int freightTemplateRelateProCount(FreightTemplate freightTemplate);
+
+    /**
+     * 默认模版信息
+     * @param  tenantId 租户ID
+     * @return  默认模版信息
+     */
+    FreightTemplate getDefaultTemplate(@Param(value = "tenantId")Long tenantId);
 }

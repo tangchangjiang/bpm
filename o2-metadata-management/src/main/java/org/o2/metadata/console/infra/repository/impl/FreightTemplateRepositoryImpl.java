@@ -36,4 +36,9 @@ public class FreightTemplateRepositoryImpl extends BaseRepositoryImpl<FreightTem
     public boolean isFreightTemplateRelatePro(FreightTemplate freightTemplate) {
         return freightTemplateMapper.freightTemplateRelateProCount(freightTemplate) > 0;
     }
+
+    @Override
+    public FreightTemplate getDefaultTemplate(Long organizationId) {
+        return freightTemplateMapper.getDefaultTemplate(organizationId);
+    }
 }

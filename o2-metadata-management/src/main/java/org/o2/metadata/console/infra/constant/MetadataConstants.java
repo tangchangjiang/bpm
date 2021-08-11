@@ -59,7 +59,23 @@ public interface MetadataConstants {
         String LOV_CODE = "O2MD.BUSINESS_TYPE";
     }
 
+    /**
+     * 元数据缓存job参数
+     */
+    interface CacheJob {
+        String DEFAULT_ACTION = "SKIP";
 
+        String REFRESH = "REFRESH";
+
+        String CACHE_WAREHOUSE = "Warehouse";
+
+        String CACHE_ONLINE_SHOP_REL_WAREHOUSE = "OnlineShopRelWarehouse";
+
+        String CACHE_SYS_PARAMETER = "SysParameter";
+        String TENANT_ID = "tenantId";
+        String DEFAULT_TENANT_ID = "0";
+        String CARRIER = "Carrier";
+    }
 
 
     /**
