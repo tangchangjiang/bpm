@@ -74,6 +74,9 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         dto.setRegionCodes(regionCodes);
         dto.setCountryCode(countryCode);
         List<Region> regionList = regionRepository.listRegionLov(dto, addressMappingQueryDTO.getTenantId());
+        if (regionList.isEmpty()) {
+            return new ArrayList<>();
+        }
         Map<String,Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region));
         for (RegionTreeChild regionTreeChild : regionTreeChildList) {
             Region region = regionMap.get(regionTreeChild.getRegionCode());
