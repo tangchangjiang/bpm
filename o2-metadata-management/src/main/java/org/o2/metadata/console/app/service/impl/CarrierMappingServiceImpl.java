@@ -3,9 +3,9 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.base.Preconditions;
 import org.o2.metadata.console.app.service.CarrierMappingService;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
-import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Platform;
+import org.o2.metadata.console.infra.mapper.PlatformMapper;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
-import org.o2.metadata.console.infra.mapper.CatalogMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,12 +20,13 @@ import java.util.Map;
 @Service
 public class CarrierMappingServiceImpl implements CarrierMappingService {
 
-    private CatalogMapper catalogMapper;
+    private PlatformMapper platformMapper;
 
     private final CarrierMappingRepository carrierMappingRepository;
 
-    public CarrierMappingServiceImpl(CatalogMapper catalogMapper, final CarrierMappingRepository carrierMappingRepository) {
-        this.catalogMapper = catalogMapper;
+    public CarrierMappingServiceImpl(PlatformMapper platformMapper,
+                                     final CarrierMappingRepository carrierMappingRepository) {
+        this.platformMapper = platformMapper;
         this.carrierMappingRepository = carrierMappingRepository;
     }
 
@@ -38,10 +39,13 @@ public class CarrierMappingServiceImpl implements CarrierMappingService {
             carrierMapping.setTenantId(organizationId);
             // 非空字段校验
             carrierMapping.baseValidate();
-            Catalog catalog = catalogMapper.selectOne(Catalog.builder().catalogCode(carrierMapping.getCatalogCode()).tenantId(carrierMapping.getTenantId()).build());
-            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + carrierMapping.getCatalogCode() + "or tenantId:" + carrierMapping.getTenantId());
+            Platform query = new Platform();
+            query.setPlatformCode(carrierMapping.getPlatformCode());
+            query.setTenantId(carrierMapping.getTenantId());
+            Platform platform = platformMapper.selectOne(query);
+            Preconditions.checkArgument(null != platform, "unrecognized platformCode:" + carrierMapping.getPlatformCode() + "or tenantId:" + carrierMapping.getTenantId());
             // 平台和承运商编码是否重复
-            carrierMapping.setCatalogId(catalog.getCatalogId());
+            carrierMapping.setPlatformId(platform.getPlatformId());
             final boolean exist = carrierMapping.exist(carrierMappingRepository);
             if (exist) {
                 j++;

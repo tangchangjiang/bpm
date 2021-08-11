@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.api.vo.CarrierMappingVO;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 
 import java.util.List;
@@ -16,9 +16,9 @@ public interface CarrierMappingRepository extends BaseRepository<CarrierMapping>
     /**
      * 获取承运商匹配表
      *
-     * @param carrierMappingVO
-     * @return
+     * @param carrierMappingQueryDTO  承运商匹配
+     * @return list
      */
-    List<CarrierMappingVO> listCarrierMappingByCondition(CarrierMappingVO carrierMappingVO);
+    List<CarrierMapping> listCarrierMappingByCondition(CarrierMappingQueryDTO carrierMappingQueryDTO);
 
 }

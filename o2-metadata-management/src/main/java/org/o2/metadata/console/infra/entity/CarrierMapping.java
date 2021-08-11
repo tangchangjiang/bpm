@@ -37,10 +37,10 @@ import javax.validation.constraints.NotNull;
 public class CarrierMapping extends AuditDomain {
 
     public static final String FIELD_CARRIER_MAPPING_ID = "carrierMappingId";
-    public static final String FIELD_PLATFORM_TYPE_CODE = "catalogCode";
+    public static final String FIELD_PLATFORM_CODE = "platformCode";
     public static final String FIELD_CARRIER_ID = "carrierId";
-    public static final String FIELD_PLATFORM_CARRIER_CODE = "externalCarrierCode";
-    public static final String FIELD_PLATFORM_CARRIER_NAME = "externalCarrierName";
+    public static final String FIELD_PLATFORM_CARRIER_CODE = "platformCarrierCode";
+    public static final String FIELD_PLATFORM_CARRIER_NAME = "platformCarrierName";
     public static final String FIELD_TENANT_ID = "tenantId";
 
     //
@@ -58,18 +58,18 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.tenantId) {
             sqls.andEqualTo(CarrierMapping.FIELD_TENANT_ID, this.getTenantId());
         }
-        if (null != this.catalogCode) {
-            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_TYPE_CODE, this.getCatalogCode());
+        if (null != this.platformCode) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CODE, this.getPlatformCode());
         }
         return carrierMappingRepository.selectCountByCondition(
                 Condition.builder(CarrierMapping.class).andWhere(sqls).build()) > 0;
     }
 
     public void baseValidate() {
-        Preconditions.checkArgument(null != this.catalogCode, MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
+        Preconditions.checkArgument(null != this.platformCode, MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         Assert.notNull(this.carrierId, "承运商id不能为空");
-        Assert.notNull(this.externalCarrierCode, "平台承运商编码不能为空");
+        Assert.notNull(this.platformCarrierCode, "平台承运商编码不能为空");
     }
 
     //
@@ -83,21 +83,21 @@ public class CarrierMapping extends AuditDomain {
     private Long carrierMappingId;
 
 
-    @Transient
-    @ApiModelProperty(value = "版本ID")
-    private Long catalogId;
-
     @ApiModelProperty(value = "承运商id")
     @NotNull
     private Long carrierId;
 
     @ApiModelProperty(value = "平台承运商编码")
     @NotBlank
-    private String externalCarrierCode;
+    private String platformCarrierCode;
 
     @ApiModelProperty(value = "平台承运商名称")
     @NotBlank
-    private String externalCarrierName;
+    private String platformCarrierName;
+
+
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
 
     //
     // 非数据库字段
@@ -107,13 +107,26 @@ public class CarrierMapping extends AuditDomain {
     @Transient
     private String platformTypeMeaning;
 
-    @ApiModelProperty(value = "租户ID")
-    private Long tenantId;
 
     @ApiModelProperty(value = "版本编码")
-    private String catalogCode;
+    private String platformCode;
 
     @Transient
     @ApiModelProperty(value = "版本名称")
-    private String catalogName;
+    private String platformName;
+
+    @Transient
+    @ApiModelProperty(value = "承运商编码")
+    private String carrierCode;
+
+    @Transient
+    @ApiModelProperty(value = "承运商名称")
+    private String carrierName;
+
+
+    @Transient
+    @ApiModelProperty(value = "平台id")
+    private Long platformId;
+
+
 }
