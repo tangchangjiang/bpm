@@ -23,17 +23,6 @@ import java.util.List;
 )
 public interface OnlineShopRemoteService {
 
-    /**
-     * 内部调用获取商品的code
-     * @param organizationId 租户id
-     * @param platformCode 平台code
-     * @param shopName 网店名称
-     * @return String 结果
-     */
-    @GetMapping("/{organizationId}/online-shops-internal")
-    ResponseEntity<String> getOnlineShopCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                     @RequestParam("platformCode") String platformCode,
-                                     @RequestParam("shopName") String shopName);
 
     /**
      * 查询网店关联有效仓库

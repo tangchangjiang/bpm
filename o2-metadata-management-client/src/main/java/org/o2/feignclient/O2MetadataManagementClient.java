@@ -95,12 +95,12 @@ public class O2MetadataManagementClient {
     /**
      * 从redis查询网店关联有效的仓库
      *
-     * @param onlineShopeCode 网店编码
+     * @param onlineShopCode 网店编码
      * @param tenantId        租户ID
      * @return map<warehouseCode, OnlineShopRelWarehouseVO>
      */
-    public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopeCode, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopeCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+    public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
         });
     }
 
@@ -165,7 +165,7 @@ public class O2MetadataManagementClient {
      * 目录版本+ 目录 批量查询网店
      *
      * @param onlineShopCatalogVersionList 网店
-     * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
+     * @return map key:catalogCode-catalogVersionCode
      */
     public Map<String, List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopVO>>>() {
@@ -257,16 +257,6 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 
-    /**
-     * 根据平台code和网店名称查询网店code
-     * @param organizationId 租户ID
-     * @param platformCode 平台code
-     * @param shopName 网店
-     * @return List<OnlineShopVO> 结果
-     */
-    public List<OnlineShopVO> getOnlineShopCode(Long organizationId,String platformCode,String shopName) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopCode(organizationId, platformCode, shopName), new TypeReference<List<OnlineShopVO>>() {});
-    }
 
     /**
      * 批量查询承运商

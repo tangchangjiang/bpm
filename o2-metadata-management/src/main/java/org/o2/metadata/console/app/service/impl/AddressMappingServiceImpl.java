@@ -258,7 +258,9 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             String key = entry.getKey();
             //根节点
             if (RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(key)) {
-                tree.addAll(collect.get(key));
+                if (!tree.containsAll(collect.get(key))) {
+                    tree.addAll(collect.get(key));
+                }
                 continue;
             }
             //查询父节点

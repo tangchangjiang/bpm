@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-04
  **/
-public class RegionTreeChildConverter{
+class RegionTreeChildConverter{
     private RegionTreeChildConverter() {
         // 无需实现
     }
@@ -44,16 +44,17 @@ public class RegionTreeChildConverter{
         regionTreeChild.setRegionName(regionTreeChildVO.getRegionName());
         regionTreeChild.setPlatformTypeMeaning(regionTreeChildVO.getPlatformTypeMeaning());
         regionTreeChild.setAddressTypeMeaning(regionTreeChildVO.getAddressTypeMeaning());
-        regionTreeChild.setRegionPathIds(regionTreeChildVO.getRegionPathIds());
-        regionTreeChild.setRegionPathCodes(regionTreeChildVO.getRegionPathCodes());
-        regionTreeChild.setRegionPathNames(regionTreeChildVO.getRegionPathNames());
         regionTreeChild.setPlatformCode(regionTreeChildVO.getPlatformCode());
         regionTreeChild.setCatalogName(regionTreeChildVO.getCatalogName());
-        regionTreeChild.setChildren(RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren()));
+
+        List<RegionTreeChild> children =  RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren());
+        if (!children.isEmpty()) {
+            regionTreeChild.setChildren(children);
+        }
         return regionTreeChild;
     }
 
-    public static List<RegionTreeChildVO> toRegionTreeChildVOList(List<RegionTreeChild> regionTreeChildList) {
+    static List<RegionTreeChildVO> toRegionTreeChildVOList(List<RegionTreeChild> regionTreeChildList) {
         if (regionTreeChildList == null) {
             return Collections.emptyList();
         }
@@ -74,18 +75,20 @@ public class RegionTreeChildConverter{
         regionTreeChildVO.setExternalCode(regionTreeChild.getExternalCode());
         regionTreeChildVO.setExternalName(regionTreeChild.getExternalName());
         regionTreeChildVO.setActiveFlag(regionTreeChild.getActiveFlag());
+        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setTenantId(regionTreeChild.getTenantId());
         regionTreeChildVO.setRegionName(regionTreeChild.getRegionName());
+        regionTreeChildVO.setAddressMappingId(regionTreeChild.getAddressMappingId());
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
-        regionTreeChildVO.setRegionPathIds(regionTreeChild.getRegionPathIds());
-        regionTreeChildVO.setRegionPathCodes(regionTreeChild.getRegionPathCodes());
-        regionTreeChildVO.setRegionPathNames(regionTreeChild.getRegionPathNames());
         regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
-        regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
+        List<RegionTreeChildVO> children =  RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren());
+        if (!children.isEmpty()) {
+            regionTreeChildVO.setChildren(children);
+        }
         regionTreeChildVO.set_token(regionTreeChild.get_token());
 
         return regionTreeChildVO;
