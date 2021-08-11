@@ -107,5 +107,7 @@ public class Region extends AuditDomain {
     @Transient
     private String countryName;
 
+    private Integer levelNumber;
+
 }
 

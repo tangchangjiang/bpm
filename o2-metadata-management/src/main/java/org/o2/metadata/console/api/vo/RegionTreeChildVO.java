@@ -12,7 +12,6 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
 
 import javax.persistence.Transient;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,17 +57,6 @@ public class RegionTreeChildVO {
     private String addressTypeMeaning;
 
 
-    /**
-     * 显示region的层级目录结构，只在详情里展示
-     */
-    @ApiModelProperty(hidden = true)
-    private List<Long> regionPathIds = new ArrayList<>(4);
-
-    @ApiModelProperty(hidden = true)
-    private List<String> regionPathCodes = new ArrayList<>(4);
-
-    @ApiModelProperty(hidden = true)
-    private List<String> regionPathNames = new ArrayList<>(4);
 
     @ApiModelProperty(value = "版本编码")
     private String platformCode;
@@ -79,6 +67,8 @@ public class RegionTreeChildVO {
      * 地区父节点id
      */
     private String parentRegionCode;
+
+    private Long addressMappingId;
 
     /**
      * 地区子节点集合
