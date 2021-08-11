@@ -85,11 +85,11 @@ class RegionTreeChildConverter{
         regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
+        regionTreeChildVO.set_token(regionTreeChild.get_token());
         List<RegionTreeChildVO> children =  RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren());
         if (!children.isEmpty()) {
             regionTreeChildVO.setChildren(children);
         }
-        regionTreeChildVO.set_token(regionTreeChild.get_token());
 
         return regionTreeChildVO;
     }
