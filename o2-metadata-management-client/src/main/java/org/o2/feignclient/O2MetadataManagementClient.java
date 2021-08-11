@@ -115,6 +115,16 @@ public class O2MetadataManagementClient {
     }
 
     /**
+     * 获取默认模版
+     *
+     * @param tenantId 租户id
+     * @return 模版
+     */
+    public FreightTemplateVO getDefaultTemplate(Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateVO.class);
+    }
+
+    /**
      * 查询有效仓库
      *
      * @param onlineShopCode 网店编码

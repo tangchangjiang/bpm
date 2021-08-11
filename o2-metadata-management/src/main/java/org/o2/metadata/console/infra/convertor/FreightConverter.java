@@ -150,4 +150,28 @@ public class FreightConverter {
         freightTemplateDetailDO.setTransportTypeMeaning(freightTemplateDetail.getTransportTypeMeaning());
         return freightTemplateDetailDO;
     }
+
+    /**
+     * 运费模版头 po转VO
+     * @param freightTemplate 运费模版头
+     * @return do
+     */
+    public static FreightTemplateVO poToVoObject(FreightTemplate freightTemplate) {
+
+        if (freightTemplate == null) {
+            return null;
+        }
+        FreightTemplateVO freightTemplateVO = new FreightTemplateVO();
+        freightTemplateVO.setTemplateId(freightTemplate.getTemplateId());
+        freightTemplateVO.setTemplateCode(freightTemplate.getTemplateCode());
+        freightTemplateVO.setTemplateName(freightTemplate.getTemplateName());
+        freightTemplateVO.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
+        freightTemplateVO.setValuationType(freightTemplate.getValuationType());
+        freightTemplateVO.setValuationUom(freightTemplate.getValuationUom());
+        freightTemplateVO.setDafaultFlag(freightTemplate.getDafaultFlag());
+        freightTemplateVO.setTenantId(freightTemplate.getTenantId());
+        freightTemplateVO.setValuationTypeMeaning(freightTemplate.getValuationTypeMeaning());
+        freightTemplateVO.setValuationUomMeaning(freightTemplate.getValuationUomMeaning());
+        return freightTemplateVO;
+    }
 }
