@@ -216,6 +216,8 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             regionTreeChild.setExternalCode(queryAddressMapping.getExternalCode());
             regionTreeChild.setPlatformCode(queryAddressMapping.getPlatformCode());
             regionTreeChild.setExternalName(queryAddressMapping.getExternalName());
+            regionTreeChild.setAddressMappingId(queryAddressMapping.getAddressMappingId());
+            regionTreeChild.set_token(queryAddressMapping.get_token());
         }
         return result.stream().collect(Collectors.groupingBy(RegionTreeChild::getRegionCode));
     }

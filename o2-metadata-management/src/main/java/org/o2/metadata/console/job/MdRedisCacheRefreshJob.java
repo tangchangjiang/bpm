@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,6 +44,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
 
     private static final String DEFAULT_ACTION = "SKIP";
     private static final String REFRESH = "REFRESH";
+    private static final String TENANT_ID ="tenantId";
 
     private static final String CACHE_WAREHOUSE = "Warehouse";
     private static final String CACHE_ONLINE_SHOP_REL_WAREHOUSE = "OnlineShopRelWarehouse";
@@ -70,7 +70,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
         if (map != null && !map.isEmpty()) {
-            final Long tenantId = DetailsHelper.getUserDetails().getTenantId();
+            final Long tenantId = Long.valueOf(map.getOrDefault(TENANT_ID,"0"));
             // 判断缓存操作
             final String warehouse = map.getOrDefault(CACHE_WAREHOUSE, DEFAULT_ACTION);
             final String onlineShopRelWarehouse = map.getOrDefault(CACHE_ONLINE_SHOP_REL_WAREHOUSE, DEFAULT_ACTION);
