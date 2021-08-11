@@ -20,12 +20,6 @@ import java.util.List;
 public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
 
     @Override
-    public ResponseEntity<String> getOnlineShopCode(Long organizationId, String platformCode, String shopName) {
-        log.error("Error getOnlineShopCode, params[tenantId = {}, platformCode = {},shopName= {}]",organizationId, platformCode,shopName);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-
-    @Override
     public ResponseEntity<String> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         log.error("Error listOnlineShopRelWarehouses, params[tenantId = {}, onlineShopCode = {}]",tenantId, onlineShopCode);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
