@@ -86,10 +86,6 @@ public class AddressMapping extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-
-    @ApiModelProperty(value = "版本ID")
-    @Transient
-    private Long catalogId;
     @Transient
     @ApiModelProperty(value = "查询条件 内部区域名称")
     private String regionName;

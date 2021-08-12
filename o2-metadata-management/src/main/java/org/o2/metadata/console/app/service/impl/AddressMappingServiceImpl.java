@@ -1,18 +1,23 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
+import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
-import org.o2.metadata.console.infra.entity.*;
-import org.o2.metadata.console.api.vo.RegionTreeChildVO;
+import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionTreeChild;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
@@ -150,6 +155,15 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
         }
         return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
+    }
+
+    @Override
+    public void createAddressMapping(AddressMapping addressMapping) {
+        if (addressMapping.exist(addressMappingRepository)) {
+            throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
+        }
+        Preconditions.checkArgument(null != addressMapping.getPlatformCode(), MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
+        addressMappingRepository.insertSelective(addressMapping);
     }
 
     /**
