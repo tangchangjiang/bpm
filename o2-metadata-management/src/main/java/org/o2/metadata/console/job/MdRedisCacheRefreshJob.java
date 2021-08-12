@@ -4,8 +4,8 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
+import org.o2.metadata.console.app.service.CacheJobService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.redis.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
