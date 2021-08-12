@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.dto;
+package org.o2.metadata.console.api.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-08-06
  **/
 @Data
-public class AddressMappingQueryIntDTO {
+public class AddressMappingQueryInnerDTO {
     /**
      * 条件查询code 和 name 二选一
      */

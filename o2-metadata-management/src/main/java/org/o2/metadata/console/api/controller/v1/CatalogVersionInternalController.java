@@ -5,7 +5,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.metadata.console.api.dto.CatalogVersionDTO;
+import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,8 @@ public class CatalogVersionInternalController{
     @ApiOperation(value = "目录版本")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/select-name")
-    public ResponseEntity<Map<String,String>> listCatalogVersions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersionDTO catalogVersionDTO) {
-        return Results.success(catalogVersionService.listCatalogVersions(catalogVersionDTO,organizationId));
+    public ResponseEntity<Map<String,String>> listCatalogVersions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO) {
+        return Results.success(catalogVersionService.listCatalogVersions(catalogVersionQueryInnerDTO,organizationId));
     }
 
 }

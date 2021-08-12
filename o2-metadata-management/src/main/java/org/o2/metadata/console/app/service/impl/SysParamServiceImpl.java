@@ -4,7 +4,7 @@ package org.o2.metadata.console.app.service.impl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.metadata.console.api.dto.SystemParameterDTO;
+import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
@@ -78,10 +78,10 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId) {
+    public ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
         ResponseVO vo = new ResponseVO();
         SystemParameter  select = new SystemParameter();
-        select.setParamCode(systemParameterDTO.getParamCode());
+        select.setParamCode(systemParameterQueryInnerDTO.getParamCode());
         select.setTenantId(tenantId);
         List<SystemParameter>  systemParameterList = systemParameterRepository.select(select);
         if (CollectionUtils.isEmpty(systemParameterList) || systemParameterList.size() > 1) {
@@ -99,7 +99,7 @@ public class SysParamServiceImpl implements SysParamService {
             return vo;
         }
 
-        Map<String,String> map = systemParameterDTO.getHashMap();
+        Map<String,String> map = systemParameterQueryInnerDTO.getHashMap();
         for (SystemParamValue value : systemParamValueList) {
             String  paramValue = map.get(value.getParamKey());
             if (StringUtils.isEmpty(paramValue)) {

@@ -8,7 +8,7 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
@@ -108,19 +108,19 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public Map<String,OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
+    public Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String,OnlineShopVO> map = new HashMap<>(16);
-       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopDTO,tenantId));
+       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO,tenantId));
         if (voList.isEmpty()) {
            return map;
         }
-        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopCodes())) {
+        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
             for (OnlineShopVO vo : voList) {
                 map.put(vo.getOnlineShopCode(),vo);
             }
             return  map;
         }
-        if (CollectionUtils.isNotEmpty(onlineShopDTO.getOnlineShopNames())) {
+        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopNames())) {
             for (OnlineShopVO vo : voList) {
                 map.put(vo.getOnlineShopName(),vo);
             }

@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @ApiModel("网店基础设置")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OnlineShopDTO {
+public class OnlineShopQueryInnerDTO {
     /**
      * 查询条件  onlineShopCodes  or  onlineShopNames
      */
@@ -25,5 +25,8 @@ public class OnlineShopDTO {
 
     @ApiModelProperty(value = "网店名称")
     private List<String> onlineShopNames;
+
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
 
 }

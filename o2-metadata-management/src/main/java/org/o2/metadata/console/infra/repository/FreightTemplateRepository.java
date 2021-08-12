@@ -37,4 +37,11 @@ public interface FreightTemplateRepository extends BaseRepository<FreightTemplat
      * @return
      */
     boolean isFreightTemplateRelatePro(final FreightTemplate freightTemplate);
+
+    /**
+     * 默认模版信息
+     * @param  organizationId 租户ID
+     * @return  默认模版信息
+     */
+    FreightTemplate getDefaultTemplate(Long organizationId);
 }

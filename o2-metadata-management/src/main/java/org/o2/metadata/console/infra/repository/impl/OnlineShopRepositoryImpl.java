@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
@@ -64,8 +64,8 @@ class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements
     }
 
     @Override
-    public List<OnlineShop> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return onlineShopMapper.listOnlineShops(onlineShopDTO,tenantId);
+    public List<OnlineShop> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+        return onlineShopMapper.listOnlineShops(onlineShopQueryInnerDTO,tenantId);
     }
 
     @Override

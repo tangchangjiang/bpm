@@ -2,9 +2,8 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.dto.CatalogVersionDTO;
+import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
@@ -56,13 +55,13 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     }
 
     @Override
-    public Map<String, String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long organizationId) {
+    public Map<String, String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long organizationId) {
         Map<String,String> map = new HashMap<>(16);
-        if (null == catalogVersionDTO) {
+        if (null == catalogVersionQueryInnerDTO) {
             return map;
         }
-        if (CollectionUtils.isNotEmpty(catalogVersionDTO.getCatalogCodes())) {
-            List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodes(),organizationId);
+        if (CollectionUtils.isNotEmpty(catalogVersionQueryInnerDTO.getCatalogCodes())) {
+            List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodes(),organizationId);
             if (CollectionUtils.isNotEmpty(catalogList)) {
                 for (Catalog catalog : catalogList) {
                     map.put(catalog.getCatalogCode(), catalog.getCatalogName());
@@ -70,8 +69,8 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
             }
         }
 
-        if (CollectionUtils.isNotEmpty(catalogVersionDTO.getCatalogCodeVersionCodes())) {
-            List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionDTO.getCatalogCodeVersionCodes(),organizationId);
+        if (CollectionUtils.isNotEmpty(catalogVersionQueryInnerDTO.getCatalogCodeVersionCodes())) {
+            List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodeVersionCodes(),organizationId);
             if (CollectionUtils.isNotEmpty(catalogVersions)) {
                 for (CatalogVersion catalogVersion : catalogVersions) {
                     map.put(catalogVersion.getCatalogVersionCode(), catalogVersion.getCatalogVersionName());

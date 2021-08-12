@@ -1,7 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
-import org.o2.feignclient.metadata.domain.dto.AddressMappingQueryIntDTO;
+import org.o2.feignclient.metadata.domain.dto.AddressMappingQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.AddressMappingRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,11 +26,11 @@ import java.util.List;
 public interface AddressMappingRemoteService {
     /**
      * 查询地址匹配
-     * @param addressMappingQueryIntDTOList 查地址匹配
+     * @param addressMappingQueryInnerDTOList 查地址匹配
      * @param organizationId 租户ID
      * @return String
      */
     @PostMapping("/{organizationId}/address-mappings-internal/list")
-    ResponseEntity<String> listAddressMappings(@RequestBody List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList,
+    ResponseEntity<String> listAddressMappings(@RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList,
                                                @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }
