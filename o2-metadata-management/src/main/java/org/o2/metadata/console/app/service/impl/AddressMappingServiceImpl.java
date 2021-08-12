@@ -123,7 +123,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         platform.setTenantId(tenantId);
         platform.setPlatformCode(addressMapping.getPlatformCode());
         final Platform query = platformRepository.selectOne(platform);
-        addressMapping.setPlatformCode(query.getPlatformName());
+        addressMapping.setPlatformName(query.getPlatformName());
         if (!regionList.isEmpty()) {
             Region region = regionList.get(0);
             addressMapping.setRegionName(region.getRegionName());
