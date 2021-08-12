@@ -148,5 +148,20 @@ public class MallLangPrompt extends AuditDomain {
 		this.status = status;
 	}
 
+	public String getStatusMeaning() {
+		return statusMeaning;
+	}
+
+	public void setStatusMeaning(String statusMeaning) {
+		this.statusMeaning = statusMeaning;
+	}
+
+	public String getLangMeaning() {
+		return langMeaning;
+	}
+
+	public void setLangMeaning(String langMeaning) {
+		this.langMeaning = langMeaning;
+	}
 }
 
