@@ -78,7 +78,7 @@
         order by w.warehouse_code asc
     </select>
 
-    <select id="queryAllShopRelWarehouseByTenantId" resultMap="RelationshipVOMap">
+    <select id="queryAllShopRelWarehouseByTenantId" resultType="org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse">
         SELECT
         w.warehouse_code,
         w.actived_date_to,
