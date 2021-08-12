@@ -1,5 +1,7 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.core.response.BatchResponse;
@@ -43,6 +45,7 @@ public class MallLangPromptController extends BaseController {
     @ApiOperation(value = "商城前端多语言内容维护表维护-分页查询商城前端多语言内容维护表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     public ResponseEntity<Page<MallLangPrompt>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                             MallLangPrompt mallLangPrompt,
                                                             @ApiIgnore @SortDefault(value = MallLangPrompt.FIELD_LANG_PROMPT_ID,

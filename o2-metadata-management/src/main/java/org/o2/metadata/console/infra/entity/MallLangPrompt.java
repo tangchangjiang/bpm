@@ -1,20 +1,20 @@
 package org.o2.metadata.console.infra.entity;
 
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.hzero.mybatis.annotation.Unique;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
-import io.choerodon.mybatis.domain.AuditDomain;
-import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.hzero.mybatis.annotation.Unique;
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.o2.core.O2CoreConstants;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
+import javax.validation.constraints.NotNull;
 
 /**
  * 商城前端多语言内容维护表
@@ -34,8 +34,11 @@ public class MallLangPrompt extends AuditDomain {
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String FIELD_STATUS = "status";
     public static final String O2MD_MALL_LANG_PROMPT_U1 = "o2md_mall_lang_prompt_u1";
+	public static final String FIELD_STATUS_MEANING = "statusMeaning";
+	public static final String FIELD_LANG_MEANING = "langMeaning";
 
-    //
+
+	//
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
@@ -51,6 +54,7 @@ public class MallLangPrompt extends AuditDomain {
     @ApiModelProperty(value = "语言字段，取值zh_CN/en_US", required = true)
     @NotBlank
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
+	@LovValue(lovCode = "O2MD.LANGUAGE", meaningField = FIELD_LANG_MEANING)
     private String lang;
     @ApiModelProperty(value = "多语言内容详情")
     private String promptDetail;
@@ -63,13 +67,22 @@ public class MallLangPrompt extends AuditDomain {
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
     private Long tenantId;
     @ApiModelProperty(value = "状态类型.值集:O2CMS.APPROVE_STATUS", required = true)
-	@LovValue(lovCode = MetadataConstants.MallLangPromptConstants.LOV_CODE)
+	@LovValue(lovCode = "O2CMS.APPROVE_STATUS", meaningField = FIELD_STATUS_MEANING)
 	@NotBlank
     private String status;
 
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+	@Transient
+	@ApiModelProperty("状态类型含义")
+	private String statusMeaning;
+
+	@Transient
+	@ApiModelProperty("语言类型含义")
+	private String langMeaning;
+
     //
     // getter/setter
     // ------------------------------------------------------------------------------
@@ -135,5 +148,20 @@ public class MallLangPrompt extends AuditDomain {
 		this.status = status;
 	}
 
+	public String getStatusMeaning() {
+		return statusMeaning;
+	}
+
+	public void setStatusMeaning(String statusMeaning) {
+		this.statusMeaning = statusMeaning;
+	}
+
+	public String getLangMeaning() {
+		return langMeaning;
+	}
+
+	public void setLangMeaning(String langMeaning) {
+		this.langMeaning = langMeaning;
+	}
 }
 
