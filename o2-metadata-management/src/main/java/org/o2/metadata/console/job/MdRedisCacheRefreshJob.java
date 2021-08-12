@@ -10,16 +10,17 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.CarrierRedis;
+import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,19 +50,21 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     private final SystemParameterRepository systemParameterRepository;
     private final SystemParameterRedis systemParameterRedis;
     private final CarrierRedis carrierRedis;
+    private final OnlineShopRedis onlineShopRedis;
 
     public MdRedisCacheRefreshJob(RedisCacheClient redisCacheClient,
                                   OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                   WarehouseRepository warehouseRepository,
                                   SystemParameterRepository systemParameterRepository,
                                   SystemParameterRedis systemParameterRedis,
-                                  CarrierRedis carrierRedis) {
+                                  CarrierRedis carrierRedis, OnlineShopRedis onlineShopRedis) {
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.warehouseRepository = warehouseRepository;
         this.systemParameterRepository = systemParameterRepository;
         this.systemParameterRedis = systemParameterRedis;
         this.carrierRedis = carrierRedis;
+        this.onlineShopRedis = onlineShopRedis;
     }
 
     @Override
@@ -122,15 +125,9 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
      * @param tenantId 租户ID
      */
     private void refreshOnlineShopRelWarehouse(Long tenantId) {
-        List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
-        OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
-        if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            onlineShopRelWarehouse.syncToRedis(onlineShopRelWarehouseVOList,
-                    MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
-                    redisCacheClient);
+        List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
+        onlineShopRedis.batchUpdateShopRelWh(list,tenantId, OnlineShopConstants.Redis.UPDATE);
 
-        }
 
     }
 

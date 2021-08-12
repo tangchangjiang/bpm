@@ -27,7 +27,7 @@ public interface OnlineShopRelWarehouseRepository extends BaseRepository<OnlineS
      * @param tenantId 租户ID
      * @return
      */
-    List<OnlineShopRelWarehouseVO> queryAllShopRelWarehouseByTenantId(Long tenantId);
+    List<OnlineShopRelWarehouse> queryAllShopRelWarehouseByTenantId(Long tenantId);
 
     /**
      * 查询网店关联有效仓库
