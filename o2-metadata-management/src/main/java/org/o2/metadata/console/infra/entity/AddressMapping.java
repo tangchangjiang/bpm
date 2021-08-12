@@ -117,5 +117,5 @@ public class AddressMapping extends AuditDomain {
 
     @ApiModelProperty(value = "版本名称",required = true)
     @Transient
-    private String catalogName;
+    private String platformName;
 }
