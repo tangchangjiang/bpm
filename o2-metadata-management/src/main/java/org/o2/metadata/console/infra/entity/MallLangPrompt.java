@@ -54,7 +54,7 @@ public class MallLangPrompt extends AuditDomain {
     @ApiModelProperty(value = "语言字段，取值zh_CN/en_US", required = true)
     @NotBlank
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
-	@LovValue(lovCode = MetadataConstants.MallLangPromptConstants.LANG_LOV_CODE, meaningField = FIELD_LANG_MEANING)
+	@LovValue(lovCode = "O2MD.LANGUAGE", meaningField = FIELD_LANG_MEANING)
     private String lang;
     @ApiModelProperty(value = "多语言内容详情")
     private String promptDetail;
@@ -67,7 +67,7 @@ public class MallLangPrompt extends AuditDomain {
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
     private Long tenantId;
     @ApiModelProperty(value = "状态类型.值集:O2CMS.APPROVE_STATUS", required = true)
-	@LovValue(lovCode = MetadataConstants.MallLangPromptConstants.LOV_CODE, meaningField = FIELD_STATUS_MEANING)
+	@LovValue(lovCode = "O2CMS.APPROVE_STATUS", meaningField = FIELD_STATUS_MEANING)
 	@NotBlank
     private String status;
 
