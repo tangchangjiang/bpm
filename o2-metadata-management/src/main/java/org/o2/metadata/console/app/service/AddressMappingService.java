@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 
@@ -39,5 +39,5 @@ public interface AddressMappingService {
      * @param tenantId 租户ID
      * @return  list
      */
-    List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingDTO, Long tenantId);
+    List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingDTO, Long tenantId);
 }

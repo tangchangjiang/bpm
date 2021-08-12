@@ -271,12 +271,12 @@ public class O2MetadataManagementClient {
     /**
      * 批量查询承运商
      *
-     * @param addressMappingQueryIntDTOList 地址匹配
+     * @param addressMappingQueryInnerDTOList 地址匹配
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryIntDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
         });
     }
 

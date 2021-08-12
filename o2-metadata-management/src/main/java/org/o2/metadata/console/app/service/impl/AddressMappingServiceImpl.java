@@ -3,7 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
@@ -128,22 +128,22 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryInts, Long tenantId) {
+    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
         List<String> externalCodes = new ArrayList<>();
         List<String> addressTypeCodes = new ArrayList<>();
         List<String> externalNames = new ArrayList<>();
-        for (AddressMappingQueryIntDTO addressMappingQueryIntDTO : addressMappingQueryInts) {
-            String externalCode = addressMappingQueryIntDTO.getExternalCode();
+        for (AddressMappingQueryInnerDTO addressMappingQueryInnerDTO : addressMappingQueryInts) {
+            String externalCode = addressMappingQueryInnerDTO.getExternalCode();
             if(StringUtils.isNotEmpty(externalCode)){
                 externalCodes.add(externalCode);
             }
 
-            String  externalName = addressMappingQueryIntDTO.getExternalName();
+            String  externalName = addressMappingQueryInnerDTO.getExternalName();
             if (StringUtils.isNotEmpty(externalName)) {
                 externalNames.add(externalName);
             }
 
-            String addressTypeCode = addressMappingQueryIntDTO.getAddressTypeCode();
+            String addressTypeCode = addressMappingQueryInnerDTO.getAddressTypeCode();
             if (StringUtils.isNotEmpty(addressTypeCode)) {
                 addressTypeCodes.add(addressTypeCode);
             }
