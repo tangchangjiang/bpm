@@ -84,6 +84,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
             final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(relationship.getWarehouseId());
             relationship.setWarehouseCode(warehouse.getWarehouseCode());
+            relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
             shopCodeSet.add(onlineShop.getOnlineShopCode());
         });
 
@@ -112,10 +113,11 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                     shopCodeSet.add(onlineShop.getOnlineShopCode());
                 }
                 relationship.setWarehouseCode(warehouse.getWarehouseCode());
+                relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
             }
         }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        onlineShopRedis.batchUpdateShopRelWh(list,tenantId,OnlineShopConstants.Redis.UPDATE);
+        onlineShopRedis.batchUpdateShopRelWh(relationships,tenantId,OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
         }
