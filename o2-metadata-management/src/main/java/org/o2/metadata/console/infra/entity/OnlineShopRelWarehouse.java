@@ -105,6 +105,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @Transient
     private String warehouseStatus;
 
+    @Transient
     private String onlineShopCode;
 
     //
