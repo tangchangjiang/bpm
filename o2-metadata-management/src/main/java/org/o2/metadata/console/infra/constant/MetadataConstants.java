@@ -303,5 +303,7 @@ public interface MetadataConstants {
         String RESOURCE_CODE = "MALL_LANG_FILE";
 
         String DESCRIPTION = "o2md.mallLang.static_file_description";
+
+        String LANG_LOV_CODE = "O2MD.LANGUAGE";
     }
 }
