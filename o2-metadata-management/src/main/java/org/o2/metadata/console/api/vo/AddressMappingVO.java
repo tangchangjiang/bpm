@@ -73,5 +73,5 @@ public class AddressMappingVO extends AuditDomain {
     private String platformCode;
 
     @ApiModelProperty(value = "版本名称",required = true)
-    private String catalogName;
+    private String platformName;
 }
