@@ -11,7 +11,7 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-30
  **/
 @Data
-public class CatalogVersionDTO {
+public class CatalogVersionQueryInnerDTO {
     /**
      * 目录编码
      */

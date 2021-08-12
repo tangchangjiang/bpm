@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.redis;
 
-import org.o2.metadata.console.api.dto.SystemParameterDTO;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 
 import java.util.List;

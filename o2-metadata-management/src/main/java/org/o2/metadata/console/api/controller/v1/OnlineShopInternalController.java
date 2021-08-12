@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -41,8 +41,8 @@ public class OnlineShopInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShop-list")
     public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                     @RequestBody OnlineShopDTO onlineShopDTO) {
-        return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
+                                                                     @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO, organizationId));
     }
 
     @ApiOperation(value = "目录+目录版本批量查询网店")

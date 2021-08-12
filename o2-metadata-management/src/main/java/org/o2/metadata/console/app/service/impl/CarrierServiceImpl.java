@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.api.dto.CarrierDTO;
+import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
@@ -121,12 +121,12 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId) {
+    public Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
         Map<String, CarrierVO> map = new HashMap<>(16);
-        if (null == carrierDTO.getCarrierCodes() && null == carrierDTO.getCarrierNames()) {
+        if (null == carrierQueryInnerDTO.getCarrierCodes() && null == carrierQueryInnerDTO.getCarrierNames()) {
             return map;
         }
-        List<Carrier> carriers = carrierRepository.batchSelect(carrierDTO,organizationId);
+        List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO,organizationId);
         if (carriers.isEmpty()) {
             return map;
         }

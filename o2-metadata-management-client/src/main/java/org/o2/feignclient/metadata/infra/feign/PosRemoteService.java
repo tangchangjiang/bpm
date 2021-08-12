@@ -1,7 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
-import org.o2.feignclient.metadata.domain.dto.PosAddressDTO;
+import org.o2.feignclient.metadata.domain.dto.PosAddressQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.PosRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -24,11 +24,11 @@ public interface PosRemoteService {
 
     /**
      * 批量查询服务点地址
-     * @param posAddressDTO 服务点地址
+     * @param posAddressQueryInnerDTO 服务点地址
      * @param organizationId 租户ID
      * @return string
      */
     @PostMapping("/{organizationId}/pos-internal/select-address")
-    ResponseEntity<String> listPosAddress(@RequestBody PosAddressDTO posAddressDTO,
+    ResponseEntity<String> listPosAddress(@RequestBody PosAddressQueryInnerDTO posAddressQueryInnerDTO,
                                           @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
 }
