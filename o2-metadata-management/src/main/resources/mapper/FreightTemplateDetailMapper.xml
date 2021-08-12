@@ -138,7 +138,7 @@
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
-                AND tenant_id = #{tenantId}
+                AND oftd.tenant_id = #{tenantId}
             </when>
             <otherwise>
                 AND 1 =0
