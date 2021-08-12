@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.api.dto.PosAddressDTO;
+import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.repository.PosAddressRepository;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;
@@ -28,7 +28,7 @@ public class PosAddressRepositoryImpl extends BaseRepositoryImpl<PosAddress> imp
     }
 
     @Override
-    public List<PosAddress> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId) {
-        return posAddressMapper.listPosAddress(posAddressDTO,tenantId);
+    public List<PosAddress> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
+        return posAddressMapper.listPosAddress(posAddressQueryInnerDTO,tenantId);
     }
 }

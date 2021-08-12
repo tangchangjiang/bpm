@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import org.hzero.core.util.Results;
-import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -42,9 +42,9 @@ public class AddressMappingInternalController {
     @Permission(permissionWithin = true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, AddressMappingVO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                             @RequestBody List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList){
+                                                                             @RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList){
         Map<String,AddressMappingVO> maps = new HashMap<>(16);
-        List<AddressMappingVO> list =  addressMappingService.listAddressMappings(addressMappingQueryIntDTOList,organizationId);
+        List<AddressMappingVO> list =  addressMappingService.listAddressMappings(addressMappingQueryInnerDTOList,organizationId);
         if (list.isEmpty()) {
             return Results.success(maps);
         }

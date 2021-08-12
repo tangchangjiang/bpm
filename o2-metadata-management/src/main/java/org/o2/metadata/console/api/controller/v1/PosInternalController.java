@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
-import org.o2.metadata.console.api.dto.PosAddressDTO;
+import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
@@ -40,12 +40,12 @@ public class PosInternalController extends BaseController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/select-address")
     public ResponseEntity<Map<String, PosAddressVO>> listPosAddress(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                    @RequestBody PosAddressDTO posAddressDTO) {
+                                                                    @RequestBody PosAddressQueryInnerDTO posAddressQueryInnerDTO) {
         Map<String, PosAddressVO> map = new HashMap<>(16);
-        if (null == posAddressDTO) {
+        if (null == posAddressQueryInnerDTO) {
             return Results.success(map);
         }
-        List<PosAddressVO> voList = posService.listPosAddress(posAddressDTO,organizationId);
+        List<PosAddressVO> voList = posService.listPosAddress(posAddressQueryInnerDTO,organizationId);
         for (PosAddressVO posAddressVO : voList) {
             map.put(posAddressVO.getPostcode(), posAddressVO);
         }

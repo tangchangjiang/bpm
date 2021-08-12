@@ -2,7 +2,7 @@ package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.feignclient.metadata.domain.dto.OnlineShopCatalogVersionDTO;
-import org.o2.feignclient.metadata.domain.dto.OnlineShopDTO;
+import org.o2.feignclient.metadata.domain.dto.OnlineShopQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.OnlineShopRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> listOnlineShops(OnlineShopDTO onlineShopDTO, Long organizationId) {
-        log.error("Error listOnlineShops, params[tenantId = {}, platformCode = {}]",organizationId, onlineShopDTO);
+    public ResponseEntity<String> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long organizationId) {
+        log.error("Error listOnlineShops, params[tenantId = {}, platformCode = {}]",organizationId, onlineShopQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

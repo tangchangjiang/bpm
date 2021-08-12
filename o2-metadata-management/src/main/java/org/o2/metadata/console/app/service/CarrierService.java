@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.console.api.dto.CarrierDTO;
+import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.infra.entity.Carrier;
 
@@ -40,9 +40,9 @@ public interface CarrierService {
 
     /**
      * 批量查询承运商
-     * @param carrierDTO 承运商
+     * @param carrierQueryInnerDTO 承运商
      * @param organizationId 租户ID
      * @return map
      */
-    Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long organizationId);
+    Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId);
 }
