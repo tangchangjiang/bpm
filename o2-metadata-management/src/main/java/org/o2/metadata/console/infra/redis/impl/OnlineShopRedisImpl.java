@@ -52,8 +52,8 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         bo.setOnlineShopName(onlineShop.getOnlineShopName());
         bo.setPlatformCode(onlineShop.getPlatformCode());
         bo.setPlatformShopCode(onlineShop.getPlatformShopCode());
-        bo.setTenantId(onlineShop.getTenantId());
-        Map<Object, Object> map = FastJsonHelper.stringToMap(FastJsonHelper.objectToString(bo));
+        bo.setTenantId(String.valueOf(onlineShop.getTenantId()));
+        Map<String, String> map = FastJsonHelper.stringToMap(FastJsonHelper.objectToString(bo));
         redisCacheClient.opsForHash().putAll(key,map);
     }
 }
