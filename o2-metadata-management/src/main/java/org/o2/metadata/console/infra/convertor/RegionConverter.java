@@ -101,7 +101,7 @@ public class RegionConverter {
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
-        regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
+        regionTreeChildVO.setPlatformName(regionTreeChild.getPlatformName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
         regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));

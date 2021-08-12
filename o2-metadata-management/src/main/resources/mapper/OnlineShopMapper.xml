@@ -204,19 +204,19 @@
                     AND 1 =0
                 </otherwise>
             </choose>
-            <if test="onlineShopQueryInnerDTO.onlineShopCodes != null and onlineShopQueryInnerDTO.onlineShopCodes.size > 0">
+            <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0">
                 and online.online_shop_code in
-                <foreach collection="onlineShopQueryInnerDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
+                <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
                     #{code}
                 </foreach>
             </if>
-            <if test="onlineShopQueryInnerDTO.platformCode != null">
-                and online.platform_code = #{onlineShopQueryInnerDTO.platformCode}
+            <if test="onlineShopDTO.platformCode != null">
+                and online.platform_code = #{onlineShopDTO.platformCode}
             </if>
 
-            <if test="onlineShopQueryInnerDTO.onlineShopNames != null and onlineShopQueryInnerDTO.onlineShopNames.size > 0">
+            <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size > 0">
                 and tl.online_shop_name in
-                <foreach collection="onlineShopQueryInnerDTO.onlineShopNames" item="name" open="(" separator="," close=")">
+                <foreach collection="onlineShopDTO.onlineShopNames" item="name" open="(" separator="," close=")">
                     #{name}
                 </foreach>
             </if>

@@ -28,12 +28,12 @@ public interface OnlineShopRemoteService {
      * 查询网店关联有效仓库
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId 租户ID
+     * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
     @GetMapping("/{organizationId}/onlineShopRelWarehouse-internal/{onlineShopCode}")
     ResponseEntity<String> listOnlineShopRelWarehouses(@PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode,
-                                                       @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long tenantId);
+                                                       @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)  Long organizationId);
     /**
      * 批量查询网店
      * @param  onlineShopQueryInnerDTO 网店

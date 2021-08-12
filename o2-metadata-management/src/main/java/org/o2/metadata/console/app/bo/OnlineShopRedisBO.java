@@ -45,5 +45,5 @@ public class OnlineShopRedisBO {
      */
     private String warehouseCode;
 
-    private Long tenantId;
+    private String tenantId;
 }

@@ -105,6 +105,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @Transient
     private String warehouseStatus;
 
+    @Transient
+    private String onlineShopCode;
+
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
@@ -147,7 +150,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
      * @return hashKey
      */
     public String buildRedisHashKey(final String onlineShopCode) {
-        return  String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
+        return  String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
     }
 
     /**
@@ -180,9 +183,6 @@ public class OnlineShopRelWarehouse extends AuditDomain {
             Map<String, List<OnlineShopRelWarehouseVO>>  synToRedisMap = onlineShopRelWarehouseEntry.getValue().stream()
                     .collect(Collectors.groupingBy(OnlineShopRelWarehouseVO::getOnlineShopCode));
 
-            List<String> keyList = new ArrayList<>();
-            Map<String, Map<String, Object>> filedMaps = new HashMap<>(4);
-
             for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWhEntry : synToRedisMap.entrySet()) {
                 List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVos = onlineShopRelWhEntry.getValue();
                 if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVos)) {
@@ -197,17 +197,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                     } else {
                         redisCacheClient.opsForHash().delete(hashKey, groupOnlineShopRelWarehouseVos.stream().map(OnlineShopRelWarehouseVO::getWarehouseCode).toArray());
                     }
-//                    keyList.add(hashKey);
-//                    // 获取hashMap
-//                    filedMaps.put(hashKey, this.buildRedisHashMap(groupOnlineShopRelWarehouseVos));
                 }
             }
-            // 执行
-//            if (onlineShopRelWarehouseEntry.getKey() == 1) {
-//                this.executeScript (filedMaps,keyList,saveResourceScriptSource,redisCacheClient);
-//            } else {
-//                this.executeScript (filedMaps,keyList,deleteResourceScriptSource,redisCacheClient);
-//            }
+
         }
     }
 

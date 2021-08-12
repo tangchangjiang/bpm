@@ -75,9 +75,9 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="posAddressQueryInnerDTO.posCodes != null and posAddressQueryInnerDTO.posCodes.size > 0" >
+        <if test="posAddressDTO.posCodes != null and posAddressDTO.posCodes.size > 0" >
             and pos.pos_code IN
-            <foreach collection="posAddressQueryInnerDTO.posCodes" item="code" open="(" separator="," close=")">
+            <foreach collection="posAddressDTO.posCodes" item="code" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>

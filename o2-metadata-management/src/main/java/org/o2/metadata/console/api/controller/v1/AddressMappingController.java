@@ -1,7 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import com.google.common.base.Preconditions;
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -20,12 +18,9 @@ import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
-import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.Country;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
-import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,16 +40,13 @@ public class AddressMappingController extends BaseController {
     private final AddressMappingRepository addressMappingRepository;
     private final AddressMappingService addressMappingService;
     private final CountryRepository countryRepository;
-    private final CatalogRepository catalogRepository;
 
     public AddressMappingController(AddressMappingRepository addressMappingRepository,
                                     AddressMappingService addressMappingService,
-                                    CountryRepository countryRepository,
-                                    CatalogRepository catalogRepository) {
+                                    CountryRepository countryRepository) {
         this.addressMappingRepository = addressMappingRepository;
         this.addressMappingService = addressMappingService;
         this.countryRepository = countryRepository;
-        this.catalogRepository = catalogRepository;
     }
 
     @ApiOperation(value = "地址匹配列表")
@@ -101,22 +93,10 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "创建地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> createAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody AddressMapping addressMapping) {
+    public ResponseEntity<AddressMapping> createAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
-        if (addressMapping.exist(addressMappingRepository)) {
-            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
-        }
-        try {
-            Preconditions.checkArgument(null != addressMapping.getPlatformCode(), MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
-            Preconditions.checkArgument(null != addressMapping.getTenantId(), MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getPlatformCode()).tenantId(addressMapping.getTenantId()).build());
-            Preconditions.checkArgument(null != catalog, "unrecognized catalogCode:" + addressMapping.getPlatformCode() + "or tenantId:" + addressMapping.getTenantId());
-            addressMapping.setCatalogId(catalog.getCatalogId());
-            addressMappingRepository.insertSelective(addressMapping);
-            return Results.success(addressMapping);
-        } catch (final DuplicateKeyException e) {
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e, "AddressMapping(" + addressMapping.getAddressMappingId() + ")");
-        }
+        addressMappingService.createAddressMapping(addressMapping);
+        return Results.success(addressMapping);
     }
 
     @ApiOperation(value = "修改地址匹配")

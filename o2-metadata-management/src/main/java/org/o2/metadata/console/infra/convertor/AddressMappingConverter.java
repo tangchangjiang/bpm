@@ -40,7 +40,7 @@ public class AddressMappingConverter {
         addressMappingVO.setRegionPathCodes(addressMapping.getRegionPathCodes());
         addressMappingVO.setRegionPathNames(addressMapping.getRegionPathNames());
         addressMappingVO.setPlatformCode(addressMapping.getPlatformCode());
-        addressMappingVO.setCatalogName(addressMapping.getCatalogName());
+        addressMappingVO.setPlatformName(addressMapping.getPlatformName());
         addressMappingVO.setCreationDate(addressMapping.getCreationDate());
         addressMappingVO.setCreatedBy(addressMapping.getCreatedBy());
         addressMappingVO.setLastUpdateDate(addressMapping.getLastUpdateDate());
