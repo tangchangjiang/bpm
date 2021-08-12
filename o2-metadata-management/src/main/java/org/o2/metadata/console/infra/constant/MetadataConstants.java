@@ -75,6 +75,7 @@ public interface MetadataConstants {
         String TENANT_ID = "tenantId";
         String DEFAULT_TENANT_ID = "0";
         String CARRIER = "Carrier";
+        String FREIGHT = "Freight";
     }
 
 

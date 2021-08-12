@@ -4,6 +4,9 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.vo.FreightInfoVO;
 import org.o2.metadata.console.api.vo.FreightTemplateDetailVO;
 import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.app.bo.FreightBO;
+import org.o2.metadata.console.app.bo.FreightDetailBO;
+import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.infra.entity.FreightInfo;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
@@ -173,5 +176,50 @@ public class FreightConverter {
         freightTemplateVO.setValuationTypeMeaning(freightTemplate.getValuationTypeMeaning());
         freightTemplateVO.setValuationUomMeaning(freightTemplate.getValuationUomMeaning());
         return freightTemplateVO;
+    }
+
+    /**
+     * po -> bo
+     * @param  freightTemplate 运费模版
+     * @return FreightDetailBO
+     */
+    public static FreightBO poToBoObject(FreightTemplate freightTemplate){
+
+        if (freightTemplate == null) {
+            return null;
+        }
+        FreightBO freightBO = new FreightBO();
+        freightBO.setTemplateId(freightTemplate.getTemplateId());
+        freightBO.setTemplateCode(freightTemplate.getTemplateCode());
+        freightBO.setTemplateName(freightTemplate.getTemplateName());
+        freightBO.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
+        freightBO.setValuationType(freightTemplate.getValuationType());
+        freightBO.setValuationUom(freightTemplate.getValuationUom());
+        freightBO.setTenantId(freightTemplate.getTenantId());
+        freightBO.setDafaultFlag(freightTemplate.getDafaultFlag());
+        return freightBO;
+    }
+
+    /**
+     * po -> bo
+     * @param  freightTemplateDetail 运费模版详情
+     * @return FreightDetailBO
+     */
+    public static FreightDetailBO poToBoObject(FreightTemplateDetail freightTemplateDetail){
+
+        if (freightTemplateDetail == null) {
+            return null;
+        }
+        FreightDetailBO freightDetailBO = new FreightDetailBO();
+        freightDetailBO.setTemplateDetailId(freightTemplateDetail.getTemplateDetailId());
+        freightDetailBO.setRegionCode(freightTemplateDetail.getRegionCode());
+        freightDetailBO.setDefaultFlag(freightTemplateDetail.getDefaultFlag());
+        freightDetailBO.setTemplateCode(freightTemplateDetail.getTemplateCode());
+        freightDetailBO.setTenantId(freightTemplateDetail.getTenantId());
+        freightDetailBO.setFirstPieceWeight(freightTemplateDetail.getFirstPieceWeight());
+        freightDetailBO.setFirstPrice(freightTemplateDetail.getFirstPrice());
+        freightDetailBO.setNextPieceWeight(freightTemplateDetail.getNextPieceWeight());
+        freightDetailBO.setNextPrice(freightTemplateDetail.getNextPrice());
+        return freightDetailBO;
     }
 }

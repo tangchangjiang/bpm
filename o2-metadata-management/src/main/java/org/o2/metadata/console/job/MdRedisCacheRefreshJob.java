@@ -42,6 +42,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             final String onlineShopRelWarehouse = map.getOrDefault(MetadataConstants.CacheJob.CACHE_ONLINE_SHOP_REL_WAREHOUSE, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String sysParameter = map.getOrDefault(MetadataConstants.CacheJob.CACHE_SYS_PARAMETER, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String carrier = map.getOrDefault(MetadataConstants.CacheJob.CARRIER, MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String freight = map.getOrDefault(MetadataConstants.CacheJob.FREIGHT,MetadataConstants.CacheJob.DEFAULT_ACTION);
 
             LOG.info("start synchronize metadata basic data to redis...");
             if (MetadataConstants.CacheJob.REFRESH.equals(warehouse)) {
@@ -65,6 +66,9 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             // 全量同步 承运商
             if (MetadataConstants.CacheJob.REFRESH.equals(carrier)) {
                 cacheJobService.refreshCarrier(tenantId);
+            }
+            if (MetadataConstants.CacheJob.REFRESH.equals(freight)) {
+                cacheJobService.refreshFreight(tenantId);
             }
         }
         return ReturnT.SUCCESS;

@@ -7,6 +7,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.FreightConstants;
+import org.o2.metadata.console.infra.convertor.FreightConverter;
 import org.o2.metadata.console.infra.entity.FreightInfo;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
@@ -54,22 +55,25 @@ public class FreightRedisImpl implements FreightRedis {
         Map<String,Map<String,String>> regionMap = new HashMap<>();
 
         for (FreightTemplateDetail detail : detailList) {
+
             if (detail.getDefaultFlag() == 1) {
-                defaultMap.put(detail.getTemplateCode(), FastJsonHelper.objectToString(detail));
+                defaultMap.put(detail.getTemplateCode(), FastJsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
                 continue;
             }
             Map<String, String> map = regionMap.computeIfAbsent(detail.getTemplateCode(), k -> new HashMap<>(16));
-            map.put(detail.getRegionCode(),FastJsonHelper.objectToString(detail));
+            map.put(detail.getRegionCode(),FastJsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
 
         }
         for (Map.Entry<String, FreightTemplate> entry : templateMap.entrySet()) {
             Map<String, String> hashMap = new HashMap<>();
             FreightTemplate v = entry.getValue();
-            hashMap.put(FreightConstants.Redis.FREIGHT_HEAD_KEY, FastJsonHelper.objectToString(v));
-
+            hashMap.put(FreightConstants.Redis.FREIGHT_HEAD_KEY, FastJsonHelper.objectToString(FreightConverter.poToBoObject(v)));
             String k = entry.getKey();
             hashMap.put(FreightConstants.Redis.FREIGHT_DEFAULT_KEY,defaultMap.get(k));
-            hashMap.putAll(regionMap.get(k));
+            Map<String,String> map = regionMap.get(k);
+            if (null != map && !map.isEmpty()) {
+                hashMap.putAll(regionMap.get(k));
+            }
             String redisKey = FreightConstants.Redis.getFreightDetailKey(tenantId, k);
             groupMap.put(redisKey,hashMap);
         }
