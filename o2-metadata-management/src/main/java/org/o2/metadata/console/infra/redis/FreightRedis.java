@@ -2,6 +2,10 @@ package org.o2.metadata.console.infra.redis;
 
 
 import org.o2.metadata.console.infra.entity.FreightInfo;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+
+import java.util.List;
 
 /**
  *
@@ -19,4 +23,12 @@ public interface FreightRedis {
      * @return 运费信息
      */
     FreightInfo getFreightTemplate(String regionCode, String templateCode, Long tenantId);
+
+    /**
+     * 更新
+     * @param templateList 模版头
+     * @param detailList 模版行
+     * @param tenantId 租户ID
+     */
+    void batchUpdateRedis(List<FreightTemplate> templateList, List<FreightTemplateDetail> detailList,Long tenantId);
 }
