@@ -122,6 +122,30 @@
                 AND oftd.template_detail_id!=#{templateDetailId}
                 and oftd.tenant_id = #{tenantId}
     </select>
+    <select id="selectAllByTenantId" resultType="org.o2.metadata.console.infra.entity.FreightTemplateDetail">
+        SELECT
+            oftd.template_detail_id,
+            oftd.region_code ,
+            oftd.first_piece_weight,
+            oftd.first_price,
+            oftd.next_piece_weight,
+            oftd.next_price,
+            oftd.default_flag,
+            o2mft.template_code,
+            oftd.tenant_id
+        FROM o2md_freight_template_detail oftd
+        inner join o2md_freight_template o2mft  on o2mft.template_id = oftd.template_id
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+        and enabled_flag = 1
+    </select>
 
     <!-- SQL 要优化 都是一个SQL  -->
 

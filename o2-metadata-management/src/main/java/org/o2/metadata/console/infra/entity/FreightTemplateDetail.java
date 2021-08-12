@@ -98,6 +98,8 @@ public class FreightTemplateDetail extends AuditDomain {
     @Transient
     private String defaultFlagMeaninng;
 
+    private String templateCode;
+
 
     @ApiModelProperty("目的地描述集合")
     @Transient

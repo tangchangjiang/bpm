@@ -70,7 +70,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public FreightTemplateManagementVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
-        final FreightTemplate freightTemplate = freightTemplateRepository.selectyTemplateId(templateId);
+        final FreightTemplate freightTemplate = freightTemplateRepository.selectTemplateId(templateId);
         List<FreightTemplate> list = new ArrayList<>();
         list.add(freightTemplate);
         this.tranLov(list,organizationId);

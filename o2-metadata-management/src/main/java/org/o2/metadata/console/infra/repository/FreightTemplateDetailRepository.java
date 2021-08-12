@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.repository;
 
+import org.apache.ibatis.annotations.Param;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 
@@ -43,4 +44,12 @@ public interface FreightTemplateDetailRepository extends BaseRepository<FreightT
      * @return 其他默认的运费模板明细
      */
     List<FreightTemplateDetail> queryOtherDefaultFreightTemplateDetail(FreightTemplateDetail freightTemplateDetail);
+
+
+    /**
+     *  通过租户ID查询所有
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<FreightTemplateDetail> selectAllByTenantId(@Param("tenantId") Long tenantId);
 }
