@@ -69,7 +69,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             this.onlineShopRepository.insertSelective(onlineShop);
-            onlineShopRedis.batchUpdateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+            onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
         } catch (final DuplicateKeyException e) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,
                     "OnlineShop(" + onlineShop.getOnlineShopId() + ")");
@@ -104,7 +104,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             // 触发渠道可用库存计算
             o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }
-        onlineShopRedis.batchUpdateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+        onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
     }
 
     @Override
