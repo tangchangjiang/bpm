@@ -30,7 +30,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
@@ -69,7 +69,7 @@
             inf.creation_date,
             inf.last_update_date,
             pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         where inf.platform_inf_mapping_id = #{id}
     </select>
@@ -85,7 +85,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
@@ -119,7 +119,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
