@@ -26,8 +26,8 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 @ApiModel("平台信息匹配表")
 @VersionAudit
 @ModifyAudit
-@Table(name = "o2md_platform_inf_mapping")
-public class PlatformInfMapping extends AuditDomain {
+@Table(name = "o2md_platform_info_mapping")
+public class PlatformInfoMapping extends AuditDomain {
 
     public static final String FIELD_PLATFORM_INF_MAPPING_ID = "platformInfMappingId";
     public static final String FIELD_INF_TYPE_CODE = "infTypeCode";
