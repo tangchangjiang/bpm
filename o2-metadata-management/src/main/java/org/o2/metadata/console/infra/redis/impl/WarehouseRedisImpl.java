@@ -49,6 +49,9 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         }
         List<Warehouse> list = new ArrayList<>();
         for (String str : warehouseStr) {
+            if (null == str) {
+                continue;
+            }
             Warehouse warehouse  = FastJsonHelper.stringToObject(str,Warehouse.class);
             list.add(warehouse);
         }
