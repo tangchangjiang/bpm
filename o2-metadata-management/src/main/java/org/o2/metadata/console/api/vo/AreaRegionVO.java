@@ -20,8 +20,6 @@ public class AreaRegionVO {
 
     private String areaMeaning;
 
-    private List<RegionBO> children;
-
-
+    private List<RegionBO> regionList;
 
 }
