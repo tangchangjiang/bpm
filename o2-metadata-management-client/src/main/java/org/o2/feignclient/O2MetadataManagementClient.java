@@ -60,13 +60,14 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询仓库
+     * 从redis查询系统参数
      *
-     * @param warehouseCodes 仓库编码
-     * @param tenantId       租户ID
+     * @param paramCodes 参数编码
+     * @param tenantId   租户ID
+     * @return map key:paramCode
      */
-    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
+    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
         });
     }
 
@@ -81,14 +82,13 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询系统参数
+     * 从redis查询仓库
      *
-     * @param paramCodes 参数编码
-     * @param tenantId   租户ID
-     * @return map key:paramCode
+     * @param warehouseCodes 仓库编码
+     * @param tenantId       租户ID
      */
-    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
+    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
         });
     }
 
@@ -101,6 +101,18 @@ public class O2MetadataManagementClient {
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+        });
+    }
+
+    /**
+     * 查询有效仓库(寻源）
+     *
+     * @param onlineShopCode 网店编码
+     * @param tenantId       租户ID
+     * @return 集合
+     */
+    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
 
@@ -122,18 +134,6 @@ public class O2MetadataManagementClient {
      */
     public FreightTemplateVO getDefaultTemplate(Long tenantId) {
         return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateVO.class);
-    }
-
-    /**
-     * 查询有效仓库
-     *
-     * @param onlineShopCode 网店编码
-     * @param tenantId       租户ID
-     * @return 集合
-     */
-    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
-        });
     }
 
     /**
@@ -170,7 +170,6 @@ public class O2MetadataManagementClient {
         });
     }
 
-
     /**
      * 目录版本+ 目录 批量查询网店
      *
@@ -193,6 +192,17 @@ public class O2MetadataManagementClient {
         });
     }
 
+    /**
+     * 批量查询地址匹配
+     *
+     * @param addressMappingQueryInnerDTOList 地址匹配
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+        });
+    }
 
     /**
      * 获取快递配送接单量到达上限的仓库
@@ -247,6 +257,19 @@ public class O2MetadataManagementClient {
         });
     }
 
+
+    /**
+     * 仓库快递配送接单量增量更新
+     *
+     * @param organizationId 租户ID
+     * @param warehouseCode  仓库编码
+     * @param increment      快递配送接单量增量
+     */
+    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
+        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
+    }
+
+
     /**
      * 保存静态资源文件表
      *
@@ -267,30 +290,6 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 
-
-    /**
-     * 批量查询地址匹配
-     *
-     * @param addressMappingQueryInnerDTOList 地址匹配
-     * @param tenantId   租户ID
-     * @return map key:carrierCode
-     */
-    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
-        });
-    }
-
-    /**
-     * 仓库快递配送接单量增量更新
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @param increment      快递配送接单量增量
-     */
-    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
-    }
-
     /**
      * 查询平台信息匹配
      * @param organizationId 租户id
@@ -299,7 +298,7 @@ public class O2MetadataManagementClient {
      * @return List<PlatformInfMappingVO> 结果
      */
     public List<PlatformInfMappingVO> getPlatformInfMappingList(Long organizationId,
-                                                            String platformCode,String infTypeCode) {
+                                                                String platformCode,String infTypeCode) {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformInfMapping(organizationId,platformCode,infTypeCode),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 
