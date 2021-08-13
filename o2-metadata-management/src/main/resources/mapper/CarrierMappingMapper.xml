@@ -60,7 +60,7 @@
         </if>
         <if test="platformCarrierCode != null and platformCarrierCode != ''">
             <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>
-            and cm.platform_carrier_code like #{platformCarrierCodeLike}
+            and cm.platform_carrier_code like #{platformCarrierCode}
         </if>
         ORDER BY cm.platform_code, c.carrier_code
     </select>
