@@ -123,7 +123,6 @@ public class FreightTemplateDetail extends AuditDomain {
     }
 
     public void regionDetailValidate() {
-        Assert.notNull(this.regionCode, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
