@@ -244,7 +244,7 @@
                     and 1 = 0
                 </otherwise>
             </choose>
-            <if test="warehouseCodes != null">
+            <if test="warehouseCodes != null and warehouseCodes.size() > 0 ">
                 and w.warehouse_code IN
                 <foreach collection="warehouseCodes" item="code" open="(" separator="," close=")">
                     #{code}

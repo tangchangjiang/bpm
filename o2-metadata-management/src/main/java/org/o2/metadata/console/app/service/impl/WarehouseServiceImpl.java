@@ -107,11 +107,16 @@ public class WarehouseServiceImpl implements WarehouseService {
                 updateList.add(warehouse);
             }
         }
-        List<Warehouse> createList = createBatch(tenantId, insertList);
-        List<Warehouse> list = updateBatch(tenantId, updateList);
         List<Warehouse> totalList = new ArrayList<>();
-        totalList.addAll(createList);
-        totalList.addAll(list);
+        if (!insertList.isEmpty()) {
+            List<Warehouse> createList = createBatch(tenantId, insertList);
+            totalList.addAll(createList);
+
+        }
+        if (!updateList.isEmpty()) {
+            List<Warehouse> list = updateBatch(tenantId, updateList);
+            totalList.addAll(list);
+        }
         return totalList ;
     }
 
