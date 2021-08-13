@@ -8,12 +8,12 @@ import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.entity.PlatformInfMapping;
-import org.o2.metadata.console.infra.repository.PlatformInfMappingRepository;
+import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
+import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.app.service.PlatformInfMappingService;
+import org.o2.metadata.console.app.service.PlatformInfoMappingService;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
@@ -35,22 +35,22 @@ import java.util.List;
 @RestController("platformInfMappingController.v1")
 @RequestMapping("/v1/{organizationId}/platform-inf-mappings")
 @RequiredArgsConstructor
-public class PlatformInfMappingController extends BaseController {
+public class PlatformInfoMappingController extends BaseController {
 
 
-    private final PlatformInfMappingRepository platformInfMappingRepository;
-    private final PlatformInfMappingService platformInfMappingService;
+    private final PlatformInfoMappingRepository platformInfoMappingRepository;
+    private final PlatformInfoMappingService platformInfoMappingService;
 
     @ApiOperation(value = "平台信息匹配表维护-分页查询平台信息匹配表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<Page<PlatformInfMapping>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            InfMappingDTO platformInfMapping,
-                                                            @ApiIgnore @SortDefault(value = PlatformInfMapping.FIELD_PLATFORM_INF_MAPPING_ID,
+    public ResponseEntity<Page<PlatformInfoMapping>> page(@PathVariable(value = "organizationId") Long organizationId,
+                                                          InfMappingDTO platformInfMapping,
+                                                          @ApiIgnore @SortDefault(value = PlatformInfoMapping.FIELD_PLATFORM_INF_MAPPING_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platformInfMapping.setTenantId(organizationId);
-        Page<PlatformInfMapping> list = platformInfMappingService.page(platformInfMapping, pageRequest);
+        Page<PlatformInfoMapping> list = platformInfoMappingService.page(platformInfMapping, pageRequest);
         return Results.success(list);
     }
 
@@ -58,58 +58,58 @@ public class PlatformInfMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{platformInfMappingId}")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<PlatformInfMapping> detail(@PathVariable(value = "organizationId") Long organizationId,
-                                                        @ApiParam(value = "平台信息匹配表ID", required = true) @PathVariable Long platformInfMappingId) {
-        PlatformInfMapping platformInfMapping = platformInfMappingRepository.selectById(platformInfMappingId);
-        return Results.success(platformInfMapping);
+    public ResponseEntity<PlatformInfoMapping> detail(@PathVariable(value = "organizationId") Long organizationId,
+                                                      @ApiParam(value = "平台信息匹配表ID", required = true) @PathVariable Long platformInfMappingId) {
+        PlatformInfoMapping platformInfoMapping = platformInfoMappingRepository.selectById(platformInfMappingId);
+        return Results.success(platformInfoMapping);
     }
 
     @ApiOperation(value = "平台信息匹配表维护-创建平台信息匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<PlatformInfMapping> create(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody PlatformInfMapping platformInfMapping) {
-        platformInfMapping.setTenantId(organizationId);
-        validObject(platformInfMapping);
-        platformInfMappingService.save(platformInfMapping);
-        return Results.success(platformInfMapping);
+    public ResponseEntity<PlatformInfoMapping> create(@PathVariable(value = "organizationId") Long organizationId,
+                                                      @RequestBody PlatformInfoMapping platformInfoMapping) {
+        platformInfoMapping.setTenantId(organizationId);
+        validObject(platformInfoMapping);
+        platformInfoMappingService.save(platformInfoMapping);
+        return Results.success(platformInfoMapping);
     }
 
     @ApiOperation(value = "平台信息匹配表维护-修改平台信息匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<PlatformInfMapping> update(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody PlatformInfMapping platformInfMapping) {
-        platformInfMapping.setTenantId(organizationId);
-        SecurityTokenHelper.validToken(platformInfMapping);
-        platformInfMappingService.save(platformInfMapping);
-        return Results.success(platformInfMapping);
+    public ResponseEntity<PlatformInfoMapping> update(@PathVariable(value = "organizationId") Long organizationId,
+                                                      @RequestBody PlatformInfoMapping platformInfoMapping) {
+        platformInfoMapping.setTenantId(organizationId);
+        SecurityTokenHelper.validToken(platformInfoMapping);
+        platformInfoMappingService.save(platformInfoMapping);
+        return Results.success(platformInfoMapping);
     }
 
     @ApiOperation(value = "平台信息匹配表维护-批量保存平台信息匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-saving")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<List<PlatformInfMapping>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody List<PlatformInfMapping> platformInfMappingList) {
-        SecurityTokenHelper.validToken(platformInfMappingList);
-        platformInfMappingService.batchSave(platformInfMappingList);
-        return Results.success(platformInfMappingList);
+    public ResponseEntity<List<PlatformInfoMapping>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
+                                                               @RequestBody List<PlatformInfoMapping> platformInfoMappingList) {
+        SecurityTokenHelper.validToken(platformInfoMappingList);
+        platformInfoMappingService.batchSave(platformInfoMappingList);
+        return Results.success(platformInfoMappingList);
     }
 
     @ApiOperation(value = "平台信息匹配表维护-删除平台信息匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody List<PlatformInfMapping> platformInfMapping) {
-        for (PlatformInfMapping infMapping : platformInfMapping) {
+                                       @RequestBody List<PlatformInfoMapping> platformInfoMapping) {
+        for (PlatformInfoMapping infMapping : platformInfoMapping) {
             infMapping.setTenantId(organizationId);
         }
-        SecurityTokenHelper.validToken(platformInfMapping);
+        SecurityTokenHelper.validToken(platformInfoMapping);
 
-        platformInfMappingRepository.batchDeleteByPrimaryKey(platformInfMapping);
+        platformInfoMappingRepository.batchDeleteByPrimaryKey(platformInfoMapping);
         return Results.success();
     }
 

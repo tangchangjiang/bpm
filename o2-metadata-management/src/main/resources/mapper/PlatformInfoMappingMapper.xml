@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.o2.metadata.console.infra.mapper.PlatformInfMappingMapper">
+<mapper namespace="org.o2.metadata.console.infra.mapper.PlatformInfoMappingMapper">
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         <result column="platform_inf_mapping_id" property="platformInfMappingId" jdbcType="DECIMAL"/>
         <result column="inf_type_code" property="infTypeCode" jdbcType="VARCHAR"/>
         <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
@@ -18,7 +18,7 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
     </resultMap>
 
-    <select id="listInfMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+    <select id="listInfMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         select
         inf.platform_inf_mapping_id,
         inf.inf_type_code,
@@ -30,7 +30,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
@@ -53,7 +53,7 @@
             </if>
         </where>
     </select>
-    <select id="selectById" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+    <select id="selectById" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         select
             inf.platform_inf_mapping_id,
             inf.inf_type_code,
@@ -69,11 +69,11 @@
             inf.creation_date,
             inf.last_update_date,
             pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         where inf.platform_inf_mapping_id = #{id}
     </select>
-    <select id="selectOneMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+    <select id="selectOneMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         select
         inf.platform_inf_mapping_id,
         inf.inf_type_code,
@@ -85,7 +85,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
@@ -107,7 +107,7 @@
             </if>
         </where>
     </select>
-    <select id="selectCondition" resultType="org.o2.metadata.console.infra.entity.PlatformInfMapping">
+    <select id="selectCondition" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         select
         inf.platform_inf_mapping_id,
         inf.inf_type_code,
@@ -119,7 +119,7 @@
         inf.tenant_id,
         inf.object_version_number,
         pf.platform_name
-        from o2md_platform_inf_mapping inf
+        from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code
         <where>
             <choose>
