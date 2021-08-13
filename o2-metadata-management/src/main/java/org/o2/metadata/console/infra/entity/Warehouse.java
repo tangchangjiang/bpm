@@ -1,8 +1,6 @@
 package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -13,23 +11,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.core.helper.FastJsonHelper;
-import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.scripting.support.ResourceScriptSource;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -171,45 +161,6 @@ public class Warehouse extends AuditDomain {
     @Transient
     private String warehouseStatus;
 
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    /**
-     * 组装hashMap
-     * @return
-     */
-    public Map<String, Object> buildRedisHashMap() {
-        DateFormat dateFormat = MetadataConstants.MdDateFormat.dateFormat();
-        final Map<String, Object> warehouseMap = new HashMap<>(13);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.POS_CODE,this.posCode);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_STATUS_CODE,this.warehouseStatusCode);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_TYPE_CODE,this.warehouseTypeCode);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.PICKUP_FLAG,this.pickedUpFlag);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESSED_FLAG,this.expressedFlag);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.SCORE,this.score);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.WAREHOUSE_NAME,this.warehouseName);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_FROM,
-                (null != this.activedDateFrom) ? dateFormat.format(this.activedDateFrom) : null);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.ACTIVE_DATE_TO,
-                (null != this.activedDateTo) ? dateFormat.format(this.activedDateTo) : null);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.INV_ORGANIZATION_CODE,this.invOrganizationCode);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY,this.expressedQuantity);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_VALUE,this.expressLimitValue == null ? "0" : this.expressLimitValue);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY,this.pickUpQuantity);
-        warehouseMap.put(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_VALUE,this.pickUpLimitValue == null ? "0" : this.pickUpLimitValue);
-        return warehouseMap;
-    }
-
-    /**
-     * 组装hashkey
-     * @param warehouseCode 仓库编码
-     * @param tenantId      租户ID
-     * @return
-     */
-    public String buildRedisHashKey(String warehouseCode, Long tenantId) {
-        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, warehouseCode);
-    }
 
     /**
      * 仓库分组
@@ -225,46 +176,5 @@ public class Warehouse extends AuditDomain {
     }
 
 
-    /**
-     * 同步到redis
-     * @param warehouseList warehouseList
-     * @param saveResourceScriptSource   saveResourceScriptSource
-     * @param deleteResourceScriptSource deleteResourceScriptSource
-     * @param redisCacheClient redisCacheClient
-     */
-    public void syncToRedis ( final List<Warehouse> warehouseList,
-                              final ResourceScriptSource saveResourceScriptSource,
-                              final ResourceScriptSource deleteResourceScriptSource,
-                              final RedisCacheClient redisCacheClient) {
-        Map<Integer, List<Warehouse>> warehouseMap  = this.warehouseGroupMap(warehouseList);
-        for (Map.Entry<Integer, List<Warehouse>> warehouseEntry : warehouseMap.entrySet()) {
-            for (Warehouse warehouse : warehouseEntry.getValue()) {
-                final String hashKey = warehouse.buildRedisHashKey(warehouse.getWarehouseCode(), tenantId);
-                if (warehouseEntry.getKey() == 1) {
-                    try {
-                        redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(FastJsonHelper.objectToString(warehouse.buildRedisHashMap()), new TypeReference<Map<String, String>>() {
-                        }));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    redisCacheClient.opsForHash().delete(hashKey, warehouse.buildRedisHashMap().keySet().toArray());
-                }
-            }
-        }
-    }
 
-    /**
-     *  operation redis
-     * @param filedMaps filedMaps
-     * @param keyList   keyList
-     */
-    public void executeScript(final Map<String, Map<String, Object>> filedMaps,
-                              final List<String> keyList,
-                              final ResourceScriptSource resourceScriptSource,
-                              final RedisCacheClient redisCacheClient) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
-        redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
-    }
 }

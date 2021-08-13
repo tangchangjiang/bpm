@@ -19,4 +19,11 @@ public interface WarehouseRedis {
      * @return 仓库
      */
     List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId );
+
+    /**
+     * 批量更新
+     * @param warehouseCodes 仓库编码
+     * @param tenantId 租户ID
+     */
+    void batchUpdateWarehouse(List<String> warehouseCodes, Long tenantId);
 }
