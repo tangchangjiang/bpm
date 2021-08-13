@@ -97,7 +97,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "是否默认")
     @Transient
     private String defaultFlagMeaninng;
-
+    @Transient
     private String templateCode;
 
 
