@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
-import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
@@ -10,7 +9,6 @@ import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionArea;
@@ -82,7 +80,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         AreaRegionVO vo = new AreaRegionVO();
         vo.setAreaCode(countryCode);
         vo.setAreaMeaning(list.get(0).getCountryName());
-        vo.setChildren(regionList);
+        vo.setRegionList(regionList);
         return Collections.singletonList(vo);
     }
 
