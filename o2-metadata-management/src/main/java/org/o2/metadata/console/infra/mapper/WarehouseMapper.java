@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -57,4 +58,13 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return
      */
     List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
+
+
+    /**
+     *  编码查询仓促
+     * @param warehouseCodes 仓库
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<WarehouseCacheBO> listWarehouseByCode(@Param("warehouseCodes") List<String> warehouseCodes, @Param("tenantId") Long tenantId);
 }

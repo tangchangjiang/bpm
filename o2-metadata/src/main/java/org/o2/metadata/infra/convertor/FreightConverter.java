@@ -1,14 +1,14 @@
 package org.o2.metadata.infra.convertor;
 
-        import org.o2.metadata.api.vo.FreightInfoVO;
-        import org.o2.metadata.api.vo.FreightTemplateDetailVO;
-        import org.o2.metadata.api.vo.FreightTemplateVO;
-        import org.o2.metadata.domain.freight.domain.FreightInfoDO;
-        import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
-        import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
-        import org.o2.metadata.infra.entity.FreightInfo;
-        import org.o2.metadata.infra.entity.FreightTemplate;
-        import org.o2.metadata.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.api.vo.FreightInfoVO;
+import org.o2.metadata.api.vo.FreightTemplateDetailVO;
+import org.o2.metadata.api.vo.FreightTemplateVO;
+import org.o2.metadata.domain.freight.domain.FreightInfoDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
+import org.o2.metadata.infra.entity.FreightInfo;
+import org.o2.metadata.infra.entity.FreightTemplate;
+import org.o2.metadata.infra.entity.FreightTemplateDetail;
 
 /**
  *

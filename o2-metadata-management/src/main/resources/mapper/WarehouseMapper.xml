@@ -216,4 +216,40 @@
             </otherwise>
         </choose>
     </select>
+    <select id="listWarehouseByCode" resultType="org.o2.metadata.console.app.bo.WarehouseCacheBO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        w.warehouse_code,
+        wtl.warehouse_name,
+        w.warehouse_type_code,
+        w.warehouse_status_code,
+        w.picked_up_flag,
+        w.pick_up_quantity,
+        w.expressed_flag,
+        w.expressed_quantity,
+        w.actived_date_from,
+        w.actived_date_to,
+        p.pos_code,
+        w.active_flag
+        FROM
+        o2md_warehouse w
+        JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
+        LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and w.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
+            <if test="warehouseCodes != null and warehouseCodes.size() > 0 ">
+                and w.warehouse_code IN
+                <foreach collection="warehouseCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

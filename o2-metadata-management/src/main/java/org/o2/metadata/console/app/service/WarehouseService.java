@@ -1,10 +1,10 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,13 +13,6 @@ import java.util.Set;
  **/
 
 public interface WarehouseService {
-    /**
-     * 插入仓库信息
-     * @param warehouse 仓库
-     * @param tenantId 租户ID
-     * @return int
-     */
-    Integer create(Long tenantId, Warehouse warehouse);
     
     /**
      * 批量插入仓库信息
@@ -28,13 +21,7 @@ public interface WarehouseService {
      * @return list
      */
     List<Warehouse> createBatch(Long tenantId, List<Warehouse> warehouses);
-    
-    /**
-     * 更新仓库信息
-     * @param warehouse 仓库信息
-     * @return  int
-     */
-    Integer update(Warehouse warehouse);
+
 
     /**
      * 批量更新仓库
@@ -55,29 +42,12 @@ public interface WarehouseService {
 
     /**
      * 获取仓库信息
-     * @param  warehouseCodes 仓库编码
+     * @param  innerDTO 仓库
      * @param  tenantId 租户ID
      * @return 仓库
      */
-    List<WarehouseVO> listWarehouses(List<String> warehouseCodes,Long tenantId);
+    List<WarehouseVO> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId);
 
-
-    /**
-     * 保存
-     * @param hashMap       map
-     * @param warehouseCode 仓库编码
-     * @param tenantId      租户Id
-     */
-    void saveWarehouse (String warehouseCode, Map<String,Object> hashMap, Long tenantId);
-
-
-    /**
-     * 更新
-     * @param warehouseCode 仓库编码
-     * @param hashMap map
-     * @param tenantId 租户id
-     */
-    void updateWarehouse (String warehouseCode,Map<String,Object> hashMap, Long tenantId);
 
     /**
      * 保存仓库快递配送接单量限制
@@ -150,15 +120,6 @@ public interface WarehouseService {
      * @return 实际自提接单量
      */
     String getPickUpValue(String warehouseCode, Long tenantId);
-
-    /**
-     * 仓库缓存KEY
-     *
-     * @param tenantId      租户ID
-     * @param warehouseCode 仓库编码
-     * @return 仓库缓存KEY
-     */
-    String warehouseCacheKey(String warehouseCode, Long tenantId);
 
     /**
      * 仓库limit缓存KEY

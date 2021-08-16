@@ -97,7 +97,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "是否默认")
     @Transient
     private String defaultFlagMeaninng;
-
+    @Transient
     private String templateCode;
 
 
@@ -106,7 +106,7 @@ public class FreightTemplateDetail extends AuditDomain {
     private List<String> regionNameArr;
     @ApiModelProperty(value = "目的ID集合")
     @Transient
-    private List<Long>  regionIdArr;
+    private List<String>  regionIdArr;
     @ApiModelProperty(value = "表ID")
     @Transient
     private List<Long>  templateDetailIdArr;
@@ -119,12 +119,10 @@ public class FreightTemplateDetail extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     public void defaultDetailValidate() {
-        Assert.isNull(this.regionCode, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 
     public void regionDetailValidate() {
-        Assert.notNull(this.regionCode, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_REGION_IS_NULL);
         validate();
     }
 

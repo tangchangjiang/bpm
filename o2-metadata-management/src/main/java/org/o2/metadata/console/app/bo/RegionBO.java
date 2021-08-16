@@ -15,22 +15,13 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegionBO {
-    private Long regionId;
 
     private String regionCode;
 
     private String regionName;
 
+    private String parentRegionCode;
+
     private List<RegionBO> children;
 
-    public RegionBO() {
-
-    }
-
-    public RegionBO(final Long regionId, final String regionCode, final String regionName, final List<RegionBO> children) {
-        this.regionId = regionId;
-        this.regionCode = regionCode;
-        this.regionName = regionName;
-        this.children = children;
-    }
 }

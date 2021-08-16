@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.mapper.WarehouseMapper;
@@ -41,5 +42,10 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     @Override
     public List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId) {
         return warehouseMapper.listActiveWarehouses(onlineShopCode,organizationId);
+    }
+
+    @Override
+    public List<WarehouseCacheBO> listWarehouseByCode(List<String> warehouseCodes, Long tenantId) {
+        return warehouseMapper.listWarehouseByCode(warehouseCodes,tenantId);
     }
 }

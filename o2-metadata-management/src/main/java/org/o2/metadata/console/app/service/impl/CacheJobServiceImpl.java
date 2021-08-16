@@ -5,14 +5,18 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.service.CacheJobService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
-import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.*;
-import org.o2.metadata.console.infra.repository.*;
+import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
+import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
+import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
+import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,9 +31,7 @@ import java.util.List;
 @Component
 public class CacheJobServiceImpl implements CacheJobService {
 
-    private final RedisCacheClient redisCacheClient;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
-    private final WarehouseRepository warehouseRepository;
     private final SystemParameterRepository systemParameterRepository;
     private final SystemParameterRedis systemParameterRedis;
     private final CarrierRedis carrierRedis;
@@ -37,18 +39,17 @@ public class CacheJobServiceImpl implements CacheJobService {
     private final FreightRedis freightRedis;
     private final FreightTemplateRepository freightTemplateRepository;
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
+    private final WarehouseRedis warehouseRedis;
 
-    public CacheJobServiceImpl(RedisCacheClient redisCacheClient,
-                               OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
-                               WarehouseRepository warehouseRepository,
+    public CacheJobServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                SystemParameterRepository systemParameterRepository,
                                SystemParameterRedis systemParameterRedis,
                                CarrierRedis carrierRedis,
                                OnlineShopRedis onlineShopRedis,
-                               FreightRedis freightRedis, FreightTemplateRepository freightTemplateRepository, FreightTemplateDetailRepository freightTemplateDetailRepository) {
-        this.redisCacheClient = redisCacheClient;
+                               FreightRedis freightRedis, FreightTemplateRepository freightTemplateRepository,
+                               FreightTemplateDetailRepository freightTemplateDetailRepository,
+                               WarehouseRedis warehouseRedis) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
-        this.warehouseRepository = warehouseRepository;
         this.systemParameterRepository = systemParameterRepository;
         this.systemParameterRedis = systemParameterRedis;
         this.carrierRedis = carrierRedis;
@@ -56,17 +57,14 @@ public class CacheJobServiceImpl implements CacheJobService {
         this.freightRedis = freightRedis;
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
+        this.warehouseRedis = warehouseRedis;
     }
 
     @Override
     public void refreshWarehouse(Long tenantId) {
-        List<Warehouse> warehouseList = warehouseRepository.queryAllWarehouseByTenantId(tenantId);
-        if (CollectionUtils.isNotEmpty(warehouseList)) {
-            warehouseList.get(0).syncToRedis(warehouseList,
-                    MetadataConstants.LuaCode.BATCH_SAVE_WAREHOUSE_REDIS_HASH_VALUE_LUA,
-                    MetadataConstants.LuaCode.BATCH_DELETE_REDIS_HASH_VALUE_LUA,
-                    redisCacheClient);
-        }
+
+        warehouseRedis.batchUpdateWarehouse(null, tenantId);
+
     }
 
     @Override
