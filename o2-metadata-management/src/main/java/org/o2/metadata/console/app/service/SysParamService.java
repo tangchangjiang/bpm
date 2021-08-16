@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 
-import org.o2.metadata.console.api.dto.SystemParameterDTO;
+import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.api.vo.SystemParameterVO;
@@ -49,9 +49,9 @@ public interface SysParamService {
 
     /**
      * 更新系统参数(map类型）
-     * @param systemParameterDTO 系统参数
+     * @param systemParameterQueryInnerDTO 系统参数
      * @param tenantId 租户ID
      * @return vo
      */
-    ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId);
+    ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
 }

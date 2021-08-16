@@ -1,5 +1,9 @@
 package org.o2.metadata.console.infra.redis;
 
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+
+import java.util.List;
+
 /**
  *
  * 网店
@@ -12,5 +16,13 @@ public interface OnlineShopRedis {
       * @param onlineShopCode 网店编码
       * @param tenantId 租户ID
       */
-     void batchUpdateRedis(String onlineShopCode,Long tenantId);
+     void updateRedis(String onlineShopCode,Long tenantId);
+
+     /**
+      * 更新网店关联仓库
+      * @param list 网店关联仓库数据
+      * @param tenantId 租户ID
+      * @param handleType 操作类型
+      */
+     void batchUpdateShopRelWh(List<OnlineShopRelWarehouse> list,Long tenantId,String handleType);
 }

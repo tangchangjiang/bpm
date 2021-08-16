@@ -28,12 +28,18 @@ public class FreightTemplateRepositoryImpl extends BaseRepositoryImpl<FreightTem
     }
 
     @Override
-    public FreightTemplate selectyTemplateId(final Long templateId) {
+    public FreightTemplate selectTemplateId(final Long templateId) {
         return freightTemplateMapper.queryFreightTemplateById(templateId);
     }
 
+
     @Override
-    public boolean isFreightTemplateRelatePro(FreightTemplate freightTemplate) {
-        return freightTemplateMapper.freightTemplateRelateProCount(freightTemplate) > 0;
+    public FreightTemplate getDefaultTemplate(Long organizationId) {
+        return freightTemplateMapper.getDefaultTemplate(organizationId);
+    }
+
+    @Override
+    public List<FreightTemplate> selectAllByTenantId(Long tenantId) {
+        return freightTemplateMapper.selectAllByTenantId(tenantId);
     }
 }

@@ -48,10 +48,7 @@ public abstract class AbstractFreightCacheOperation {
             FreightDetailBO bo = new FreightDetailBO();
 
 
-            if (detail.getRegionId() != null) {
-                Region region = regionRepository.selectByPrimaryKey(detail.getRegionId());
-                bo.setRegionCode(region != null ? region.getRegionCode() : null);
-            }
+            bo.setRegionCode(detail.getRegionCode());
             if (detail.getTemplateId() != null) {
                 FreightTemplate template = freightTemplateRepository.selectByPrimaryKey(detail.getTemplateId());
                 bo.setTemplateCode(template != null ? template.getTemplateCode() : null);

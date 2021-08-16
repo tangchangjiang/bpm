@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.metadata.console.api.dto.CatalogVersionDTO;
+import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 
 import java.util.Map;
@@ -26,9 +26,9 @@ public interface CatalogVersionService {
 
     /**
      * 批量查询目录版本
-     * @param catalogVersionDTO 目录版本
+     * @param catalogVersionQueryInnerDTO 目录版本
      * @param organizationId 租户ID
      * @return map
      */
-    Map<String,String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long organizationId);
+    Map<String,String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long organizationId);
 }

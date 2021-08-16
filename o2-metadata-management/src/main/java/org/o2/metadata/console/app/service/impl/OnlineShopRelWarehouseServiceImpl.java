@@ -18,6 +18,7 @@ import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
@@ -26,7 +27,6 @@ import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -52,15 +52,16 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private O2InventoryClient o2InventoryClient;
     private RedisCacheClient redisCacheClient;
     private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
+    private final OnlineShopRedis onlineShopRedis;
 
-    @Autowired
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                              OnlineShopRepository onlineShopRepository,
                                              WarehouseRepository warehouseRepository,
                                              PosRepository posRepository,
                                              O2InventoryClient o2InventoryClient,
                                              RedisCacheClient redisCacheClient,
-                                             OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository) {
+                                             OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
+                                             OnlineShopRedis onlineShopRedis) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
@@ -68,6 +69,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
+        this.onlineShopRedis = onlineShopRedis;
     }
 
     @Override
@@ -80,11 +82,14 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
             OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
+            final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(relationship.getWarehouseId());
+            relationship.setWarehouseCode(warehouse.getWarehouseCode());
+            relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
             shopCodeSet.add(onlineShop.getOnlineShopCode());
         });
 
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        syncToRedis(list);
+        onlineShopRedis.batchUpdateShopRelWh(list,organizationId,OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
         }
@@ -95,7 +100,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long tenantId, final List<OnlineShopRelWarehouse> relationships) {
         Set<String> shopCodeSet = new HashSet<>();
-        relationships.forEach(relationship -> {
+        for (OnlineShopRelWarehouse relationship : relationships) {
             relationship.setTenantId(tenantId);
             Assert.isTrue(relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             relationship.baseValidate(onlineShopRepository, warehouseRepository);
@@ -107,12 +112,12 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                 if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
                     shopCodeSet.add(onlineShop.getOnlineShopCode());
                 }
-                String key = String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShop.getOnlineShopCode());
-                redisCacheClient.opsForHash().put(key, warehouse.getWarehouseCode(), String.valueOf(relationship.getActiveFlag()));
+                relationship.setWarehouseCode(warehouse.getWarehouseCode());
+                relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
             }
-        });
+        }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        syncToRedis(list);
+        onlineShopRedis.batchUpdateShopRelWh(relationships,tenantId,OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
         }
@@ -208,7 +213,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                 onlineShopId, tenantId, activeFlag, JSONArray.toJSONString(onlineShopRelWarehouses));
         onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
 
-        String key = String.format(OnlineShopConstants.OnlineShopRelWarehouse.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
+        String key = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
         Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
         log.info("updateByShop key({}), hashKeySet({})", key, JSON.toJSONString(map.keySet()));
         if (map.isEmpty()) {

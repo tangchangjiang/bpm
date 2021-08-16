@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
-import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
@@ -65,43 +64,24 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         RegionQueryDTO queryDTO = new RegionQueryDTO();
         queryDTO.setCountryCode(countryCode);
         queryDTO.setEnabledFlag(enabledFlag);
+        queryDTO.setLevelNumber(1);
+        List<RegionVO> list = this.listChildren(queryDTO,tenantId);
+        List<RegionBO> regionList = RegionConverter.voToBoListObjects(list);
 
-        final List<RegionVO> regionList = this.listChildren(queryDTO,tenantId);
-        final Map<String, List<RegionBO>> regionMap = new HashMap<>(16);
-        String key;
-        List<RegionBO> list;
-        for (final RegionVO regionVO : regionList) {
-            key = regionVO.getAreaCode() == null ? "$OTHER_AREA$" : regionVO.getAreaCode();
-            if (regionMap.containsKey(key)) {
-                list = regionMap.get(key);
-            } else {
-                list = new ArrayList<>();
-                regionMap.put(key, list);
-            }
-            queryDTO.setParentRegionId(regionVO.getRegionId());
-            List<RegionVO> childrenVO = this.listChildren(queryDTO, tenantId);
-            List<RegionBO> childrenBO = null;
-            if (CollectionUtils.isNotEmpty(childrenVO)) {
-                childrenBO = childrenVO.stream().map(m -> {
-                    RegionBO regionBO = new RegionBO();
-                    regionBO.setRegionId(m.getRegionId());
-                    regionBO.setRegionCode(m.getRegionCode());
-                    regionBO.setRegionName(m.getRegionName());
-                    return regionBO;
-                }).collect(Collectors.toList());
-            }
-            list.add(new RegionBO(regionVO.getRegionId(), regionVO.getRegionCode(), regionVO.getRegionName(), childrenBO));
+        //市
+        queryDTO.setLevelNumber(2);
+        List<RegionBO> cityList = RegionConverter.voToBoListObjects(this.listChildren(queryDTO,tenantId));
+        Map<String,List<RegionBO>> cityMap = cityList.stream().collect(Collectors.groupingBy(RegionBO::getParentRegionCode));
+
+        for (RegionBO vo : regionList) {
+            String code = vo.getRegionCode();
+            vo.setChildren(cityMap.get(code));
         }
-        final List<AreaRegionVO> areaRegionList = new ArrayList<>(regionMap.size());
-        for (final String areaCode : regionMap.keySet()) {
-            final AreaRegionVO areaRegionVO = new AreaRegionVO();
-            areaRegionVO.setAreaCode(areaCode);
-            areaRegionVO.setRegionList(regionMap.get(areaCode));
-            areaRegionList.add(areaRegionVO);
-        }
-        // 排序
-        areaRegionList.sort(null);
-        return areaRegionList;
+        AreaRegionVO vo = new AreaRegionVO();
+        vo.setAreaCode(countryCode);
+        vo.setAreaMeaning(list.get(0).getCountryName());
+        vo.setRegionList(regionList);
+        return Collections.singletonList(vo);
     }
 
     @Override

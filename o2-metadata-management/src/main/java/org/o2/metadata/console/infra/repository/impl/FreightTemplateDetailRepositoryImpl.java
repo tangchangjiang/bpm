@@ -40,4 +40,9 @@ public class FreightTemplateDetailRepositoryImpl extends BaseRepositoryImpl<Frei
     public List<FreightTemplateDetail> queryOtherDefaultFreightTemplateDetail(FreightTemplateDetail freightTemplateDetail) {
         return freightTemplateDetailMapper.queryOtherDefaultFreightTemplateDetail(freightTemplateDetail);
     }
+
+    @Override
+    public List<FreightTemplateDetail> selectAllByTenantId(Long tenantId) {
+        return freightTemplateDetailMapper.selectAllByTenantId(tenantId);
+    }
 }

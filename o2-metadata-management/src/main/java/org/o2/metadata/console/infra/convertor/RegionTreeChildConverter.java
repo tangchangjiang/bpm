@@ -45,7 +45,7 @@ class RegionTreeChildConverter{
         regionTreeChild.setPlatformTypeMeaning(regionTreeChildVO.getPlatformTypeMeaning());
         regionTreeChild.setAddressTypeMeaning(regionTreeChildVO.getAddressTypeMeaning());
         regionTreeChild.setPlatformCode(regionTreeChildVO.getPlatformCode());
-        regionTreeChild.setCatalogName(regionTreeChildVO.getCatalogName());
+        regionTreeChild.setPlatformName(regionTreeChildVO.getPlatformName());
 
         List<RegionTreeChild> children =  RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren());
         if (!children.isEmpty()) {
@@ -82,7 +82,7 @@ class RegionTreeChildConverter{
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
-        regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
+        regionTreeChildVO.setPlatformName(regionTreeChild.getPlatformName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
         regionTreeChildVO.set_token(regionTreeChild.get_token());

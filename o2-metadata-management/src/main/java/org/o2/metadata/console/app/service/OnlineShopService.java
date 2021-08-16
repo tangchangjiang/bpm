@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
-import org.o2.metadata.console.api.dto.OnlineShopDTO;
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
@@ -28,11 +28,11 @@ public interface OnlineShopService {
 
     /**
      * 批量查询网店
-     * @param  onlineShopDTO 网店
+     * @param  onlineShopQueryInnerDTO 网店
      * @param tenantId 租户ID
      * @return list
      */
-    Map<String,OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId);
+    Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
     /**
      * 目录版本+目录 批量查询网店

@@ -114,10 +114,40 @@
         WHERE oft.template_id = #{templateId}
     </select>
 
-    <select id="freightTemplateRelateProCount" resultType="int">
-        SELECT COUNT(1)
-        FROM o2pcm_platform_product opp
-        WHERE opp.shelf_status_code = 'ON'
-              AND opp.template_id = #{templateId}
+    <select id="getDefaultTemplate" resultType="org.o2.metadata.console.infra.entity.FreightTemplate">
+        select oft.template_id,
+               oft.template_code,
+               oft.template_name,
+               oft.delivery_free_flag,
+               oft.valuation_type,
+               oft.valuation_uom,
+               oft.dafault_flag,
+               oft.tenant_id,
+               oft.active_flag
+        from o2md_freight_template oft
+         where oft.dafault_flag = 1
+          and oft.active_flag = 1
+          and oft.tenant_id = #{tenantId}
+    </select>
+    <select id="selectAllByTenantId" resultType="org.o2.metadata.console.infra.entity.FreightTemplate">
+        select dafault_flag,
+        delivery_free_flag,
+        template_code,
+        template_id,
+        template_name,
+        tenant_id,
+        valuation_type,
+        valuation_uom
+        from o2md_freight_template
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 =0
+            </otherwise>
+        </choose>
+       and active_flag = 1
     </select>
 </mapper>

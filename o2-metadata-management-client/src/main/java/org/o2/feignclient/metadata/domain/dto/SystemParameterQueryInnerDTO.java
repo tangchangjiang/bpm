@@ -11,7 +11,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2021-07-27
  **/
 @Data
-public class SystemParameterDTO {
+public class SystemParameterQueryInnerDTO {
     /**
      * 参数编码
      */

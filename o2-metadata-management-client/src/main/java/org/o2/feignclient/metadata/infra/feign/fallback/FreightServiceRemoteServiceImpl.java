@@ -22,4 +22,10 @@ public class FreightServiceRemoteServiceImpl implements FreightRemoteService {
         log.error("Error getFreightTemplate, params[freight = {}, organizationId = {}]", freight,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> getDefaultTemplate(Long organizationId) {
+        log.error("Error getDefaultTemplate, params[organizationId = {}]", organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

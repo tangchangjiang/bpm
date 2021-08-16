@@ -1,14 +1,12 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public interface WarehouseRemoteService {
      */
     @GetMapping("/{organizationId}/warehouse-internal/list")
     ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                           @RequestParam(value = "warehouseCodes") List<String> warehouseCodes);
+                                           @RequestParam(value = "warehouseCodes",required = false) List<String> warehouseCodes);
 
     /**
      * 保存仓库快递配送接单量限制

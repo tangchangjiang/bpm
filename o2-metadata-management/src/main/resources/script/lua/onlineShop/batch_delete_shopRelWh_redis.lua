@@ -5,3 +5,4 @@ for hashKey, filedMap in pairs(objMap) do
         redis.call("hdel", hashKey, fieldKey);
     end
 end
+

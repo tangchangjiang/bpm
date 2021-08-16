@@ -1,21 +1,24 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryIntDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
+import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.*;
-import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,15 +36,17 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private final RegionRepository regionRepository;
     private final AddressMappingRepository addressMappingRepository;
     private final CatalogRepository catalogRepository;
+    private final PlatformRepository platformRepository;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
                                      RegionRepository regionRepository,
                                      AddressMappingRepository addressMappingRepository,
-                                     CatalogRepository catalogRepository) {
+                                     CatalogRepository catalogRepository, PlatformRepository platformRepository) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
         this.addressMappingRepository = addressMappingRepository;
         this.catalogRepository = catalogRepository;
+        this.platformRepository = platformRepository;
     }
 
     /**
@@ -114,9 +119,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         queryLovDTO.setRegionCode(addressMapping.getRegionCode());
         queryLovDTO.setTenantId(tenantId);
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
-        final Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(addressMapping.getPlatformCode()).tenantId(addressMapping.getTenantId()).build());
-        addressMapping.setPlatformCode(catalog.getCatalogCode());
-        addressMapping.setCatalogName(catalog.getCatalogName());
+        Platform platform = new Platform();
+        platform.setTenantId(tenantId);
+        platform.setPlatformCode(addressMapping.getPlatformCode());
+        final Platform query = platformRepository.selectOne(platform);
+        addressMapping.setPlatformName(query.getPlatformName());
         if (!regionList.isEmpty()) {
             Region region = regionList.get(0);
             addressMapping.setRegionName(region.getRegionName());
@@ -128,28 +135,37 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryInts, Long tenantId) {
+    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
         List<String> externalCodes = new ArrayList<>();
         List<String> addressTypeCodes = new ArrayList<>();
         List<String> externalNames = new ArrayList<>();
-        for (AddressMappingQueryIntDTO addressMappingQueryIntDTO : addressMappingQueryInts) {
-            String externalCode = addressMappingQueryIntDTO.getExternalCode();
+        for (AddressMappingQueryInnerDTO addressMappingQueryInnerDTO : addressMappingQueryInts) {
+            String externalCode = addressMappingQueryInnerDTO.getExternalCode();
             if(StringUtils.isNotEmpty(externalCode)){
                 externalCodes.add(externalCode);
             }
 
-            String  externalName = addressMappingQueryIntDTO.getExternalName();
+            String  externalName = addressMappingQueryInnerDTO.getExternalName();
             if (StringUtils.isNotEmpty(externalName)) {
                 externalNames.add(externalName);
             }
 
-            String addressTypeCode = addressMappingQueryIntDTO.getAddressTypeCode();
+            String addressTypeCode = addressMappingQueryInnerDTO.getAddressTypeCode();
             if (StringUtils.isNotEmpty(addressTypeCode)) {
                 addressTypeCodes.add(addressTypeCode);
             }
 
         }
         return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
+    }
+
+    @Override
+    public void createAddressMapping(AddressMapping addressMapping) {
+        if (addressMapping.exist(addressMappingRepository)) {
+            throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
+        }
+        Preconditions.checkArgument(null != addressMapping.getPlatformCode(), MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
+        addressMappingRepository.insertSelective(addressMapping);
     }
 
     /**

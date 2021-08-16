@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -45,4 +46,12 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @return list
      */
     List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
+
+    /**
+     *  编码查询仓促
+     * @param warehouseCodes 仓库
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<WarehouseCacheBO> listWarehouseByCode(List<String> warehouseCodes, Long tenantId);
 }

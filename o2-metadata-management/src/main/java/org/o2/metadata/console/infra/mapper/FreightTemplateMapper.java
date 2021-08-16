@@ -30,11 +30,18 @@ public interface FreightTemplateMapper extends BaseMapper<FreightTemplate> {
      */
     FreightTemplate queryFreightTemplateById(@Param(value = "templateId") Long templateId);
 
+
     /**
-     * 查询运费模板关联上架平台商品的数量
-     *
-     * @param freightTemplate 运费模板
-     * @return
+     * 默认模版信息
+     * @param  tenantId 租户ID
+     * @return  默认模版信息
      */
-    int freightTemplateRelateProCount(FreightTemplate freightTemplate);
+    FreightTemplate getDefaultTemplate(@Param(value = "tenantId")Long tenantId);
+
+    /**
+     *  通过租户ID查询所有
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<FreightTemplate> selectAllByTenantId(@Param("tenantId") Long tenantId);
 }

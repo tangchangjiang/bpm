@@ -1,7 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
-import org.o2.feignclient.metadata.domain.dto.SystemParameterDTO;
+import org.o2.feignclient.metadata.domain.dto.SystemParameterQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +30,8 @@ public class SysParameterRemoteServiceImpl implements SysParameterRemoteService 
     }
 
     @Override
-    public ResponseEntity<String> updateSysParameter(SystemParameterDTO systemParameterDTO, Long organizationId) {
-        log.error("Error updateSysParameter, params[tenantId = {}, systemParameterDTO = {}]", organizationId, systemParameterDTO);
+    public ResponseEntity<String> updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long organizationId) {
+        log.error("Error updateSysParameter, params[tenantId = {}, systemParameterDTO = {}]", organizationId, systemParameterQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

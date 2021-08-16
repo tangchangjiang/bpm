@@ -28,13 +28,20 @@ public interface FreightTemplateRepository extends BaseRepository<FreightTemplat
      * @param templateId 运费模板ID
      * @return 运费模板
      */
-    FreightTemplate selectyTemplateId(final Long templateId);
+    FreightTemplate selectTemplateId(final Long templateId);
+
 
     /**
-     * 运费模板是否关联平台产品
-     *
-     * @param freightTemplate 运费模板
-     * @return
+     * 默认模版信息
+     * @param  organizationId 租户ID
+     * @return  默认模版信息
      */
-    boolean isFreightTemplateRelatePro(final FreightTemplate freightTemplate);
+    FreightTemplate getDefaultTemplate(Long organizationId);
+
+    /**
+     *  通过租户ID查询所有
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<FreightTemplate> selectAllByTenantId(Long tenantId);
 }

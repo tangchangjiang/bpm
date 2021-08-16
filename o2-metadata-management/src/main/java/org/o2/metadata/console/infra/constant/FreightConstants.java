@@ -29,7 +29,7 @@ public interface FreightConstants {
         String BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL = "error.basic_data.freight_template_detail.template_id.not_null";
         String BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE = "error.basic_data.freight_template_detail.duplicate";
     }
-    interface RedisKey {
+    interface Redis {
 
         /**
          * 默认运费模板KEY
@@ -58,41 +58,16 @@ public interface FreightConstants {
         static String getFreightDetailKey(Long tenantId, String freightCode) {
             return String.format(FREIGHT_DETAIL_KEY, tenantId, freightCode);
         }
-    }
-
-    interface FreightCache {
-
-        /***
-         * 运费模板默认运费行KEY
-         */
-        String FREIGHT_DEFAULT_LINE_KEY = "DEFAULT";
-        /***
-         * 默认运费模板KEY
-         */
-        String FREIGHT_DEFAULT_KEY = "DEFAULT";
-        /***
-         *运费模板头KEY
-         */
-        String FREIGHT_HEAD_KEY = "HEAD";
-
-
-        /**
-         * 运费模板明细redis key(hash): o2md:freight::{tenantId}:{freightCode} ; 注:默认的运费模板{freightCode} 为DEFAULT
-         * <p>
-         * key:
-         * HEAD ~ 运费模板头信息
-         * {region} - 地区信息对应模板
-         * DEFAULT  - 默认运费模板行
-         */
-        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
-
-
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
 
         ResourceScriptSource DELETE_FREIGHT_DETAIL_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/freight/delete_freight_detail_cache.lua"));
+
+        ResourceScriptSource BATCH_UPDATE_FREIGHT_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/freight/batch_update_freight.lua"));
     }
+
     /**
      * 运费模版类型
      */

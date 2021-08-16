@@ -3,7 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.metadata.console.api.dto.PosAddressDTO;
+import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.api.vo.PosVO;
@@ -143,8 +143,8 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public List<PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO, Long tenantId) {
-        List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressDTO,tenantId);
+    public List<PosAddressVO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
+        List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressQueryInnerDTO,tenantId);
         List<String> regionCodes = new ArrayList<>();
         for (PosAddress address : addresses) {
             regionCodes.add(address.getCityCode());

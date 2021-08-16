@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.vo.PlatformInfMappingVO;
-import org.o2.metadata.console.infra.entity.PlatformInfMapping;
+import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 
 /**
  * description 平台信息pojo转换器
@@ -15,24 +15,24 @@ public class PlatformInfMappingConverter {
 
     /**
      * po ->vo
-     * @param platformInfMapping 平台信息pojo转换器
+     * @param platformInfoMapping 平台信息pojo转换器
      * @return  vo
      */
-    public static PlatformInfMappingVO toPlatformInfMappingVO(PlatformInfMapping platformInfMapping) {
-        if (platformInfMapping == null) {
+    public static PlatformInfMappingVO toPlatformInfMappingVO(PlatformInfoMapping platformInfoMapping) {
+        if (platformInfoMapping == null) {
             return null;
         }
         PlatformInfMappingVO platformInfMappingVO = new PlatformInfMappingVO();
-        platformInfMappingVO.setPlatformInfMappingId(platformInfMapping.getPlatformInfMappingId());
-        platformInfMappingVO.setInfTypeCode(platformInfMapping.getInfTypeCode());
-        platformInfMappingVO.setPlatformCode(platformInfMapping.getPlatformCode());
-        platformInfMappingVO.setInfCode(platformInfMapping.getInfCode());
-        platformInfMappingVO.setInfName(platformInfMapping.getInfName());
-        platformInfMappingVO.setPlatformInfCode(platformInfMapping.getPlatformInfCode());
-        platformInfMappingVO.setPlatformInfName(platformInfMapping.getPlatformInfName());
-        platformInfMappingVO.setTenantId(platformInfMapping.getTenantId());
-        platformInfMappingVO.setPlatformName(platformInfMapping.getPlatformName());
-        platformInfMappingVO.setInfTypeMeaning(platformInfMapping.getInfTypeMeaning());
+        platformInfMappingVO.setPlatformInfMappingId(platformInfoMapping.getPlatformInfMappingId());
+        platformInfMappingVO.setInfTypeCode(platformInfoMapping.getInfTypeCode());
+        platformInfMappingVO.setPlatformCode(platformInfoMapping.getPlatformCode());
+        platformInfMappingVO.setInfCode(platformInfoMapping.getInfCode());
+        platformInfMappingVO.setInfName(platformInfoMapping.getInfName());
+        platformInfMappingVO.setPlatformInfCode(platformInfoMapping.getPlatformInfCode());
+        platformInfMappingVO.setPlatformInfName(platformInfoMapping.getPlatformInfName());
+        platformInfMappingVO.setTenantId(platformInfoMapping.getTenantId());
+        platformInfMappingVO.setPlatformName(platformInfoMapping.getPlatformName());
+        platformInfMappingVO.setInfTypeMeaning(platformInfoMapping.getInfTypeMeaning());
         return platformInfMappingVO;
     }
 }

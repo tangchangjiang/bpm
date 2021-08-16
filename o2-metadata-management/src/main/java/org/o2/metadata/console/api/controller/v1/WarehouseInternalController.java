@@ -6,11 +6,13 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.vo.WarehouseVO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,12 +32,14 @@ public class WarehouseInternalController {
     }
 
     @ApiOperation(value = "查询仓库")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/list")
     public ResponseEntity<Map<String, WarehouseVO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                 @RequestParam List<String> warehouseCodes) {
-        Map<String,WarehouseVO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
-        List<WarehouseVO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
+                                                                   @RequestParam (required = false) List<String> warehouseCodes) {
+        Map<String,WarehouseVO> map = new HashMap<>(16);
+        WarehouseQueryInnerDTO queryInnerDTO = new WarehouseQueryInnerDTO();
+        queryInnerDTO.setWarehouseCodes(warehouseCodes);
+        List<WarehouseVO> vos = warehouseService.listWarehouses(queryInnerDTO, organizationId);
         if (vos.isEmpty()){
           return Results.success(map);
         }
@@ -44,32 +48,13 @@ public class WarehouseInternalController {
         }
         return  Results.success(map);
     }
+
     @ApiOperation(value = "查询有效仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/active/{onlineShopCode}")
     public ResponseEntity<List<WarehouseVO>> listActiveWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                  @PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode) {
         return Results.success(warehouseService.listActiveWarehouses(onlineShopCode, organizationId));
-    }
-
-    @ApiOperation("保存(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
-    @PostMapping({"/saveWarehouse"})
-    public ResponseEntity<?> saveWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                           @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
-                                           @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap) {
-        warehouseService.saveWarehouse(warehouseCode, hashMap, organizationId);
-        return Results.success();
-    }
-
-    @ApiOperation("更新(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
-    @PostMapping({"/updateWarehouse"})
-    public ResponseEntity<?> updateWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                             @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
-                                             @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap) {
-        warehouseService.updateWarehouse(warehouseCode, hashMap, organizationId);
-        return Results.success();
     }
 
     @ApiOperation("保存仓库快递配送接单量限制(内部调用)")
@@ -148,14 +133,6 @@ public class WarehouseInternalController {
         return Results.success(result);
     }
 
-    @ApiOperation("获取仓库缓存KEY(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
-    @GetMapping({"/warehouseCacheKey"})
-    public ResponseEntity<?> warehouseCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                               @RequestParam(value = "warehouseCode") String warehouseCode) {
-        String result = warehouseService.warehouseCacheKey(warehouseCode, organizationId);
-        return Results.success(result);
-    }
 
     @ApiOperation("获取仓库limit缓存KEY(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)

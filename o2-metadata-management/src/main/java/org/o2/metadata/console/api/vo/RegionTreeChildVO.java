@@ -62,7 +62,7 @@ public class RegionTreeChildVO {
     private String platformCode;
 
     @ApiModelProperty(value = "版本名称",required = true)
-    private String catalogName;
+    private String platformName;
     /**
      * 地区父节点id
      */

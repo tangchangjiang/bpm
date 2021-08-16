@@ -60,27 +60,6 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询仓库
-     *
-     * @param warehouseCodes 仓库编码
-     * @param tenantId       租户ID
-     */
-    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
-        });
-    }
-
-    /**
-     * 更新系统参数
-     *
-     * @param systemParameterDTO 系统
-     * @param tenantId           租户ID
-     */
-    public ResponseVO updateSysParameter(SystemParameterDTO systemParameterDTO, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterDTO, tenantId), ResponseVO.class);
-    }
-
-    /**
      * 从redis查询系统参数
      *
      * @param paramCodes 参数编码
@@ -89,6 +68,27 @@ public class O2MetadataManagementClient {
      */
     public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
+        });
+    }
+
+    /**
+     * 更新系统参数
+     *
+     * @param systemParameterQueryInnerDTO 系统
+     * @param tenantId           租户ID
+     */
+    public ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterQueryInnerDTO, tenantId), ResponseVO.class);
+    }
+
+    /**
+     * 从redis查询仓库
+     *
+     * @param warehouseCodes 仓库编码
+     * @param tenantId       租户ID
+     */
+    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
         });
     }
 
@@ -105,17 +105,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取模版
-     *
-     * @param freight 运费参数
-     * @return 运费结果
-     */
-    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight, tenantId), FreightInfoVO.class);
-    }
-
-    /**
-     * 查询有效仓库
+     * 查询有效仓库(寻源）
      *
      * @param onlineShopCode 网店编码
      * @param tenantId       租户ID
@@ -127,39 +117,58 @@ public class O2MetadataManagementClient {
     }
 
     /**
+     * 获取模版
+     *
+     * @param freight 运费参数
+     * @return 运费结果
+     */
+    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight, tenantId), FreightInfoVO.class);
+    }
+
+    /**
+     * 获取默认模版
+     *
+     * @param tenantId 租户id
+     * @return 模版
+     */
+    public FreightTemplateVO getDefaultTemplate(Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateVO.class);
+    }
+
+    /**
      * 批量查询目录版本
-     * @param catalogVersionDTO 目录版本集合
+     * @param catalogVersionQueryInnerDTO 目录版本集合
      * @param tenantId 租户ID
      * @return map key:编码 value:名称
      */
-    public Map<String, String> listCatalogVersions(CatalogVersionDTO catalogVersionDTO, Long tenantId) {
-        return ResponseUtils.getResponse(catalogVersionRemoteService.listCatalogVersions(catalogVersionDTO, tenantId), new TypeReference<Map<String, String>>() {
+    public Map<String, String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(catalogVersionRemoteService.listCatalogVersions(catalogVersionQueryInnerDTO, tenantId), new TypeReference<Map<String, String>>() {
         });
     }
 
     /**
      * 批量查询承运商
      *
-     * @param carrierDTO 承运商
+     * @param carrierQueryInnerDTO 承运商
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, CarrierVO> listCarriers(CarrierDTO carrierDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
+    public Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
         });
     }
 
     /**
      * 批量查询网店
      *
-     * @param onlineShopDTO 网店
+     * @param onlineShopQueryInnerDTO 网店
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
-    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
         });
     }
-
 
     /**
      * 目录版本+ 目录 批量查询网店
@@ -174,15 +183,26 @@ public class O2MetadataManagementClient {
 
     /**
      * 批量查询服务点地址
-     * @param posAddressDTO 服务点地址
+     * @param posAddressQueryInnerDTO 服务点地址
      * @param tenantId 租户ID
      * @return string
      */
-    public Map<String,PosAddressVO> listPosAddress(PosAddressDTO posAddressDTO,Long tenantId) {
-        return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressDTO, tenantId), new TypeReference<Map<String, PosAddressVO>>() {
+    public Map<String,PosAddressVO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressQueryInnerDTO, tenantId), new TypeReference<Map<String, PosAddressVO>>() {
         });
     }
 
+    /**
+     * 批量查询地址匹配
+     *
+     * @param addressMappingQueryInnerDTOList 地址匹配
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+        });
+    }
 
     /**
      * 获取快递配送接单量到达上限的仓库
@@ -237,6 +257,19 @@ public class O2MetadataManagementClient {
         });
     }
 
+
+    /**
+     * 仓库快递配送接单量增量更新
+     *
+     * @param organizationId 租户ID
+     * @param warehouseCode  仓库编码
+     * @param increment      快递配送接单量增量
+     */
+    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
+        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
+    }
+
+
     /**
      * 保存静态资源文件表
      *
@@ -257,30 +290,6 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 
-
-    /**
-     * 批量查询承运商
-     *
-     * @param addressMappingQueryIntDTOList 地址匹配
-     * @param tenantId   租户ID
-     * @return map key:carrierCode
-     */
-    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryIntDTO> addressMappingQueryIntDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryIntDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
-        });
-    }
-
-    /**
-     * 仓库快递配送接单量增量更新
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     * @param increment      快递配送接单量增量
-     */
-    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
-    }
-
     /**
      * 查询平台信息匹配
      * @param organizationId 租户id
@@ -289,7 +298,7 @@ public class O2MetadataManagementClient {
      * @return List<PlatformInfMappingVO> 结果
      */
     public List<PlatformInfMappingVO> getPlatformInfMappingList(Long organizationId,
-                                                            String platformCode,String infTypeCode) {
+                                                                String platformCode,String infTypeCode) {
         return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformInfMapping(organizationId,platformCode,infTypeCode),new TypeReference<List<PlatformInfMappingVO>>(){});
     }
 

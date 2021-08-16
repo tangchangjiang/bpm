@@ -210,6 +210,10 @@
                     #{code}
                 </foreach>
             </if>
+            <if test="onlineShopDTO.platformCode != null">
+                and online.platform_code = #{onlineShopDTO.platformCode}
+            </if>
+
             <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size > 0">
                 and tl.online_shop_name in
                 <foreach collection="onlineShopDTO.onlineShopNames" item="name" open="(" separator="," close=")">

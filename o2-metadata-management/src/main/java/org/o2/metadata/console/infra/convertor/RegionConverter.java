@@ -2,10 +2,12 @@ package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.api.vo.RegionVO;
+import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public class RegionConverter {
         regionVO.setRegionName(region.getRegionName());
         regionVO.setCountryId(region.getCountryId());
         regionVO.setParentRegionId(region.getParentRegionId());
+        regionVO.setParentRegionCode(region.getParentRegionCode());
         regionVO.setLevelPath(region.getLevelPath());
         regionVO.setEnabledFlag(region.getEnabledFlag());
-        regionVO.setChildren(region.getChildren());
         regionVO.setAreaCode(region.getAreaCode());
         regionVO.setAreaMeaning(region.getAreaMeaning());
         regionVO.setTenantId(region.getTenantId());
@@ -101,7 +103,7 @@ public class RegionConverter {
         regionTreeChildVO.setPlatformTypeMeaning(regionTreeChild.getPlatformTypeMeaning());
         regionTreeChildVO.setAddressTypeMeaning(regionTreeChild.getAddressTypeMeaning());
         regionTreeChildVO.setPlatformCode(regionTreeChild.getPlatformCode());
-        regionTreeChildVO.setCatalogName(regionTreeChild.getCatalogName());
+        regionTreeChildVO.setPlatformName(regionTreeChild.getPlatformName());
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
         regionTreeChildVO.setChildren(RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren()));
@@ -124,6 +126,41 @@ public class RegionConverter {
             regionTreeChildVOList.add(poToVoObject(regionTreeChild));
         }
         return regionTreeChildVOList;
+    }
+
+    /**
+     * vo ->bo
+     * @date 2021-08-13
+     * @param regionVO sql值集地区
+     * @return  bo
+     */
+    public static RegionBO voToBoObject(RegionVO regionVO) {
+
+        if (regionVO == null) {
+            return null;
+        }
+        RegionBO regionBO = new RegionBO();
+        regionBO.setRegionCode(regionVO.getRegionCode());
+        regionBO.setRegionName(regionVO.getRegionName());
+        regionBO.setParentRegionCode(regionVO.getParentRegionCode());
+        return regionBO;
+    }
+
+    /**
+     * vO 转 vbo
+     * @param regionList 地区树
+     * @return  list
+     */
+
+    public static List<RegionBO> voToBoListObjects(List<RegionVO> regionList) {
+        List<RegionBO> regionBOList = new ArrayList<>();
+        if (regionList == null) {
+            return regionBOList;
+        }
+        for (RegionVO vo : regionList) {
+            regionBOList.add(voToBoObject(vo));
+        }
+        return regionBOList;
     }
 
 }

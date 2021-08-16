@@ -78,7 +78,7 @@ public class FreightTemplateManagementVO extends FreightTemplate {
                  detail.setDefaultFlag(old.getDefaultFlag());
                  detail.setTenantId(old.getTenantId()==null?tenantId:old.getTenantId());
 
-                 detail.setRegionId(old.getRegionIdArr().get(i));
+                 detail.setRegionCode(old.getRegionIdArr().get(i));
                  List<String> regionNameArr =  old.getRegionNameArr();
                  if (CollectionUtils.isNotEmpty(regionNameArr)){
                      detail.setRegionName( i<regionNameArr.size()?regionNameArr.get(i):null );
@@ -124,7 +124,7 @@ public class FreightTemplateManagementVO extends FreightTemplate {
             detail.setTemplateId(fist.getTemplateId());
             detail.setDefaultFlag(fist.getDefaultFlag());
             detail.setTenantId(fist.getTenantId()==null ? tenantId:fist.getTenantId());
-            detail.setRegionIdArr(value.stream().map(e -> e.getRegionId()).collect(Collectors.toList()));
+            detail.setRegionIdArr(value.stream().map(e -> e.getRegionCode()).collect(Collectors.toList()));
             Map<String ,List<FreightTemplateDetail>> regionMap = value.stream().collect(
                     Collectors.groupingBy(regionItem -> StringUtils.isEmpty(regionItem.getParentRegionName())?"":regionItem.getParentRegionName()));
             List<String>  displayRegion = new ArrayList<>();

@@ -44,4 +44,13 @@ public interface FreightTemplateDetailMapper extends BaseMapper<FreightTemplateD
      * @return 其他默认的运费模板明细
      */
     List<FreightTemplateDetail> queryOtherDefaultFreightTemplateDetail(FreightTemplateDetail freightTemplateDetail);
+
+
+
+    /**
+     *  通过租户ID查询所有
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<FreightTemplateDetail> selectAllByTenantId(@Param("tenantId") Long tenantId);
 }

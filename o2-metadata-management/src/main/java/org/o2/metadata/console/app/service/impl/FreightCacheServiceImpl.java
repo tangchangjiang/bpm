@@ -36,7 +36,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
         final String freightStr = FastJsonHelper.objectToString(freight);
         final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(),freight.getTemplateCode());
-        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.FreightCache.FREIGHT_HEAD_KEY ,freightStr);
+        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY ,freightStr);
         saveFreightDetails(freightDetailList);
 
         //更新默认模板
@@ -55,10 +55,10 @@ public class FreightCacheServiceImpl implements FreightCacheService {
 
         final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
         final String freightStr = FastJsonHelper.objectToString(freight);
-        String templateCode =  FreightConstants.FreightCache.FREIGHT_DEFAULT_KEY;
+        String templateCode =  FreightConstants.Redis.FREIGHT_DEFAULT_KEY;
         final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(),templateCode);
         this.redisCacheClient.delete(freightInforKey);
-        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.FreightCache.FREIGHT_HEAD_KEY ,freightStr);
+        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY ,freightStr);
         saveFreightDetails(freightDetailList);
     }
 
@@ -102,7 +102,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      * @return 运费模板明细redis缓存key
      */
     private String getFreightInforCacheKey(final Long tenantId, final String freightCode) {
-        return String.format(FreightConstants.FreightCache.FREIGHT_DETAIL_KEY,tenantId, freightCode);
+        return String.format(FreightConstants.Redis.FREIGHT_DETAIL_KEY,tenantId, freightCode);
     }
 
 
@@ -117,7 +117,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         for (FreightDetailBO freightDetail : freightDetailList) {
             if (freightDetail.getDefaultFlag()!=null&&freightDetail.getDefaultFlag()==1){
                 freightDetailMap.put
-                        (FreightConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY, FastJsonHelper.objectToString(freightDetail));
+                        (FreightConstants.Redis.FREIGHT_DEFAULT_KEY, FastJsonHelper.objectToString(freightDetail));
             }else{
                 freightDetailMap.put
                         (freightDetail.getRegionCode(), FastJsonHelper.objectToString(freightDetail));
@@ -137,7 +137,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private List<String> getTemplateDetailRegionCodeList(final List<FreightDetailBO> freightDetailList) {
         final List<String> tmpDetailIdRegionCodeList = new ArrayList<>();
         for (FreightDetailBO freightDetail : freightDetailList) {
-            tmpDetailIdRegionCodeList.add(freightDetail.getDefaultFlag()==1?FreightConstants.FreightCache.FREIGHT_DEFAULT_LINE_KEY:freightDetail.getRegionCode());
+            tmpDetailIdRegionCodeList.add(freightDetail.getDefaultFlag()==1?FreightConstants.Redis.FREIGHT_DEFAULT_KEY:freightDetail.getRegionCode());
         }
         return tmpDetailIdRegionCodeList;
     }
@@ -152,7 +152,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private void executeSaveFreightInforScript(final String freightDetailKey,
                                                final Map<String, String> freightDetailMap) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(FreightConstants.FreightCache.SAVE_FREIGHT_DETAIL_CACHE_LUA);
+        defaultRedisScript.setScriptSource(FreightConstants.Redis.SAVE_FREIGHT_DETAIL_CACHE_LUA);
         LOG.info("freightDetailMap json {}", FastJsonHelper.objectToString(freightDetailMap));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(freightDetailMap));
     }
@@ -166,7 +166,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private void executeDeleteFreightDetailScript(final String freightDetailKey,
                                                   final List<String> templateRegionCodeList) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(FreightConstants.FreightCache.DELETE_FREIGHT_DETAIL_CACHE_LUA);
+        defaultRedisScript.setScriptSource(FreightConstants.Redis.DELETE_FREIGHT_DETAIL_CACHE_LUA);
         LOG.info("templateRegionCodeList json = {}", FastJsonHelper.objectToString(templateRegionCodeList));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(templateRegionCodeList));
     }

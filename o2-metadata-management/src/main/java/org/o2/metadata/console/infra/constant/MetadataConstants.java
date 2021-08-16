@@ -37,8 +37,8 @@ public interface MetadataConstants {
         String BASIC_DATA_PLATFORM_CODE_IS_NULL = "error.basic_data.platformCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
-        String O2MD_ERROR_CHECK_FAILED = "O2MD.ERROR.CHECK.FAILED";
-        String O2MD_ERROR_CHECK_ERROR = "O2MD.ERROR.CHECK.ERROR";
+        String O2MD_ERROR_CHECK_FAILED = "o2md.error.check.failed";
+        String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
 
     }
@@ -59,7 +59,24 @@ public interface MetadataConstants {
         String LOV_CODE = "O2MD.BUSINESS_TYPE";
     }
 
+    /**
+     * 元数据缓存job参数
+     */
+    interface CacheJob {
+        String DEFAULT_ACTION = "SKIP";
 
+        String REFRESH = "REFRESH";
+
+        String CACHE_WAREHOUSE = "Warehouse";
+
+        String CACHE_ONLINE_SHOP_REL_WAREHOUSE = "OnlineShopRelWarehouse";
+
+        String CACHE_SYS_PARAMETER = "SysParameter";
+        String TENANT_ID = "tenantId";
+        String DEFAULT_TENANT_ID = "0";
+        String CARRIER = "Carrier";
+        String FREIGHT = "Freight";
+    }
 
 
     /**
@@ -91,7 +108,7 @@ public interface MetadataConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_save_redis_hash_value.lua"));
 
         ResourceScriptSource BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/batch_delete_shopRelWh_redis_hash_value.lua"));
+                new ResourceScriptSource(new ClassPathResource("script/lua/onlineShop/batch_delete_shopRelWh_redis.lua"));
 
         ResourceScriptSource BATCH_DELETE_REDIS_HASH_VALUE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/batch_delete_redis_hash_value.lua"));
