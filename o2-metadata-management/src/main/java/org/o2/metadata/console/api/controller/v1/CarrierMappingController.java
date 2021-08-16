@@ -22,6 +22,7 @@ import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,21 +67,16 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "批量新增或修改承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody List<CarrierMapping> carrierMappings) {
-        final Map<String, Object> resultMap = carrierMappingService.insertAll(organizationId,carrierMappings);
-        if (MapUtils.isEmpty(resultMap)) {
-            return Results.success(Collections.EMPTY_LIST);
-        } else {
-            final String resultString = "平台和承运商编码不可重复" + "，成功保存"
-                    + resultMap.get("平台和承运商编码不可重复") + "条数据";
-            return Results.success(Collections.singletonList(resultString));
-        }
+    public ResponseEntity<CarrierMapping> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierMapping carrierMapping) {
+        carrierMappingService.insertCarrierMapping(organizationId, carrierMapping);
+        return Results.success(carrierMapping);
+
     }
 
     @ApiOperation(value = "修改承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final CarrierMapping carrierMapping) {
+    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final CarrierMapping carrierMapping) {
         SecurityTokenHelper.validToken(carrierMapping);
         carrierMapping.setTenantId(organizationId);
         carrierMappingRepository.updateByPrimaryKeySelective(carrierMapping);

@@ -61,6 +61,9 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.platformCode) {
             sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CODE, this.getPlatformCode());
         }
+        if (null != this.platformCarrierCode ) {
+            sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CARRIER_CODE, this.getPlatformCarrierCode());
+        }
         return carrierMappingRepository.selectCountByCondition(
                 Condition.builder(CarrierMapping.class).andWhere(sqls).build()) > 0;
     }
