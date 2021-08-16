@@ -1,11 +1,10 @@
 package org.o2.metadata.console.infra.redis.impl;
 
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 
-import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.convertor.FreightConverter;
 import org.o2.metadata.console.infra.entity.FreightInfo;
@@ -37,7 +36,15 @@ public class FreightRedisImpl implements FreightRedis {
         FreightInfo freightInfo = new FreightInfo();
         freightInfo.setFreightTemplateCode(templateCode);
         String freightDetailKey = FreightConstants.Redis.getFreightDetailKey(tenantId, templateCode);
-        List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, Arrays.asList(FreightConstants.Redis.FREIGHT_HEAD_KEY, FreightConstants.Redis.FREIGHT_DEFAULT_KEY, regionCode));
+        List<String>  paramCodes = new ArrayList<>(3);
+        paramCodes.add(FreightConstants.Redis.FREIGHT_HEAD_KEY);
+        paramCodes.add(FreightConstants.Redis.FREIGHT_DEFAULT_KEY);
+        if (StringUtils.isEmpty(regionCode)) {
+            paramCodes.add(String.valueOf(BaseConstants.Digital.NEGATIVE_ONE));
+        } else {
+            paramCodes.add(regionCode);
+        }
+        List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
         String headTemplate =  freightTemplates.get(0);
         freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : FastJsonHelper.stringToObject(headTemplate, FreightTemplate.class));
 
