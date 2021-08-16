@@ -24,6 +24,7 @@ import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             updateList.forEach(item -> {
                 // TODO: 唯一性校验
                 UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+                item.setStatus(MetadataConstants.MallLangPromptConstants.UNAPPROVED);
                 mallLangPromptRepository.updateByPrimaryKeySelective(item);
             });
         }
@@ -104,6 +106,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (mallLangPrompt.getLangPromptId() == null) {
             mallLangPromptRepository.insertSelective(mallLangPrompt);
         } else {
+            mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.UNAPPROVED);
             mallLangPromptRepository.updateOptional(mallLangPrompt,
                     MallLangPrompt.FIELD_LANG,
                     MallLangPrompt.FIELD_PROMPT_DETAIL,
@@ -181,27 +184,30 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         // 下载
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         Object valueObj = redisCacheClient.opsForHash().get(key, SystemParameterConstants.FileConfig.FILE_PREFIX);
+
         log.info("redis systemParameter file_prefix ({}), ({})", key, valueObj);
         if (valueObj == null) {
             return false;
         }
-        String urlPrefix = String.valueOf(valueObj);
-        String relativeUrl = directory + BaseConstants.Symbol.SLASH + tenantId + BaseConstants.Symbol.SLASH + fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON;
-        String url = urlPrefix + relativeUrl;
-        log.info("download inputStream url ({}) ({}) ({})", tenantId, bucketCode, url);
         // 上传/新增
         try {
-            fileClient.uploadFile(tenantId, bucketCode, directory,
+            String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
                     fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON, SystemParameterConstants.FileConfig.FILE_JSON_TYPE,
                     storageCode, jsonFile.getBytes());
+
+            if (!StringUtils.isEmpty(resultUrl)) {
+                for (int i = 0; i < MetadataConstants.MallLangPromptConstants.IMAGE_INTERCEPTION_MARK; i++) {
+                    resultUrl = resultUrl.substring(resultUrl.indexOf(BaseConstants.Symbol.SLASH) + 1);
+                }
+                resource.setResourceUrl(BaseConstants.Symbol.SLASH + resultUrl);
+            }
         }catch (Exception e){
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return false;
         }
         //记录上传文件信息
-        resource.setResourceCode(MetadataConstants.Constants.MODE_NAME + "_" + MetadataConstants.MallLangPromptConstants.RESOURCE_CODE + "_" + fileName);
+        resource.setResourceCode(MetadataConstants.MallLangPromptConstants.RESOURCE_CODE + "_" + fileName.toUpperCase());
         resource.setSourceModuleCode(MetadataConstants.Constants.MODE_NAME);
-        resource.setResourceUrl(relativeUrl);
         resource.setDescription(MessageAccessor.getMessage(MetadataConstants.MallLangPromptConstants.DESCRIPTION).getDesc());
         resource.setLang(mallLangPrompt.getLang());
         resource.setTenantId(tenantId);
