@@ -91,17 +91,6 @@ public class PlatformController extends BaseController {
         return Results.success(platform);
     }
 
-    @ApiOperation(value = "平台定义表维护-批量保存平台定义表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-saving")
-    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<List<Platform>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody List<Platform> platformList) {
-        SecurityTokenHelper.validToken(platformList);
-        platformService.batchSave(platformList);
-        return Results.success(platformList);
-    }
-
     @ApiOperation(value = "平台定义表维护-删除平台定义表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping

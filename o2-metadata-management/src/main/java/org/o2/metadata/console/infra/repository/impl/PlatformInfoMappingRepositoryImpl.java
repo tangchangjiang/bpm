@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
+import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.mapper.PlatformInfoMappingMapper;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
@@ -37,7 +38,7 @@ public class PlatformInfoMappingRepositoryImpl extends BaseRepositoryImpl<Platfo
     }
 
     @Override
-    public List<PlatformInfoMapping> selectCondition(List<PlatformInfMappingDTO> platformInfMappingDTOList, Long tenantId) {
-        return platformInfoMappingMapper.selectCondition(platformInfMappingDTOList,tenantId);
+    public List<PlatformInfoMapping> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
+        return platformInfoMappingMapper.selectCondition(queryInnerDTO);
     }
 }

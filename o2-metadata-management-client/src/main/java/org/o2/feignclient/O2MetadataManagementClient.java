@@ -3,6 +3,7 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.co.PlatformCO;
 import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
@@ -25,7 +26,7 @@ public class O2MetadataManagementClient {
     private final CatalogVersionRemoteService catalogVersionRemoteService;
     private final CarrierRemoteService carrierRemoteService;
     private final PosRemoteService posRemoteService;
-    private final PlatformInfMappingRemoteService platformInfMappingRemoteService;
+    private final PlatformRemoteService platformRemoteService;
     private final OnlineShopRemoteService onlineShopRemoteService;
     private final AddressMappingRemoteService addressMappingRemoteService;
 
@@ -35,7 +36,7 @@ public class O2MetadataManagementClient {
                                       FreightRemoteService freightRemoteService,
                                       StaticResourceRemoteService staticResourceRemoteService, CatalogVersionRemoteService catalogVersionRemoteService,
                                       CarrierRemoteService carrierRemoteService,
-                                      PosRemoteService posRemoteService, PlatformInfMappingRemoteService platformInfMappingRemoteService, OnlineShopRemoteService onlineShopRemoteService,
+                                      PosRemoteService posRemoteService, PlatformRemoteService platformRemoteService, OnlineShopRemoteService onlineShopRemoteService,
                                       AddressMappingRemoteService addressMappingRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
@@ -44,7 +45,7 @@ public class O2MetadataManagementClient {
         this.catalogVersionRemoteService = catalogVersionRemoteService;
         this.carrierRemoteService = carrierRemoteService;
         this.posRemoteService = posRemoteService;
-        this.platformInfMappingRemoteService = platformInfMappingRemoteService;
+        this.platformRemoteService = platformRemoteService;
         this.onlineShopRemoteService = onlineShopRemoteService;
         this.addressMappingRemoteService = addressMappingRemoteService;
     }
@@ -279,27 +280,15 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(organizationId, staticResourceSaveDTOList), Boolean.class);
     }
 
-    /**
-     * 查询平台信息匹配
-     * @param organizationId 租户id
-     * @param platformInfMapping 参数
-     * @return PlatformInfMappingVO 结果
-     */
-    public List<PlatformInfMappingVO> getPlatformInfMapping(Long organizationId,
-                                                      List<PlatformInfMappingDTO> platformInfMapping) {
-        return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformMapping(organizationId,platformInfMapping),new TypeReference<List<PlatformInfMappingVO>>(){});
-    }
 
     /**
-     * 查询平台信息匹配
-     * @param organizationId 租户id
-     * @param platformCode 平台code
-     * @param infTypeCode 类型
+     * 查询平台信息
+     * @param tenantId 租户id
+     * @param platformQueryInnerDTO 平台入参
      * @return List<PlatformInfMappingVO> 结果
      */
-    public List<PlatformInfMappingVO> getPlatformInfMappingList(Long organizationId,
-                                                                String platformCode,String infTypeCode) {
-        return ResponseUtils.getResponse(platformInfMappingRemoteService.getPlatformInfMapping(organizationId,platformCode,infTypeCode),new TypeReference<List<PlatformInfMappingVO>>(){});
+    public Map<String, PlatformCO> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
     }
 
 

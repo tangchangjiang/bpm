@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.repository;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
+import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 
 import java.util.List;
@@ -36,9 +37,8 @@ public interface PlatformInfoMappingRepository extends BaseRepository<PlatformIn
 
     /**
      * 批量查询数据
-     * @param platformInfMappingDTOList 批量条件
-     * @param tenantId 租户Id
+     * @param queryInnerDTO 条件
      * @return List<PlatformInfMapping> 结果
      */
-    List<PlatformInfoMapping> selectCondition(List<PlatformInfMappingDTO> platformInfMappingDTOList, Long tenantId);
+    List<PlatformInfoMapping> selectCondition(PlatformQueryInnerDTO queryInnerDTO);
 }
