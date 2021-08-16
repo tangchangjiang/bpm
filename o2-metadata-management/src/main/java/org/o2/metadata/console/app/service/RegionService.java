@@ -41,40 +41,6 @@ public interface RegionService {
      */
     List<AreaRegionVO> listAreaRegion(String countryCode, Integer enabledFlag, Long tenantId);
 
-    /**
-     * 创建地区定义
-     *
-     * @param region 地区
-     * @return 创建之后的地区定义
-     */
-    Region createRegion(Region region);
-
-    /**
-     * 更新地区定义
-     *
-     * @param region 地区
-     * @return 更新之后的地区定义
-     */
-    Region updateRegion(Region region);
-
-    /**
-     * 禁用地区定义
-     *
-     * @param region 地区
-     * @return 更新后的地区定义
-     */
-    List<Region> disableOrEnable(Region region);
-
-    /**
-     * 通过编码获取地址信息
-     * @param regionCode 地址编码
-     * @return the return
-     * @throws RuntimeException exception description
-     */
-    Region getRegionByCode(String regionCode);
-
-
-
 
     /**
      * 查询地区
@@ -85,12 +51,5 @@ public interface RegionService {
      */
     List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO,Long tenantId);
 
-    /**
-     * 编码查询地区
-     * @param regionCode  地区编码
-     * @param tenantId  租户ID
-     * @return  地区
-     */
-    RegionVO selectOneByCode(String regionCode, Long tenantId);
 }
 
