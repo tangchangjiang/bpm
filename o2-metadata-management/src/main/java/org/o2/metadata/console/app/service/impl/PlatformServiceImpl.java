@@ -1,22 +1,27 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.co.PlatformCO;
+import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.convertor.PlatformConverter;
 import org.o2.metadata.console.infra.entity.Platform;
+import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
+import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
-import io.choerodon.mybatis.domain.AuditDomain;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.o2.metadata.console.app.service.PlatformService;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -25,38 +30,15 @@ import java.util.List;
  * @author zhilin.ren@hand-china.com 2021-08-02 11:11:28
  */
 @Service
-@RequiredArgsConstructor
 public class PlatformServiceImpl implements PlatformService {
 
     private final PlatformRepository platformRepository;
+    private final PlatformInfoMappingRepository platformInfoMappingRepository;
 
-    
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<Platform> batchSave(List<Platform> platformList) {
-        Map<AuditDomain.RecordStatus, List<Platform>> statusMap = platformList.stream().collect(Collectors.groupingBy(Platform::get_status));
-        // 删除
-        if (statusMap.containsKey(AuditDomain.RecordStatus.delete)) {
-            List<Platform> deleteList = statusMap.get(AuditDomain.RecordStatus.delete);
-            platformRepository.batchDeleteByPrimaryKey(deleteList);
-        }
-        // 更新
-        if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
-            List<Platform> updateList = statusMap.get(AuditDomain.RecordStatus.update);
-            updateList.forEach(item -> {
-                // TODO: 唯一性校验
-                platformRepository.updateByPrimaryKeySelective(item);
-            });
-        }
-        // 新增
-        if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
-            List<Platform> createList = statusMap.get(AuditDomain.RecordStatus.create);
-            createList.forEach(item -> {
-                // TODO: 唯一性校验
-                platformRepository.insertSelective(item);
-            });
-        }
-        return platformList;
+    public PlatformServiceImpl(PlatformRepository platformRepository,
+                               PlatformInfoMappingRepository platformInfoMappingRepository) {
+        this.platformRepository = platformRepository;
+        this.platformInfoMappingRepository = platformInfoMappingRepository;
     }
 
 
@@ -89,5 +71,25 @@ public class PlatformServiceImpl implements PlatformService {
         }
 
         return platform;
+    }
+
+    @Override
+    public Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
+        Map<String,PlatformCO> map = new HashMap<>(16);
+        List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
+        if (list.isEmpty()) {
+            return map;
+        }
+        PlatformCO co = new PlatformCO();
+        Map<String,List<PlatformInfoMapping>> groupMap = list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
+        for (Map.Entry<String, List<PlatformInfoMapping>> entry : groupMap.entrySet()) {
+            String k = entry.getKey();
+            List<PlatformInfoMapping> value = entry.getValue();
+            co.setPlatformCode(k);
+            co.setPlatformName(value.get(0).getPlatformName());
+            co.setPlatformInfoMappings(PlatformConverter.poToCoListObjects(value));
+            map.put(k,co);
+        }
+        return map;
     }
 }

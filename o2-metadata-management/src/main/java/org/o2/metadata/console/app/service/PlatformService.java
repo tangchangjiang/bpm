@@ -1,7 +1,9 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.PlatformCO;
+import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.Platform;
-import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -11,14 +13,7 @@ import java.util.List;
  */
 public interface PlatformService {
 
-    
-    /**
-     * 批量保存平台定义表
-     *
-     * @param platformList 平台定义表对象列表
-     * @return 平台定义表对象列表
-     */
-    List<Platform> batchSave(List<Platform> platformList);
+
 
 
     /**
@@ -28,4 +23,11 @@ public interface PlatformService {
      * @return 平台定义表对象
      */
     Platform save(Platform platform);
+
+    /**
+     * 查询平台信息
+     * @param queryInnerDTO 入参
+     * @return  map
+     */
+    Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO);
 }

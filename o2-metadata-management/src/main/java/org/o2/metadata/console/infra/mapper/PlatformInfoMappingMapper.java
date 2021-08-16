@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.mapper;
 
-import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
+import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -38,9 +38,8 @@ public interface PlatformInfoMappingMapper extends BaseMapper<PlatformInfoMappin
 
     /**
      * 批量查询数据
-     * @param platformInfMappingDTOList 批量条件
-     * @param tenantId 租户Id
+     * @param queryInnerDTO 批量条件
      * @return List<PlatformInfMapping> 结果
      */
-    List<PlatformInfoMapping> selectCondition(@Param("list") List<PlatformInfMappingDTO> platformInfMappingDTOList, @Param("tenantId") Long tenantId);
+    List<PlatformInfoMapping> selectCondition(PlatformQueryInnerDTO queryInnerDTO);
 }
