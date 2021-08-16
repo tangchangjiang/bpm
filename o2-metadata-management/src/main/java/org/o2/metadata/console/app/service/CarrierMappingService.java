@@ -2,8 +2,6 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * 承运商匹配表应用服务
@@ -18,5 +16,5 @@ public interface CarrierMappingService {
      * @param carrierMappings 原数据
      * @return
      */
-    Map<String, Object> insertAll(Long organizationId, List<CarrierMapping> carrierMappings);
+    void insertCarrierMapping(Long organizationId, CarrierMapping carrierMappings);
 }

@@ -37,8 +37,8 @@ public interface MetadataConstants {
         String BASIC_DATA_PLATFORM_CODE_IS_NULL = "error.basic_data.platformCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
         String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
-        String O2MD_ERROR_CHECK_FAILED = "O2MD.ERROR.CHECK.FAILED";
-        String O2MD_ERROR_CHECK_ERROR = "O2MD.ERROR.CHECK.ERROR";
+        String O2MD_ERROR_CHECK_FAILED = "o2md.error.check.failed";
+        String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
 
     }
