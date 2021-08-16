@@ -17,7 +17,6 @@ import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
-import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
@@ -35,17 +34,15 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private final AddressMappingMapper addressMappingMapper;
     private final RegionRepository regionRepository;
     private final AddressMappingRepository addressMappingRepository;
-    private final CatalogRepository catalogRepository;
     private final PlatformRepository platformRepository;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
                                      RegionRepository regionRepository,
                                      AddressMappingRepository addressMappingRepository,
-                                     CatalogRepository catalogRepository, PlatformRepository platformRepository) {
+                                      PlatformRepository platformRepository) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
         this.addressMappingRepository = addressMappingRepository;
-        this.catalogRepository = catalogRepository;
         this.platformRepository = platformRepository;
     }
 
@@ -57,16 +54,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      */
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingQueryDTO addressMappingQueryDTO, final String countryCode) {
-        if (addressMappingQueryDTO.getPlatformCode() == null || "".equals(addressMappingQueryDTO.getPlatformCode())) {
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
-        }
-        if (countryCode == null || "".equals(countryCode)) {
-            throw new CommonException("countryCode is null");
-        }
-        if (null == addressMappingQueryDTO.getTenantId()) {
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-        }
+        checkData(addressMappingQueryDTO,countryCode);
         List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingQueryDTO, countryCode);
+        if (null == regionTreeChildList || regionTreeChildList.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<String> regionCodes = new ArrayList<>();
         for (RegionTreeChild regionTreeChild : regionTreeChildList) {
             if (StringUtils.isNotEmpty(regionTreeChild.getRegionCode())) {
@@ -109,6 +101,22 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         getParent(collect, tree, addressMappingQueryDTO.getPlatformCode(), addressMappingQueryDTO.getTenantId());
         sortList(tree);
         return RegionConverter.poToVoChildObjects(tree);
+    }
+    /**
+     * 校验数据
+     * @param countryCode 国际编码
+     * @param addressMappingQueryDTO 入参
+     */
+    private void checkData(AddressMappingQueryDTO addressMappingQueryDTO,String countryCode ) {
+        if (addressMappingQueryDTO.getPlatformCode() == null || "".equals(addressMappingQueryDTO.getPlatformCode())) {
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
+        }
+        if (countryCode == null || "".equals(countryCode)) {
+            throw new CommonException("countryCode is null");
+        }
+        if (null == addressMappingQueryDTO.getTenantId()) {
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        }
     }
 
     @Override
@@ -302,12 +310,13 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             return;
         }
         //分组下一次数据
-        final Map<String, List<RegionTreeChild>> parentMap = result.stream().map(node -> {
+        final Map<String, List<RegionTreeChild>> parentMap = new HashMap<>();
+        for (RegionTreeChild node : result) {
             if (node.getParentRegionCode() == null) {
                 node.setParentRegionCode(RegionConstants.RegionLov.DEFAULT_CODE.getCode());
             }
-            return node;
-        }).collect(Collectors.groupingBy(RegionTreeChild::getParentRegionCode));
+            parentMap.computeIfAbsent(node.getParentRegionCode(), k -> new ArrayList<>()).add(node);
+        }
         //递归调用
         getParent(parentMap, tree, type,tenantId);
     }

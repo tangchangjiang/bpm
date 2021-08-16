@@ -1,28 +1,23 @@
 package org.o2.metadata.console.app.service.impl;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.service.BaseServiceImpl;
-import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
+import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.app.service.RegionService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.entity.RegionArea;
-import org.o2.metadata.console.infra.repository.RegionAreaRepository;
 import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.RegionVO;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.hzero.core.base.BaseConstants.ErrorCode.DATA_NOT_EXISTS;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -32,22 +27,18 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
     private static final long ROOT_ID = -1L;
 
     private RegionRepository regionRepository;
-    private RegionAreaRepository regionAreaRepository;
     private RegionRelPosRepository regionRelPosRepository;
 
     public RegionServiceImpl(RegionRepository regionRepository,
-                             RegionAreaRepository regionAreaRepository,
                              RegionRelPosRepository regionRelPosRepository) {
         this.regionRepository = regionRepository;
-        this.regionAreaRepository = regionAreaRepository;
         this.regionRelPosRepository = regionRelPosRepository;
     }
 
     @Override
     public List<RegionVO> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
         List<Region> regionList = regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag, tenantId);
-        Map<Long, List<Region>> map = regionList.stream().collect(Collectors.groupingBy(item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId()));
-        return RegionConverter.poToVoListObjects(recursiveBuildRegionTree(map, ROOT_ID, new ArrayList<>()));
+        return RegionConverter.poToVoListObjects(regionList);
     }
 
     @Override
@@ -84,81 +75,6 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return Collections.singletonList(vo);
     }
 
-    @Override
-    public Region createRegion(final Region region) {
-        if (region.getParentRegionId() != null) {
-            final Region parentRegion = regionRepository.selectByPrimaryKey(region.getParentRegionId());
-            if (parentRegion == null) {
-                throw new CommonException(DATA_NOT_EXISTS);
-            }
-            region.setLevelPath(parentRegion.getLevelPath() + MetadataConstants.Constants.ADDRESS_SPLIT + region.getRegionCode());
-        } else {
-            region.setLevelPath(region.getRegionCode());
-        }
-        if (regionRepository.insert(region) != 1) {
-            throw new CommonException(BaseConstants.ErrorCode.ERROR);
-        }
-        return region;
-    }
-
-    @Override
-    public Region updateRegion(final Region region) {
-        final Region exists = regionRepository.selectByPrimaryKey(region.getRegionId());
-        if (exists == null) {
-            throw new CommonException(DATA_NOT_EXISTS);
-        }
-        // 更新大区定义
-        RegionArea regionArea = new RegionArea();
-        regionArea.setAreaCode(region.getAreaCode());
-        regionArea.setEnabledFlag(region.getEnabledFlag());
-        regionArea.setTenantId(region.getTenantId());
-        regionArea.setRegionId(exists.getRegionId());
-        regionArea.setRegionCode(exists.getRegionCode());
-        regionArea.setRegionName(exists.getRegionName());
-        regionAreaRepository.insertSelective(regionArea);
-        return region;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<Region> disableOrEnable(final Region region) {
-        // 默认启用
-        final int enableFlag = region.getEnabledFlag() == null ? BaseConstants.Flag.NO : region.getEnabledFlag();
-        final Region exists = regionRepository.selectByPrimaryKey(region.getRegionId());
-        if (exists == null) {
-            throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
-        }
-        region.setLevelPath(exists.getLevelPath());
-        // 默认父级未启用禁止启用下级
-        if (enableFlag == BaseConstants.Flag.YES && region.getLevelPath().contains(MetadataConstants.Constants.ADDRESS_SPLIT)) {
-            // 验证父级是否开启
-            final List<Region> parentRegionList =
-                    regionRepository.listRegionByLevelPath(resolveParentLevelPath(region.getLevelPath()),region.getTenantId());
-            for (final Region parent : parentRegionList) {
-                if (Objects.equals(BaseConstants.Flag.NO, parent.getEnabledFlag())) {
-                    throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PARENT_NOT_ENABLED);
-                }
-            }
-        }
-        final List<Region> regionList = regionRepository.listRegionChildrenByLevelPath(region.getLevelPath(),region.getTenantId());
-        for (final Region item : regionList) {
-            item.setCountryId(null);
-            item.setRegionCode(null);
-            item.setRegionName(null);
-            item.setParentRegionId(null);
-            item.setEnabledFlag(enableFlag);
-        }
-        return regionRepository.batchUpdateByPrimaryKeySelective(regionList);
-    }
-
-    @Override
-    public Region getRegionByCode(final String regionCode) {
-        final Region region = new Region();
-        region.setRegionCode(regionCode);
-        return regionRepository.selectOne(region);
-    }
-
-
 
     @Override
     public List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO, Long organizationId) {
@@ -171,18 +87,6 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
         return RegionConverter.poToVoListObjects(regionList);
-    }
-
-    @Override
-    public RegionVO selectOneByCode(String regionCode, Long tenantId) {
-        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
-        queryLovDTO.setRegionCode(regionCode);
-        queryLovDTO.setTenantId(tenantId);
-        List<Region> regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
-        if (regionList.isEmpty()){
-            return new RegionVO();
-        }
-        return RegionConverter.poToVoObject(regionList.get(0));
     }
 
     /**
@@ -208,19 +112,5 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return regionList;
     }
 
-    /**
-     * 获取所有父级路径
-     *
-     * @param levelPath 当前等级路径
-     * @return 所有父级路径
-     */
-    private List<String> resolveParentLevelPath(String levelPath) {
-        final List<String> levelPathList = new ArrayList<>();
-        while (levelPath.contains(MetadataConstants.Constants.ADDRESS_SPLIT)) {
-            levelPath = levelPath.substring(0, levelPath.lastIndexOf(MetadataConstants.Constants.ADDRESS_SPLIT));
-            levelPathList.add(levelPath);
-        }
-        return levelPathList;
-    }
 }
 

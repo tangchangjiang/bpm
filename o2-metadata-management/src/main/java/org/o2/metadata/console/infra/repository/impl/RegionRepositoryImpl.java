@@ -15,7 +15,6 @@ import org.springframework.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
@@ -38,36 +37,37 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
         dto.setEnabledFlag(enabledFlag);
         dto.setCountryCode(countryCode);
         dto.setRegionCode(condition);
-        final Set<Region> regionSet = new HashSet<>(this.listRegionLov(dto,tenantId));
-        // 2.地址编码集合
-        final Set<String> regionSetCodes = new HashSet<>();
-        for (final Region r : regionSet) {
-            regionSetCodes.add(r.getRegionCode());
-        }
-        // 3.查询父地区
-        if (!CollectionUtils.isEmpty(regionSet) && StringUtils.isNotEmpty(condition)) {
-            RegionQueryLovDTO queryParent = new RegionQueryLovDTO();
-            Set<Long> parentIds = regionSet.stream().filter(item -> item.getParentRegionId() != null).map(Region::getParentRegionId).collect(Collectors.toSet());
-            boolean hasFather = !parentIds.isEmpty();
-            while (hasFather) {
-                queryParent.setParentRegionIds(new ArrayList<>(parentIds));
-                queryParent.setEnabledFlag(enabledFlag);
-                final Set<Region> fatherList = new HashSet<>(this.listRegionLov(queryParent,tenantId));
-                for (final Region r : fatherList) {
-                    if (!regionSetCodes.contains(r.getRegionCode())) {
-                        regionSet.add(r);
-                        regionSetCodes.add(r.getRegionCode());
-                    }
-                }
-                //父ID
-                parentIds = fatherList.stream().filter(item -> item.getParentRegionId() != null).map(Region::getParentRegionId).collect(Collectors.toSet());
-                //是否还有父级
-                hasFather = !parentIds.isEmpty();
+        List<Region>  regionList  = this.listRegionLov(dto,tenantId);
+        List<Region> regionTree = new ArrayList<>();
+        for (Region region : regionList) {
+            if (StringUtils.isEmpty(region.getParentRegionCode())) {
+                region.setChildren(getChildren(region, regionList));
+                regionTree.add(region);
             }
         }
-        return new ArrayList<>(regionSet).stream().sorted(Comparator.comparingLong(Region::getRegionId)).collect(Collectors.toList());
+
+        return regionTree;
     }
 
+
+    /**
+     * 递归查找指定分类的所有子分类( 所有菜单的子菜单)
+     * @param current 一级分类
+     * @param entities 地区数据
+     * @return list
+     */
+    private List<Region> getChildren(Region current, List<Region> entities) {
+        //找到子分类
+        List<Region> children = new ArrayList<>();
+        for (Region regionEntity : entities) {
+            if (current.getRegionCode().equals(regionEntity.getParentRegionCode())) {
+                regionEntity.setChildren(getChildren(regionEntity, entities));
+                children.add(regionEntity);
+            }
+        }
+
+        return children;
+    }
     @Override
     public List<RegionVO> listChildren(final String countryIdOrCode, final Long parentRegionId, final Integer enabledFlag,Long tenantId) {
         return regionMapper.listChildren(countryIdOrCode, parentRegionId, enabledFlag,tenantId);
