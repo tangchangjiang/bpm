@@ -80,11 +80,12 @@ public class PlatformServiceImpl implements PlatformService {
         if (list.isEmpty()) {
             return map;
         }
-        PlatformCO co = new PlatformCO();
+
         Map<String,List<PlatformInfoMapping>> groupMap = list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
         for (Map.Entry<String, List<PlatformInfoMapping>> entry : groupMap.entrySet()) {
             String k = entry.getKey();
             List<PlatformInfoMapping> value = entry.getValue();
+            PlatformCO co = new PlatformCO();
             co.setPlatformCode(k);
             co.setPlatformName(value.get(0).getPlatformName());
             co.setPlatformInfoMappings(PlatformConverter.poToCoListObjects(value));
