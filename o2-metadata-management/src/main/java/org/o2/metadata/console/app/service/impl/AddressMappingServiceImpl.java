@@ -133,11 +133,23 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final Platform query = platformRepository.selectOne(platform);
         addressMapping.setPlatformName(query.getPlatformName());
         if (!regionList.isEmpty()) {
-            Region region = regionList.get(0);
-            addressMapping.setRegionName(region.getRegionName());
-            addressMapping.getRegionPathIds().add(region.getCountryId());
-            addressMapping.getRegionPathCodes().add(region.getCountryCode());
-            addressMapping.getRegionPathNames().add(region.getCountryName());
+            //查询地区上级
+            Region bean = regionList.get(0);
+            String levelPath = bean.getLevelPath();
+            String[] paths = levelPath.split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
+            List<String> regionCodes = new ArrayList<>();
+            Collections.addAll(regionCodes, paths);
+            RegionQueryLovDTO queryLov = new RegionQueryLovDTO();
+            queryLov.setCountryCode(countryCode);
+            queryLov.setRegionCodes(regionCodes);
+            queryLov.setTenantId(tenantId);
+            List<Region> parent = regionRepository.listRegionLov(queryLov,tenantId);
+            if (!parent.isEmpty()) {
+                for (Region region : parent){
+                    addressMapping.setRegionName(region.getRegionName());
+                    addressMapping.getRegionPathNames().add(region.getRegionName());
+                }
+            }
         }
         return AddressMappingConverter.poToVoObject(addressMapping);
     }
