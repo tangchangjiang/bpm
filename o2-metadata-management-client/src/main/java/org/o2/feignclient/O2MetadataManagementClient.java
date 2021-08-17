@@ -285,11 +285,14 @@ public class O2MetadataManagementClient {
      * 查询平台信息
      * @param tenantId 租户id
      * @param platformQueryInnerDTO 平台入参
-     * @return List<PlatformInfMappingVO> 结果
+     * @return key : platformCode（平台编码）
      */
     public Map<String, PlatformCO> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
     }
+
+
+
 
 
 }

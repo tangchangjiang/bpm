@@ -34,5 +34,11 @@ public class OnlineShopVO {
     @ApiModelProperty(value = "是否有效")
     private Integer activeFlag;
 
+    @ApiModelProperty("平台编码")
+    private String  platformCode;
+
+    @ApiModelProperty("平台网店编码")
+    private String platformShopCode;
+
 
 }

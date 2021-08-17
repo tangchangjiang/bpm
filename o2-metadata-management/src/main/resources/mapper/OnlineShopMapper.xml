@@ -192,7 +192,9 @@
         online.online_shop_code,
         online.catalog_code,
         online.catalog_version_code,
-        online.active_flag
+        online.active_flag,
+        online.platform_code,
+        online.platform_shop_code
         from o2md_online_shop online
         inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
         <where>
