@@ -156,27 +156,8 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
-        List<String> externalCodes = new ArrayList<>();
-        List<String> addressTypeCodes = new ArrayList<>();
-        List<String> externalNames = new ArrayList<>();
-        for (AddressMappingQueryInnerDTO addressMappingQueryInnerDTO : addressMappingQueryInts) {
-            String externalCode = addressMappingQueryInnerDTO.getExternalCode();
-            if(StringUtils.isNotEmpty(externalCode)){
-                externalCodes.add(externalCode);
-            }
 
-            String  externalName = addressMappingQueryInnerDTO.getExternalName();
-            if (StringUtils.isNotEmpty(externalName)) {
-                externalNames.add(externalName);
-            }
-
-            String addressTypeCode = addressMappingQueryInnerDTO.getAddressTypeCode();
-            if (StringUtils.isNotEmpty(addressTypeCode)) {
-                addressTypeCodes.add(addressTypeCode);
-            }
-
-        }
-        return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(externalCodes, addressTypeCodes, externalNames, tenantId));
+        return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
     }
 
     @Override

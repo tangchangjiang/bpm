@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository;
 
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import java.util.List;
@@ -26,11 +27,9 @@ public interface AddressMappingRepository extends BaseRepository<AddressMapping>
 
     /**
      * 内部方法 批量查询地址匹配
-     * @param externalCodes 外部编码
-     * @param addressTypeCodes 类型
-     * @param externalNames 外部名称
+     * @param addressMappingQueryInts 参数
      * @param tenantId 租户ID
      * @return  list
      */
-    List<AddressMapping> listAddressMappings(List<String> externalCodes,List<String> addressTypeCodes,List<String> externalNames , Long tenantId);
+    List<AddressMapping> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts , Long tenantId);
 }
