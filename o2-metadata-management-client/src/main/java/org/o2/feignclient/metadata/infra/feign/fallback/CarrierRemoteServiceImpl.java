@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.feignclient.metadata.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.feignclient.metadata.domain.dto.CarrierQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.CarrierRemoteService;
 import org.springframework.http.HttpStatus;
@@ -21,4 +22,12 @@ public class CarrierRemoteServiceImpl implements CarrierRemoteService {
         log.error("Error listCarriers, params[tenantId = {}, carrierDTO = {}]", organizationId, carrierQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> listCarrierMappings(CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO, Long organizationId) {
+        log.error("Error listCarriers, params[tenantId = {}, carrierDTO = {}]", organizationId, carrierMappingQueryInnerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+
 }

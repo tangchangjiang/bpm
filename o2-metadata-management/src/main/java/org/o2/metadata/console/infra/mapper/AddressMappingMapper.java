@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
@@ -72,14 +73,10 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
 
     /**
      * 内部方法 批量查询地址匹配
-     * @param externalCodes 外部编码
-     * @param addressTypeCodes 类型
-     * @param externalNames 外部名称
+     * @param addressMappingQueryInts 参数
      * @param tenantId 租户ID
      * @return  list
      */
-    List<AddressMapping> listAddressMappings(@Param("externalCodes") List<String> externalCodes,
-                                             @Param("addressTypeCodes") List<String> addressTypeCodes,
-                                             @Param("externalNames") List<String> externalNames,
+    List<AddressMapping> listAddressMappings(@Param("query") List<AddressMappingQueryInnerDTO> addressMappingQueryInts,
                                              @Param("tenantId") Long tenantId);
 }
