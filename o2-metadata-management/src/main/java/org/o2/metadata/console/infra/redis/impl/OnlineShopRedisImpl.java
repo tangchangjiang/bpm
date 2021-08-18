@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
@@ -15,9 +16,7 @@ import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +37,10 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
 
     @Override
     public void updateRedis(String onlineShopCode, Long tenantId) {
-        OnlineShop query = new OnlineShop();
-        query.setOnlineShopCode(onlineShopCode);
-        query.setTenantId(tenantId);
+        OnlineShopQueryInnerDTO query = new OnlineShopQueryInnerDTO();
+        query.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
 
-        List<OnlineShop> list = onlineShopRepository.select(query);
+        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query,tenantId);
         if (list.isEmpty()) {
             return;
         }
@@ -52,15 +50,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             redisCacheClient.opsForHash().delete(key,onlineShopCode);
             return;
         }
-        OnlineShopCacheBO bo = new OnlineShopCacheBO();
-        bo.setCatalogCode(onlineShop.getCatalogCode());
-        bo.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
-        bo.setOnlineShopCode(onlineShopCode);
-        bo.setOnlineShopName(onlineShop.getOnlineShopName());
-        bo.setPlatformCode(onlineShop.getPlatformCode());
-        bo.setPlatformShopCode(onlineShop.getPlatformShopCode());
-        bo.setTenantId(onlineShop.getTenantId());
-        redisCacheClient.opsForHash().put(key,onlineShopCode,FastJsonHelper.objectToString(bo));
+        redisCacheClient.opsForHash().put(key,onlineShopCode,FastJsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
     }
 
     @Override

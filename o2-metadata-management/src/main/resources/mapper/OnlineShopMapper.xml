@@ -186,15 +186,20 @@
     </select>
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        select online.online_shop_id,
-        online.platform_code,
+        select
         tl.online_shop_name,
         online.online_shop_code,
         online.catalog_code,
         online.catalog_version_code,
         online.active_flag,
         online.platform_code,
-        online.platform_shop_code
+        online.platform_shop_code,
+        online.picked_up_flag,
+        online.returned_flag,
+        online.exchanged_flag,
+        online.enable_split_flag,
+        online.sourced_flag,
+        online.is_default
         from o2md_online_shop online
         inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
         <where>
