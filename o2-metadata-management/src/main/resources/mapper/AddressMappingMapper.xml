@@ -178,24 +178,13 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        <if test="externalCodes!=null and externalCodes.size > 0">
-        and ad.external_code in
-            <foreach collection="externalCodes" item="code" open="(" separator="," close=")">
-                #{code}
+          <if test="query!=null ">
+            and
+            <foreach collection="query" item="item" open="(" separator="or"  close=")">
+                (ad.external_name = #{item.externalName} and  ad.address_type_code = #{item.addressTypeCode})
             </foreach>
         </if>
-        <if test="addressTypeCodes!=null and addressTypeCodes.size > 0">
-            and ad.address_type_code in
-            <foreach collection="addressTypeCodes" item="code" open="(" separator="," close=")">
-                #{code}
-            </foreach>
-        </if>
-        <if test="externalNames!=null and externalNames.size > 0">
-            and ad.external_name in
-            <foreach collection="externalNames" item="name" open="(" separator="," close=")">
-                #{name}
-            </foreach>
-        </if>
+
 
     </select>
 </mapper>

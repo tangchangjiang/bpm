@@ -64,4 +64,23 @@
         </if>
         ORDER BY cm.platform_code, c.carrier_code
     </select>
+    <select id="listCarrierMappings" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
+        SELECT
+               c.carrier_code,
+               cm.platform_carrier_code
+        FROM o2md_carrier_mapping cm
+        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
+        where 1 = 1
+        <choose>
+            <when test="tenantId != null">
+                AND c.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="platformCode!=null and platformCode!=''">
+            AND cm.platform_code = #{platformCode}
+        </if>
+    </select>
 </mapper>

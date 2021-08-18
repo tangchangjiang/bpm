@@ -6,15 +6,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.co.CarrierMappingCO;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
+import org.o2.metadata.console.infra.convertor.CarrierConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
+import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
 import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
+import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
@@ -35,16 +40,18 @@ public class CarrierServiceImpl implements CarrierService {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private final CarrierRedis carrierRedis;
+    private final CarrierMappingRepository carrierMappingRepository;
 
 
     public CarrierServiceImpl(final CarrierRepository carrierRepository,
                               final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
                               final PosRelCarrierRepository posRelCarrierRepository,
-                              CarrierRedis carrierRedis) {
+                              CarrierRedis carrierRedis, CarrierMappingRepository carrierMappingRepository) {
         this.carrierRepository = carrierRepository;
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRedis = carrierRedis;
+        this.carrierMappingRepository = carrierMappingRepository;
     }
 
     @Override
@@ -70,8 +77,7 @@ public class CarrierServiceImpl implements CarrierService {
         }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
-        for (int i = 0; i < carrierList.size(); i++) {
-            Carrier carrier = carrierList.get(i);
+        for (Carrier carrier : carrierList) {
             carrier.setTenantId(organizationId);
             carrier.validate();
             if (carrier.getCarrierId() != null) {
@@ -135,6 +141,21 @@ public class CarrierServiceImpl implements CarrierService {
             carrierVO.setCarrierCode(carrier.getCarrierCode());
             carrierVO.setCarrierName(carrier.getCarrierName());
             map.put(carrier.getCarrierCode(), carrierVO);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, CarrierMappingCO> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO, Long organizationId) {
+        queryInnerDTO.setTenantId(organizationId);
+        Map<String, CarrierMappingCO> map = new HashMap<>(16);
+        List<CarrierMapping> list = carrierMappingRepository.listCarrierMappings(queryInnerDTO);
+        if(list.isEmpty()) {
+            return map;
+        }
+        List<CarrierMappingCO> cos = CarrierConverter.poToCoListObjects(list);
+        for (CarrierMappingCO carrier : cos) {
+            map.put(carrier.getCarrierCode(),  carrier);
         }
         return map;
     }

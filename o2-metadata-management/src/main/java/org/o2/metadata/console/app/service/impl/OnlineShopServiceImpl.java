@@ -110,23 +110,36 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String,OnlineShopVO> map = new HashMap<>(16);
-       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO,tenantId));
+       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRedis.select(onlineShopQueryInnerDTO,tenantId));
         if (voList.isEmpty()) {
            return map;
         }
+        // 全部网店
+        if (null == onlineShopQueryInnerDTO) {
+            for (OnlineShopVO vo : voList) {
+                map.put(vo.getOnlineShopCode(),vo);
+            }
+            return  map;
+        }
+        // 编码查询
         if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
             for (OnlineShopVO vo : voList) {
                 map.put(vo.getOnlineShopCode(),vo);
             }
             return  map;
         }
+        // 名称查询
         if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopNames())) {
             for (OnlineShopVO vo : voList) {
                 map.put(vo.getOnlineShopName(),vo);
             }
             return  map;
         }
-        return map;
+
+        for (OnlineShopVO vo : voList) {
+            map.put(vo.getOnlineShopCode(),vo);
+        }
+        return  map;
     }
 
     @Override
@@ -138,8 +151,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         for (OnlineShopVO vo : voList) {
             String key = vo.getCatalogCode() + "-" + vo.getCatalogVersionCode();
-            List<OnlineShopVO> list = map.get(key);
-            if (null == list) {
+            List<OnlineShopVO> list = map.getOrDefault(key,new ArrayList<>());
+            if (list.isEmpty()) {
                 List<OnlineShopVO> onlineShops = new ArrayList<>();
                 onlineShops.add(vo);
                 map.put(key,onlineShops);

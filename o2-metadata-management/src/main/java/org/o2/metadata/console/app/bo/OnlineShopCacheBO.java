@@ -41,5 +41,11 @@ public class OnlineShopCacheBO {
     private String catalogVersionCode;
 
 
+    private Integer pickedUpFlag;
+    private Integer returnedFlag;
+    private Integer exchangedFlag;
+    private Integer enableSplitFlag;
     private Long tenantId;
+    private Integer isDefault;
+    private Integer sourcedFlag;
 }

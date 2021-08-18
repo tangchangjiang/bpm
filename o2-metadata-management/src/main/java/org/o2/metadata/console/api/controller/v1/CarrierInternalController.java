@@ -5,9 +5,12 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.co.CarrierMappingCO;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.vo.CarrierVO;
 import org.o2.metadata.console.app.service.CarrierService;
+import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,13 @@ public class CarrierInternalController{
     @PostMapping("/list")
     public ResponseEntity<Map<String, CarrierVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
         return Results.success(carrierService.listCarriers(carrierQueryInnerDTO,organizationId));
+    }
+
+    @ApiOperation(value = "承运商匹配")
+    @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/mapping")
+    public ResponseEntity<Map<String, CarrierMappingCO>> listCarrierMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierMappingQueryInnerDTO queryInnerDTO) {
+        return Results.success(carrierService.listCarrierMappings(queryInnerDTO,organizationId));
     }
 
 
