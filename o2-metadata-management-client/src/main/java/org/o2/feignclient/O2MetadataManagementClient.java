@@ -3,6 +3,7 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.co.CarrierMappingCO;
 import org.o2.feignclient.metadata.domain.co.PlatformCO;
 import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
@@ -157,6 +158,18 @@ public class O2MetadataManagementClient {
      */
     public Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
+        });
+    }
+
+    /**
+     * 批量查询承运商匹配规则
+     *
+     * @param carrierMappingQueryInnerDTO 承运商
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, CarrierMappingCO> listCarrierMappings(CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarrierMappings(carrierMappingQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierMappingCO>>() {
         });
     }
 

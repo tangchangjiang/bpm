@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
+import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 
 import java.util.List;
@@ -21,4 +22,11 @@ public interface CarrierMappingMapper extends BaseMapper<CarrierMapping> {
      */
     List<CarrierMapping> listCarrierMappingByCondition(CarrierMappingQueryDTO carrierMappingQueryDTO);
 
+    /**
+     * 获取承运商匹配
+     *
+     * @param queryInnerDTO 承运商
+     * @return 承运商匹配表
+     */
+    List<CarrierMapping> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO);
 }
