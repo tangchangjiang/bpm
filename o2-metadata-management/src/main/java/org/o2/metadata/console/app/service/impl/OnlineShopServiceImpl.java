@@ -138,8 +138,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         for (OnlineShopVO vo : voList) {
             String key = vo.getCatalogCode() + "-" + vo.getCatalogVersionCode();
-            List<OnlineShopVO> list = map.get(key);
-            if (null == list) {
+            List<OnlineShopVO> list = map.getOrDefault(key,new ArrayList<>());
+            if (list.isEmpty()) {
                 List<OnlineShopVO> onlineShops = new ArrayList<>();
                 onlineShops.add(vo);
                 map.put(key,onlineShops);
