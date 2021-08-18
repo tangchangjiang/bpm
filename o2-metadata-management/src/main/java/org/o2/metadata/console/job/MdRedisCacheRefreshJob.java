@@ -43,32 +43,36 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             final String sysParameter = map.getOrDefault(MetadataConstants.CacheJob.CACHE_SYS_PARAMETER, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String carrier = map.getOrDefault(MetadataConstants.CacheJob.CARRIER, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String freight = map.getOrDefault(MetadataConstants.CacheJob.FREIGHT,MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String onlinShop = map.getOrDefault(MetadataConstants.CacheJob.ONLINE_SHOP,MetadataConstants.CacheJob.DEFAULT_ACTION);
 
-            LOG.info("start synchronize metadata basic data to redis...");
             if (MetadataConstants.CacheJob.REFRESH.equals(warehouse)) {
                 // 全量同步 仓库 数据到Redis，判断失效时间
                 LOG.info("synchronize warehouse to redis cache complete.");
                 cacheJobService.refreshWarehouse(tenantId);
             }
-
+            // 全量同步 网店关联仓库 到Redis，判断生效标记 active_flag 和失效时间
             if (MetadataConstants.CacheJob.REFRESH.equals(onlineShopRelWarehouse)) {
-                // 全量同步 网店关联仓库 到Redis，判断生效标记 active_flag 和失效时间
                 LOG.info("synchronize onlineShopRelWarehouse to redis cache complete.");
                 cacheJobService.refreshOnlineShopRelWarehouse(tenantId);
             }
 
+            // 全量同步 系统参数 到Redis 判断 active_flag
             if (MetadataConstants.CacheJob.REFRESH.equals(sysParameter)) {
-                // 全量同步 系统参数 到Redis 判断 active_flag
+
                 LOG.info("synchronize sysParameter to redis cache complete.");
                 cacheJobService.refreshSysParameter(tenantId);
             }
-
             // 全量同步 承运商
             if (MetadataConstants.CacheJob.REFRESH.equals(carrier)) {
                 cacheJobService.refreshCarrier(tenantId);
             }
+            // 全量同步 运费模板
             if (MetadataConstants.CacheJob.REFRESH.equals(freight)) {
                 cacheJobService.refreshFreight(tenantId);
+            }
+            // 全量同步 网店
+            if (MetadataConstants.CacheJob.REFRESH.equals(onlinShop)) {
+                cacheJobService.refreshOnlineShop(tenantId);
             }
         }
         return ReturnT.SUCCESS;

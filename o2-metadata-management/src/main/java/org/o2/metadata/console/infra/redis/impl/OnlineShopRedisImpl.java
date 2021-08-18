@@ -5,8 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.app.bo.OnlineShopRedisBO;
+import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
@@ -46,21 +47,20 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             return;
         }
         OnlineShop onlineShop = list.get(0);
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(onlineShopCode);
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
-            redisCacheClient.delete(key);
+            redisCacheClient.opsForHash().delete(key,onlineShopCode);
             return;
         }
-        OnlineShopRedisBO bo = new OnlineShopRedisBO();
+        OnlineShopCacheBO bo = new OnlineShopCacheBO();
         bo.setCatalogCode(onlineShop.getCatalogCode());
         bo.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
         bo.setOnlineShopCode(onlineShopCode);
         bo.setOnlineShopName(onlineShop.getOnlineShopName());
         bo.setPlatformCode(onlineShop.getPlatformCode());
         bo.setPlatformShopCode(onlineShop.getPlatformShopCode());
-        bo.setTenantId(String.valueOf(onlineShop.getTenantId()));
-        Map<String, String> map = FastJsonHelper.stringToMap(FastJsonHelper.objectToString(bo));
-        redisCacheClient.opsForHash().putAll(key,map);
+        bo.setTenantId(onlineShop.getTenantId());
+        redisCacheClient.opsForHash().put(key,onlineShopCode,FastJsonHelper.objectToString(bo));
     }
 
     @Override
@@ -87,5 +87,19 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         }
         this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), FastJsonHelper.objectToString(groupMap));
 
+    }
+
+    @Override
+    public void batchUpdateRedis(List<OnlineShop> list, Long tenantId) {
+        if (list.isEmpty()) {
+            return;
+        }
+        List<OnlineShopCacheBO> bos = OnlineShopConverter.poToBoListObjects(list);
+        Map<String, String> map = Maps.newHashMapWithExpectedSize(bos.size());
+        for (OnlineShopCacheBO bo : bos) {
+            map.put(bo.getOnlineShopCode(), FastJsonHelper.objectToString(bo));
+        }
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+        redisCacheClient.opsForHash().putAll(key, map);
     }
 }

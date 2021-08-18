@@ -12,7 +12,6 @@ import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.stereotype.Component;
 
-import java.awt.image.Kernel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
