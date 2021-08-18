@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private OnlineShopRepository onlineShopRepository;
     private RedisCacheClient redisCacheClient;
+
     public OnlineShopRedisImpl(OnlineShopRepository onlineShopRepository,
                                RedisCacheClient redisCacheClient) {
         this.onlineShopRepository = onlineShopRepository;
@@ -40,17 +41,17 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         OnlineShopQueryInnerDTO query = new OnlineShopQueryInnerDTO();
         query.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
 
-        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query,tenantId);
+        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query, tenantId);
         if (list.isEmpty()) {
             return;
         }
         OnlineShop onlineShop = list.get(0);
         String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
-            redisCacheClient.opsForHash().delete(key,onlineShopCode);
+            redisCacheClient.opsForHash().delete(key, onlineShopCode);
             return;
         }
-        redisCacheClient.opsForHash().put(key,onlineShopCode,FastJsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+        redisCacheClient.opsForHash().put(key, onlineShopCode, FastJsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
     }
 
     @Override
@@ -58,16 +59,16 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (list.isEmpty() || StringUtils.isEmpty(handleType)) {
             return;
         }
-        Map<String, List<OnlineShopRelWarehouse>>  map = list.stream().collect(Collectors.groupingBy(OnlineShopRelWarehouse::getOnlineShopCode));
-        Map<String,Map<String,String>> groupMap = Maps.newHashMapWithExpectedSize(map.size());
+        Map<String, List<OnlineShopRelWarehouse>> map = list.stream().collect(Collectors.groupingBy(OnlineShopRelWarehouse::getOnlineShopCode));
+        Map<String, Map<String, String>> groupMap = Maps.newHashMapWithExpectedSize(map.size());
         for (Map.Entry<String, List<OnlineShopRelWarehouse>> entry : map.entrySet()) {
-            String redisKey = OnlineShopConstants.Redis.getOnlineShopRelWarehouseKey( entry.getKey(),tenantId);
+            String redisKey = OnlineShopConstants.Redis.getOnlineShopRelWarehouseKey(entry.getKey(), tenantId);
             List<OnlineShopRelWarehouse> v = entry.getValue();
-            Map<String,String> hashMap = Maps.newHashMapWithExpectedSize(v.size());
+            Map<String, String> hashMap = Maps.newHashMapWithExpectedSize(v.size());
             for (OnlineShopRelWarehouse warehouse : v) {
-                hashMap.put(warehouse.getWarehouseCode(),String.valueOf(warehouse.getActiveFlag()));
+                hashMap.put(warehouse.getWarehouseCode(), String.valueOf(warehouse.getActiveFlag()));
             }
-            groupMap.put(redisKey,hashMap);
+            groupMap.put(redisKey, hashMap);
         }
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         if (OnlineShopConstants.Redis.UPDATE.equals(handleType)) {
@@ -91,5 +92,48 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         }
         String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         redisCacheClient.opsForHash().putAll(key, map);
+    }
+
+    @Override
+    public List<OnlineShop> select(OnlineShopQueryInnerDTO innerDTO, Long tenantId) {
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+        if (null == innerDTO) {
+            // 查所有的网店
+            return selectAll(key);
+        }
+        List<String> shopCodes = innerDTO.getOnlineShopCodes();
+        String platformCode = innerDTO.getPlatformCode();
+        // 查询某平台下所有网店
+        if (StringUtils.isNotEmpty(platformCode)) {
+            List<OnlineShop> onlineShops = selectAll(key);
+            Map<String, List<OnlineShop>> groupMap = onlineShops.stream().collect(Collectors.groupingBy(OnlineShop::getPlatformCode));
+            onlineShops = groupMap.get(platformCode);
+            return onlineShops;
+        }
+        // 根据网店编码查询
+        if (!shopCodes.isEmpty()) {
+            List<OnlineShop> onlineShops = new ArrayList<>();
+            List<String> list = redisCacheClient.<String, String>opsForHash().multiGet(key, shopCodes);
+            for (String str : list) {
+                onlineShops.add(FastJsonHelper.stringToObject(str, OnlineShop.class));
+            }
+            return onlineShops;
+        }
+      return new ArrayList<>();
+    }
+
+    /**
+     *  查所有网店
+     * @param  key redis key
+     * @return  list
+     */
+    private List<OnlineShop> selectAll(String key) {
+        List<OnlineShop> onlineShops = new ArrayList<>();
+        Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String v = entry.getValue();
+            onlineShops.add(FastJsonHelper.stringToObject(v, OnlineShop.class));
+        }
+        return onlineShops;
     }
 }

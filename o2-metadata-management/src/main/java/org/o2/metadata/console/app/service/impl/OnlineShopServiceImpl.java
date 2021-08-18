@@ -110,11 +110,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String,OnlineShopVO> map = new HashMap<>(16);
-       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO,tenantId));
+       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRedis.select(onlineShopQueryInnerDTO,tenantId));
         if (voList.isEmpty()) {
            return map;
         }
-        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
+        if (null == onlineShopQueryInnerDTO || CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
             for (OnlineShopVO vo : voList) {
                 map.put(vo.getOnlineShopCode(),vo);
             }

@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.redis;
 
+import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
@@ -33,4 +34,12 @@ public interface OnlineShopRedis {
       * @param tenantId 租户ID
       */
      void batchUpdateRedis(List<OnlineShop> list, Long tenantId);
+     
+     /**
+      * 查询网店
+      * @param innerDTO 查询条件
+      * @param tenantId 租户ID
+      * @return 网店数据
+      */
+     List<OnlineShop> select(OnlineShopQueryInnerDTO innerDTO,Long tenantId);
 }
