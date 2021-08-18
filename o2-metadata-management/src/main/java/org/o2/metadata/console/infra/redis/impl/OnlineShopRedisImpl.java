@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
@@ -111,7 +112,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             return onlineShops;
         }
         // 根据网店编码查询
-        if (!shopCodes.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(shopCodes)) {
             List<OnlineShop> onlineShops = new ArrayList<>();
             List<String> list = redisCacheClient.<String, String>opsForHash().multiGet(key, shopCodes);
             for (String str : list) {
@@ -119,7 +120,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             }
             return onlineShops;
         }
-      return new ArrayList<>();
+      return selectAll(key);
     }
 
     /**
