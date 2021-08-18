@@ -28,7 +28,6 @@ public interface CacheJobService {
      */
      void refreshSysParameter(Long tenantId);
 
-
     /**
      * 承运商
      * @param tenantId 租户ID
@@ -40,4 +39,11 @@ public interface CacheJobService {
      * @param tenantId 租户ID
      */
      void refreshFreight(Long tenantId);
+
+     /**
+      * 网店
+      * @date 2021-08-18
+      * @param tenantId 租户ID
+      */
+    void refreshOnlineShop(Long tenantId);
 }
