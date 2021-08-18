@@ -72,7 +72,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         List<SystemParameter> doList = new ArrayList<>();
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         List<String> list = redisCacheClient.<String,String>opsForHash().multiGet(key,paramCodeList);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (CollectionUtils.isNotEmpty(list) && null != list.get(0)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
                 SystemParameter systemParameter = new SystemParameter();
                 systemParameter.setParamCode(paramCodeList.get(i));
@@ -83,7 +83,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
         String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         List<String> listSet = redisCacheClient.<String,String>opsForHash().multiGet(keySet,paramCodeList);
-        if (CollectionUtils.isNotEmpty(listSet)) {
+        if (CollectionUtils.isNotEmpty(listSet) && null != listSet.get(0)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
                 SystemParameter systemParameter = new SystemParameter();
                 systemParameter.setParamCode(paramCodeList.get(i));

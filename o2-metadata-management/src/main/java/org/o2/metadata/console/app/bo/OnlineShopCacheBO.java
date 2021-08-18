@@ -9,7 +9,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-08-06
  **/
 @Data
-public class OnlineShopRedisBO {
+public class OnlineShopCacheBO {
     /**
      * 平台编码
      */
@@ -40,10 +40,12 @@ public class OnlineShopRedisBO {
      */
     private String catalogVersionCode;
 
-    /**
-     * 仓库编码
-     */
-    private String warehouseCode;
 
-    private String tenantId;
+    private Integer pickedUpFlag;
+    private Integer returnedFlag;
+    private Integer exchangedFlag;
+    private Integer enableSplitFlag;
+    private Long tenantId;
+    private Integer isDefault;
+    private Integer sourcedFlag;
 }

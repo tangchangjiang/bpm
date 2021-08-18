@@ -61,5 +61,6 @@ public class WarehouseCacheBO {
     private String posCode;
     private String expressLimitValue;
     private String pickUpLimitValue;
+    private String warehouseStatusCode;
 
 }

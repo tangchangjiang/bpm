@@ -15,51 +15,35 @@ import java.util.List;
 @ApiModel("区域视图")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegionVO  {
+public class RegionVO {
 
-    @ApiModelProperty("地区ID")
-      private Long regionId;
 
     @ApiModelProperty("地区编码")
-     private String regionCode;
+    private String regionCode;
 
     @ApiModelProperty("地区名称")
-     private String regionName;
+    private String regionName;
 
-    @ApiModelProperty("国家ID")
-    private Long countryId;
-
-    @ApiModelProperty("父地区ID")
-    private Long parentRegionId;
 
     private String parentRegionCode;
     private String parentRegionName;
 
-    @ApiModelProperty("等级路径")
-     private String levelPath;
-
-    @ApiModelProperty("是否启用")
-
-    private Integer enabledFlag;
-
 
     @ApiModelProperty(value = "子类", hidden = true)
-     private List<RegionVO> children;
+    private List<RegionVO> children;
 
 
-       private String areaCode;
+    private String areaCode;
 
     @ApiModelProperty(value = "大区名称")
-     private String areaMeaning;
+    private String areaMeaning;
 
     @ApiModelProperty(value = "租户ID")
-     private Long tenantId;
+    private Long tenantId;
 
-     private String countryCode;
+    private String countryCode;
 
-     private String countryName;
+    private String countryName;
 
     private Integer levelNumber;
-    @ApiModelProperty(value = "子节点数量")
-     private Integer childrenCount;
 }

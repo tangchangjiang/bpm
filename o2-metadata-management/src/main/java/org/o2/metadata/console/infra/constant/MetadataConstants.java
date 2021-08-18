@@ -76,6 +76,7 @@ public interface MetadataConstants {
         String DEFAULT_TENANT_ID = "0";
         String CARRIER = "Carrier";
         String FREIGHT = "Freight";
+        String ONLINE_SHOP = "OnlineShop";
     }
 
 

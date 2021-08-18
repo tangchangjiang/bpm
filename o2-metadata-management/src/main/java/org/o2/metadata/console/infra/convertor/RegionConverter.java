@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
@@ -7,8 +8,8 @@ import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,23 +28,24 @@ public class RegionConverter {
      */
     public static RegionVO poToVoObject(Region region){
 
+
         if (region == null) {
             return null;
         }
         RegionVO regionVO = new RegionVO();
-        regionVO.setRegionId(region.getRegionId());
         regionVO.setRegionCode(region.getRegionCode());
         regionVO.setRegionName(region.getRegionName());
-        regionVO.setCountryId(region.getCountryId());
-        regionVO.setParentRegionId(region.getParentRegionId());
         regionVO.setParentRegionCode(region.getParentRegionCode());
-        regionVO.setLevelPath(region.getLevelPath());
-        regionVO.setEnabledFlag(region.getEnabledFlag());
+        regionVO.setParentRegionName(region.getParentRegionName());
         regionVO.setAreaCode(region.getAreaCode());
         regionVO.setAreaMeaning(region.getAreaMeaning());
         regionVO.setTenantId(region.getTenantId());
         regionVO.setCountryCode(region.getCountryCode());
         regionVO.setCountryName(region.getCountryName());
+        regionVO.setLevelNumber(region.getLevelNumber());
+        if (CollectionUtils.isNotEmpty(region.getChildren())) {
+            regionVO.setChildren(RegionConverter.toRegionVOList(region.getChildren()));
+        }
         return regionVO;
     }
 
@@ -134,7 +136,7 @@ public class RegionConverter {
      * @param regionVO sql值集地区
      * @return  bo
      */
-    public static RegionBO voToBoObject(RegionVO regionVO) {
+    private static RegionBO voToBoObject(RegionVO regionVO) {
 
         if (regionVO == null) {
             return null;
@@ -163,4 +165,16 @@ public class RegionConverter {
         return regionBOList;
     }
 
+
+
+    private static List<RegionVO> toRegionVOList(List<Region> regionList) {
+        if (regionList == null) {
+            return Collections.emptyList();
+        }
+        List<RegionVO> regionVOList = new ArrayList<>();
+        for (Region region : regionList) {
+            regionVOList.add(poToVoObject(region));
+        }
+        return regionVOList;
+    }
 }

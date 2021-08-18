@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
                 CatalogVersionRemoteService.class,
                 CarrierRemoteService.class,
                 PosRemoteService.class,
-                PlatformInfMappingRemoteService.class,
+                PlatformRemoteService.class,
                 OnlineShopRemoteService.class,
                 AddressMappingRemoteService.class
         }
@@ -71,8 +71,8 @@ public class MetadataManagementClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public PlatformInfMappingRemoteServiceImpl platformInfMappingRemoteServiceFallback() {
-        return new PlatformInfMappingRemoteServiceImpl();
+    public PlatformRemoteServiceImpl platformInfMappingRemoteServiceFallback() {
+        return new PlatformRemoteServiceImpl();
     }
 
 
@@ -97,7 +97,7 @@ public class MetadataManagementClientConfiguration {
                                                                  CatalogVersionRemoteService catalogVersionRemoteService,
                                                                  CarrierRemoteService carrierRemoteService,
                                                                  PosRemoteService posRemoteService,
-                                                                 PlatformInfMappingRemoteService platformInfMappingRemoteService,
+                                                                 PlatformRemoteService platformRemoteService,
                                                                  OnlineShopRemoteService onlineShopRemoteService,
                                                                  AddressMappingRemoteService addressMappingService) {
         return new O2MetadataManagementClient(sysParameterRemoteService,
@@ -107,7 +107,7 @@ public class MetadataManagementClientConfiguration {
                 catalogVersionRemoteService,
                 carrierRemoteService,
                 posRemoteService,
-                platformInfMappingRemoteService,
+                platformRemoteService,
                 onlineShopRemoteService,
                 addressMappingService);
     }
