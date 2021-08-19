@@ -26,7 +26,5 @@ public class InfMappingDTO {
     private String platformInfName;
     @ApiModelProperty(value = "平台名称")
     private String platformName;
-    @ApiModelProperty(value = "平台编码")
-    private String platformInfCode;
 
 }
