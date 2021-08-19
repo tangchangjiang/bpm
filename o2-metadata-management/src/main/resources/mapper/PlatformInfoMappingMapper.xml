@@ -51,6 +51,14 @@
                 <bind name="infName" value="'%'+infName+'%'"/>
                 and inf.inf_name like #{infName}
             </if>
+            <if test="platformName != null and platformName != ''">
+                <bind name="platformName" value="'%'+platformName+'%'"/>
+                and pf.platform_name like #{platformName}
+            </if>
+            <if test="platformInfName != null and platformInfName != ''">
+                <bind name="platformInfName" value="'%'+platformInfName+'%'"/>
+                and inf.platform_inf_name like #{platformInfName}
+            </if>
         </where>
     </select>
     <select id="selectById" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
