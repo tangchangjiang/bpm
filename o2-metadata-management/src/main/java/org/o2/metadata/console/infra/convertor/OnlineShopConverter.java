@@ -35,6 +35,7 @@ public class OnlineShopConverter {
         onlineShopVO.setPlatformCode(onlineShop.getPlatformCode());
         onlineShopVO.setPlatformShopCode(onlineShop.getPlatformShopCode());
         onlineShopVO.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
+        onlineShopVO.setActiveFlag(onlineShop.getActiveFlag());
         return onlineShopVO;
     }
 
