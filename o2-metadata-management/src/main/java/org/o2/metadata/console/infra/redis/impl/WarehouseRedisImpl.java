@@ -59,30 +59,19 @@ public class WarehouseRedisImpl implements WarehouseRedis {
 
     @Override
     public void batchUpdateWarehouse(List<String> warehouseCodes, Long tenantId) {
-        List<WarehouseCacheBO> list =  warehouseRepository.listWarehouseByCode(warehouseCodes,tenantId);
-        if (null == list ||list.isEmpty()) {
+        List<WarehouseCacheBO> list = warehouseRepository.listWarehouseByCode(warehouseCodes, tenantId);
+        if (null == list || list.isEmpty()) {
             return;
         }
-        List<WarehouseCacheBO> update = new ArrayList<>();
-        List<String> delete = new ArrayList<>();
-        for (WarehouseCacheBO bo : list) {
-            if (BaseConstants.Flag.YES.equals(bo.getActiveFlag())) {
-                update.add(bo);
-                continue;
-            }
-            delete.add(bo.getWarehouseCode());
-        }
+
         String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
-        if (!update.isEmpty()) {
-            Map<String,String> updateMap = Maps.newHashMapWithExpectedSize(update.size());
-            for (WarehouseCacheBO bo : update) {
-                updateMap.put(bo.getWarehouseCode(),FastJsonHelper.objectToString(bo));
-            }
-            redisCacheClient.opsForHash().putAll(key,updateMap);
+
+        Map<String, String> updateMap = Maps.newHashMapWithExpectedSize(list.size());
+        for (WarehouseCacheBO bo : list) {
+            updateMap.put(bo.getWarehouseCode(), FastJsonHelper.objectToString(bo));
         }
-        if (!delete.isEmpty()) {
-            redisCacheClient.opsForHash().delete(key,delete);
-        }
+        redisCacheClient.opsForHash().putAll(key, updateMap);
+
 
     }
 }
