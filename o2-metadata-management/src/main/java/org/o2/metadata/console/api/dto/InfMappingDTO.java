@@ -20,5 +20,9 @@ public class InfMappingDTO {
     private String infName;
     @ApiModelProperty(value = "租户ID", required = true)
     private Long tenantId;
+    @ApiModelProperty(value = "平台信息名称")
+    private String platformInfName;
+    @ApiModelProperty(value = "平台名称")
+    private String platformName;
 
 }

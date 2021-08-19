@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.bo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -48,4 +49,6 @@ public class OnlineShopCacheBO {
     private Long tenantId;
     private Integer isDefault;
     private Integer sourcedFlag;
+    @ApiModelProperty(value = "是否有效")
+    private Integer activeFlag;
 }
