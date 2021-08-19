@@ -23,6 +23,7 @@ public enum RegionConstants {
         COUNTRY_LOV_CODE("O2MD.COUNTRY", ""),
         LEVEL_NUMBER("levelNumber", ""),
         REGION_NAME("regionName",""),
+        ADDRESS_TYPE("addressType",""),
         REGION_CODE("regionCode",""),
         REGION_IDS("regionIds",""),
         PARENT_REGION_ID("parentRegionId",""),
@@ -34,7 +35,8 @@ public enum RegionConstants {
         COUNTRY_CODE("countryCode",""),
         TENANT_ID("tenantId",""),
         LANG("lang",""),
-        DEFAULT_CODE("-1","");
+        DEFAULT_CODE("-1",""),
+        DEFAULT_DATA("region","");
 
 
         private String code;
