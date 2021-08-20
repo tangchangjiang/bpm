@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.api.vo.CarrierVO;
+import org.o2.metadata.api.co.CarrierCO;
 import org.o2.metadata.domain.carrier.domain.CarrierDO;
 import org.o2.metadata.infra.entity.Carrier;
 
@@ -41,16 +41,16 @@ public class CarrierConverter {
      * @param carrier 承运商
      * @return  Vo
      */
-    private static CarrierVO doToVoObject(CarrierDO carrier) {
+    private static CarrierCO doToVoObject(CarrierDO carrier) {
 
         if (carrier == null) {
             return null;
         }
-        CarrierVO carrierVO = new CarrierVO();
-        carrierVO.setCarrierCode(carrier.getCarrierCode());
-        carrierVO.setCarrierName(carrier.getCarrierName());
-        carrierVO.setCarrierTypeCode(carrier.getCarrierTypeCode());
-        return carrierVO;
+        CarrierCO co = new CarrierCO();
+        co.setCarrierCode(carrier.getCarrierCode());
+        co.setCarrierName(carrier.getCarrierName());
+        co.setCarrierTypeCode(carrier.getCarrierTypeCode());
+        return co;
     }
     /**
      * PO 转 DO
@@ -69,18 +69,18 @@ public class CarrierConverter {
     }
 
     /**
-     * DO 转 VO
+     * DO 转 CO
      * @param carrierList 系统参数集合
      * @return  list
      */
-    public static List<CarrierVO> doToVoListObjects(List<CarrierDO> carrierList) {
-        List<CarrierVO> carrierVOList = new ArrayList<>();
+    public static List<CarrierCO> doToCoListObjects(List<CarrierDO> carrierList) {
+        List<CarrierCO> cos = new ArrayList<>();
         if (carrierList == null) {
-            return carrierVOList;
+            return cos;
         }
         for (CarrierDO carrier : carrierList) {
-            carrierVOList.add(doToVoObject(carrier));
+            cos.add(doToVoObject(carrier));
         }
-        return carrierVOList;
+        return cos;
     }
 }
