@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.constant;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -128,6 +127,10 @@ public interface MetadataConstants {
         String EN_US = "en_US";
 
         String FILE_NAME = "country-region";
+
+        String LOV = "lov";
+
+        String LOV_FILE_NAME = "o2-public-lov";
 
     }
 
@@ -279,9 +282,24 @@ public interface MetadataConstants {
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
 
+        /**
+         * 元数据 - 地区数据文件
+         */
+        String O2MD_PUBLIC_LOV = "O2MD_PUBLIC_LOV";
+
+        /**
+         * 元数据 - PUB-LOV数据文件
+         */
+        String O2MD_PUBLIC_LOV_DESCRIPTION = "PUB-LOV数据文件";
+
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
         }
+
+        static String buildMetadataPublicLovCode() {
+            return String.format("%s", O2MD_PUBLIC_LOV);
+        }
+
     }
 
     /**
