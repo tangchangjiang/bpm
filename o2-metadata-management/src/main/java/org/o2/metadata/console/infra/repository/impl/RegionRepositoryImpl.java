@@ -92,6 +92,7 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
         queryParams.put(RegionConstants.RegionLov.COUNTRY_CODE.getCode(), regionQueryLov.getCountryCode());
         queryParams.put(RegionConstants.RegionLov.REGION_CODE.getCode(), regionQueryLov.getRegionCode());
         queryParams.put(RegionConstants.RegionLov.REGION_NAME.getCode(), regionQueryLov.getRegionName());
+        queryParams.put(RegionConstants.RegionLov.ADDRESS_TYPE.getCode(),RegionConstants.RegionLov.DEFAULT_DATA.getCode());
         Long  parentRegionId = regionQueryLov.getParentRegionId();
         if (null != parentRegionId) {
             queryParams.put(RegionConstants.RegionLov.PARENT_REGION_ID.getCode(), String.valueOf(regionQueryLov.getParentRegionId()) );

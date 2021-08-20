@@ -25,4 +25,7 @@ public class AddressMappingQueryInnerDTO {
      * 属于(省) or  (市)  3(区)
      */
     private String addressTypeCode;
+
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
 }

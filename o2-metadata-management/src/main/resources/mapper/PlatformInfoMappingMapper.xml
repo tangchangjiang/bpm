@@ -51,12 +51,13 @@
                 <bind name="infName" value="'%'+infName+'%'"/>
                 and inf.inf_name like #{infName}
             </if>
-            <if test="platformInfCode != null and platformInfCode!= ''">
-                and platform_inf_code = #{platformInfCode}
-            </if>
             <if test="platformName != null and platformName != ''">
                 <bind name="platformName" value="'%'+platformName+'%'"/>
                 and pf.platform_name like #{platformName}
+            </if>
+            <if test="platformInfCode != null and platformInfCode != ''">
+                <bind name="platformInfCode" value="'%'+platformInfCode+'%'"/>
+                and  inf.platform_inf_code like #{platformInfCode}
             </if>
             <if test="platformInfName != null and platformInfName != ''">
                 <bind name="platformInfName" value="'%'+platformInfName+'%'"/>
