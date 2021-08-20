@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.co.CarrierMappingCO;
 import org.o2.feignclient.metadata.domain.co.PlatformCO;
+import org.o2.feignclient.metadata.domain.co.WarehouseCO;
 import org.o2.feignclient.metadata.domain.dto.*;
 import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
@@ -84,13 +85,13 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询仓库
+     * 查询仓库
      *
-     * @param warehouseCodes 仓库编码
+     * @param innerDTO 入参
      * @param tenantId       租户ID
      */
-    public Map<String, WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
+    public Map<String, WarehouseCO> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(innerDTO, tenantId), new TypeReference<Map<String, WarehouseCO>>() {
         });
     }
 
@@ -103,18 +104,6 @@ public class O2MetadataManagementClient {
      */
     public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
-        });
-    }
-
-    /**
-     * 查询有效仓库(寻源）
-     *
-     * @param onlineShopCode 网店编码
-     * @param tenantId       租户ID
-     * @return 集合
-     */
-    public List<WarehouseVO> listActiveWarehouse(String onlineShopCode, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listActiveWarehouse(onlineShopCode, tenantId), new TypeReference<List<WarehouseVO>>() {
         });
     }
 
@@ -293,7 +282,6 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(staticResourceRemoteService.saveResource(organizationId, staticResourceSaveDTOList), Boolean.class);
     }
 
-
     /**
      * 查询平台信息
      * @param tenantId 租户id
@@ -303,9 +291,5 @@ public class O2MetadataManagementClient {
     public Map<String, PlatformCO> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
     }
-
-
-
-
 
 }

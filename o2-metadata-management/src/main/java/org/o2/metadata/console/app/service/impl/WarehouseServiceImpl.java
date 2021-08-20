@@ -3,6 +3,8 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -11,7 +13,7 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
-import org.o2.metadata.console.api.vo.WarehouseVO;
+import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -121,8 +123,18 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<WarehouseVO> listWarehouses(WarehouseQueryInnerDTO warehouseQueryInnerDTO, Long tenantId) {
-        return WarehouseConverter.doToVoListObjects(warehouseDomainService.listWarehouses(warehouseQueryInnerDTO.getWarehouseCodes(),tenantId));
+    public List<WarehouseCO> listWarehouses(WarehouseQueryInnerDTO queryInnerDTO, Long tenantId) {
+        Boolean dbFlag = queryInnerDTO.getDbFlag();
+        // 查询数据库
+        if (null == dbFlag || Boolean.TRUE.equals(dbFlag)) {
+            // 通过网店查询有效的网店
+            if (StringUtils.isNotEmpty(queryInnerDTO.getOnlineShopCode()) && BaseConstants.Flag.YES.equals(queryInnerDTO.getActiveFlag())) {
+                return WarehouseConverter.poToCoListObjects(warehouseRepository.listActiveWarehouseByShopCode(queryInnerDTO.getOnlineShopCode(), tenantId));
+            }
+            return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehouses(queryInnerDTO, tenantId));
+        }
+        // 查询redis
+        return WarehouseConverter.doToCoListObjects(warehouseDomainService.listWarehouses(queryInnerDTO.getWarehouseCodes(), tenantId));
     }
 
     private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
@@ -274,10 +286,6 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     }
 
-    @Override
-    public List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId) {
-        return WarehouseConverter.poToVoListObjects(warehouseRepository.listActiveWarehouses(onlineShopCode,organizationId));
-    }
 
     private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
