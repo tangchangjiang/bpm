@@ -28,23 +28,23 @@
 
     <select id="getWarehouseWithCarrierNameById" resultMap="BaseResultMap">
         SELECT
-            p.pos_id,
-            p.pos_code,
-            p.pos_name,
-            p.pos_status_code,
-            p.pos_type_code,
-            p.business_type_code,
-            p.open_date,
-            p.address_id,
-            p.business_time,
-            p.OBJECT_VERSION_NUMBER,
-            p.CREATION_DATE,
-            p.CREATED_BY,
-            p.LAST_UPDATED_BY,
-            p.LAST_UPDATE_DATE,
-            p.tenant_id
+        p.pos_id,
+        p.pos_code,
+        p.pos_name,
+        p.pos_status_code,
+        p.pos_type_code,
+        p.business_type_code,
+        p.open_date,
+        p.address_id,
+        p.business_time,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE,
+        p.tenant_id
         FROM
-            o2md_pos p
+        o2md_pos p
         where p.pos_id = #{posId}
         <choose>
             <when test="tenantId != null">
@@ -58,14 +58,15 @@
 
     <select id="listUnbindWarehouseList" resultMap="BaseResultMap">
         SELECT
-            w.warehouse_id,
-            w.pos_id,
-            w.warehouse_code,
-            w.warehouse_name,
-            w.warehouse_type_code
+        w.warehouse_id,
+        w.pos_id,
+        w.warehouse_code,
+        w.warehouse_name,
+        w.warehouse_type_code
         from o2md_warehouse w
         where not exists(
-           select 1 from o2md_online_shop_rel_warehouse srw where srw.warehouse_id = w.warehouse_id and srw.online_shop_id = #{onlineShopId}
+        select 1 from o2md_online_shop_rel_warehouse srw where srw.warehouse_id = w.warehouse_id and srw.online_shop_id
+        = #{onlineShopId}
         )
         <choose>
             <when test="tenantId != null">
@@ -81,7 +82,7 @@
         </if>
         <if test="warehouseName != null">
             <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
-            and  w.warehouse_name LIKE #{warehouseNameLike}
+            and w.warehouse_name LIKE #{warehouseNameLike}
         </if>
         <if test="_databaseId == 'mysql'">
             and w.actived_date_to <![CDATA[>]]> sysdate()
@@ -304,8 +305,15 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="innerDTO.warehouseName != null and innerDTO.warehouseName != ''">
+                <bind name="warehouseName" value="'%' + innerDTO.warehouseName + '%'"/>
+                AND wtl.warehouse_name LIKE #{warehouseName}
+            </if>
+            <if test="innerDTO.warehouseTypeCode != null and innerDTO.warehouseTypeCode != ''">
+                AND w.warehouse_type_code = #{innerDTO.warehouseTypeCode}
+            </if>
             <if test="innerDTO.activeFlag != null">
-                and w.warehouse_code  = #{innerDTO.activeFlag}
+                and w.warehouse_code = #{innerDTO.activeFlag}
             </if>
             <if test="innerDTO.onlineShopCode != null">
                 AND os.online_shop_code = #{innerDTO.onlineShopCode}
