@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -35,13 +36,18 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     }
 
     @Override
+    public List<Warehouse> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId) {
+        return warehouseMapper.listWarehouses(innerDTO,tenantId);
+    }
+
+    @Override
     public List<Warehouse> queryAllWarehouseByTenantId(Long tenantId) {
         return warehouseMapper.queryAllWarehouseByTenantId(tenantId);
     }
 
     @Override
-    public List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId) {
-        return warehouseMapper.listActiveWarehouses(onlineShopCode,organizationId);
+    public List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId) {
+        return warehouseMapper.listActiveWarehouseByShopCode(onlineShopCode,organizationId);
     }
 
     @Override

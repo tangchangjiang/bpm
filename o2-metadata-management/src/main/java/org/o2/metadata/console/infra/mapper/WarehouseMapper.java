@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
@@ -47,7 +48,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
     /**
      * 查询租户下的所有仓库
      * @param tenantId 租户ID
-     * @return
+     * @return list
      */
     List<Warehouse> queryAllWarehouseByTenantId(@Param("tenantId") final Long tenantId);
 
@@ -55,10 +56,9 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * 查询有效的仓库
      * @param onlineShopCode 网店编码
      * @param organizationId 租户ID
-     * @return
+     * @return list
      */
-    List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
-
+    List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId);
 
     /**
      *  编码查询仓促
@@ -67,4 +67,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return list
      */
     List<WarehouseCacheBO> listWarehouseByCode(@Param("warehouseCodes") List<String> warehouseCodes, @Param("tenantId") Long tenantId);
+
+    /**
+     * 查询仓库
+     * @param innerDTO 网店编码
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<Warehouse> listWarehouses(@Param("innerDTO") WarehouseQueryInnerDTO innerDTO, @Param("tenantId") Long tenantId);
 }

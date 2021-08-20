@@ -1,12 +1,11 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.feignclient.metadata.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  *
@@ -18,10 +17,9 @@ import java.util.List;
 @Slf4j
 public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
 
-
     @Override
-    public ResponseEntity<String> listWarehouses(Long organizationId, List<String> warehouseCodes) {
-        log.error("Error listWarehouses, params[tenantId = {}, warehouseCodes = {}]", organizationId, warehouseCodes);
+    public ResponseEntity<String> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long organizationId) {
+        log.error("Error saveExpressQuantity, params[tenantId = {}, innerDTO = {}]", organizationId, innerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
