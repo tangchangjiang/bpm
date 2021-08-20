@@ -31,4 +31,8 @@ public class WarehouseQueryInnerDTO {
      * 是否有效
      */
     private Integer activeFlag;
+
+    private String warehouseTypeCode;
+
+    private String warehouseName;
 }
