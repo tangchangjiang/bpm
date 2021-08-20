@@ -65,7 +65,7 @@ public class PlatformServiceImpl implements PlatformService {
             platformRepository.updateOptional(platform,
                     Platform.FIELD_PLATFORM_CODE,
                     Platform.FIELD_PLATFORM_NAME,
-                    Platform.FIELD_PLATFORM_STATUS_CODE,
+                    Platform.FIELD_ACTIVE_FLAG,
                     Platform.FIELD_TENANT_ID
             );
         }
