@@ -6,7 +6,7 @@
         <result column="platform_id" property="platformId" jdbcType="DECIMAL"/>
         <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
         <result column="platform_name" property="platformName" jdbcType="VARCHAR"/>
-        <result column="platform_status_code" property="platformStatusCode" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
@@ -18,7 +18,7 @@
         platform_id,
         platform_code,
         platform_name,
-        platform_status_code,
+        active_flag,
         tenant_id,
         created_by,
         last_updated_by,
@@ -47,8 +47,8 @@
                 <bind name="platformName" value="'%'+platformName+'%'"/>
                 and pf.platform_name like #{platformName}
             </if>
-            <if test="platformStatusCode != null">
-                and pf.platform_status_code = #{platformStatusCode}
+            <if test="activeFlag != null">
+                and pf.active_flag = #{activeFlag}
             </if>
         </where>
     </select>
