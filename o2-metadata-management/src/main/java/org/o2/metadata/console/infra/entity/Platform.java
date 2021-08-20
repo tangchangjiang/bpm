@@ -28,7 +28,7 @@ public class Platform extends AuditDomain {
     public static final String FIELD_PLATFORM_ID = "platformId";
     public static final String FIELD_PLATFORM_CODE = "platformCode";
     public static final String FIELD_PLATFORM_NAME = "platformName";
-    public static final String FIELD_PLATFORM_STATUS_CODE = "platformStatusCode";
+    public static final String FIELD_ACTIVE_FLAG = "activeFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
 
     //
@@ -50,9 +50,9 @@ public class Platform extends AuditDomain {
     @ApiModelProperty(value = "平台名称")
     @NotNull
     private String platformName;
-    @ApiModelProperty(value = "平台状态")
+    @ApiModelProperty(value = "是否有效")
     @NotNull
-    private Integer platformStatusCode;
+    private Integer activeFlag;
     @ApiModelProperty(value = "租户id", required = true)
     @NotNull
     private Long tenantId;
