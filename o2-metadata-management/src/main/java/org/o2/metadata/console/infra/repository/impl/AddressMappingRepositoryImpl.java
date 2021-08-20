@@ -7,6 +7,7 @@ import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,10 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
 
     @Override
     public List<AddressMapping> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
-        return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId);
+        if (addressMappingQueryInts.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId,addressMappingQueryInts.get(0).getPlatformCode());
     }
 
 }

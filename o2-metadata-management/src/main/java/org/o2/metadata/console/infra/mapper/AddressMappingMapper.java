@@ -75,8 +75,10 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      * 内部方法 批量查询地址匹配
      * @param addressMappingQueryInts 参数
      * @param tenantId 租户ID
+     * @param platformCode 平台编码
      * @return  list
      */
     List<AddressMapping> listAddressMappings(@Param("query") List<AddressMappingQueryInnerDTO> addressMappingQueryInts,
-                                             @Param("tenantId") Long tenantId);
+                                             @Param("tenantId") Long tenantId,
+                                             @Param("platformCode") String platformCode);
 }

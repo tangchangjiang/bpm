@@ -183,8 +183,9 @@
             <foreach collection="query" item="item" open="(" separator="or"  close=")">
                 (ad.external_name = #{item.externalName} and  ad.address_type_code = #{item.addressTypeCode})
             </foreach>
+          </if>
+        <if test="platformCode !=null ">
+            and ad.platform_code = #{platformCode}
         </if>
-
-
     </select>
 </mapper>
