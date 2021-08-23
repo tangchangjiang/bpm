@@ -3,11 +3,8 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.co.CarrierMappingCO;
-import org.o2.feignclient.metadata.domain.co.PlatformCO;
-import org.o2.feignclient.metadata.domain.co.WarehouseCO;
+import org.o2.feignclient.metadata.domain.co.*;
 import org.o2.feignclient.metadata.domain.dto.*;
-import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 
 
