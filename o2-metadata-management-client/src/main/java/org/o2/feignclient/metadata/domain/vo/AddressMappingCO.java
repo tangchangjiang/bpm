@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel("地址匹配")
-public class AddressMappingVO  {
+public class AddressMappingCO {
 
 
     @ApiModelProperty(value = "region 关联")

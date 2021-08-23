@@ -9,13 +9,13 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-07-16
  **/
 @Data
-public class FreightInfoVO {
+public class FreightInfoCO {
     /**
      * 运费模版编码
      */
     private  String freightTemplateCode;
 
-    private  FreightTemplateVO headTemplate;
+    private FreightTemplateCO headTemplate;
 
-    private  FreightTemplateDetailVO regionTemplate;
+    private FreightTemplateDetailCO regionTemplate;
 }

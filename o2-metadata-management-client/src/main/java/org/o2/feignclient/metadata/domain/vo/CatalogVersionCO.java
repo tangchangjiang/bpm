@@ -10,7 +10,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-07-30
  **/
 @Data
-public class CatalogVersionVO {
+public class CatalogVersionCO {
     @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
 

@@ -11,7 +11,7 @@ import java.util.Date;
  * @author yuying.shi@hand-china.com 2020-03-02
  */
 @ApiModel("网店关联仓库")
-public class OnlineShopRelWarehouseVO {
+public class OnlineShopRelWarehouseCO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long onlineShopRelWarehouseId;
