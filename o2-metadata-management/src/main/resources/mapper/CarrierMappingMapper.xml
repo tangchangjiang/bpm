@@ -65,6 +65,7 @@
         ORDER BY cm.platform_code, c.carrier_code
     </select>
     <select id="listCarrierMappings" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
                c.carrier_code,
                cm.platform_carrier_code,
