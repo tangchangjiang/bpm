@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 地址匹配
  *
@@ -36,5 +38,7 @@ public class AddressMappingCO {
 
     @ApiModelProperty(value = "地址类型.值集:O2MD.ADDRESS_TYPE")
     private String addressTypeCode;
+
+    private List<AddressMappingCO> children;
 
 }

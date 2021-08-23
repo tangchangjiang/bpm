@@ -159,7 +159,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public Map<String, List<AddressMappingCO>> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
+    public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
         List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
         List<String> regionCodes = new ArrayList<>(16);
         for (AddressMappingCO co : list) {
@@ -183,11 +183,9 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                 addressMappingTree.add(co);
             }
         }
-        Map<String,List<AddressMappingCO>> result = new HashMap<>(16);
+        Map<String,AddressMappingCO> result = new HashMap<>(16);
         for (AddressMappingCO co : addressMappingTree) {
-            List<AddressMappingCO> allList = new ArrayList<>();
-            allList.add(co);
-            result.put(co.getRegionName(),getList(co.getChildren(),allList));
+            result.put(co.getRegionName(),co);
         }
         return result;
     }
@@ -208,14 +206,6 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
         }
         return children;
-    }
-
-    private List<AddressMappingCO> getList(List<AddressMappingCO> children,List<AddressMappingCO> allList) {
-        for (AddressMappingCO co : children) {
-            allList.add(co);
-            getList(co.getChildren(),allList);
-        }
-        return allList;
     }
 
     @Override
