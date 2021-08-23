@@ -7,7 +7,7 @@ import org.o2.metadata.console.api.vo.PublicLovVO;
  *
  * @author: kang.yang@hand-china.com 2021-08-20 14:17
  **/
-public interface O2SitePublicLovService {
+public interface O2PublicLovService {
 
     /**
      * 同步O2MD.PUBLIC_LOV值集静态文件
