@@ -1,10 +1,10 @@
 package org.o2.metadata.console.app.service;
 
 
+import org.o2.metadata.console.api.co.ResponseCO;
+import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
-import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.infra.entity.SystemParameter;
-import org.o2.metadata.console.api.vo.SystemParameterVO;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface SysParamService {
      * @param tenantId 租户ID
      * @return SystemParamDetailVO
      */
-    SystemParameterVO getSystemParameter(String paramCode, Long tenantId);
+    SystemParameterCO getSystemParameter(String paramCode, Long tenantId);
 
     /**
      * 批量从redis查询系统参数
@@ -31,7 +31,7 @@ public interface SysParamService {
      * @param tenantId 租户ID
      * @return list
      */
-    List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId);
+    List<SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId);
     
     /**
      *  新建系统参数
@@ -53,5 +53,5 @@ public interface SysParamService {
      * @param tenantId 租户ID
      * @return vo
      */
-    ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
+    ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
 }

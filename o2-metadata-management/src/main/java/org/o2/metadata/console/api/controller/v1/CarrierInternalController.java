@@ -8,9 +8,8 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.api.vo.CarrierVO;
+import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
-import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,7 @@ public class CarrierInternalController{
     @ApiOperation(value = "承运商")
     @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
-    public ResponseEntity<Map<String, CarrierVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
+    public ResponseEntity<Map<String, CarrierCO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
         return Results.success(carrierService.listCarriers(carrierQueryInnerDTO,organizationId));
     }
 

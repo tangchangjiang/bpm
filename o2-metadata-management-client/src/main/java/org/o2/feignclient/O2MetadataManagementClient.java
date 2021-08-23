@@ -3,11 +3,8 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.co.CarrierMappingCO;
-import org.o2.feignclient.metadata.domain.co.PlatformCO;
-import org.o2.feignclient.metadata.domain.co.WarehouseCO;
+import org.o2.feignclient.metadata.domain.co.*;
 import org.o2.feignclient.metadata.domain.dto.*;
-import org.o2.feignclient.metadata.domain.vo.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 
 
@@ -58,8 +55,8 @@ public class O2MetadataManagementClient {
      * @param paramCode 参数编码
      * @param tenantId  租户ID
      */
-    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
+    public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterCO.class);
     }
 
     /**
@@ -69,8 +66,8 @@ public class O2MetadataManagementClient {
      * @param tenantId   租户ID
      * @return map key:paramCode
      */
-    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterVO>>() {
+    public Map<String, SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(tenantId, paramCodes), new TypeReference<Map<String, SystemParameterCO>>() {
         });
     }
 
@@ -80,8 +77,8 @@ public class O2MetadataManagementClient {
      * @param systemParameterQueryInnerDTO 系统
      * @param tenantId           租户ID
      */
-    public ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterQueryInnerDTO, tenantId), ResponseVO.class);
+    public ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterQueryInnerDTO, tenantId), ResponseCO.class);
     }
 
     /**
@@ -100,10 +97,10 @@ public class O2MetadataManagementClient {
      *
      * @param onlineShopCode 网店编码
      * @param tenantId        租户ID
-     * @return map<warehouseCode, OnlineShopRelWarehouseVO>
+     * @return map<warehouseCode, OnlineShopRelWarehouseCO>
      */
-    public Map<String, OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseVO>>() {
+    public Map<String, OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseCO>>() {
         });
     }
 
@@ -113,8 +110,8 @@ public class O2MetadataManagementClient {
      * @param freight 运费参数
      * @return 运费结果
      */
-    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight, tenantId), FreightInfoVO.class);
+    public FreightInfoCO getFreightTemplate(FreightDTO freight, Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight, tenantId), FreightInfoCO.class);
     }
 
     /**
@@ -123,8 +120,8 @@ public class O2MetadataManagementClient {
      * @param tenantId 租户id
      * @return 模版
      */
-    public FreightTemplateVO getDefaultTemplate(Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateVO.class);
+    public FreightTemplateCO getDefaultTemplate(Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateCO.class);
     }
 
     /**
@@ -145,8 +142,8 @@ public class O2MetadataManagementClient {
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierVO>>() {
+    public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierCO>>() {
         });
     }
 
@@ -168,8 +165,8 @@ public class O2MetadataManagementClient {
      * @param onlineShopQueryInnerDTO 网店
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
-    public Map<String, OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String, OnlineShopVO>>() {
+    public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String, OnlineShopCO>>() {
         });
     }
 
@@ -179,8 +176,8 @@ public class O2MetadataManagementClient {
      * @param onlineShopCatalogVersionList 网店
      * @return map key:catalogCode-catalogVersionCode
      */
-    public Map<String, List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopVO>>>() {
+    public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopCO>>>() {
         });
     }
 
@@ -190,8 +187,8 @@ public class O2MetadataManagementClient {
      * @param tenantId 租户ID
      * @return string
      */
-    public Map<String,PosAddressVO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressQueryInnerDTO, tenantId), new TypeReference<Map<String, PosAddressVO>>() {
+    public Map<String, PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressQueryInnerDTO, tenantId), new TypeReference<Map<String, PosAddressCO>>() {
         });
     }
 
@@ -202,8 +199,8 @@ public class O2MetadataManagementClient {
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingVO>>() {
+    public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
         });
     }
 

@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.console.api.co;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @ApiModel("网店基础设置")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OnlineShopVO {
+public class OnlineShopCO {
 
     @ApiModelProperty(value = "表ID", hidden = true)
     private Long onlineShopId;

@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.console.api.co;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-07-27
  **/
 @Data
-public class ResponseVO {
+public class ResponseCO {
     private String success;
     private String msg;
 }

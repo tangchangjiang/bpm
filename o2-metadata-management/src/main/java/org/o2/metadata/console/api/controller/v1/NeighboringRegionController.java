@@ -18,7 +18,6 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.convertor.NeighboringRegionConverter;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,9 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.console.api.co;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 
 
 /**
@@ -16,7 +14,7 @@ import lombok.Data;
 @Data
 @ApiModel("承运商")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CarrierVO  {
+public class CarrierCO {
 
 
     @ApiModelProperty("表ID，主键，供其他表做外键")

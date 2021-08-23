@@ -13,6 +13,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
@@ -228,8 +229,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
-    public List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return OnlineShopRelWarehouseConverter.doToVoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
+    public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
+        return OnlineShopRelWarehouseConverter.doToCoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {

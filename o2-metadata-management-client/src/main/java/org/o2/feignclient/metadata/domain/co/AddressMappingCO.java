@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel("地址匹配")
-public class AddressMappingVO  {
+public class AddressMappingCO {
 
 
     @ApiModelProperty(value = "region 关联")
@@ -33,5 +33,8 @@ public class AddressMappingVO  {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "地址类型.值集:O2MD.ADDRESS_TYPE")
+    private String addressTypeCode;
 
 }

@@ -3,9 +3,9 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
-import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
@@ -143,7 +143,7 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public List<PosAddressVO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
+    public List<PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
         List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressQueryInnerDTO,tenantId);
         List<String> regionCodes = new ArrayList<>();
         for (PosAddress address : addresses) {
@@ -180,7 +180,7 @@ public class PosServiceImpl implements PosService {
                 address.setRegionName(region.getRegionName());
             }
         }
-        return PosAddressConverter.poToVoListObjects(addresses);
+        return PosAddressConverter.poToCoListObjects(addresses);
     }
 
 

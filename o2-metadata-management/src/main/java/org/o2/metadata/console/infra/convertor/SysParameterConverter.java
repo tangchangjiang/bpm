@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
-import org.o2.metadata.console.api.vo.SystemParamValueVO;
-import org.o2.metadata.console.api.vo.SystemParameterVO;
+import org.o2.metadata.console.api.co.SystemParamValueCO;
+import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.domain.systemparameter.domain.SystemParamValueDO;
@@ -24,33 +24,33 @@ public class SysParameterConverter {
     }
 
     /**
-     * DO 转 VO
+     * DO 转 CO
      * @param systemParameterDO 系统参数
      * @return  bean
      */
-    public static SystemParameterVO doToVoObject(SystemParameterDO systemParameterDO){
+    public static SystemParameterCO doToCoObject(SystemParameterDO systemParameterDO){
         if (systemParameterDO == null) {
             return null;
         }
-        SystemParameterVO systemParameterVO = new SystemParameterVO();
-        systemParameterVO.setParamCode(systemParameterDO.getParamCode());
-        systemParameterVO.setDefaultValue(systemParameterDO.getDefaultValue());
+        SystemParameterCO co = new SystemParameterCO();
+        co.setParamCode(systemParameterDO.getParamCode());
+        co.setDefaultValue(systemParameterDO.getDefaultValue());
         Set<SystemParamValueDO> systemParamValueDO = systemParameterDO.getSetSystemParamValue();
         if (null == systemParamValueDO || systemParamValueDO.isEmpty()) {
-            return systemParameterVO;
+            return co;
         }
-        Set<SystemParamValueVO> systemParamValueVos = new HashSet<>();
+        Set<SystemParamValueCO> valueCos = new HashSet<>();
         for (SystemParamValueDO valueDO : systemParamValueDO) {
-            SystemParamValueVO valueVO = new SystemParamValueVO();
-            valueVO.setParam1(valueDO.getParam1());
-            valueVO.setParam2(valueDO.getParam2());
-            valueVO.setParam3(valueDO.getParam3());
-            valueVO.setParamValue(valueDO.getParamValue());
-            valueVO.setParamKey(valueDO.getParamKey());
-            systemParamValueVos.add(valueVO);
+            SystemParamValueCO valueCo = new SystemParamValueCO();
+            valueCo.setParam1(valueDO.getParam1());
+            valueCo.setParam2(valueDO.getParam2());
+            valueCo.setParam3(valueDO.getParam3());
+            valueCo.setParamValue(valueDO.getParamValue());
+            valueCo.setParamKey(valueDO.getParamKey());
+            valueCos.add(valueCo);
         }
-        systemParameterVO.setSetSystemParamValue(systemParamValueVos);
-        return systemParameterVO;
+        co.setSetSystemParamValue(valueCos);
+        return co;
     }
     /**
      * PO 转 DO
@@ -82,19 +82,19 @@ public class SysParameterConverter {
         return systemParameterDO;
     }
     /**
-     * DO 转 VO
+     * DO 转 CO
      * @param systemParameterDOList 系统参数集合
      * @return  list
      */
-    public static List<SystemParameterVO> doToVoListObjects(List<SystemParameterDO> systemParameterDOList) {
-        List<SystemParameterVO> systemParameterVOList = new ArrayList<>();
+    public static List<SystemParameterCO> doToCoListObjects(List<SystemParameterDO> systemParameterDOList) {
+        List<SystemParameterCO> cos = new ArrayList<>();
         if (systemParameterDOList == null) {
-            return systemParameterVOList;
+            return cos;
         }
         for (SystemParameterDO systemParameterDO : systemParameterDOList) {
-            systemParameterVOList.add(doToVoObject(systemParameterDO));
+            cos.add(doToCoObject(systemParameterDO));
         }
-        return systemParameterVOList;
+        return cos;
     }
     /**
      * PO 转 DO

@@ -6,10 +6,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
-
+import org.o2.metadata.console.api.co.ResponseCO;
+import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
-import org.o2.metadata.console.api.vo.ResponseVO;
-import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +33,7 @@ public class SysParameterMetadataInternalController {
     @ApiOperation(value = "从redis查询系统参数")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}")
-    public ResponseEntity<SystemParameterVO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<SystemParameterCO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                 @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
         return Results.success(sysParamService.getSystemParameter(paramCode, organizationId));
     }
@@ -42,15 +41,15 @@ public class SysParameterMetadataInternalController {
     @ApiOperation(value = "批量从redis查询系统参数")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/paramCodes")
-    public ResponseEntity<Map<String, SystemParameterVO>> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, SystemParameterCO>> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                @RequestParam List<String> paramCodes) {
-        List<SystemParameterVO> systemParameterVOList = sysParamService.listSystemParameters(paramCodes, organizationId);
-        Map<String, SystemParameterVO> map = new HashMap<>(4);
+        List<SystemParameterCO> systemParameterVOList = sysParamService.listSystemParameters(paramCodes, organizationId);
+        Map<String, SystemParameterCO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
         }
-        for (SystemParameterVO vo : systemParameterVOList) {
-            map.put(vo.getParamCode(), vo);
+        for (SystemParameterCO co : systemParameterVOList) {
+            map.put(co.getParamCode(), co);
         }
         return Results.success(map);
     }
@@ -58,7 +57,7 @@ public class SysParameterMetadataInternalController {
     @ApiOperation(value = "更新系统参数(map）类型")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/update")
-    public ResponseEntity<ResponseVO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterQueryInnerDTO systemParameterQueryInnerDTO) {
+    public ResponseEntity<ResponseCO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterQueryInnerDTO systemParameterQueryInnerDTO) {
         return Results.success(sysParamService.updateSysParameter(systemParameterQueryInnerDTO,organizationId));
     }
 }

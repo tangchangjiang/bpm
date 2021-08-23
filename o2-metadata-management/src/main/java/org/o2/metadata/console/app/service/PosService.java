@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service;
 
 
+import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
-import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
@@ -45,5 +45,5 @@ public interface PosService {
      * @param tenantId 租户ID
      * @return  list
      */
-    List<PosAddressVO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId);
+    List<PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId);
 }
