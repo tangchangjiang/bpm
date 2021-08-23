@@ -8,6 +8,7 @@ import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 地址匹配应用服务
@@ -41,7 +42,7 @@ public interface AddressMappingService {
      * @param tenantId 租户ID
      * @return  list
      */
-    List<AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingDTO, Long tenantId);
+    Map<String, List<AddressMappingCO>> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingDTO, Long tenantId);
 
     /**
      * 创建
