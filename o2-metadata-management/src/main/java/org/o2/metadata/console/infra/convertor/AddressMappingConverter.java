@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
+import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
@@ -50,6 +51,7 @@ public class AddressMappingConverter {
         return addressMappingVO;
     }
 
+
     /**
      * PO 转 VO
      * @param addressMappings 地址匹配
@@ -66,5 +68,41 @@ public class AddressMappingConverter {
         return addressMappingVOList;
     }
 
+    /**
+     * po -> CO
+     * @param addressMapping 地址匹配
+     * @return  CO
+     */
+    private static AddressMappingCO poToCoObject(AddressMapping addressMapping) {
+
+        if (addressMapping == null) {
+            return null;
+        }
+        AddressMappingCO co = new AddressMappingCO();
+        co.setRegionCode(addressMapping.getRegionCode());
+        co.setRegionName(addressMapping.getRegionName());
+        co.setExternalCode(addressMapping.getExternalCode());
+        co.setExternalName(addressMapping.getExternalName());
+        co.setActiveFlag(addressMapping.getActiveFlag());
+        co.setTenantId(addressMapping.getTenantId());
+        co.setAddressTypeCode(addressMapping.getAddressTypeCode());
+        return co;
+    }
+
+    /**
+     * PO 转 CO
+     * @param addressMappings 地址匹配
+     * @return  list
+     */
+    public static List<AddressMappingCO> poToCoListObjects(List<AddressMapping> addressMappings) {
+        List<AddressMappingCO> cos = new ArrayList<>();
+        if (addressMappings == null) {
+            return cos;
+        }
+        for (AddressMapping addressMapping : addressMappings) {
+            cos.add(poToCoObject(addressMapping));
+        }
+        return cos;
+    }
 
 }

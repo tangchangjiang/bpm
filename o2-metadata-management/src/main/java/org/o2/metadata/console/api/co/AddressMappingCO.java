@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.co;
+package org.o2.metadata.console.api.co;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -36,5 +36,6 @@ public class AddressMappingCO {
 
     @ApiModelProperty(value = "地址类型.值集:O2MD.ADDRESS_TYPE")
     private String addressTypeCode;
+
 
 }

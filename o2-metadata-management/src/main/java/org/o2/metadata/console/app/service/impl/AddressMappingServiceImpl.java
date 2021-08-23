@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
@@ -155,9 +156,8 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public List<AddressMappingVO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
-
-        return AddressMappingConverter.poToVoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
+    public List<AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
+        return AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.api.vo.CarrierVO;
+import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.convertor.CarrierConverter;
@@ -127,8 +127,8 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
-        Map<String, CarrierVO> map = new HashMap<>(16);
+    public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
+        Map<String, CarrierCO> map = new HashMap<>(16);
         if (null == carrierQueryInnerDTO.getCarrierCodes() && null == carrierQueryInnerDTO.getCarrierNames()) {
             return map;
         }
@@ -136,7 +136,7 @@ public class CarrierServiceImpl implements CarrierService {
         if (carriers.isEmpty()) {
             return map;
         }
-        CarrierVO carrierVO = new CarrierVO();
+        CarrierCO carrierVO = new CarrierCO();
         for (Carrier carrier : carriers) {
             carrierVO.setCarrierCode(carrier.getCarrierCode());
             carrierVO.setCarrierName(carrier.getCarrierName());

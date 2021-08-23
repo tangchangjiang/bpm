@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
-import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +41,14 @@ public class AddressMappingInternalController {
     @ApiOperation(value = "批量查询地址批量表")
     @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
-    public ResponseEntity<Map<String, AddressMappingVO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, AddressMappingCO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                              @RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList){
-        Map<String,AddressMappingVO> maps = new HashMap<>(16);
-        List<AddressMappingVO> list =  addressMappingService.listAddressMappings(addressMappingQueryInnerDTOList,organizationId);
+        Map<String,AddressMappingCO> maps = new HashMap<>(16);
+        List<AddressMappingCO> list =  addressMappingService.listAddressMappings(addressMappingQueryInnerDTOList,organizationId);
         if (list.isEmpty()) {
             return Results.success(maps);
         }
-        maps = list.stream().collect(Collectors.toMap(AddressMappingVO::getAddressTypeCode, Function.identity(), (v1, v2)->v1));
+        maps = list.stream().collect(Collectors.toMap(AddressMappingCO::getAddressTypeCode, Function.identity(), (v1, v2)->v1));
         return  Results.success(maps);
     }
 
