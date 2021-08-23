@@ -313,7 +313,7 @@
                 AND w.warehouse_type_code = #{innerDTO.warehouseTypeCode}
             </if>
             <if test="innerDTO.activeFlag != null">
-                and w.warehouse_code = #{innerDTO.activeFlag}
+                and w.active_flag = #{innerDTO.activeFlag}
             </if>
             <if test="innerDTO.onlineShopCode != null">
                 AND os.online_shop_code = #{innerDTO.onlineShopCode}
