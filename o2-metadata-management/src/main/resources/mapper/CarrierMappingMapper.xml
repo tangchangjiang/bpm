@@ -67,9 +67,12 @@
     <select id="listCarrierMappings" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
         SELECT
                c.carrier_code,
-               cm.platform_carrier_code
+               cm.platform_carrier_code,
+               tl.carrier_name,
+               cm.platform_carrier_name
         FROM o2md_carrier_mapping cm
         JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
+        JOIN o2md_carrier_tl tl on tl.carrier_id=c.carrier_id AND tl.lang =  #{lang}
         where 1 = 1
         <choose>
             <when test="tenantId != null">
