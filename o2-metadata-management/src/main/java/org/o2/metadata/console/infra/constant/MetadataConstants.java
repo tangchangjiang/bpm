@@ -282,22 +282,14 @@ public interface MetadataConstants {
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
 
-        /**
-         * 元数据 - 地区数据文件
-         */
-        String O2MD_PUBLIC_LOV = "O2MD_PUBLIC_LOV";
 
         /**
-         * 元数据 - PUB-LOV数据文件
+         * 元数据 - 值集数据文件
          */
-        String O2MD_PUBLIC_LOV_DESCRIPTION = "PUB-LOV数据文件";
+        String LOV_DESCRIPTION = "值集数据文件";
 
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
-        }
-
-        static String buildMetadataPublicLovCode() {
-            return String.format("%s", O2MD_PUBLIC_LOV);
         }
 
     }
