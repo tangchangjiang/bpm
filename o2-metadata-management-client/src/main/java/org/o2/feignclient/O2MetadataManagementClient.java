@@ -199,8 +199,8 @@ public class O2MetadataManagementClient {
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
+    public Map<String, List<AddressMappingCO>> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, List<AddressMappingCO>>>() {
         });
     }
 

@@ -129,9 +129,6 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
         Map<String, CarrierCO> map = new HashMap<>(16);
-        if (null == carrierQueryInnerDTO.getCarrierCodes() && null == carrierQueryInnerDTO.getCarrierNames()) {
-            return map;
-        }
         List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO,organizationId);
         if (carriers.isEmpty()) {
             return map;
