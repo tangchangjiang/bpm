@@ -107,11 +107,10 @@ public class MallLangPromptController extends BaseController {
     @ApiOperation(value = "商城前端多语言内容维护表维护-批量保存商城前端多语言内容维护表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/release")
-    public ResponseEntity release(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<BatchResponse<MallLangPrompt>> release(@PathVariable(value = "organizationId") Long organizationId,
                                   @RequestBody List<MallLangPrompt> mallLangPromptList){
         SecurityTokenHelper.validToken(mallLangPromptList);
-        BatchResponse<MallLangPrompt> batchResponse = mallLangPromptService.release(mallLangPromptList);
-        return batchResponse.getResponseEntity();
+        return Results.success(mallLangPromptService.release(mallLangPromptList));
     }
 
 }

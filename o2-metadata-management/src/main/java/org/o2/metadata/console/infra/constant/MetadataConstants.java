@@ -308,14 +308,18 @@ public interface MetadataConstants {
     interface MallLangPromptConstants{
         String LOV_CODE = "O2CMS.APPROVE_STATUS";
 
+        String UNAPPROVED = "UNAPPROVED";
+
         String MALL_LANG_LOCK_KEY = "o2md:mallLang:static:file:lock";
 
         String NAME = "mallLang";
 
-        String RESOURCE_CODE = "MALL_LANG_FILE";
-
         String DESCRIPTION = "o2md.mallLang.static_file_description";
 
         String LANG_LOV_CODE = "O2MD.LANGUAGE";
+
+        String RESOURCE_CODE = "O2MD_MALL_LANG_PROMPT";
+
+        int IMAGE_INTERCEPTION_MARK = 3;
     }
 }

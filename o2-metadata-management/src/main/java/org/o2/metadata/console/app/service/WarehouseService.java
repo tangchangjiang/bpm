@@ -1,7 +1,10 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.api.vo.WarehouseCO;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -178,4 +181,17 @@ public interface WarehouseService {
      */
     void resetWarehousePickUpLimit(String warehouseCode, Long tenantId);
 
+    /**
+     * 仓库关联承运商
+     * @param queryDTO 查询条件
+     * @return list
+     */
+    List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO);
+
+    /**
+     * 仓库地址
+     * @param queryDTO 查询条件
+     * @return list
+     */
+    List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO);
 }

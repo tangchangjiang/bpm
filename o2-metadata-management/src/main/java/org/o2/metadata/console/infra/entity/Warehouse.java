@@ -162,6 +162,24 @@ public class Warehouse extends AuditDomain {
     private String warehouseStatus;
 
 
+    @Transient
+    private String countryCode;
+    @Transient
+    private String regionCode;
+    @Transient
+    private String cityCode;
+    @Transient
+    private String districtCode;
+    @Transient
+    private String streetName;
+    @Transient
+    private String contact;
+    @Transient
+    private String mobilePhone;
+    @Transient
+    private String phoneNumber;
+
+
     /**
      * 仓库分组
      * @param warehouses 仓库
