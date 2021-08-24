@@ -12,12 +12,15 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.WarehouseConverter;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
@@ -284,6 +287,16 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
         executeScript(warehouseCode, WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
 
+    }
+
+    @Override
+    public List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO) {
+        return warehouseRepository.listCarriers(queryDTO);
+    }
+
+    @Override
+    public List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO) {
+        return warehouseRepository.listWarehouseAddr(queryDTO);
     }
 
 

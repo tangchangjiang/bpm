@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.constant;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -128,6 +127,10 @@ public interface MetadataConstants {
         String EN_US = "en_US";
 
         String FILE_NAME = "country-region";
+
+        String LOV = "lov";
+
+        String LOV_FILE_NAME = "o2-public-lov";
 
     }
 
@@ -293,6 +296,7 @@ public interface MetadataConstants {
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
         }
+
     }
 
     /**
@@ -309,14 +313,18 @@ public interface MetadataConstants {
     interface MallLangPromptConstants{
         String LOV_CODE = "O2CMS.APPROVE_STATUS";
 
+        String UNAPPROVED = "UNAPPROVED";
+
         String MALL_LANG_LOCK_KEY = "o2md:mallLang:static:file:lock";
 
         String NAME = "mallLang";
 
-        String RESOURCE_CODE = "MALL_LANG_FILE";
-
         String DESCRIPTION = "o2md.mallLang.static_file_description";
 
         String LANG_LOV_CODE = "O2MD.LANGUAGE";
+
+        String RESOURCE_CODE = "O2MD_MALL_LANG_PROMPT";
+
+        int IMAGE_INTERCEPTION_MARK = 3;
     }
 }
