@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,15 +42,15 @@ public class OnlineShopRelWarehouseInternalController {
     @ApiOperation(value = "查询网店关联有效仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{onlineShopCode}")
-    public ResponseEntity<Map<String,OnlineShopRelWarehouseVO>> listOnlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                                            @PathVariable(value = "onlineShopCode") @ApiParam(value = "参数code", required = true) String onlineShopCode) {
-        List<OnlineShopRelWarehouseVO> systemParameterVOList = onlineShopRelWarehouseService.listOnlineShopRelWarehouses(onlineShopCode, organizationId);
-        Map<String, OnlineShopRelWarehouseVO> map = new HashMap<>(4);
+    public ResponseEntity<Map<String, OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                             @PathVariable(value = "onlineShopCode") @ApiParam(value = "参数code", required = true) String onlineShopCode) {
+        List<OnlineShopRelWarehouseCO> systemParameterVOList = onlineShopRelWarehouseService.listOnlineShopRelWarehouses(onlineShopCode, organizationId);
+        Map<String, OnlineShopRelWarehouseCO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
         }
-        for (OnlineShopRelWarehouseVO vo : systemParameterVOList) {
-            map.put(vo.getWarehouseCode(), vo);
+        for (OnlineShopRelWarehouseCO co : systemParameterVOList) {
+            map.put(co.getWarehouseCode(), co);
         }
         return Results.success(map);
     }

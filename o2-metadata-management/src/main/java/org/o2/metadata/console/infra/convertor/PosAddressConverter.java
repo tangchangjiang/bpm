@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
+import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.vo.PosAddressVO;
 import org.o2.metadata.console.infra.entity.PosAddress;
 
@@ -68,5 +69,49 @@ public class PosAddressConverter {
             posAddressVOList.add(poToVoObject(posAddress));
         }
         return posAddressVOList;
+    }
+
+    /**
+     * po 转 CO
+     * @date 2021-08-05
+     * @param posAddress 服务点地址
+     * @return  vo
+     */
+    private static PosAddressCO poToCoObject(PosAddress posAddress) {
+
+        if (posAddress == null) {
+            return null;
+        }
+        PosAddressCO co = new PosAddressCO();
+        co.setPosAddressId(posAddress.getPosAddressId());
+        co.setCountryCode(posAddress.getCountryCode());
+        co.setRegionCode(posAddress.getRegionCode());
+        co.setCityCode(posAddress.getCityCode());
+        co.setDistrictCode(posAddress.getDistrictCode());
+        co.setStreetName(posAddress.getStreetName());
+        co.setPhoneNumber(posAddress.getPhoneNumber());
+        co.setPostcode(posAddress.getPostcode());
+        co.setContact(posAddress.getContact());
+        co.setMobilePhone(posAddress.getMobilePhone());
+        co.setLongitude(posAddress.getLongitude());
+        co.setLatitude(posAddress.getLatitude());
+        co.setTenantId(posAddress.getTenantId());
+        return co;
+    }
+
+    /**
+     * PO 转 CO
+     * @param posAddressList 地址
+     * @return  list
+     */
+    public static List<PosAddressCO> poToCoListObjects(List<PosAddress> posAddressList) {
+        List<PosAddressCO> cos = new ArrayList<>();
+        if (posAddressList == null) {
+            return cos;
+        }
+        for (PosAddress posAddress : posAddressList) {
+            cos.add(poToCoObject(posAddress));
+        }
+        return cos;
     }
 }

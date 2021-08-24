@@ -8,7 +8,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.api.dto.PlatformDTO;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.http.ResponseEntity;

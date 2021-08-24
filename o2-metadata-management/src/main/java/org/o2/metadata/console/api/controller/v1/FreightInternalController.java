@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 
+import org.o2.metadata.console.api.co.FreightInfoCO;
+import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
-import org.o2.metadata.console.api.vo.FreightInfoVO;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class FreightInternalController {
     @ApiOperation(value = "查询模版信息")
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @PostMapping("/template")
-    public ResponseEntity<FreightInfoVO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody FreightDTO freight) {
+    public ResponseEntity<FreightInfoCO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody FreightDTO freight) {
         freight.setTenantId(organizationId);
         return Results.success(freightService.getFreightTemplate(freight));
     }
@@ -41,7 +41,7 @@ public class FreightInternalController {
     @ApiOperation(value = "查询默认模版信息")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/default")
-    public ResponseEntity<FreightTemplateVO> getDefaultTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<FreightTemplateCO> getDefaultTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId) {
         return Results.success(freightService.getDefaultTemplate(organizationId));
     }
 }

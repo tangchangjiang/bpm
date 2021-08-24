@@ -5,14 +5,14 @@ import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.metadata.console.api.co.FreightInfoCO;
+import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
-import org.o2.metadata.console.api.vo.FreightInfoVO;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
+import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.app.bo.FreightBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
@@ -25,7 +25,6 @@ import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.o2.product.management.client.O2ProductClient;
 import org.springframework.stereotype.Service;
@@ -117,13 +116,13 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightInfoVO getFreightTemplate(FreightDTO freight) {
-        return FreightConverter.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
+    public FreightInfoCO getFreightTemplate(FreightDTO freight) {
+        return FreightConverter.doToCoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
     }
 
     @Override
-    public FreightTemplateVO getDefaultTemplate(Long organizationId) {
-        return  FreightConverter.poToVoObject(freightTemplateRepository.getDefaultTemplate(organizationId));
+    public FreightTemplateCO getDefaultTemplate(Long organizationId) {
+        return  FreightConverter.poToCoObject(freightTemplateRepository.getDefaultTemplate(organizationId));
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {

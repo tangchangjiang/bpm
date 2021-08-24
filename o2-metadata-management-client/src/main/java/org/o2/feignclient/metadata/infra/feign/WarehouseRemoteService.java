@@ -25,13 +25,13 @@ public interface WarehouseRemoteService {
     /**
      * 从redis查询系统仓库
      *
-     * @param warehouseCodes 仓库编码
+     * @param innerDTO 入参
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/warehouse-internal/list")
-    ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                           @RequestParam(value = "warehouseCodes",required = false) List<String> warehouseCodes);
+    @PostMapping("/{organizationId}/warehouse-internal/list")
+    ResponseEntity<String>  listWarehouses(@RequestBody WarehouseQueryInnerDTO innerDTO,
+                                           @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 保存仓库快递配送接单量限制

@@ -10,7 +10,7 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.CountryDTO;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.CountryVO;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.convertor.CountryConverter;
 import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.springframework.http.ResponseEntity;

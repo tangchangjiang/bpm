@@ -1,9 +1,9 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.FreightInfoCO;
+import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
-import org.o2.metadata.console.api.vo.FreightInfoVO;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
-import org.o2.metadata.console.api.vo.FreightTemplateVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
@@ -119,12 +119,12 @@ public interface FreightTemplateService {
      * @param  freight  运费参数
      * @return 模版信息
      */
-    FreightInfoVO getFreightTemplate(FreightDTO freight);
+    FreightInfoCO getFreightTemplate(FreightDTO freight);
 
     /**
      * 默认模版信息
      * @param  organizationId 租户ID
      * @return  默认模版信息
      */
-    FreightTemplateVO getDefaultTemplate(Long organizationId);
+    FreightTemplateCO getDefaultTemplate(Long organizationId);
 }

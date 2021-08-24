@@ -1,6 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.domain.onlineshop.domain.OnlineShopRelWarehouseDO;
 
@@ -40,41 +40,41 @@ public class OnlineShopRelWarehouseConverter {
     }
 
     /**
-     * do 转 vo
+     * do 转 Co
      * @param  warehouseDO 网店关联仓库
-     * @return vo
+     * @return CO
      */
-    private static OnlineShopRelWarehouseVO doToVoObject(OnlineShopRelWarehouseDO warehouseDO) {
+    private static OnlineShopRelWarehouseCO doToCoObject(OnlineShopRelWarehouseDO warehouseDO) {
 
         if (warehouseDO == null) {
             return null;
         }
-        OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
-        onlineShopRelWarehouseVO.setOnlineShopRelWarehouseId(warehouseDO.getOnlineShopRelWarehouseId());
-        onlineShopRelWarehouseVO.setOnlineShopId(warehouseDO.getOnlineShopId());
-        onlineShopRelWarehouseVO.setPosId(warehouseDO.getPosId());
-        onlineShopRelWarehouseVO.setWarehouseId(warehouseDO.getWarehouseId());
-        onlineShopRelWarehouseVO.setActiveFlag(warehouseDO.getActiveFlag());
-        onlineShopRelWarehouseVO.setBusinessActiveFlag(warehouseDO.getBusinessActiveFlag());
-        onlineShopRelWarehouseVO.setTenantId(warehouseDO.getTenantId());
-        onlineShopRelWarehouseVO.setWarehouseCode(warehouseDO.getWarehouseCode());
-        return onlineShopRelWarehouseVO;
+        OnlineShopRelWarehouseCO co = new OnlineShopRelWarehouseCO();
+        co.setOnlineShopRelWarehouseId(warehouseDO.getOnlineShopRelWarehouseId());
+        co.setOnlineShopId(warehouseDO.getOnlineShopId());
+        co.setPosId(warehouseDO.getPosId());
+        co.setWarehouseId(warehouseDO.getWarehouseId());
+        co.setActiveFlag(warehouseDO.getActiveFlag());
+        co.setBusinessActiveFlag(warehouseDO.getBusinessActiveFlag());
+        co.setTenantId(warehouseDO.getTenantId());
+        co.setWarehouseCode(warehouseDO.getWarehouseCode());
+        return co;
     }
 
     /**
-     * DO 转 VO
+     * DO 转 CO
      * @param onlineShopRelWarehouseDOList 网店关联仓库集合
      * @return list
      */
-    public static List<OnlineShopRelWarehouseVO> doToVoListObjects(List<OnlineShopRelWarehouseDO> onlineShopRelWarehouseDOList) {
-        List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
+    public static List<OnlineShopRelWarehouseCO> doToCoListObjects(List<OnlineShopRelWarehouseDO> onlineShopRelWarehouseDOList) {
+        List<OnlineShopRelWarehouseCO> cos = new ArrayList<>();
         if (onlineShopRelWarehouseDOList == null) {
-            return onlineShopRelWarehouseVOList;
+            return cos;
         }
         for (OnlineShopRelWarehouseDO onlineShopRelWarehouseDO : onlineShopRelWarehouseDOList) {
-            onlineShopRelWarehouseVOList.add(doToVoObject(onlineShopRelWarehouseDO));
+            cos.add(doToCoObject(onlineShopRelWarehouseDO));
         }
-        return onlineShopRelWarehouseVOList;
+        return cos;
     }
 
     /**

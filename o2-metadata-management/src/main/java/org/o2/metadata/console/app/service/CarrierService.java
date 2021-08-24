@@ -3,7 +3,7 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.api.vo.CarrierVO;
+import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.infra.entity.Carrier;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public interface CarrierService {
      * @param organizationId 租户ID
      * @return map
      */
-    Map<String, CarrierVO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId);
+    Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId);
 
     /**
      * 批量查询承运商匹配规则

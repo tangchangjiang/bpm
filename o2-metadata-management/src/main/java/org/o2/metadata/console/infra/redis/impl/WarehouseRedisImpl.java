@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
