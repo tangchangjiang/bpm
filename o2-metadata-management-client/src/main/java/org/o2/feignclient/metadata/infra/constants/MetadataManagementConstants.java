@@ -18,10 +18,17 @@ public interface MetadataManagementConstants {
          * 元数据 - 地区数据文件
          */
         String O2MD_REGION = "O2MD_REGION";
+
+        /**
+         * 元数据 - 商城端公共的Lov值集
+         */
+        String O2MD_PUBLIC_LOV = "O2MD_PUB_LOV";
+
         /**
          * 商品 - 类别文件
          */
         String O2PCM_CATEGORY = "O2PCM_CATEGORY";
+
         /**
          * CMS - CMS页面装修
          */
@@ -31,6 +38,7 @@ public interface MetadataManagementConstants {
          * CMS - site站点配置文件
          */
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
+
 
         /**
          * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
@@ -45,7 +53,7 @@ public interface MetadataManagementConstants {
         /**
          * 构造CMS站点site配置文件资源编码
          *
-         * @param siteCode     站点编码
+         * @param siteCode 站点编码
          * @return CMS配置文件资源编码
          */
         static String buildCmsSiteResourceCode(String siteCode) {
