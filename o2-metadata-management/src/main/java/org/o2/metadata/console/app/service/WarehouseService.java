@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.api.vo.WarehouseCO;
@@ -182,9 +183,15 @@ public interface WarehouseService {
 
     /**
      * 仓库关联承运商
-     * @date 2021-08-24
      * @param queryDTO 查询条件
      * @return list
      */
     List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO);
+
+    /**
+     * 仓库地址
+     * @param queryDTO 查询条件
+     * @return list
+     */
+    List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO);
 }
