@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 
 import java.util.List;
@@ -19,4 +20,11 @@ public interface CatalogVersionRepository extends BaseRepository<CatalogVersion>
      * @return 目录版本
      */
     List<CatalogVersion> batchSelectByCodes(List<String> catalogVersionCodes, Long organizationId);
+
+    /**
+     * 查询目录&目录版本
+     * @param queryDTO 入参
+     * @return  list
+     */
+    List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
 }

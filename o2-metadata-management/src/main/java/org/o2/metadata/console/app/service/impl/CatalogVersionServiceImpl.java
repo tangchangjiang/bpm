@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -79,5 +80,10 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         }
 
         return map;
+    }
+
+    @Override
+    public List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO) {
+        return catalogVersionRepository.catalogRelVersion(queryDTO);
     }
 }

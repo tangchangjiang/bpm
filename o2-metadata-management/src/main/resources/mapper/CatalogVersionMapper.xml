@@ -41,4 +41,51 @@
 
         AND t.lang =#{lang}
     </select>
+    <select id="catalogRelVersion" resultType="org.o2.metadata.console.infra.entity.CatalogVersion">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        cl.catalog_id,
+        cl.catalog_code,
+        cltl.catalog_name,
+        cltl.catalog_remarks,
+        clv.catalog_version_id,
+        clv.catalog_version_code,
+        clvtl.catalog_version_name,
+        clvtl.catalog_version_remarks
+        FROM
+        o2md_catalog_version AS clv
+        JOIN o2md_catalog AS cl ON clv.catalog_id = cl.catalog_id
+        LEFT JOIN o2md_catalog_version_tl AS clvtl ON clv.catalog_version_id = clvtl.catalog_version_id AND clvtl.lang = #{lang}
+        LEFT JOIN o2md_catalog_tl AS cltl ON cl.catalog_id = cltl.catalog_id AND cltl.lang= #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND clv.tenant_id = #{tenantId} and cl.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND clv.tenant_id =0 and cl.tenant_id = 0
+                </otherwise>
+            </choose>
+            <if test="catalogId != null and catalogId != ''">
+                AND cl.catalog_id = #{catalogId}
+            </if>
+            <if test="catalogVersionId != null and catalogVersionId != ''">
+                AND clv.catalog_version_id = #{catalogVersionId}
+            </if>
+            <if test="catalogCode != null and catalogCode != ''">
+                AND cl.catalog_code = #{catalogCode}
+            </if>
+            <if test="containMasterFlag ==0 ">
+                AND cl.catalog_code <![CDATA[ <> ]]> 'MASTER'
+            </if>
+            <if test="catalogVersionCode != null and catalogVersionCode!= ''">
+                <bind name="catalogVersionCode" value="'%' + catalogVersionCode + '%'"/>
+                AND clv.catalog_version_code like #{catalogVersionCode}
+            </if>
+            <if test="catalogVersionName != null and catalogVersionName!= ''">
+                <bind name="catalogVersionName" value="'%' + catalogVersionName + '%'"/>
+                AND clvtl.catalog_version_name like #{catalogVersionName}
+            </if>
+        </where>
+    </select>
 </mapper>

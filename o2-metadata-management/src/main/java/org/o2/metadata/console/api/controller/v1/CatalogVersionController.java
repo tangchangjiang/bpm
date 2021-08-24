@@ -3,6 +3,7 @@ package org.o2.metadata.console.api.controller.v1;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
@@ -90,6 +92,18 @@ public class CatalogVersionController extends BaseController {
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.deleteByPrimaryKey(catalogVersion);
         return Results.success();
+    }
+
+    @ApiOperation(value = "目录&目录版本")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/catalog-version")
+    public ResponseEntity<Page<CatalogVersion>> catalogRelVersion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogRelVersionQueryDTO queryDTO,
+                                                            @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
+            direction = Sort.Direction.DESC) PageRequest pageRequest) {
+          queryDTO.setTenantId(organizationId);
+        final Page<CatalogVersion> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+                () -> catalogVersionService.catalogRelVersion(queryDTO));
+        return Results.success(list);
     }
 
 }

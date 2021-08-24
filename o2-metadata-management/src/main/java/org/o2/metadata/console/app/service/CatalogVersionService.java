@@ -1,8 +1,10 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +33,11 @@ public interface CatalogVersionService {
      * @return map
      */
     Map<String,String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long organizationId);
+
+    /**
+     * 查询目录&目录版本
+     * @param queryDTO 入参
+     * @return  list
+     */
+    List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
 }
