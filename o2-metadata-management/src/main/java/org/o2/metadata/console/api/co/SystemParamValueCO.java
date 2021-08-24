@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.console.api.co;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2020/6/10 14:57
  **/
 @Data
-public class SystemParamValueVO {
+public class SystemParamValueCO {
 
     private String paramValue;
 

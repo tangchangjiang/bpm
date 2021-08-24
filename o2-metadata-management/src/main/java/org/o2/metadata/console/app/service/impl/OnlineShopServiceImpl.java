@@ -7,9 +7,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
+import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -108,57 +108,57 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
-        Map<String,OnlineShopVO> map = new HashMap<>(16);
-       List<OnlineShopVO> voList =  OnlineShopConverter.poToVoListObjects(onlineShopRedis.select(onlineShopQueryInnerDTO,tenantId));
+    public Map<String,OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+        Map<String, OnlineShopCO> map = new HashMap<>(16);
+       List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRedis.select(onlineShopQueryInnerDTO,tenantId));
         if (voList.isEmpty()) {
            return map;
         }
         // 全部网店
         if (null == onlineShopQueryInnerDTO) {
-            for (OnlineShopVO vo : voList) {
-                map.put(vo.getOnlineShopCode(),vo);
+            for (OnlineShopCO co : voList) {
+                map.put(co.getOnlineShopCode(),co);
             }
             return  map;
         }
         // 编码查询
         if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
-            for (OnlineShopVO vo : voList) {
-                map.put(vo.getOnlineShopCode(),vo);
+            for (OnlineShopCO co : voList) {
+                map.put(co.getOnlineShopCode(),co);
             }
             return  map;
         }
         // 名称查询
         if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopNames())) {
-            for (OnlineShopVO vo : voList) {
-                map.put(vo.getOnlineShopName(),vo);
+            for (OnlineShopCO co : voList) {
+                map.put(co.getOnlineShopName(),co);
             }
             return  map;
         }
 
-        for (OnlineShopVO vo : voList) {
-            map.put(vo.getOnlineShopCode(),vo);
+        for (OnlineShopCO co : voList) {
+            map.put(co.getOnlineShopCode(),co);
         }
         return  map;
     }
 
     @Override
-    public Map<String, List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
-        Map<String,List<OnlineShopVO>> map = new HashMap<>(16);
-        List<OnlineShopVO> voList = OnlineShopConverter.poToVoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList,tenantId));
+    public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
+        Map<String,List<OnlineShopCO>> map = new HashMap<>(16);
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList,tenantId));
         if (voList.isEmpty()) {
             return map;
         }
-        for (OnlineShopVO vo : voList) {
-            String key = vo.getCatalogCode() + "-" + vo.getCatalogVersionCode();
-            List<OnlineShopVO> list = map.getOrDefault(key,new ArrayList<>());
+        for (OnlineShopCO co : voList) {
+            String key = co.getCatalogCode() + "-" + co.getCatalogVersionCode();
+            List<OnlineShopCO> list = map.getOrDefault(key,new ArrayList<>());
             if (list.isEmpty()) {
-                List<OnlineShopVO> onlineShops = new ArrayList<>();
-                onlineShops.add(vo);
+                List<OnlineShopCO> onlineShops = new ArrayList<>();
+                onlineShops.add(co);
                 map.put(key,onlineShops);
                 continue;
             }
-            list.add(vo);
+            list.add(co);
             map.put(key,list);
         }
         return map;

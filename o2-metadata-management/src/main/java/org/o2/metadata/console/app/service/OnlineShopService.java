@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public interface OnlineShopService {
      * @param tenantId 租户ID
      * @return list
      */
-    Map<String,OnlineShopVO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
+    Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
     /**
      * 目录版本+目录 批量查询网店
@@ -40,5 +40,5 @@ public interface OnlineShopService {
      * @param tenantId 租户id
      * @return list
      */
-    Map<String,List<OnlineShopVO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId);
+    Map<String,List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId);
 }

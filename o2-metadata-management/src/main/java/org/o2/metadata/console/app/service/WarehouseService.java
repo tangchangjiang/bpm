@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
-import org.o2.metadata.console.api.vo.WarehouseVO;
+import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public interface WarehouseService {
      * @param  tenantId 租户ID
      * @return 仓库
      */
-    List<WarehouseVO> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId);
+    List<WarehouseCO> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId);
 
 
     /**
@@ -177,12 +177,5 @@ public interface WarehouseService {
      * @param warehouseCode 仓库编码
      */
     void resetWarehousePickUpLimit(String warehouseCode, Long tenantId);
-    
-    /**
-     * 查询有效的仓库
-     * @param onlineShopCode 网店编码
-     * @param organizationId 租户ID
-     * @return list
-     */
-    List<WarehouseVO> listActiveWarehouses(String onlineShopCode, Long organizationId);
+
 }

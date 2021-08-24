@@ -1,15 +1,15 @@
 package org.o2.metadata.console.app.service.impl;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.metadata.console.api.co.ResponseCO;
+import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
-import org.o2.metadata.console.api.vo.ResponseVO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
-
-import org.o2.metadata.console.api.vo.SystemParameterVO;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -18,13 +18,10 @@ import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author yong.nie@hand-china.com
@@ -51,14 +48,14 @@ public class SysParamServiceImpl implements SysParamService {
 
 
     @Override
-    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
+    public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO = systemParameterDomainService.getSystemParameter(paramCode, tenantId);
-        return SysParameterConverter.doToVoObject(systemParameterDO);
+        return SysParameterConverter.doToCoObject(systemParameterDO);
     }
 
     @Override
-    public List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return SysParameterConverter.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, tenantId));
+    public List<SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return SysParameterConverter.doToCoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, tenantId));
     }
 
     @Override
@@ -78,15 +75,15 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseVO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
-        ResponseVO vo = new ResponseVO();
+    public ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
+        ResponseCO co = new ResponseCO();
         SystemParameter  select = new SystemParameter();
         select.setParamCode(systemParameterQueryInnerDTO.getParamCode());
         select.setTenantId(tenantId);
         List<SystemParameter>  systemParameterList = systemParameterRepository.select(select);
         if (CollectionUtils.isEmpty(systemParameterList) || systemParameterList.size() > 1) {
-            vo.setSuccess(BaseConstants.FIELD_FAILED);
-            return vo;
+            co.setSuccess(BaseConstants.FIELD_FAILED);
+            return co;
         }
 
         SystemParameter systemParameter = systemParameterList.get(0);
@@ -95,8 +92,8 @@ public class SysParamServiceImpl implements SysParamService {
         selectValue.setTenantId(tenantId);
         List<SystemParamValue> systemParamValueList =  systemParamValueRepository.select(selectValue);
         if (CollectionUtils.isEmpty(systemParamValueList)) {
-            vo.setSuccess(BaseConstants.FIELD_FAILED);
-            return vo;
+            co.setSuccess(BaseConstants.FIELD_FAILED);
+            return co;
         }
 
         Map<String,String> map = systemParameterQueryInnerDTO.getHashMap();
@@ -110,8 +107,8 @@ public class SysParamServiceImpl implements SysParamService {
 
         systemParamValueRepository.batchUpdateByPrimaryKeySelective(systemParamValueList);
         systemParameterRedis.updateToRedis(systemParameter,tenantId);
-        vo.setSuccess(BaseConstants.FIELD_SUCCESS);
-        return vo;
+        co.setSuccess(BaseConstants.FIELD_SUCCESS);
+        return co;
     }
 
 }

@@ -1,9 +1,9 @@
 package org.o2.metadata.console.infra.repository.impl;
 
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.core.helper.FastJsonHelper;
+import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Region;
@@ -22,11 +22,11 @@ import java.util.*;
 @Component
 public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements RegionRepository {
     private final RegionMapper regionMapper;
-    private final LovAdapter lovAdapter;
+    private final HzeroLovQueryService hzeroLovQueryService;
 
-    public RegionRepositoryImpl(final RegionMapper regionMapper, LovAdapter lovAdapter) {
+    public RegionRepositoryImpl(final RegionMapper regionMapper, HzeroLovQueryService hzeroLovQueryService) {
         this.regionMapper = regionMapper;
-        this.lovAdapter = lovAdapter;
+        this.hzeroLovQueryService = hzeroLovQueryService;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
             queryParams.put(RegionConstants.RegionLov.LANG.getCode(),regionQueryLov.getLang());
         }
 
-        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.REGION_LOV_CODE.getCode(),tenantId, null,  BaseConstants.PAGE_NUM, null , queryParams);
+        List<Map<String,Object>> list = hzeroLovQueryService.queryLovValueMeaning(tenantId,RegionConstants.RegionLov.REGION_LOV_CODE.getCode(), queryParams);
         if (list.isEmpty()){
             return regionList;
         }

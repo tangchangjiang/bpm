@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShop-list")
-    public ResponseEntity<Map<String, OnlineShopVO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO, organizationId));
     }
@@ -48,7 +48,7 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "目录+目录版本批量查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShops")
-    public ResponseEntity<Map<String, List<OnlineShopVO>>> listOnlineShopList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, List<OnlineShopCO>>> listOnlineShopList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody List<OnlineShopCatalogVersionDTO> onlineShopDTO) {
         return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
     }

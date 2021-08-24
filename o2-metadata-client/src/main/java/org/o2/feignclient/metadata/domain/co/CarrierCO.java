@@ -1,4 +1,4 @@
-package org.o2.metadata.api.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
 @Data
-public class CarrierVO {
+public class CarrierCO {
     private String carrierCode;
     private String carrierName;
     private String carrierTypeCode;

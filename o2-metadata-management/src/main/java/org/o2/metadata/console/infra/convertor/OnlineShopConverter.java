@@ -1,6 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
-import org.o2.metadata.console.api.vo.OnlineShopVO;
+import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
@@ -18,41 +18,41 @@ public class OnlineShopConverter {
     private OnlineShopConverter() {
     }
     /**
-     * po->vo
+     * po->CO
      * @param onlineShop 网店
      * @return  vo
      */
-    public static OnlineShopVO poToVoObject(OnlineShop onlineShop) {
+    public static OnlineShopCO poToVoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
         }
-        OnlineShopVO onlineShopVO = new OnlineShopVO();
-        onlineShopVO.setOnlineShopId(onlineShop.getOnlineShopId());
-        onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
-        onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
-        onlineShopVO.setCatalogCode(onlineShop.getCatalogCode());
-        onlineShopVO.setPlatformCode(onlineShop.getPlatformCode());
-        onlineShopVO.setPlatformShopCode(onlineShop.getPlatformShopCode());
-        onlineShopVO.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
-        onlineShopVO.setActiveFlag(onlineShop.getActiveFlag());
-        return onlineShopVO;
+        OnlineShopCO co = new OnlineShopCO();
+        co.setOnlineShopId(onlineShop.getOnlineShopId());
+        co.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        co.setOnlineShopName(onlineShop.getOnlineShopName());
+        co.setCatalogCode(onlineShop.getCatalogCode());
+        co.setPlatformCode(onlineShop.getPlatformCode());
+        co.setPlatformShopCode(onlineShop.getPlatformShopCode());
+        co.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
+        co.setActiveFlag(onlineShop.getActiveFlag());
+        return co;
     }
 
     /**
-     * PO 转 VO
+     * PO 转 CO
      * @param onlineShopList 网店
      * @return  list
      */
-    public static List<OnlineShopVO> poToVoListObjects(List<OnlineShop> onlineShopList) {
-        List<OnlineShopVO> onlineShopVOList = new ArrayList<>();
+    public static List<OnlineShopCO> poToCoListObjects(List<OnlineShop> onlineShopList) {
+        List<OnlineShopCO> cos = new ArrayList<>();
         if (onlineShopList == null) {
-            return onlineShopVOList;
+            return cos;
         }
         for (OnlineShop onlineShop : onlineShopList) {
-            onlineShopVOList.add(poToVoObject(onlineShop));
+            cos.add(poToVoObject(onlineShop));
         }
-        return onlineShopVOList;
+        return cos;
     }
 
 

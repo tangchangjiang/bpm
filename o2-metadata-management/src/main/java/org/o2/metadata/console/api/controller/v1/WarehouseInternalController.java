@@ -1,13 +1,12 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import com.google.common.collect.Maps;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
-import org.o2.metadata.console.api.vo.WarehouseVO;
+import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,28 +32,18 @@ public class WarehouseInternalController {
 
     @ApiOperation(value = "查询仓库")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/list")
-    public ResponseEntity<Map<String, WarehouseVO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                   @RequestParam (required = false) List<String> warehouseCodes) {
-        Map<String,WarehouseVO> map = new HashMap<>(16);
-        WarehouseQueryInnerDTO queryInnerDTO = new WarehouseQueryInnerDTO();
-        queryInnerDTO.setWarehouseCodes(warehouseCodes);
-        List<WarehouseVO> vos = warehouseService.listWarehouses(queryInnerDTO, organizationId);
-        if (vos.isEmpty()){
+    @PostMapping("/list")
+    public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestBody WarehouseQueryInnerDTO queryInnerDTO) {
+        Map<String, WarehouseCO> map = new HashMap<>(16);
+        List<WarehouseCO> cos = warehouseService.listWarehouses(queryInnerDTO, organizationId);
+        if (cos.isEmpty()){
           return Results.success(map);
         }
-        for (WarehouseVO warehouseVO : vos) {
-            map.put(warehouseVO.getWarehouseCode(), warehouseVO);
+        for (WarehouseCO co : cos) {
+            map.put(co.getWarehouseCode(), co);
         }
         return  Results.success(map);
-    }
-
-    @ApiOperation(value = "查询有效仓库")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/active/{onlineShopCode}")
-    public ResponseEntity<List<WarehouseVO>> listActiveWarehouse(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                 @PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode) {
-        return Results.success(warehouseService.listActiveWarehouses(onlineShopCode, organizationId));
     }
 
     @ApiOperation("保存仓库快递配送接单量限制(内部调用)")

@@ -3,15 +3,13 @@ package org.o2.feignclient;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.hzero.core.util.ResponseUtils;
+import org.o2.feignclient.metadata.domain.co.CarrierCO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
 import org.o2.feignclient.metadata.domain.vo.OnlineShopVO;
 import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
 import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
-import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
-import org.o2.feignclient.metadata.infra.feign.OnlineShopRemoteService;
-import org.o2.feignclient.metadata.infra.feign.SysParameterRemoteService;
-import org.o2.feignclient.metadata.infra.feign.WarehouseRemoteService;
+import org.o2.feignclient.metadata.infra.feign.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,14 +23,18 @@ public class O2MetadataClient {
     private final WarehouseRemoteService warehouseRemoteService;
     private final FreightRemoteService freightRemoteService;
     private final OnlineShopRemoteService onlineShopRemoteService;
+    private final CarrierRemoteService carrierRemoteService;
 
     public O2MetadataClient(SysParameterRemoteService sysParameterRemoteService,
                             WarehouseRemoteService warehouseRemoteService,
-                            FreightRemoteService freightRemoteService, OnlineShopRemoteService onlineShopRemoteService) {
+                            FreightRemoteService freightRemoteService,
+                            OnlineShopRemoteService onlineShopRemoteService,
+                            CarrierRemoteService carrierRemoteService) {
         this.sysParameterRemoteService = sysParameterRemoteService;
         this.warehouseRemoteService = warehouseRemoteService;
         this.freightRemoteService = freightRemoteService;
         this.onlineShopRemoteService = onlineShopRemoteService;
+        this.carrierRemoteService = carrierRemoteService;
     }
 
     /**
@@ -93,5 +95,15 @@ public class O2MetadataClient {
      */
     public OnlineShopVO getOnlineShop(String onlineShopCode) {
        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode),OnlineShopVO.class);
+    }
+
+    /**
+     * 查询承运商
+     * @param organizationId 租户id
+     * @return  list
+     */
+    public List<CarrierCO> listCarriers(final Long organizationId){
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(organizationId),  new TypeReference<List<CarrierCO>>() {
+        });
     }
 }
