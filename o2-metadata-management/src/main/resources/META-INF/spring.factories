@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.console.config.MetadataManagementAutoConfiguration
+org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration

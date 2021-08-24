@@ -37,7 +37,7 @@ public interface CarrierConstants {
         /**
          * redis key(hash): o2md:carrier:{tenantId}
          */
-        String CARRIER_KEY = "o2md:carrier:%s:";
+        String CARRIER_KEY = "o2md:carrier:%s:all";
         /**
          * GetFreightDefaultKey
          *
