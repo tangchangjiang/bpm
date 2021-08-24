@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
         import io.choerodon.mybatis.common.BaseMapper;
         import org.apache.ibatis.annotations.Param;
+        import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
         import org.o2.metadata.console.infra.entity.CatalogVersion;
 
         import java.util.List;
@@ -21,4 +22,11 @@ public interface CatalogVersionMapper extends BaseMapper<CatalogVersion> {
      */
     List<CatalogVersion> batchSelectByCodes(@Param(value = "catalogVersionCodes") List<String> catalogVersionCodes,
                                             @Param("tenantId") Long tenantId);
+
+    /**
+     * 查询目录&目录版本
+     * @param queryDTO 入参
+     * @return  list
+     */
+    List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
 }
