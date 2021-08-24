@@ -26,17 +26,18 @@ public enum RegionConstants {
         ADDRESS_TYPE("addressType",""),
         REGION_CODE("regionCode",""),
         REGION_IDS("regionIds",""),
-        PARENT_REGION_ID("parentRegionId",""),
-        PARENT_REGION_CODE("parentRegionCode",""),
-        NOT_IN_REGION_CODE("notInRegionCodes",""),
-        PARENT_REGION_IDS("parentRegionIds",""),
-        PARENT_REGION_CODES("parentRegionCodes",""),
-        ENABLED_FLAG("enabledFlag",""),
-        COUNTRY_CODE("countryCode",""),
-        TENANT_ID("tenantId",""),
-        LANG("lang",""),
-        DEFAULT_CODE("-1",""),
-        DEFAULT_DATA("region","");
+        PARENT_REGION_ID("parentRegionId", ""),
+        PARENT_REGION_CODE("parentRegionCode", ""),
+        NOT_IN_REGION_CODE("notInRegionCodes", ""),
+        PARENT_REGION_IDS("parentRegionIds", ""),
+        PARENT_REGION_CODES("parentRegionCodes", ""),
+        ENABLED_FLAG("enabledFlag", ""),
+        COUNTRY_CODE("countryCode", ""),
+        TENANT_ID("tenantId", ""),
+        LANG("lang", ""),
+        DEFAULT_CODE("-1", ""),
+        DEFAULT_DATA("region", ""),
+        PUBLIC_LOV("O2MD.PUBLIC_LOV", "");
 
 
         private String code;
