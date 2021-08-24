@@ -288,7 +288,7 @@ public interface MetadataConstants {
         /**
          * 元数据 - 值集数据文件
          */
-        String O2MD_PUB_LOV_DESCRIPTION = "值集数据文件";
+        String LOV_DESCRIPTION = "值集数据文件";
 
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
