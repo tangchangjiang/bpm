@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.console.api.co;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author yipeng.zhu@hand-china.com 2021-07-30
  **/
 @Data
-public class CatalogVersionVO {
+public class CatalogVersionCO {
     @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
 

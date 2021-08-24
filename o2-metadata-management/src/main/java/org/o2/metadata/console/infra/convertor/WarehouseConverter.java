@@ -1,6 +1,6 @@
 package org.o2.metadata.console.infra.convertor;
 
-import org.o2.metadata.console.api.vo.WarehouseVO;
+import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 
@@ -53,16 +53,16 @@ public class WarehouseConverter {
         return warehouseDO;
     }
    /**
-    * do 转 vo
+    * do 转 CO
     * @param warehouse 仓库
-    * @return vo
+    * @return CO
     */
-    private static WarehouseVO doToVoObject(WarehouseDO warehouse) {
+    private static WarehouseCO doToCoObject(WarehouseDO warehouse) {
 
         if (warehouse == null) {
             return null;
         }
-        WarehouseVO warehouseVO = new WarehouseVO();
+        WarehouseCO warehouseVO = new WarehouseCO();
         warehouseVO.setWarehouseId(warehouse.getWarehouseId());
         warehouseVO.setPosId(warehouse.getPosId());
         warehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
@@ -87,12 +87,12 @@ public class WarehouseConverter {
         warehouseVO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseVO;
     }
-    public static WarehouseVO poToVoObject(Warehouse warehouse) {
+    public static WarehouseCO poToVoObject(Warehouse warehouse) {
 
         if (warehouse == null) {
             return null;
         }
-        WarehouseVO warehouseVO = new WarehouseVO();
+        WarehouseCO warehouseVO = new WarehouseCO();
         warehouseVO.setWarehouseId(warehouse.getWarehouseId());
         warehouseVO.setPosId(warehouse.getPosId());
         warehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
@@ -123,8 +123,8 @@ public class WarehouseConverter {
      * @param warehouses 仓库
      * @return  list
      */
-    public static List<WarehouseVO> poToVoListObjects(List<Warehouse> warehouses) {
-        List<WarehouseVO> warehouseVOList = new ArrayList<>();
+    public static List<WarehouseCO> poToVoListObjects(List<Warehouse> warehouses) {
+        List<WarehouseCO> warehouseVOList = new ArrayList<>();
         if (warehouses == null) {
             return warehouseVOList;
         }
@@ -151,18 +151,70 @@ public class WarehouseConverter {
     }
 
     /**
-     * DO 转 VO
+     * DO 转 CO
      * @param warehouses 仓库
      * @return  list
      */
-    public static List<WarehouseVO> doToVoListObjects(List<WarehouseDO> warehouses) {
-        List<WarehouseVO> warehouseVOList = new ArrayList<>();
+    public static List<WarehouseCO> doToCoListObjects(List<WarehouseDO> warehouses) {
+        List<WarehouseCO> warehouseVOList = new ArrayList<>();
         if (warehouses == null) {
             return warehouseVOList;
         }
         for (WarehouseDO warehouse : warehouses) {
-            warehouseVOList.add(doToVoObject(warehouse));
+            warehouseVOList.add(doToCoObject(warehouse));
         }
         return warehouseVOList;
+    }
+    /**
+     * PO 转 CO
+     * @param warehouses 仓库
+     * @return  list
+     */
+    public static List<WarehouseCO> poToCoListObjects(List<Warehouse> warehouses) {
+        List<WarehouseCO> cos = new ArrayList<>();
+        if (warehouses == null) {
+            return cos;
+        }
+        for (Warehouse warehouse : warehouses) {
+            cos.add(poToCoObject(warehouse));
+        }
+        return cos;
+    }
+
+    /**
+     * PO 转 CO
+     * @param warehouse 仓库
+     * @return  co
+     */
+    private static WarehouseCO poToCoObject(Warehouse warehouse) {
+
+        if (warehouse == null) {
+            return null;
+        }
+        WarehouseCO warehouseCO = new WarehouseCO();
+        warehouseCO.setWarehouseId(warehouse.getWarehouseId());
+        warehouseCO.setPosId(warehouse.getPosId());
+        warehouseCO.setWarehouseCode(warehouse.getWarehouseCode());
+        warehouseCO.setWarehouseName(warehouse.getWarehouseName());
+        warehouseCO.setWarehouseStatusCode(warehouse.getWarehouseStatusCode());
+        warehouseCO.setWarehouseTypeCode(warehouse.getWarehouseTypeCode());
+        warehouseCO.setPickUpQuantity(warehouse.getPickUpQuantity());
+        warehouseCO.setExpressedQuantity(warehouse.getExpressedQuantity());
+        warehouseCO.setPickedUpFlag(warehouse.getPickedUpFlag());
+        warehouseCO.setExpressedFlag(warehouse.getExpressedFlag());
+        warehouseCO.setScore(warehouse.getScore());
+        warehouseCO.setActivedDateFrom(warehouse.getActivedDateFrom());
+        warehouseCO.setActivedDateTo(warehouse.getActivedDateTo());
+        warehouseCO.setInvOrganizationCode(warehouse.getInvOrganizationCode());
+        warehouseCO.setTenantId(warehouse.getTenantId());
+        warehouseCO.setActiveFlag(warehouse.getActiveFlag());
+        warehouseCO.setPosCode(warehouse.getPosCode());
+        warehouseCO.setPosName(warehouse.getPosName());
+        warehouseCO.setWarehouseStatusMeaning(warehouse.getWarehouseStatusMeaning());
+        warehouseCO.setWarehouseTypeMeaning(warehouse.getWarehouseTypeMeaning());
+        warehouseCO.setExpressLimitValue(warehouse.getExpressLimitValue());
+        warehouseCO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        warehouseCO.setWarehouseStatus(warehouse.getWarehouseStatus());
+        return warehouseCO;
     }
 }

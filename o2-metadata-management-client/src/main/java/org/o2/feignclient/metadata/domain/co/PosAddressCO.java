@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Data
 @ApiModel("详细地址")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PosAddressVO {
+public class PosAddressCO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
 

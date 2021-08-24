@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.metadata.api.vo.CarrierVO;
+import org.o2.metadata.api.co.CarrierCO;
 
 import java.util.List;
 
@@ -16,6 +16,6 @@ public interface CarrierService {
      * @param tenantId 租户id
      * @return  list
      */
-    List<CarrierVO> listCarriers(Long tenantId);
+    List<CarrierCO> listCarriers(Long tenantId);
 
 }

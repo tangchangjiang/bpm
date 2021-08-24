@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
@@ -32,6 +33,15 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      */
     List<Warehouse> listWarehouseByCondition(Warehouse warehouse);
 
+
+    /**
+     *  内部接口 条件查询仓库
+     * @param innerDTO 入参
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<Warehouse> listWarehouses(WarehouseQueryInnerDTO innerDTO,Long tenantId);
+
     /**
      * 查询租户下的所有仓库
      * @param tenantId 租户ID
@@ -45,7 +55,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @param organizationId 租户ID
      * @return list
      */
-    List<Warehouse> listActiveWarehouses(String onlineShopCode, Long organizationId);
+    List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId);
 
     /**
      *  编码查询仓促
