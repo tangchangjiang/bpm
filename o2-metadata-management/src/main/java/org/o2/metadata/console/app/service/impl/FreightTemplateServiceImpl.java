@@ -9,6 +9,7 @@ import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
@@ -47,6 +48,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightCacheService freightCacheService;
     private final FreightTemplateDomainRepository freightTemplateDomainRepository;
     private  final LovSqlHandler lovSqlHandler;
+    private final HzeroLovQueryService hzeroLovQueryService;
     private final O2ProductClient o2ProductClient;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
@@ -55,13 +57,14 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightCacheService freightCacheService,
                                       final RegionRepository regionRepository,
                                       FreightTemplateDomainRepository freightTemplateDomainRepository,
-                                      LovSqlHandler lovSqlHandler, O2ProductClient o2ProductClient) {
+                                      LovSqlHandler lovSqlHandler, HzeroLovQueryService hzeroLovQueryService, O2ProductClient o2ProductClient) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
         this.freightTemplateDomainRepository = freightTemplateDomainRepository;
         this.lovSqlHandler = lovSqlHandler;
+        this.hzeroLovQueryService = hzeroLovQueryService;
         this.o2ProductClient = o2ProductClient;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
@@ -126,13 +129,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
-        Map<String,Object> params = new HashMap<>(4);
-        params.put("lovCode",lovCode);
-        params.put("page",0);
-        params.put("size",100);
-        params.put("tenantId",tenantId);
-        List<Map<String, Object>> lovSqlMeaning = lovSqlHandler.queryData(lovCode, tenantId, params, 0, 100);
-        return lovSqlMeaning;
+        return  hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,new HashMap<>());
     }
 
     public String fetchGroupKey(final FreightTemplateDetail detail) {
