@@ -2,7 +2,9 @@ package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -64,4 +66,12 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @return list
      */
     List<WarehouseCacheBO> listWarehouseByCode(List<String> warehouseCodes, Long tenantId);
+
+
+    /**
+     * 仓库关联承运商
+     * @param queryDTO 查询条件
+     * @return list
+     */
+    List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO);
 }

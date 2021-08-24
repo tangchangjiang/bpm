@@ -3,7 +3,9 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
@@ -75,4 +77,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return list
      */
     List<Warehouse> listWarehouses(@Param("innerDTO") WarehouseQueryInnerDTO innerDTO, @Param("tenantId") Long tenantId);
+
+
+    /**
+     * 仓库关联承运商
+     * @param queryDTO 查询条件
+     * @return list
+     */
+    List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO);
 }

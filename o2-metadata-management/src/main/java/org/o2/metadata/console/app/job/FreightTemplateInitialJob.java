@@ -1,4 +1,4 @@
-package org.o2.metadata.console.job;
+package org.o2.metadata.console.app.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

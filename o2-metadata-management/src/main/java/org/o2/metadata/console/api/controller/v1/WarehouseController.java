@@ -12,8 +12,10 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.PosRepository;
@@ -54,7 +56,7 @@ public class WarehouseController extends BaseController {
     @GetMapping
     @CustomPageRequest
     @ApiResponses(@ApiResponse(code = 200, message = "OK", response = Warehouse.class, responseContainer = "List"))
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<Warehouse>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                   final Warehouse warehouse,
                                   @ApiIgnore final PageRequest pageRequest) {
         warehouse.setTenantId(organizationId);
@@ -66,7 +68,7 @@ public class WarehouseController extends BaseController {
     @ApiOperation(value = "创建仓库")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<List<Warehouse>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                     @RequestBody final List<Warehouse> warehouses) {
         warehouses.forEach(w -> {
             w.setTenantId(organizationId);
@@ -80,7 +82,7 @@ public class WarehouseController extends BaseController {
     @ApiOperation(value = "修改仓库信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<List<Warehouse>> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                     @RequestBody final List<Warehouse> warehouses) {
         SecurityTokenHelper.validToken(warehouses);
         warehouses.forEach(w -> {
@@ -93,7 +95,7 @@ public class WarehouseController extends BaseController {
     @ApiOperation(value = "批量操作仓库")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-handle")
-    public ResponseEntity<?> batchHandle(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<List<Warehouse>> batchHandle(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                          @RequestBody final List<Warehouse> warehouses) {
         warehouses.forEach(w -> {
             w.setTenantId(organizationId);
@@ -107,11 +109,22 @@ public class WarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/pos")
-    public ResponseEntity<?> listPos(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<Pos>> listPos(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                      final Pos pos,
                                      @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
         final Page<Pos> posList = PageHelper.doPageAndSort(pageRequest, () -> posRepository.listPosByCondition(pos));
         return Results.success(posList);
+    }
+
+    @ApiOperation(value = "仓库关联承运商")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/carriers")
+    public ResponseEntity<Page<Carrier>> listCarriers(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      final WarehouseRelCarrierQueryDTO queryDTO,
+                                                      final PageRequest pageRequest) {
+        queryDTO.setTenantId(organizationId);
+        final Page<Carrier> carrier = PageHelper.doPageAndSort(pageRequest, () -> warehouseService.listCarriers(queryDTO));
+        return Results.success(carrier);
     }
 }

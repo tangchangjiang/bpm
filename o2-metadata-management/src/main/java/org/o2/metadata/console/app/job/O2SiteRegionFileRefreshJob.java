@@ -1,4 +1,4 @@
-package org.o2.metadata.console.job;
+package org.o2.metadata.console.app.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
@@ -8,7 +8,6 @@ import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.springframework.util.StringUtils;
-
 
 import java.util.Map;
 
