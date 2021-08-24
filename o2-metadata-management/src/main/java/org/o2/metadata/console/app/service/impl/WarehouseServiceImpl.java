@@ -12,6 +12,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.api.vo.WarehouseCO;
@@ -291,6 +292,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Carrier> listCarriers(WarehouseRelCarrierQueryDTO queryDTO) {
         return warehouseRepository.listCarriers(queryDTO);
+    }
+
+    @Override
+    public List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO) {
+        return warehouseRepository.listWarehouseAddr(queryDTO);
     }
 
 

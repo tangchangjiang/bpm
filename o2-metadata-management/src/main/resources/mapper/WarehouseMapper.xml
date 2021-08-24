@@ -354,4 +354,63 @@
             </choose>
         </where>
     </select>
+    <select id="listWarehouseAddr" resultType="org.o2.metadata.console.infra.entity.Warehouse">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        w.warehouse_id,
+        w.warehouse_code,
+        wtl.warehouse_name,
+        w.warehouse_type_code,
+        w.warehouse_status_code,
+        w.picked_up_flag,
+        w.pick_up_quantity,
+        w.expressed_flag,
+        w.expressed_quantity,
+        w.score,
+        w.actived_date_from,
+        w.actived_date_to,
+        w.pos_id,
+        p.pos_code,
+        ptl.pos_name,
+        w.tenant_id,
+        addr.country_code,
+        addr.region_code,
+        addr.city_code,
+        addr.district_code,
+        addr.street_name,
+        addr.contact,
+        addr.mobile_phone,
+        addr.phone_number
+        from
+        o2md_warehouse as w
+        join o2md_pos as p on p.pos_id = w.pos_id and p.tenant_id = w.tenant_id
+        left join o2md_warehouse_tl wtl on wtl.warehouse_id = w.warehouse_id and wtl.lang = #{lang}
+        left join o2md_pos_tl ptl on ptl.pos_id = p.pos_id and ptl.lang = #{lang}
+        left join o2md_pos_address addr on p.address_id = addr.pos_address_id and addr.tenant_id = #{tenantId}
+        <where>
+            and w.active_flag = 1
+            <if test="warehouseCode != null and warehouseCode != ''">
+                <bind name="warehouseCodeLike" value="'%' + warehouseCode + '%'"/>
+                and w.warehouse_code like #{warehouseCodeLike}
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
+                and wtl.warehouse_name like #{warehouseNameLike}
+            </if>
+            <if test="warehouseStatusCode != null and warehouseStatusCode != ''">
+                and w.warehouse_status_code = #{warehouseStatusCode}
+            </if>
+            <if test="warehouseTypeCode != null and warehouseTypeCode != ''">
+                and w.warehouse_type_code = #{warehouseTypeCode}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    and w.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 </mapper>

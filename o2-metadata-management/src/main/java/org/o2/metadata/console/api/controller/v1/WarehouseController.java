@@ -12,6 +12,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -126,5 +127,16 @@ public class WarehouseController extends BaseController {
         queryDTO.setTenantId(organizationId);
         final Page<Carrier> carrier = PageHelper.doPageAndSort(pageRequest, () -> warehouseService.listCarriers(queryDTO));
         return Results.success(carrier);
+    }
+
+    @ApiOperation(value = "仓库地址")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/address")
+    public ResponseEntity<Page<Warehouse>> listWarehouseAddr(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      final WarehouseAddrQueryDTO queryDTO,
+                                                      final PageRequest pageRequest) {
+        queryDTO.setTenantId(organizationId);
+        final Page<Warehouse> warehouses = PageHelper.doPageAndSort(pageRequest, () -> warehouseService.listWarehouseAddr(queryDTO));
+        return Results.success(warehouses);
     }
 }
