@@ -62,10 +62,10 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                     //O2MD.PUBLIC_LOV
                     List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {
-                        data.put(lovValueDTO.getValue(), JSON.toJSONString(lovValueDTOList));
+                        data.put(lovValueDTO.getValue(), lovValueDTOList);
                     }
                 } else {
-                    data.put(publicLovVO.getLovCode(), JSON.toJSONString(publicLovValueDTOList));
+                    data.put(publicLovVO.getLovCode(), publicLovValueDTOList);
                 }
             }
             //1.hzero-boot-file的client上传 拿到OSS的url 2.更新到静态资源表
@@ -140,5 +140,4 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         String domainSuffix = httpSplits[1];
         return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
     }
-
 }
