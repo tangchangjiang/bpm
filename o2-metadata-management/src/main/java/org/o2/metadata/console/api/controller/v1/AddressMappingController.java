@@ -15,7 +15,7 @@ import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Country;

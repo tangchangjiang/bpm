@@ -15,7 +15,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
 import org.o2.metadata.console.app.service.CarrierMappingService;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.springframework.http.ResponseEntity;

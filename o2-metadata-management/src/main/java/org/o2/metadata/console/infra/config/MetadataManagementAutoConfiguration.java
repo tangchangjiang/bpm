@@ -1,4 +1,4 @@
-package org.o2.metadata.console.config;
+package org.o2.metadata.console.infra.config;
 
 import org.hzero.core.message.MessageAccessor;
 import org.springframework.beans.factory.InitializingBean;

@@ -17,7 +17,7 @@ import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
-import org.o2.metadata.console.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.springframework.http.HttpStatus;
