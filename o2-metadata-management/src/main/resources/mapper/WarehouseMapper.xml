@@ -320,4 +320,38 @@
             </if>
         </where>
     </select>
+    <select id="listCarriers" resultType="org.o2.metadata.console.infra.entity.Carrier">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        c.carrier_id,
+        c.carrier_code,
+        ctl.carrier_name
+        FROM o2md_carrier c
+        JOIN o2md_pos_rel_carrier rel ON rel.carrier_id = c.carrier_id AND rel.tenant_id = c.tenant_id
+        JOIN o2md_warehouse w ON w.pos_id = rel.pos_id AND w.tenant_id = c.tenant_id
+        LEFT JOIN o2md_carrier_tl ctl ON ctl.carrier_id = c.carrier_id AND ctl.lang = #{lang}
+        <where>
+            w.warehouse_code = #{warehouseCode}
+            AND c.active_flag = 1
+            AND rel.active_flag = 1
+            AND w.actived_date_from <![CDATA[<]]>= CURRENT_TIMESTAMP
+            AND ((w.actived_date_to <![CDATA[>]]>= CURRENT_TIMESTAMP) OR (w.actived_date_to IS NULL))
+            <if test="carrierCode != null and carrierCode != ''">
+                <bind name="carrierCodeLike" value="'%' + carrierCode + '%'"/>
+                AND c.carrier_code LIKE #{carrierCodeLike}
+            </if>
+            <if test="carrierName != null and carrierName != ''">
+                <bind name="carrierNameLike" value="'%' + carrierName + '%'"/>
+                AND ctl.carrier_name LIKE #{carrierNameLike}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND c.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 </mapper>
