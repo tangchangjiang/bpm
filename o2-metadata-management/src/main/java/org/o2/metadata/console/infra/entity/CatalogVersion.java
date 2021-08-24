@@ -76,4 +76,11 @@ public class CatalogVersion extends AuditDomain {
     @ApiModelProperty(value = "目录编码")
     @Transient
     private String catalogCode;
+
+
+    @Transient
+    private String catalogName;
+    @Transient
+    private String catalogRemarks;
+
 }
