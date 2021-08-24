@@ -1,5 +1,6 @@
-package org.o2.metadata.console.job;
+package org.o2.metadata.console.app.job;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
@@ -10,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 缓存数据刷新
