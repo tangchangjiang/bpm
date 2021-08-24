@@ -51,7 +51,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     public void createPublicLovFile(PublicLovVO publicLovVO) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
-            publicLovVO.setLovCode(MetadataConstants.StaticResourceCode.O2MD_PUBLIC_LOV);
+            publicLovVO.setLovCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
         }
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
 
@@ -59,7 +59,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
-                if (MetadataConstants.StaticResourceCode.O2MD_PUBLIC_LOV.equals(publicLovVO.getLovCode())) {
+                if (MetadataConstants.StaticResourceCode.O2MD_PUB_LOV.equals(publicLovVO.getLovCode())) {
                     //O2MD.PUBLIC_LOV
                     List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {

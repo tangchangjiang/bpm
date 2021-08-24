@@ -284,7 +284,7 @@ public interface MetadataConstants {
         /**
          * 元数据- 公共值集数据文件
          */
-        String O2MD_PUBLIC_LOV = "O2MD_PUBLIC_LOV";
+        String O2MD_PUB_LOV = "O2MD_PUB_LOV";
 
         /**
          * 元数据 - 值集数据文件
