@@ -3,7 +3,6 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
-import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,11 +16,13 @@ import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.choerodon.core.oauth.DetailsHelper;
 
 /**
  * O2MD.PUBLIC_LOV  静态文件
@@ -50,7 +51,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     public void createPublicLovFile(PublicLovVO publicLovVO) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
-            publicLovVO.setLovCode(RegionConstants.RegionLov.PUBLIC_LOV.getCode());
+            publicLovVO.setLovCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
         }
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
 
@@ -58,7 +59,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
-                if (RegionConstants.RegionLov.PUBLIC_LOV.getCode().equals(publicLovVO.getLovCode())) {
+                if (MetadataConstants.StaticResourceCode.O2MD_PUB_LOV.equals(publicLovVO.getLovCode())) {
                     //O2MD.PUBLIC_LOV
                     List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {

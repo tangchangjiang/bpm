@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.constant;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -170,8 +171,6 @@ public interface MetadataConstants {
     }
 
 
-
-
     /**
      * 服务点类型
      */
@@ -288,6 +287,7 @@ public interface MetadataConstants {
          */
         String LOV_DESCRIPTION = "值集数据文件";
 
+
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
         }
@@ -304,8 +304,7 @@ public interface MetadataConstants {
     }
 
 
-
-    interface MallLangPromptConstants{
+    interface MallLangPromptConstants {
         String LOV_CODE = "O2CMS.APPROVE_STATUS";
 
         String UNAPPROVED = "UNAPPROVED";

@@ -33,6 +33,11 @@ public interface MetadataManagementConstants {
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
 
         /**
+         * 元数据- LOV文件
+         */
+        String O2MD_PUBLIC_LOV = "O2MD_PUBLIC_LOV";
+
+        /**
          * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
          *
          * @param siteCode 站点编码
@@ -45,7 +50,7 @@ public interface MetadataManagementConstants {
         /**
          * 构造CMS站点site配置文件资源编码
          *
-         * @param siteCode     站点编码
+         * @param siteCode 站点编码
          * @return CMS配置文件资源编码
          */
         static String buildCmsSiteResourceCode(String siteCode) {
