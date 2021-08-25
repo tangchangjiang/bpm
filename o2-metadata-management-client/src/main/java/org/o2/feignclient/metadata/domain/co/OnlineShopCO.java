@@ -23,9 +23,13 @@ public class OnlineShopCO {
 
     @ApiModelProperty(value = "目录编码")
     private String catalogCode;
+    @ApiModelProperty(value = "目录名称")
+    private String catalogName;
 
-    @ApiModelProperty(value = "目录编码")
+    @ApiModelProperty(value = "目录版本编码")
     private String catalogVersionCode;
+    @ApiModelProperty(value = "目录版本名称")
+    private String catalogVersionName;
 
     @ApiModelProperty(value = "网点名称")
     private String onlineShopName;
