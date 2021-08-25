@@ -277,6 +277,11 @@ public interface MetadataConstants {
         String O2MD_REGION = "O2MD_REGION";
 
         /**
+         * 元数据 - 供C端使用的Lov值集数据文件
+        */
+        String O2MD_PUB_LOV = "O2MD_PUB_LOV";
+
+        /**
          * 元数据 - 地区数据文件描述
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
