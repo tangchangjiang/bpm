@@ -116,21 +116,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         if (voList.isEmpty()) {
            return map;
         }
-        // 编码查询
-        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
-            for (OnlineShopCO co : voList) {
-                map.put(co.getOnlineShopCode(),co);
-            }
-            return  map;
-        }
-        // 名称查询
-        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopNames())) {
-            for (OnlineShopCO co : voList) {
-                map.put(co.getOnlineShopName(),co);
-            }
-            return  map;
-        }
-        //全部网店
         for (OnlineShopCO co : voList) {
             map.put(co.getOnlineShopCode(),co);
         }
