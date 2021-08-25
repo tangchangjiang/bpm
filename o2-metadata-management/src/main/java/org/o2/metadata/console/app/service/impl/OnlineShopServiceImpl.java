@@ -112,6 +112,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
        query.setTenantId(tenantId);
        query.setOnlineShopCodes(onlineShopQueryInnerDTO.getOnlineShopCodes());
        query.setOnlineShopNames(onlineShopQueryInnerDTO.getOnlineShopNames());
+       query.setPlatformCode(onlineShopQueryInnerDTO.getPlatformCode());
        List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRepository.selectByCondition(query));
         if (voList.isEmpty()) {
            return map;
