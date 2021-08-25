@@ -17,7 +17,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopQueryInnerDTO {
     /**
-     * 查询条件  onlineShopCodes  or  onlineShopNames
+     * 查询条件==
+     * onlineShopCodes  or  onlineShopNames
      */
 
     @ApiModelProperty(value = "网点编码")

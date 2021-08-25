@@ -86,8 +86,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
         final OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
-        log.info("origin shop id({}), active({}), code({}), onlineShop id({}), active({}), code({})", origin.getOnlineShopId(), origin.getActiveFlag(), origin.getOnlineShopCode(),
-                onlineShop.getOnlineShopId(), onlineShop.getActiveFlag(), onlineShop.getOnlineShopCode());
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogId(catalog.getCatalogId()).catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
         Preconditions.checkArgument(null != catalogVersion, "illegal combination catalogId && organizationId && catalogVersionCode");
@@ -110,16 +108,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String,OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
-       List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRedis.select(onlineShopQueryInnerDTO,tenantId));
+       OnlineShop query = new OnlineShop();
+       query.setTenantId(tenantId);
+       query.setOnlineShopCodes(onlineShopQueryInnerDTO.getOnlineShopCodes());
+       query.setOnlineShopNames(onlineShopQueryInnerDTO.getOnlineShopNames());
+       List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRepository.selectByCondition(query));
         if (voList.isEmpty()) {
            return map;
-        }
-        // 全部网店
-        if (null == onlineShopQueryInnerDTO) {
-            for (OnlineShopCO co : voList) {
-                map.put(co.getOnlineShopCode(),co);
-            }
-            return  map;
         }
         // 编码查询
         if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
@@ -135,7 +130,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             }
             return  map;
         }
-
+        //全部网店
         for (OnlineShopCO co : voList) {
             map.put(co.getOnlineShopCode(),co);
         }

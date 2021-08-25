@@ -17,12 +17,13 @@ public class OnlineShopConverter {
 
     private OnlineShopConverter() {
     }
+
     /**
      * po->CO
      * @param onlineShop 网店
      * @return  vo
      */
-    public static OnlineShopCO poToVoObject(OnlineShop onlineShop) {
+    private static OnlineShopCO poToCoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
@@ -30,12 +31,14 @@ public class OnlineShopConverter {
         OnlineShopCO co = new OnlineShopCO();
         co.setOnlineShopId(onlineShop.getOnlineShopId());
         co.setOnlineShopCode(onlineShop.getOnlineShopCode());
-        co.setOnlineShopName(onlineShop.getOnlineShopName());
         co.setCatalogCode(onlineShop.getCatalogCode());
+        co.setCatalogName(onlineShop.getCatalogName());
+        co.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
+        co.setCatalogVersionName(onlineShop.getCatalogVersionName());
+        co.setOnlineShopName(onlineShop.getOnlineShopName());
+        co.setActiveFlag(onlineShop.getActiveFlag());
         co.setPlatformCode(onlineShop.getPlatformCode());
         co.setPlatformShopCode(onlineShop.getPlatformShopCode());
-        co.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
-        co.setActiveFlag(onlineShop.getActiveFlag());
         return co;
     }
 
@@ -50,11 +53,10 @@ public class OnlineShopConverter {
             return cos;
         }
         for (OnlineShop onlineShop : onlineShopList) {
-            cos.add(poToVoObject(onlineShop));
+            cos.add(poToCoObject(onlineShop));
         }
         return cos;
     }
-
 
     /**
      * po->bo

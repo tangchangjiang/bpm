@@ -131,13 +131,7 @@ public class OnlineShop extends AuditDomain {
     @Size(max = 255)
     private String platformShopCode;
 
-    @Transient
-    @ApiModelProperty(value = "版本主键")
-    private Long catalogId;
 
-    @Transient
-    @ApiModelProperty(value = "版本目录主键")
-    private Long catalogVersionId;
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
     @Column(name = "sourced_flag")
@@ -183,6 +177,7 @@ public class OnlineShop extends AuditDomain {
 
     @ApiModelProperty(value = "默认货币", hidden = true)
     private String defaultCurrency;
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -208,4 +203,20 @@ public class OnlineShop extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "平台名称")
     private String platformName;
+
+    @Transient
+    @ApiModelProperty(value = "网点编码")
+    private List<String> onlineShopCodes;
+    @Transient
+    @ApiModelProperty(value = "网店名称")
+    private List<String> onlineShopNames;
+
+    @Transient
+    @ApiModelProperty(value = "版本主键")
+    private Long catalogId;
+
+    @Transient
+    @ApiModelProperty(value = "版本目录主键")
+    private Long catalogVersionId;
+
 }
