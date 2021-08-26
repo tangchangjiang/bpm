@@ -141,5 +141,4 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         String domainSuffix = httpSplits[1];
         return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
     }
-
 }

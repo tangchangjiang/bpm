@@ -18,10 +18,17 @@ public interface MetadataManagementConstants {
          * 元数据 - 地区数据文件
          */
         String O2MD_REGION = "O2MD_REGION";
+
+        /**
+         * 元数据 - 商城端公共的Lov值集
+         */
+        String O2MD_PUBLIC_LOV = "O2MD_PUB_LOV";
+
         /**
          * 商品 - 类别文件
          */
         String O2PCM_CATEGORY = "O2PCM_CATEGORY";
+
         /**
          * CMS - CMS页面装修
          */
@@ -31,6 +38,7 @@ public interface MetadataManagementConstants {
          * CMS - site站点配置文件
          */
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
+
 
         /**
          * 元数据- LOV文件
