@@ -38,12 +38,7 @@ public interface MetadataManagementConstants {
          * CMS - site站点配置文件
          */
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
-
-
-        /**
-         * 元数据- LOV文件
-         */
-        String O2MD_PUBLIC_LOV = "O2MD_PUBLIC_LOV";
+        
 
         /**
          * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
