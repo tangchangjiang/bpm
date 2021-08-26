@@ -38,6 +38,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     private final FileStorageProperties fileStorageProperties;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
+    private final static String PUB_LOV_CODE = "O2MD.PUBLIC_LOV";
 
     public O2PublicLovServiceImpl(HzeroLovQueryService hzeroLovQueryService, FileStorageProperties fileStorageProperties, FileClient fileClient, StaticResourceInternalService staticResourceInternalService) {
         this.hzeroLovQueryService = hzeroLovQueryService;
@@ -51,7 +52,8 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     public void createPublicLovFile(PublicLovVO publicLovVO) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
-            publicLovVO.setLovCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
+            // 设置PUB_LOV默认值集编码
+            publicLovVO.setLovCode(PUB_LOV_CODE);
         }
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
 
@@ -59,7 +61,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
-                if (MetadataConstants.StaticResourceCode.O2MD_PUB_LOV.equals(publicLovVO.getLovCode())) {
+                if (PUB_LOV_CODE.equals(publicLovVO.getLovCode())) {
                     //O2MD.PUBLIC_LOV
                     List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {
@@ -114,7 +116,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         String trimResourceUrl = getTrimDomainPrefix(resourceUrl);
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
-        saveDTO.setResourceCode(lovCode);
+        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(lovCode + MetadataConstants.StaticResourceCode.LOV_DESCRIPTION);
         saveDTO.setResourceUrl(trimResourceUrl);
