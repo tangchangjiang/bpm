@@ -112,25 +112,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
        query.setTenantId(tenantId);
        query.setOnlineShopCodes(onlineShopQueryInnerDTO.getOnlineShopCodes());
        query.setOnlineShopNames(onlineShopQueryInnerDTO.getOnlineShopNames());
+       query.setPlatformCode(onlineShopQueryInnerDTO.getPlatformCode());
        List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRepository.selectByCondition(query));
         if (voList.isEmpty()) {
            return map;
         }
-        // 编码查询
-        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopCodes())) {
-            for (OnlineShopCO co : voList) {
-                map.put(co.getOnlineShopCode(),co);
-            }
-            return  map;
-        }
-        // 名称查询
-        if (CollectionUtils.isNotEmpty(onlineShopQueryInnerDTO.getOnlineShopNames())) {
-            for (OnlineShopCO co : voList) {
-                map.put(co.getOnlineShopName(),co);
-            }
-            return  map;
-        }
-        //全部网店
         for (OnlineShopCO co : voList) {
             map.put(co.getOnlineShopCode(),co);
         }

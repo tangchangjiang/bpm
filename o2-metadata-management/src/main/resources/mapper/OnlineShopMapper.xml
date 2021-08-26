@@ -72,7 +72,7 @@
                 </otherwise>
             </choose>
             <if test="platformCode != null">
-                AND os.platform_code = (#{platformCodeLike})
+                AND os.platform_code = #{platformCode}
             </if>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
