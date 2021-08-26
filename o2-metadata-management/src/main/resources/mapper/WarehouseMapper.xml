@@ -275,7 +275,8 @@
         p.pos_code,
         w.tenant_id,
         wtl.warehouse_name,
-        w.active_flag
+        w.active_flag,
+        p.pos_name
         FROM
         o2md_warehouse w
         JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id

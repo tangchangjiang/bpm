@@ -61,7 +61,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @param organizationId 租户ID
      * @return list
      */
-    List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId);
+    List<Warehouse> listActiveWarehouseByShopCode(@Param("onlineShopCode") String onlineShopCode,@Param("tenantId") Long organizationId);
 
     /**
      *  编码查询仓促

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
 @Data
 @ApiModel("仓库表")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class WarehouseCO {
+public class WarehouseVO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
@@ -74,7 +75,6 @@ public class WarehouseCO {
     private String warehouseStatusMeaning;
 
     private String warehouseTypeMeaning;
-
     private String expressLimitValue;
 
     private String pickUpLimitValue;
