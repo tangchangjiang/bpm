@@ -52,7 +52,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     public void createPublicLovFile(PublicLovVO publicLovVO) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
-            // 设置默认的pub_lov值集编码
+            // 设置PUB_LOV默认值集编码
             publicLovVO.setLovCode(PUB_LOV_CODE);
         }
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
@@ -143,4 +143,5 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         String domainSuffix = httpSplits[1];
         return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
     }
+
 }
