@@ -9,6 +9,8 @@ import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.ScriptSource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -72,5 +74,53 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         redisCacheClient.opsForHash().putAll(key, updateMap);
 
 
+    }
+
+    @Override
+    public Integer updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId) ;
+        // 库存缓存key
+        String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
+        List<String> keyList = new ArrayList<>(2);
+        keyList.add(expressLimitKey);
+        keyList.add(warehouseCacheKey);
+        return executeScript(keyList,warehouseCode, expressQuantity,WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_CACHE_LUA);
+    }
+
+    @Override
+    public Integer updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId) {
+        // 仓库自提单量限制 key
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
+        // 库存缓存key
+        String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
+        List<String> keyList = new ArrayList<>(2);
+        keyList.add(pickUpLimitKey);
+        keyList.add(warehouseCacheKey);
+        return executeScript(keyList,warehouseCode, pickUpQuantity,WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_CACHE_LUA);
+    }
+
+
+    /**
+     * 执行lua 脚本
+     * @param keyList redis key 集合
+     * @param warehouseCode 仓库编码
+     * @param num 数量
+     * @param scriptSource lua
+     * @return integer
+     */
+    private Integer executeScript(List<String> keyList, final String warehouseCode, final String num, ScriptSource scriptSource) {
+        final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(scriptSource);
+        try {
+            Long scriptValue = this.redisCacheClient.execute(defaultRedisScript, keyList, warehouseCode, num);
+            if (null == scriptValue) {
+                return -1;
+            }
+            return scriptValue.intValue();
+        } catch (Exception e) {
+            log.error("execute script error", e);
+            return -1;
+        }
     }
 }

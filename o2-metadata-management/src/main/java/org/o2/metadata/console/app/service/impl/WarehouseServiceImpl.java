@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -8,6 +9,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
@@ -26,10 +28,6 @@ import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.ScriptSource;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,9 +152,6 @@ public class WarehouseServiceImpl implements WarehouseService {
             String warehouseCode = origin.getWarehouseCode();
             List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
             for (String skuCode : skuCodeList) {
-                log.info("warehouse buildTriggerCalInfoList activeFlag({}),({});expressedFlag({}),({});pickedUpFlag({}),({})",
-                        warehouse.getWarehouseStatusCode(), origin.getWarehouseStatusCode(), warehouse.getActiveFlag(), origin.getActiveFlag(),
-                        warehouse.getExpressedFlag(), origin.getExpressedFlag(), warehouse.getPickedUpFlag(), origin.getPickedUpFlag());
                 if (!warehouse.getWarehouseStatusCode().equals(origin.getWarehouseStatusCode())) {
                     TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
                     triggerStockCalculationVO.setWarehouseCode(warehouseCode);
@@ -195,97 +190,91 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 
 
-
     @Override
-    public void saveExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
-        executeScript(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,warehouseCode, expressQuantity, tenantId, EXPRESS_LIMIT_CACHE_LUA);
+    public Integer updateExpressValue(String warehouseCode, String increment, Long tenantId) {
+         return warehouseRedis.updateExpressQuantity(warehouseCode,increment,tenantId);
     }
 
     @Override
-    public void savePickUpQuantity(String warehouseCode, String pickUpQuantity, Long tenantId) {
-        executeScript(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,warehouseCode, pickUpQuantity, tenantId, PICK_UP_LIMIT_CACHE_LUA);
-    }
-
-    @Override
-    public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
-        executeScript(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,warehouseCode, increment, tenantId, EXPRESS_VALUE_CACHE_LUA);
-    }
-
-    @Override
-    public void updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
-        executeScript(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,warehouseCode, increment, tenantId, PICK_UP_VALUE_CACHE_LUA);
-    }
-
-    @Override
-    public String getExpressLimit(String warehouseCode, Long tenantId) {
-        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_QUANTITY);
-    }
-
-    @Override
-    public String getPickUpLimit(String warehouseCode, Long tenantId) {
-        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_QUANTITY);
-    }
-
-    @Override
-    public String getExpressValue(String warehouseCode, Long tenantId) {
-        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_VALUE);
-    }
-
-    @Override
-    public String getPickUpValue(String warehouseCode, Long tenantId) {
-        return this.redisCacheClient.<String, String>boundHashOps(warehouseCacheKey(warehouseCode, tenantId)).get(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_VALUE);
+    public Integer updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
+        return warehouseRedis.updatePickUpValue(warehouseCode,increment,tenantId);
     }
 
 
     @Override
     public String warehouseLimitCacheKey(String limit,Long tenantId) {
         if (tenantId == null) {
-            return WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(limit,0);
+            return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit,0);
         }
-        return WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(limit,tenantId);
+        return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit,tenantId);
     }
 
     @Override
     public boolean isWarehouseExpressLimit(String warehouseCode, Long tenantId) {
-        final Boolean result = this.redisCacheClient.boundSetOps(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION).isMember(warehouseCacheKey(warehouseCode, tenantId));
-        return result != null && result;
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
+        String result = this.redisCacheClient.<String, String>opsForHash().get(expressLimitKey,warehouseCode);
+        JSONObject object = FastJsonHelper.stringToJsonObject(result);
+        return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
     @Override
     public boolean isWarehousePickUpLimit(String warehouseCode, Long tenantId) {
-        final Boolean result = this.redisCacheClient.boundSetOps(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION).isMember(warehouseCacheKey(warehouseCode, tenantId));
-        return result != null && result;
+        // 仓库快递配送接单量限制 key
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
+        String result = this.redisCacheClient.<String, String>opsForHash().get(pickUpLimitKey,warehouseCode);
+        JSONObject object = FastJsonHelper.stringToJsonObject(result);
+        return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
     @Override
     public Set<String> expressLimitWarehouseCollection(Long tenantId) {
-        final Set<String> members = this.redisCacheClient.boundSetOps(warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,tenantId)).members();
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(members)) {
-            return new HashSet<>(members);
-        } else {
-            return null;
-        }
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
+        return getWarehouseCodes(expressLimitKey);
     }
 
     @Override
     public Set<String> pickUpLimitWarehouseCollection(Long tenantId) {
-        final Set<String> members = this.redisCacheClient.boundSetOps(warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId)).members();
-        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(members)) {
-            return new HashSet<>(members);
-        } else {
-            return null;
-        }
+        // 仓库自提单量限制 key
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
+        return getWarehouseCodes(pickUpLimitKey);
     }
-
+   /**
+    * 获取仓库编码
+    * @param key redis key
+    * @return  map
+    */
+    private Set<String> getWarehouseCodes(String key) {
+        Map<String, String> map = this.redisCacheClient.<String, String>opsForHash().entries(key);
+        if (map.isEmpty()) {
+            return new HashSet<>(2);
+        }
+        Set<String> set = new HashSet<>(16);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String k = entry.getKey();
+            String v = entry.getValue();
+            JSONObject object = FastJsonHelper.stringToJsonObject(v);
+            boolean flag = object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
+            if (Boolean.TRUE.equals(flag)) {
+                set.add(k);
+            }
+        }
+        return set;
+    }
     @Override
     public void resetWarehouseExpressLimit(String warehouseCode, Long tenantId) {
-        executeScript(warehouseCode,WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_COLLECTION,tenantId, EXPRESS_VALUE_CACHE_RESET_LUA);
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
+        this.redisCacheClient.opsForHash().delete(expressLimitKey,warehouseCode);
     }
 
 
     @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
-        executeScript(warehouseCode, WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION,tenantId, PICK_UP_VALUE_CACHE_RESET_LUA);
+        // 仓库自提单量限制 key
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
+        this.redisCacheClient.opsForHash().delete(pickUpLimitKey,warehouseCode);
 
     }
 
@@ -297,41 +286,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO) {
         return warehouseRepository.listWarehouseAddr(queryDTO);
-    }
-
-
-    private void executeScript(final String limit,final String warehouseCode, final String num, final Long tenantId, final ScriptSource scriptSource) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, num, String.valueOf(tenantId), warehouseCacheKey(warehouseCode, tenantId));
-    }
-
-    private void executeScript(final String warehouseCode,final String limit,final Long tenantId, final ScriptSource scriptSource) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(scriptSource);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(warehouseLimitCacheKey(limit, tenantId)), warehouseCode, String.valueOf(tenantId), warehouseCacheKey(warehouseCode, tenantId));
-    }
-
-
-
-    private static final ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
-    private static final ResourceScriptSource EXPRESS_VALUE_CACHE_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_value_cache.lua"));
-    private static final ResourceScriptSource EXPRESS_VALUE_CACHE_RESET_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_value_cache_reset.lua"));
-    private static final ResourceScriptSource PICK_UP_LIMIT_CACHE_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_limit_cache.lua"));
-    private static final ResourceScriptSource PICK_UP_VALUE_CACHE_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache.lua"));
-    private static final ResourceScriptSource PICK_UP_VALUE_CACHE_RESET_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_value_cache_reset.lua"));
-
-    private String warehouseCacheKey(String warehouseCode, Long tenantId) {
-        if (tenantId == null) {
-            return WarehouseConstants.WarehouseCache.warehouseCacheKey(0);
-        }
-        return WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
     }
 
 }
