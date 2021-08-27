@@ -1,9 +1,9 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
-import org.o2.metadata.console.api.vo.WarehouseCO;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
