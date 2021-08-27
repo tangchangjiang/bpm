@@ -41,7 +41,7 @@
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
-         FROM o2md_freight_template_detail oftd
+         FROM o2md_freight_tpl_detail oftd
 		 WHERE    oftd.default_flag =1 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
     </select>
 
@@ -64,7 +64,7 @@
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
-        FROM o2md_freight_template_detail oftd
+        FROM o2md_freight_tpl_detail oftd
 		 WHERE oftd.default_flag =0 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
     </select>
 
@@ -88,7 +88,7 @@
              oftd.created_by,
              oftd.last_updated_by,
              oftd.last_update_date
-        FROM o2md_freight_template_detail oftd
+        FROM o2md_freight_tpl_detail oftd
 			left join  hpfm_region rg on  oftd.region_id = rg.region_id   and  rg.tenant_id = #{tenantId}
 			left join  hpfm_region_tl  rgtl on rg.region_id = rgtl.region_id and rgtl.lang = #{lang}
 		 WHERE  oftd.template_id= #{templateId}
@@ -133,7 +133,7 @@
             oftd.default_flag,
             o2mft.template_code,
             oftd.tenant_id
-        FROM o2md_freight_template_detail oftd
+        FROM o2md_freight_tpl_detail oftd
         inner join o2md_freight_template o2mft  on o2mft.template_id = oftd.template_id
         WHERE 1=1
         <choose>

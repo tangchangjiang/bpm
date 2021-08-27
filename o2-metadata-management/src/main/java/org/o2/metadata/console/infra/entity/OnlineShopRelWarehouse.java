@@ -32,7 +32,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ import java.util.stream.Collectors;
 @ApiModel("网店关联仓库")
 @VersionAudit
 @ModifyAudit
-@Table(name = "o2md_online_shop_rel_warehouse")
+@Table(name = "o2md_shop_rel_warehouse")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopRelWarehouse extends AuditDomain {
 

@@ -50,7 +50,7 @@
         srw.online_shop_rel_warehouse_id
         FROM
         o2md_warehouse w
-        JOIN o2md_online_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id
+        JOIN o2md_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id
         left join o2md_warehouse_tl wt on wt.warehouse_id = w.warehouse_id and wt.lang= #{lang}
         WHERE  srw.online_shop_id = #{onlineShopId}
         <choose>
@@ -87,7 +87,7 @@
         srw.business_active_flag,
         srw.tenant_id
         FROM
-        o2md_online_shop_rel_warehouse srw
+        o2md_shop_rel_warehouse srw
         JOIN o2md_warehouse w ON srw.warehouse_id = w.warehouse_id AND w.tenant_id = #{tenantId}
         JOIN o2md_pos p ON srw.pos_id = p.pos_id AND p.tenant_id = #{tenantId}
         JOIN o2md_online_shop s ON srw.online_shop_id = s.online_shop_id AND s.tenant_id = #{tenantId}
@@ -112,7 +112,7 @@
         FROM
         o2md_warehouse ow
         JOIN o2md_pos pos on ow.pos_id = pos.pos_id
-        JOIN o2md_online_shop_rel_warehouse osrw ON osrw.warehouse_id = ow.warehouse_id
+        JOIN o2md_shop_rel_warehouse osrw ON osrw.warehouse_id = ow.warehouse_id
         JOIN o2md_online_shop os ON os.online_shop_id = osrw.online_shop_id
         WHERE
         ow.warehouse_status_code = 'NORMAL'
