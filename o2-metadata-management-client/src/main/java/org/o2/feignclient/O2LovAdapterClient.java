@@ -52,7 +52,7 @@ public class O2LovAdapterClient {
      * @return 单位类型信息MAP
      */
     public Map<String, UomTypeCO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes){
-        return ResponseUtils.getResponse(lovAdapterRemoteService.findUomByCodes(tenantId, uomTypeCodes), new TypeReference<Map<String, UomTypeCO>>() {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.findUomTypeByCodes(tenantId, uomTypeCodes), new TypeReference<Map<String, UomTypeCO>>() {
         });
     }
 
