@@ -34,7 +34,7 @@ public class LovAdapterInternalController {
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")
     public ResponseEntity<Map<String, CurrencyBO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                       @RequestParam List<String> currencyCodes) {
+                                                                       @RequestParam(value = "currencyCodes") List<String> currencyCodes) {
         return Results.success(lovAdapterService.findCurrencyByCodes(organizationId,currencyCodes));
     }
 
@@ -42,7 +42,7 @@ public class LovAdapterInternalController {
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/uom-by-codes")
     public ResponseEntity<Map<String, UomBO>> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                             @RequestParam List<String> uomCodes) {
+                                                             @RequestParam(value = "uomCodes") List<String> uomCodes) {
         return Results.success(lovAdapterService.findUomByCodes(organizationId,uomCodes));
     }
 
@@ -50,7 +50,7 @@ public class LovAdapterInternalController {
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/uomType-by-codes")
     public ResponseEntity<Map<String, UomTypeBO>> findUomTypeByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                     @RequestParam List<String> uomTypeCodes) {
+                                                                     @RequestParam(value = "uomTypeCodes") List<String> uomTypeCodes) {
         return Results.success(lovAdapterService.findUomTypeByCodes(organizationId,uomTypeCodes));
     }
 }
