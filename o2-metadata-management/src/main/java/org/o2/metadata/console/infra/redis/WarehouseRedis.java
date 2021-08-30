@@ -26,4 +26,27 @@ public interface WarehouseRedis {
      * @param tenantId 租户ID
      */
     void batchUpdateWarehouse(List<String> warehouseCodes, Long tenantId);
+
+    /**
+     * 保存仓库快递配送接单量限制
+     *
+     * @param tenantId        租户ID
+     * @param warehouseCode   仓库编码
+     * @param expressQuantity 快递配送接单量限制
+     * @return -1 失败 1成功
+     */
+    Integer updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId);
+
+    /**
+     * 仓库自提接单量增量更新
+     *
+     * @param tenantId      租户ID
+     * @param warehouseCode 仓库编码
+     * @param pickUpQuantity     自提单量增量
+     * @return 1 成功 -1 失败
+     */
+    Integer updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId);
+
+
+
 }

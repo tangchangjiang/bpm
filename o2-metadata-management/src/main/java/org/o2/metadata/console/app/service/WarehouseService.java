@@ -53,31 +53,14 @@ public interface WarehouseService {
 
 
     /**
-     * 保存仓库快递配送接单量限制
-     *
-     * @param tenantId        租户ID
-     * @param warehouseCode   仓库编码
-     * @param expressQuantity 快递配送接单量限制
-     */
-    void saveExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId);
-
-    /**
-     * 保存仓库自提接单量限制
-     *
-     * @param tenantId       租户ID
-     * @param warehouseCode  仓库编码
-     * @param pickUpQuantity 自提单量限制
-     */
-    void savePickUpQuantity(String warehouseCode, String pickUpQuantity, Long tenantId);
-
-    /**
      * 仓库快递配送接单量增量更新
      *
      * @param tenantId       租户ID
      * @param warehouseCode  仓库编码
      * @param increment      快递配送接单量增量
+     * @return 1 成功 -1 失败
      */
-    void updateExpressValue(String warehouseCode, String increment, Long tenantId);
+    Integer updateExpressValue(String warehouseCode, String increment, Long tenantId);
 
     /**
      * 仓库自提接单量增量更新
@@ -85,44 +68,9 @@ public interface WarehouseService {
      * @param tenantId      租户ID
      * @param warehouseCode 仓库编码
      * @param increment     自提单量增量
+     * @return 1 成功 -1 失败
      */
-    void updatePickUpValue(String warehouseCode, String increment, Long tenantId);
-
-    /**
-     * 获取快递配送接单量限制
-     *
-     * @param tenantId      租户ID
-     * @param warehouseCode 仓库编码
-     * @return 快递配送接单量限制
-     */
-    String getExpressLimit(String warehouseCode, Long tenantId);
-
-    /**
-     * 获取自提接单量限制
-     *
-     * @param tenantId       租户ID
-     * @param warehouseCode  仓库编码
-     * @return 自提接单量限制
-     */
-    String getPickUpLimit(String warehouseCode, Long tenantId);
-
-    /**
-     * 获取实际快递配送接单量
-     *
-     * @param tenantId       租户ID
-     * @param warehouseCode  仓库编码
-     * @return 实际快递配送接单量
-     */
-    String getExpressValue(String warehouseCode, Long tenantId);
-
-    /**
-     * 获取实际自提接单量
-     *
-     * @param tenantId       租户ID
-     * @param warehouseCode  仓库编码
-     * @return 实际自提接单量
-     */
-    String getPickUpValue(String warehouseCode, Long tenantId);
+    Integer updatePickUpValue(String warehouseCode, String increment, Long tenantId);
 
     /**
      * 仓库limit缓存KEY
