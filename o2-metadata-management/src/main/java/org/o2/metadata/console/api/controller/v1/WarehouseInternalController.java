@@ -2,12 +2,14 @@ package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
+import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +24,15 @@ import java.util.Set;
  */
 @RestController("warehouseInternalController.v1")
 @RequestMapping("v1/{organizationId}/warehouse-internal")
+@Api(tags = MetadataManagementAutoConfiguration.WAREHOUSE)
 public class WarehouseInternalController {
 
     private WarehouseService warehouseService;
-
     public WarehouseInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
 
-    @ApiOperation(value = "查询仓库")
+    @ApiOperation(value = "查询仓库(内部调用)")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
