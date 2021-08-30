@@ -263,10 +263,10 @@ public class O2MetadataManagementClient {
      *
      * @param organizationId 租户ID
      * @param warehouseCode  仓库编码
-     * @param increment      快递配送接单量增量
+     * @param increment      快递配送接单量增量 1 成功 -1 失败
      */
-    public Boolean updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.isFailed(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment));
+    public Integer updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
+        return ResponseUtils.getResponse(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment),Integer.class);
     }
 
 
