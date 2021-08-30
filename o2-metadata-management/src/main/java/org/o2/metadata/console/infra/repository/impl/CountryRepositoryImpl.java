@@ -31,7 +31,7 @@ public class CountryRepositoryImpl extends BaseRepositoryImpl<Country> implement
         Map<String,String> queryParams = new HashMap<>(16);
         queryParams.put(RegionConstants.RegionLov.COUNTRY_CODE.getCode(),regionQueryLov.getCountryCode());
         queryParams.put(RegionConstants.RegionLov.TENANT_ID.getCode(),String.valueOf(regionQueryLov.getTenantId()));
-        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.COUNTRY_LOV_CODE.getCode(),tenantId, null,  regionQueryLov.getPage(), regionQueryLov.getSize() , queryParams);
+        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.REGION_LOV_CODE.getCode(),tenantId, null,  regionQueryLov.getPage(), regionQueryLov.getSize() , queryParams);
         if (list.isEmpty()){
             return countryList;
         }
