@@ -1,8 +1,10 @@
 package org.o2.metadata.console.app.service;
 
+import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.lov.domain.bo.CurrencyBO;
 import org.o2.lov.domain.bo.UomBO;
 import org.o2.lov.domain.bo.UomTypeBO;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -37,4 +39,12 @@ public interface LovAdapterService {
      * @return 单位类型信息MAP
      */
     Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes);
+
+    /**
+     * 根据编码以及租户ID批量查集值
+     * @param queryMap 查询条件
+     * @param tenantId 租户ID
+     * @return 值集集合
+     */
+    ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId);
 }
