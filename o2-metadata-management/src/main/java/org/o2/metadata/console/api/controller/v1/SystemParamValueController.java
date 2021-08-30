@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
@@ -55,7 +56,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "系统参数值列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> listSystemParamValues(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
+    public ResponseEntity<Page<SystemParamValue>> listSystemParamValues(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         Page<SystemParamValue> page = PageHelper.doPage(pageRequest, () -> systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class)
@@ -68,7 +69,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "系统参数值明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{valueId}")
-    public ResponseEntity<?> getSystemParamValue(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<SystemParamValue> getSystemParamValue(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
         SystemParamValue condition = new SystemParamValue();
         condition.setTenantId(organizationId);
         condition.setValueId(valueId);
@@ -79,38 +80,38 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "创建系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> saveSystemParamValue(@RequestBody SystemParamValueDTO systemParamValueDTO, @PathVariable("organizationId") Long organizationId) {
-        systemParamValueDTO.setTenantId(organizationId);
-        systemParamValueService.systemParamValueValidate(systemParamValueDTO);
-        systemParamValueService.saveSystemParamValue(systemParamValueDTO);
-        return Results.success(systemParamValueDTO);
+    public ResponseEntity<SystemParamValue> saveSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+        systemParamValue.setTenantId(organizationId);
+        systemParamValueService.systemParamValueValidate(systemParamValue);
+        systemParamValueService.saveSystemParamValue(systemParamValue);
+        return Results.success(systemParamValue);
     }
 
     @ApiOperation(value = "修改系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValueDTO systemParamValueDTO, @PathVariable("organizationId") Long organizationId) {
-        systemParamValueDTO.setTenantId(organizationId);
-        SecurityTokenHelper.validToken(systemParamValueDTO);
-        systemParamValueService.systemParamValueValidate(systemParamValueDTO);
-        systemParamValueService.updateSystemParamValue(systemParamValueDTO);
-        return Results.success(systemParamValueDTO);
+    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+        systemParamValue.setTenantId(organizationId);
+        SecurityTokenHelper.validToken(systemParamValue);
+        systemParamValueService.systemParamValueValidate(systemParamValue);
+        systemParamValueService.updateSystemParamValue(systemParamValue);
+        return Results.success(systemParamValue);
     }
 
     @ApiOperation(value = "删除系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<String> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
         systemParamValueService.removeSystemParamValue(systemParamValue);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "获取KV系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}/KV")
-    public ResponseEntity<?> getSysValueByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<String> getSysValueByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
         String sysValueByParam = systemParamValueService.getSysValueByParam(paramCode, organizationId);
         return Results.success(sysValueByParam);
     }
@@ -118,7 +119,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "获取List系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}/LIST")
-    public ResponseEntity<?> getSysListByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<List<String>> getSysListByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
         List<String> sysListByParam = systemParamValueService.getSysListByParam(paramCode, organizationId);
         return Results.success(sysListByParam);
     }
@@ -126,7 +127,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "获取SET系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}/SET")
-    public ResponseEntity<?> getSysSetByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<Set<String>> getSysSetByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
         Set<String> sysSetByParam = systemParamValueService.getSysSetByParam(paramCode, organizationId);
         return Results.success(sysSetByParam);
     }

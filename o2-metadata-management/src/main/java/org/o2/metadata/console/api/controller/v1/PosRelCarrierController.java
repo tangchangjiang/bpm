@@ -10,6 +10,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -55,7 +56,7 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "服务点关联承运商明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{relId}")
-    public ResponseEntity<?> detail(@PathVariable final Long relId) {
+    public ResponseEntity<PosRelCarrier> detail(@PathVariable final Long relId) {
         final PosRelCarrier posRelCarrier = posRelCarrierRepository.selectByPrimaryKey(relId);
         return Results.success(posRelCarrier);
     }
@@ -63,7 +64,7 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量创建或更新服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<PosRelCarrier> posRelCarriers) {
+    public ResponseEntity<List<PosRelCarrier>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<PosRelCarrier> posRelCarriers) {
         final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(organizationId,posRelCarriers);
         return Results.success(resultList);
     }
@@ -71,7 +72,7 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "修改服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final PosRelCarrier posRelCarrier) {
+    public ResponseEntity<PosRelCarrier> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final PosRelCarrier posRelCarrier) {
         SecurityTokenHelper.validToken(posRelCarrier);
         posRelCarrier.setTenantId(organizationId);
         posRelCarrierRepository.updateByPrimaryKeySelective(posRelCarrier);
@@ -81,10 +82,10 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量删除服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
+    public ResponseEntity<String> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
         SecurityTokenHelper.validToken(posRelCarrieies);
         posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrieies);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
 }

@@ -52,7 +52,7 @@ public class FreightTemplateDetailController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/region/{templateId}")
-    public ResponseEntity<?> queryRegionFreightTemplateDetail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId, final PageRequest pageRequest) {
+    public ResponseEntity<Page<FreightTemplateDetail>> queryRegionFreightTemplateDetail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId, final PageRequest pageRequest) {
         final Page<FreightTemplateDetail> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateDetailService.queryRegionFreightTemplateDetail(templateId));
         return Results.success(list);
@@ -62,7 +62,7 @@ public class FreightTemplateDetailController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{templateDetailId}")
-    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateDetailId) {
+    public ResponseEntity<FreightTemplateDetail> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateDetailId) {
         final FreightTemplateDetail freightTemplateDetail = freightTemplateDetailRepository.selectByPrimaryKey(templateDetailId);
         return Results.success(freightTemplateDetail);
     }
@@ -70,9 +70,9 @@ public class FreightTemplateDetailController extends BaseController {
     @ApiOperation(value = "批量删除运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
+    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
         freightTemplateDetailService.batchDelete(freightTemplateDetailList);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
 }

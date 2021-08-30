@@ -1,6 +1,7 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -22,7 +23,6 @@ import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -55,7 +55,7 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @ApiOperation(value = "批量创建网店关联仓库关系")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-warehouse/batch-create")
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
+    public ResponseEntity<List<OnlineShopRelWarehouse>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
         this.validList(onlineShopRelWarehouseList);
         final List<OnlineShopRelWarehouse> relationShips = onlineShopRelWarehouseService.batchInsertSelective(organizationId,onlineShopRelWarehouseList);
         return Results.success(relationShips);
@@ -64,7 +64,7 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @ApiOperation("批量更新网点关联仓库状态")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-warehouse/batch-update")
-    public ResponseEntity<?>  batchUpdateActived(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
+    public ResponseEntity<List<OnlineShopRelWarehouse>>  batchUpdateActived(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
         this.validList(onlineShopRelWarehouseList);
         SecurityTokenHelper.validToken(onlineShopRelWarehouseList);
         final List<OnlineShopRelWarehouse> relationships = onlineShopRelWarehouseService.batchUpdateByPrimaryKey(organizationId,onlineShopRelWarehouseList);
@@ -75,7 +75,7 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/unbind-warehouse")
-    public ResponseEntity<?>  queryUnbindWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<Warehouse>>  queryUnbindWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @PathVariable("onlineShopId") final Long onlineShopId,
                                            @RequestParam(required = false) final String warehouseCode,
                                            @RequestParam(required = false) final String warehouseName,
@@ -89,7 +89,7 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/shop-warehouse-relationships")
-    public ResponseEntity<?>  list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<OnlineShopRelWarehouseVO>>  list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                @PathVariable("onlineShopId") final Long onlineShopId,
                                final OnlineShopRelWarehouseVO onlineShopRelWarehouseVO,
                                @ApiIgnore final PageRequest pageRequest) {
@@ -103,16 +103,16 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @PostMapping("/online-shops/reset-is-inv-calculated")
-    public ResponseEntity<?> resetIsInvCalculated(
+    public ResponseEntity<List<OnlineShopRelWarehouse>> resetIsInvCalculated(
             @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
             @RequestParam(required = false) final String onlineShopCode,
             @RequestParam(required = false) final String warehouseCode) {
         if (StringUtils.isEmpty(onlineShopCode) && StringUtils.isEmpty(warehouseCode)) {
-            return new ResponseEntity<>(getExceptionResponse(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL);
         }
 
         if (StringUtils.isNotEmpty(onlineShopCode) && StringUtils.isNotEmpty(warehouseCode)) {
-            return new ResponseEntity<>(getExceptionResponse(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL), HttpStatus.OK);
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL);
         }
         return Results.success(onlineShopRelWarehouseService.resetIsInvCalculated(onlineShopCode, warehouseCode,organizationId));
     }

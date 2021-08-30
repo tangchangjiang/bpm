@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.export.annotation.ExcelExport;
@@ -51,7 +52,7 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
+    public ResponseEntity<Page<Catalog>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, Catalog catalog, @ApiIgnore @SortDefault(value = Catalog.FIELD_CATALOG_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         catalog.setTenantId(organizationId);
         final Page<Catalog> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
@@ -62,7 +63,7 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "版本明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{catalogId}")
-    public ResponseEntity<?> detail(@PathVariable Long catalogId) {
+    public ResponseEntity<Catalog> detail(@PathVariable Long catalogId) {
         Catalog catalog = catalogRepository.selectByPrimaryKey(catalogId);
         return Results.success(catalog);
     }
@@ -70,7 +71,7 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "创建版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+    public ResponseEntity<Catalog> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
         catalogRepository.insertSelective(catalog);
         return Results.success(catalog);
@@ -79,7 +80,7 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "修改版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+    public ResponseEntity<Catalog> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         SecurityTokenHelper.validToken(catalog);
         catalog.setTenantId(organizationId);
         catalogService.update(catalog);
@@ -89,18 +90,18 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "删除版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
         SecurityTokenHelper.validToken(catalog);
         catalogRepository.deleteByPrimaryKey(catalog);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "版本导出Excel")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/export")
     @ExcelExport(CatalogVO.class)
-    public ResponseEntity<?> export(ExportParam exportParam, HttpServletResponse response,@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<List<CatalogVO>> export(ExportParam exportParam, HttpServletResponse response,@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         List<CatalogVO> export = catalogService.export(exportParam,organizationId);
         log.info("data {}",export);
         return Results.success(export);

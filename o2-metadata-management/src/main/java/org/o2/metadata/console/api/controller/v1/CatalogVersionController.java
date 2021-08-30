@@ -10,6 +10,7 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -47,7 +48,7 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
+    public ResponseEntity<Page<CatalogVersion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         catalogVersion.setTenantId(organizationId);
         if (null != catalogVersion.getCatalogCode()) {
@@ -62,7 +63,7 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "目录版本明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{catalogVersionId}")
-    public ResponseEntity<?> detail(@PathVariable Long catalogVersionId) {
+    public ResponseEntity<CatalogVersion> detail(@PathVariable Long catalogVersionId) {
         CatalogVersion catalogVersion = catalogVersionRepository.selectByPrimaryKey(catalogVersionId);
         return Results.success(catalogVersion);
     }
@@ -70,7 +71,7 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "创建目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<CatalogVersion> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
         catalogVersionService.insert(catalogVersion);
         return Results.success(catalogVersion);
@@ -79,7 +80,7 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "修改目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<CatalogVersion> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
         catalogVersionService.update(catalogVersion);
         return Results.success(catalogVersion);
@@ -88,10 +89,10 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "删除目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<String> remove(@RequestBody CatalogVersion catalogVersion) {
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.deleteByPrimaryKey(catalogVersion);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "目录&目录版本")
