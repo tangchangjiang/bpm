@@ -69,8 +69,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
+    public void saveSystemParamValue(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.insertSelective(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -78,8 +77,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateSystemParamValue(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
+    public void updateSystemParamValue(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.updateByPrimaryKey(systemParamValue);
         systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
@@ -94,11 +92,10 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
     }
 
     @Override
-    public void systemParamValueValidate(SystemParamValueDTO systemParamValueDTO) {
-        SystemParamValue systemParamValue = SystemParamValueConverter.dtoToPoObject(systemParamValueDTO);
+    public void systemParamValueValidate(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         if (SystemParameterConstants.ParamType.MAP.equals(systemParameter.getParamTypeCode())){
-           String key =  systemParamValueDTO.getParamKey();
+           String key =  systemParamValue.getParamKey();
            if (StringUtils.isEmpty(key)) {
                throw new CommonException(SystemParameterConstants.ErrorCode.BASIC_DATA_MAP_KEY_IS_NULL);
            }

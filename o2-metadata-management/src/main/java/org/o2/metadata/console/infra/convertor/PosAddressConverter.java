@@ -79,6 +79,7 @@ public class PosAddressConverter {
      */
     private static PosAddressCO poToCoObject(PosAddress posAddress) {
 
+
         if (posAddress == null) {
             return null;
         }
@@ -96,6 +97,10 @@ public class PosAddressConverter {
         co.setLongitude(posAddress.getLongitude());
         co.setLatitude(posAddress.getLatitude());
         co.setTenantId(posAddress.getTenantId());
+        co.setDistrict(posAddress.getStreetName());
+        co.setCity(posAddress.getCityName());
+        co.setCountry(posAddress.getCountryName());
+        co.setRegion(posAddress.getRegionName());
         return co;
     }
 

@@ -45,7 +45,7 @@ public class FreightTemplateController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
+    public ResponseEntity<Page<FreightTemplate>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
         //默认查询生效的
         freightTemplate.setActiveFlag(1);
 
@@ -62,7 +62,7 @@ public class FreightTemplateController extends BaseController {
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_DETAIL_DISPLAY_LIST,
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_TEMPLATE_DETAILS})
     @GetMapping("/{templateId}")
-    public ResponseEntity<?> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId) {
+    public ResponseEntity<FreightTemplateManagementVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId) {
         final FreightTemplateManagementVO freightTemplate = freightTemplateService.queryTemplateAndDetails(templateId,organizationId);
         return Results.success(freightTemplate);
     }
@@ -70,7 +70,7 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "新增运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
+    public ResponseEntity<FreightTemplate> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
         final FreightTemplate insert = freightTemplateService.createTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(insert);
     }
@@ -78,7 +78,7 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "修改运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
+    public ResponseEntity<FreightTemplate> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
         SecurityTokenHelper.validToken(freightTemplateManagementVO);
         final FreightTemplate update = freightTemplateService.updateTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(update);
@@ -87,25 +87,25 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "删除运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
+    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
         freightTemplateService.removeTemplateAndDetails(freightTemplateList,organizationId);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "更新运费模板redis缓存")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/refresh-cache")
-    public ResponseEntity<?> refreshCache(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
+    public ResponseEntity<String> refreshCache(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
         freightTemplateService.refreshCache(templateId);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "设置默认模板")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/setDefaultTemp")
-    public ResponseEntity<?> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
+    public ResponseEntity<String> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
         freightTemplateService.setDefaultTemp(organizationId,templateId);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
     @ApiOperation(value = "获取默认的运费模板及其明细")
@@ -114,7 +114,7 @@ public class FreightTemplateController extends BaseController {
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_DEFAULT_FREIGHT_TEMPLATE_DETAILS,
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_TEMPLATE_DETAILS})
     @GetMapping("/defaultTemplate")
-    public ResponseEntity<?> querydefaultTemplate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<FreightTemplateManagementVO> querydefaultTemplate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         final FreightTemplateManagementVO freightTemplate = freightTemplateService.querydefaultTemplate(organizationId);
         return Results.success(freightTemplate);
     }

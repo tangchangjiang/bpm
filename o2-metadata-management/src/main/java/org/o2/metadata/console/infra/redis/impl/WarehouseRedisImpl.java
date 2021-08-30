@@ -112,6 +112,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     private Integer executeScript(List<String> keyList, final String warehouseCode, final String num, ScriptSource scriptSource) {
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
+        defaultRedisScript.setResultType(Long.class);
         try {
             Long scriptValue = this.redisCacheClient.execute(defaultRedisScript, keyList, warehouseCode, num);
             if (null == scriptValue) {

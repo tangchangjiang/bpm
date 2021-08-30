@@ -42,16 +42,16 @@ public interface SystemParamValueService {
 
     /**
      * 新建参数值
-     * @param  systemParamValueDTO 参数值
+     * @param  systemParamValue 参数值
      * @return
      */
-    void saveSystemParamValue(SystemParamValueDTO systemParamValueDTO);
+    void saveSystemParamValue(SystemParamValue systemParamValue);
 
     /**
      * 更新参数值
-     * @param  systemParamValueDTO 参数值
+     * @param  systemParamValue 参数值
      */
-    void updateSystemParamValue(SystemParamValueDTO systemParamValueDTO);
+    void updateSystemParamValue(SystemParamValue systemParamValue);
 
     /**
      * 删除参数值
@@ -61,8 +61,8 @@ public interface SystemParamValueService {
     
     /**
      * 校验值
-     * @param systemParamValueDTO 参数值
+     * @param systemParamValue 参数值
      */
-    void  systemParamValueValidate(SystemParamValueDTO systemParamValueDTO);
+    void  systemParamValueValidate(SystemParamValue systemParamValue);
 
 }

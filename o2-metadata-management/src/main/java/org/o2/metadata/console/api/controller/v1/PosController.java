@@ -1,6 +1,7 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.core.domain.Page;
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -70,20 +71,20 @@ public class PosController extends BaseController {
     @ApiOperation(value = "创建服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosDTO pos) {
+    public ResponseEntity<Pos> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
         pos.setTenantId(organizationId);
         validObject(pos);
         if (!UniqueHelper.valid(pos)) {
-            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.DATA_EXISTS), HttpStatus.OK);
+            throw  new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
         }
         posService.create(pos);
-        return Results.success(pos);
+        return Results.success();
     }
 
     @ApiOperation(value = "修改服务点信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosDTO pos) {
+    public ResponseEntity<Pos> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Pos pos) {
         SecurityTokenHelper.validToken(pos, true, true);
         this.validObject(pos);
         pos.setTenantId(organizationId);
@@ -96,7 +97,7 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/by/{posCode}")
-    public ResponseEntity<?> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final String posCode) {
+    public ResponseEntity<Pos> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final String posCode) {
         final Pos pos = posRepository.getPosByCode(organizationId, posCode);
         return Results.success(pos);
     }

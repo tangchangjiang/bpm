@@ -56,7 +56,7 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "承运商匹配表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{carrierMappingId}")
-    public ResponseEntity<?> detail(@PathVariable final Long carrierMappingId) {
+    public ResponseEntity<CarrierMapping> detail(@PathVariable final Long carrierMappingId) {
         final CarrierMapping carrierMapping = carrierMappingRepository.selectByPrimaryKey(carrierMappingId);
         return Results.success(carrierMapping);
     }
@@ -73,7 +73,7 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "修改承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final CarrierMapping carrierMapping) {
+    public ResponseEntity<CarrierMapping> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final CarrierMapping carrierMapping) {
         SecurityTokenHelper.validToken(carrierMapping);
         carrierMapping.setTenantId(organizationId);
         carrierMappingRepository.updateByPrimaryKeySelective(carrierMapping);
@@ -83,10 +83,10 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "删除承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
+    public ResponseEntity<String> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
         SecurityTokenHelper.validToken(carrierMappings);
         carrierMappingRepository.batchDeleteByPrimaryKey(carrierMappings);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 
 }

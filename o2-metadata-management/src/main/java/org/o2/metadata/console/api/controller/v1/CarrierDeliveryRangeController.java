@@ -3,6 +3,7 @@ package org.o2.metadata.console.api.controller.v1;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -54,7 +55,7 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "承运商送达范围列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-list")
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierDeliveryRange carrierDeliveryRange,
+    public ResponseEntity<Page<CarrierDeliveryRange>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierDeliveryRange carrierDeliveryRange,
                                   @ApiIgnore @SortDefault(value = CarrierDeliveryRange.FIELD_DELIVERY_RANGE_ID,
                                           direction = Sort.Direction.DESC) final PageRequest pageRequest) {
         carrierDeliveryRange.setTenantId(organizationId);
@@ -66,7 +67,7 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "承运商送达范围明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/detail")
-    public ResponseEntity<?> detail(@RequestParam final Long deliveryRangeId,
+    public ResponseEntity<CarrierDeliveryRange> detail(@RequestParam final Long deliveryRangeId,
                                     @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         return Results.success(carrierDeliveryRangeService.carrierDeliveryRangeDetail(deliveryRangeId,organizationId));
     }
@@ -74,7 +75,7 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量创建或新增承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRangeSaveDTO> carrierDeliveryRangeSaveDTOList) {
+    public ResponseEntity<List<CarrierDeliveryRange>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRangeSaveDTO> carrierDeliveryRangeSaveDTOList) {
         carrierDeliveryRangeSaveDTOList.forEach(CarrierDeliveryRangeSaveDTO::baseValidate);
         List<CarrierDeliveryRange> carrierDeliveryRanges = carrierDeliveryRangeSaveDTOList.stream()
                 .map(dto -> dto.convertToCarrierDeliveryRange(countryRepository, DetailsHelper.getUserDetails().getTenantId()))
@@ -86,9 +87,9 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量删除承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public ResponseEntity<String> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         SecurityTokenHelper.validToken(carrierDeliveryRanges);
         carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(carrierDeliveryRanges);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 }

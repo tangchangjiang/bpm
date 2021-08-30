@@ -60,16 +60,16 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "创建临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
+    public ResponseEntity<List<NeighboringRegion>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
         return Results.success(neighboringRegionService.batchInsert(organizationId, neighboringRegion));
     }
 
     @ApiOperation(value = "批量删除临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
+    public ResponseEntity<String> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
         SecurityTokenHelper.validToken(neighboringRegions);
         neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
-        return Results.success();
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 }

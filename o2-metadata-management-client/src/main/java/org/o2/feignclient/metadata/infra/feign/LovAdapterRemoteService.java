@@ -32,7 +32,7 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/currency-by-codes")
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                               @RequestParam(value = "currencyCodes") List<String> currencyCodes);
+                                               @RequestParam(value = "currencyCodes",required = false) List<String> currencyCodes);
 
     /**
      * 通过编码查询单位(批量)
@@ -42,7 +42,7 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                          @RequestParam(value = "uomCodes") List<String> uomCodes);
+                                          @RequestParam(value = "uomCodes",required = false) List<String> uomCodes);
 
     /**
      * 通过编码查询单位类型(批量)
@@ -52,5 +52,5 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/uomType-by-codes")
     ResponseEntity<String> findUomTypeByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                              @RequestParam(value = "uomTypeCodes") List<String> uomTypeCodes);
+                                              @RequestParam(value = "uomTypeCodes",required = false) List<String> uomTypeCodes);
 }

@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -21,7 +22,6 @@ import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Country;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,12 +102,12 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "修改地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<AddressMapping> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         if (!addressMapping.exist(addressMappingRepository)) {
-            return new ResponseEntity<>(getExceptionResponse(BaseConstants.ErrorCode.NOT_FOUND), HttpStatus.OK);
+            throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
         addressMappingRepository.updateByPrimaryKeySelective(addressMapping);
         return Results.success(addressMapping);
@@ -121,6 +121,6 @@ public class AddressMappingController extends BaseController {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
-        return Results.success("true");
+        return Results.success(BaseConstants.FIELD_SUCCESS);
     }
 }
