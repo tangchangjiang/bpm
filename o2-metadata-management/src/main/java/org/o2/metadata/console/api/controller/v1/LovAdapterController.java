@@ -40,16 +40,40 @@ public class LovAdapterController {
         return lovAdapterService.batchQueryLovInfo(queryMap,organizationId);
     }
 
-    @ApiOperation("调用hzero url值集")
+    @ApiOperation("货币")
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
-    @GetMapping("/url")
+    @GetMapping("/url/currency")
     public ResponseEntity<Page<Object>> listCurrency(@PathVariable Long organizationId,
                                                 @RequestParam(required = false) Map<String,String> queryParams,
                                                 PageRequest pageRequest) {
         // todo 后续替换组件
         queryParams.put("organizationId",String.valueOf(organizationId));
+        queryParams.put("lovCode","O2MD.CURRENCY");
         return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
     }
 
+    @ApiOperation("单位")
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
+    @GetMapping("/url/uom")
+    public ResponseEntity<Page<Object>> listUom(@PathVariable Long organizationId,
+                                                     @RequestParam(required = false) Map<String,String> queryParams,
+                                                     PageRequest pageRequest) {
+        // todo 后续替换组件
+        queryParams.put("organizationId",String.valueOf(organizationId));
+        queryParams.put("lovCode","O2MD.UOM");
+        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
+    }
+
+    @ApiOperation("单位类型")
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
+    @GetMapping("/url/uom-type")
+    public ResponseEntity<Page<Object>> listUomType(@PathVariable Long organizationId,
+                                                @RequestParam(required = false) Map<String,String> queryParams,
+                                                PageRequest pageRequest) {
+        // todo 后续替换组件
+        queryParams.put("organizationId",String.valueOf(organizationId));
+        queryParams.put("lovCode","O2MD.UOM_TYPE");
+        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
+    }
 
 }
