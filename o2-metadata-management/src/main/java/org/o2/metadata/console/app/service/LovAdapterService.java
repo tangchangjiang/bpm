@@ -1,5 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.lov.domain.bo.CurrencyBO;
 import org.o2.lov.domain.bo.UomBO;
@@ -47,4 +49,7 @@ public interface LovAdapterService {
      * @return 值集集合
      */
     ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId);
+
+
+    <E> Page<E>  pageList(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
 }
