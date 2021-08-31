@@ -100,7 +100,7 @@ public interface MetadataManagementConstants {
         String MULTI_LANGUAGE = "multilanguageUrl";
         String PUB_LOV = "pubLovResourceUrl";
         String REGION = "regionResourceUrl";
-        String SPU = "spuResourceUrl";
+        String PCM_SPU = "spuResourceUrl";
     }
 
 }
