@@ -42,14 +42,13 @@ public class LovAdapterController {
 
     @ApiOperation("调用hzero url值集")
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
-    @GetMapping("/url/{lovCode}")
+    @GetMapping("/url")
     public ResponseEntity<Page<Object>> listCurrency(@PathVariable Long organizationId,
-                                                @PathVariable String lovCode,
                                                 @RequestParam(required = false) Map<String,String> queryParams,
                                                 PageRequest pageRequest) {
         // todo 后续替换组件
         queryParams.put("organizationId",String.valueOf(organizationId));
-        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,lovCode));
+        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
     }
 
 
