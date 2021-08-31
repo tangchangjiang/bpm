@@ -38,7 +38,7 @@ public interface MetadataManagementConstants {
          * CMS - site站点配置文件
          */
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
-        
+
 
         /**
          * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
@@ -89,6 +89,18 @@ public interface MetadataManagementConstants {
         String METADATA = "METADATA";
         String PCM = "PRODUCT";
         String CMS = "CMS";
+    }
+
+    /**
+     * 静态资源文件来源系统JsonKey
+     */
+    interface StaticResourceJsonKey {
+        String PCM_CATEGORY = "categoryResourceUrl";
+        String CMS_DECORATION = "cmsDecorationUrl";
+        String MULTI_LANGUAGE = "multilanguageUrl";
+        String PUB_LOV = "pubLovResourceUrl";
+        String REGION = "regionResourceUrl";
+        String PCM_SPU = "spuResourceUrl";
     }
 
 }
