@@ -116,24 +116,27 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     }
 
     private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl, String languageCode) {
-        String trimResourceUrl = trimDomainPrefix(resourceUrl);
+        String domainAndUrl=trimHttpPrefix(resourceUrl);
+        int indexOfSlash=domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
+
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
         saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.buildMetadataRegionCode());
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(MetadataConstants.StaticResourceCode.O2MD_REGION_DESCRIPTION);
-        saveDTO.setResourceUrl(trimResourceUrl);
+        saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        saveDTO.setDomain(domainAndUrl.substring(0,indexOfSlash));
         saveDTO.setLang(languageCode);
         return saveDTO;
     }
 
     /**
-     * 裁剪掉域名 + 端口
+     * 裁剪掉http前缀
      *
      * @param resourceUrl resourceUrl
      * @return result
      */
-    private static String trimDomainPrefix(String resourceUrl) {
+    private static String trimHttpPrefix(String resourceUrl) {
         if (StringUtils.isBlank(resourceUrl)) {
             return "";
         }
@@ -143,7 +146,6 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
             return resourceUrl;
         }
 
-        String domainSuffix = httpSplits[1];
-        return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
+        return httpSplits[1];
     }
 }
