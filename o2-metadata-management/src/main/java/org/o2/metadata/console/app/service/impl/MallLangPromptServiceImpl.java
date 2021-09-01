@@ -79,7 +79,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
             List<MallLangPrompt> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
-                // TODO: 唯一性校验
+                // 唯一性校验
                 UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 item.setStatus(MetadataConstants.MallLangPromptConstants.UNAPPROVED);
                 mallLangPromptRepository.updateByPrimaryKeySelective(item);
@@ -89,7 +89,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
             List<MallLangPrompt> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
-                // TODO: 唯一性校验
+                // 唯一性校验
                 UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 mallLangPromptRepository.insertSelective(item);
             });
@@ -123,10 +123,10 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     public BatchResponse<MallLangPrompt> release(List<MallLangPrompt> mallLangPromptList) {
         BatchResponse<MallLangPrompt> batchResponse = new BatchResponse<>();
         List<String> errorMsg = new ArrayList<>();
-        for(MallLangPrompt mallLangPrompt : mallLangPromptList){
+        for (MallLangPrompt mallLangPrompt : mallLangPromptList) {
             final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
                     3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
-            lockService.lock(lockData, () -> releaseProcess(mallLangPrompt,errorMsg,batchResponse),null);
+            lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse), null);
         }
         //详情页面校验报错
         if (mallLangPromptList.size() == 1 && CollectionUtils.isNotEmpty(errorMsg)) {

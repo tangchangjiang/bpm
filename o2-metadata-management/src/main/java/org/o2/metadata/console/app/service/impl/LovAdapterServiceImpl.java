@@ -85,7 +85,7 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
         String json;
         if ("POST".equals(lovDTO.getRequestMethod())) {
-            json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class, new Object[0]), String.class);
+            json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
         } else {
             json = ResponseUtils.getResponse(this.restTemplate.getForEntity(this.preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);
         }
@@ -98,7 +98,12 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         return result;
     }
 
-
+    /**
+     *  构造请求地址
+     * @param url 请求url
+     * @param params   参数
+     * @return  str
+     */
     private String preProcessUrlParam(String url, Map<String, String> params) {
         if (MapUtils.isEmpty(params)) {
             return url;
@@ -117,14 +122,24 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     }
 
 
-
+    /**
+     *  获取服务名
+     * @param serverCode 路由
+     * @return  str
+     */
     private String getServerName(String serverCode) {
         this.redisHelper.setCurrentDatabase(HZeroService.Admin.REDIS_DB);
         String serverName = this.redisHelper.hshGet("hadm:routes", serverCode);
         this.redisHelper.clearCurrentDatabase();
         return serverName;
     }
-
+    /**
+     * 构造分页入参
+     * @param params 参数
+     * @param page 页码
+     * @param size 大小
+     * @param isMustPage 是否分页
+     */
     private void processPageInfo(Map<String, String> params, Integer page, Integer size, boolean isMustPage) {
         if (page == null) {
             params.put("page", "0");

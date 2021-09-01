@@ -16,7 +16,6 @@ import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.mapper.RegionMapper;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +32,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
-    private static final String JSON_TYPE = "application/json";
-    private static final String ZH_CN = "zh_CN";
-    private static final String EN_US = "en_US";
+
 
     private final FileStorageProperties fileStorageProperties;
     private final RegionRepository regionRepository;
@@ -84,7 +81,6 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
      *
      * @param list 静态文件数据实体
      */
-    // TODO：文件上传需要分布式锁
     private String staticFile(final List<RegionCacheBO> list,
                               final String lang,
                               final Long tenantId,
@@ -100,7 +96,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         log.info("directory url {}", directory);
         final String fileName = MetadataConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + MetadataConstants.FileSuffix.JSON;
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
-                directory, fileName, JSON_TYPE,
+                directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
         log.info("resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
         return resultUrl;
@@ -108,9 +104,9 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId, String zhResourceUrl, String enResourceUrl) {
         List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
-        StaticResourceSaveDTO zhSaveDTO = fillCommonFields(tenantId, zhResourceUrl, ZH_CN);
+        StaticResourceSaveDTO zhSaveDTO = fillCommonFields(tenantId, zhResourceUrl, MetadataConstants.O2SiteRegionFile.ZH_CN);
         saveDTOList.add(zhSaveDTO);
-        StaticResourceSaveDTO enSaveDTO = fillCommonFields(tenantId, enResourceUrl, EN_US);
+        StaticResourceSaveDTO enSaveDTO = fillCommonFields(tenantId, enResourceUrl, MetadataConstants.O2SiteRegionFile.EN_US);
         saveDTOList.add(enSaveDTO);
         return saveDTOList;
     }

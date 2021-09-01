@@ -44,6 +44,23 @@ public interface MetadataConstants {
     }
 
     /**
+     * 公共值集
+     */
+    interface PublicLov {
+        String PUB_LOV_CODE = "O2MD.PUBLIC_LOV";
+        String JSON_TYPE = "application/json";
+    }
+
+    /**
+     * 地区静态文件同步
+     */
+    interface O2SiteRegionFile {
+         String JSON_TYPE = "application/json";
+           String ZH_CN = "zh_CN";
+          String EN_US = "en_US";
+    }
+
+    /**
      * 营业类型
      */
     interface BusinessType {
@@ -110,12 +127,6 @@ public interface MetadataConstants {
 
         ResourceScriptSource BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/onlineShop/batch_delete_shopRelWh_redis.lua"));
-
-        ResourceScriptSource BATCH_DELETE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/batch_delete_redis_hash_value.lua"));
-
-        ResourceScriptSource BATCH_UPDATE_REDIS_HASH_VALUE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/batch_update_redis_hash_value.lua"));
     }
 
     interface Path {
@@ -135,7 +146,7 @@ public interface MetadataConstants {
 
     }
 
-    public interface FileSuffix {
+     interface FileSuffix {
         String JSON = ".json";
     }
 

@@ -32,13 +32,11 @@ import io.choerodon.core.oauth.DetailsHelper;
 @Service
 @Slf4j
 public class O2PublicLovServiceImpl implements O2PublicLovService {
-    private static final String JSON_TYPE = "application/json";
 
     private final HzeroLovQueryService hzeroLovQueryService;
     private final FileStorageProperties fileStorageProperties;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
-    private final static String PUB_LOV_CODE = "O2MD.PUBLIC_LOV";
 
     public O2PublicLovServiceImpl(HzeroLovQueryService hzeroLovQueryService, FileStorageProperties fileStorageProperties, FileClient fileClient, StaticResourceInternalService staticResourceInternalService) {
         this.hzeroLovQueryService = hzeroLovQueryService;
@@ -53,7 +51,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
             // 设置PUB_LOV默认值集编码
-            publicLovVO.setLovCode(PUB_LOV_CODE);
+            publicLovVO.setLovCode(MetadataConstants.PublicLov.PUB_LOV_CODE);
         }
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
 
@@ -61,7 +59,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
-                if (PUB_LOV_CODE.equals(publicLovVO.getLovCode())) {
+                if (MetadataConstants.PublicLov.PUB_LOV_CODE.equals(publicLovVO.getLovCode())) {
                     //O2MD.PUBLIC_LOV
                     List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {
@@ -99,7 +97,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         log.info("O2MD.PUBLIC_LOV directory url {}", directory);
         final String fileName = MetadataConstants.Path.LOV_FILE_NAME + MetadataConstants.FileSuffix.JSON;
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
-                directory, fileName, JSON_TYPE,
+                directory, fileName, MetadataConstants.PublicLov.JSON_TYPE,
                 fileStorageProperties.getStorageCode(), jsonString.getBytes());
         log.info("O2MD.PUBLIC_LOV: resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
         return resultUrl;
