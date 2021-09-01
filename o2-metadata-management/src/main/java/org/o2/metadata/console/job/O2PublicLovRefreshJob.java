@@ -17,14 +17,14 @@ import java.util.Map;
  * @author: kang.yang@hand-china.com 2021-08-20 14:17
  **/
 @Slf4j
-@JobHandler(value = "O2MD_PUBLIC_LOV_REFRESH_JOB")
-public class O2MDPublicLovRefreshJob implements IJobHandler {
+@JobHandler(value = "o2PublicLovRefreshJob")
+public class O2PublicLovRefreshJob implements IJobHandler {
     private static final String TENANT_ID = "tenantId";
     private static final String LOV_CODE = "lovCode";
 
     private final O2PublicLovService o2PublicLovService;
 
-    public O2MDPublicLovRefreshJob(O2PublicLovService o2PublicLovService) {
+    public O2PublicLovRefreshJob(O2PublicLovService o2PublicLovService) {
         this.o2PublicLovService = o2PublicLovService;
     }
 
