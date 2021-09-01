@@ -45,7 +45,7 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "服务点关联承运商列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
+    public ResponseEntity<Page<PosRelCarrier>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
             direction = Sort.Direction.ASC) final PageRequest pageRequest) {
         posRelCarrier.setTenantId(organizationId);
         final Page<PosRelCarrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),

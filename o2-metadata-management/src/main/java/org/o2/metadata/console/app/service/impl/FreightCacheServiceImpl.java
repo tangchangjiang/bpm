@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.FreightBO;
@@ -7,9 +8,6 @@ import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
 import org.o2.metadata.console.infra.constant.FreightConstants;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +19,8 @@ import java.util.*;
  * @author peng.xu@hand-china.com 2019-06-18
  */
 @Component("freightCacheService")
+@Slf4j
 public class FreightCacheServiceImpl implements FreightCacheService {
-    private final static Logger LOG = LoggerFactory.getLogger(FreightCacheServiceImpl.class);
-    private final static String DEFAULT_REGION = "null";
     private RedisCacheClient redisCacheClient;
 
     public FreightCacheServiceImpl(final RedisCacheClient redisCacheClient) {
@@ -47,9 +44,9 @@ public class FreightCacheServiceImpl implements FreightCacheService {
 
     /***
      * 更新默认模板
-     * @param freightTemplate
+     * @param freightTemplate 运费模板
      */
-    public void saveFreightDefault(final FreightTemplateBO freightTemplate) {
+    private void saveFreightDefault(final FreightTemplateBO freightTemplate) {
         final FreightBO freight = freightTemplate.getFreight();
         if (freight.getDafaultFlag()==1 ) {return;}
 
@@ -64,7 +61,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
 
     @Override
     public void saveFreightDetails(final List<FreightDetailBO> freightDetailList) {
-        if (freightDetailList != null && freightDetailList.size() > 0) {
+        if (freightDetailList != null && !freightDetailList.isEmpty()) {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
             final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
@@ -85,7 +82,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
 
     @Override
     public void deleteFreightDetails(final List<FreightDetailBO> freightDetailList) {
-        if (freightDetailList != null && freightDetailList.size() > 0) {
+        if (freightDetailList != null &&  !freightDetailList.isEmpty()) {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
             final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
@@ -153,7 +150,6 @@ public class FreightCacheServiceImpl implements FreightCacheService {
                                                final Map<String, String> freightDetailMap) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.SAVE_FREIGHT_DETAIL_CACHE_LUA);
-        LOG.info("freightDetailMap json {}", FastJsonHelper.objectToString(freightDetailMap));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(freightDetailMap));
     }
 
@@ -167,7 +163,6 @@ public class FreightCacheServiceImpl implements FreightCacheService {
                                                   final List<String> templateRegionCodeList) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.DELETE_FREIGHT_DETAIL_CACHE_LUA);
-        LOG.info("templateRegionCodeList json = {}", FastJsonHelper.objectToString(templateRegionCodeList));
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), FastJsonHelper.objectToString(templateRegionCodeList));
     }
 }

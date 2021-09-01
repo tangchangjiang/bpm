@@ -4,6 +4,7 @@ import org.o2.metadata.api.co.CarrierCO;
 import org.o2.metadata.app.service.CarrierService;
 import org.o2.metadata.domain.carrier.repository.CarrierDomainRepository;
 import org.o2.metadata.infra.convertor.CarrierConverter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
+    @Cacheable(value = "O2MD_METADATA", key = "'carrier'+'_'+#tenantId")
     public List<CarrierCO> listCarriers(Long tenantId) {
         return CarrierConverter.doToCoListObjects(carrierDomainRepository.listCarriers(tenantId));
     }

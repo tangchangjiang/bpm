@@ -7,6 +7,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.core.response.BatchResponse;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Pos;
@@ -112,8 +113,8 @@ public class RegionRelPosController extends BaseController {
     @ApiOperation(value = "批量修改默认服务点配置")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/batch")
-    public ResponseEntity<?> batchUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                               @RequestBody List<RegionRelPos> regionRelPos) {
+    public ResponseEntity<BatchResponse<RegionRelPos>> batchUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestBody List<RegionRelPos> regionRelPos) {
         SecurityTokenHelper.validToken(regionRelPos);
         return regionRelPosRepository.batchUpdate(organizationId, regionRelPos).getResponseEntity();
     }

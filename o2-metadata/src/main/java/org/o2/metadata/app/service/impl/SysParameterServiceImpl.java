@@ -6,6 +6,7 @@ import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.o2.metadata.infra.convertor.SysParameterConverter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +26,14 @@ public class SysParameterServiceImpl implements SysParameterService {
     }
 
     @Override
+    @Cacheable(value = "O2MD_METADATA", key = "'systemParameter'+'_'+#tenantId+'_'+#paramCode")
     public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO =systemParameterDomainService.getSystemParameter(paramCode,tenantId);
         return SysParameterConverter.doToVoObject(systemParameterDO);
     }
 
     @Override
+    @Cacheable(value = "O2MD_METADATA", key = "'systemParameter'+'_'+#organizationId+'_'+#paramCodes")
     public List<SystemParameterVO> listSystemParameters(List<String> paramCodes, Long organizationId) {
         return SysParameterConverter.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, organizationId));
     }

@@ -83,7 +83,7 @@ public class CarrierController extends BaseController {
     @ApiOperation(value = "批量删除承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
+    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
         SecurityTokenHelper.validToken(carrierList);
         carrierService.batchDelete(organizationId,carrierList);
         return Results.success(BaseConstants.FIELD_SUCCESS);
