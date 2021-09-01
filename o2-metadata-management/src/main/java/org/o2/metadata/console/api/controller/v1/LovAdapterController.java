@@ -6,7 +6,6 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.poi.ss.formula.functions.T;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
 import org.hzero.core.util.Results;
@@ -40,40 +39,16 @@ public class LovAdapterController {
         return lovAdapterService.batchQueryLovInfo(queryMap,organizationId);
     }
 
-    @ApiOperation("货币")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
-    @GetMapping("/url/currency")
+    @ApiOperation("")
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/url/{lovCode}")
     public ResponseEntity<Page<Object>> listCurrency(@PathVariable Long organizationId,
-                                                @RequestParam(required = false) Map<String,String> queryParams,
-                                                PageRequest pageRequest) {
-        // todo 后续替换组件
-        queryParams.put("organizationId",String.valueOf(organizationId));
-        queryParams.put("lovCode","O2MD.CURRENCY");
-        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
-    }
-
-    @ApiOperation("单位")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
-    @GetMapping("/url/uom")
-    public ResponseEntity<Page<Object>> listUom(@PathVariable Long organizationId,
-                                                     @RequestParam(required = false) Map<String,String> queryParams,
+                                                     @RequestParam(required = false) Map<String, String> queryParams,
+                                                     @PathVariable String lovCode,
                                                      PageRequest pageRequest) {
         // todo 后续替换组件
-        queryParams.put("organizationId",String.valueOf(organizationId));
-        queryParams.put("lovCode","O2MD.UOM");
-        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
-    }
-
-    @ApiOperation("单位类型")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION )
-    @GetMapping("/url/uom-type")
-    public ResponseEntity<Page<Object>> listUomType(@PathVariable Long organizationId,
-                                                @RequestParam(required = false) Map<String,String> queryParams,
-                                                PageRequest pageRequest) {
-        // todo 后续替换组件
-        queryParams.put("organizationId",String.valueOf(organizationId));
-        queryParams.put("lovCode","O2MD.UOM_TYPE");
-        return Results.success(lovAdapterService.pageList(queryParams, pageRequest,queryParams.get("lovCode")));
+        queryParams.put("organizationId", String.valueOf(organizationId));
+        return Results.success(lovAdapterService.pageList(queryParams, pageRequest, lovCode));
     }
 
 }
