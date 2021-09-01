@@ -15,7 +15,6 @@ import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +33,9 @@ import java.util.List;
 public class RegionController extends BaseController {
 
     private final RegionService regionService;
-    private final RegionRepository regionRepository;
 
-    public RegionController(RegionService regionService, RegionRepository regionRepository) {
+    public RegionController(RegionService regionService) {
         this.regionService = regionService;
-        this.regionRepository = regionRepository;
     }
 
     @ApiOperation("查询国家下地区定义，使用树状结构返回")

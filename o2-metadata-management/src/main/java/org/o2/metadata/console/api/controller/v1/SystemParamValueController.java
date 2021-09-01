@@ -6,7 +6,6 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
@@ -90,7 +89,7 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "修改系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> updateSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<SystemParamValue> updateSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
         systemParamValueService.systemParamValueValidate(systemParamValue);

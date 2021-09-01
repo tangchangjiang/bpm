@@ -59,7 +59,6 @@ public class CacheJobServiceImpl implements CacheJobService {
 
     @Override
     public void refreshWarehouse(Long tenantId) {
-
         warehouseRedis.batchUpdateWarehouse(null, tenantId);
 
     }
