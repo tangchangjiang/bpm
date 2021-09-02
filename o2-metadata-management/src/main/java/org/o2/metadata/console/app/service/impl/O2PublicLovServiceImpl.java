@@ -111,24 +111,27 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     }
 
     private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl, String languageCode, String lovCode) {
-        String trimResourceUrl = getTrimDomainPrefix(resourceUrl);
+        String domainAndUrl=trimHttpPrefix(resourceUrl);
+        int indexOfSlash=domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
+
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
         saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(lovCode + MetadataConstants.StaticResourceCode.LOV_DESCRIPTION);
-        saveDTO.setResourceUrl(trimResourceUrl);
+        saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        saveDTO.setDomain(domainAndUrl.substring(0,indexOfSlash));
         saveDTO.setLang(languageCode);
         return saveDTO;
     }
 
     /**
-     * 裁剪掉域名 + 端口
+     * 裁剪掉http前缀
      *
      * @param resourceUrl resourceUrl
      * @return result
      */
-    private static String getTrimDomainPrefix(String resourceUrl) {
+    private static String trimHttpPrefix(String resourceUrl) {
         if (StringUtils.isBlank(resourceUrl)) {
             return "";
         }
@@ -138,8 +141,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
             return resourceUrl;
         }
 
-        String domainSuffix = httpSplits[1];
-        return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
+        return httpSplits[1];
     }
 
 }

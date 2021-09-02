@@ -30,6 +30,8 @@ public class StaticResource extends AuditDomain {
     public static final String FIELD_RESOURCE_CODE = "resourceCode";
     public static final String FIELD_SOURCE_MODULE_CODE = "sourceModuleCode";
     public static final String FIELD_RESOURCE_URL = "resourceUrl";
+    public static final String FIELD_DOMAIN ="domain";
+    public static final String FIELD_JSON_KEY="jsonKey";
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_LANG = "lang";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -48,16 +50,28 @@ public class StaticResource extends AuditDomain {
     @Id
     @GeneratedValue
     private Long resourceId;
+
     @ApiModelProperty(value = "静态资源编码[模块名_资源内容名]", required = true)
     @NotBlank
     @Unique(O2MD_STATIC_RESOURCE_U1)
     private String resourceCode;
+
     @ApiModelProperty(value = "来源模块编码", required = true)
     @NotBlank
     private String sourceModuleCode;
+
     @ApiModelProperty(value = "静态资源相对路径", required = true)
     @NotBlank
     private String resourceUrl;
+
+    @ApiModelProperty(value = "静态资源host")
+    @NotBlank
+    private String domain;
+
+    @ApiModelProperty(value = "静态资源JSON文件的key名称")
+    @NotBlank
+    private String jsonKey;
+
     @ApiModelProperty(value = "静态资源描述")
     private String description;
 
@@ -118,6 +132,28 @@ public class StaticResource extends AuditDomain {
 
     public void setResourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
+    }
+
+    /**
+     * @return 静态资源host
+     */
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    /**
+     * @return 静态资源的jsonKey
+     */
+    public String getJsonKey() {
+        return jsonKey;
+    }
+
+    public void setJsonKey(String jsonKey) {
+        this.jsonKey = jsonKey;
     }
 
     /**
