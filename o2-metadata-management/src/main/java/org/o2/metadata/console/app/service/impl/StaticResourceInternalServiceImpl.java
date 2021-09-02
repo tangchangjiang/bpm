@@ -1,8 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
@@ -77,24 +75,5 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
             staticResource.setResourceId(originResource.getResourceId());
             staticResourceRepository.updateByPrimaryKey(staticResource);
         }
-    }
-
-    /**
-     * 裁剪掉http前缀
-     *
-     * @param resourceUrl resourceUrl
-     * @return result
-     */
-    private static String trimHttpPrefix(String resourceUrl) {
-        if (StringUtils.isBlank(resourceUrl)) {
-            return "";
-        }
-
-        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
-        if (httpSplits.length < 2) {
-            return resourceUrl;
-        }
-
-        return httpSplits[1];
     }
 }

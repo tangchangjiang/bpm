@@ -60,7 +60,7 @@ public class StaticResource extends AuditDomain {
     @NotBlank
     private String sourceModuleCode;
 
-    @ApiModelProperty(value = "静态资源相对路径")
+    @ApiModelProperty(value = "静态资源相对路径", required = true)
     @NotBlank
     private String resourceUrl;
 
