@@ -73,13 +73,9 @@ public class CarrierDeliveryRangeController extends BaseController {
     }
 
     @ApiOperation(value = "批量创建或新增承运商送达范围")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic =true,level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<List<CarrierDeliveryRange>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRangeSaveDTO> carrierDeliveryRangeSaveDTOList) {
-        carrierDeliveryRangeSaveDTOList.forEach(CarrierDeliveryRangeSaveDTO::baseValidate);
-        List<CarrierDeliveryRange> carrierDeliveryRanges = carrierDeliveryRangeSaveDTOList.stream()
-                .map(dto -> dto.convertToCarrierDeliveryRange(countryRepository, DetailsHelper.getUserDetails().getTenantId()))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<CarrierDeliveryRange>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         final List<CarrierDeliveryRange> resultList = carrierDeliveryRangeService.batchMerge(organizationId, carrierDeliveryRanges);
         return Results.success(resultList);
     }
