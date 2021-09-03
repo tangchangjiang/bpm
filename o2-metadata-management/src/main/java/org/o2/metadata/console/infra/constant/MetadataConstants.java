@@ -337,4 +337,9 @@ public interface MetadataConstants {
 
         int IMAGE_INTERCEPTION_MARK = 3;
     }
+
+    interface StaticResourceLevel{
+        String PUBLIC="PUBLIC";
+        String SITE="SITE";
+    }
 }

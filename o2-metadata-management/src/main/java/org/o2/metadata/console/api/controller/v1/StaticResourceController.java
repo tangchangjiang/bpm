@@ -1,7 +1,10 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.mybatis.pagehelper.PageHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
-import io.swagger.annotations.ApiParam;
 import java.util.List;
 
 /**
@@ -42,7 +44,16 @@ public class StaticResourceController extends BaseController {
                                                      StaticResource staticResource,
                                                      @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        Page<StaticResource> list = staticResourceRepository.pageAndSort(pageRequest, staticResource);
+        Page<StaticResource> list = PageHelper.doPageAndSort(pageRequest,
+                ()->staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
+                        .andWhere(Sqls.custom()
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_CODE,staticResource.getResourceCode(),true)
+                                .andLike(StaticResource.FIELD_DESCRIPTION,staticResource.getDescription(),true)
+                                .andEqualTo(StaticResource.FIELD_ENABLE_FLAG,staticResource.getEnableFlag(),true)
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel(),true)
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
+                                .andEqualTo(StaticResource.FIELD_SOURCE_MODULE_CODE,staticResource.getSourceModuleCode(),true))
+                        .build()));
         return Results.success(list);
     }
 

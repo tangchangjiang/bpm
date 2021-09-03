@@ -1,11 +1,13 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.StaticResourceConverter;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
@@ -56,6 +58,11 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     @Transactional(rollbackFor = Exception.class)
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
+        if(!MetadataConstants.StaticResourceLevel.PUBLIC.equals(staticResource.getResourceLevel())
+                &&staticResource.getResourceOwner()==null){
+            throw new CommonException("Resource owner is null");
+        }
+
         staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
 
         // 根据resource_code查询是否已存在
