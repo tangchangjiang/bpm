@@ -33,7 +33,7 @@ public class SysParameterMetadataInternalController {
     }
 
     @ApiOperation(value = "从redis查询系统参数")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}")
     public ResponseEntity<SystemParameterVO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                  @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
