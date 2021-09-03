@@ -87,14 +87,13 @@ public interface PipelineConstants {
      * 库文件数据类型
      */
     interface RuleDataType {
-
-        String CODE = "O2EXT.RULE_DATA_TYPE";
+        String CODE = "O2MD.RULE_DATA_TYPE";
     }
 
     /**
      * 展示类型
      */
     interface DisplayType{
-        String LOV_CODE = "O2EXT.DISPLAY_TYPE";
+        String LOV_CODE = "O2MD.DISPLAY_TYPE";
     }
 }

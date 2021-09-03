@@ -1,7 +1,7 @@
 package org.o2.metadata.infra.redis.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.collections4.CollectionUtils;
+import org.o2.core.helper.FastJsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParamValue;
@@ -41,7 +41,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
         if (null != object) {
-            systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(object, SystemParamValue.class)));
+            Set<SystemParamValue>  set = new HashSet<>(16);
+            List<SystemParamValue>  list = FastJsonHelper.stringToArray(object, SystemParamValue.class);
+            set.addAll(list);
+            systemParameter.setSetSystemParamValue(set);
             return systemParameter;
         }
         //map类型
@@ -53,32 +56,11 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
         List<SystemParameter> doList = new ArrayList<>();
-        String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
-        List<String> list = redisCacheClient.<String,String>opsForHash().multiGet(key,paramCodeList);
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (int i = 0; i < paramCodeList.size(); i++) {
-                SystemParameter systemParameter = new SystemParameter();
-                systemParameter.setParamCode(paramCodeList.get(i));
-                systemParameter.setDefaultValue(list.get(i));
-                doList.add(systemParameter);
-            }
+        if (CollectionUtils.isEmpty(paramCodeList)) {
             return doList;
         }
-        String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
-        List<String> listSet = redisCacheClient.<String,String>opsForHash().multiGet(keySet,paramCodeList);
-        if (CollectionUtils.isNotEmpty(listSet)) {
-            for (int i = 0; i < paramCodeList.size(); i++) {
-                SystemParameter systemParameter = new SystemParameter();
-                systemParameter.setParamCode(paramCodeList.get(i));
-                systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(listSet.get(i), SystemParamValue.class)));
-                doList.add(systemParameter);
-            }
-            return doList;
-        }
-        for (String paramCode : paramCodeList) {
-            SystemParameter systemParameter = new SystemParameter();
-            systemParameter.setParamCode(paramCode);
-            systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId,paramCode));
+        for (String str : paramCodeList) {
+            SystemParameter systemParameter = this.getSystemParameter(str,tenantId);
             doList.add(systemParameter);
         }
         return doList;
