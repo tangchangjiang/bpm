@@ -1,12 +1,14 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.mybatis.pagehelper.PageHelper;
+import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,8 @@ public class StaticResourceController extends BaseController {
     private StaticResourceRepository staticResourceRepository;
     @Autowired
     private StaticResourceService staticResourceService;
+    @Autowired
+    private RedisHelper redisHelper;
 
     @ApiOperation(value = "静态资源文件表维护-分页查询静态资源文件表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -54,6 +58,7 @@ public class StaticResourceController extends BaseController {
                                 .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
                                 .andEqualTo(StaticResource.FIELD_SOURCE_MODULE_CODE,staticResource.getSourceModuleCode(),true))
                         .build()));
+        list.forEach(item-> item.setLastUpdatedByName(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy())).getRealName()));
         return Results.success(list);
     }
 
