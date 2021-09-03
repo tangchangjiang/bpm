@@ -29,7 +29,11 @@ public class StaticResourceConverter {
         staticResource.setResourceCode(staticResourceSaveDTO.getResourceCode());
         staticResource.setSourceModuleCode(staticResourceSaveDTO.getSourceModuleCode());
         staticResource.setResourceUrl(staticResourceSaveDTO.getResourceUrl());
-        staticResource.setDomain(staticResourceSaveDTO.getDomain());
+        staticResource.setResourceHost(staticResourceSaveDTO.getResourceHost());
+        staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
+        staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
+        staticResource.setSourceProgram(staticResourceSaveDTO.getSourceProgram());
+        staticResource.setEnableFlag(staticResourceSaveDTO.getEnableFlag());
         staticResource.setJsonKey(staticResourceSaveDTO.getJsonKey());
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());

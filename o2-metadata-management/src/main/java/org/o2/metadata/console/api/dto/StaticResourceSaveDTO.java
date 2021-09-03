@@ -28,11 +28,26 @@ public class StaticResourceSaveDTO {
     @NotBlank
     private String resourceUrl;
 
-    @ApiModelProperty(value = "静态资源domain", required = true)
+    @ApiModelProperty(value = "静态资源host")
     @NotBlank
-    private String domain;
+    private String resourceHost;
 
-    @ApiModelProperty(value = "静态资源JSON文件的key名称",required = true)
+    @ApiModelProperty(value = "资源级别(参考O2MD.RESOURCE_LEVEL值集)")
+    @NotBlank
+    private String resourceLevel;
+
+    @ApiModelProperty(value = "资源拥有者编码(如所属站点编码)")
+    private String resourceOwner;
+
+    @ApiModelProperty(value = "来源程序（如xxxJob的全路径名）")
+    @NotBlank
+    private String sourceProgram;
+
+    @ApiModelProperty(value = "是否启用，默认启用")
+    @NotNull
+    private Integer enableFlag;
+
+    @ApiModelProperty(value = "静态资源JSON文件的key名称")
     @NotBlank
     private String jsonKey;
 
