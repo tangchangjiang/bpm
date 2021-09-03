@@ -58,7 +58,7 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     @Transactional(rollbackFor = Exception.class)
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
-        if(!MetadataConstants.StaticResourceLevel.PUBLIC.equals(staticResource.getResourceLevel())
+        if(!"PUBLIC".equals(staticResource.getResourceLevel())
                 &&staticResource.getResourceOwner()==null){
             throw new CommonException("Resource owner is null");
         }
