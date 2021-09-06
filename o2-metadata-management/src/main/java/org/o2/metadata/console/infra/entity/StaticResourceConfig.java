@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import javax.validation.constraints.NotBlank;
@@ -10,11 +11,13 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.Data;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 /**
  * 静态资源配置
@@ -32,10 +35,12 @@ public class StaticResourceConfig extends AuditDomain {
     public static final String FIELD_RESOURCE_CONFIG_ID = "resourceConfigId";
     public static final String FIELD_RESOURCE_CODE = "resourceCode";
     public static final String FIELD_RESOURCE_LEVEL = "resourceLevel";
+    public static final String FIELD_RESOURCE_LEVEL_MEANING = "resourceLevelMeaning";
     public static final String FIELD_JSON_KEY = "jsonKey";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_DIFFERENT_LANG_FLAG = "differentLangFlag";
+    public static final String FIELD_DIFFERENT_LANG_FLAG_MEANING = "differentLangFlagMeaning";
     public static final String FIELD_UPLOAD_FOLDER = "uploadFolder";
     public static final String O2MD_STATIC_RESOURCE_CONFIG_U1 = "o2md_static_resource_config_u1";
 
@@ -57,6 +62,7 @@ public class StaticResourceConfig extends AuditDomain {
     @Unique(O2MD_STATIC_RESOURCE_CONFIG_U1)
     private String resourceCode;
     @ApiModelProperty(value = "静态资源层级", required = true)
+    @LovValue(value = MetadataConstants.PublicLov.STATIC_RESOURCE_LOV_CODE, meaningField = FIELD_RESOURCE_LEVEL_MEANING)
     @NotBlank
     private String resourceLevel;
     @ApiModelProperty(value = "静态资源访问jsonKey", required = true)
@@ -69,6 +75,7 @@ public class StaticResourceConfig extends AuditDomain {
     @ApiModelProperty(value = "描述")
     private String description;
     @ApiModelProperty(value = "是否区分多语言", required = true)
+    @LovValue(value = MetadataConstants.PublicLov.DIFFERENT_LANG_FLAG, meaningField = FIELD_DIFFERENT_LANG_FLAG_MEANING)
     @NotNull
     private Integer differentLangFlag;
     @ApiModelProperty(value = "上传目录")
@@ -77,6 +84,12 @@ public class StaticResourceConfig extends AuditDomain {
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @Transient
+    private String resourceLevelMeaning;
+
+    @Transient
+    private String differentLangFlagMeaning;
 
 }
 

@@ -22,6 +22,7 @@
         select
             resource_config_id,
             resource_code,
+            resource_level,
             description,
             different_lang_flag,
             json_key,

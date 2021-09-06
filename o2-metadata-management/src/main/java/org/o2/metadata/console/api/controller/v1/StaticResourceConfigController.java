@@ -1,6 +1,8 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.mybatis.pagehelper.PageHelper;
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
@@ -35,6 +37,7 @@ public class StaticResourceConfigController extends BaseController {
     }
 
     @ApiOperation(value = "静态资源配置维护-分页查询静态资源配置列表")
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     public ResponseEntity<Page<StaticResourceConfig>> page(@PathVariable(value = "organizationId") Long organizationId,
