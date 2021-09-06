@@ -28,6 +28,14 @@ public class StaticResourceSaveDTO {
     @NotBlank
     private String resourceUrl;
 
+    @ApiModelProperty(value = "静态资源domain", required = true)
+    @NotBlank
+    private String domain;
+
+    @ApiModelProperty(value = "静态资源JSON文件的key名称",required = true)
+    @NotBlank
+    private String jsonKey;
+
     @ApiModelProperty(value = "静态资源描述")
     private String description;
 

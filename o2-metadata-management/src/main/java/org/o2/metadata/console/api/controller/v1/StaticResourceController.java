@@ -40,19 +40,10 @@ public class StaticResourceController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<StaticResource>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                      StaticResource staticResource,
-                                                     @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_ID,
+                                                     @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<StaticResource> list = staticResourceRepository.pageAndSort(pageRequest, staticResource);
         return Results.success(list);
-    }
-
-    @ApiOperation(value = "静态资源文件表维护-查询静态资源文件表明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{resourceId}")
-    public ResponseEntity<StaticResource> detail(@PathVariable(value = "organizationId") Long organizationId,
-                                                        @ApiParam(value = "静态资源文件表ID", required = true) @PathVariable Long resourceId) {
-        StaticResource staticResource = staticResourceRepository.selectByPrimaryKey(resourceId);
-        return Results.success(staticResource);
     }
 
     @ApiOperation(value = "静态资源文件表维护-创建静态资源文件表")
@@ -75,7 +66,7 @@ public class StaticResourceController extends BaseController {
         return Results.success(staticResource);
     }
 
-        @ApiOperation(value = "静态资源文件表维护-批量保存静态资源文件表")
+    @ApiOperation(value = "静态资源文件表维护-批量保存静态资源文件表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-saving")
     public ResponseEntity<List<StaticResource>> batchSave(@PathVariable(value = "organizationId") Long organizationId,

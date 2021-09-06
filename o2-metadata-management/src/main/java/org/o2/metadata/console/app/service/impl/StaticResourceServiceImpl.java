@@ -70,6 +70,8 @@ public class StaticResourceServiceImpl implements StaticResourceService {
                     StaticResource.FIELD_RESOURCE_CODE,
                     StaticResource.FIELD_SOURCE_MODULE_CODE,
                     StaticResource.FIELD_RESOURCE_URL,
+                    StaticResource.FIELD_DOMAIN,
+                    StaticResource.FIELD_JSON_KEY,
                     StaticResource.FIELD_DESCRIPTION,
                     StaticResource.FIELD_TENANT_ID
             );
