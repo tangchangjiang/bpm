@@ -112,6 +112,7 @@ public class StaticResourceController extends BaseController {
     @PutMapping("/enable")
     public ResponseEntity<StaticResource> enable(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody StaticResource staticResource){
+        SecurityTokenHelper.validToken(staticResource);
         staticResourceRepository.updateOptional(staticResource,StaticResource.FIELD_ENABLE_FLAG);
         return Results.success(staticResource);
     }
