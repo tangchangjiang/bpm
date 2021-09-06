@@ -110,10 +110,10 @@ public class StaticResourceController extends BaseController {
     @ApiOperation(value = "静态资源文件表维护-状态启用和禁用")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/enable")
-    public ResponseEntity<Void> enable(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<StaticResource> enable(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody StaticResource staticResource){
-        staticResourceRepository.updateByPrimaryKey(staticResource);
-        return Results.success();
+        staticResourceRepository.updateOptional(staticResource,StaticResource.FIELD_ENABLE_FLAG);
+        return Results.success(staticResource);
     }
 
 }
