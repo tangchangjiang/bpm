@@ -1,9 +1,15 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
+import org.o2.user.domain.vo.IamUserBO;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +24,8 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
-import io.swagger.annotations.ApiParam;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 静态资源文件表 管理 API
@@ -34,6 +40,8 @@ public class StaticResourceController extends BaseController {
     private StaticResourceRepository staticResourceRepository;
     @Autowired
     private StaticResourceService staticResourceService;
+    @Autowired
+    private RedisHelper redisHelper;
 
     @ApiOperation(value = "静态资源文件表维护-分页查询静态资源文件表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -42,7 +50,20 @@ public class StaticResourceController extends BaseController {
                                                      StaticResource staticResource,
                                                      @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        Page<StaticResource> list = staticResourceRepository.pageAndSort(pageRequest, staticResource);
+        Page<StaticResource> list = PageHelper.doPageAndSort(pageRequest,
+                ()->staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
+                        .andWhere(Sqls.custom()
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_CODE,staticResource.getResourceCode(),true)
+                                .andLike(StaticResource.FIELD_DESCRIPTION,staticResource.getDescription(),true)
+                                .andEqualTo(StaticResource.FIELD_ENABLE_FLAG,staticResource.getEnableFlag(),true)
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel(),true)
+                                .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
+                                .andEqualTo(StaticResource.FIELD_SOURCE_MODULE_CODE,staticResource.getSourceModuleCode(),true))
+                        .build()));
+        list.forEach(item->{
+            String realName = Optional.ofNullable(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy()))).map(IamUserBO::getRealName).orElse("");
+            item.setLastUpdatedByName(realName);
+        });
         return Results.success(list);
     }
 
@@ -84,6 +105,16 @@ public class StaticResourceController extends BaseController {
         SecurityTokenHelper.validToken(staticResource);
         staticResourceRepository.deleteByPrimaryKey(staticResource);
         return Results.success();
+    }
+
+    @ApiOperation(value = "静态资源文件表维护-状态启用和禁用")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PutMapping("/enable")
+    public ResponseEntity<StaticResource> enable(@PathVariable(value = "organizationId") Long organizationId,
+                                       @RequestBody StaticResource staticResource){
+        SecurityTokenHelper.validToken(staticResource);
+        staticResourceRepository.updateOptional(staticResource,StaticResource.FIELD_ENABLE_FLAG);
+        return Results.success(staticResource);
     }
 
 }

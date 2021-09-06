@@ -337,4 +337,5 @@ public interface MetadataConstants {
 
         int IMAGE_INTERCEPTION_MARK = 3;
     }
+
 }
