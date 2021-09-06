@@ -161,13 +161,16 @@
         os.catalog_version_code,
         os.catalog_code,
         os.platform_shop_code,
-        ost.online_shop_name
+        ost.online_shop_name,
+        os.active_flag,
+        plat.platform_name
         from o2md_online_shop os
+        inner join  o2md_platform plat on plat.platform_code = os.platform_code
         left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang}
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId} and plat.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
