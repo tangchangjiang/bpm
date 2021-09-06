@@ -120,7 +120,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(lovCode + MetadataConstants.StaticResourceCode.LOV_DESCRIPTION);
         saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
-        saveDTO.setResourceHost(domainAndUrl.substring(0,indexOfSlash));
+        saveDTO.setResourceHost("http://"+domainAndUrl.substring(0,indexOfSlash));
         saveDTO.setLang(languageCode);
         return saveDTO;
     }
