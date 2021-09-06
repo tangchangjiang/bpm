@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class StaticResourceConfigDTO {
 
-    @ApiModelProperty(value = "静态资源编码", required = true)
+    @ApiModelProperty(value = "静态资源编码")
     private String resourceCode;
 
     @ApiModelProperty(value = "描述")
