@@ -8,6 +8,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
+import org.o2.user.domain.vo.IamUserBO;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 静态资源文件表 管理 API
@@ -58,7 +60,10 @@ public class StaticResourceController extends BaseController {
                                 .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
                                 .andEqualTo(StaticResource.FIELD_SOURCE_MODULE_CODE,staticResource.getSourceModuleCode(),true))
                         .build()));
-        list.forEach(item-> item.setLastUpdatedByName(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy())).getRealName()));
+        list.forEach(item->{
+            String realName = Optional.ofNullable(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy()))).map(IamUserBO::getRealName).orElse("");
+            item.setLastUpdatedByName(realName);
+        });
         return Results.success(list);
     }
 
@@ -99,6 +104,16 @@ public class StaticResourceController extends BaseController {
                                        @RequestBody StaticResource staticResource) {
         SecurityTokenHelper.validToken(staticResource);
         staticResourceRepository.deleteByPrimaryKey(staticResource);
+        return Results.success();
+    }
+
+    @ApiOperation(value = "静态资源文件表维护-状态启用和禁用")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PutMapping("/enable")
+    public ResponseEntity<Void> enable(@PathVariable(value = "organizationId") Long organizationId,
+                                       @RequestBody StaticResource staticResource){
+        SecurityTokenHelper.validToken(staticResource);
+        staticResourceRepository.updateByPrimaryKey(staticResource);
         return Results.success();
     }
 
