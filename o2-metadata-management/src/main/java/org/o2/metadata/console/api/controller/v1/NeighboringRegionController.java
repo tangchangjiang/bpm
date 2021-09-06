@@ -15,7 +15,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
+import org.o2.metadata.console.api.dto.NeighboringRegionQueryDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
@@ -48,7 +48,7 @@ public class NeighboringRegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<Page<NeighboringRegion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegionDTO neighboringRegion,
+    public ResponseEntity<Page<NeighboringRegion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegionQueryDTO neighboringRegion,
                                   @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_CODE,
                                           direction = Sort.Direction.ASC) final PageRequest pageRequest) {
         neighboringRegion.setTenantId(organizationId);

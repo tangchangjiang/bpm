@@ -74,7 +74,7 @@ public class RegionController extends BaseController {
     @ApiOperation("查询大区下的省份")
     @GetMapping("/area")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<AreaRegionVO>> listAreaRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                               @RequestParam final String countryCode,
                                                               @RequestParam(required = false) final Integer enabledFlag) {

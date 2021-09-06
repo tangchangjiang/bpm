@@ -1,9 +1,11 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.collect.Maps;
-import org.o2.metadata.console.api.dto.NeighboringRegionDTO;
+import org.o2.metadata.console.api.co.NeighboringRegionCO;
+import org.o2.metadata.console.api.dto.NeighboringRegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
+import org.o2.metadata.console.infra.convertor.NeighboringRegionConverter;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
@@ -47,7 +49,7 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
 
 
     @Override
-    public List<NeighboringRegion> findNeighboringRegions(final NeighboringRegionDTO neighboringRegion) {
+    public List<NeighboringRegion> findNeighboringRegions(final NeighboringRegionQueryDTO neighboringRegion) {
         List<NeighboringRegion> list = neighboringRegionRepository.findNeighboringRegions(neighboringRegion);
         List<String> regionCodes = new ArrayList<>();
         for (NeighboringRegion bean : list) {
@@ -79,5 +81,13 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
 
         }
         return list;
+    }
+
+    @Override
+    public List<NeighboringRegionCO> listNeighboringRegions(Long organizationId) {
+        NeighboringRegionQueryDTO queryDTO = new NeighboringRegionQueryDTO();
+        queryDTO.setTenantId(organizationId);
+        List<NeighboringRegion> list = this.findNeighboringRegions(queryDTO);
+        return NeighboringRegionConverter.poToCoListObjects(list);
     }
 }

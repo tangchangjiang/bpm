@@ -205,6 +205,16 @@ public class O2MetadataManagementClient {
     }
 
     /**
+     * 查询临近省
+     * @param tenantId 租户ID
+     * @return LIST
+     */
+    public List<NeighboringRegionCO> listNeighboringRegions(Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listNeighboringRegions(tenantId), new TypeReference<List<NeighboringRegionCO>>() {
+        });
+    }
+
+    /**
      * 获取快递配送接单量到达上限的仓库
      *
      * @param organizationId 租户id

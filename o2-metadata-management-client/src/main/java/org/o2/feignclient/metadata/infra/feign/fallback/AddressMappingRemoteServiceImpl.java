@@ -24,4 +24,11 @@ public class AddressMappingRemoteServiceImpl implements AddressMappingRemoteServ
         log.error("Error listAddressMappings, params[tenantId = {}, addressMappingQueryIntDTO = {}]", organizationId, addressMappingQueryInnerDTOList);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> listNeighboringRegions(Long organizationId) {
+        log.error("Error listNeighboringRegions, params[tenantId = {}]", organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+    }
 }
