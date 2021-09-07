@@ -108,19 +108,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String,OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
-       OnlineShop query = new OnlineShop();
-       query.setTenantId(tenantId);
-       query.setOnlineShopCodes(onlineShopQueryInnerDTO.getOnlineShopCodes());
-       query.setOnlineShopNames(onlineShopQueryInnerDTO.getOnlineShopNames());
-       query.setPlatformCode(onlineShopQueryInnerDTO.getPlatformCode());
-       List<OnlineShopCO> voList =  OnlineShopConverter.poToCoListObjects(onlineShopRepository.selectByCondition(query));
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, tenantId));
         if (voList.isEmpty()) {
-           return map;
+            return map;
         }
         for (OnlineShopCO co : voList) {
-            map.put(co.getOnlineShopCode(),co);
+            map.put(co.getOnlineShopCode(), co);
         }
-        return  map;
+        return map;
     }
 
     @Override
