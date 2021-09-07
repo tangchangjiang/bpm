@@ -44,6 +44,7 @@ public class StaticResourceConfig extends AuditDomain {
     public static final String FIELD_UPLOAD_FOLDER = "uploadFolder";
     public static final String FIELD_SOURCE_MODULE_CODE = "sourceModuleCode";
     public static final String FIELD_SOURCE_PROGRAM = "sourceProgram";
+    public static final String FIELD_ACTIVE_FLAG = "activeFlag";
     public static final String O2MD_STATIC_RESOURCE_CONFIG_U1 = "o2md_static_resource_config_u1";
 
     //
