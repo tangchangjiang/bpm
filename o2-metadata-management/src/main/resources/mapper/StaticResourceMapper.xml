@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.StaticResourceMapper">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.StaticResource">
+        <result property="resourceId" column="resource_id" jdbcType="INTEGER"/>
+        <result property="resourceCode" column="resource_code" jdbcType="VARCHAR"/>
+        <result property="resourceUrl" column="resource_url" jdbcType="VARCHAR"/>
+        <result property="resourceHost" column="resource_host" jdbcType="VARCHAR"/>
+        <result property="resourceLevel" column="resource_level" jdbcType="VARCHAR"/>
+        <result property="resourceOwner" column="resource_owner" jdbcType="VARCHAR"/>
+        <result property="enableFlag" column="enable_flag" jdbcType="BOOLEAN"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="tenantId" column="tenant_id" jdbcType="INTEGER"/>
+        <result property="lang" column="lang" jdbcType="VARCHAR"/>
+        <result property="sourceModuleCode" column="source_module_code" jdbcType="VARCHAR"/>
+        <result property="sourceProgram" column="source_program" jdbcType="VARCHAR"/>
+        <result property="jsonKey" column="json_key" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="listStaticResourceByCondition" resultType="org.o2.metadata.console.infra.entity.StaticResource">
+        select
+        osr.resource_id,
+        osr.resource_code,
+        osr.resource_url,
+        osr.resource_host,
+        osr.resource_level,
+        osr.resource_owner,
+        osr.enable_flag,
+        osr.description,
+        osr.tenant_id,
+        osr.lang,
+        osr.creation_date,
+        osr.created_by,
+        osr.last_update_date,
+        osr.last_updated_by,
+        osr.object_version_number,
+        osrc.source_module_code,
+        osrc.source_program,
+        osrc.json_key
+        from o2md_static_resource osr
+        left join o2md_static_resource_config osrc on osr.resource_code=osrc.resource_code
+        <where>
+            <if test="resourceCode!=null">
+                AND osr.resource_code=#{resourceCode}
+            </if>
+            <if test="resourceLevel!=null">
+                AND osr.resource_level=#{resourceLevel}
+            </if>
+            <if test="resourceOwner!=null">
+                AND osr.resource_owner=#{resourceOwner}
+            </if>
+            <if test="enableFlag!=null">
+                AND osr.enable_flag=#{enableFlag}
+            </if>
+            <if test="description!=null">
+                <bind name="descriptionLike" value="'%'+description+'%'"/>
+                AND osr.description LIKE #{descriptionLike}
+            </if>
+        </where>
+    </select>
+</mapper>

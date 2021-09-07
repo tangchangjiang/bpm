@@ -117,7 +117,6 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
         saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
-        saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(lovCode + MetadataConstants.StaticResourceCode.LOV_DESCRIPTION);
         saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
         saveDTO.setResourceHost(MetadataConstants.StaticResourceDefault.RESOURCE_HOST_PREFIX

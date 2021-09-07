@@ -30,14 +30,11 @@ public class StaticResourceConverter {
         }
         StaticResource staticResource = new StaticResource();
         staticResource.setResourceCode(staticResourceSaveDTO.getResourceCode());
-        staticResource.setSourceModuleCode(staticResourceSaveDTO.getSourceModuleCode());
         staticResource.setResourceUrl(staticResourceSaveDTO.getResourceUrl());
         staticResource.setResourceHost(staticResourceSaveDTO.getResourceHost());
         staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
         staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
-        staticResource.setSourceProgram(staticResourceSaveDTO.getSourceProgram());
         staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceDefault.ENABLE_FLAG));
-        staticResource.setJsonKey(staticResourceSaveDTO.getJsonKey());
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
         staticResource.setLang(staticResourceSaveDTO.getLang());
