@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.console.infra.mapper.StaticResourceConfigMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.StaticResourceConfig">
+        <result column="resource_config_id" property="resourceConfigId" jdbcType="DECIMAL"/>
+        <result column="resource_code" property="resourceCode" jdbcType="VARCHAR"/>
+        <result column="resource_level" property="resourceLevel" jdbcType="VARCHAR"/>
+        <result column="json_key" property="jsonKey" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="different_lang_flag" property="differentLangFlag" jdbcType="DECIMAL"/>
+        <result column="upload_folder" property="uploadFolder" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="listStaticResourceConfig" resultMap="BaseResultMap">
+        select
+            resource_config_id,
+            resource_code,
+            resource_level,
+            description,
+            different_lang_flag,
+            json_key,
+            upload_folder,
+            created_by,
+            last_updated_by,
+            object_version_number,
+            tenant_id
+        from o2md_static_resource_config
+        <where>
+            <if test="resourceCode != null and resourceCode != ''">
+                <bind name="resourceCode" value="'%'+resourceCode+'%'"/>
+                and resource_code like #{resourceCode}
+            </if>
+            <if test="description != null and description != ''">
+                <bind name="description" value="'%'+description+'%'"/>
+                and description like #{description}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    and tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1=0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+</mapper>

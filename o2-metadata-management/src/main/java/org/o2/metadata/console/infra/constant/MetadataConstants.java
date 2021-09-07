@@ -49,6 +49,8 @@ public interface MetadataConstants {
     interface PublicLov {
         String PUB_LOV_CODE = "O2MD.PUBLIC_LOV";
         String JSON_TYPE = "application/json";
+        String STATIC_RESOURCE_LOV_CODE = "O2MD.RESOURCE_LEVEL";
+        String DIFFERENT_LANG_FLAG = "O2MD.FLAG";
     }
 
     /**
