@@ -35,8 +35,9 @@ public class StaticResourceConfigServiceImpl implements StaticResourceConfigServ
             staticResourceConfigRepository.insertSelective(staticResourceConfig);
         } else {
             staticResourceConfigRepository.updateOptional(staticResourceConfig,
-                    StaticResourceConfig.FIELD_RESOURCE_LEVEL,
-                    StaticResourceConfig.FIELD_DESCRIPTION
+                    StaticResourceConfig.FIELD_DESCRIPTION,
+                    StaticResourceConfig.FIELD_ACTIVE_FLAG,
+                    StaticResourceConfig.FIELD_SOURCE_PROGRAM
             );
         }
 

@@ -4,6 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
@@ -43,7 +44,8 @@ public class StaticResourceConfigInternalController {
 
         List<StaticResourceConfig> resourceConfigs = staticResourceConfigRepository.selectByCondition(Condition.builder(StaticResourceConfig.class)
                 .andWhere(Sqls.custom().andEqualTo(StaticResourceConfig.FIELD_RESOURCE_CODE, resourceCode)
-                        .andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, organizationId))
+                        .andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, organizationId)
+                        .andEqualTo(StaticResourceConfig.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
         if (!CollectionUtils.isEmpty(resourceConfigs)) {
             StaticResourceConfig resourceConfig = resourceConfigs.get(0);
