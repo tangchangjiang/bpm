@@ -8,6 +8,7 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class StaticResourceInternalController extends BaseController {
                                                 @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
         validList(staticResourceSaveDTOList);
         for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
-            if(!"PUBLIC".equals(saveDTO.getResourceLevel())
+            if(!MetadataConstants.StaticResourceLevel.PUBLIC.equals(saveDTO.getResourceLevel())
                     &&saveDTO.getResourceOwner()==null){
                 throw new CommonException("Resource owner is null",saveDTO.getResourceCode());
             }

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.StaticResource;
 
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class StaticResourceConverter {
         staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
         staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
         staticResource.setSourceProgram(staticResourceSaveDTO.getSourceProgram());
-        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(1));
+        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceDefault.ENABLE_FLAG));
         staticResource.setJsonKey(staticResourceSaveDTO.getJsonKey());
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
