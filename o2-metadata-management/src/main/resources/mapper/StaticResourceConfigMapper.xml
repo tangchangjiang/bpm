@@ -16,9 +16,11 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="different_lang_flag" property="differentLangFlag" jdbcType="DECIMAL"/>
         <result column="upload_folder" property="uploadFolder" jdbcType="VARCHAR"/>
+        <result column="source_module_code" property="sourceModuleCode" jdbcType="VARCHAR" />
+        <result column="source_program" property="sourceProgram" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="listStaticResourceConfig" resultMap="BaseResultMap">
+    <select id="listStaticResourceConfig" resultType="org.o2.metadata.console.api.vo.StaticResourceConfigVO">
         select
             resource_config_id,
             resource_code,
@@ -30,6 +32,8 @@
             created_by,
             last_updated_by,
             object_version_number,
+            source_module_code,
+            source_program,
             tenant_id
         from o2md_static_resource_config
         <where>

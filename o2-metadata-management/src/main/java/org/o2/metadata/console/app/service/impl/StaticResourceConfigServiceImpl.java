@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
+import org.o2.metadata.console.api.vo.StaticResourceConfigVO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.repository.StaticResourceConfigRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,7 @@ public class StaticResourceConfigServiceImpl implements StaticResourceConfigServ
     }
 
     @Override
-    public List<StaticResourceConfig> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO) {
+    public List<StaticResourceConfigVO> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO) {
         return staticResourceConfigRepository.listStaticResourceConfig(staticResourceConfigDTO);
     }
 }

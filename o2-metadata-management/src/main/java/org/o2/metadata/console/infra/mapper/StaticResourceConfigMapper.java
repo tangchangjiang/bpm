@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.mapper;
 
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
+import org.o2.metadata.console.api.vo.StaticResourceConfigVO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import io.choerodon.mybatis.common.BaseMapper;
 
@@ -19,6 +20,6 @@ public interface StaticResourceConfigMapper extends BaseMapper<StaticResourceCon
      * @param staticResourceConfigDTO 静态资源配置入参
      * @return 静态资源配置对象集合
      */
-    List<StaticResourceConfig> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO);
+    List<StaticResourceConfigVO> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO);
 
 }
