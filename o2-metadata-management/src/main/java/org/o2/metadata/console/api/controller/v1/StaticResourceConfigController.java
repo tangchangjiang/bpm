@@ -3,10 +3,12 @@ package org.o2.metadata.console.api.controller.v1;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
+import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -21,6 +23,8 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 /**
  * 静态资源配置 管理 API
  *
@@ -32,8 +36,11 @@ public class StaticResourceConfigController extends BaseController {
 
     private final StaticResourceConfigService staticResourceConfigService;
 
-    public StaticResourceConfigController(final StaticResourceConfigService staticResourceConfigService){
+    private final RedisHelper redisHelper;
+
+    public StaticResourceConfigController(final StaticResourceConfigService staticResourceConfigService, RedisHelper redisHelper){
         this.staticResourceConfigService = staticResourceConfigService;
+        this.redisHelper = redisHelper;
     }
 
     @ApiOperation(value = "静态资源配置维护-分页查询静态资源配置列表")
@@ -41,11 +48,17 @@ public class StaticResourceConfigController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     public ResponseEntity<Page<StaticResourceConfig>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            StaticResourceConfigDTO staticResourceConfig,
-                                                            @ApiIgnore @SortDefault(value = StaticResourceConfig.FIELD_RESOURCE_CONFIG_ID,
+                                                             StaticResourceConfigDTO staticResourceConfig,
+                                                             @ApiIgnore @SortDefault(value = StaticResourceConfig.FIELD_RESOURCE_CONFIG_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         staticResourceConfig.setTenantId(staticResourceConfig.getTenantId() == null ? organizationId : staticResourceConfig.getTenantId());
         Page<StaticResourceConfig> list = PageHelper.doPageAndSort(pageRequest, () -> staticResourceConfigService.listStaticResourceConfig(staticResourceConfig));
+        List<StaticResourceConfig> content = list.getContent();
+        for (StaticResourceConfig configVO : content) {
+            configVO.setCreatedName(IamUserHelper.getRealName(redisHelper,configVO.getCreatedBy().toString()));
+            configVO.setUpdateName(IamUserHelper.getRealName(redisHelper,configVO.getLastUpdatedBy().toString()));
+        }
+
         return Results.success(list);
     }
 

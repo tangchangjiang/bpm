@@ -42,6 +42,8 @@ public class StaticResourceConfig extends AuditDomain {
     public static final String FIELD_DIFFERENT_LANG_FLAG = "differentLangFlag";
     public static final String FIELD_DIFFERENT_LANG_FLAG_MEANING = "differentLangFlagMeaning";
     public static final String FIELD_UPLOAD_FOLDER = "uploadFolder";
+    public static final String FIELD_SOURCE_MODULE_CODE = "sourceModuleCode";
+    public static final String FIELD_SOURCE_PROGRAM = "sourceProgram";
     public static final String O2MD_STATIC_RESOURCE_CONFIG_U1 = "o2md_static_resource_config_u1";
 
     //
@@ -81,6 +83,15 @@ public class StaticResourceConfig extends AuditDomain {
     @ApiModelProperty(value = "上传目录")
     private String uploadFolder;
 
+    @NotBlank
+    @ApiModelProperty(value = "来源模块,值集:O2MD.DOMAIN_MODULE")
+    @LovValue(value = MetadataConstants.PublicLov.SOURCE_MODULE_CODE)
+    private String sourceModuleCode;
+
+    @ApiModelProperty(value = "来源程序")
+    @NotBlank
+    private String sourceProgram;
+
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -90,6 +101,17 @@ public class StaticResourceConfig extends AuditDomain {
 
     @Transient
     private String differentLangFlagMeaning;
+
+    @Transient
+    @ApiModelProperty("来源模块")
+    private String sourceModuleMeaning;
+
+    @Transient
+    @ApiModelProperty("创建人")
+    private String createdName;
+    @Transient
+    @ApiModelProperty("更新人")
+    private String updateName;
 
 }
 

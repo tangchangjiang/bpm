@@ -289,4 +289,8 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
     }
 
+    public StaticResourceConfigCO getStaticResourceConfig(String resourceCode,Long tenantId) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceConfig(tenantId,resourceCode),StaticResourceConfigCO.class);
+    }
+
 }
