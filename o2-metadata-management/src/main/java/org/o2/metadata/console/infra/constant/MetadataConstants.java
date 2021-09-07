@@ -341,4 +341,14 @@ public interface MetadataConstants {
         int IMAGE_INTERCEPTION_MARK = 3;
     }
 
+    interface StaticResourceDefault{
+        Integer ENABLE_FLAG=1;
+        String RESOURCE_HOST_PREFIX="http://";
+    }
+
+    interface StaticResourceLevel{
+        String PUBLIC="PUBLIC";
+        String SITE="SITE";
+    }
+
 }

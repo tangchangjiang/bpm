@@ -4,13 +4,10 @@ import io.choerodon.mybatis.pagehelper.PageHelper;
 import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.o2.user.domain.vo.IamUserBO;
 import org.o2.user.helper.IamUserHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -35,13 +32,17 @@ import java.util.Optional;
 @RestController("staticResourceController.v1")
 @RequestMapping("/v1/{organizationId}/static-resources")
 public class StaticResourceController extends BaseController {
+    private final StaticResourceRepository staticResourceRepository;
+    private final StaticResourceService staticResourceService;
+    private final RedisHelper redisHelper;
 
-    @Autowired
-    private StaticResourceRepository staticResourceRepository;
-    @Autowired
-    private StaticResourceService staticResourceService;
-    @Autowired
-    private RedisHelper redisHelper;
+    public StaticResourceController(StaticResourceRepository staticResourceRepository,
+                                    StaticResourceService staticResourceService,
+                                    RedisHelper redisHelper){
+        this.staticResourceRepository=staticResourceRepository;
+        this.staticResourceService=staticResourceService;
+        this.redisHelper=redisHelper;
+    }
 
     @ApiOperation(value = "静态资源文件表维护-分页查询静态资源文件表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -51,15 +52,8 @@ public class StaticResourceController extends BaseController {
                                                      @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<StaticResource> list = PageHelper.doPageAndSort(pageRequest,
-                ()->staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
-                        .andWhere(Sqls.custom()
-                                .andEqualTo(StaticResource.FIELD_RESOURCE_CODE,staticResource.getResourceCode(),true)
-                                .andLike(StaticResource.FIELD_DESCRIPTION,staticResource.getDescription(),true)
-                                .andEqualTo(StaticResource.FIELD_ENABLE_FLAG,staticResource.getEnableFlag(),true)
-                                .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel(),true)
-                                .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
-                                .andEqualTo(StaticResource.FIELD_SOURCE_MODULE_CODE,staticResource.getSourceModuleCode(),true))
-                        .build()));
+                ()->staticResourceRepository.listStaticResourceByCondition(staticResource));
+
         list.forEach(item->{
             String realName = Optional.ofNullable(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy()))).map(IamUserBO::getRealName).orElse("");
             item.setLastUpdatedByName(realName);

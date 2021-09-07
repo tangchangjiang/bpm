@@ -68,14 +68,11 @@ public class StaticResourceServiceImpl implements StaticResourceService {
         } else {
             staticResourceRepository.updateOptional(staticResource,
                     StaticResource.FIELD_RESOURCE_CODE,
-                    StaticResource.FIELD_SOURCE_MODULE_CODE,
                     StaticResource.FIELD_RESOURCE_URL,
                     StaticResource.FIELD_RESOURCE_HOST,
                     StaticResource.FIELD_RESOURCE_LEVEL,
                     StaticResource.FIELD_RESOURCE_OWNER,
-                    StaticResource.FIELD_SOURCE_PROGRAM,
                     StaticResource.FIELD_ENABLE_FLAG,
-                    StaticResource.FIELD_JSON_KEY,
                     StaticResource.FIELD_DESCRIPTION,
                     StaticResource.FIELD_TENANT_ID
             );

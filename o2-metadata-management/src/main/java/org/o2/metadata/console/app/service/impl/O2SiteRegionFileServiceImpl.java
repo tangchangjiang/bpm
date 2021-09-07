@@ -118,10 +118,10 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setTenantId(tenantId);
         saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.buildMetadataRegionCode());
-        saveDTO.setSourceModuleCode(MetadataConstants.StaticResourceSourceModuleCode.METADATA);
         saveDTO.setDescription(MetadataConstants.StaticResourceCode.O2MD_REGION_DESCRIPTION);
         saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
-        saveDTO.setResourceHost("http://"+domainAndUrl.substring(0,indexOfSlash));
+        saveDTO.setResourceHost(MetadataConstants.StaticResourceDefault.RESOURCE_HOST_PREFIX
+                +domainAndUrl.substring(0,indexOfSlash));
         saveDTO.setLang(languageCode);
         return saveDTO;
     }

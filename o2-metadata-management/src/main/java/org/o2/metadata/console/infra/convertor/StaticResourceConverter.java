@@ -1,7 +1,10 @@
 package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.StaticResource;
+
+import java.util.Optional;
 
 /**
  * 静态资源转换器
@@ -27,14 +30,11 @@ public class StaticResourceConverter {
         }
         StaticResource staticResource = new StaticResource();
         staticResource.setResourceCode(staticResourceSaveDTO.getResourceCode());
-        staticResource.setSourceModuleCode(staticResourceSaveDTO.getSourceModuleCode());
         staticResource.setResourceUrl(staticResourceSaveDTO.getResourceUrl());
         staticResource.setResourceHost(staticResourceSaveDTO.getResourceHost());
         staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
         staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
-        staticResource.setSourceProgram(staticResourceSaveDTO.getSourceProgram());
-        staticResource.setEnableFlag(staticResourceSaveDTO.getEnableFlag());
-        staticResource.setJsonKey(staticResourceSaveDTO.getJsonKey());
+        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceDefault.ENABLE_FLAG));
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
         staticResource.setLang(staticResourceSaveDTO.getLang());

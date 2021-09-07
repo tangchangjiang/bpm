@@ -10,7 +10,6 @@ import org.o2.metadata.console.infra.convertor.StaticResourceConverter;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,19 +51,21 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
         staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
 
-        // 根据resource_code查询是否已存在
+        // 根据resource_code、tenant_id、lang、resource_level、resource_owner查询是否已存在
         List<StaticResource> staticResources = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
                         .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
-                        .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang())
+                        .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang(),true)
+                        .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel())
+                        .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
                 ).build());
 
+        // 记录存在则更新记录，不存在则新增
         int count = staticResources.size();
         if (count <= 0) {
             staticResourceRepository.insertSelective(staticResource);

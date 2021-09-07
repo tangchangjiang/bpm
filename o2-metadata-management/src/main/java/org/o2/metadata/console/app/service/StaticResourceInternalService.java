@@ -26,6 +26,11 @@ public interface StaticResourceInternalService extends BaseService<StaticResourc
     Map<String, String> queryResourceCodeUrlMap(StaticResourceQueryDTO staticResourceQueryDTO);
 
 
+    /**
+     * 静态资源创建/更新
+     *
+     * @param staticResourceSaveDTO 静态资源 SaveDTO
+     */
     void saveResource(StaticResourceSaveDTO staticResourceSaveDTO);
 
 }

@@ -29,14 +29,11 @@ public class StaticResource extends AuditDomain {
 
     public static final String FIELD_RESOURCE_ID = "resourceId";
     public static final String FIELD_RESOURCE_CODE = "resourceCode";
-    public static final String FIELD_SOURCE_MODULE_CODE = "sourceModuleCode";
     public static final String FIELD_RESOURCE_URL = "resourceUrl";
     public static final String FIELD_RESOURCE_HOST ="resourceHost";
     public static final String FIELD_RESOURCE_LEVEL="resourceLevel";
     public static final String FIELD_RESOURCE_OWNER="resourceOwner";
-    public static final String FIELD_SOURCE_PROGRAM="sourceProgram";
     public static final String FIELD_ENABLE_FLAG="enableFlag";
-    public static final String FIELD_JSON_KEY="jsonKey";
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_LANG = "lang";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -61,10 +58,6 @@ public class StaticResource extends AuditDomain {
     @Unique(O2MD_STATIC_RESOURCE_U1)
     private String resourceCode;
 
-    @ApiModelProperty(value = "来源模块编码", required = true)
-    @NotBlank
-    private String sourceModuleCode;
-
     @ApiModelProperty(value = "静态资源相对路径", required = true)
     @NotBlank
     private String resourceUrl;
@@ -80,17 +73,9 @@ public class StaticResource extends AuditDomain {
     @ApiModelProperty(value = "资源拥有者编码(如所属站点编码)")
     private String resourceOwner;
 
-    @ApiModelProperty(value = "来源程序（如xxxJob的全路径名）")
-    @NotBlank
-    private String sourceProgram;
-
     @ApiModelProperty(value = "是否启用，默认启用")
     @NotNull
     private Integer enableFlag;
-
-    @ApiModelProperty(value = "静态资源JSON文件的key名称")
-    @NotBlank
-    private String jsonKey;
 
     @ApiModelProperty(value = "静态资源描述")
     private String description;
@@ -106,6 +91,18 @@ public class StaticResource extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "来源模块编码", required = true)
+    @Transient
+    private String sourceModuleCode;
+
+    @ApiModelProperty(value = "静态资源JSON文件的key名称")
+    @Transient
+    private String jsonKey;
+
+    @ApiModelProperty(value = "来源程序（如xxxJob的全路径名）")
+    @Transient
+    private String sourceProgram;
 
     @ApiModelProperty(value = "更新人")
     @Transient

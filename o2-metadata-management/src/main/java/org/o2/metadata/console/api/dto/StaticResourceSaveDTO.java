@@ -20,10 +20,6 @@ public class StaticResourceSaveDTO {
     @NotBlank
     private String resourceCode;
 
-    @ApiModelProperty(value = "来源模块编码", required = true)
-    @NotBlank
-    private String sourceModuleCode;
-
     @ApiModelProperty(value = "静态资源相对路径", required = true)
     @NotBlank
     private String resourceUrl;
@@ -39,17 +35,8 @@ public class StaticResourceSaveDTO {
     @ApiModelProperty(value = "资源拥有者编码(如所属站点编码)")
     private String resourceOwner;
 
-    @ApiModelProperty(value = "来源程序（如xxxJob的全路径名）")
-    @NotBlank
-    private String sourceProgram;
-
     @ApiModelProperty(value = "是否启用，默认启用")
-    @NotNull
     private Integer enableFlag;
-
-    @ApiModelProperty(value = "静态资源JSON文件的key名称")
-    @NotBlank
-    private String jsonKey;
 
     @ApiModelProperty(value = "静态资源描述")
     private String description;
