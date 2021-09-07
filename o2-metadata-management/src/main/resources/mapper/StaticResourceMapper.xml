@@ -55,6 +55,9 @@
                 <bind name="descriptionLike" value="'%'+description+'%'"/>
                 AND osr.description LIKE #{descriptionLike}
             </if>
+            <if test="sourceModuleCode!=null">
+                AND osrc.source_module_code=#{sourceModuleCode}
+            </if>
         </where>
     </select>
 </mapper>
