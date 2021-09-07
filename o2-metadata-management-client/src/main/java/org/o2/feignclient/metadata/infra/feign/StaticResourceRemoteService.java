@@ -1,11 +1,13 @@
 package org.o2.feignclient.metadata.infra.feign;
 
+import io.swagger.annotations.ApiParam;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.StaticResourceRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +46,16 @@ public interface StaticResourceRemoteService {
      */
     @PostMapping("/{organizationId}/static-resources-internal/save")
     ResponseEntity<String> saveResource(@PathVariable(value = "organizationId") Long organizationId, @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList);
+
+    /**
+     * 获取静态资源配置
+     * @param organizationId 租户ID
+     * @param resourceCode 资源编码
+     * @return String 静态资源配置
+     */
+    @GetMapping("/{organizationId}/static-resource-configs-internal/{resourceCode}")
+    ResponseEntity<String> getStaticResourceConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                   @PathVariable(value = "resourceCode") @ApiParam(value = "参数code", required = true) String resourceCode);
 
 }
 

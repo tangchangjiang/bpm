@@ -37,4 +37,10 @@ public class StaticResourceRemoteServiceImpl implements StaticResourceRemoteServ
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> getStaticResourceConfig(Long organizationId, String resourceCode) {
+        log.error("error getStaticResourceConfig,params[resourceCode = {}, tenantId = {}]",resourceCode,organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 }
