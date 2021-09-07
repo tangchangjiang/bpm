@@ -91,6 +91,9 @@ public class StaticResourceConfig extends AuditDomain {
     @ApiModelProperty(value = "来源程序")
     @NotBlank
     private String sourceProgram;
+    @ApiModelProperty(value = "启用标识")
+    @NotNull
+    private Integer activeFlag;
 
 	//
     // 非数据库字段

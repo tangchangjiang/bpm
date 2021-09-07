@@ -18,6 +18,7 @@
         <result column="upload_folder" property="uploadFolder" jdbcType="VARCHAR"/>
         <result column="source_module_code" property="sourceModuleCode" jdbcType="VARCHAR" />
         <result column="source_program" property="sourceProgram" jdbcType="VARCHAR" />
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL" />
     </resultMap>
 
     <select id="listStaticResourceConfig" resultMap="BaseResultMap">
@@ -34,6 +35,7 @@
             object_version_number,
             source_module_code,
             source_program,
+            active_flag,
             tenant_id
         from o2md_static_resource_config
         <where>
