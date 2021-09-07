@@ -51,10 +51,11 @@ public class StaticResourceInternalController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Boolean> saveResource(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        validList(staticResourceSaveDTOList);
         for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
             if(!"PUBLIC".equals(saveDTO.getResourceLevel())
                     &&saveDTO.getResourceOwner()==null){
-                throw new CommonException("Resource owner is null");
+                throw new CommonException("Resource owner is null",saveDTO.getResourceCode());
             }
             staticResourceInternalService.saveResource(saveDTO);
         }

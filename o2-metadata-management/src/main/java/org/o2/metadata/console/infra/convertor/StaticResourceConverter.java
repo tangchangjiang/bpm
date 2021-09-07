@@ -3,6 +3,8 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.infra.entity.StaticResource;
 
+import java.util.Optional;
+
 /**
  * 静态资源转换器
  *
@@ -33,7 +35,7 @@ public class StaticResourceConverter {
         staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
         staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
         staticResource.setSourceProgram(staticResourceSaveDTO.getSourceProgram());
-        staticResource.setEnableFlag(staticResourceSaveDTO.getEnableFlag());
+        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(1));
         staticResource.setJsonKey(staticResourceSaveDTO.getJsonKey());
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());

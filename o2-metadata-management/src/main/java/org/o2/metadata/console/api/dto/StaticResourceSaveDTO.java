@@ -44,7 +44,6 @@ public class StaticResourceSaveDTO {
     private String sourceProgram;
 
     @ApiModelProperty(value = "是否启用，默认启用")
-    @NotNull
     private Integer enableFlag;
 
     @ApiModelProperty(value = "静态资源JSON文件的key名称")
