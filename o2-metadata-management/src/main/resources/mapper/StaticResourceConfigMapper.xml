@@ -20,7 +20,7 @@
         <result column="source_program" property="sourceProgram" jdbcType="VARCHAR" />
     </resultMap>
 
-    <select id="listStaticResourceConfig" resultType="org.o2.metadata.console.api.vo.StaticResourceConfigVO">
+    <select id="listStaticResourceConfig" resultMap="BaseResultMap">
         select
             resource_config_id,
             resource_code,

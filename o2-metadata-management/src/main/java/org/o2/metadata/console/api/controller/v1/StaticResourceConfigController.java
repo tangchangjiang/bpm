@@ -7,7 +7,6 @@ import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
-import org.o2.metadata.console.api.vo.StaticResourceConfigVO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.http.ResponseEntity;
@@ -48,14 +47,14 @@ public class StaticResourceConfigController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<Page<StaticResourceConfigVO>> page(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<Page<StaticResourceConfig>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                              StaticResourceConfigDTO staticResourceConfig,
                                                              @ApiIgnore @SortDefault(value = StaticResourceConfig.FIELD_RESOURCE_CONFIG_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         staticResourceConfig.setTenantId(staticResourceConfig.getTenantId() == null ? organizationId : staticResourceConfig.getTenantId());
-        Page<StaticResourceConfigVO> list = PageHelper.doPageAndSort(pageRequest, () -> staticResourceConfigService.listStaticResourceConfig(staticResourceConfig));
-        List<StaticResourceConfigVO> content = list.getContent();
-        for (StaticResourceConfigVO configVO : content) {
+        Page<StaticResourceConfig> list = PageHelper.doPageAndSort(pageRequest, () -> staticResourceConfigService.listStaticResourceConfig(staticResourceConfig));
+        List<StaticResourceConfig> content = list.getContent();
+        for (StaticResourceConfig configVO : content) {
             configVO.setCreatedName(IamUserHelper.getRealName(redisHelper,configVO.getCreatedBy().toString()));
             configVO.setUpdateName(IamUserHelper.getRealName(redisHelper,configVO.getLastUpdatedBy().toString()));
         }

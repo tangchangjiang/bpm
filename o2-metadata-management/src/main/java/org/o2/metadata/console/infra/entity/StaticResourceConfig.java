@@ -85,6 +85,7 @@ public class StaticResourceConfig extends AuditDomain {
 
     @NotBlank
     @ApiModelProperty(value = "来源模块,值集:O2MD.DOMAIN_MODULE")
+    @LovValue(value = MetadataConstants.PublicLov.SOURCE_MODULE_CODE)
     private String sourceModuleCode;
 
     @ApiModelProperty(value = "来源程序")
@@ -104,6 +105,13 @@ public class StaticResourceConfig extends AuditDomain {
     @Transient
     @ApiModelProperty("来源模块")
     private String sourceModuleMeaning;
+
+    @Transient
+    @ApiModelProperty("创建人")
+    private String createdName;
+    @Transient
+    @ApiModelProperty("更新人")
+    private String updateName;
 
 }
 
