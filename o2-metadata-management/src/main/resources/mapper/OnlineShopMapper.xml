@@ -240,7 +240,7 @@
             </if>
             <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size() > 0">
                 and
-                <foreach item="name" index="index" collection="onlineShopNames" open="(" separator="or" close=")">
+                <foreach item="name" index="index" collection="onlineShopDTO.onlineShopNames" open="(" separator="or" close=")">
                     online.online_shop_name LIKE  CONCAT('%',#{name},'%')
                 </foreach>
             </if>
