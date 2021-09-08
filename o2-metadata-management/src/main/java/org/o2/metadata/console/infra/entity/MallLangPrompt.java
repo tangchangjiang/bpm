@@ -68,8 +68,13 @@ public class MallLangPrompt extends AuditDomain {
     private Long tenantId;
     @ApiModelProperty(value = "状态类型.值集:O2CMS.APPROVE_STATUS", required = true)
 	@LovValue(lovCode = "O2CMS.APPROVE_STATUS", meaningField = FIELD_STATUS_MEANING)
-	@NotBlank
     private String status;
+
+    @ApiModelProperty(value = "创建人")
+    private Long createdBy;
+
+    @ApiModelProperty(value = "更新人")
+    private Long lastUpdatedBy;
 
 	//
     // 非数据库字段
@@ -82,6 +87,13 @@ public class MallLangPrompt extends AuditDomain {
 	@Transient
 	@ApiModelProperty("语言类型含义")
 	private String langMeaning;
+
+	@Transient
+	@ApiModelProperty("创建人姓名")
+	private String createdByName;
+	@Transient
+	@ApiModelProperty("更新者姓名")
+	private String lastUpdatedByName;
 
     //
     // getter/setter
@@ -162,6 +174,42 @@ public class MallLangPrompt extends AuditDomain {
 
 	public void setLangMeaning(String langMeaning) {
 		this.langMeaning = langMeaning;
+	}
+
+	public String getCreatedByName() {
+		return createdByName;
+	}
+
+	public void setCreatedByName(String createdByName) {
+		this.createdByName = createdByName;
+	}
+
+	public String getLastUpdatedByName() {
+		return lastUpdatedByName;
+	}
+
+	public void setLastUpdatedByName(String lastUpdatedByName) {
+		this.lastUpdatedByName = lastUpdatedByName;
+	}
+
+	@Override
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+
+	@Override
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	@Override
+	public Long getLastUpdatedBy() {
+		return lastUpdatedBy;
+	}
+
+	@Override
+	public void setLastUpdatedBy(Long lastUpdatedBy) {
+		this.lastUpdatedBy = lastUpdatedBy;
 	}
 }
 
