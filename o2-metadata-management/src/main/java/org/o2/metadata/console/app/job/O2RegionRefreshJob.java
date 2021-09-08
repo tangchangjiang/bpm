@@ -7,6 +7,7 @@ import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -17,22 +18,22 @@ import java.util.Map;
  * @author: yipeng.zhu@hand-china.com 2020-05-20 10:30
  **/
 @Slf4j
-@JobHandler(value = "o2SiteRegionFileRefreshJob")
-public class O2SiteRegionFileRefreshJob implements IJobHandler {
-    private static final String TENANT_ID = "tenantId";
-    private static final String COUNTRY_CODE = "countryCode";
+@JobHandler(value = "o2RegionRefreshJob")
+public class O2RegionRefreshJob implements IJobHandler {
 
     private final O2SiteRegionFileService o2SiteRegionFileService;
 
 
-    public O2SiteRegionFileRefreshJob(O2SiteRegionFileService o2SiteRegionFileService) {
+    public O2RegionRefreshJob(O2SiteRegionFileService o2SiteRegionFileService) {
         this.o2SiteRegionFileService = o2SiteRegionFileService;
     }
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        final String tenantId = map.get(TENANT_ID);
-        final String countryCode = map.get(COUNTRY_CODE);
+        final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
+        final String countryCode = map.get(MetadataConstants.RefreshJobConstants.COUNTRY_CODE);
+        final String regionOwner=map.get(MetadataConstants.RefreshJobConstants.REGION_OWNER);
+
         if (!StringUtils.hasText(tenantId) || !StringUtils.hasText(countryCode)) {
             tool.error("Parameter [tenantId] and [countryCode] can't be null.Please check job configuration.");
             return ReturnT.FAILURE;
@@ -41,7 +42,7 @@ public class O2SiteRegionFileRefreshJob implements IJobHandler {
         final RegionCacheVO vo = new RegionCacheVO();
         vo.setTenantId(Long.parseLong(tenantId));
         vo.setCountryCode(countryCode);
-        o2SiteRegionFileService.createRegionStaticFile(vo);
+        o2SiteRegionFileService.createRegionStaticFile(vo,regionOwner);
 
         return ReturnT.SUCCESS;
     }

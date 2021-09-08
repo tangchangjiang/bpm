@@ -34,7 +34,7 @@ public class StaticResourceConverter {
         staticResource.setResourceHost(staticResourceSaveDTO.getResourceHost());
         staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
         staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
-        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceDefault.ENABLE_FLAG));
+        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceConstants.ENABLE_FLAG));
         staticResource.setDescription(staticResourceSaveDTO.getDescription());
         staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
         staticResource.setLang(staticResourceSaveDTO.getLang());

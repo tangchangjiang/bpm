@@ -92,7 +92,7 @@ public class StaticResource extends AuditDomain {
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
-    @ApiModelProperty(value = "来源模块编码", required = true)
+    @ApiModelProperty(value = "来源模块编码")
     @Transient
     private String sourceModuleCode;
 
