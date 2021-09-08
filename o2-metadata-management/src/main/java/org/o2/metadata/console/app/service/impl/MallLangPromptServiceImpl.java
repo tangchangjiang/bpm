@@ -127,9 +127,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
                     3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
             lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse), null);
+            mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
+            mallLangPromptRepository.updateByPrimaryKeySelective(mallLangPrompt);
         }
         //详情页面校验报错
-        if (mallLangPromptList.size() == 1 && CollectionUtils.isNotEmpty(errorMsg)) {
+        if (mallLangPromptList.size() == 0 && CollectionUtils.isNotEmpty(errorMsg)) {
             StringBuilder stringBuilder = new StringBuilder();
             errorMsg.forEach(eMsg -> stringBuilder.append(MessageAccessor.getMessage(eMsg)).append("\r\n"));
             throw new CommonException(stringBuilder.toString());

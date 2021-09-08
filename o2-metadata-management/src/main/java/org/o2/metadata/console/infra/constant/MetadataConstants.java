@@ -328,6 +328,8 @@ public interface MetadataConstants {
 
         String UNAPPROVED = "UNAPPROVED";
 
+        String APPROVED = "APPROVED";
+
         String MALL_LANG_LOCK_KEY = "o2md:mallLang:static:file:lock";
 
         String NAME = "mallLang";
