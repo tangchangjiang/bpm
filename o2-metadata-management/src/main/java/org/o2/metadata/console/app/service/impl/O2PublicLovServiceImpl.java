@@ -11,16 +11,18 @@ import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
 import org.o2.lov.app.service.HzeroLovQueryService;
+import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
+import org.o2.metadata.console.app.service.StaticResourceConfigService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import io.choerodon.core.oauth.DetailsHelper;
 
@@ -37,25 +39,44 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     private final FileStorageProperties fileStorageProperties;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
+    private final StaticResourceConfigService staticResourceConfigService;
 
-    public O2PublicLovServiceImpl(HzeroLovQueryService hzeroLovQueryService, FileStorageProperties fileStorageProperties, FileClient fileClient, StaticResourceInternalService staticResourceInternalService) {
+    public O2PublicLovServiceImpl(HzeroLovQueryService hzeroLovQueryService,
+                                  FileStorageProperties fileStorageProperties,
+                                  FileClient fileClient,
+                                  StaticResourceInternalService staticResourceInternalService,
+                                  StaticResourceConfigService staticResourceConfigService) {
         this.hzeroLovQueryService = hzeroLovQueryService;
         this.fileStorageProperties = fileStorageProperties;
         this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
+        this.staticResourceConfigService=staticResourceConfigService;
     }
 
 
     @Override
-    public void createPublicLovFile(PublicLovVO publicLovVO) {
+    public void createPublicLovFile(PublicLovVO publicLovVO, String resourceOwner) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
             // 设置PUB_LOV默认值集编码
             publicLovVO.setLovCode(MetadataConstants.PublicLov.PUB_LOV_CODE);
         }
-        log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, publicLovVO.getLovCode());
+        final String lovCode=publicLovVO.getLovCode();
+        log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, lovCode);
 
-        List<LovValueDTO> publicLovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, publicLovVO.getLovCode());
+        StaticResourceConfigDTO staticResourceConfigDTO=new StaticResourceConfigDTO();
+        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
+        staticResourceConfigDTO.setTenantId(tenantId);
+
+        final List<StaticResourceConfig> staticResourceConfigList=staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
+        final StaticResourceConfig staticResourceConfig=staticResourceConfigList.get(0);
+        String uploadFolder=staticResourceConfig.getUploadFolder();
+
+        // 使用map存储resourceUrl,key为langCode、value为resourceUrl
+        Map<String,String> resourceUrlMap=new HashMap<>(4);
+
+
+        List<LovValueDTO> publicLovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovCode);
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
@@ -69,11 +90,16 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                     data.put(publicLovVO.getLovCode(), publicLovValueDTOList);
                 }
             }
+
             //1.hzero-boot-file的client上传 拿到OSS的url 2.更新到静态资源表
-            String resourceUrl = this.staticFile(data, tenantId, DetailsHelper.getUserDetails().getLanguage());
+            resourceUrlMap.put(MetadataConstants.Path.ZH_CN,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.ZH_CN));
+            if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
+                    .equals(staticResourceConfig.getDifferentLangFlag())){
+                resourceUrlMap.put(MetadataConstants.Path.EN_US,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.EN_US));
+            }
 
             //  更新静态文件资源表
-            List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrl, publicLovVO.getLovCode());
+            List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap,resourceOwner,staticResourceConfig);
             for (StaticResourceSaveDTO saveDTO : saveDTOList) {
                 staticResourceInternalService.saveResource(saveDTO);
             }
@@ -85,15 +111,19 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
      *
      * @param jsonObject 静态文件数据实体
      */
-    private String staticFile(final JSONObject jsonObject, final Long tenantId, final String lang) {
+    private String staticFile(final JSONObject jsonObject,
+                              final String uploadFolder,
+                              final Long tenantId,
+                              final String lang) {
         final String jsonString = JSON.toJSONString(jsonObject);
 
         // 上传路径全小写，多语言用中划线
-        final String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                fileStorageProperties.getStoragePath(),
-                MetadataConstants.Path.FILE,
-                MetadataConstants.Path.LOV,
-                lang).toLowerCase();
+        final String directory = Optional.ofNullable(uploadFolder)
+                .orElse(Joiner.on(BaseConstants.Symbol.SLASH)
+                        .skipNulls().join(fileStorageProperties.getStoragePath(),
+                                MetadataConstants.Path.FILE,
+                                MetadataConstants.Path.LOV,
+                                lang).toLowerCase());
         log.info("O2MD.PUBLIC_LOV directory url {}", directory);
         final String fileName = MetadataConstants.Path.LOV_FILE_NAME + MetadataConstants.FileSuffix.JSON;
         String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
@@ -103,25 +133,42 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         return resultUrl;
     }
 
-    private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId, String resourceUrl, String lovCode) {
+    private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
+                                                                   Map<String,String> resourceUrlMap,
+                                                                   String resourceOwner,
+                                                                   StaticResourceConfig staticResourceConfig) {
         List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
-        StaticResourceSaveDTO saveDTO = fillCommonFields(tenantId, resourceUrl, DetailsHelper.getUserDetails().getLanguage(), lovCode);
-        saveDTOList.add(saveDTO);
+        for(Map.Entry<String,String> entry:resourceUrlMap.entrySet()){
+            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(),resourceOwner,staticResourceConfig));
+        }
         return saveDTOList;
     }
 
-    private StaticResourceSaveDTO fillCommonFields(Long tenantId, String resourceUrl, String languageCode, String lovCode) {
+    private StaticResourceSaveDTO fillCommonFields(Long tenantId,
+                                                   String resourceUrl,
+                                                   String languageCode,
+                                                   String resourceOwner,
+                                                   StaticResourceConfig staticResourceConfig) {
         String domainAndUrl=trimHttpPrefix(resourceUrl);
         int indexOfSlash=domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
 
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
-        saveDTO.setTenantId(tenantId);
-        saveDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_PUB_LOV);
-        saveDTO.setDescription(lovCode + MetadataConstants.StaticResourceCode.LOV_DESCRIPTION);
+        saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
+        saveDTO.setDescription(staticResourceConfig.getDescription());
+        saveDTO.setResourceLevel(staticResourceConfig.getResourceLevel());
+        saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
+        if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
+                .equals(saveDTO.getResourceLevel())){
+            saveDTO.setResourceOwner(resourceOwner);
+        }
+        if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
+                .equals(staticResourceConfig.getDifferentLangFlag())){
+            saveDTO.setLang(languageCode);
+        }
         saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
-        saveDTO.setResourceHost(MetadataConstants.StaticResourceDefault.RESOURCE_HOST_PREFIX
+        saveDTO.setResourceHost(MetadataConstants.StaticResourceConstants.HOST_PREFIX
                 +domainAndUrl.substring(0,indexOfSlash));
-        saveDTO.setLang(languageCode);
+        saveDTO.setTenantId(tenantId);
         return saveDTO;
     }
 

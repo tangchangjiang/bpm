@@ -295,6 +295,8 @@ public interface MetadataConstants {
         */
         String O2MD_PUB_LOV = "O2MD_PUB_LOV";
 
+        String O2MD_IDP_LOV= "O2MD_IDP_LOV";
+
         /**
          * 元数据 - 地区数据文件描述
          */
@@ -343,14 +345,28 @@ public interface MetadataConstants {
         int IMAGE_INTERCEPTION_MARK = 3;
     }
 
-    interface StaticResourceDefault{
+    interface StaticResourceConstants{
         Integer ENABLE_FLAG=1;
-        String RESOURCE_HOST_PREFIX="http://";
+
+        String HOST_PREFIX="http://";
+
+        String LEVEL_PUBLIC="PUBLIC";
+
+        String LEVEL_SITE="SITE";
+
+        Integer CONFIG_DIFFERENT_LANG_FLAG=1;
     }
 
-    interface StaticResourceLevel{
-        String PUBLIC="PUBLIC";
-        String SITE="SITE";
+    interface RefreshJobConstants{
+        String TENANT_ID = "tenantId";
+
+        String COUNTRY_CODE = "countryCode";
+
+        String LOV_CODE = "lovCode";
+
+        String IDP_LOV_OWNER="idpLovOwner";
+
+        String REGION_OWNER="regionOwner";
     }
 
 }

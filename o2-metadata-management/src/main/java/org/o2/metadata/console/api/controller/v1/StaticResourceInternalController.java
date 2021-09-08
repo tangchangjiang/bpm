@@ -54,7 +54,7 @@ public class StaticResourceInternalController extends BaseController {
                                                 @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
         validList(staticResourceSaveDTOList);
         for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
-            if(!MetadataConstants.StaticResourceLevel.PUBLIC.equals(saveDTO.getResourceLevel())
+            if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC.equals(saveDTO.getResourceLevel())
                     &&saveDTO.getResourceOwner()==null){
                 throw new CommonException("Resource owner is null",saveDTO.getResourceCode());
             }

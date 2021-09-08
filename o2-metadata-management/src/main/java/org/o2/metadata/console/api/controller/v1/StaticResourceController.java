@@ -51,6 +51,7 @@ public class StaticResourceController extends BaseController {
                                                      StaticResource staticResource,
                                                      @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        staticResource.setTenantId(staticResource.getTenantId()!=null?staticResource.getTenantId():organizationId);
         Page<StaticResource> list = PageHelper.doPageAndSort(pageRequest,
                 ()->staticResourceRepository.listStaticResourceByCondition(staticResource));
 
