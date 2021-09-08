@@ -14,6 +14,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.lov.app.service.BaseLovQueryService;
+import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.lov.app.service.PublicLovQueryService;
 import org.o2.lov.domain.bo.CurrencyBO;
 import org.o2.lov.domain.bo.UomBO;
@@ -37,15 +38,21 @@ import java.util.*;
 public class LovAdapterServiceImpl implements LovAdapterService {
     private BaseLovQueryService baseLovQueryService;
     private PublicLovQueryService publicLovQueryService;
+    private HzeroLovQueryService hzeroLovQueryService;
     private LovAdapter lovAdapter;
     private final RestTemplate restTemplate;
     private final RedisHelper redisHelper;
     private final ObjectMapper objectMapper;
 
     public LovAdapterServiceImpl(BaseLovQueryService baseLovQueryService,
-                                 PublicLovQueryService publicLovQueryService, LovAdapter lovAdapter, RestTemplate restTemplate, RedisHelper redisHelper, ObjectMapper objectMapper) {
+                                 PublicLovQueryService publicLovQueryService,
+                                 HzeroLovQueryService hzeroLovQueryService,
+                                 LovAdapter lovAdapter, RestTemplate restTemplate,
+                                 RedisHelper redisHelper,
+                                 ObjectMapper objectMapper) {
         this.baseLovQueryService = baseLovQueryService;
         this.publicLovQueryService = publicLovQueryService;
+        this.hzeroLovQueryService = hzeroLovQueryService;
         this.lovAdapter = lovAdapter;
         this.restTemplate = restTemplate;
         this.redisHelper = redisHelper;
@@ -96,6 +103,21 @@ public class LovAdapterServiceImpl implements LovAdapterService {
             log.error("get translation data error.");
         }
         return result;
+    }
+
+    @Override
+    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
+        return hzeroLovQueryService.queryLovValue(tenantId,lovCode);
+    }
+
+    @Override
+    public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
+        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,lovCode);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
+        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
     }
 
     /**

@@ -52,4 +52,37 @@ public interface LovAdapterService {
 
 
     <E> Page<E>  pageList(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
+
+    /**
+     * 查询值集详细信息
+     *
+     * @param lovCode  值集code
+     * @param tenantId 租户id
+     * @return List<LovValueDTO>
+     */
+    List<LovValueDTO>queryLovValue (Long tenantId,  String lovCode);
+
+    /**
+     * 查询值集中指定值的 描述信息（meaning）
+     *
+     * @param tenantId 租户id
+     * @param lovCode  值集code
+     * @param lovValue 值集value
+     * @return String
+     */
+    String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue);
+
+
+    /**
+     * 批量查询指定值集内容
+     *
+     * @param tenantId
+     * @param lovCode
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                   String lovCode,
+                                                   Map<String, String> queryLovValueMap);
 }
