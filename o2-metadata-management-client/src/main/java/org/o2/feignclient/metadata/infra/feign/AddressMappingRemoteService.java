@@ -6,6 +6,7 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.AddressMappingRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,4 +34,12 @@ public interface AddressMappingRemoteService {
     @PostMapping("/{organizationId}/address-mappings-internal/list")
     ResponseEntity<String> listAddressMappings(@RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList,
                                                @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 查询临近省
+     * @param organizationId 租户ID
+     * @return String
+     */
+    @GetMapping("/{organizationId}/neighboring-regions-internal")
+    ResponseEntity<String> listNeighboringRegions( @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }
