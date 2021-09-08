@@ -128,7 +128,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
                     3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
             lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse), null);
             mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
-            mallLangPromptRepository.updateByPrimaryKeySelective(mallLangPrompt);
+            mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
         }
         //详情页面校验报错
         if (mallLangPromptList.size() == 0 && CollectionUtils.isNotEmpty(errorMsg)) {
