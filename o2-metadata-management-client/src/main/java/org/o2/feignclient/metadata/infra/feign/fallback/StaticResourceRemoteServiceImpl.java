@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.feignclient.metadata.domain.dto.StaticResourceListDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
 import org.o2.feignclient.metadata.infra.feign.StaticResourceRemoteService;
@@ -40,6 +41,13 @@ public class StaticResourceRemoteServiceImpl implements StaticResourceRemoteServ
     @Override
     public ResponseEntity<String> getStaticResourceConfig(Long organizationId, String resourceCode) {
         log.error("error getStaticResourceConfig,params[resourceCode = {}, tenantId = {}]",resourceCode,organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> getStaticResourceAndConfig(Long organizationId, StaticResourceListDTO staticResourceListDTO) {
+
+        log.error("error getStaticResourceAndConfig,param:{}",staticResourceListDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

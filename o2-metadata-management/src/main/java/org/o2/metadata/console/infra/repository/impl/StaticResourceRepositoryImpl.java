@@ -1,6 +1,8 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
+import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.mapper.StaticResourceMapper;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
@@ -24,5 +26,10 @@ public class StaticResourceRepositoryImpl extends BaseRepositoryImpl<StaticResou
     @Override
     public List<StaticResource> listStaticResourceByCondition(final StaticResource condition) {
         return staticResourceMapper.listStaticResourceByCondition(condition);
+    }
+
+    @Override
+    public List<StaticResourceAndConfigCO> getStaticResourceAndConfig(StaticResourceListDTO staticResourceListDTO) {
+        return staticResourceMapper.getStaticResourceAndConfig(staticResourceListDTO);
     }
 }

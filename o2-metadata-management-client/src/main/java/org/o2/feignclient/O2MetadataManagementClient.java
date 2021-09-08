@@ -299,8 +299,24 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
     }
 
+    /**
+     * 获取静态资源配置
+     * @param resourceCode 资源编码
+     * @param tenantId 租户ID
+     * @return StaticResourceConfigCO 配置
+     */
     public StaticResourceConfigCO getStaticResourceConfig(String resourceCode,Long tenantId) {
         return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceConfig(tenantId,resourceCode),StaticResourceConfigCO.class);
+    }
+
+    /**
+     * 获取json_key 和 resource_url
+     * @param tenantId 租户ID
+     * @param staticResourceListDTO 查询条件
+     * @return List<StaticResourceAndConfigCO> 结果
+     */
+    public List<StaticResourceAndConfigCO> getStaticResourceAndConfig(Long tenantId,StaticResourceListDTO staticResourceListDTO){
+        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceAndConfig(tenantId, staticResourceListDTO), new TypeReference<List<StaticResourceAndConfigCO>>() {});
     }
 
 }

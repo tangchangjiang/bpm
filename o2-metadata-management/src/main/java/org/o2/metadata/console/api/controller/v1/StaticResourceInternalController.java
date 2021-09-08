@@ -5,10 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
+import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +34,11 @@ import io.choerodon.swagger.annotation.Permission;
 public class StaticResourceInternalController extends BaseController {
 
     private final StaticResourceInternalService staticResourceInternalService;
+    private final StaticResourceRepository staticResourceRepository;
 
-    public StaticResourceInternalController(StaticResourceInternalService staticResourceInternalService) {
+    public StaticResourceInternalController(StaticResourceInternalService staticResourceInternalService, StaticResourceRepository staticResourceRepository) {
         this.staticResourceInternalService = staticResourceInternalService;
+        this.staticResourceRepository = staticResourceRepository;
     }
 
     @ApiOperation(value = "查询静态资源文件code&url映射")
@@ -61,6 +66,14 @@ public class StaticResourceInternalController extends BaseController {
             staticResourceInternalService.saveResource(saveDTO);
         }
         return Results.success(true);
+    }
+
+    @ApiOperation(value = "获取json_key&resource_url")
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @PostMapping("/get_resource_and_config")
+    public ResponseEntity<List<StaticResourceAndConfigCO>> getStaticResourceAndConfig(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                @RequestBody StaticResourceListDTO staticResourceListDTO){
+        return Results.success(staticResourceRepository.getStaticResourceAndConfig(staticResourceListDTO));
     }
 
 }

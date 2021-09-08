@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.mapper;
 
+import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
+import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.infra.entity.StaticResource;
 
 
@@ -20,4 +22,11 @@ public interface StaticResourceMapper extends BaseMapper<StaticResource> {
      * @return list of staticResource
      */
     List<StaticResource> listStaticResourceByCondition(StaticResource condition);
+
+    /**
+     * 根据条件查询json_key和resourceUrl
+     * @param staticResourceListDTO 查询条件
+     * @return List<StaticResourceAndConfigCO> 结果
+     */
+    List<StaticResourceAndConfigCO> getStaticResourceAndConfig(StaticResourceListDTO staticResourceListDTO);
 }

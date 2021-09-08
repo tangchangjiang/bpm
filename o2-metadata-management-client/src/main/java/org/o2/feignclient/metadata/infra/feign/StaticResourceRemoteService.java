@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.StaticResourceListDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceQueryDTO;
 import org.o2.feignclient.metadata.domain.dto.StaticResourceSaveDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
@@ -56,6 +57,10 @@ public interface StaticResourceRemoteService {
     @GetMapping("/{organizationId}/static-resource-configs-internal/{resourceCode}")
     ResponseEntity<String> getStaticResourceConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @PathVariable(value = "resourceCode") @ApiParam(value = "参数code", required = true) String resourceCode);
+
+    @PostMapping("/{organizationId}/static-resources-internal/get_resource_and_config")
+    ResponseEntity<String> getStaticResourceAndConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      @RequestBody StaticResourceListDTO staticResourceListDTO);
 
 }
 
