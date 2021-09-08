@@ -6,6 +6,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.StaticResourceConverter;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
@@ -55,15 +56,19 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
         staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
 
+        Sqls sqls=Sqls.custom()
+                .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
+                .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
+                .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang(),true)
+                .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel());
+        if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
+                .equals(staticResource.getResourceLevel())){
+            sqls.andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner());
+        }
+
         // 根据resource_code、tenant_id、lang、resource_level、resource_owner查询是否已存在
         List<StaticResource> staticResources = staticResourceRepository.selectByCondition(Condition.builder(StaticResource.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
-                        .andEqualTo(StaticResource.FIELD_TENANT_ID, staticResource.getTenantId())
-                        .andEqualTo(StaticResource.FIELD_LANG, staticResource.getLang(),true)
-                        .andEqualTo(StaticResource.FIELD_RESOURCE_LEVEL,staticResource.getResourceLevel())
-                        .andEqualTo(StaticResource.FIELD_RESOURCE_OWNER,staticResource.getResourceOwner(),true)
-                ).build());
+                .andWhere(sqls).build());
 
         // 记录存在则更新记录，不存在则新增
         int count = staticResources.size();

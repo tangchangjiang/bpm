@@ -58,6 +58,14 @@
             <if test="sourceModuleCode!=null">
                 AND osrc.source_module_code=#{sourceModuleCode}
             </if>
+            <choose>
+                <when test="tenantId != null">
+                    and osr.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1=0
+                </otherwise>
+            </choose>
         </where>
     </select>
 </mapper>
