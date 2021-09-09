@@ -1,4 +1,4 @@
-package org.o2.metadata.api.vo;
+package org.o2.metadata.api.co;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author peng.xu@hand-china.com 2019/5/15
  */
 @Data
-public class FreightTemplateDetailVO {
+public class FreightTemplateDetailCO {
     @ApiModelProperty("表ID，主键")
     private Long templateDetailId;
     @ApiModelProperty(value = "运送方式，关联值集O2MD.TRANSPORT_TYPE")

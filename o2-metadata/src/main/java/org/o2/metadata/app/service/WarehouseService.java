@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.metadata.api.vo.WarehouseVO;
+import org.o2.metadata.api.co.WarehouseCO;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface WarehouseService {
      * @param organizationId 租户ID
      * @return 仓库
      */
-    List<WarehouseVO> listWarehouses(List<String> warehouseCodes, Long organizationId);
+    List<WarehouseCO> listWarehouses(List<String> warehouseCodes, Long organizationId);
 
     /**
      * 仓库快递配送接单量增量更新

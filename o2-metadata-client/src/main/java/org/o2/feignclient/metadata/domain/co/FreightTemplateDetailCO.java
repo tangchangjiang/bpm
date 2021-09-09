@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author peng.xu@hand-china.com 2019/5/15
  */
 @Data
-public class FreightTemplateDetailVO {
+public class FreightTemplateDetailCO {
     @ApiModelProperty("表ID，主键")
     private Long templateDetailId;
     @ApiModelProperty(value = "运送方式，关联值集O2MD.TRANSPORT_TYPE")
@@ -40,7 +40,7 @@ public class FreightTemplateDetailVO {
     public boolean equals(Object o) {
         if (this == o) {return true;}
         if (o == null || getClass() != o.getClass()) {return false;}
-        FreightTemplateDetailVO that = (FreightTemplateDetailVO) o;
+        FreightTemplateDetailCO that = (FreightTemplateDetailCO) o;
         return templateDetailId.equals(that.templateDetailId) &&
                 transportTypeCode.equals(that.transportTypeCode) &&
                 regionId.equals(that.regionId) &&

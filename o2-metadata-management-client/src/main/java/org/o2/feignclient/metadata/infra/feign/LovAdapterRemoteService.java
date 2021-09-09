@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -32,7 +33,7 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/currency-by-codes")
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                               @RequestParam(value = "currencyCodes",required = false) List<String> currencyCodes);
+                                               @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 
     /**
      * 通过编码查询单位(批量)
@@ -42,7 +43,7 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                          @RequestParam(value = "uomCodes",required = false) List<String> uomCodes);
+                                          @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
 
     /**
      * 通过编码查询单位类型(批量)
@@ -52,5 +53,43 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/uomType-by-codes")
     ResponseEntity<String> findUomTypeByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                              @RequestParam(value = "uomTypeCodes",required = false) List<String> uomTypeCodes);
+                                              @RequestParam(value = "uomTypeCodes", required = false) List<String> uomTypeCodes);
+
+    /**
+     * 查询值集详细信息
+     *
+     * @param lovCode  值集code
+     * @param organizationId 租户id
+     * @return str
+     */
+    @GetMapping("/{organizationId}/lov/query-lov-value")
+    ResponseEntity<String> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                         @RequestParam String lovCode);
+
+    /**
+     * 查询值集中指定值的 描述信息（meaning）
+     *
+     * @param organizationId 租户id
+     * @param lovCode  值集code
+     * @param lovValue 值集value
+     * @return String
+     */
+    @GetMapping("/{organizationId}/lov/query-lov-value-meaning")
+    ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                @RequestParam String lovCode,
+                                                @RequestParam String lovValue);
+
+    /**
+     * 批量查询指定值集内容
+     *
+     * @param organizationId 租户id
+     * @param lovCode 值集code
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    @GetMapping("/{organizationId}/lov/batch-query-lov-value-meaning")
+    ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                @RequestParam String lovCode,
+                                                @RequestParam Map<String, String> queryLovValueMap);
 }

@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @ApiModel("运费模板")
 @Data
-public class FreightTemplateVO {
+public class FreightTemplateCO {
 
     @ApiModelProperty("表ID，主键")
     private Long templateId;
@@ -39,7 +39,7 @@ public class FreightTemplateVO {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {return false;}
-        FreightTemplateVO that = (FreightTemplateVO) o;
+        FreightTemplateCO that = (FreightTemplateCO) o;
         return templateId.equals(that.templateId) &&
                 templateCode.equals(that.templateCode) &&
                 templateName.equals(that.templateName) &&

@@ -1,4 +1,4 @@
-package org.o2.metadata.api.vo;
+package org.o2.metadata.api.co;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @ApiModel("运费模板")
 @Data
-public class FreightTemplateVO {
+public class FreightTemplateCO {
 
     @ApiModelProperty("表ID，主键")
     private Long templateId;

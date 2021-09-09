@@ -7,7 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.WarehouseVO;
+import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +31,14 @@ public class WarehouseMetadataInternalController {
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/internal/list")
-    public ResponseEntity<Map<String, WarehouseVO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                    @RequestParam List<String> warehouseCodes) {
-        Map<String,WarehouseVO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
-        List<WarehouseVO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
+        Map<String, WarehouseCO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
+        List<WarehouseCO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
         if (vos.isEmpty()){
             return Results.success(map);
         }
-        for (WarehouseVO warehouseVO : vos) {
+        for (WarehouseCO warehouseVO : vos) {
             map.put(warehouseVO.getWarehouseCode(), warehouseVO);
         }
         return  Results.success(map);

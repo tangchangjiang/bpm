@@ -2,7 +2,7 @@ package org.o2.metadata.app.service;
 
 
 import org.o2.metadata.api.dto.FreightDTO;
-import org.o2.metadata.api.vo.FreightInfoVO;
+import org.o2.metadata.api.co.FreightInfoCO;
 
 
 /**
@@ -17,5 +17,5 @@ public interface FreightService {
      * @param  freight
      * @return 运费
      */
-    FreightInfoVO getFreightTemplate(FreightDTO freight);
+    FreightInfoCO getFreightTemplate(FreightDTO freight);
 }

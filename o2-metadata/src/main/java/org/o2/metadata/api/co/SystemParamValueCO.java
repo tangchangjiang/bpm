@@ -1,4 +1,4 @@
-package org.o2.metadata.api.vo;
+package org.o2.metadata.api.co;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020/6/10 14:57
  **/
 @Data
-public class SystemParamValueVO {
+public class SystemParamValueCO {
 
     private String paramValue;
 

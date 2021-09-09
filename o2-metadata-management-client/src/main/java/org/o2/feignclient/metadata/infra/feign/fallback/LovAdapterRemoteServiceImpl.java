@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -31,6 +32,24 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     @Override
     public ResponseEntity<String> findUomTypeByCodes(Long organizationId, List<String> uomTypeCodes) {
         log.error("Error findUomTypeByCodes, params[uomCodes = {}, organizationId = {}]", uomTypeCodes, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryLovValue(Long organizationId, String lovCode) {
+        log.error("Error queryLovValue, params[lovCode = {}, organizationId = {}]", lovCode, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, String lovValue) {
+        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, lovValue= {}]", lovCode, organizationId,lovValue);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, Map<String, String> queryLovValueMap) {
+        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, map = {} ]", lovCode, organizationId,queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

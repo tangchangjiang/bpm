@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.metadata.api.vo.OnlineShopVO;
+import org.o2.metadata.api.co.OnlineShopCO;
 
 /**
  *
@@ -14,6 +14,6 @@ public interface OnlineShopService {
      * @param onlineShopCode 网店编码
      * @return  网店
      */
-   OnlineShopVO getOnlineShop(String onlineShopCode);
+   OnlineShopCO getOnlineShop(String onlineShopCode);
 
 }

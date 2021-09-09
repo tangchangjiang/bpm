@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.metadata.api.vo.WarehouseVO;
+import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.o2.metadata.infra.convertor.WarehouseConverter;
@@ -21,7 +21,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseDomainRepository = warehouseDomainRepository;
     }
     @Override
-    public List<WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
+    public List<WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
         return WarehouseConverter.doToVoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId));
     }
 

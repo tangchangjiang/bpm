@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import java.util.Set;
 
@@ -10,11 +10,11 @@ import lombok.Data;
  **/
 
 @Data
-public class SystemParameterVO {
+public class SystemParameterCO {
 
     private String paramCode;
 
     private String defaultValue;
 
-    private Set<SystemParamValueVO> setSystemParamValue;
+    private Set<SystemParamValueCO> setSystemParamValue;
 }

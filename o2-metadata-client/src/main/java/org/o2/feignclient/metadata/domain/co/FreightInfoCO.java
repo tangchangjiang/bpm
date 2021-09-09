@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import lombok.Data;
 
@@ -11,21 +11,21 @@ import java.util.Objects;
  * @author yipeng.zhu@hand-china.com 2021-07-16
  **/
 @Data
-public class FreightInfoVO {
+public class FreightInfoCO {
     /**
      * 运费模版编码
      */
     private  String freightTemplateCode;
 
-    private  FreightTemplateVO headTemplate;
+    private FreightTemplateCO headTemplate;
 
-    private  FreightTemplateDetailVO regionTemplate;
+    private FreightTemplateDetailCO regionTemplate;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {return true;}
         if (o == null || getClass() != o.getClass()) {return false;}
-        FreightInfoVO that = (FreightInfoVO) o;
+        FreightInfoCO that = (FreightInfoCO) o;
         return freightTemplateCode.equals(that.freightTemplateCode);
     }
 

@@ -1,4 +1,4 @@
-package org.o2.feignclient.metadata.domain.vo;
+package org.o2.metadata.api.co;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel("仓库表")
-public class WarehouseVO {
+public class WarehouseCO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
