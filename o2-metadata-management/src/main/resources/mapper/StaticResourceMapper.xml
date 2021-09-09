@@ -65,11 +65,11 @@
         SELECT osrc.json_key,
                osr.resource_url
         FROM o2md_static_resource osr
-        JOIN o2md_static_resource_config osrc ON osr.resource_code = osrc.resource_code
+        JOIN o2md_static_resource_config osrc ON osr.resource_code = osrc.resource_code and osr.tenant_id = osrc.tenant_id
         <where>
             <choose>
                 <when test="tenantId != null">
-                    and tenant_id = #{tenantId}
+                    and osr.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     and 1=0
