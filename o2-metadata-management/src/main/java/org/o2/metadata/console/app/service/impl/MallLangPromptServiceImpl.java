@@ -55,7 +55,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
 
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
-                                     FileClient fileClient, RedisCacheClient redisCacheClient){
+                                     FileClient fileClient, RedisCacheClient redisCacheClient) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
@@ -65,7 +65,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     }
 
 
-    
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<MallLangPrompt> batchSave(List<MallLangPrompt> mallLangPromptList) {
@@ -80,7 +79,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             List<MallLangPrompt> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
                 // 唯一性校验
-                UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+                UniqueHelper.valid(item, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 item.setStatus(MetadataConstants.MallLangPromptConstants.UNAPPROVED);
                 mallLangPromptRepository.updateByPrimaryKeySelective(item);
             });
@@ -90,7 +89,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             List<MallLangPrompt> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
                 // 唯一性校验
-                UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+                UniqueHelper.valid(item, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 mallLangPromptRepository.insertSelective(item);
             });
         }
@@ -102,7 +101,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     @Transactional(rollbackFor = Exception.class)
     public MallLangPrompt save(MallLangPrompt mallLangPrompt) {
         //保存商城前端多语言内容维护表
-        UniqueHelper.valid(mallLangPrompt,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+        UniqueHelper.valid(mallLangPrompt, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
         if (mallLangPrompt.getLangPromptId() == null) {
             mallLangPromptRepository.insertSelective(mallLangPrompt);
         } else {
@@ -112,7 +111,9 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
                     MallLangPrompt.FIELD_PROMPT_DETAIL,
                     MallLangPrompt.FIELD_MALL_TYPE,
                     MallLangPrompt.FIELD_TENANT_ID,
-                    MallLangPrompt.FIELD_STATUS
+                    MallLangPrompt.FIELD_STATUS,
+                    MallLangPrompt.FIELD_DESCRIPTION,
+                    MallLangPrompt.FIELD_SITE_RANG
             );
         }
 
@@ -140,28 +141,28 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     }
 
 
-    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse){
+    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse) {
         StaticResource resource = new StaticResource();
         //上传静态文件
-        if(!uploadStaticFile(mallLangPrompt,resource,errorMsg)){
+        if (!uploadStaticFile(mallLangPrompt, resource, errorMsg)) {
             batchResponse.addFailedBody(mallLangPrompt);
             return;
         }
         //保存发布记录
-        saveMallLangPromptInfo(mallLangPrompt,resource);
+        saveMallLangPromptInfo(mallLangPrompt, resource);
         batchResponse.addSuccessBody(mallLangPrompt);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveMallLangPromptInfo(MallLangPrompt mallLangPrompt,StaticResource resource){
+    public void saveMallLangPromptInfo(MallLangPrompt mallLangPrompt, StaticResource resource) {
         StaticResource request = new StaticResource();
         request.setLang(resource.getLang());
         request.setTenantId(resource.getTenantId());
         request.setResourceCode(resource.getResourceCode());
         List<StaticResource> staticResource = staticResourceRepository.select(request);
-        if(staticResource.isEmpty()){
+        if (staticResource.isEmpty()) {
             staticResourceRepository.insertSelective(resource);
-        }else{
+        } else {
             resource.setResourceId(staticResource.get(0).getResourceId());
             resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
             staticResourceRepository.updateByPrimaryKeySelective(resource);
@@ -181,7 +182,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         final String jsonFile = mallLangPrompt.getPromptDetail();
         // 上传路径全小写
         String directory = fileStorageProperties.getStoragePath() + Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                 MetadataConstants.MallLangPromptConstants.NAME,mallLangPrompt.getMallType(),
+                MetadataConstants.MallLangPromptConstants.NAME, mallLangPrompt.getMallType(),
                 mallLangPrompt.getLang()).toLowerCase();
         // 下载
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
@@ -203,7 +204,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
                 }
                 resource.setResourceUrl(BaseConstants.Symbol.SLASH + resultUrl);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return false;
         }

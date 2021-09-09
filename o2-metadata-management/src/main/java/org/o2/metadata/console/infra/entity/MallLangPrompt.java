@@ -34,11 +34,12 @@ public class MallLangPrompt extends AuditDomain {
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String FIELD_STATUS = "status";
     public static final String O2MD_MALL_LANG_PROMPT_U1 = "o2md_mall_lang_prompt_u1";
-	public static final String FIELD_STATUS_MEANING = "statusMeaning";
-	public static final String FIELD_LANG_MEANING = "langMeaning";
+    public static final String FIELD_STATUS_MEANING = "statusMeaning";
+    public static final String FIELD_LANG_MEANING = "langMeaning";
+    public static final String FIELD_SITE_RANG = "siteRang";
+    public static final String FIELD_DESCRIPTION = "description";
 
-
-	//
+    //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
@@ -54,7 +55,7 @@ public class MallLangPrompt extends AuditDomain {
     @ApiModelProperty(value = "语言字段，取值zh_CN/en_US", required = true)
     @NotBlank
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
-	@LovValue(lovCode = "O2MD.LANGUAGE", meaningField = FIELD_LANG_MEANING)
+    @LovValue(lovCode = "O2MD.LANGUAGE", meaningField = FIELD_LANG_MEANING)
     private String lang;
     @ApiModelProperty(value = "多语言内容详情")
     private String promptDetail;
@@ -67,7 +68,7 @@ public class MallLangPrompt extends AuditDomain {
     @Unique(O2MD_MALL_LANG_PROMPT_U1)
     private Long tenantId;
     @ApiModelProperty(value = "状态类型.值集:O2CMS.APPROVE_STATUS", required = true)
-	@LovValue(lovCode = "O2CMS.APPROVE_STATUS", meaningField = FIELD_STATUS_MEANING)
+    @LovValue(lovCode = "O2CMS.APPROVE_STATUS", meaningField = FIELD_STATUS_MEANING)
     private String status;
 
     @ApiModelProperty(value = "创建人")
@@ -81,24 +82,24 @@ public class MallLangPrompt extends AuditDomain {
     @ApiModelProperty(value = "描述")
     private String description;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
-	@Transient
-	@ApiModelProperty("状态类型含义")
-	private String statusMeaning;
+    @Transient
+    @ApiModelProperty("状态类型含义")
+    private String statusMeaning;
 
-	@Transient
-	@ApiModelProperty("语言类型含义")
-	private String langMeaning;
+    @Transient
+    @ApiModelProperty("语言类型含义")
+    private String langMeaning;
 
-	@Transient
-	@ApiModelProperty("创建人姓名")
-	private String createdByName;
-	@Transient
-	@ApiModelProperty("更新者姓名")
-	private String lastUpdatedByName;
+    @Transient
+    @ApiModelProperty("创建人姓名")
+    private String createdByName;
+    @Transient
+    @ApiModelProperty("更新者姓名")
+    private String lastUpdatedByName;
 
     //
     // getter/setter
@@ -107,130 +108,135 @@ public class MallLangPrompt extends AuditDomain {
     /**
      * @return 主键，自增字段
      */
-	public Long getLangPromptId() {
-		return langPromptId;
-	}
+    public Long getLangPromptId() {
+        return langPromptId;
+    }
 
-	public void setLangPromptId(Long langPromptId) {
-		this.langPromptId = langPromptId;
-	}
+    public void setLangPromptId(Long langPromptId) {
+        this.langPromptId = langPromptId;
+    }
+
     /**
      * @return 语言字段，取值zh_CN/en_US
      */
-	public String getLang() {
-		return lang;
-	}
+    public String getLang() {
+        return lang;
+    }
 
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
     /**
      * @return 多语言内容详情
      */
-	public String getPromptDetail() {
-		return promptDetail;
-	}
+    public String getPromptDetail() {
+        return promptDetail;
+    }
 
-	public void setPromptDetail(String promptDetail) {
-		this.promptDetail = promptDetail;
-	}
+    public void setPromptDetail(String promptDetail) {
+        this.promptDetail = promptDetail;
+    }
+
     /**
      * @return 商城类型，取值B2B,B2C
      */
-	public String getMallType() {
-		return mallType;
-	}
+    public String getMallType() {
+        return mallType;
+    }
 
-	public void setMallType(String mallType) {
-		this.mallType = mallType;
-	}
+    public void setMallType(String mallType) {
+        this.mallType = mallType;
+    }
+
     /**
      * @return 租户ID
      */
-	public Long getTenantId() {
-		return tenantId;
-	}
+    public Long getTenantId() {
+        return tenantId;
+    }
 
-	public void setTenantId(Long tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
     /**
      * @return 数据状态
      */
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public String getStatusMeaning() {
-		return statusMeaning;
-	}
+    public String getStatusMeaning() {
+        return statusMeaning;
+    }
 
-	public void setStatusMeaning(String statusMeaning) {
-		this.statusMeaning = statusMeaning;
-	}
+    public void setStatusMeaning(String statusMeaning) {
+        this.statusMeaning = statusMeaning;
+    }
 
-	public String getLangMeaning() {
-		return langMeaning;
-	}
+    public String getLangMeaning() {
+        return langMeaning;
+    }
 
-	public void setLangMeaning(String langMeaning) {
-		this.langMeaning = langMeaning;
-	}
+    public void setLangMeaning(String langMeaning) {
+        this.langMeaning = langMeaning;
+    }
 
-	public String getCreatedByName() {
-		return createdByName;
-	}
+    public String getCreatedByName() {
+        return createdByName;
+    }
 
-	public void setCreatedByName(String createdByName) {
-		this.createdByName = createdByName;
-	}
+    public void setCreatedByName(String createdByName) {
+        this.createdByName = createdByName;
+    }
 
-	public String getLastUpdatedByName() {
-		return lastUpdatedByName;
-	}
+    public String getLastUpdatedByName() {
+        return lastUpdatedByName;
+    }
 
-	public void setLastUpdatedByName(String lastUpdatedByName) {
-		this.lastUpdatedByName = lastUpdatedByName;
-	}
+    public void setLastUpdatedByName(String lastUpdatedByName) {
+        this.lastUpdatedByName = lastUpdatedByName;
+    }
 
-	@Override
-	public Long getCreatedBy() {
-		return createdBy;
-	}
+    @Override
+    public Long getCreatedBy() {
+        return createdBy;
+    }
 
-	@Override
-	public void setCreatedBy(Long createdBy) {
-		this.createdBy = createdBy;
-	}
+    @Override
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	@Override
-	public Long getLastUpdatedBy() {
-		return lastUpdatedBy;
-	}
+    @Override
+    public Long getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
 
-	@Override
-	public void setLastUpdatedBy(Long lastUpdatedBy) {
-		this.lastUpdatedBy = lastUpdatedBy;
-	}
+    @Override
+    public void setLastUpdatedBy(Long lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
 
-	public String getSiteRang() {
-		return siteRang;
-	}
+    public String getSiteRang() {
+        return siteRang;
+    }
 
-	public void setSiteRang(String siteRang) {
-		this.siteRang = siteRang;
-	}
+    public void setSiteRang(String siteRang) {
+        this.siteRang = siteRang;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
 
