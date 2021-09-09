@@ -76,6 +76,11 @@ public class MallLangPrompt extends AuditDomain {
     @ApiModelProperty(value = "更新人")
     private Long lastUpdatedBy;
 
+    @ApiModelProperty(value = "适用站点范围")
+    private String siteRang;
+    @ApiModelProperty(value = "描述")
+    private String description;
+
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -210,6 +215,22 @@ public class MallLangPrompt extends AuditDomain {
 	@Override
 	public void setLastUpdatedBy(Long lastUpdatedBy) {
 		this.lastUpdatedBy = lastUpdatedBy;
+	}
+
+	public String getSiteRang() {
+		return siteRang;
+	}
+
+	public void setSiteRang(String siteRang) {
+		this.siteRang = siteRang;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
 
