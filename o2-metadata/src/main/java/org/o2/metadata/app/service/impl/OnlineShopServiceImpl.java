@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.metadata.api.vo.OnlineShopVO;
+import org.o2.metadata.api.vo.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.o2.metadata.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.infra.redis.OnlineShopRedis;
@@ -21,7 +21,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public OnlineShopVO getOnlineShop(String onlineShopCode) {
+    public OnlineShopCO getOnlineShop(String onlineShopCode) {
         return OnlineShopConverter.poToVoObject(onlineShopRedis.getOnlineShop(onlineShopCode));
     }
 }

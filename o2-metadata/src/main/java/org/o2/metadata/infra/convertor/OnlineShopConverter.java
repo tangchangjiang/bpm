@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.api.vo.OnlineShopVO;
+import org.o2.metadata.api.vo.OnlineShopCO;
 import org.o2.metadata.infra.entity.OnlineShop;
 
 /**
@@ -16,16 +16,16 @@ public class OnlineShopConverter {
      * @param onlineShop 网店
      * @return  Vo
      */
-    public static OnlineShopVO poToVoObject(OnlineShop onlineShop) {
+    public static OnlineShopCO poToVoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
         }
-        OnlineShopVO onlineShopVO = new OnlineShopVO();
-        onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
-        onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
-        onlineShopVO.setTenantId(onlineShop.getTenantId());
-        return onlineShopVO;
+        OnlineShopCO co = new OnlineShopCO();
+        co.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        co.setOnlineShopName(onlineShop.getOnlineShopName());
+        co.setTenantId(onlineShop.getTenantId());
+        return co;
     }
 
 

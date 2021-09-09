@@ -2,7 +2,7 @@ package org.o2.metadata.app.service.impl;
 
 
 import org.o2.metadata.api.dto.FreightDTO;
-import org.o2.metadata.api.vo.FreightInfoVO;
+import org.o2.metadata.api.vo.FreightInfoCO;
 import org.o2.metadata.app.service.FreightService;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.o2.metadata.infra.convertor.FreightConverter;
@@ -24,7 +24,7 @@ public class FreightServiceImpl implements FreightService {
 
     @Override
     @Cacheable(value = "O2MD_METADATA", key = "'freight'+'_'+#freight")
-    public FreightInfoVO getFreightTemplate(FreightDTO freight) {
+    public FreightInfoCO getFreightTemplate(FreightDTO freight) {
       return FreightConverter.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
     }
 

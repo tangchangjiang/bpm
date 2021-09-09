@@ -2,7 +2,7 @@ package org.o2.metadata.api.controller.v1;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.SystemParameterVO;
+import org.o2.metadata.api.vo.SystemParameterCO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -35,22 +35,22 @@ public class SysParameterMetadataInternalController {
     @ApiOperation(value = "从redis查询系统参数")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}")
-    public ResponseEntity<SystemParameterVO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                 @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
+    public ResponseEntity<SystemParameterCO> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
         return Results.success(sysParameterService.getSystemParameter(paramCode, organizationId));
     }
 
     @ApiOperation(value = "批量从redis查询系统参数")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/paramCodes")
-    public ResponseEntity<Map<String, SystemParameterVO>> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, SystemParameterCO>> listSystemParameters(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                @RequestParam List<String> paramCodes) {
-        List<SystemParameterVO> systemParameterVOList = sysParameterService.listSystemParameters(paramCodes, organizationId);
-        Map<String, SystemParameterVO> map = new HashMap<>(4);
+        List<SystemParameterCO> systemParameterVOList = sysParameterService.listSystemParameters(paramCodes, organizationId);
+        Map<String, SystemParameterCO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
         }
-        for (SystemParameterVO vo : systemParameterVOList) {
+        for (SystemParameterCO vo : systemParameterVOList) {
             map.put(vo.getParamCode(), vo);
         }
         return Results.success(map);

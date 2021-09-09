@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @ApiModel("网店基")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OnlineShopVO {
+public class OnlineShopCO {
 
     @ApiModelProperty(value = "网点编码")
     private String onlineShopCode;

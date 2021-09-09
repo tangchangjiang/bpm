@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.dto.FreightDTO;
-import org.o2.metadata.api.vo.FreightInfoVO;
+import org.o2.metadata.api.vo.FreightInfoCO;
 import org.o2.metadata.app.service.FreightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class FreightInternalController {
     @ApiOperation(value = "查询运费模版信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/template")
-    public ResponseEntity<FreightInfoVO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<FreightInfoCO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                             @RequestBody FreightDTO freight) {
         freight.setTenantId(organizationId);
         return Results.success(freightService.getFreightTemplate(freight));

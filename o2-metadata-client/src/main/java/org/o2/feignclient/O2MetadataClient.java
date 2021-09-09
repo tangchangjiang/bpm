@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.co.CarrierCO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.vo.FreightInfoVO;
-import org.o2.feignclient.metadata.domain.vo.OnlineShopVO;
-import org.o2.feignclient.metadata.domain.vo.SystemParameterVO;
-import org.o2.feignclient.metadata.domain.vo.WarehouseVO;
+import org.o2.feignclient.metadata.domain.vo.FreightInfoCO;
+import org.o2.feignclient.metadata.domain.vo.OnlineShopCO;
+import org.o2.feignclient.metadata.domain.vo.SystemParameterCO;
+import org.o2.feignclient.metadata.domain.vo.WarehouseCO;
 import org.o2.feignclient.metadata.infra.feign.*;
 
 import java.util.List;
@@ -43,8 +43,8 @@ public class O2MetadataClient {
      * @param paramCode 参数编码
      * @param tenantId 租户ID
      */
-    public SystemParameterVO getSystemParameter(String paramCode, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterVO.class);
+    public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterCO.class);
     }
 
     /**
@@ -52,8 +52,8 @@ public class O2MetadataClient {
      * @param  paramCodes 参数编码
      * @return list
      */
-    public Map<String, SystemParameterVO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), new TypeReference<Map<String, SystemParameterVO>>() {
+    public Map<String, SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), new TypeReference<Map<String, SystemParameterCO>>() {
         });
     }
     /**
@@ -62,8 +62,8 @@ public class O2MetadataClient {
      * @param warehouseCodes 仓库编码
      * @param tenantId 租户ID
      */
-    public Map<String,WarehouseVO> listWarehouses(List<String> warehouseCodes, Long tenantId){
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseVO>>() {
+    public Map<String, WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId){
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseCO>>() {
         });
     }
     /**
@@ -72,8 +72,8 @@ public class O2MetadataClient {
      * @param freight 运费参数
      * @return 运费结果
      */
-    public FreightInfoVO getFreightTemplate(FreightDTO freight, Long tenantId){
-        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight,tenantId), FreightInfoVO.class);
+    public FreightInfoCO getFreightTemplate(FreightDTO freight, Long tenantId){
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplate(freight,tenantId), FreightInfoCO.class);
     }
 
     /**
@@ -93,8 +93,8 @@ public class O2MetadataClient {
      * @param onlineShopCode  网店编码
      * @return 网店
      */
-    public OnlineShopVO getOnlineShop(String onlineShopCode) {
-       return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode),OnlineShopVO.class);
+    public OnlineShopCO getOnlineShop(String onlineShopCode) {
+       return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode), OnlineShopCO.class);
     }
 
     /**

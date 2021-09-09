@@ -4,7 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.OnlineShopVO;
+import org.o2.metadata.api.vo.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +30,9 @@ public class OnlineShopInternalController {
 
 
     @ApiOperation(value = "查询运费模版信息")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop")
-    public ResponseEntity<OnlineShopVO> getOnlineShop(@RequestParam String  onlineShopCode) {
+    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String  onlineShopCode) {
         return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
     }
 }
