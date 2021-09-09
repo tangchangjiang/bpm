@@ -2,7 +2,7 @@ package org.o2.metadata.api.controller.v1;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.SystemParameterCO;
+import org.o2.metadata.api.co.SystemParameterCO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;

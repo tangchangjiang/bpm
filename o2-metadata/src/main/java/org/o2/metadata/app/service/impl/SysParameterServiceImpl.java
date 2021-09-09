@@ -1,7 +1,7 @@
 package org.o2.metadata.app.service.impl;
 
 
-import org.o2.metadata.api.vo.SystemParameterCO;
+import org.o2.metadata.api.co.SystemParameterCO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;

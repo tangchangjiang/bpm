@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.metadata.api.vo.WarehouseCO;
+import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.o2.metadata.infra.convertor.WarehouseConverter;

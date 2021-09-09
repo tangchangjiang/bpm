@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.dto.FreightDTO;
-import org.o2.metadata.api.vo.FreightInfoCO;
+import org.o2.metadata.api.co.FreightInfoCO;
 import org.o2.metadata.app.service.FreightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

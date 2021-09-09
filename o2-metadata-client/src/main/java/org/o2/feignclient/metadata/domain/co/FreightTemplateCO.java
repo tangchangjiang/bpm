@@ -1,8 +1,10 @@
-package org.o2.metadata.api.vo;
+package org.o2.feignclient.metadata.domain.co;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Objects;
 
 
 /**
@@ -30,9 +32,26 @@ public class FreightTemplateCO {
     private Integer dafaultFlag;
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
-    @ApiModelProperty(value = "计价方式描述")
-    private String valuationTypeMeaning;
-    @ApiModelProperty(value = "计价单位描述")
-    private String valuationUomMeaning;
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {return false;}
+        FreightTemplateCO that = (FreightTemplateCO) o;
+        return templateId.equals(that.templateId) &&
+                templateCode.equals(that.templateCode) &&
+                templateName.equals(that.templateName) &&
+                deliveryFreeFlag.equals(that.deliveryFreeFlag) &&
+                valuationType.equals(that.valuationType) &&
+                valuationUom.equals(that.valuationUom) &&
+                dafaultFlag.equals(that.dafaultFlag) &&
+                tenantId.equals(that.tenantId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(templateId, templateCode, templateName, deliveryFreeFlag, valuationType, valuationUom, dafaultFlag, tenantId);
+    }
 }

@@ -2,7 +2,7 @@ package org.o2.metadata.app.service;
 
 
 import org.o2.metadata.api.dto.FreightDTO;
-import org.o2.metadata.api.vo.FreightInfoCO;
+import org.o2.metadata.api.co.FreightInfoCO;
 
 
 /**

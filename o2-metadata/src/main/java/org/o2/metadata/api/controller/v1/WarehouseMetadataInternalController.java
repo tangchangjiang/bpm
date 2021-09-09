@@ -7,7 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.WarehouseCO;
+import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;

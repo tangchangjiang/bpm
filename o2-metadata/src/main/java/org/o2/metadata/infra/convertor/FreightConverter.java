@@ -1,8 +1,8 @@
 package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.api.vo.FreightInfoCO;
-import org.o2.metadata.api.vo.FreightTemplateDetailCO;
-import org.o2.metadata.api.vo.FreightTemplateCO;
+import org.o2.metadata.api.co.FreightInfoCO;
+import org.o2.metadata.api.co.FreightTemplateDetailCO;
+import org.o2.metadata.api.co.FreightTemplateCO;
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
 import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;

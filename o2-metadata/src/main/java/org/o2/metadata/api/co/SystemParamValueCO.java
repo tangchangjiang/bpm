@@ -1,4 +1,4 @@
-package org.o2.metadata.api.vo;
+package org.o2.metadata.api.co;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.co.CarrierCO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
-import org.o2.feignclient.metadata.domain.vo.FreightInfoCO;
-import org.o2.feignclient.metadata.domain.vo.OnlineShopCO;
-import org.o2.feignclient.metadata.domain.vo.SystemParameterCO;
-import org.o2.feignclient.metadata.domain.vo.WarehouseCO;
+import org.o2.feignclient.metadata.domain.co.FreightInfoCO;
+import org.o2.feignclient.metadata.domain.co.OnlineShopCO;
+import org.o2.feignclient.metadata.domain.co.SystemParameterCO;
+import org.o2.feignclient.metadata.domain.co.WarehouseCO;
 import org.o2.feignclient.metadata.infra.feign.*;
 
 import java.util.List;

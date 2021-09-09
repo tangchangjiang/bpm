@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.api.vo.WarehouseCO;
+import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 import org.o2.metadata.infra.entity.Warehouse;
 

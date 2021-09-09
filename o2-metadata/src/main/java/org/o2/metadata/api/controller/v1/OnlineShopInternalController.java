@@ -4,7 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.vo.OnlineShopCO;
+import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

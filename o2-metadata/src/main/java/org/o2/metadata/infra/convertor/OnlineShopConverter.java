@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.convertor;
 
-import org.o2.metadata.api.vo.OnlineShopCO;
+import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.infra.entity.OnlineShop;
 
 /**

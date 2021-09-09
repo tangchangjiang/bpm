@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service;
 
-import org.o2.metadata.api.vo.WarehouseCO;
+import org.o2.metadata.api.co.WarehouseCO;
 
 import java.util.List;
 

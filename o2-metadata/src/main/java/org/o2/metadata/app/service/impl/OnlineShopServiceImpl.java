@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
-import org.o2.metadata.api.vo.OnlineShopCO;
+import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.o2.metadata.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.infra.redis.OnlineShopRedis;
