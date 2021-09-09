@@ -68,4 +68,32 @@
             </choose>
         </where>
     </select>
+    <select id="getStaticResourceAndConfig"
+            resultType="org.o2.metadata.console.api.co.StaticResourceAndConfigCO">
+        SELECT osrc.json_key,
+               osr.resource_url
+        FROM o2md_static_resource osr
+        JOIN o2md_static_resource_config osrc ON osr.resource_code = osrc.resource_code and osr.tenant_id = osrc.tenant_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and osr.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1=0
+                </otherwise>
+            </choose>
+            and osr.enable_flag = 1
+            and osrc.active_flag = 1
+            <if test="lang !=null and lang != ''">
+                and osr.lang = #{lang}
+            </if>
+            and
+            <trim prefix="(" suffix=")">
+                osr.resource_level = 'PUBLIC'
+                or (osr.resource_level = 'SITE' and osr.resource_owner = #{siteCode})
+                or (osr.resource_level = 'CATALOG_VERSION' and osr.resource_owner = #{catalogVersionCode})
+            </trim>
+        </where>
+    </select>
 </mapper>

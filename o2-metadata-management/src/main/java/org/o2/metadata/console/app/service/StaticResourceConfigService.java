@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
+import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 
 import java.util.List;

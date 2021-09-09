@@ -1,6 +1,8 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
+import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.infra.entity.StaticResource;
 
 import java.util.List;
@@ -19,4 +21,11 @@ public interface StaticResourceRepository extends BaseRepository<StaticResource>
      * @return list of staticResource
      */
     List<StaticResource> listStaticResourceByCondition(StaticResource condition);
+
+    /**
+     * 根据条件查询json_key和resource_url
+     * @param staticResourceListDTO
+     * @return
+     */
+    List<StaticResourceAndConfigCO> getStaticResourceAndConfig(StaticResourceListDTO staticResourceListDTO);
 }
