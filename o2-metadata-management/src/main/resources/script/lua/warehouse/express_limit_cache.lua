@@ -49,6 +49,8 @@ if limitHashValue ~= nil then
     end
     -- 大于到配送限制量
     if number > expressLimit then
+        expressObject["limitFlag"] = true;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
         return -1;
     end
 end

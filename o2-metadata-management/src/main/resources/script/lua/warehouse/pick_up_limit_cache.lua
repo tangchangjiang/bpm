@@ -50,6 +50,8 @@ if limitHashValue  then
 
     -- 大于自提限制量
     if number > pickUpLimit then
+        pickupObject["limitFlag"] = true;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(pickupObject));
         return -1;
     end
 
