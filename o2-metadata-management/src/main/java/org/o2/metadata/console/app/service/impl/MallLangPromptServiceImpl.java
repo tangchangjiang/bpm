@@ -65,6 +65,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
 
     private final HzeroLovQueryService hzeroLovQueryService;
 
+    private final String SITE_CODE = "siteCode";
+    private final String SITE_NAME = "siteName";
+    private final String LOV_CODE = "O2CMS.SITE";
+    private final Long ORGANIZATION_ID = 2L;
+
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
@@ -174,17 +179,18 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         List<String> siteRangs = content.stream().filter(i -> i.getSiteRang() != null)
                 .map(a -> a.getSiteRang()).collect(Collectors.toList());
 
+
         Map<Long, String> updateUserMap = IamUserHelper.getRealNameMap(updateUserIds);
         Map<Long, String> createUserMap = IamUserHelper.getRealNameMap(createUserIds);
 
-        List<Map<String, Object>> maps = hzeroLovQueryService.queryLovValueMeaning(2L, "O2CMS.SITE", new HashMap<>());
+        List<Map<String, Object>> maps = hzeroLovQueryService.queryLovValueMeaning(ORGANIZATION_ID, LOV_CODE, new HashMap<>());
         Map<String, Object> siteRangName = new HashMap<>();
         for (String siteCode : siteRangs) {
             String[] result = siteCode.split(",");
             for (String siteCodeResult : result) {
                 for (Map<String, Object> s : maps) {
-                    if (siteCodeResult.equals(s.get("siteCode"))) {
-                        siteRangName.put(siteCodeResult, s.get("siteName"));
+                    if (siteCodeResult.equals(s.get(SITE_CODE))) {
+                        siteRangName.put(siteCodeResult, s.get(SITE_NAME));
                     }
                 }
             }
