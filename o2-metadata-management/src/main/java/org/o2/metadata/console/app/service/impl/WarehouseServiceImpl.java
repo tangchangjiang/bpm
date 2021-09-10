@@ -9,7 +9,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
@@ -214,7 +214,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         // 仓库快递配送接单量限制 key
         String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
         String result = this.redisCacheClient.<String, String>opsForHash().get(expressLimitKey,warehouseCode);
-        JSONObject object = FastJsonHelper.stringToJsonObject(result);
+        JSONObject object = JsonHelper.stringToJsonObject(result);
         return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
@@ -223,7 +223,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         // 仓库快递配送接单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
         String result = this.redisCacheClient.<String, String>opsForHash().get(pickUpLimitKey,warehouseCode);
-        JSONObject object = FastJsonHelper.stringToJsonObject(result);
+        JSONObject object = JsonHelper.stringToJsonObject(result);
         return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
@@ -254,7 +254,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
-            JSONObject object = FastJsonHelper.stringToJsonObject(v);
+            JSONObject object = JsonHelper.stringToJsonObject(v);
             boolean flag = object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
             if (Boolean.TRUE.equals(flag)) {
                 set.add(k);

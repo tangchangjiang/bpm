@@ -80,8 +80,8 @@ public class PipelineNode extends AuditDomain {
     @ApiModelProperty(value = "下个节点行为")
     @NotNull
     private Long nextAction;
-    @ApiModelProperty(value = "决策类型，值集 OBSM.PIPELINE_STRATEGY")
-    @LovValue(lovCode = "OBSM.PIPELINE_STRATEGY")
+    @ApiModelProperty(value = "决策类型，值集 O2MD.PIPELINE_STRATEGY")
+    @LovValue(lovCode = "O2MD.PIPELINE_STRATEGY")
     private String strategyType;
     @ApiModelProperty("租户ID")
     @NotNull

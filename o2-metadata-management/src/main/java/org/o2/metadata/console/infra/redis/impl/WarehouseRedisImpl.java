@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -52,7 +52,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
             if (null == str) {
                 continue;
             }
-            Warehouse warehouse  = FastJsonHelper.stringToObject(str,Warehouse.class);
+            Warehouse warehouse  = JsonHelper.stringToObject(str,Warehouse.class);
             list.add(warehouse);
         }
         return list;
@@ -69,7 +69,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
 
         Map<String, String> updateMap = Maps.newHashMapWithExpectedSize(list.size());
         for (WarehouseCacheBO bo : list) {
-            updateMap.put(bo.getWarehouseCode(), FastJsonHelper.objectToString(bo));
+            updateMap.put(bo.getWarehouseCode(), JsonHelper.objectToString(bo));
         }
         redisCacheClient.opsForHash().putAll(key, updateMap);
 

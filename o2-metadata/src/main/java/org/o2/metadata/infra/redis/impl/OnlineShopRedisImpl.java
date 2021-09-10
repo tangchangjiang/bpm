@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
 import org.o2.metadata.infra.entity.OnlineShop;
@@ -27,6 +27,6 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     public OnlineShop getOnlineShop(String onlineShopCode) {
         String key = OnlineShopConstants.Redis.getOnlineShopKey(onlineShopCode);
         Map<String,String> map = redisCacheClient.<String,String>opsForHash().entries(key);
-        return FastJsonHelper.stringToObject(FastJsonHelper.mapToString(map), OnlineShop.class);
+        return JsonHelper.stringToObject(JsonHelper.mapToString(map), OnlineShop.class);
     }
 }

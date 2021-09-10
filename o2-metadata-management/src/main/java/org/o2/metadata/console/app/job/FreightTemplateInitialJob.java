@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 运费模板初始化
+ * 运费模板初始化(废弃）
  *
  * @author peixin.zhao@hand-china.com
  */

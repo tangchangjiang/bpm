@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.pipeline.domain.repository.ActionParameterRepository;
 import org.o2.metadata.pipeline.infra.constants.PipelineConstants;
 
@@ -68,7 +68,7 @@ public class ActionParameter extends AuditDomain {
         jsonMap.put(FIELD_PARAMETER_NAME, this.getParameterName());
         jsonMap.put(FIELD_DATA_TYPE_CODE, this.getDataTypeCode());
         jsonMap.put(FIELD_TENANT_ID, this.getTenantId());
-        return FastJsonHelper.mapToString(jsonMap);
+        return JsonHelper.mapToString(jsonMap);
     }
 
     //

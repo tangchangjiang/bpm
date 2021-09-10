@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.CarrierRedisBO;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
@@ -47,7 +47,7 @@ public class CarrierRedisImpl implements CarrierRedis {
             bo.setCarrierCode(carrier.getCarrierCode());
             bo.setCarrierName(carrier.getCarrierName());
             bo.setCarrierTypeCode(carrier.getCarrierTypeCode());
-            hashMap.put(carrier.getCarrierCode(), FastJsonHelper.objectToString(bo));
+            hashMap.put(carrier.getCarrierCode(), JsonHelper.objectToString(bo));
         }
         for (Carrier carrier : deletes) {
             deleteMap.put(carrier.getCarrierCode(),String.valueOf(tenantId));
@@ -55,7 +55,7 @@ public class CarrierRedisImpl implements CarrierRedis {
         String key = CarrierConstants.Redis.getCarrierKey(tenantId);
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(CarrierConstants.Redis.CARRIER_CACHE_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), FastJsonHelper.objectToString(hashMap),FastJsonHelper.objectToString(deleteMap));
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), JsonHelper.objectToString(hashMap),JsonHelper.objectToString(deleteMap));
     }
 
     @Override

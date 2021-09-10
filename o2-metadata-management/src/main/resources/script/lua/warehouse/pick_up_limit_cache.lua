@@ -31,13 +31,7 @@ if limitHashValue  then
     local pickupQuantity = pickupObject["pickUpQuantity"];
 
     local number = tonumber(pickupQuantity) + insert;
-    -- 达到自提限制量
-    if number > pickUpLimit then
-        pickupObject["pickUpQuantity"] = pickUpLimit;
-        pickupObject["limitFlag"] = true;
-        redis.call("hset", limitKey, warehouseCode, cjson.encode(pickupObject));
-        return -1;
-    end
+
     -- 更新
     if number < pickUpLimit then
         pickupObject["pickUpQuantity"] = number;
@@ -45,5 +39,21 @@ if limitHashValue  then
         redis.call("hset", limitKey, warehouseCode, cjson.encode(pickupObject));
         return 1;
     end
+
+    -- 达到自提限制量
+    if number == pickUpLimit then
+        pickupObject["pickUpQuantity"] = pickUpLimit;
+        pickupObject["limitFlag"] = true;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(pickupObject));
+        return 1;
+    end
+
+    -- 大于自提限制量
+    if number > pickUpLimit then
+        pickupObject["limitFlag"] = true;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(pickupObject));
+        return -1;
+    end
+
 end
 

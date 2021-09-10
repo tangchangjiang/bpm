@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.util;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -90,7 +90,7 @@ public class SystemParameterRedisUtil {
                                              final RedisCacheClient redisCacheClient) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(resourceScriptSource);
-        redisCacheClient.execute(defaultRedisScript, keyList, FastJsonHelper.mapToString(filedMaps));
+        redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(filedMaps));
     }
 
 }
