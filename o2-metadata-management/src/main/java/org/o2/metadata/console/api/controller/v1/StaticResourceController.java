@@ -45,8 +45,8 @@ public class StaticResourceController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<StaticResource>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                      StaticResource staticResource,
-                                                     @ApiIgnore @SortDefault(value = StaticResource.FIELD_RESOURCE_CODE,
-                                                                     direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                     @ApiIgnore @SortDefault(value = {StaticResource.FIELD_RESOURCE_CODE,StaticResource.FIELD_RESOURCE_OWNER},
+                                                                     direction = Sort.Direction.ASC) PageRequest pageRequest) {
         staticResource.setTenantId(staticResource.getTenantId()!=null?staticResource.getTenantId():organizationId);
         Page<StaticResource> list = PageHelper.doPageAndSort(pageRequest,
                 ()->staticResourceRepository.listStaticResourceByCondition(staticResource));
