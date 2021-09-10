@@ -45,17 +45,15 @@ public class MallLangPromptController extends BaseController {
 
     private final MallLangPromptService mallLangPromptService;
 
-    private final O2MetadataManagementClient metadataManagementClient;
 
     @Autowired
     private RedisHelper redisHelper;
 
     public MallLangPromptController(MallLangPromptRepository mallLangPromptRepository,
-                                    MallLangPromptService mallLangPromptService,
-                                    O2MetadataManagementClient metadataManagementClient) {
+                                    MallLangPromptService mallLangPromptService) {
         this.mallLangPromptService = mallLangPromptService;
         this.mallLangPromptRepository = mallLangPromptRepository;
-        this.metadataManagementClient = metadataManagementClient;
+
     }
 
     @ApiOperation(value = "商城前端多语言内容维护表维护-分页查询商城前端多语言内容维护表列表")
