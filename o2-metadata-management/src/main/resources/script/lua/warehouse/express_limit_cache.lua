@@ -32,19 +32,24 @@ if limitHashValue ~= nil then
     local expressedQuantity = expressObject["expressedQuantity"];
 
     local number = tonumber(expressedQuantity) + insert;
-    -- 达到配送限制量
-    if number > expressLimit then
-        expressObject["expressedQuantity"] = expressLimit;
-        expressObject["limitFlag"] = true;
-        redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
-        return -1;
-    end
     -- 更新
     if number < expressLimit then
         expressObject["expressedQuantity"] = number;
         expressObject["limitFlag"] = false;
         redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
         return 1;
+    end
+
+    -- 达到配置限制量
+    if number == expressLimit then
+        expressObject["expressedQuantity"] = expressLimit;
+        expressObject["limitFlag"] = true;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
+        return 1;
+    end
+    -- 大于到配送限制量
+    if number > expressLimit then
+        return -1;
     end
 end
 
