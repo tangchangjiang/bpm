@@ -71,15 +71,15 @@ public class PipelineAction extends AuditDomain {
     private String label;
     @ApiModelProperty(value = "描述")
     private String description;
-    @ApiModelProperty(value = "行为类型，值集 O2EXT.ACTION_TYPE（Bean/Script）")
-    @LovValue(lovCode = "O2EXT.ACTION_TYPE")
+    @ApiModelProperty(value = "行为类型，值集 O2MD.ACTION_TYPE（Bean/Script）")
+    @LovValue(lovCode = "O2MD.ACTION_TYPE")
     @NotNull
     private String actionType;
     @ApiModelProperty(value = "当前行为(spring_bean_id)")
     private String beanId;
     @ApiModelProperty(value = "脚本")
     private String script;
-    @ApiModelProperty(value = "展示类型，值集O2EXT.DISPLAY_TYPE")
+    @ApiModelProperty(value = "展示类型，值集O2MD.DISPLAY_TYPE")
     @LovValue(lovCode = PipelineConstants.DisplayType.LOV_CODE)
     private String displayTypeCode;
     @ApiModelProperty(value = "是否启用")
