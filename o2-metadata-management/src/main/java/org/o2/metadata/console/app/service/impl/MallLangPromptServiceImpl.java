@@ -175,7 +175,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             request.setDescription(resource.getDescription());
             request.setResourceLevel(resource.getResourceLevel());
             request.setResourceUrl(resource.getResourceUrl());
-            request.setResourceOwner(resource.getResourceOwner());
+            request.setResourceOwner(r);
             request.setResourceHost(resource.getResourceHost());
             List<StaticResource> staticResource = staticResourceRepository.select(request);
             if (staticResource.isEmpty()) {
@@ -216,13 +216,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
                     fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON, SystemParameterConstants.FileConfig.FILE_JSON_TYPE,
                     storageCode, jsonFile.getBytes());
-
-            if (!StringUtils.isEmpty(resultUrl)) {
-                for (int i = 0; i < MetadataConstants.MallLangPromptConstants.IMAGE_INTERCEPTION_MARK; i++) {
-                    resultUrl = resultUrl.substring(resultUrl.indexOf(BaseConstants.Symbol.SLASH) + 1);
-                }
-                resource.setResourceUrl(BaseConstants.Symbol.SLASH + resultUrl);
-            }
+                resource.setResourceUrl(resultUrl);
         } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return false;
@@ -243,7 +237,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (!"PUBLIC".equals(staticResourceConfigCO.getResourceLevel())) {
             resource.setResourceOwner(mallLangPrompt.getSiteRang());
         }
-        //resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
         resource.setResourceHost("http://" + domainAndUrl.substring(0, indexOfSlash));
         return true;
     }
