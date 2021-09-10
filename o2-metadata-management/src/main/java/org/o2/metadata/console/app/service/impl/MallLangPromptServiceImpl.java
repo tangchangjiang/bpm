@@ -160,13 +160,14 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (resource.getResourceOwner().isEmpty()) {
             saveMallLangPromptInfo(mallLangPrompt, resource);
         } else {
-            String substring = resource.getResourceOwner().substring(0, resource.getResourceOwner().length() - 1);
-            String[] result = substring.split(",");
+            String resourceOwner = resource.getResourceOwner();
+            String[] result = resourceOwner.split(",");
             for (String r : result) {
                 resource.setResourceOwner(r);
                 saveMallLangPromptInfo(mallLangPrompt, resource);
             }
         }
+        System.out.println();
         batchResponse.addSuccessBody(mallLangPrompt);
     }
 
@@ -179,7 +180,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         request.setLastUpdatedBy(resource.getLastUpdatedBy());
         request.setDescription(resource.getDescription());
         request.setResourceLevel(resource.getResourceLevel());
-        request.setEnableFlag(resource.getEnableFlag());
         request.setResourceUrl(resource.getResourceUrl());
         request.setResourceOwner(resource.getResourceOwner());
         request.setResourceHost(resource.getResourceHost());
