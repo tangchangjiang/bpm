@@ -1,7 +1,6 @@
 package org.o2.metadata.console.api.controller.v1;
 
 import io.choerodon.mybatis.pagehelper.PageHelper;
-import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.metadata.console.infra.entity.StaticResource;
@@ -34,14 +33,11 @@ import java.util.Optional;
 public class StaticResourceController extends BaseController {
     private final StaticResourceRepository staticResourceRepository;
     private final StaticResourceService staticResourceService;
-    private final RedisHelper redisHelper;
 
     public StaticResourceController(StaticResourceRepository staticResourceRepository,
-                                    StaticResourceService staticResourceService,
-                                    RedisHelper redisHelper){
+                                    StaticResourceService staticResourceService){
         this.staticResourceRepository=staticResourceRepository;
         this.staticResourceService=staticResourceService;
-        this.redisHelper=redisHelper;
     }
 
     @ApiOperation(value = "静态资源文件表维护-分页查询静态资源文件表列表")
@@ -56,7 +52,7 @@ public class StaticResourceController extends BaseController {
                 ()->staticResourceRepository.listStaticResourceByCondition(staticResource));
 
         list.forEach(item->{
-            String realName = Optional.ofNullable(IamUserHelper.getIamUser(redisHelper, String.valueOf(item.getLastUpdatedBy()))).map(IamUserBO::getRealName).orElse("");
+            String realName = Optional.ofNullable(IamUserHelper.getIamUser(String.valueOf(item.getLastUpdatedBy()))).map(IamUserBO::getRealName).orElse("");
             item.setLastUpdatedByName(realName);
         });
         return Results.success(list);
