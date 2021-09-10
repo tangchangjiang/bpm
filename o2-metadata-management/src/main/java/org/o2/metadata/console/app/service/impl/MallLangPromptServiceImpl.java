@@ -18,7 +18,9 @@ import org.o2.feignclient.metadata.domain.co.StaticResourceConfigCO;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
 import org.o2.lock.domain.data.LockType;
+import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.MallLangPromptService;
+import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
@@ -58,10 +60,13 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
 
     private final O2MetadataManagementClient metadataManagementClient;
 
+    private final StaticResourceInternalService staticResourceInternalService;
+
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
-                                     O2MetadataManagementClient metadataManagementClient) {
+                                     O2MetadataManagementClient metadataManagementClient,
+                                     StaticResourceInternalService staticResourceInternalService) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
@@ -69,6 +74,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         this.lockService = lockService;
         this.fileClient = fileClient;
         this.metadataManagementClient = metadataManagementClient;
+        this.staticResourceInternalService = staticResourceInternalService;
     }
 
 
@@ -167,7 +173,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         String[] result = resourceOwner.split(",");
         for (String r : result) {
             resource.setResourceOwner(r);
-            StaticResource request = new StaticResource();
+            StaticResourceSaveDTO request = new StaticResourceSaveDTO();
             request.setLang(resource.getLang());
             request.setTenantId(resource.getTenantId());
             request.setResourceCode(resource.getResourceCode());
@@ -175,14 +181,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             request.setResourceUrl(resource.getResourceUrl());
             request.setResourceOwner(r);
             request.setResourceHost(resource.getResourceHost());
-            List<StaticResource> staticResource = staticResourceRepository.select(request);
-            if (staticResource.isEmpty()) {
-                staticResourceRepository.insertSelective(resource);
-            } else {
-                resource.setResourceId(staticResource.get(0).getResourceId());
-                resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
-                staticResourceRepository.updateByPrimaryKeySelective(resource);
-            }
+            staticResourceInternalService.saveResource(request);
         }
         mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
     }
