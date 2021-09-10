@@ -157,40 +157,34 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             return;
         }
         //保存发布记录
-        if (resource.getResourceOwner().isEmpty()) {
-            saveMallLangPromptInfo(mallLangPrompt, resource);
-        } else {
-            String resourceOwner = resource.getResourceOwner();
-            String[] result = resourceOwner.split(",");
-            for (String r : result) {
-                resource.setResourceOwner(r);
-                saveMallLangPromptInfo(mallLangPrompt, resource);
-            }
-        }
-        System.out.println();
+        saveMallLangPromptInfo(mallLangPrompt, resource);
         batchResponse.addSuccessBody(mallLangPrompt);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void saveMallLangPromptInfo(MallLangPrompt mallLangPrompt, StaticResource resource) {
-        StaticResource request = new StaticResource();
-        request.setLang(resource.getLang());
-        request.setTenantId(resource.getTenantId());
-        request.setResourceCode(resource.getResourceCode());
-        request.setLastUpdatedBy(resource.getLastUpdatedBy());
-        request.setDescription(resource.getDescription());
-        request.setResourceLevel(resource.getResourceLevel());
-        request.setResourceUrl(resource.getResourceUrl());
-        request.setResourceOwner(resource.getResourceOwner());
-        request.setResourceHost(resource.getResourceHost());
-
-        List<StaticResource> staticResource = staticResourceRepository.select(request);
-        if (staticResource.isEmpty()) {
-            staticResourceRepository.insertSelective(resource);
-        } else {
-            resource.setResourceId(staticResource.get(0).getResourceId());
-            resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
-            staticResourceRepository.updateByPrimaryKeySelective(resource);
+        String resourceOwner = resource.getResourceOwner();
+        String[] result = resourceOwner.split(",");
+        for (String r : result) {
+            resource.setResourceOwner(r);
+            StaticResource request = new StaticResource();
+            request.setLang(resource.getLang());
+            request.setTenantId(resource.getTenantId());
+            request.setResourceCode(resource.getResourceCode());
+            request.setLastUpdatedBy(resource.getLastUpdatedBy());
+            request.setDescription(resource.getDescription());
+            request.setResourceLevel(resource.getResourceLevel());
+            request.setResourceUrl(resource.getResourceUrl());
+            request.setResourceOwner(resource.getResourceOwner());
+            request.setResourceHost(resource.getResourceHost());
+            List<StaticResource> staticResource = staticResourceRepository.select(request);
+            if (staticResource.isEmpty()) {
+                staticResourceRepository.insertSelective(resource);
+            } else {
+                resource.setResourceId(staticResource.get(0).getResourceId());
+                resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
+                staticResourceRepository.updateByPrimaryKeySelective(resource);
+            }
         }
         mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
     }
@@ -249,7 +243,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         if (!"PUBLIC".equals(staticResourceConfigCO.getResourceLevel())) {
             resource.setResourceOwner(mallLangPrompt.getSiteRang());
         }
-        resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        //resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
         resource.setResourceHost("http://" + domainAndUrl.substring(0, indexOfSlash));
         return true;
     }
