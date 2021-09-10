@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Joiner;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -12,10 +13,14 @@ import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.core.file.FileStorageProperties;
 import org.o2.core.response.BatchResponse;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.feignclient.O2MetadataManagementClient;
+import org.o2.feignclient.metadata.domain.co.StaticResourceConfigCO;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
 import org.o2.lock.domain.data.LockType;
+import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.MallLangPromptService;
+import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
@@ -53,19 +58,26 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
 
     private final FileClient fileClient;
 
+    private final O2MetadataManagementClient metadataManagementClient;
+
+    private final StaticResourceInternalService staticResourceInternalService;
+
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
-                                     FileClient fileClient, RedisCacheClient redisCacheClient){
+                                     FileClient fileClient, RedisCacheClient redisCacheClient,
+                                     O2MetadataManagementClient metadataManagementClient,
+                                     StaticResourceInternalService staticResourceInternalService) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
         this.redisCacheClient = redisCacheClient;
         this.lockService = lockService;
         this.fileClient = fileClient;
+        this.metadataManagementClient = metadataManagementClient;
+        this.staticResourceInternalService = staticResourceInternalService;
     }
 
 
-    
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<MallLangPrompt> batchSave(List<MallLangPrompt> mallLangPromptList) {
@@ -80,7 +92,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             List<MallLangPrompt> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
                 // 唯一性校验
-                UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+                UniqueHelper.valid(item, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 item.setStatus(MetadataConstants.MallLangPromptConstants.UNAPPROVED);
                 mallLangPromptRepository.updateByPrimaryKeySelective(item);
             });
@@ -90,7 +102,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             List<MallLangPrompt> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
                 // 唯一性校验
-                UniqueHelper.valid(item,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+                UniqueHelper.valid(item, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
                 mallLangPromptRepository.insertSelective(item);
             });
         }
@@ -102,7 +114,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     @Transactional(rollbackFor = Exception.class)
     public MallLangPrompt save(MallLangPrompt mallLangPrompt) {
         //保存商城前端多语言内容维护表
-        UniqueHelper.valid(mallLangPrompt,MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
+        UniqueHelper.valid(mallLangPrompt, MallLangPrompt.O2MD_MALL_LANG_PROMPT_U1);
         if (mallLangPrompt.getLangPromptId() == null) {
             mallLangPromptRepository.insertSelective(mallLangPrompt);
         } else {
@@ -112,10 +124,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
                     MallLangPrompt.FIELD_PROMPT_DETAIL,
                     MallLangPrompt.FIELD_MALL_TYPE,
                     MallLangPrompt.FIELD_TENANT_ID,
-                    MallLangPrompt.FIELD_STATUS
+                    MallLangPrompt.FIELD_STATUS,
+                    MallLangPrompt.FIELD_DESCRIPTION,
+                    MallLangPrompt.FIELD_SITE_RANG
             );
         }
-
         return mallLangPrompt;
     }
 
@@ -124,9 +137,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         BatchResponse<MallLangPrompt> batchResponse = new BatchResponse<>();
         List<String> errorMsg = new ArrayList<>();
         for (MallLangPrompt mallLangPrompt : mallLangPromptList) {
+            //获取静态资源
+            StaticResourceConfigCO staticResourceConfigCO = metadataManagementClient.getStaticResourceConfig(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT, mallLangPrompt.getTenantId());
             final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
                     3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
-            lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse), null);
+            lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse, staticResourceConfigCO), null);
             mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
             mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
         }
@@ -140,31 +155,33 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     }
 
 
-    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse){
+    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse, StaticResourceConfigCO staticResourceConfigCO) {
         StaticResource resource = new StaticResource();
         //上传静态文件
-        if(!uploadStaticFile(mallLangPrompt,resource,errorMsg)){
+        if (!uploadStaticFile(mallLangPrompt, resource, errorMsg, staticResourceConfigCO)) {
             batchResponse.addFailedBody(mallLangPrompt);
             return;
         }
         //保存发布记录
-        saveMallLangPromptInfo(mallLangPrompt,resource);
+        saveMallLangPromptInfo(mallLangPrompt, resource);
         batchResponse.addSuccessBody(mallLangPrompt);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveMallLangPromptInfo(MallLangPrompt mallLangPrompt,StaticResource resource){
-        StaticResource request = new StaticResource();
-        request.setLang(resource.getLang());
-        request.setTenantId(resource.getTenantId());
-        request.setResourceCode(resource.getResourceCode());
-        List<StaticResource> staticResource = staticResourceRepository.select(request);
-        if(staticResource.isEmpty()){
-            staticResourceRepository.insertSelective(resource);
-        }else{
-            resource.setResourceId(staticResource.get(0).getResourceId());
-            resource.setObjectVersionNumber(staticResource.get(0).getObjectVersionNumber());
-            staticResourceRepository.updateByPrimaryKeySelective(resource);
+    public void saveMallLangPromptInfo(MallLangPrompt mallLangPrompt, StaticResource resource) {
+        String resourceOwner = resource.getResourceOwner();
+        String[] result = resourceOwner.split(",");
+        for (String r : result) {
+            resource.setResourceOwner(r);
+            StaticResourceSaveDTO request = new StaticResourceSaveDTO();
+            request.setLang(resource.getLang());
+            request.setTenantId(resource.getTenantId());
+            request.setResourceCode(resource.getResourceCode());
+            request.setDescription(resource.getDescription());
+            request.setResourceUrl(resource.getResourceUrl());
+            request.setResourceOwner(r);
+            request.setResourceHost(resource.getResourceHost());
+            staticResourceInternalService.saveResource(request);
         }
         mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
     }
@@ -173,7 +190,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     /**
      * 静态文件上传
      */
-    private boolean uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg) {
+    private boolean uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfigCO staticResourceConfigCO) {
         final Long tenantId = mallLangPrompt.getTenantId();
         final String fileName = mallLangPrompt.getMallType() + "_" + mallLangPrompt.getLang();
         final String bucketCode = fileStorageProperties.getBucketCode();
@@ -181,7 +198,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         final String jsonFile = mallLangPrompt.getPromptDetail();
         // 上传路径全小写
         String directory = fileStorageProperties.getStoragePath() + Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                 MetadataConstants.MallLangPromptConstants.NAME,mallLangPrompt.getMallType(),
+                MetadataConstants.MallLangPromptConstants.NAME, mallLangPrompt.getMallType(),
                 mallLangPrompt.getLang()).toLowerCase();
         // 下载
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
@@ -196,24 +213,47 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
                     fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON, SystemParameterConstants.FileConfig.FILE_JSON_TYPE,
                     storageCode, jsonFile.getBytes());
-
-            if (!StringUtils.isEmpty(resultUrl)) {
-                for (int i = 0; i < MetadataConstants.MallLangPromptConstants.IMAGE_INTERCEPTION_MARK; i++) {
-                    resultUrl = resultUrl.substring(resultUrl.indexOf(BaseConstants.Symbol.SLASH) + 1);
-                }
-                resource.setResourceUrl(BaseConstants.Symbol.SLASH + resultUrl);
-            }
-        }catch (Exception e){
+            resource.setResourceUrl(resultUrl);
+        } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return false;
         }
+        String domainAndUrl = trimDomainPrefix(resource.getResourceUrl());
+        int indexOfSlash = domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
         //记录上传文件信息
-        resource.setResourceCode(MetadataConstants.MallLangPromptConstants.RESOURCE_CODE + "_" + fileName.toUpperCase());
         resource.setSourceModuleCode(MetadataConstants.Constants.MODE_NAME);
-        resource.setDescription(MessageAccessor.getMessage(MetadataConstants.MallLangPromptConstants.DESCRIPTION).getDesc());
-        resource.setLang(mallLangPrompt.getLang());
+
         resource.setTenantId(tenantId);
+        resource.setJsonKey(staticResourceConfigCO.getJsonKey());
+        resource.setResourceCode(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT);
+        resource.setDescription(staticResourceConfigCO.getDescription());
+        resource.setResourceLevel(staticResourceConfigCO.getResourceLevel());
+        resource.setEnableFlag(1);
+        resource.setLang(mallLangPrompt.getLang());
+        resource.setLastUpdatedBy(DetailsHelper.getUserDetails().getUserId());
+        if (!"PUBLIC".equals(staticResourceConfigCO.getResourceLevel())) {
+            resource.setResourceOwner(mallLangPrompt.getSiteRang());
+        }
+        resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        resource.setResourceHost("http://" + domainAndUrl.substring(0, indexOfSlash));
         return true;
+    }
+
+    /**
+     * 裁剪掉域名 + 端口
+     *
+     * @param resourceUrl resourceUrl
+     * @return result
+     */
+    private static String trimDomainPrefix(String resourceUrl) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(resourceUrl)) {
+            return "";
+        }
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return resourceUrl;
+        }
+        return httpSplits[1];
     }
 
 }

@@ -6,6 +6,7 @@ import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.core.response.BatchResponse;
+import org.o2.feignclient.O2MetadataManagementClient;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.user.domain.vo.IamUserBO;
@@ -44,11 +45,12 @@ public class MallLangPromptController extends BaseController {
 
     private final MallLangPromptService mallLangPromptService;
 
+
     @Autowired
     private RedisHelper redisHelper;
 
     public MallLangPromptController(MallLangPromptRepository mallLangPromptRepository,
-                                    MallLangPromptService mallLangPromptService){
+                                    MallLangPromptService mallLangPromptService) {
         this.mallLangPromptService = mallLangPromptService;
         this.mallLangPromptRepository = mallLangPromptRepository;
 
@@ -59,9 +61,9 @@ public class MallLangPromptController extends BaseController {
     @GetMapping
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     public ResponseEntity<Page<MallLangPrompt>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            MallLangPrompt mallLangPrompt,
-                                                            @ApiIgnore @SortDefault(value = MallLangPrompt.FIELD_LANG_PROMPT_ID,
-                                                                     direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                     MallLangPrompt mallLangPrompt,
+                                                     @ApiIgnore @SortDefault(value = MallLangPrompt.FIELD_LANG_PROMPT_ID,
+                                                             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<MallLangPrompt> list = mallLangPromptRepository.pageAndSort(pageRequest, mallLangPrompt);
         List<MallLangPrompt> content = list.getContent();
 
@@ -79,6 +81,7 @@ public class MallLangPromptController extends BaseController {
                     prompt.setCreatedByName(createUserMap.get(prompt.getCreatedBy()));
                 }
         );
+
         return Results.success(list);
     }
 
@@ -86,7 +89,7 @@ public class MallLangPromptController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{langPromptId}")
     public ResponseEntity<MallLangPrompt> detail(@PathVariable(value = "organizationId") Long organizationId,
-                                                        @ApiParam(value = "商城前端多语言内容维护表ID", required = true) @PathVariable Long langPromptId) {
+                                                 @ApiParam(value = "商城前端多语言内容维护表ID", required = true) @PathVariable Long langPromptId) {
         MallLangPrompt mallLangPrompt = mallLangPromptRepository.selectByPrimaryKey(langPromptId);
         return Results.success(mallLangPrompt);
     }
@@ -95,7 +98,7 @@ public class MallLangPromptController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<MallLangPrompt> create(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody MallLangPrompt mallLangPrompt) {
+                                                 @RequestBody MallLangPrompt mallLangPrompt) {
         validObject(mallLangPrompt);
         mallLangPromptService.save(mallLangPrompt);
         return Results.success(mallLangPrompt);
@@ -105,7 +108,7 @@ public class MallLangPromptController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<MallLangPrompt> update(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody MallLangPrompt mallLangPrompt) {
+                                                 @RequestBody MallLangPrompt mallLangPrompt) {
         SecurityTokenHelper.validToken(mallLangPrompt);
         mallLangPromptService.save(mallLangPrompt);
         return Results.success(mallLangPrompt);
@@ -115,7 +118,7 @@ public class MallLangPromptController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-saving")
     public ResponseEntity<List<MallLangPrompt>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody List<MallLangPrompt> mallLangPromptList) {
+                                                          @RequestBody List<MallLangPrompt> mallLangPromptList) {
         SecurityTokenHelper.validToken(mallLangPromptList);
         mallLangPromptService.batchSave(mallLangPromptList);
         return Results.success(mallLangPromptList);
@@ -136,7 +139,7 @@ public class MallLangPromptController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/release")
     public ResponseEntity<BatchResponse<MallLangPrompt>> release(@PathVariable(value = "organizationId") Long organizationId,
-                                  @RequestBody List<MallLangPrompt> mallLangPromptList){
+                                                                 @RequestBody List<MallLangPrompt> mallLangPromptList) {
         SecurityTokenHelper.validToken(mallLangPromptList);
         return Results.success(mallLangPromptService.release(mallLangPromptList));
     }

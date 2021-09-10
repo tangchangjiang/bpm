@@ -343,6 +343,8 @@ public interface MetadataConstants {
         String RESOURCE_CODE = "O2MD_MALL_LANG_PROMPT";
 
         int IMAGE_INTERCEPTION_MARK = 3;
+
+        String PCM_LANG_PROMPT = "O2PCM_LANG_PROMPT";
     }
 
     interface StaticResourceConstants{
