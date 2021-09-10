@@ -37,7 +37,7 @@
         osrc.source_program,
         osrc.json_key
         from o2md_static_resource osr
-        left join o2md_static_resource_config osrc on osr.resource_code=osrc.resource_code
+        join o2md_static_resource_config osrc on osr.resource_code=osrc.resource_code and osr.tenant_id = osrc.tenant_id
         <where>
             <if test="resourceCode!=null">
                 AND osr.resource_code=#{resourceCode}
