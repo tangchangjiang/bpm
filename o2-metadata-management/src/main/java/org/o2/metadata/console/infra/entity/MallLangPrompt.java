@@ -38,6 +38,7 @@ public class MallLangPrompt extends AuditDomain {
     public static final String FIELD_LANG_MEANING = "langMeaning";
     public static final String FIELD_SITE_RANG = "siteRang";
     public static final String FIELD_DESCRIPTION = "description";
+    public static final String FIELD_SITE_RANG_FOR_NAME = "siteRangForName";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -100,6 +101,9 @@ public class MallLangPrompt extends AuditDomain {
     @Transient
     @ApiModelProperty("更新者姓名")
     private String lastUpdatedByName;
+    @Transient
+    @ApiModelProperty("适用站点姓名")
+    private String siteRangForName;
 
     //
     // getter/setter
@@ -237,6 +241,14 @@ public class MallLangPrompt extends AuditDomain {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSiteRangForName() {
+        return siteRangForName;
+    }
+
+    public void setSiteRangForName(String siteRangForName) {
+        this.siteRangForName = siteRangForName;
     }
 }
 
