@@ -61,7 +61,7 @@ public class MallLangPromptController extends BaseController {
                                                              direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<MallLangPrompt> list = mallLangPromptRepository.pageAndSort(pageRequest, mallLangPrompt);
 
-        mallLangPromptService.list(list,organizationId);
+        mallLangPromptService.list(list, organizationId);
         return Results.success(list);
     }
 
