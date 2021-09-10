@@ -1,7 +1,7 @@
 package org.o2.metadata.infra.redis.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.FreightConstants;
 import org.o2.metadata.infra.entity.FreightInfo;
@@ -37,14 +37,14 @@ public class FreightRedisImpl implements FreightRedis {
         if (StringUtils.isEmpty(headTemplate)) {
             freightInfo.setHeadTemplate(null);
         } else {
-            FastJsonHelper.stringToObject(headTemplate, FreightTemplate.class);
+            JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
         }
 
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
         if (StringUtils.isEmpty(cityTemplate)) {
             freightInfo.setRegionTemplate(null);
         } else {
-            FastJsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class);
+            JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class);
         }
         return freightInfo;
     }

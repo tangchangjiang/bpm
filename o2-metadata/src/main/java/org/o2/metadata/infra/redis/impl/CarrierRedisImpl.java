@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.metadata.infra.constants.CarrierConstants;
@@ -36,7 +36,7 @@ public class CarrierRedisImpl implements CarrierRedis {
       }
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String v = entry.getValue();
-            carriers.add(FastJsonHelper.stringToObject(v, Carrier.class));
+            carriers.add(JsonHelper.stringToObject(v, Carrier.class));
         }
         return carriers;
     }

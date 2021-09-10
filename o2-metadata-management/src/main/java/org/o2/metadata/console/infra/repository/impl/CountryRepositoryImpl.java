@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Country;
@@ -36,7 +36,7 @@ public class CountryRepositoryImpl extends BaseRepositoryImpl<Country> implement
             return countryList;
         }
         for (Map<String, Object> map : list) {
-            countryList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Country.class));
+            countryList.add(JsonHelper.stringToObject(JsonHelper.objectToString(map), Country.class));
         }
         return countryList;
     }

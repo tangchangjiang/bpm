@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
@@ -132,7 +132,7 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
             return regionList;
         }
         for (Map<String, Object> map : list) {
-            regionList.add(FastJsonHelper.stringToObject(FastJsonHelper.objectToString(map), Region.class));
+            regionList.add(JsonHelper.stringToObject(JsonHelper.objectToString(map), Region.class));
         }
         return regionList;
     }

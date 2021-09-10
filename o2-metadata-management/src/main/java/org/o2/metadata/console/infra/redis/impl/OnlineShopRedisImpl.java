@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
@@ -52,7 +52,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             redisCacheClient.opsForHash().delete(key, onlineShopCode);
             return;
         }
-        redisCacheClient.opsForHash().put(key, onlineShopCode, FastJsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+        redisCacheClient.opsForHash().put(key, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         } else {
             defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.DELETE_CACHE_LUA);
         }
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), FastJsonHelper.objectToString(groupMap));
+        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), JsonHelper.objectToString(groupMap));
 
     }
 
@@ -89,7 +89,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         List<OnlineShopCacheBO> bos = OnlineShopConverter.poToBoListObjects(list);
         Map<String, String> map = Maps.newHashMapWithExpectedSize(bos.size());
         for (OnlineShopCacheBO bo : bos) {
-            map.put(bo.getOnlineShopCode(), FastJsonHelper.objectToString(bo));
+            map.put(bo.getOnlineShopCode(), JsonHelper.objectToString(bo));
         }
         String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         redisCacheClient.opsForHash().putAll(key, map);
@@ -116,7 +116,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             List<OnlineShop> onlineShops = new ArrayList<>();
             List<String> list = redisCacheClient.<String, String>opsForHash().multiGet(key, shopCodes);
             for (String str : list) {
-                onlineShops.add(FastJsonHelper.stringToObject(str, OnlineShop.class));
+                onlineShops.add(JsonHelper.stringToObject(str, OnlineShop.class));
             }
             return onlineShops;
         }
@@ -133,7 +133,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String v = entry.getValue();
-            onlineShops.add(FastJsonHelper.stringToObject(v, OnlineShop.class));
+            onlineShops.add(JsonHelper.stringToObject(v, OnlineShop.class));
         }
         return onlineShops;
     }

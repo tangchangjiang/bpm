@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.metadata.infra.constants.WarehouseConstants;
@@ -37,8 +37,8 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         for (String code : warehouseCodes) {
             String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId, code);
             Map<Object,Object> wareHouseMap = redisCacheClient.opsForHash().entries(key);
-            String jsonStr = FastJsonHelper.mapToString(wareHouseMap);
-            Warehouse warehouse =  FastJsonHelper.stringToObject(jsonStr,Warehouse.class);
+            String jsonStr = JsonHelper.mapToString(wareHouseMap);
+            Warehouse warehouse =  JsonHelper.stringToObject(jsonStr,Warehouse.class);
             warehouse.setWarehouseCode(code);
             list.add(warehouse);
         }

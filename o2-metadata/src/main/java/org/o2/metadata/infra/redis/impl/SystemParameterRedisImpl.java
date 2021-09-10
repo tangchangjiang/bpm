@@ -1,7 +1,7 @@
 package org.o2.metadata.infra.redis.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParamValue;
@@ -86,7 +86,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
         if (null != object) {
             Set<SystemParamValue>  set = new HashSet<>(16);
-            List<SystemParamValue>  list = FastJsonHelper.stringToArray(object, SystemParamValue.class);
+            List<SystemParamValue>  list = JsonHelper.stringToArray(object, SystemParamValue.class);
             set.addAll(list);
             systemParameter.setSetSystemParamValue(set);
             return systemParameter;

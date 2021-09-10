@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
@@ -189,7 +189,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                     final String hashKey = this.buildRedisHashKey(groupOnlineShopRelWarehouseVos.get(0).getOnlineShopCode());
                     if (onlineShopRelWarehouseEntry.getKey() == 1) {
                         try {
-                            redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(FastJsonHelper.objectToString(this.buildRedisHashMap(groupOnlineShopRelWarehouseVos)), new TypeReference<Map<String, String>>() {
+                            redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(JsonHelper.objectToString(this.buildRedisHashMap(groupOnlineShopRelWarehouseVos)), new TypeReference<Map<String, String>>() {
                             }));
                         } catch (IOException e) {
                         }
@@ -213,6 +213,6 @@ public class OnlineShopRelWarehouse extends AuditDomain {
                               final RedisCacheClient redisCacheClient) {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(resourceScriptSource);
-        redisCacheClient.execute(defaultRedisScript,keyList, FastJsonHelper.mapToString(filedMaps));
+        redisCacheClient.execute(defaultRedisScript,keyList, JsonHelper.mapToString(filedMaps));
     }
 }

@@ -3,7 +3,7 @@ package org.o2.metadata.pipeline.app.service.impl;
 import io.choerodon.core.convertor.ApplicationContextHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.pipeline.api.vo.PipelineNodeVO;
 import org.o2.metadata.pipeline.api.vo.PipelineVO;
@@ -122,7 +122,7 @@ public class PipelineRedisServiceImpl implements PipelineRedisService {
             pipelineVO.getPipelineNodes().put(pipelineNodeVO.uniqueKey(), pipelineNodeVO);
         }
 
-        return FastJsonHelper.objectToString(pipelineVO);
+        return JsonHelper.objectToString(pipelineVO);
     }
 
     private boolean executeScript(final String pipelineCode, final String pipelineEntityJson,

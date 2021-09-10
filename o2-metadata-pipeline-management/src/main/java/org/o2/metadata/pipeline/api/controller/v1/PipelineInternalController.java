@@ -5,7 +5,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.pipeline.api.vo.PipelineVO;
 import org.o2.metadata.pipeline.app.service.PipelineRedisService;
 import org.springframework.http.ResponseEntity;

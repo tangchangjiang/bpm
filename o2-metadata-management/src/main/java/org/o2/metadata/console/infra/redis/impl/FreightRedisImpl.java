@@ -2,7 +2,7 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.helper.FastJsonHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.metadata.console.infra.constant.FreightConstants;
@@ -46,11 +46,11 @@ public class FreightRedisImpl implements FreightRedis {
         }
         List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
         String headTemplate =  freightTemplates.get(0);
-        freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : FastJsonHelper.stringToObject(headTemplate, FreightTemplate.class));
+        freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
 
 
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
-        freightInfo.setRegionTemplate(StringUtils.isEmpty(cityTemplate)?null :FastJsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
+        freightInfo.setRegionTemplate(StringUtils.isEmpty(cityTemplate)?null :JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
         return freightInfo;
     }
 
@@ -64,17 +64,17 @@ public class FreightRedisImpl implements FreightRedis {
         for (FreightTemplateDetail detail : detailList) {
 
             if (detail.getDefaultFlag() == 1) {
-                defaultMap.put(detail.getTemplateCode(), FastJsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
+                defaultMap.put(detail.getTemplateCode(), JsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
                 continue;
             }
             Map<String, String> map = regionMap.computeIfAbsent(detail.getTemplateCode(), k -> new HashMap<>(16));
-            map.put(detail.getRegionCode(),FastJsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
+            map.put(detail.getRegionCode(),JsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
 
         }
         for (Map.Entry<String, FreightTemplate> entry : templateMap.entrySet()) {
             Map<String, String> hashMap = new HashMap<>();
             FreightTemplate v = entry.getValue();
-            hashMap.put(FreightConstants.Redis.FREIGHT_HEAD_KEY, FastJsonHelper.objectToString(FreightConverter.poToBoObject(v)));
+            hashMap.put(FreightConstants.Redis.FREIGHT_HEAD_KEY, JsonHelper.objectToString(FreightConverter.poToBoObject(v)));
             String k = entry.getKey();
             hashMap.put(FreightConstants.Redis.FREIGHT_DEFAULT_KEY,defaultMap.get(k));
             Map<String,String> map = regionMap.get(k);
@@ -86,6 +86,6 @@ public class FreightRedisImpl implements FreightRedis {
         }
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), FastJsonHelper.objectToString(groupMap));
+        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), JsonHelper.objectToString(groupMap));
     }
 }
