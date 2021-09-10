@@ -171,9 +171,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             request.setLang(resource.getLang());
             request.setTenantId(resource.getTenantId());
             request.setResourceCode(resource.getResourceCode());
-            request.setLastUpdatedBy(resource.getLastUpdatedBy());
             request.setDescription(resource.getDescription());
-            request.setResourceLevel(resource.getResourceLevel());
             request.setResourceUrl(resource.getResourceUrl());
             request.setResourceOwner(r);
             request.setResourceHost(resource.getResourceHost());
