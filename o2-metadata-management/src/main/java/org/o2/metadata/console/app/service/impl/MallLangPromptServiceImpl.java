@@ -183,9 +183,8 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             String[] result = siteCode.split(",");
             for (String siteCodeResult : result) {
                 for (Map<String, Object> s : maps) {
-                    Set keySet = s.keySet();
-                    if (keySet.contains(siteCodeResult)) {
-                        siteRangName.put(siteCodeResult, s.get(siteCodeResult));
+                    if (siteCodeResult.equals(s.get("siteCode"))) {
+                        siteRangName.put(siteCodeResult, s.get("siteName"));
                     }
                 }
             }
