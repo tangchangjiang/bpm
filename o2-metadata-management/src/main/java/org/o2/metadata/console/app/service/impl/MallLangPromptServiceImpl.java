@@ -213,7 +213,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
                     fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON, SystemParameterConstants.FileConfig.FILE_JSON_TYPE,
                     storageCode, jsonFile.getBytes());
-                resource.setResourceUrl(resultUrl);
+            resource.setResourceUrl(resultUrl);
         } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return false;
