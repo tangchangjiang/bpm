@@ -29,23 +29,6 @@ public interface FreightTemplateDetailMapper extends BaseMapper<FreightTemplateD
      */
     List<FreightTemplateDetail> queryRegionFreightTemplateDetails(@Param(value = "templateId") Long templateId);
 
-    /**
-     * 根据运费模板ID，查询所有运费模板明细
-     *
-     * @param templateId 运费模板ID
-     * @return 运费模板明细列表
-     */
-    List<FreightTemplateDetail> queryFreightTemplateDetailByTemplateId(@Param(value = "templateId") Long templateId);
-
-    /**
-     * 查询其他默认的运费模板明细
-     *
-     * @param freightTemplateDetail 需要排除的默认运费模板明细
-     * @return 其他默认的运费模板明细
-     */
-    List<FreightTemplateDetail> queryOtherDefaultFreightTemplateDetail(FreightTemplateDetail freightTemplateDetail);
-
-
 
     /**
      *  通过租户ID查询所有

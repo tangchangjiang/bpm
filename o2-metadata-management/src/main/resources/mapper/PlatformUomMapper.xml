@@ -7,18 +7,5 @@
         <result column="uom_type_code" property="parentValue" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="getChildrenValues" resultMap="BaseResultMap">
-        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        SELECT hu.uom_code,
-        hu.uom_name,
-        hu.uom_type_code
-        FROM hpfm_uom_type hut
-        LEFT JOIN hpfm_uom_type_tl hutt ON hut.uom_type_id = hutt.uom_type_id
-        LEFT JOIN hpfm_uom hu ON hu.uom_type_code = hut.uom_type_code
-        LEFT JOIN hpfm_uom_tl hutl ON hu.uom_id = hutl.uom_id
-        WHERE hutl.lang = #{lang}
-        AND hutt.lang = #{lang}
-        AND hu.enabled_flag = 1
-        AND hu.uom_type_code = #{parentValue}
-    </select>
+
 </mapper>
