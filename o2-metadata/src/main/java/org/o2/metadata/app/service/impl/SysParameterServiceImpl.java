@@ -27,11 +27,11 @@ public class SysParameterServiceImpl implements SysParameterService {
     @Override
     public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO =systemParameterDomainService.getSystemParameter(paramCode,tenantId);
-        return SysParameterConverter.doToVoObject(systemParameterDO);
+        return SysParameterConverter.doToCoObject(systemParameterDO);
     }
 
     @Override
     public List<SystemParameterCO> listSystemParameters(List<String> paramCodes, Long organizationId) {
-        return SysParameterConverter.doToVoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, organizationId));
+        return SysParameterConverter.doToCoListObjects(systemParameterDomainService.listSystemParameters(paramCodes, organizationId));
     }
 }

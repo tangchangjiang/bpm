@@ -24,7 +24,7 @@ public class SysParameterConverter {
      * @param systemParameterDO 系统参数
      * @return  bean
      */
-    public static SystemParameterCO doToVoObject(SystemParameterDO systemParameterDO){
+    public static SystemParameterCO doToCoObject(SystemParameterDO systemParameterDO){
         if (systemParameterDO == null) {
             return null;
         }
@@ -42,6 +42,7 @@ public class SysParameterConverter {
             value.setParam2(valueDO.getParam2());
             value.setParam3(valueDO.getParam3());
             value.setParamValue(valueDO.getParamValue());
+            value.setParamKey(valueDO.getParamKey());
             systemParamValueVos.add(value);
         }
         co.setSetSystemParamValue(systemParamValueVos);
@@ -70,6 +71,7 @@ public class SysParameterConverter {
             valueDO.setParam2(value.getParam2());
             valueDO.setParam3(value.getParam3());
             valueDO.setParamValue(value.getParamValue());
+            valueDO.setParamKey(value.getParamKey());
             systemParamValueDos.add(valueDO);
         }
         systemParameterDO.setSetSystemParamValue(systemParamValueDos);
@@ -80,13 +82,13 @@ public class SysParameterConverter {
      * @param systemParameterDOList 系统参数集合
      * @return  list
      */
-    public static List<SystemParameterCO> doToVoListObjects(List<SystemParameterDO> systemParameterDOList) {
+    public static List<SystemParameterCO> doToCoListObjects(List<SystemParameterDO> systemParameterDOList) {
         List<SystemParameterCO> systemParameterVOList = new ArrayList<>();
         if (systemParameterDOList == null) {
             return systemParameterVOList;
         }
         for (SystemParameterDO systemParameterDO : systemParameterDOList) {
-            systemParameterVOList.add(doToVoObject(systemParameterDO));
+            systemParameterVOList.add(doToCoObject(systemParameterDO));
         }
         return systemParameterVOList;
     }
