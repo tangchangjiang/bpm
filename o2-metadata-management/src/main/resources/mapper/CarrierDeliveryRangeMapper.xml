@@ -4,10 +4,6 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.CarrierDeliveryRange">
         <id column="delivery_range_id" property="deliveryRangeId" jdbcType="DECIMAL"/>
-        <result column="country_id" property="countryId" jdbcType="DECIMAL"/>
-        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
-        <result column="city_id" property="cityId" jdbcType="DECIMAL"/>
-        <result column="district_id" property="districtId" jdbcType="DECIMAL"/>
         <result column="carrier_id" property="carrierId" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>

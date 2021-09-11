@@ -27,7 +27,7 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT DISTINCT
         rrp.online_shop_id,
-        rrp.region_id,
+        rrp.region_code,
         rrp_tl.region_description,
         <if test="regionCode != null">
             rrp.region_rel_pos_id,
@@ -76,39 +76,6 @@
         </if>
     </select>
 
-    <select id="selectUnbindRegionByStoreId" resultType="org.o2.metadata.console.infra.entity.Region">
-        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        SELECT
-        hr.region_id,
-        hr.country_id,
-        hr.region_code,
-        hrt.region_name,
-        hr.parent_region_id
-        FROM hpfm_region hr
-        left JOIN hpfm_region_tl hrt ON hrt.region_id = hr.region_id AND hrt.lang = #{lang}
-        where not exists(
-        select 1 from o2md_region_rel_pos rrp where rrp.region_id = hr.region_id and rrp.online_shop_id =
-        #{onlineStoreId}
-        <choose>
-            <when test="tenantId != null">
-                and rrp.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                and 1 = 0
-            </otherwise>
-        </choose>
-        )
-        AND hr.enabled_flag = 1
-        <choose>
-            <when test="tenantId != null">
-                and hr.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                and 1 = 0
-            </otherwise>
-        </choose>
-        order by hr.region_id
-    </select>
 
     <select id="selectUnbindPosByRegionId" resultType="org.o2.metadata.console.infra.entity.Pos">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>

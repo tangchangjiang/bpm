@@ -20,14 +20,7 @@ public interface FreightTemplateDetailService {
      */
     List<FreightTemplateDetail> batchInsert(final List<FreightTemplateDetail> freightTemplateDetailList, final boolean isRegion);
 
-    /**
-     * 更新运费模板明细
-     *
-     * @param freightTemplateDetailList 更新的运费模板明细列表
-     * @param isRegion                  是否属于指定区域的运费模板明细列表
-     * @return 更新成功的运费模板明细列表
-     */
-    List<FreightTemplateDetail> batchUpdate(final List<FreightTemplateDetail> freightTemplateDetailList, final boolean isRegion);
+
 
     /**
      * 删除运费模板明细

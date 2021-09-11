@@ -2,10 +2,8 @@ package org.o2.metadata.console.app.service.impl;
 
 import org.o2.metadata.console.app.service.PlatformUomService;
 import org.o2.metadata.console.infra.repository.PlatformUomRepository;
-import org.o2.metadata.console.api.vo.PlatformUomVO;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * 平台值集服务默认实现
@@ -21,8 +19,4 @@ public class PlatformUomServiceImpl implements PlatformUomService {
         this.platformUomRepository = platformUomRepository;
     }
 
-    @Override
-    public List<PlatformUomVO> getChildrenValues(String parentValue) {
-        return platformUomRepository.getChildrenValues(parentValue);
-    }
 }

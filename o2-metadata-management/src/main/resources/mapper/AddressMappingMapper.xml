@@ -46,61 +46,6 @@
             AND ad.external_name LIKE concat('%',concat(#{addressMapping.externalName}),'%')
         </if>
     </select>
-    <select id="findAddressMappingById" resultType="org.o2.metadata.console.infra.entity.RegionTreeChild">
-        SELECT
-        ad.address_mapping_id,
-        ad.address_type_code,
-        ad.catalog_code,
-        ad.external_code,
-        ad.external_name,
-        ad.active_flag,
-        ad.OBJECT_VERSION_NUMBER,
-        c.region_id,
-        c.region_code,
-        c.region_name,
-        c.parent_region_id
-        FROM
-        hpfm_region c
-        LEFT JOIN o2md_address_mapping ad ON ad.region_id = c.region_id AND ad.tenant_id = #{tenantId}
-        WHERE 1=1
-        <choose>
-            <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        AND c.region_id = #{id}
-        AND ad.catalog_code=#{type}
-    </select>
-    <select id="findAddressMappingByCode" resultType="org.o2.metadata.console.api.vo.RegionTreeChildVO">
-        SELECT
-        ad.address_mapping_id,
-        ad.address_type_code,
-        ad.catalog_code,
-        ad.external_code,
-        ad.external_name,
-        ad.active_flag,
-        ad.OBJECT_VERSION_NUMBER,
-        c.region_id,
-        c.region_code,
-        c.region_name,
-        c.parent_region_id
-        FROM
-        hpfm_region c
-        LEFT JOIN o2md_address_mapping ad ON ad.region_id = c.region_id AND ad.tenant_id = #{tenantId}
-        WHERE 1=1
-        <choose>
-            <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        AND c.region_code = #{regionCode}
-    </select>
 
     <!--更据catalogCode和regionId查询地址匹配数量-->
     <select id="queryAddressByCondition" resultType="org.o2.metadata.console.infra.entity.AddressMapping">

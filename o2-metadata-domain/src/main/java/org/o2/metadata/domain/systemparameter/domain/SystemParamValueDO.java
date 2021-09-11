@@ -131,6 +131,7 @@ public class SystemParamValueDO {
                 Objects.equals(param1, valueDO.param1) &&
                 Objects.equals(param2, valueDO.param2) &&
                 Objects.equals(param3, valueDO.param3) &&
+                Objects.equals(paramKey,valueDO.paramKey)&&
                 Objects.equals(tenantId, valueDO.tenantId);
     }
 

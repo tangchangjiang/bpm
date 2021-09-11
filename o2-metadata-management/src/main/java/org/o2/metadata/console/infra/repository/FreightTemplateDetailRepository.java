@@ -29,21 +29,6 @@ public interface FreightTemplateDetailRepository extends BaseRepository<FreightT
      */
     List<FreightTemplateDetail> queryRegionFreightTemplateDetail(final Long templateId);
 
-    /**
-     * 根据运费模板ID，查询所有运费模板明细
-     *
-     * @param templateId 运费模板ID
-     * @return 默认运费模板明细列表
-     */
-    List<FreightTemplateDetail> queryFreightTemplateDetailByTemplateId(final Long templateId);
-
-    /**
-     * 查询其他默认的运费模板明细
-     *
-     * @param freightTemplateDetail 需要排除的默认运费模板明细
-     * @return 其他默认的运费模板明细
-     */
-    List<FreightTemplateDetail> queryOtherDefaultFreightTemplateDetail(FreightTemplateDetail freightTemplateDetail);
 
 
     /**

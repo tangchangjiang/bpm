@@ -21,8 +21,4 @@ public class PlatformUomRepositoryImpl implements PlatformUomRepository {
         this.platformUomMapper = platformUomMapper;
     }
 
-    @Override
-    public List<PlatformUomVO> getChildrenValues(String parentValue) {
-        return platformUomMapper.getChildrenValues(parentValue);
-    }
 }

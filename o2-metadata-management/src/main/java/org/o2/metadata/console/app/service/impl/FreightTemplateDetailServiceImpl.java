@@ -57,26 +57,6 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<FreightTemplateDetail> batchUpdate(List<FreightTemplateDetail> freightTemplateDetailList, boolean isRegion) {
-        checkData(freightTemplateDetailList, true, isRegion);
-        FreightTemplateDetail defaultDetail = containUniqleDefault(freightTemplateDetailList, isRegion);
-        if (defaultDetail != null) {
-            List<FreightTemplateDetail> otherDetailtList = freightTemplateDetailRepository.queryOtherDefaultFreightTemplateDetail(defaultDetail);
-            otherDetailtList.forEach(item -> {
-                item.setDefaultFlag(0);
-            });
-            freightTemplateDetailRepository.batchUpdateByPrimaryKey(otherDetailtList);
-        }
-        List<FreightTemplateDetail> freightTemplateDetails = freightTemplateDetailRepository.batchUpdateByPrimaryKey(freightTemplateDetailList);
-
-        //更新缓存
-        saveFreightDetailCache(freightTemplateDetails);
-
-        return freightTemplateDetails;
-    }
-
-    @Override
     public void batchDelete(List<FreightTemplateDetail> regionFreightDetailDisplayLis) {
 
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
