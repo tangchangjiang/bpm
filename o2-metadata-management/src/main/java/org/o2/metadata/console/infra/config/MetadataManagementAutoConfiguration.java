@@ -4,6 +4,7 @@ import org.hzero.core.message.MessageAccessor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 import springfox.documentation.service.Tag;
@@ -68,8 +69,8 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE_DETAIL, "运费模板明细管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_UOM, "平台值集管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION_REL_POS, "区域关联服务点配置"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM,"平台定义管理"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING,"平台信息匹配管理"));
+                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM, "平台定义管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING, "平台信息匹配管理"));
     }
 
     @Override

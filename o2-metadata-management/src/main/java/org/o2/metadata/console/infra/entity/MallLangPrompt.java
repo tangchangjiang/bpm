@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * 商城前端多语言内容维护表
@@ -38,7 +39,6 @@ public class MallLangPrompt extends AuditDomain {
     public static final String FIELD_LANG_MEANING = "langMeaning";
     public static final String FIELD_SITE_RANG = "siteRang";
     public static final String FIELD_DESCRIPTION = "description";
-    public static final String FIELD_SITE_RANG_FOR_NAME = "siteRangForName";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -103,7 +103,7 @@ public class MallLangPrompt extends AuditDomain {
     private String lastUpdatedByName;
     @Transient
     @ApiModelProperty("适用站点姓名")
-    private String siteRangForName;
+    private Map<String, Object> siteRangForName;
 
     //
     // getter/setter
@@ -243,11 +243,11 @@ public class MallLangPrompt extends AuditDomain {
         this.description = description;
     }
 
-    public String getSiteRangForName() {
+    public Map<String, Object> getSiteRangForName() {
         return siteRangForName;
     }
 
-    public void setSiteRangForName(String siteRangForName) {
+    public void setSiteRangForName(Map<String, Object> siteRangForName) {
         this.siteRangForName = siteRangForName;
     }
 }

@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import io.choerodon.core.domain.Page;
 import org.o2.core.response.BatchResponse;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import java.util.List;
@@ -35,4 +36,9 @@ public interface MallLangPromptService {
      * @param mallLangPromptList 商城前端多语言表
      */
     BatchResponse<MallLangPrompt> release(List<MallLangPrompt> mallLangPromptList);
+
+    /**
+     * 编码与名称转换
+     */
+    void list(Page<MallLangPrompt> list,Long organizationId);
 }
