@@ -207,10 +207,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
     /**
      * 查詢CMS站點信息LOV
+     *
      * @param organizationId
      * @return
      */
-    @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '#organizationId'")
+    @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '_' + '#organizationId'")
     public List<Map<String, Object>> queryCmsSiteLovValue(Long organizationId) {
         return hzeroLovQueryService.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
     }
