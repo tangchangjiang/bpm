@@ -85,13 +85,16 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
 
     @Override
-    public  <E> Page<E> queryUrlLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode) {
+    public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode,Long tenantId) {
         Page<E> result = new Page<>();
-        LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, 2L);
+        LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
 
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
-        String url = O2LovConstants.RequestParam.URL_PREFIX + getServerName(lovDTO.getRouteName()) + lovDTO.getCustomUrl();
+        String url = getLovUrl(lovDTO,tenantId);
+        if (null == url) {
+            return result;
+        }
 
         String json;
         if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
@@ -107,27 +110,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         }
         return result;
     }
-
-    @Override
-    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
-        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
-    }
-
-    @Override
-    public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovCode);
-    }
-
-    @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
-    }
-
-    @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
-        return null;
-    }
-
     /**
      *  构造请求地址
      * @param url 请求url
@@ -188,4 +170,41 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         }
 
     }
+    private String getLovUrl(LovDTO lov, Long tenantId) {
+        String serviceName = this.getServerName(lov.getRouteName());
+        String lovTypeCode = lov.getLovTypeCode();
+        if ("SQL".equals(lovTypeCode)) {
+            if (tenantId != null && !Objects.equals(tenantId, BaseConstants.DEFAULT_TENANT_ID)) {
+                return O2LovConstants.RequestParam.URL_PREFIX + serviceName + "/v1/{organizationId}/lovs/sql/data";
+            }
+
+            return O2LovConstants.RequestParam.URL_PREFIX + serviceName + "/v1/lovs/sql/data";
+        }
+        if ("URL".equals(lovTypeCode)) {
+            return O2LovConstants.RequestParam.URL_PREFIX + serviceName + lov.getCustomUrl();
+        }
+        return null;
+    }
+
+    @Override
+    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
+        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
+    }
+
+    @Override
+    public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovCode);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
+        return null;
+    }
+
+
 }

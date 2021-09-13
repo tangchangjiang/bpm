@@ -56,9 +56,10 @@ public interface LovAdapterService {
      * @param queryParam 查询参数
      * @param pageRequest 分页
      * @param lovCode 值集编码
+     * @param tenantId 租户ID
      * @return  page
      */
-    <E> Page<E>  queryUrlLovPage(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
+    <E> Page<E>  queryLovPage(Map<String,String> queryParam,PageRequest pageRequest, String lovCode,Long tenantId);
 
     /**
      * 查询值集详细信息
