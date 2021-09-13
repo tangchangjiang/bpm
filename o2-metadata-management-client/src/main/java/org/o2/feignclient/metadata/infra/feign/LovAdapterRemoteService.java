@@ -105,7 +105,7 @@ public interface LovAdapterRemoteService {
      * @return List<Map < String, Object>>
      */
     @GetMapping("/{organizationId}/lov/page-query-lov-value")
-    ResponseEntity<String> queryUrlLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    ResponseEntity<String> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam(required = false) Integer page,
                                                 @RequestParam(required = false) Integer size,

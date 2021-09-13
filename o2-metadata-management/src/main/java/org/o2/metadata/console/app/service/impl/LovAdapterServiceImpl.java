@@ -88,7 +88,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode,Long tenantId) {
         Page<E> result = new Page<>();
         LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
-
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
         String url = getLovUrl(lovDTO,tenantId);
@@ -100,8 +99,7 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
             json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
         } else {
-            json = ResponseUtils.getResponse(this.restTemplate.getForEntity(this.preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);
-        }
+            json = (String)ResponseUtils.getResponse(this.restTemplate.getForEntity(preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);        }
         try {
             result =  this.objectMapper.readValue(json, new TypeReference<Page<E>>() {
             });
@@ -174,11 +172,11 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         String serviceName = this.getServerName(lov.getRouteName());
         String lovTypeCode = lov.getLovTypeCode();
         if ("SQL".equals(lovTypeCode)) {
-            if (tenantId != null && !Objects.equals(tenantId, BaseConstants.DEFAULT_TENANT_ID)) {
-                return O2LovConstants.RequestParam.URL_PREFIX + serviceName + "/v1/{organizationId}/lovs/sql/data";
+            if (tenantId == null || Objects.equals(tenantId, BaseConstants.DEFAULT_TENANT_ID)) {
+                return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/lovs/sql/data";
             }
+            return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/{organizationId}/lovs/sql/data";
 
-            return O2LovConstants.RequestParam.URL_PREFIX + serviceName + "/v1/lovs/sql/data";
         }
         if ("URL".equals(lovTypeCode)) {
             return O2LovConstants.RequestParam.URL_PREFIX + serviceName + lov.getCustomUrl();

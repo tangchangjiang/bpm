@@ -107,8 +107,8 @@ public class O2LovAdapterClient {
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
      */
-    public Page<Object> queryUrlLovPage(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryParams) {
-        return ResponseUtils.getResponse(lovAdapterRemoteService.queryUrlLovPage(tenantId, lovCode, page,size, queryParams), new TypeReference<Page<Object>>() {
+    public Page<Object> queryLovPage(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryParams) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovPage(tenantId, lovCode, page,size, queryParams), new TypeReference<Page<Object>>() {
         });
     }
 }
