@@ -54,8 +54,8 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
-        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page, size,queryLovValueMap);
+    public ResponseEntity<String> queryUrlLovPage(Long organizationId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
+        log.error("Error queryUrlLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page, size,queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

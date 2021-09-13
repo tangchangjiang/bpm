@@ -51,8 +51,14 @@ public interface LovAdapterService {
      */
     ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId);
 
-
-    <E> Page<E>  pageList(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
+    /**
+     * 分页查询url值集
+     * @param queryParam 查询参数
+     * @param pageRequest 分页
+     * @param lovCode 值集编码
+     * @return  page
+     */
+    <E> Page<E>  queryUrlLovPage(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
 
     /**
      * 查询值集详细信息

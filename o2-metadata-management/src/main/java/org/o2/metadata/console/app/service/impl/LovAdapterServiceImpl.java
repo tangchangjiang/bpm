@@ -18,6 +18,7 @@ import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
@@ -84,16 +85,16 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
 
     @Override
-    public  <E> Page<E> pageList(Map<String, String> queryParam, PageRequest pageRequest, String lovCode) {
+    public  <E> Page<E> queryUrlLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode) {
         Page<E> result = new Page<>();
         LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, 2L);
 
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
-        String url = "http" + "://" + getServerName(lovDTO.getRouteName()) + lovDTO.getCustomUrl();
+        String url = O2LovConstants.RequestParam.URL_PREFIX + getServerName(lovDTO.getRouteName()) + lovDTO.getCustomUrl();
 
         String json;
-        if ("POST".equals(lovDTO.getRequestMethod())) {
+        if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
             json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
         } else {
             json = ResponseUtils.getResponse(this.restTemplate.getForEntity(this.preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);

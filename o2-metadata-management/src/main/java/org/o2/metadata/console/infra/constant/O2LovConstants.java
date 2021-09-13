@@ -8,6 +8,13 @@ package org.o2.metadata.console.infra.constant;
  */
 public interface O2LovConstants {
 
+    interface  RequestParam {
+        String POST = "POST";
+
+        String URL_PREFIX = "http://";
+
+    }
+
     interface LovProperties {
         /**
          * LOV Value

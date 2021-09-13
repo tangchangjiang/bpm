@@ -1,6 +1,8 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -83,12 +85,12 @@ public class LovAdapterInternalController {
 
     @ApiOperation(value = " 分页查询指定值集内容")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/page-query-lov-value-meaning")
-    public ResponseEntity<List<Map<String, Object>>> pageQueryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                               @RequestParam String lovCode,
-                                                                               @RequestParam Integer page,
-                                                                               @RequestParam Integer size,
-                                                                               @RequestParam (required = false) Map<String, String> queryLovValueMap) {
-        return Results.success(lovAdapterService.queryLovValueMeaning(organizationId, lovCode, page, size, queryLovValueMap));
+    @GetMapping("/page-query-url-lov")
+    public ResponseEntity<Page<Object>> queryUrlLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @RequestParam String lovCode,
+                                                                 @RequestParam (required = false) Map<String, String> queryParams,
+                                                                 PageRequest pageRequest) {
+        queryParams.put("organizationId", String.valueOf(organizationId));
+        return Results.success(lovAdapterService.queryUrlLovPage(queryParams, pageRequest, lovCode));
     }
 }
