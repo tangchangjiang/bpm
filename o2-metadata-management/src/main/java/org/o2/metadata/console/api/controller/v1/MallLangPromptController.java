@@ -1,21 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
-import org.hzero.core.base.BaseConstants;
-import org.hzero.core.util.Results;
-import org.hzero.core.base.BaseController;
-import org.o2.core.response.BatchResponse;
-import org.o2.feignclient.O2LovAdapterClient;
-import org.o2.lov.app.service.HzeroLovQueryService;
-import org.o2.metadata.console.app.service.LovAdapterService;
-import org.o2.metadata.console.infra.entity.MallLangPrompt;
-import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
-import org.o2.user.helper.IamUserHelper;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.app.service.MallLangPromptService;
-
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -23,13 +7,21 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
-import springfox.documentation.annotations.ApiIgnore;
 import io.swagger.annotations.ApiParam;
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
+import org.hzero.core.base.BaseController;
+import org.hzero.core.util.Results;
+import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.BatchResponse;
+import org.o2.metadata.console.app.service.MallLangPromptService;
+import org.o2.metadata.console.infra.entity.MallLangPrompt;
+import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 商城前端多语言内容维护表 管理 API

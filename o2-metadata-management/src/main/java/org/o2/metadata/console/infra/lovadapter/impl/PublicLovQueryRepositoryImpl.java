@@ -9,7 +9,7 @@ import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
@@ -20,7 +20,7 @@ import java.util.*;
  *
  * @author wei.cai@hand-china.com 2019/12/25 12:26
  */
-@Service
+@Repository
 @Slf4j
 public class PublicLovQueryRepositoryImpl implements PublicLovQueryRepository {
 

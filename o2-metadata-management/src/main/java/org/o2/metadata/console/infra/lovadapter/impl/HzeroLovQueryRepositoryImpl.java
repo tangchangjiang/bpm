@@ -12,12 +12,12 @@ import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Repository
 @Slf4j
 @EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
 public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {

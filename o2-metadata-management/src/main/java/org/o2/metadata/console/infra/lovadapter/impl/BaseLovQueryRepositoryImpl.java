@@ -9,6 +9,7 @@ import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -20,7 +21,7 @@ import java.util.Map;
  *
  * @author wei.cai@hand-china.com 2021/8/25
  */
-@Service("baseLovQueryServiceImpl")
+@Repository("baseLovQueryServiceImpl")
 @Slf4j
 public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
 
