@@ -92,11 +92,11 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "删除系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> removeSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<Void> removeSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.deleteByPrimaryKey(systemParameter);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
 }

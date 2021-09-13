@@ -70,9 +70,9 @@ public class FreightTemplateDetailController extends BaseController {
     @ApiOperation(value = "批量删除运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
+    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
         freightTemplateDetailService.batchDelete(freightTemplateDetailList);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
 }

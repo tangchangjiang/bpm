@@ -83,9 +83,9 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量删除承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public ResponseEntity<Void> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         SecurityTokenHelper.validToken(carrierDeliveryRanges);
         carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(carrierDeliveryRanges);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 }

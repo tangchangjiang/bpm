@@ -90,11 +90,11 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "删除版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
         SecurityTokenHelper.validToken(catalog);
         catalogRepository.deleteByPrimaryKey(catalog);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
     @ApiOperation(value = "版本导出Excel")

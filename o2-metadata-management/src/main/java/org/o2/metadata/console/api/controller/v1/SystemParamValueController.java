@@ -100,11 +100,11 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "删除系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<Void> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
         systemParamValueService.removeSystemParamValue(systemParamValue);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
     @ApiOperation(value = "获取KV系统参数值")
