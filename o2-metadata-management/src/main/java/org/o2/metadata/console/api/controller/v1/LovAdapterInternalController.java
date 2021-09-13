@@ -32,7 +32,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "通过编码查询货币(批量)")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")
     public ResponseEntity<Map<String, CurrencyBO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                        @RequestParam(value = "currencyCodes" ,required = false) List<String> currencyCodes) {
@@ -40,7 +40,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "通过编码查询单位(批量)")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/uom-by-codes")
     public ResponseEntity<Map<String, UomBO>> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                              @RequestParam(value = "uomCodes",required = false) List<String> uomCodes) {
@@ -48,7 +48,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "通过编码查询单位类型(批量)")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/uomType-by-codes")
     public ResponseEntity<Map<String, UomTypeBO>> findUomTypeByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestParam(value = "uomTypeCodes",required = false) List<String> uomTypeCodes) {
@@ -56,7 +56,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "查询值集详细信息")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-lov-value")
     public ResponseEntity<List<LovValueDTO>> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                            @RequestParam  String lovCode) {
@@ -64,7 +64,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "查询值集中指定值的 描述信息（meaning）")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-lov-value-meaning")
     public ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                        @RequestParam String lovCode,
@@ -73,11 +73,22 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = " 批量查询指定值集内容")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/batch-query-lov-value-meaning")
     public ResponseEntity<List<Map<String, Object>>> batchQueryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                        @RequestParam String lovCode,
                                                        @RequestParam (required = false) Map<String, String> queryLovValueMap) {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,queryLovValueMap));
+    }
+
+    @ApiOperation(value = " 分页查询指定值集内容")
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/page-query-lov-value-meaning")
+    public ResponseEntity<List<Map<String, Object>>> pageQueryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                               @RequestParam String lovCode,
+                                                                               @RequestParam Integer page,
+                                                                               @RequestParam Integer size,
+                                                                               @RequestParam (required = false) Map<String, String> queryLovValueMap) {
+        return Results.success(lovAdapterService.queryLovValueMeaning(organizationId, lovCode, page, size, queryLovValueMap));
     }
 }

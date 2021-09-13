@@ -122,6 +122,11 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
     }
 
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
+        return null;
+    }
+
     /**
      *  构造请求地址
      * @param url 请求url

@@ -47,4 +47,21 @@ public interface HzeroLovQueryRepository {
     List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
                                                    String lovCode,
                                                    Map<String, String> queryLovValueMap);
+
+    /**
+     * 批量查询指定值集内容
+     *
+     * @param tenantId 租户ID
+     * @param lovCode 值集编码
+     * @param page 页码
+     * @param size 大小
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                   String lovCode,
+                                                   Integer page,
+                                                   Integer size,
+                                                   Map<String, String> queryLovValueMap);
 }

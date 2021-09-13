@@ -84,8 +84,8 @@ public class O2LovAdapterClient {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId
-     * @param lovCode
+     * @param tenantId 租户ID
+     * @param lovCode 值集编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -95,4 +95,19 @@ public class O2LovAdapterClient {
         });
     }
 
+    /**
+     * 分页查询指定值集
+     *
+     * @param tenantId 租户ID
+     * @param lovCode 值集编码
+     * @param page 页码
+     * @param size  大小
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode,Integer page,Integer size, Map<String, String> queryLovValueMap) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, page,size, queryLovValueMap), new TypeReference<List<Map<String, Object>>>() {
+        });
+    }
 }

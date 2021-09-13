@@ -41,7 +41,7 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
                                        String lovValue) {
         StringBuilder cacheKey = new StringBuilder(tenantId.toString()).append("_").append(lovCode).append("_").append(lovValue);
         HzeroLovQueryRepositoryImpl currentProxy = (HzeroLovQueryRepositoryImpl) AopContext.currentProxy();
-        List<Map<String, Object>> lovList = currentProxy.queryLovValueMeaning(tenantId, lovCode, null, cacheKey.toString());
+        List<Map<String, Object>> lovList = currentProxy.queryLovValueMeaning(tenantId, lovCode, null,null,null, cacheKey.toString());
         if (CollectionUtils.isEmpty(lovList) || MapUtils.isEmpty(lovList.get(0))) {
             return "";
         } else {
@@ -67,14 +67,31 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
             }
         }
         HzeroLovQueryRepositoryImpl currentProxy = (HzeroLovQueryRepositoryImpl) AopContext.currentProxy();
-        return currentProxy.queryLovValueMeaning(tenantId, lovCode, queryLovValueMap, cacheKey.toString());
+        return currentProxy.queryLovValueMeaning(tenantId, lovCode,null,null, queryLovValueMap, cacheKey.toString());
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
+        StringBuilder cacheKey = new StringBuilder(tenantId.toString())
+                .append("_").append(lovCode)
+                .append("_").append(page)
+                .append("_").append(size );
+        for (Map.Entry<String, String> enty : queryLovValueMap.entrySet()) {
+            if (StringUtils.isNotEmpty(enty.getValue())){
+                cacheKey.append(enty.getKey()).append("_").append(enty.getValue()).append("_");
+            }
+        }
+        HzeroLovQueryRepositoryImpl currentProxy = (HzeroLovQueryRepositoryImpl) AopContext.currentProxy();
+        return currentProxy.queryLovValueMeaning(tenantId, lovCode,page,size, queryLovValueMap, cacheKey.toString());
     }
 
     @Cacheable(value = "O2_LOV", key = "#cacheKey")
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
                                                           String lovCode,
+                                                          Integer page,
+                                                          Integer size,
                                                           Map<String, String> queryLovValueMap,
                                                           String cacheKey) {
-        return lovAdapter.queryLovData(lovCode, tenantId, null, null, null, queryLovValueMap);
+        return lovAdapter.queryLovData(lovCode, tenantId, null, page, size, queryLovValueMap);
     }
 }
