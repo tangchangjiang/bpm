@@ -8,6 +8,7 @@ import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.boot.file.FileClient;
+import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.helper.UniqueHelper;
@@ -31,6 +32,7 @@ import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.o2.user.helper.IamUserHelper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class MallLangPromptServiceImpl implements MallLangPromptService {
+public class MallLangPromptServiceImpl implements MallLangPromptService, AopProxy<MallLangPromptServiceImpl> {
 
     private final MallLangPromptRepository mallLangPromptRepository;
 
@@ -68,7 +70,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     private final String SITE_CODE = "siteCode";
     private final String SITE_NAME = "siteName";
     private final String LOV_CODE = "O2CMS.SITE";
-    private final Long ORGANIZATION_ID = 2L;
 
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
@@ -177,13 +178,13 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         List<String> createUserIds = content.stream().filter(i -> i.getCreatedBy() != null)
                 .map(a -> a.getCreatedBy().toString()).collect(Collectors.toList());
         List<String> siteRangs = content.stream().filter(i -> i.getSiteRang() != null)
-                .map(a -> a.getSiteRang()).collect(Collectors.toList());
+                .map(MallLangPrompt::getSiteRang).collect(Collectors.toList());
 
 
         Map<Long, String> updateUserMap = IamUserHelper.getRealNameMap(updateUserIds);
         Map<Long, String> createUserMap = IamUserHelper.getRealNameMap(createUserIds);
 
-        List<Map<String, Object>> maps = hzeroLovQueryService.queryLovValueMeaning(ORGANIZATION_ID, LOV_CODE, new HashMap<>());
+        List<Map<String, Object>> maps = self().queryCmsSiteLovValue(organizationId);
         Map<String, Object> siteRangName = new HashMap<>();
         for (String siteCode : siteRangs) {
             String[] result = siteCode.split(",");
@@ -202,6 +203,16 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
                     prompt.setSiteRangForName(siteRangName);
                 }
         );
+    }
+
+    /**
+     * 查詢CMS站點信息LOV
+     * @param organizationId
+     * @return
+     */
+    @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '#organizationId'")
+    public List<Map<String, Object>> queryCmsSiteLovValue(Long organizationId) {
+        return hzeroLovQueryService.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
     }
 
 
