@@ -10,7 +10,6 @@ import org.hzero.boot.file.FileClient;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
-import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.PublicLovVO;
@@ -19,12 +18,12 @@ import org.o2.metadata.console.app.service.StaticResourceConfigService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.springframework.stereotype.Service;
 
 
 import java.util.*;
 
-import io.choerodon.core.oauth.DetailsHelper;
 
 /**
  * O2MD.PUBLIC_LOV  静态文件
@@ -35,18 +34,18 @@ import io.choerodon.core.oauth.DetailsHelper;
 @Slf4j
 public class O2PublicLovServiceImpl implements O2PublicLovService {
 
-    private final HzeroLovQueryService hzeroLovQueryService;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
     private final FileStorageProperties fileStorageProperties;
     private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
     private final StaticResourceConfigService staticResourceConfigService;
 
-    public O2PublicLovServiceImpl(HzeroLovQueryService hzeroLovQueryService,
+    public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
                                   FileStorageProperties fileStorageProperties,
                                   FileClient fileClient,
                                   StaticResourceInternalService staticResourceInternalService,
                                   StaticResourceConfigService staticResourceConfigService) {
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
@@ -76,13 +75,13 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         Map<String,String> resourceUrlMap=new HashMap<>(4);
 
 
-        List<LovValueDTO> publicLovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovCode);
+        List<LovValueDTO> publicLovValueDTOList = hzeroLovQueryRepository.queryLovValue(tenantId, lovCode);
         JSONObject data = new JSONObject();
         if (CollectionUtils.isNotEmpty(publicLovValueDTOList)) {
             for (LovValueDTO lovValueDTO : publicLovValueDTOList) {
                 if (MetadataConstants.PublicLov.PUB_LOV_CODE.equals(publicLovVO.getLovCode())) {
                     //O2MD.PUBLIC_LOV
-                    List<LovValueDTO> lovValueDTOList = hzeroLovQueryService.queryLovValue(tenantId, lovValueDTO.getValue());
+                    List<LovValueDTO> lovValueDTOList = hzeroLovQueryRepository.queryLovValue(tenantId, lovValueDTO.getValue());
                     if (CollectionUtils.isNotEmpty(lovValueDTOList)) {
                         data.put(lovValueDTO.getValue(), lovValueDTOList);
                     }

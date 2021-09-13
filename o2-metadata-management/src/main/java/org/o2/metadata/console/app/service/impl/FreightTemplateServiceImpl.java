@@ -9,7 +9,6 @@ import org.hzero.boot.platform.lov.handler.LovSqlHandler;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
@@ -23,6 +22,7 @@ import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.convertor.FreightConverter;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
@@ -47,8 +47,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightTemplateDetailService freightTemplateDetailService;
     private final FreightCacheService freightCacheService;
     private final FreightTemplateDomainRepository freightTemplateDomainRepository;
-    private  final LovSqlHandler lovSqlHandler;
-    private final HzeroLovQueryService hzeroLovQueryService;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
     private final O2ProductClient o2ProductClient;
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
@@ -57,14 +56,13 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightCacheService freightCacheService,
                                       final RegionRepository regionRepository,
                                       FreightTemplateDomainRepository freightTemplateDomainRepository,
-                                      LovSqlHandler lovSqlHandler, HzeroLovQueryService hzeroLovQueryService, O2ProductClient o2ProductClient) {
+                                      HzeroLovQueryRepository hzeroLovQueryRepository, O2ProductClient o2ProductClient) {
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
         this.freightCacheService = freightCacheService;
         this.freightTemplateDomainRepository = freightTemplateDomainRepository;
-        this.lovSqlHandler = lovSqlHandler;
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.o2ProductClient = o2ProductClient;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
@@ -129,7 +127,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     public List<Map<String, Object>> getSqlMeaning(String lovCode, Long tenantId) {
-        return  hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,new HashMap<>());
+        return  hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,new HashMap<>());
     }
 
     public String fetchGroupKey(final FreightTemplateDetail detail) {

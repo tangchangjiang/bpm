@@ -13,13 +13,14 @@ import org.hzero.common.HZeroService;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.lov.app.service.BaseLovQueryService;
-import org.o2.lov.app.service.HzeroLovQueryService;
-import org.o2.lov.app.service.PublicLovQueryService;
-import org.o2.lov.domain.bo.CurrencyBO;
-import org.o2.lov.domain.bo.UomBO;
-import org.o2.lov.domain.bo.UomTypeBO;
+
+import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.bo.UomBO;
+import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.lovadapter.BaseLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,23 +37,24 @@ import java.util.*;
 @Service
 @Slf4j
 public class LovAdapterServiceImpl implements LovAdapterService {
-    private BaseLovQueryService baseLovQueryService;
-    private PublicLovQueryService publicLovQueryService;
-    private HzeroLovQueryService hzeroLovQueryService;
+    private BaseLovQueryRepository baseLovQueryRepository;
+    private PublicLovQueryRepository publicLovQueryRepository;
+    private HzeroLovQueryRepository hzeroLovQueryRepository;
     private LovAdapter lovAdapter;
     private final RestTemplate restTemplate;
     private final RedisHelper redisHelper;
     private final ObjectMapper objectMapper;
 
-    public LovAdapterServiceImpl(BaseLovQueryService baseLovQueryService,
-                                 PublicLovQueryService publicLovQueryService,
-                                 HzeroLovQueryService hzeroLovQueryService,
-                                 LovAdapter lovAdapter, RestTemplate restTemplate,
+    public LovAdapterServiceImpl(BaseLovQueryRepository baseLovQueryRepository,
+                                 PublicLovQueryRepository publicLovQueryRepository,
+                                 HzeroLovQueryRepository hzeroLovQueryRepository,
+                                 LovAdapter lovAdapter,
+                                 RestTemplate restTemplate,
                                  RedisHelper redisHelper,
                                  ObjectMapper objectMapper) {
-        this.baseLovQueryService = baseLovQueryService;
-        this.publicLovQueryService = publicLovQueryService;
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.baseLovQueryRepository = baseLovQueryRepository;
+        this.publicLovQueryRepository = publicLovQueryRepository;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.lovAdapter = lovAdapter;
         this.restTemplate = restTemplate;
         this.redisHelper = redisHelper;
@@ -62,22 +64,22 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
     @Override
     public Map<String, CurrencyBO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
-        return baseLovQueryService.findCurrencyByCodes(tenantId,currencyCodes);
+        return baseLovQueryRepository.findCurrencyByCodes(tenantId,currencyCodes);
     }
 
     @Override
     public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
-        return baseLovQueryService.findUomByCodes(tenantId,uomCodes);
+        return baseLovQueryRepository.findUomByCodes(tenantId,uomCodes);
     }
 
     @Override
     public Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes) {
-        return baseLovQueryService.findUomTypeByCodes(tenantId,uomTypeCodes);
+        return baseLovQueryRepository.findUomTypeByCodes(tenantId,uomTypeCodes);
     }
 
     @Override
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId) {
-        return publicLovQueryService.batchQueryLovInfo(queryMap,tenantId);
+        return publicLovQueryRepository.batchQueryLovInfo(queryMap,tenantId);
     }
 
 
@@ -107,17 +109,17 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
     @Override
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
-        return hzeroLovQueryService.queryLovValue(tenantId,lovCode);
+        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
     }
 
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,lovCode);
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovCode);
     }
 
     @Override
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
-        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
     }
 
     /**

@@ -3,9 +3,10 @@ package org.o2.metadata.console.app.service;
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
-import org.o2.lov.domain.bo.CurrencyBO;
-import org.o2.lov.domain.bo.UomBO;
-import org.o2.lov.domain.bo.UomTypeBO;
+
+import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.bo.UomBO;
+import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
