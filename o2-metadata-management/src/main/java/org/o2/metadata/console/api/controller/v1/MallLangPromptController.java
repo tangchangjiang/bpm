@@ -2,16 +2,15 @@ package org.o2.metadata.console.api.controller.v1;
 
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
 import org.o2.core.response.BatchResponse;
-import org.o2.feignclient.O2MetadataManagementClient;
+import org.o2.feignclient.O2LovAdapterClient;
+import org.o2.lov.app.service.HzeroLovQueryService;
+import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
-import org.o2.user.domain.vo.IamUserBO;
 import org.o2.user.helper.IamUserHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -27,9 +26,9 @@ import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 import io.swagger.annotations.ApiParam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,14 +45,10 @@ public class MallLangPromptController extends BaseController {
     private final MallLangPromptService mallLangPromptService;
 
 
-    @Autowired
-    private RedisHelper redisHelper;
-
     public MallLangPromptController(MallLangPromptRepository mallLangPromptRepository,
                                     MallLangPromptService mallLangPromptService) {
         this.mallLangPromptService = mallLangPromptService;
         this.mallLangPromptRepository = mallLangPromptRepository;
-
     }
 
     @ApiOperation(value = "商城前端多语言内容维护表维护-分页查询商城前端多语言内容维护表列表")
@@ -65,23 +60,8 @@ public class MallLangPromptController extends BaseController {
                                                      @ApiIgnore @SortDefault(value = MallLangPrompt.FIELD_LANG_PROMPT_ID,
                                                              direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<MallLangPrompt> list = mallLangPromptRepository.pageAndSort(pageRequest, mallLangPrompt);
-        List<MallLangPrompt> content = list.getContent();
 
-        List<String> updateUserIds = content.stream().filter(i -> i.getLastUpdatedBy() != null)
-                .map(a -> a.getLastUpdatedBy().toString()).collect(Collectors.toList());
-        List<String> createUserIds = content.stream().filter(i -> i.getCreatedBy() != null)
-                .map(a -> a.getCreatedBy().toString()).collect(Collectors.toList());
-
-        Map<Long, String> updateUserMap = IamUserHelper.getRealNameMap(redisHelper, updateUserIds);
-        Map<Long, String> createUserMap = IamUserHelper.getRealNameMap(redisHelper, createUserIds);
-
-        list.getContent().forEach(
-                prompt -> {
-                    prompt.setLastUpdatedByName(updateUserMap.get(prompt.getLastUpdatedBy()));
-                    prompt.setCreatedByName(createUserMap.get(prompt.getCreatedBy()));
-                }
-        );
-
+        mallLangPromptService.list(list, organizationId);
         return Results.success(list);
     }
 

@@ -1,39 +1,42 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Joiner;
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.boot.file.FileClient;
+import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.core.file.FileStorageProperties;
 import org.o2.core.response.BatchResponse;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.feignclient.O2MetadataManagementClient;
-import org.o2.feignclient.metadata.domain.co.StaticResourceConfigCO;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
 import org.o2.lock.domain.data.LockType;
+import org.o2.lov.app.service.HzeroLovQueryService;
+import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.MallLangPromptService;
+import org.o2.metadata.console.app.service.StaticResourceConfigService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.entity.StaticResource;
+import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
+import org.o2.user.helper.IamUserHelper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class MallLangPromptServiceImpl implements MallLangPromptService {
+public class MallLangPromptServiceImpl implements MallLangPromptService, AopProxy<MallLangPromptServiceImpl> {
 
     private final MallLangPromptRepository mallLangPromptRepository;
 
@@ -58,23 +61,30 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
 
     private final FileClient fileClient;
 
-    private final O2MetadataManagementClient metadataManagementClient;
-
     private final StaticResourceInternalService staticResourceInternalService;
+
+    private final StaticResourceConfigService staticResourceConfigService;
+
+    private final HzeroLovQueryService hzeroLovQueryService;
+
+    private final String SITE_CODE = "siteCode";
+    private final String SITE_NAME = "siteName";
+    private final String LOV_CODE = "O2CMS.SITE";
 
     public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
-                                     O2MetadataManagementClient metadataManagementClient,
-                                     StaticResourceInternalService staticResourceInternalService) {
+                                     StaticResourceInternalService staticResourceInternalService,
+                                     StaticResourceConfigService staticResourceConfigService, HzeroLovQueryService hzeroLovQueryService) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
         this.redisCacheClient = redisCacheClient;
         this.lockService = lockService;
         this.fileClient = fileClient;
-        this.metadataManagementClient = metadataManagementClient;
         this.staticResourceInternalService = staticResourceInternalService;
+        this.staticResourceConfigService = staticResourceConfigService;
+        this.hzeroLovQueryService = hzeroLovQueryService;
     }
 
 
@@ -138,10 +148,15 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         List<String> errorMsg = new ArrayList<>();
         for (MallLangPrompt mallLangPrompt : mallLangPromptList) {
             //获取静态资源
-            StaticResourceConfigCO staticResourceConfigCO = metadataManagementClient.getStaticResourceConfig(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT, mallLangPrompt.getTenantId());
-            final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
-                    3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
-            lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse, staticResourceConfigCO), null);
+            StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
+            staticResourceConfigDTO.setResourceCode(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT);
+            staticResourceConfigDTO.setTenantId(mallLangPrompt.getTenantId());
+            List<StaticResourceConfig> listStaticResourceConfig = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
+            for (StaticResourceConfig staticResourceConfig : listStaticResourceConfig) {
+                final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
+                        3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
+                lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse, staticResourceConfig), null);
+            }
             mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
             mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
         }
@@ -154,11 +169,58 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         return batchResponse;
     }
 
+    @Override
+    public void list(Page<MallLangPrompt> list, Long organizationId) {
+        List<MallLangPrompt> content = list.getContent();
 
-    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse, StaticResourceConfigCO staticResourceConfigCO) {
+        List<String> updateUserIds = content.stream().filter(i -> i.getLastUpdatedBy() != null)
+                .map(a -> a.getLastUpdatedBy().toString()).collect(Collectors.toList());
+        List<String> createUserIds = content.stream().filter(i -> i.getCreatedBy() != null)
+                .map(a -> a.getCreatedBy().toString()).collect(Collectors.toList());
+        List<String> siteRangs = content.stream().filter(i -> i.getSiteRang() != null)
+                .map(MallLangPrompt::getSiteRang).collect(Collectors.toList());
+
+
+        Map<Long, String> updateUserMap = IamUserHelper.getRealNameMap(updateUserIds);
+        Map<Long, String> createUserMap = IamUserHelper.getRealNameMap(createUserIds);
+
+        List<Map<String, Object>> maps = self().queryCmsSiteLovValue(organizationId);
+        Map<String, Object> siteRangName = new HashMap<>();
+        for (String siteCode : siteRangs) {
+            String[] result = siteCode.split(",");
+            for (String siteCodeResult : result) {
+                for (Map<String, Object> s : maps) {
+                    if (siteCodeResult.equals(s.get(SITE_CODE))) {
+                        siteRangName.put(siteCodeResult, s.get(SITE_NAME));
+                    }
+                }
+            }
+        }
+        list.getContent().forEach(
+                prompt -> {
+                    prompt.setLastUpdatedByName(updateUserMap.get(prompt.getLastUpdatedBy()));
+                    prompt.setCreatedByName(createUserMap.get(prompt.getCreatedBy()));
+                    prompt.setSiteRangForName(siteRangName);
+                }
+        );
+    }
+
+    /**
+     * 查詢CMS站點信息LOV
+     *
+     * @param organizationId
+     * @return
+     */
+    @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '_' + '#organizationId'")
+    public List<Map<String, Object>> queryCmsSiteLovValue(Long organizationId) {
+        return hzeroLovQueryService.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
+    }
+
+
+    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse, StaticResourceConfig staticResourceConfig) {
         StaticResource resource = new StaticResource();
         //上传静态文件
-        if (!uploadStaticFile(mallLangPrompt, resource, errorMsg, staticResourceConfigCO)) {
+        if (!uploadStaticFile(mallLangPrompt, resource, errorMsg, staticResourceConfig)) {
             batchResponse.addFailedBody(mallLangPrompt);
             return;
         }
@@ -180,6 +242,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
             request.setDescription(resource.getDescription());
             request.setResourceUrl(resource.getResourceUrl());
             request.setResourceOwner(r);
+            request.setResourceLevel(resource.getResourceLevel());
             request.setResourceHost(resource.getResourceHost());
             staticResourceInternalService.saveResource(request);
         }
@@ -190,7 +253,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
     /**
      * 静态文件上传
      */
-    private boolean uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfigCO staticResourceConfigCO) {
+    private boolean uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfig staticResourceConfig) {
         final Long tenantId = mallLangPrompt.getTenantId();
         final String fileName = mallLangPrompt.getMallType() + "_" + mallLangPrompt.getLang();
         final String bucketCode = fileStorageProperties.getBucketCode();
@@ -224,14 +287,14 @@ public class MallLangPromptServiceImpl implements MallLangPromptService {
         resource.setSourceModuleCode(MetadataConstants.Constants.MODE_NAME);
 
         resource.setTenantId(tenantId);
-        resource.setJsonKey(staticResourceConfigCO.getJsonKey());
+        resource.setJsonKey(staticResourceConfig.getJsonKey());
         resource.setResourceCode(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT);
-        resource.setDescription(staticResourceConfigCO.getDescription());
-        resource.setResourceLevel(staticResourceConfigCO.getResourceLevel());
+        resource.setDescription(staticResourceConfig.getDescription());
+        resource.setResourceLevel(staticResourceConfig.getResourceLevel());
         resource.setEnableFlag(1);
         resource.setLang(mallLangPrompt.getLang());
         resource.setLastUpdatedBy(DetailsHelper.getUserDetails().getUserId());
-        if (!"PUBLIC".equals(staticResourceConfigCO.getResourceLevel())) {
+        if (!"PUBLIC".equals(staticResourceConfig.getResourceLevel())) {
             resource.setResourceOwner(mallLangPrompt.getSiteRang());
         }
         resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
