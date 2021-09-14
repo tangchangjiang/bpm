@@ -3,6 +3,8 @@ package org.o2.metadata.console.api.co;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 
 import java.util.Date;
 
@@ -28,9 +30,11 @@ public class WarehouseCO {
     private String warehouseName;
 
     @ApiModelProperty(value = "仓库状态,值集：O2MD.WAREHOUSE_STATUS")
+    @LovValue(lovCode = WarehouseConstants.WarehouseStatus.LOV_CODE)
     private String warehouseStatusCode;
 
     @ApiModelProperty(value = "仓库类型,值集: O2MD.WAREHOUSE_TYPE （良品仓/不良品仓/退货仓）")
+    @LovValue(lovCode = WarehouseConstants.WarehouseType.LOV_CODE)
     private String warehouseTypeCode;
 
     @ApiModelProperty(value = "自提发货接单量")

@@ -1,6 +1,8 @@
-package org.o2.feignclient.metadata.domain.dto;
+package org.o2.metadata.console.api.dto;
 
 import lombok.Data;
+
+import java.util.List;
 
 /**
  *
@@ -15,6 +17,8 @@ public class WarehousePageQueryInnerDTO {
      */
     private String warehouseId;
 
+    private List<Long> warehouseIdList;
+
     /**
      * 值为0禁用，1启用
      */
@@ -24,6 +28,11 @@ public class WarehousePageQueryInnerDTO {
      */
     private String warehouseCode;
 
+    private List<String> warehouseCodeList;
+
     private Integer page;
+
     private Integer pageSize;
+
+    private Long tenantId;
 }

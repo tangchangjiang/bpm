@@ -1,15 +1,21 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
+
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +36,21 @@ public class WarehouseInternalController {
     private WarehouseService warehouseService;
     public WarehouseInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
+    }
+
+    @ApiOperation(value = "仓库信息列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    public ResponseEntity<Page<WarehouseCO>> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  WarehousePageQueryInnerDTO innerDTO) {
+        innerDTO.setTenantId(organizationId);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setSize(innerDTO.getPageSize());
+        pageRequest.setPage(innerDTO.getPage());
+        final Page<WarehouseCO> posList = PageHelper.doPage(pageRequest,
+                () -> warehouseService.pageWarehouses(innerDTO));
+        return Results.success(posList);
     }
 
     @ApiOperation(value = "查询仓库(内部调用)")

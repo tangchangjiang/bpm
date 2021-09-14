@@ -2,6 +2,7 @@ package org.o2.feignclient;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.choerodon.core.domain.Page;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.co.*;
 import org.o2.feignclient.metadata.domain.dto.*;
@@ -92,6 +93,16 @@ public class O2MetadataManagementClient {
         });
     }
 
+    /**
+     * 页面查询仓库
+     *
+     * @param innerDTO 入参
+     * @param tenantId       租户ID
+     */
+    public Page<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.pageWarehouses(tenantId, innerDTO), new TypeReference<Page<WarehouseCO>>() {
+        });
+    }
     /**
      * 从redis查询网店关联有效的仓库
      *

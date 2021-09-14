@@ -14,9 +14,9 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
-import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -278,6 +278,25 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO) {
         return warehouseRepository.listWarehouseAddr(queryDTO);
+    }
+
+    @Override
+    public List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO) {
+        String warehouseId = innerDTO.getWarehouseId();
+        if (StringUtils.isNotEmpty(warehouseId)) {
+            List<Long> idsList = new ArrayList<>();
+            String[] strings = StringUtils.split(warehouseId,BaseConstants.Symbol.COMMA);
+            for (String str : strings) {
+                Long id = Long.valueOf(str);
+                idsList.add(id);
+                innerDTO.setWarehouseIdList(idsList);
+            }
+        }
+        String warehouseCode = innerDTO.getWarehouseCode();
+        if (StringUtils.isNotEmpty(warehouseCode)) {
+            innerDTO.setWarehouseCodeList(Arrays.asList(StringUtils.split(warehouseCode, BaseConstants.Symbol.COMMA)));
+        }
+        return warehouseRepository.pageWarehouses(innerDTO);
     }
 
 }
