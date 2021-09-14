@@ -1,11 +1,11 @@
 package org.o2.metadata.console.infra.repository.impl;
 
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Country;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +19,12 @@ import java.util.Map;
  */
 @Component
 public class CountryRepositoryImpl extends BaseRepositoryImpl<Country> implements CountryRepository {
-    private final LovAdapter lovAdapter;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
-    public CountryRepositoryImpl(LovAdapter lovAdapter) {
-        this.lovAdapter = lovAdapter;
+    public CountryRepositoryImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
+
 
     @Override
     public List<Country> listCountryLov(CountryQueryLovDTO regionQueryLov, Long tenantId) {
@@ -31,7 +32,7 @@ public class CountryRepositoryImpl extends BaseRepositoryImpl<Country> implement
         Map<String,String> queryParams = new HashMap<>(16);
         queryParams.put(RegionConstants.RegionLov.COUNTRY_CODE.getCode(),regionQueryLov.getCountryCode());
         queryParams.put(RegionConstants.RegionLov.TENANT_ID.getCode(),String.valueOf(regionQueryLov.getTenantId()));
-        List<Map<String,Object>> list = lovAdapter.queryLovData(RegionConstants.RegionLov.REGION_LOV_CODE.getCode(),tenantId, null,  regionQueryLov.getPage(), regionQueryLov.getSize() , queryParams);
+        List<Map<String,Object>> list = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,RegionConstants.RegionLov.REGION_LOV_CODE.getCode(),  regionQueryLov.getPage(), regionQueryLov.getSize() , queryParams);
         if (list.isEmpty()){
             return countryList;
         }
