@@ -75,7 +75,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
                                      StaticResourceInternalService staticResourceInternalService,
-                                     StaticResourceConfigService staticResourceConfigService,HzeroLovQueryRepository hzeroLovQueryRepository) {
+                                     StaticResourceConfigService staticResourceConfigService, HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
@@ -143,15 +143,15 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     }
 
     @Override
-    public BatchResponse<MallLangPrompt> release(List<MallLangPrompt> mallLangPromptList) {
+    public BatchResponse<MallLangPrompt> release(List<MallLangPrompt> mallLangPromptList, Long tenantId) {
         BatchResponse<MallLangPrompt> batchResponse = new BatchResponse<>();
         List<String> errorMsg = new ArrayList<>();
+        //获取静态资源
+        StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
+        staticResourceConfigDTO.setResourceCode(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT);
+        staticResourceConfigDTO.setTenantId(tenantId);
+        List<StaticResourceConfig> listStaticResourceConfig = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
         for (MallLangPrompt mallLangPrompt : mallLangPromptList) {
-            //获取静态资源
-            StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
-            staticResourceConfigDTO.setResourceCode(MetadataConstants.MallLangPromptConstants.PCM_LANG_PROMPT);
-            staticResourceConfigDTO.setTenantId(mallLangPrompt.getTenantId());
-            List<StaticResourceConfig> listStaticResourceConfig = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
             for (StaticResourceConfig staticResourceConfig : listStaticResourceConfig) {
                 final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
                         3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
