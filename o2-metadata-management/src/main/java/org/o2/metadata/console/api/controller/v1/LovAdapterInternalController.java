@@ -85,7 +85,7 @@ public class LovAdapterInternalController {
 
     @ApiOperation(value = " 分页查询指定值集内容")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/page-query-url-lov")
+    @GetMapping("/page-query-lov-value")
     public ResponseEntity<Page<Object>> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                  @RequestParam String lovCode,
                                                                  @RequestParam (required = false) Map<String, String> queryParams,
