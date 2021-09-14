@@ -26,7 +26,6 @@ import org.o2.metadata.console.infra.convertor.WarehouseConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
-import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
