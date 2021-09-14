@@ -1,32 +1,19 @@
 package org.o2.metadata.console.app.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.MapUtils;
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
-import org.hzero.boot.platform.lov.dto.LovDTO;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
-import org.hzero.common.HZeroService;
-import org.hzero.core.base.BaseConstants;
-import org.hzero.core.redis.RedisHelper;
-import org.hzero.core.util.ResponseUtils;
 
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
-import org.o2.metadata.console.infra.constant.O2LovConstants;
-import org.o2.metadata.console.infra.lovadapter.BaseLovQueryRepository;
-import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
-import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.PublicLovQueryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -41,25 +28,14 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     private BaseLovQueryRepository baseLovQueryRepository;
     private PublicLovQueryRepository publicLovQueryRepository;
     private HzeroLovQueryRepository hzeroLovQueryRepository;
-    private LovAdapter lovAdapter;
-    private final RestTemplate restTemplate;
-    private final RedisHelper redisHelper;
-    private final ObjectMapper objectMapper;
+
 
     public LovAdapterServiceImpl(BaseLovQueryRepository baseLovQueryRepository,
                                  PublicLovQueryRepository publicLovQueryRepository,
-                                 HzeroLovQueryRepository hzeroLovQueryRepository,
-                                 LovAdapter lovAdapter,
-                                 RestTemplate restTemplate,
-                                 RedisHelper redisHelper,
-                                 ObjectMapper objectMapper) {
+                                 HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.baseLovQueryRepository = baseLovQueryRepository;
         this.publicLovQueryRepository = publicLovQueryRepository;
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
-        this.lovAdapter = lovAdapter;
-        this.restTemplate = restTemplate;
-        this.redisHelper = redisHelper;
-        this.objectMapper = objectMapper;
     }
 
 
@@ -86,103 +62,9 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
     @Override
     public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode,Long tenantId) {
-        Page<E> result = new Page<>();
-        LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
-        processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
-
-        String url = getLovUrl(lovDTO,tenantId);
-        if (null == url) {
-            return result;
-        }
-
-        String json;
-        if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
-            json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
-        } else {
-            json = (String)ResponseUtils.getResponse(this.restTemplate.getForEntity(preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);        }
-        try {
-            result =  this.objectMapper.readValue(json, new TypeReference<Page<E>>() {
-            });
-        } catch (IOException var9) {
-            log.error("get translation data error.");
-        }
-        return result;
-    }
-    /**
-     *  构造请求地址
-     * @param url 请求url
-     * @param params   参数
-     * @return  str
-     */
-    private String preProcessUrlParam(String url, Map<String, String> params) {
-        if (MapUtils.isEmpty(params)) {
-            return url;
-        }
-        StringBuilder stringBuilder = new StringBuilder(url);
-        boolean firstKey = !url.contains("?");
-        for (String key : params.keySet()) {
-            if (firstKey) {
-                stringBuilder.append('?').append(key).append("={").append(key).append('}');
-                firstKey = false;
-                continue;
-            }
-            stringBuilder.append('&').append(key).append("={").append(key).append('}');
-        }
-        return stringBuilder.toString();
+        return hzeroLovQueryRepository.queryLovPage(queryParam,pageRequest,lovCode,tenantId);
     }
 
-
-    /**
-     *  获取服务名
-     * @param serverCode 路由
-     * @return  str
-     */
-    private String getServerName(String serverCode) {
-        this.redisHelper.setCurrentDatabase(HZeroService.Admin.REDIS_DB);
-        String serverName = this.redisHelper.hshGet("hadm:routes", serverCode);
-        this.redisHelper.clearCurrentDatabase();
-        return serverName;
-    }
-    /**
-     * 构造分页入参
-     * @param params 参数
-     * @param page 页码
-     * @param size 大小
-     * @param isMustPage 是否分页
-     */
-    private void processPageInfo(Map<String, String> params, Integer page, Integer size, boolean isMustPage) {
-        if (page == null) {
-            params.put("page", "0");
-        } else {
-            params.put("page", String.valueOf(page));
-        }
-
-        if (size == null) {
-            if (isMustPage) {
-                params.put("size", "100");
-            } else {
-                params.put("size", "100000000");
-            }
-        } else {
-            params.put("size", String.valueOf(Integer.min(size, Integer.parseInt("100000000"))));
-        }
-
-    }
-    private String getLovUrl(LovDTO lov, Long tenantId) {
-        String serviceName = this.getServerName(lov.getRouteName());
-        String lovTypeCode = lov.getLovTypeCode();
-        if ("SQL".equals(lovTypeCode)) {
-            if (tenantId == null || Objects.equals(tenantId, BaseConstants.DEFAULT_TENANT_ID)) {
-                return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/lovs/sql/data";
-            }
-            return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/{organizationId}/lovs/sql/data";
-
-        }
-        if ("URL".equals(lovTypeCode)) {
-            return O2LovConstants.RequestParam.URL_PREFIX + serviceName + lov.getCustomUrl();
-        }
-        return null;
-    }
 
     @Override
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {

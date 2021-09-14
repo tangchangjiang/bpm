@@ -18,7 +18,7 @@ import org.o2.metadata.console.app.service.StaticResourceConfigService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
-import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.stereotype.Service;
 
 

@@ -32,10 +32,12 @@ public class WarehouseCO {
     @ApiModelProperty(value = "仓库状态,值集：O2MD.WAREHOUSE_STATUS")
     @LovValue(lovCode = WarehouseConstants.WarehouseStatus.LOV_CODE)
     private String warehouseStatusCode;
+    private String warehouseStatusMeaning;
 
     @ApiModelProperty(value = "仓库类型,值集: O2MD.WAREHOUSE_TYPE （良品仓/不良品仓/退货仓）")
     @LovValue(lovCode = WarehouseConstants.WarehouseType.LOV_CODE)
     private String warehouseTypeCode;
+    private String warehouseTypeMeaning;
 
     @ApiModelProperty(value = "自提发货接单量")
     private Long pickUpQuantity;
@@ -71,10 +73,6 @@ public class WarehouseCO {
     private String posCode;
 
     private String posName;
-
-    private String warehouseStatusMeaning;
-
-    private String warehouseTypeMeaning;
 
     private String expressLimitValue;
 

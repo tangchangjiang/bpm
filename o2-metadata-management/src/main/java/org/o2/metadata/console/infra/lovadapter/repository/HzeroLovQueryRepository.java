@@ -1,5 +1,7 @@
-package org.o2.metadata.console.infra.lovadapter;
+package org.o2.metadata.console.infra.lovadapter.repository;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
 import java.util.List;
@@ -64,4 +66,15 @@ public interface HzeroLovQueryRepository {
                                                    Integer page,
                                                    Integer size,
                                                    Map<String, String> queryLovValueMap);
+
+
+    /**
+     * 分页查询url值集
+     * @param queryParam 查询参数
+     * @param pageRequest 分页
+     * @param lovCode 值集编码
+     * @param tenantId 租户ID
+     * @return  page
+     */
+    <E> Page<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 }

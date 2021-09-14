@@ -6,7 +6,7 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
