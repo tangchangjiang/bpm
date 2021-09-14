@@ -15,7 +15,6 @@ import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
-import org.o2.metadata.console.infra.entity.Warehouse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

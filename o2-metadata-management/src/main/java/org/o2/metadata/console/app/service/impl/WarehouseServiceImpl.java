@@ -44,19 +44,16 @@ import java.util.*;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
-    private final AcrossSchemaRepository acrossSchemaRepository;
     private final O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
     private final WarehouseDomainService warehouseDomainService;
     private final WarehouseRedis warehouseRedis;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
-                                final AcrossSchemaRepository acrossSchemaRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
                                 WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis) {
         this.warehouseRepository = warehouseRepository;
-        this.acrossSchemaRepository = acrossSchemaRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
         this.warehouseDomainService = warehouseDomainService;

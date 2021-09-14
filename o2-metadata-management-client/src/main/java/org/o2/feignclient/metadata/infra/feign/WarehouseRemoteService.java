@@ -1,10 +1,6 @@
 package org.o2.feignclient.metadata.infra.feign;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import io.choerodon.core.domain.Page;
 import io.swagger.annotations.ApiParam;
-import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.co.WarehouseCO;
 import org.o2.feignclient.metadata.domain.dto.WarehousePageQueryInnerDTO;
 import org.o2.feignclient.metadata.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
@@ -13,7 +9,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  *
