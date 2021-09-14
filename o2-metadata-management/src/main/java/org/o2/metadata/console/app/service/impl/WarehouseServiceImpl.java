@@ -13,6 +13,7 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
+import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
@@ -80,7 +81,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
         // 准备触发线上可用库存计算的数据
-        List<TriggerStockCalculationVO> triggerCalInfoList = this.buildTriggerCalInfoList(tenantId, warehouses);
+        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(warehouses);
         // 更新MySQL
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
@@ -91,7 +92,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseRedis.batchUpdateWarehouse(warehouseCodes,tenantId);
         // 触发线上可用库存计算
         if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
-            o2InventoryClient.triggerWhStockCal(tenantId, triggerCalInfoList);
+            o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
         }
         return list;
     }
@@ -138,9 +139,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return WarehouseConverter.doToCoListObjects(warehouseDomainService.listWarehouses(queryInnerDTO.getWarehouseCodes(), tenantId));
     }
 
-    private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
+    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> warehouses) {
         // 触发线上可用库存计算
-        List<TriggerStockCalculationVO> triggerCalInfoList = new ArrayList<>();
+        List<TriggerStockCalWithWhVO> calInfoList = new ArrayList<>(4);
         for (Warehouse warehouse : warehouses) {
             List<Warehouse> warehouseList = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class).andWhere(Sqls.custom()
                     .andEqualTo(Warehouse.FIELD_WAREHOUSE_ID, warehouse.getWarehouseId())
@@ -150,42 +151,33 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
             Warehouse origin = warehouseList.get(0);
             String warehouseCode = origin.getWarehouseCode();
-            List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
-            for (String skuCode : skuCodeList) {
                 if (!warehouse.getWarehouseStatusCode().equals(origin.getWarehouseStatusCode())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getActiveFlag().equals(origin.getActiveFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getExpressedFlag().equals(origin.getExpressedFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getPickedUpFlag().equals(origin.getPickedUpFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
-            }
+
         }
-        return triggerCalInfoList;
+        return calInfoList;
     }
 
 
