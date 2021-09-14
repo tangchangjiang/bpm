@@ -209,12 +209,13 @@ public interface WarehouseRemoteService {
                                                @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 
     /**
-     * 页面查询仓库
+     * 分页查询仓库
      *
      * @param innerDTO 入参
      * @param organizationId  租户ID
      * @return  ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/warehouse-internal/page")
-    ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId, WarehousePageQueryInnerDTO innerDTO);
+    @PostMapping("/{organizationId}/warehouse-internal/page")
+    ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+                                          @RequestBody WarehousePageQueryInnerDTO innerDTO);
 }
