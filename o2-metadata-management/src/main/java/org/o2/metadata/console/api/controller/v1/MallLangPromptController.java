@@ -113,7 +113,7 @@ public class MallLangPromptController extends BaseController {
     public ResponseEntity<BatchResponse<MallLangPrompt>> release(@PathVariable(value = "organizationId") Long organizationId,
                                                                  @RequestBody List<MallLangPrompt> mallLangPromptList) {
         SecurityTokenHelper.validToken(mallLangPromptList);
-        return Results.success(mallLangPromptService.release(mallLangPromptList));
+        return Results.success(mallLangPromptService.release(mallLangPromptList, organizationId));
     }
 
 }
