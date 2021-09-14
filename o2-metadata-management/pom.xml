@@ -52,7 +52,7 @@
         </dependency>
         <dependency>
             <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-lov</artifactId>
+            <artifactId>o2-starter-ehcache</artifactId>
         </dependency>
         <!-- hzero -->
         <dependency>

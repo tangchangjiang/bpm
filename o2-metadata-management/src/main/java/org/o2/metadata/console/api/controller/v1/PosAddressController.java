@@ -75,11 +75,11 @@ public class PosAddressController extends BaseController {
     @ApiOperation(value = "删除详细地址")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
+    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
         SecurityTokenHelper.validToken(posAddress);
         posAddress.setTenantId(organizationId);
         posAddressRepository.deleteByPrimaryKey(posAddress);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
 

@@ -3,10 +3,10 @@ package org.o2.metadata.console.infra.repository.impl;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.core.helper.JsonHelper;
-import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
 import org.o2.metadata.console.infra.constant.RegionConstants;
 import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.infra.mapper.RegionMapper;
@@ -22,12 +22,13 @@ import java.util.*;
 @Component
 public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements RegionRepository {
     private final RegionMapper regionMapper;
-    private final HzeroLovQueryService hzeroLovQueryService;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
-    public RegionRepositoryImpl(final RegionMapper regionMapper, HzeroLovQueryService hzeroLovQueryService) {
+    public RegionRepositoryImpl(RegionMapper regionMapper, HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.regionMapper = regionMapper;
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
+
 
     @Override
     public List<Region> listRegionWithParent(final String countryCode, final String condition, final Integer enabledFlag,Long tenantId) {
@@ -127,7 +128,7 @@ public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements 
             queryParams.put(RegionConstants.RegionLov.LANG.getCode(),regionQueryLov.getLang());
         }
 
-        List<Map<String,Object>> list = hzeroLovQueryService.queryLovValueMeaning(tenantId,RegionConstants.RegionLov.REGION_LOV_CODE.getCode(), queryParams);
+        List<Map<String,Object>> list = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,RegionConstants.RegionLov.REGION_LOV_CODE.getCode(), queryParams);
         if (list.isEmpty()){
             return regionList;
         }

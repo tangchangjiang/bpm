@@ -1,6 +1,7 @@
 package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.choerodon.core.domain.Page;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.domain.co.CurrencyCO;
 import org.o2.feignclient.metadata.domain.co.LovValueCO;
@@ -84,8 +85,8 @@ public class O2LovAdapterClient {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId
-     * @param lovCode
+     * @param tenantId 租户ID
+     * @param lovCode 值集编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -95,4 +96,19 @@ public class O2LovAdapterClient {
         });
     }
 
+    /**
+     * 分页查询URL值集
+     *
+     * @param tenantId 租户ID
+     * @param lovCode 值集编码
+     * @param page 页码
+     * @param size  大小
+     * @param queryParams * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    public Page<Object> queryLovPage(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryParams) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovPage(tenantId, lovCode, page,size, queryParams), new TypeReference<Page<Object>>() {
+        });
+    }
 }

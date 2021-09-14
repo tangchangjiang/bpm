@@ -87,9 +87,9 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "删除运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
+    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
         freightTemplateService.removeTemplateAndDetails(freightTemplateList,organizationId);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
     @ApiOperation(value = "更新运费模板redis缓存")

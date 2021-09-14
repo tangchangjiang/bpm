@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.WarehousePageQueryInnerDTO;
 import org.o2.feignclient.metadata.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.WarehouseRemoteServiceImpl;
@@ -8,7 +9,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  *
@@ -207,4 +207,14 @@ public interface WarehouseRemoteService {
     @GetMapping("/{organizationId}/warehouse-internal/active/{onlineShopCode}")
     ResponseEntity<String> listActiveWarehouse(@PathVariable @ApiParam(value = "网店编码", required = true)String onlineShopCode,
                                                @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+
+    /**
+     * 页面查询仓库
+     *
+     * @param innerDTO 入参
+     * @param organizationId  租户ID
+     * @return  ResponseEntity<String>
+     */
+    @GetMapping("/{organizationId}/warehouse-internal/page")
+    ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId, WarehousePageQueryInnerDTO innerDTO);
 }

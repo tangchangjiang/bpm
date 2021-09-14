@@ -82,10 +82,10 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量删除服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
+    public ResponseEntity<Void> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
         SecurityTokenHelper.validToken(posRelCarrieies);
         posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrieies);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
 }

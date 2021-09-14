@@ -13,13 +13,15 @@ import org.hzero.common.HZeroService;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.lov.app.service.BaseLovQueryService;
-import org.o2.lov.app.service.HzeroLovQueryService;
-import org.o2.lov.app.service.PublicLovQueryService;
-import org.o2.lov.domain.bo.CurrencyBO;
-import org.o2.lov.domain.bo.UomBO;
-import org.o2.lov.domain.bo.UomTypeBO;
+
+import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.bo.UomBO;
+import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.constant.O2LovConstants;
+import org.o2.metadata.console.infra.lovadapter.BaseLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,23 +38,24 @@ import java.util.*;
 @Service
 @Slf4j
 public class LovAdapterServiceImpl implements LovAdapterService {
-    private BaseLovQueryService baseLovQueryService;
-    private PublicLovQueryService publicLovQueryService;
-    private HzeroLovQueryService hzeroLovQueryService;
+    private BaseLovQueryRepository baseLovQueryRepository;
+    private PublicLovQueryRepository publicLovQueryRepository;
+    private HzeroLovQueryRepository hzeroLovQueryRepository;
     private LovAdapter lovAdapter;
     private final RestTemplate restTemplate;
     private final RedisHelper redisHelper;
     private final ObjectMapper objectMapper;
 
-    public LovAdapterServiceImpl(BaseLovQueryService baseLovQueryService,
-                                 PublicLovQueryService publicLovQueryService,
-                                 HzeroLovQueryService hzeroLovQueryService,
-                                 LovAdapter lovAdapter, RestTemplate restTemplate,
+    public LovAdapterServiceImpl(BaseLovQueryRepository baseLovQueryRepository,
+                                 PublicLovQueryRepository publicLovQueryRepository,
+                                 HzeroLovQueryRepository hzeroLovQueryRepository,
+                                 LovAdapter lovAdapter,
+                                 RestTemplate restTemplate,
                                  RedisHelper redisHelper,
                                  ObjectMapper objectMapper) {
-        this.baseLovQueryService = baseLovQueryService;
-        this.publicLovQueryService = publicLovQueryService;
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.baseLovQueryRepository = baseLovQueryRepository;
+        this.publicLovQueryRepository = publicLovQueryRepository;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.lovAdapter = lovAdapter;
         this.restTemplate = restTemplate;
         this.redisHelper = redisHelper;
@@ -62,40 +65,41 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
     @Override
     public Map<String, CurrencyBO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
-        return baseLovQueryService.findCurrencyByCodes(tenantId,currencyCodes);
+        return baseLovQueryRepository.findCurrencyByCodes(tenantId,currencyCodes);
     }
 
     @Override
     public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
-        return baseLovQueryService.findUomByCodes(tenantId,uomCodes);
+        return baseLovQueryRepository.findUomByCodes(tenantId,uomCodes);
     }
 
     @Override
     public Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes) {
-        return baseLovQueryService.findUomTypeByCodes(tenantId,uomTypeCodes);
+        return baseLovQueryRepository.findUomTypeByCodes(tenantId,uomTypeCodes);
     }
 
     @Override
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId) {
-        return publicLovQueryService.batchQueryLovInfo(queryMap,tenantId);
+        return publicLovQueryRepository.batchQueryLovInfo(queryMap,tenantId);
     }
 
 
     @Override
-    public  <E> Page<E> pageList(Map<String, String> queryParam, PageRequest pageRequest, String lovCode) {
+    public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode,Long tenantId) {
         Page<E> result = new Page<>();
-        LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, 2L);
-
+        LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
-        String url = "http" + "://" + getServerName(lovDTO.getRouteName()) + lovDTO.getCustomUrl();
+        String url = getLovUrl(lovDTO,tenantId);
+        if (null == url) {
+            return result;
+        }
 
         String json;
-        if ("POST".equals(lovDTO.getRequestMethod())) {
+        if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
             json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
         } else {
-            json = ResponseUtils.getResponse(this.restTemplate.getForEntity(this.preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);
-        }
+            json = (String)ResponseUtils.getResponse(this.restTemplate.getForEntity(preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);        }
         try {
             result =  this.objectMapper.readValue(json, new TypeReference<Page<E>>() {
             });
@@ -104,22 +108,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         }
         return result;
     }
-
-    @Override
-    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
-        return hzeroLovQueryService.queryLovValue(tenantId,lovCode);
-    }
-
-    @Override
-    public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,lovCode);
-    }
-
-    @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
-        return hzeroLovQueryService.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
-    }
-
     /**
      *  构造请求地址
      * @param url 请求url
@@ -180,4 +168,41 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         }
 
     }
+    private String getLovUrl(LovDTO lov, Long tenantId) {
+        String serviceName = this.getServerName(lov.getRouteName());
+        String lovTypeCode = lov.getLovTypeCode();
+        if ("SQL".equals(lovTypeCode)) {
+            if (tenantId == null || Objects.equals(tenantId, BaseConstants.DEFAULT_TENANT_ID)) {
+                return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/lovs/sql/data";
+            }
+            return O2LovConstants.RequestParam.URL_PREFIX  + serviceName + "/v1/{organizationId}/lovs/sql/data";
+
+        }
+        if ("URL".equals(lovTypeCode)) {
+            return O2LovConstants.RequestParam.URL_PREFIX + serviceName + lov.getCustomUrl();
+        }
+        return null;
+    }
+
+    @Override
+    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
+        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
+    }
+
+    @Override
+    public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovCode);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,queryLovValueMap);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
+        return null;
+    }
+
+
 }

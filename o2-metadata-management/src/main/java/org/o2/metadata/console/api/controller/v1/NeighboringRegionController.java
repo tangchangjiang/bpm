@@ -70,6 +70,6 @@ public class NeighboringRegionController extends BaseController {
     public ResponseEntity<String> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
         SecurityTokenHelper.validToken(neighboringRegions);
         neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 }

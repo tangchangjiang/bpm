@@ -3,9 +3,10 @@ package org.o2.metadata.console.app.service;
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
-import org.o2.lov.domain.bo.CurrencyBO;
-import org.o2.lov.domain.bo.UomBO;
-import org.o2.lov.domain.bo.UomTypeBO;
+
+import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.bo.UomBO;
+import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -50,8 +51,15 @@ public interface LovAdapterService {
      */
     ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovInfo(Map<String, String> queryMap, Long tenantId);
 
-
-    <E> Page<E>  pageList(Map<String,String> queryParam,PageRequest pageRequest, String lovCode);
+    /**
+     * 分页查询url值集
+     * @param queryParam 查询参数
+     * @param pageRequest 分页
+     * @param lovCode 值集编码
+     * @param tenantId 租户ID
+     * @return  page
+     */
+    <E> Page<E>  queryLovPage(Map<String,String> queryParam,PageRequest pageRequest, String lovCode,Long tenantId);
 
     /**
      * 查询值集详细信息
@@ -76,8 +84,8 @@ public interface LovAdapterService {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId
-     * @param lovCode
+     * @param tenantId 租户ID
+     * @param lovCode  值集编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -85,4 +93,18 @@ public interface LovAdapterService {
     List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
                                                    String lovCode,
                                                    Map<String, String> queryLovValueMap);
+
+
+    /**
+     * 分页查询指定值集内容
+     *
+     * @param tenantId 租户ID
+     * @param lovCode  值集编码
+     * @param page  页码
+     * @param size  大小
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap);
 }

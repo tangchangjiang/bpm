@@ -48,7 +48,7 @@ public class LovAdapterController {
                                                      PageRequest pageRequest) {
         // todo 后续替换组件
         queryParams.put("organizationId", String.valueOf(organizationId));
-        return Results.success(lovAdapterService.pageList(queryParams, pageRequest, lovCode));
+        return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
     }
 
 }

@@ -415,4 +415,51 @@
             </choose>
         </where>
     </select>
+    <select id="pageWarehouses" resultType="org.o2.metadata.console.api.co.WarehouseCO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        w.warehouse_id,
+        w.warehouse_code,
+        w.warehouse_type_code,
+        wtl.warehouse_name,
+        w.warehouse_status_code,
+        w.picked_up_flag,
+        w.pick_up_quantity,
+        w.expressed_flag,
+        w.expressed_quantity,
+        w.actived_date_from,
+        w.actived_date_to,
+        w.inv_organization_code,
+        w.tenant_id,
+        w.active_flag,
+         FROM
+        o2md_warehouse w
+         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and w.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
+            <if test="warehouseCodeList != null and warehouseCodeList.size() > 0 ">
+                and w.warehouse_code IN
+                <foreach collection="warehouseCodeList" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="warehouseIdList != null and warehouseIdList.size() > 0 ">
+                and wtl.warehouse_id IN
+                <foreach collection="warehouseIdList" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="activeFlag != null">
+                and w.active_flag = #{activeFlag}
+            </if>
+        </where>
+    </select>
 </mapper>

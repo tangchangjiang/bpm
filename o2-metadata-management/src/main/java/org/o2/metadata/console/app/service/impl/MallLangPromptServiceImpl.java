@@ -18,7 +18,6 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
 import org.o2.lock.domain.data.LockType;
-import org.o2.lov.app.service.HzeroLovQueryService;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.MallLangPromptService;
@@ -29,6 +28,7 @@ import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
+import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.o2.user.helper.IamUserHelper;
@@ -65,7 +65,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
     private final StaticResourceConfigService staticResourceConfigService;
 
-    private final HzeroLovQueryService hzeroLovQueryService;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
     private final String SITE_CODE = "siteCode";
     private final String SITE_NAME = "siteName";
@@ -75,7 +75,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
                                      StaticResourceInternalService staticResourceInternalService,
-                                     StaticResourceConfigService staticResourceConfigService, HzeroLovQueryService hzeroLovQueryService) {
+                                     StaticResourceConfigService staticResourceConfigService,HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.staticResourceRepository = staticResourceRepository;
@@ -84,7 +84,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
         this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
         this.staticResourceConfigService = staticResourceConfigService;
-        this.hzeroLovQueryService = hzeroLovQueryService;
+        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
 
 
@@ -213,7 +213,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
      */
     @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '_' + '#organizationId'")
     public List<Map<String, Object>> queryCmsSiteLovValue(Long organizationId) {
-        return hzeroLovQueryService.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
+        return hzeroLovQueryRepository.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
     }
 
 

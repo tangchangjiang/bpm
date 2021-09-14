@@ -86,7 +86,7 @@ public class CarrierMappingController extends BaseController {
     public ResponseEntity<String> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
         SecurityTokenHelper.validToken(carrierMappings);
         carrierMappingRepository.batchDeleteByPrimaryKey(carrierMappings);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
 }

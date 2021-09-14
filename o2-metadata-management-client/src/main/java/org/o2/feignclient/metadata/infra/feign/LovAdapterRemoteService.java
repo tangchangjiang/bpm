@@ -92,4 +92,22 @@ public interface LovAdapterRemoteService {
     ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam Map<String, String> queryLovValueMap);
+
+    /**
+     * 分页查询指定值集
+     *
+     * @param organizationId 租户ID
+     * @param lovCode 值集编码
+     * @param page 页码
+     * @param size  大小
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @return List<Map < String, Object>>
+     */
+    @GetMapping("/{organizationId}/lov/page-query-lov-value")
+    ResponseEntity<String> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                @RequestParam String lovCode,
+                                                @RequestParam(required = false) Integer page,
+                                                @RequestParam(required = false) Integer size,
+                                                @RequestParam(required = false) Map<String, String> queryLovValueMap);
 }

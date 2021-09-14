@@ -89,10 +89,10 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "删除目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<Void> remove(@RequestBody CatalogVersion catalogVersion) {
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.deleteByPrimaryKey(catalogVersion);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
     @ApiOperation(value = "目录&目录版本")

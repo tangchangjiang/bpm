@@ -13,9 +13,10 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
-import org.o2.inventory.management.client.domain.vo.TriggerStockCalculationVO;
+import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -25,7 +26,6 @@ import org.o2.metadata.console.infra.convertor.WarehouseConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
-import org.o2.metadata.console.infra.repository.AcrossSchemaRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
@@ -43,19 +43,16 @@ import java.util.*;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
-    private final AcrossSchemaRepository acrossSchemaRepository;
     private final O2InventoryClient o2InventoryClient;
     private final RedisCacheClient redisCacheClient;
     private final WarehouseDomainService warehouseDomainService;
     private final WarehouseRedis warehouseRedis;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
-                                final AcrossSchemaRepository acrossSchemaRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
                                 WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis) {
         this.warehouseRepository = warehouseRepository;
-        this.acrossSchemaRepository = acrossSchemaRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
         this.warehouseDomainService = warehouseDomainService;
@@ -80,7 +77,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
         // 准备触发线上可用库存计算的数据
-        List<TriggerStockCalculationVO> triggerCalInfoList = this.buildTriggerCalInfoList(tenantId, warehouses);
+        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(warehouses);
         // 更新MySQL
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
@@ -91,7 +88,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseRedis.batchUpdateWarehouse(warehouseCodes,tenantId);
         // 触发线上可用库存计算
         if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
-            o2InventoryClient.triggerWhStockCal(tenantId, triggerCalInfoList);
+            o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
         }
         return list;
     }
@@ -138,9 +135,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return WarehouseConverter.doToCoListObjects(warehouseDomainService.listWarehouses(queryInnerDTO.getWarehouseCodes(), tenantId));
     }
 
-    private List<TriggerStockCalculationVO> buildTriggerCalInfoList(final Long tenantId, final List<Warehouse> warehouses) {
+    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> warehouses) {
         // 触发线上可用库存计算
-        List<TriggerStockCalculationVO> triggerCalInfoList = new ArrayList<>();
+        List<TriggerStockCalWithWhVO> calInfoList = new ArrayList<>(4);
         for (Warehouse warehouse : warehouses) {
             List<Warehouse> warehouseList = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class).andWhere(Sqls.custom()
                     .andEqualTo(Warehouse.FIELD_WAREHOUSE_ID, warehouse.getWarehouseId())
@@ -150,42 +147,33 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
             Warehouse origin = warehouseList.get(0);
             String warehouseCode = origin.getWarehouseCode();
-            List<String> skuCodeList = acrossSchemaRepository.selectSkuByWarehouse(warehouseCode, tenantId);
-            for (String skuCode : skuCodeList) {
                 if (!warehouse.getWarehouseStatusCode().equals(origin.getWarehouseStatusCode())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getActiveFlag().equals(origin.getActiveFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getExpressedFlag().equals(origin.getExpressedFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
-                    continue;
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
                 if (!warehouse.getPickedUpFlag().equals(origin.getPickedUpFlag())) {
-                    TriggerStockCalculationVO triggerStockCalculationVO = new TriggerStockCalculationVO();
-                    triggerStockCalculationVO.setWarehouseCode(warehouseCode);
-                    triggerStockCalculationVO.setSkuCode(skuCode);
-                    triggerStockCalculationVO.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
-                    triggerCalInfoList.add(triggerStockCalculationVO);
+                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
+                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
+                    vo.setWarehouseCode(warehouseCode);
+                    calInfoList.add(vo);
                 }
-            }
+
         }
-        return triggerCalInfoList;
+        return calInfoList;
     }
 
 
@@ -286,6 +274,25 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> listWarehouseAddr(WarehouseAddrQueryDTO queryDTO) {
         return warehouseRepository.listWarehouseAddr(queryDTO);
+    }
+
+    @Override
+    public List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO) {
+        String warehouseId = innerDTO.getWarehouseId();
+        if (StringUtils.isNotEmpty(warehouseId)) {
+            List<Long> idsList = new ArrayList<>();
+            String[] strings = StringUtils.split(warehouseId,BaseConstants.Symbol.COMMA);
+            for (String str : strings) {
+                Long id = Long.valueOf(str);
+                idsList.add(id);
+                innerDTO.setWarehouseIdList(idsList);
+            }
+        }
+        String warehouseCode = innerDTO.getWarehouseCode();
+        if (StringUtils.isNotEmpty(warehouseCode)) {
+            innerDTO.setWarehouseCodeList(Arrays.asList(StringUtils.split(warehouseCode, BaseConstants.Symbol.COMMA)));
+        }
+        return warehouseRepository.pageWarehouses(innerDTO);
     }
 
 }
