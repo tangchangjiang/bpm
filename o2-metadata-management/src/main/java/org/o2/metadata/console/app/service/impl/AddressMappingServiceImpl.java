@@ -161,33 +161,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
         List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
-        List<String> regionCodes = new ArrayList<>(16);
-        for (AddressMappingCO co : list) {
-            regionCodes.add(co.getRegionCode());
-        }
-        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
-        queryLovDTO.setTenantId(tenantId);
-        queryLovDTO.setRegionCodes(regionCodes);
-        List<Region>  regionList = regionRepository.listRegionLov(queryLovDTO,tenantId);
-        Map<String,Region>  regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, v -> v));
-        for (AddressMappingCO co : list) {
-           Region region = regionMap.get(co.getRegionCode());
-           co.setParentRegionCode(region.getParentRegionCode());
-           co.setRegionName(region.getRegionName());
-        }
-        // 通过组装树形结构数据 过滤通过名称查出的脏数据
-        List<AddressMappingCO> addressMappingTree = new ArrayList<>();
-        for (AddressMappingCO co : list) {
-            if (StringUtils.isEmpty(co.getParentRegionCode())) {
-                co.setChildren(getChildren(co, list));
-                addressMappingTree.add(co);
-            }
-        }
-        Map<String,AddressMappingCO> result = new HashMap<>(16);
-        for (AddressMappingCO co : addressMappingTree) {
-            result.put(co.getRegionName(),co);
-        }
-        return result;
+        return getStringAddressMappingCOMap(tenantId, list);
     }
 
     /**
@@ -389,5 +363,47 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
         }
         return parent;
+    }
+
+    @Override
+    public Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId) {
+        List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingMapper.listAddressMappings(null,tenantId,platformCode));
+        return getStringAddressMappingCOMap(tenantId, list);
+    }
+
+    /**
+     * 返回地址对象集合
+     * @param tenantId
+     * @param list
+     * @return
+     */
+    private Map<String, AddressMappingCO> getStringAddressMappingCOMap(Long tenantId, List<AddressMappingCO> list) {
+        List<String> regionCodes = new ArrayList<>(16);
+        for (AddressMappingCO co : list) {
+            regionCodes.add(co.getRegionCode());
+        }
+        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        queryLovDTO.setTenantId(tenantId);
+        queryLovDTO.setRegionCodes(regionCodes);
+        List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, tenantId);
+        Map<String, Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, v -> v));
+        for (AddressMappingCO co : list) {
+            Region region = regionMap.get(co.getRegionCode());
+            co.setParentRegionCode(region.getParentRegionCode());
+            co.setRegionName(region.getRegionName());
+        }
+        // 通过组装树形结构数据 过滤通过名称查出的脏数据
+        List<AddressMappingCO> addressMappingTree = new ArrayList<>();
+        for (AddressMappingCO co : list) {
+            if (StringUtils.isEmpty(co.getParentRegionCode())) {
+                co.setChildren(getChildren(co, list));
+                addressMappingTree.add(co);
+            }
+        }
+        Map<String, AddressMappingCO> result = new HashMap<>(16);
+        for (AddressMappingCO co : addressMappingTree) {
+            result.put(co.getRegionName(), co);
+        }
+        return result;
     }
 }
