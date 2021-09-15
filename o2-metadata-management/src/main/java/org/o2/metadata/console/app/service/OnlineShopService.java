@@ -14,17 +14,24 @@ import java.util.Map;
  **/
 public interface OnlineShopService {
     /**
+     * 条件查询
+     *
+     * @param condition 查询条件
+     * @return list of 网店
+     */
+    List<OnlineShop> selectByCondition(OnlineShop condition);
+    /**
      * 创建网店
      * @date 2020-06-03
      * @param onlineShop 网店信息
      */
-    void createOnlineShop(final OnlineShop onlineShop);
+    OnlineShop createOnlineShop(final OnlineShop onlineShop);
     /**
      * 修改网店
      * @date 2020-06-03
      * @param  onlineShop 网店信息
      */
-    void updateOnlineShop(final  OnlineShop onlineShop);
+    OnlineShop updateOnlineShop(final  OnlineShop onlineShop);
 
     /**
      * 批量查询网店
