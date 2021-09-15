@@ -431,7 +431,7 @@
         w.actived_date_to,
         w.inv_organization_code,
         w.tenant_id,
-        w.active_flag,
+        w.active_flag
          FROM
         o2md_warehouse w
          LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang}

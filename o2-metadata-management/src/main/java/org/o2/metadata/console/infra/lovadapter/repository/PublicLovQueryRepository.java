@@ -1,4 +1,4 @@
-package org.o2.metadata.console.infra.lovadapter;
+package org.o2.metadata.console.infra.lovadapter.repository;
 
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;

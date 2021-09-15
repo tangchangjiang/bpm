@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.UserHelper;
-import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.PublicLovQueryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

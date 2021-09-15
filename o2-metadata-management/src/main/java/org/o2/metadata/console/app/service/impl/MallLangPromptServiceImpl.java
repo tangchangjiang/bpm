@@ -28,7 +28,7 @@ import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
-import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.o2.user.helper.IamUserHelper;

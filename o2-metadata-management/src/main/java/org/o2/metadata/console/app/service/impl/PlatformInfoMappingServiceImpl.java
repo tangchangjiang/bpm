@@ -6,13 +6,13 @@ import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +35,7 @@ import java.util.List;
 public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingService {
 
     private final PlatformInfoMappingRepository platformInfoMappingRepository;
-    private final LovAdapter lovAdapter;
-    public static final String REFUND_STATUS = "REFUND_STATUS";
-    public static final String ORDER_STATUS = "ORDER_STATUS";
-    public static final String SHELF_STATUS= "SHELF_STATUS";
-    public static final String REFUND_REASON = "REFUND_REASON";
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
     
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -123,8 +119,8 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
      */
     private void setLovMeaning(PlatformInfoMapping platformInfoMapping) {
         String lovValue = platformInfoMapping.getInfTypeCode();
-        String lovMeaning = lovAdapter.queryLovMeaning(lovValue,
-                platformInfoMapping.getTenantId(), platformInfoMapping.getInfCode());
+        String lovMeaning = hzeroLovQueryRepository.queryLovValueMeaning(
+                platformInfoMapping.getTenantId(), lovValue,platformInfoMapping.getInfCode());
         platformInfoMapping.setInfName(lovMeaning);
 
     }

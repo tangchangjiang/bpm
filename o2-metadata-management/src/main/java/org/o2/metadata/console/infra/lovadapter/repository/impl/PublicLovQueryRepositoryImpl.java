@@ -1,12 +1,12 @@
-package org.o2.metadata.console.infra.lovadapter.impl;
+package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
-import org.o2.metadata.console.infra.lovadapter.HzeroLovQueryRepository;
-import org.o2.metadata.console.infra.lovadapter.PublicLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.PublicLovQueryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;

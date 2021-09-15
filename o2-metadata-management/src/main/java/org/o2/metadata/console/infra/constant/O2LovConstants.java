@@ -14,6 +14,10 @@ public interface O2LovConstants {
         String URL_PREFIX = "http://";
 
     }
+    interface LovTypeCode {
+         String SQL = "SQL";
+         String URL = "URL";
+    }
 
     interface LovProperties {
         /**
