@@ -9,7 +9,6 @@ import org.o2.metadata.console.app.bo.RegionBO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.repository.RegionRelPosRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +23,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RegionServiceImpl extends BaseServiceImpl<Region> implements RegionService {
-    private static final long ROOT_ID = -1L;
 
     private RegionRepository regionRepository;
-    private RegionRelPosRepository regionRelPosRepository;
 
-    public RegionServiceImpl(RegionRepository regionRepository,
-                             RegionRelPosRepository regionRelPosRepository) {
+    public RegionServiceImpl(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
-        this.regionRelPosRepository = regionRelPosRepository;
     }
 
     @Override
@@ -41,13 +36,6 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         return RegionConverter.poToVoListObjects(regionList);
     }
 
-    @Override
-    public List<Region> treeOnlineStoreUnbindRegion(Long organizationId, Long onlineStoreId) {
-        return recursiveBuildRegionTree(
-                regionRelPosRepository.listUnbindRegion(organizationId, onlineStoreId).stream().collect(Collectors.groupingBy(
-                        item -> item.getParentRegionId() == null ? ROOT_ID : item.getParentRegionId())),
-                ROOT_ID, new ArrayList<>());
-    }
 
     @Override
     public List<AreaRegionVO> listAreaRegion(final String countryCode, final Integer enabledFlag, final Long tenantId) {
@@ -87,29 +75,6 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
         return RegionConverter.poToVoListObjects(regionList);
-    }
-
-    /**
-     * 递归构建地区定义树
-     *
-     * @param regionMap  地区定义Map
-     * @param parentId   父地区定义ID
-     * @param regionList 地区定义List
-     * @return 地区定义树
-     */
-    private List<Region> recursiveBuildRegionTree(final Map<Long, List<Region>> regionMap, final long parentId,
-                                                  final List<Region> regionList) {
-        if (regionMap.containsKey(parentId)) {
-            for (final Region region : regionMap.get(parentId)) {
-                if (regionMap.containsKey(region.getRegionId())) {
-                    region.setChildren(recursiveBuildRegionTree(regionMap, region.getRegionId(), new ArrayList<>()));
-                    regionList.add(region);
-                } else {
-                    regionList.add(region);
-                }
-            }
-        }
-        return regionList;
     }
 
 }
