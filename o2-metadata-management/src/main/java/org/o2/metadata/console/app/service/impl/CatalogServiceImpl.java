@@ -11,6 +11,7 @@ import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,8 +41,7 @@ public class CatalogServiceImpl implements CatalogService {
      */
     @Override
     public List<CatalogVO> export(final ExportParam exportParam,final Long tenantId) {
-        Set<Long> catalogBatchIdList = exportParam.getIds();
-        return catalogRepository.batchFindByIds(catalogBatchIdList,tenantId);
+        return catalogRepository.batchFindByIds(new HashSet<>(2),tenantId);
     }
 
     @Override
