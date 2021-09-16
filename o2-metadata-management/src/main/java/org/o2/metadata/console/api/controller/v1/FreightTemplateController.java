@@ -92,20 +92,12 @@ public class FreightTemplateController extends BaseController {
         return Results.success();
     }
 
-    @ApiOperation(value = "更新运费模板redis缓存")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/refresh-cache")
-    public ResponseEntity<String> refreshCache(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
-        freightTemplateService.refreshCache(templateId);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
-    }
-
     @ApiOperation(value = "设置默认模板")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/setDefaultTemp")
-    public ResponseEntity<String> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final Long templateId) {
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
+    @PutMapping("/setDefaultTemp")
+    public ResponseEntity<Void> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestParam final Long templateId) {
         freightTemplateService.setDefaultTemp(organizationId,templateId);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success();
     }
 
     @ApiOperation(value = "获取默认的运费模板及其明细")
