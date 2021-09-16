@@ -45,7 +45,7 @@ public class AddressMappingInternalController {
     @ApiOperation(value = "全量查询地址批量表")
     @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list-all")
-    public ResponseEntity<Map<String, AddressMappingCO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, AddressMappingCO>> listAllAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                              @RequestParam("platformCode") String platformCode){
         return  Results.success(addressMappingService.listAddressMappings(platformCode,organizationId));
     }
