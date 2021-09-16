@@ -14,4 +14,19 @@ public class CurrencyCO {
      * 货币名称
      */
     private String name;
+
+    /**
+     * 符号
+     */
+    private String currencySymbol;
+
+    /**
+     * 国际名称
+     */
+    private String countryName;
+
+    /**
+     * 国际编码
+     */
+    private String countryCode;
 }

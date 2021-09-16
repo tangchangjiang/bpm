@@ -55,6 +55,8 @@ public interface O2LovConstants {
          * 返回值currencyName
          */
         String CURRENCY_NAME = "currencyName";
+        String COUNTRY_CODE = "countryName";
+        String CURRENCY_SYMBOL = "currencySymbol";
     }
 
     interface Uom {
