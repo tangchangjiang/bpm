@@ -77,5 +77,5 @@ public interface HzeroLovQueryRepository {
      * @param tenantId 租户ID
      * @return  page
      */
-    <E> PageCO<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    <E> Page<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 }

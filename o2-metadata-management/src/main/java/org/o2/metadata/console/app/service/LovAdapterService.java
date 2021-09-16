@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
@@ -59,7 +60,7 @@ public interface LovAdapterService {
      * @param tenantId 租户ID
      * @return  page
      */
-    <E> PageCO<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    <E> Page<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 
     /**
      * 查询值集详细信息

@@ -62,7 +62,7 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
 
     @Override
-    public  <E> PageCO<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
+    public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
         return hzeroLovQueryRepository.queryLovPage(queryParam,pageRequest,lovCode,tenantId);
     }
 

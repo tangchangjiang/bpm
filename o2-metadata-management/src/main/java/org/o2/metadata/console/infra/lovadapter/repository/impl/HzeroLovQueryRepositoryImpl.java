@@ -117,8 +117,8 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     }
 
     @Override
-    public <E> PageCO<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
-        PageCO<E> result = new PageCO<>();
+    public <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
+        Page<E> result = new Page<>();
         LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
