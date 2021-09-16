@@ -30,13 +30,15 @@ import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
-import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -52,8 +54,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     private final MallLangPromptRepository mallLangPromptRepository;
 
     private final FileStorageProperties fileStorageProperties;
-
-    private final StaticResourceRepository staticResourceRepository;
 
     private final RedisCacheClient redisCacheClient;
 
@@ -71,14 +71,13 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     private final String SITE_NAME = "siteName";
     private final String LOV_CODE = "O2CMS.SITE";
 
-    public MallLangPromptServiceImpl(StaticResourceRepository staticResourceRepository, MallLangPromptRepository mallLangPromptRepository,
+    public MallLangPromptServiceImpl(MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
                                      FileClient fileClient, RedisCacheClient redisCacheClient,
                                      StaticResourceInternalService staticResourceInternalService,
                                      StaticResourceConfigService staticResourceConfigService, HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
-        this.staticResourceRepository = staticResourceRepository;
         this.redisCacheClient = redisCacheClient;
         this.lockService = lockService;
         this.fileClient = fileClient;
@@ -153,12 +152,17 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
         List<StaticResourceConfig> listStaticResourceConfig = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
         for (MallLangPrompt mallLangPrompt : mallLangPromptList) {
             for (StaticResourceConfig staticResourceConfig : listStaticResourceConfig) {
-                final LockData lockData = new LockData(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY, 0L,
-                        3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
-                lockService.lock(lockData, () -> releaseProcess(mallLangPrompt, errorMsg, batchResponse, staticResourceConfig), null);
+                StaticResource resource = new StaticResource();
+                //分布式锁
+                String key = String.format(MetadataConstants.MallLangPromptConstants.MALL_LANG_LOCK_KEY,mallLangPrompt.getTenantId(),mallLangPrompt.getMallType(),mallLangPrompt.getLang());
+                final LockData lockData = new LockData(key, 0L, 3000L, TimeUnit.MILLISECONDS, LockType.FAIR);
+                //文件上传
+                lockService.lock(lockData, () -> uploadStaticFile(mallLangPrompt,resource,errorMsg,staticResourceConfig), null);
+                //静态资源更新
+                if(resource.getResourceUrl() != null){
+                    releaseProcess(mallLangPrompt,batchResponse,resource);
+                }
             }
-            mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
-            mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
         }
         //详情页面校验报错
         if (mallLangPromptList.size() == 0 && CollectionUtils.isNotEmpty(errorMsg)) {
@@ -217,13 +221,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     }
 
 
-    private void releaseProcess(MallLangPrompt mallLangPrompt, List<String> errorMsg, BatchResponse<MallLangPrompt> batchResponse, StaticResourceConfig staticResourceConfig) {
-        StaticResource resource = new StaticResource();
-        //上传静态文件
-        if (!uploadStaticFile(mallLangPrompt, resource, errorMsg, staticResourceConfig)) {
-            batchResponse.addFailedBody(mallLangPrompt);
-            return;
-        }
+    private void releaseProcess(MallLangPrompt mallLangPrompt, BatchResponse<MallLangPrompt> batchResponse, StaticResource resource) {
         //保存发布记录
         saveMallLangPromptInfo(mallLangPrompt, resource);
         batchResponse.addSuccessBody(mallLangPrompt);
@@ -246,6 +244,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
             request.setResourceHost(resource.getResourceHost());
             staticResourceInternalService.saveResource(request);
         }
+        mallLangPrompt.setStatus(MetadataConstants.MallLangPromptConstants.APPROVED);
         mallLangPromptRepository.updateOptional(mallLangPrompt, MallLangPrompt.FIELD_STATUS);
     }
 
@@ -253,7 +252,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     /**
      * 静态文件上传
      */
-    private boolean uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfig staticResourceConfig) {
+    private StaticResource uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfig staticResourceConfig) {
         final Long tenantId = mallLangPrompt.getTenantId();
         final String fileName = mallLangPrompt.getMallType() + "_" + mallLangPrompt.getLang();
         final String bucketCode = fileStorageProperties.getBucketCode();
@@ -269,7 +268,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
         log.info("redis systemParameter file_prefix ({}), ({})", key, valueObj);
         if (valueObj == null) {
-            return false;
+            return resource;
         }
         // 上传/新增
         try {
@@ -279,7 +278,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
             resource.setResourceUrl(resultUrl);
         } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
-            return false;
+            return resource;
         }
         String domainAndUrl = trimDomainPrefix(resource.getResourceUrl());
         int indexOfSlash = domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
@@ -299,7 +298,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
         }
         resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
         resource.setResourceHost("http://" + domainAndUrl.substring(0, indexOfSlash));
-        return true;
+        return resource;
     }
 
     /**
