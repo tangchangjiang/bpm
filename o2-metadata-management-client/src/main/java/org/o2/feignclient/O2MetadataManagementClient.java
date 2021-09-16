@@ -206,26 +206,15 @@ public class O2MetadataManagementClient {
     /**
      * 批量查询地址匹配
      *
-     * @param addressMappingQueryInnerDTOList 地址匹配
+     * @param queryInnerDTO 地址匹配
      * @param tenantId   租户ID
      * @return map key:carrierCode
      */
-    public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
+    public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(queryInnerDTO, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
         });
     }
 
-    /**
-     * 批量查询地址匹配
-     *
-     * @param platformCode 平台编码
-     * @param tenantId   租户ID
-     * @return map key:carrierCode
-     */
-    public Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(platformCode, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
-        });
-    }
 
     /**
      * 查询临近省

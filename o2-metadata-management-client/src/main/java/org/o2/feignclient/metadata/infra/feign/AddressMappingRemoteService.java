@@ -24,23 +24,12 @@ import java.util.List;
 public interface AddressMappingRemoteService {
     /**
      * 查询地址匹配
-     * @param addressMappingQueryInnerDTOList 查地址匹配
+     * @param queryInnerDTO 查地址匹配
      * @param organizationId 租户ID
      * @return String
      */
     @PostMapping("/{organizationId}/address-mappings-internal/list")
-    ResponseEntity<String> listAllAddressMappings(@RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList,
-                                                  @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
-
-
-    /**
-     * 查询平台全量地址匹配
-     * @param platformCode 查地址匹配
-     * @param organizationId 租户ID
-     * @return String
-     */
-    @PostMapping("/{organizationId}/address-mappings-internal/list-all")
-    ResponseEntity<String> listAllAddressMappings(@RequestParam("platformCode") String platformCode,
+    ResponseEntity<String> listAllAddressMappings(@RequestBody AddressMappingQueryInnerDTO queryInnerDTO,
                                                   @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**

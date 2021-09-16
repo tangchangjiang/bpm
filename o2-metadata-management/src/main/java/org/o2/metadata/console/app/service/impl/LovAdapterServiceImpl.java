@@ -5,6 +5,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
+import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
@@ -61,7 +62,7 @@ public class LovAdapterServiceImpl implements LovAdapterService {
 
 
     @Override
-    public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode,Long tenantId) {
+    public  <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
         return hzeroLovQueryRepository.queryLovPage(queryParam,pageRequest,lovCode,tenantId);
     }
 
