@@ -211,7 +211,19 @@ public class O2MetadataManagementClient {
      * @return map key:carrierCode
      */
     public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long tenantId) {
-        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(addressMappingQueryInnerDTOList, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
+        });
+    }
+
+    /**
+     * 批量查询地址匹配
+     *
+     * @param platformCode 平台编码
+     * @param tenantId   租户ID
+     * @return map key:carrierCode
+     */
+    public Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(platformCode, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
         });
     }
 
