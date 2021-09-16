@@ -49,4 +49,13 @@ public interface AddressMappingService {
      * @param addressMapping 地址匹配
      */
     void createAddressMapping(AddressMapping addressMapping);
+
+
+    /**
+     * 内部方法 批量查询地址匹配
+     * @param platformCode 入参
+     * @param tenantId 租户ID
+     * @return  list
+     */
+    Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId);
 }

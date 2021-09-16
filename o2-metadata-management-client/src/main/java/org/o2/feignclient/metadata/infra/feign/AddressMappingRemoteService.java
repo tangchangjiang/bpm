@@ -6,10 +6,7 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.AddressMappingRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,8 +29,19 @@ public interface AddressMappingRemoteService {
      * @return String
      */
     @PostMapping("/{organizationId}/address-mappings-internal/list")
-    ResponseEntity<String> listAddressMappings(@RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList,
-                                               @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+    ResponseEntity<String> listAllAddressMappings(@RequestBody List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList,
+                                                  @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+
+    /**
+     * 查询平台全量地址匹配
+     * @param platformCode 查地址匹配
+     * @param organizationId 租户ID
+     * @return String
+     */
+    @PostMapping("/{organizationId}/address-mappings-internal/list-all")
+    ResponseEntity<String> listAllAddressMappings(@RequestParam("platformCode") String platformCode,
+                                                  @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 查询临近省
