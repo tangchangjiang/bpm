@@ -16,6 +16,7 @@ import org.hzero.common.HZeroService;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.aop.framework.AopContext;
@@ -116,8 +117,8 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     }
 
     @Override
-    public <E> Page<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
-        Page<E> result = new Page<>();
+    public <E> PageCO<E> queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
+        PageCO<E> result = new PageCO<>();
         LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
         processPageInfo(queryParam,pageRequest.getPage(),pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 

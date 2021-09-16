@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.lovadapter.repository;
 import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
+import org.o2.metadata.console.api.co.PageCO;
 
 import java.util.List;
 import java.util.Map;
@@ -76,5 +77,5 @@ public interface HzeroLovQueryRepository {
      * @param tenantId 租户ID
      * @return  page
      */
-    <E> Page<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    <E> PageCO<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 }
