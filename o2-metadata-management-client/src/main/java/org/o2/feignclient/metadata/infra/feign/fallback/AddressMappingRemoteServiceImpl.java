@@ -19,18 +19,12 @@ import java.util.List;
 @Slf4j
 public class AddressMappingRemoteServiceImpl implements AddressMappingRemoteService {
 
-    @Override
-    public ResponseEntity<String> listAllAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInnerDTOList, Long organizationId) {
-        log.error("Error listAddressMappings, params[tenantId = {}, addressMappingQueryIntDTO = {}]", organizationId, addressMappingQueryInnerDTOList);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
 
     @Override
-    public ResponseEntity<String> listAllAddressMappings(String platformCode, Long organizationId) {
-        log.error("Error listAddressMappings, params[tenantId = {}, platformCode = {}]", organizationId, platformCode);
+    public ResponseEntity<String> listAllAddressMappings(AddressMappingQueryInnerDTO queryInnerDTO, Long organizationId) {
+        log.error("Error listAllAddressMappings, params[tenantId = {}]", organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
     @Override
     public ResponseEntity<String> listNeighboringRegions(Long organizationId) {
         log.error("Error listNeighboringRegions, params[tenantId = {}]", organizationId);

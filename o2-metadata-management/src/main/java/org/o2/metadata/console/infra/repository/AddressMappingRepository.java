@@ -31,5 +31,5 @@ public interface AddressMappingRepository extends BaseRepository<AddressMapping>
      * @param tenantId 租户ID
      * @return  list
      */
-    List<AddressMapping> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts , Long tenantId);
+    List<AddressMapping> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts  , Long tenantId);
 }

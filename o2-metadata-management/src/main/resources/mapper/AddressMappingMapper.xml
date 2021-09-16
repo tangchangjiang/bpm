@@ -123,14 +123,15 @@
                 AND 1 =0
             </otherwise>
         </choose>
-          <if test="query!=null ">
+          <if test="query.addressMappingInnerList !=null ">
             and
-            <foreach collection="query" item="item" open="(" separator="or"  close=")">
-                (ad.external_name = #{item.externalName} and  ad.address_type_code = #{item.addressTypeCode})
+            <foreach collection="query.addressMappingInnerList" item="item" open="(" separator="or"  close=")">
+                (ad.external_name = #{item.externalName} and  ad.address_type_code = #{item.addressTypeCode} and ad.platform_code = #{item.platformCode} )
             </foreach>
+
           </if>
-        <if test="platformCode !=null ">
-            and ad.platform_code = #{platformCode}
+        <if test="query.platformCode !=null ">
+            and ad.platform_code = #{query.platformCode}
         </if>
     </select>
 </mapper>

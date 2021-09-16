@@ -38,11 +38,8 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
     }
 
     @Override
-    public List<AddressMapping> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
-        if (addressMappingQueryInts.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId,addressMappingQueryInts.get(0).getPlatformCode());
+    public List<AddressMapping> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
+        return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId);
     }
 
 }

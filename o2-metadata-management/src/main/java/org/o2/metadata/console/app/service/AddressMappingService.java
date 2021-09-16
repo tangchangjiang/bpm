@@ -42,7 +42,7 @@ public interface AddressMappingService {
      * @param tenantId 租户ID
      * @return  list
      */
-    Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingDTO, Long tenantId);
+    Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingDTO, Long tenantId);
 
     /**
      * 创建
@@ -50,12 +50,4 @@ public interface AddressMappingService {
      */
     void createAddressMapping(AddressMapping addressMapping);
 
-
-    /**
-     * 内部方法 批量查询地址匹配
-     * @param platformCode 入参
-     * @param tenantId 租户ID
-     * @return  list
-     */
-    Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId);
 }

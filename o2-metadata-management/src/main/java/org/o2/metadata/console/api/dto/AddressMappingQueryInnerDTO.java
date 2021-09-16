@@ -3,6 +3,8 @@ package org.o2.metadata.console.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 
 /**
  *
@@ -12,20 +14,12 @@ import lombok.Data;
  **/
 @Data
 public class AddressMappingQueryInnerDTO {
-    /**
-     * 条件查询code 和 name 二选一
-     */
-    @ApiModelProperty(value = "外部区域代码")
-    private String externalCode;
 
-    @ApiModelProperty(value = "外部区域名称")
-    private String externalName;
-
-    /**
-     * 属于(省) or  (市)  3(区)
-     */
-    private String addressTypeCode;
+    @ApiModelProperty(value = "批量查询地址")
+    private List<AddressMappingInnerDTO> addressMappingInnerList;
 
     @ApiModelProperty(value = "平台编码")
     private String platformCode;
+
+    private Long tenantId;
 }

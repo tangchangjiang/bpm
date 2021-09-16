@@ -159,7 +159,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public Map<String, AddressMappingCO> listAddressMappings(List<AddressMappingQueryInnerDTO> addressMappingQueryInts, Long tenantId) {
+    public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
         List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
         return getStringAddressMappingCOMap(tenantId, list);
     }
@@ -365,11 +365,6 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         return parent;
     }
 
-    @Override
-    public Map<String, AddressMappingCO> listAddressMappings(String platformCode, Long tenantId) {
-        List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingMapper.listAddressMappings(null,tenantId,platformCode));
-        return getStringAddressMappingCOMap(tenantId, list);
-    }
 
     /**
      * 返回地址对象集合
