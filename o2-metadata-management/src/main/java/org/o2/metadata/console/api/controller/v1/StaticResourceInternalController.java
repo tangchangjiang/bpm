@@ -74,6 +74,7 @@ public class StaticResourceInternalController extends BaseController {
     public ResponseEntity<List<StaticResourceAndConfigCO>> getStaticResourceAndConfig(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                 @RequestBody StaticResourceListDTO staticResourceListDTO){
         staticResourceListDTO.setTenantId(organizationId);
+        validObject(staticResourceListDTO);
         return Results.success(staticResourceRepository.getStaticResourceAndConfig(staticResourceListDTO));
     }
 
