@@ -93,7 +93,7 @@ public class FreightTemplateController extends BaseController {
     }
 
     @ApiOperation(value = "设置默认模板")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/setDefaultTemp")
     public ResponseEntity<Void> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplate freightTemplate) {
         freightTemplateService.setDefaultTemp(organizationId,freightTemplate.getTemplateId());
