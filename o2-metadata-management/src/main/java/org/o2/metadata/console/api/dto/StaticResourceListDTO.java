@@ -3,6 +3,8 @@ package org.o2.metadata.console.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * description 关联查询静态资源和配置条件
  *
@@ -15,6 +17,7 @@ public class StaticResourceListDTO {
     private Long tenantId;
 
     @ApiModelProperty(value = "语言")
+    @NotBlank
     private String lang;
 
     @ApiModelProperty(value = "站点编码")
