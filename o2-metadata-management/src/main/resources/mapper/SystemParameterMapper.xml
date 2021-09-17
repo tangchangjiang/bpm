@@ -53,6 +53,9 @@
             <if test="systemParameter.paramTypeCode != null and systemParameter.paramTypeCode != ''">
                 AND osp.param_type_code = #{systemParameter.paramTypeCode}
             </if>
+            <if test="systemParameter.activeFlag != null and systemParameter.activeFlag != ''">
+                AND osp.active_flag = #{systemParameter.activeFlag}
+            </if>
             <choose>
                 <when test="tenantId != null">
                     AND osp.tenant_id = #{tenantId}
