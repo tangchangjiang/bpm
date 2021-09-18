@@ -28,6 +28,8 @@ public class PipelineNodeDTO {
      */
     private String curDescription;
 
+    private Long tenantId;
+
     public String uniqueKey() {
         return uniqueKey(this.curAction, this.strategyType);
     }
