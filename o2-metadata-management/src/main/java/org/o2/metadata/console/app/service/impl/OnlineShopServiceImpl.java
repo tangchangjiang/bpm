@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
@@ -12,13 +13,14 @@ import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
+import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
-import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 网店应用服务默认实现
@@ -43,22 +47,42 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final CatalogVersionRepository catalogVersionRepository;
     private O2InventoryClient o2InventoryClient;
     private final OnlineShopRedis onlineShopRedis;
+    private final LovAdapterService lovAdapterService;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRelWarehouseService onlineShopRelWarehouseService,
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
-                                 O2InventoryClient o2InventoryClient, OnlineShopRedis onlineShopRedis) {
+                                 O2InventoryClient o2InventoryClient,
+                                 OnlineShopRedis onlineShopRedis,
+                                 final LovAdapterService lovAdapterService) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRedis = onlineShopRedis;
+        this.lovAdapterService = lovAdapterService;
     }
+
+    @Override
+    public List<OnlineShop> selectByCondition(OnlineShop condition) {
+        Preconditions.checkArgument(null != condition.getTenantId(), MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        List<OnlineShop> onlineShops = onlineShopRepository.selectByCondition(condition);
+        onlineShops.forEach(onlineShop -> {
+            String currencyCode = onlineShop.getDefaultCurrency();
+            if(StringUtils.isNotBlank(currencyCode)) {
+                Map<String, CurrencyBO> currencyByCodes = lovAdapterService
+                        .findCurrencyByCodes(condition.getTenantId(), Stream.of(currencyCode).collect(Collectors.toList()));
+                onlineShop.setCurrencyName(currencyByCodes.isEmpty() ? null : currencyByCodes.get(currencyCode).getName());
+            }
+        });
+        return onlineShops;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createOnlineShop(OnlineShop onlineShop) {
+    public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         if (null == onlineShop.getCatalogCode()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_CATALOG_CODE_IS_NULL);
         }
@@ -79,6 +103,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, e,
                     "OnlineShop(" + onlineShop.getOnlineShopId() + ")");
         }
+        return onlineShop;
     }
 
     @Override
@@ -110,6 +135,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }
         onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+        return onlineShop;
     }
 
     /**
@@ -160,4 +186,5 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         return map;
     }
+
 }
