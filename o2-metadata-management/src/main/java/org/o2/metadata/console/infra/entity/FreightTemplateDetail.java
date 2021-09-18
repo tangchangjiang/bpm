@@ -34,7 +34,7 @@ import java.util.List;
 @VersionAudit
 @ModifyAudit
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@Table(name = "o2md_shop_rel_warehouse")
+@Table(name = "o2md_freight_tpl_detail")
 public class FreightTemplateDetail extends AuditDomain {
 
     public static final String FIELD_TEMPLATE_DETAIL_ID = "templateDetailId";
@@ -78,8 +78,6 @@ public class FreightTemplateDetail extends AuditDomain {
     @ApiModelProperty(value = "租户ID",required = true)
     @NotNull
     private Long tenantId;
-    @ApiModelProperty(value = "目的地")
-    private Long regionId;
 
     //
     // 非数据库字段

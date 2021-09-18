@@ -53,7 +53,7 @@
             <if test="systemParameter.paramTypeCode != null and systemParameter.paramTypeCode != ''">
                 AND osp.param_type_code = #{systemParameter.paramTypeCode}
             </if>
-            <if test="systemParameter.activeFlag != null and systemParameter.activeFlag != ''">
+            <if test="systemParameter.activeFlag != null">
                 AND osp.active_flag = #{systemParameter.activeFlag}
             </if>
             <choose>
