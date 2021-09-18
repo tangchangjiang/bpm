@@ -53,8 +53,8 @@ public class FreightConverter {
         }
         FreightInfoCO co = new FreightInfoCO();
         co.setFreightTemplateCode(freightInfoDO.getFreightTemplateCode());
-        co.setHeadTemplate(toFreightTemplateCO(freightInfoDO.getHeadTemplate()));
-        co.setRegionTemplate(toFreightTemplateDetailCO(freightInfoDO.getRegionTemplate()));
+        co.setHeadTemplate(toFreightTemplateCo(freightInfoDO.getHeadTemplate()));
+        co.setRegionTemplate(toFreightTemplateDetailCo(freightInfoDO.getRegionTemplate()));
         return co;
     }
 
@@ -63,7 +63,7 @@ public class FreightConverter {
      * @param freightTemplateDO 运费模详情
      * @return  vo 运费模版详情
      */
-    private static FreightTemplateCO toFreightTemplateCO(FreightTemplateDO freightTemplateDO) {
+    private static FreightTemplateCO toFreightTemplateCo(FreightTemplateDO freightTemplateDO) {
         if (freightTemplateDO == null) {
             return null;
         }
@@ -83,7 +83,7 @@ public class FreightConverter {
      * @param freightTemplateDetailDO 运费模详情
      * @return  vo 运费模版详情
      */
-    private static FreightTemplateDetailCO toFreightTemplateDetailCO(FreightTemplateDetailDO freightTemplateDetailDO) {
+    private static FreightTemplateDetailCO toFreightTemplateDetailCo(FreightTemplateDetailDO freightTemplateDetailDO) {
         if (freightTemplateDetailDO == null) {
             return null;
         }
@@ -138,7 +138,6 @@ public class FreightConverter {
         FreightTemplateDetailDO freightTemplateDetailDO = new FreightTemplateDetailDO();
         freightTemplateDetailDO.setTemplateDetailId(freightTemplateDetail.getTemplateDetailId());
         freightTemplateDetailDO.setTransportTypeCode(freightTemplateDetail.getTransportTypeCode());
-        freightTemplateDetailDO.setRegionId(freightTemplateDetail.getRegionId());
         freightTemplateDetailDO.setFirstPieceWeight(freightTemplateDetail.getFirstPieceWeight());
         freightTemplateDetailDO.setFirstPrice(freightTemplateDetail.getFirstPrice());
         freightTemplateDetailDO.setNextPieceWeight(freightTemplateDetail.getNextPieceWeight());
