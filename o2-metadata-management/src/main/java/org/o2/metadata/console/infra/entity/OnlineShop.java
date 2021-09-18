@@ -72,7 +72,7 @@ public class OnlineShop extends AuditDomain {
         Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
         if (this.getOnlineShopId() != null) {
             final OnlineShop record = onlineShopRepository.selectByPrimaryKey(this.onlineShopId);
-            if (!record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {
+            if (record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {
                 throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_ENTITY_CANNOT_UPDATE, "OnlineShop(" + this.onlineShopCode + ")");
             }
         }
