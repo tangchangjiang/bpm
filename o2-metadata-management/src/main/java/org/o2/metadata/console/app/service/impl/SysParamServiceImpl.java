@@ -1,14 +1,18 @@
 package org.o2.metadata.console.app.service.impl;
 
 
+import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.app.service.SysParamService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
@@ -61,6 +65,15 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveSystemParameter(SystemParameter systemParameter, Long tenantId) {
+        // 编码唯一性
+        final Sqls sqls = Sqls.custom();
+        sqls.andEqualTo(SystemParameter.FIELD_PARAM_CODE, systemParameter.getParamCode());
+        int number = systemParameterRepository.selectCountByCondition(
+                Condition.builder(SystemParameter.class).andWhere(sqls).build());
+        if (number > 0){
+            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "paramCode(" + systemParameter.getParamCode() + ")");
+        }
+
         systemParameterRepository.insertSelective(systemParameter);
         systemParameterRedis.updateToRedis(systemParameter, tenantId);
     }
