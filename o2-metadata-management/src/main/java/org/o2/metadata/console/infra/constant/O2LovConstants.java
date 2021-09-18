@@ -55,7 +55,8 @@ public interface O2LovConstants {
          * 返回值currencyName
          */
         String CURRENCY_NAME = "currencyName";
-        String COUNTRY_CODE = "countryName";
+        String COUNTRY_NAME = "countryName";
+        String COUNTRY_CODE = "countryCode";
         String CURRENCY_SYMBOL = "currencySymbol";
     }
 
