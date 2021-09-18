@@ -45,6 +45,7 @@ public class OnlineShop extends AuditDomain {
     public static final String FIELD_PLATFORM_TYPE_CODE = "catalogId";
     public static final String FIELD_SOURCED = "sourcedFlag";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 业务方法(按public protected private顺序排列)
@@ -68,15 +69,6 @@ public class OnlineShop extends AuditDomain {
         return !onlineShops.isEmpty();
     }
 
-    public void validate(final OnlineShopRepository onlineShopRepository) {
-        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-        if (this.getOnlineShopId() != null) {
-            final OnlineShop record = onlineShopRepository.selectByPrimaryKey(this.onlineShopId);
-            if (record.getOnlineShopCode().equalsIgnoreCase(this.onlineShopCode)) {
-                throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_ENTITY_CANNOT_UPDATE, "OnlineShop(" + this.onlineShopCode + ")");
-            }
-        }
-    }
 
     /**
      * 按默认值初始化
