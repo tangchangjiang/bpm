@@ -88,7 +88,7 @@ public interface FreightTemplateService {
      *
      * @param templateId 运费模板ID
      */
-    void refreshCache(final Long templateId);
+    void refreshCache(final Long templateId,Long tenantId);
 
     /**
      * 设置默默认运费模板

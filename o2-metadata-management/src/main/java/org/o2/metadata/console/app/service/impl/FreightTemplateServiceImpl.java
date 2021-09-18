@@ -329,8 +329,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public void refreshCache(Long templateId) {
-        FreightTemplateManagementVO freightTemplateManagementVO = queryTemplateAndDetails(templateId, null);
+    public void refreshCache(Long templateId, Long tenantId) {
+        FreightTemplateManagementVO freightTemplateManagementVO = queryTemplateAndDetails(templateId, tenantId);
 
         List<FreightTemplateDetail> list = new ArrayList<>();
         if (freightTemplateManagementVO.getDefaultFreightTemplateDetails() != null) {
@@ -372,9 +372,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         freightTemplateRepository.updateOptional(defaultTemp,FreightTemplate.FIELD_DAFAULT_FLAG);
 
         if (oldTemplateId!=null){
-            refreshCache(oldTemplateId);
+            refreshCache(oldTemplateId,organizationId);
         }
-        refreshCache(templateId);
+        refreshCache(templateId,organizationId);
     }
 
     /**

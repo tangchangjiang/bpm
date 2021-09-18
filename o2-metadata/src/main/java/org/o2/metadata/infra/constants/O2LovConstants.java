@@ -1,4 +1,4 @@
-package org.o2.metadata.console.infra.constant;
+package org.o2.metadata.infra.constants;
 
 
 /**

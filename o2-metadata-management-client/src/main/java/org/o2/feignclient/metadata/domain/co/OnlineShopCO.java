@@ -43,5 +43,7 @@ public class OnlineShopCO {
     @ApiModelProperty("平台网店编码")
     private String platformShopCode;
 
+    @ApiModelProperty("平台名称")
+    private String platformName;
 
 }
