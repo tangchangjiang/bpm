@@ -59,7 +59,7 @@ public class OnlineShopController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<OnlineShop>> listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
         condition.setTenantId(organizationId);
-        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectByCondition(condition)));
+        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopService.selectByCondition(condition)));
     }
 
     @ApiOperation("查询所有active的网点列表")
@@ -94,27 +94,28 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<String> createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
+    public ResponseEntity<OnlineShop> createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                   @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
-        onlineShopService.createOnlineShop(onlineShop);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        OnlineShop onlineShopReturn = onlineShopService.createOnlineShop(onlineShop);
+        return Results.success(onlineShopReturn);
     }
 
     @ApiOperation("修改网店信息")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<String> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<OnlineShop> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestBody final OnlineShop onlineShop) {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
         this.validObject(onlineShop);
-        onlineShopService.updateOnlineShop(onlineShop);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        OnlineShop onlineShopReturn = onlineShopService.updateOnlineShop(onlineShop);
+        return Results.success(onlineShopReturn);
     }
 
 }
