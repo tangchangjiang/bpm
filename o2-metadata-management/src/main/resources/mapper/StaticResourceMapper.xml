@@ -85,14 +85,7 @@
             </choose>
             and osr.enable_flag = 1
             and osrc.active_flag = 1
-            <choose>
-                <when test="lang !=null and lang != ''">
-                    and osr.lang = #{lang}
-                </when>
-                <otherwise>
-                    and osr.lang = ''
-                </otherwise>
-            </choose>
+            and (osr.lang = #{lang} or osr.lang is null)
             and
             <trim prefix="(" suffix=")">
                 osr.resource_level = 'PUBLIC'
