@@ -1,8 +1,5 @@
 package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.adapter.LovAdapter;

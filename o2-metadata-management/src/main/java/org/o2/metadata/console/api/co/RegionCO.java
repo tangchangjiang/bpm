@@ -1,13 +1,14 @@
 package org.o2.metadata.console.api.co;
 
+ import com.fasterxml.jackson.annotation.JsonInclude;
  import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import java.util.List;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegionCO{
     @ApiModelProperty("地区ID")
     private Long regionId;

@@ -11,7 +11,9 @@ import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.Map;
  **/
 @Repository
 @Slf4j
+@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
 public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
     private HzeroLovQueryRepository hzeroLovQueryRepository;
 
@@ -38,15 +41,16 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
     @Override
     public List<RegionCO> queryRegion(Long tenantId, Map<String, String> queryParam) {
         String cacheKey = getCacheKey(tenantId,queryParam);
-        return queryRegion(tenantId, queryParam, cacheKey);
+        RegionLovQueryRepositoryImpl currentProxy = (RegionLovQueryRepositoryImpl) AopContext.currentProxy();
+        return currentProxy.queryRegion(tenantId, queryParam, cacheKey);
     }
 
     @Override
     public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, Map<String, String> queryParam) {
         String cacheKey = getCacheKey(tenantId,queryParam);
-        return queryRegionPage(tenantId,page,size,queryParam,cacheKey);
+        RegionLovQueryRepositoryImpl currentProxy = (RegionLovQueryRepositoryImpl) AopContext.currentProxy();
+        return currentProxy.queryRegionPage(tenantId,page,size,queryParam,cacheKey);
     }
-    
     
     /**
      * 获取缓存key
@@ -103,6 +107,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
         PageRequest pageRequest  = new PageRequest();
         pageRequest.setPage(page);
         pageRequest.setSize(size);
+        queryParam.put("organizationId", String.valueOf(tenantId));
         String json = hzeroLovQueryRepository.queryLovPage(queryParam,pageRequest,O2LovConstants.AddressType.CODE,tenantId);
         if (StringUtils.isNotEmpty(json)) {
             try {

@@ -96,7 +96,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "查询地区值")
-    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-region-lov")
     public ResponseEntity<List<RegionCO>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                       @RequestParam (required = false) Map<String, String> queryLovValueMap) {
