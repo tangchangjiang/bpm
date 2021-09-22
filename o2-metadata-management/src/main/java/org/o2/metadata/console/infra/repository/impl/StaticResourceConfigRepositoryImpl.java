@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
@@ -7,6 +9,7 @@ import org.o2.metadata.console.infra.mapper.StaticResourceConfigMapper;
 import org.o2.metadata.console.infra.repository.StaticResourceConfigRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,7 +28,7 @@ public class StaticResourceConfigRepositoryImpl extends BaseRepositoryImpl<Stati
 
     @Override
     public List<StaticResourceConfig> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO) {
-        if (!staticResourceConfigDTO.getResourceCode().isEmpty()) {
+        if (StringUtils.isNotBlank(staticResourceConfigDTO.getResourceCode())) {
             String resouceCode = staticResourceConfigDTO.getResourceCode();
             staticResourceConfigDTO.setResourceCode(resouceCode.toUpperCase());
         }
