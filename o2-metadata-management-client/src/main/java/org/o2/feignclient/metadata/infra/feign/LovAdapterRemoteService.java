@@ -1,6 +1,10 @@
 package org.o2.feignclient.metadata.infra.feign;
 
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.util.Results;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -56,7 +60,7 @@ public interface LovAdapterRemoteService {
                                               @RequestParam(value = "uomTypeCodes", required = false) List<String> uomTypeCodes);
 
     /**
-     * 查询值集详细信息
+     * 查询独立值集详细信息
      *
      * @param lovCode  值集code
      * @param organizationId 租户id
@@ -106,8 +110,33 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov/page-query-lov-value")
     ResponseEntity<String> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                @RequestParam String lovCode,
-                                                @RequestParam(required = false) Integer page,
-                                                @RequestParam(required = false) Integer size,
-                                                @RequestParam(required = false) Map<String, String> queryLovValueMap);
+                                        @RequestParam String lovCode,
+                                        @RequestParam(required = false) Integer page,
+                                        @RequestParam(required = false) Integer size,
+                                        @RequestParam(required = false) Map<String, String> queryLovValueMap);
+
+    /**
+     * 根据编码以及租户ID批量查集值
+     * @param queryLovValueMap 查询条件
+     * @param organizationId 租户ID
+     * @return 值集集合
+     */
+    @GetMapping("/{organizationId}/query-region-lov")
+    ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                       @RequestParam(required = false) Map<String, String> queryLovValueMap);
+
+    /**
+     * 分页查询地区值集
+     * @param organizationId 租户ID
+     * @param page page 页码
+     * @param size 大小
+     * @param queryParam 查询参数
+     * @return page
+     */
+    @GetMapping("/{organizationId}/page-query-region-lov")
+    ResponseEntity<String> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                           @RequestParam Integer page,
+                                           @RequestParam Integer size,
+                                           @RequestParam(required = false) Map<String, String> queryParam);
+
 }

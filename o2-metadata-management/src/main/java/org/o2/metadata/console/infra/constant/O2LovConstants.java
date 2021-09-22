@@ -106,6 +106,8 @@ public interface O2LovConstants {
         String COUNTRY_DETAIL = "countryDetail";
         // 地区
         String REGION = "region";
+
+        String CODE = "O2MD.REGION";
     }
 
     /**

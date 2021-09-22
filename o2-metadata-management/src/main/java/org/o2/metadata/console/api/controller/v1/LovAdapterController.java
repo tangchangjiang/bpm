@@ -42,7 +42,7 @@ public class LovAdapterController {
     @ApiOperation("")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/url/{lovCode}")
-    public ResponseEntity<Page<Object>> listCurrency(@PathVariable Long organizationId,
+    public ResponseEntity<String> listCurrency(@PathVariable Long organizationId,
                                                      @RequestParam(required = false) Map<String, String> queryParams,
                                                      @PathVariable String lovCode,
                                                      PageRequest pageRequest) {
