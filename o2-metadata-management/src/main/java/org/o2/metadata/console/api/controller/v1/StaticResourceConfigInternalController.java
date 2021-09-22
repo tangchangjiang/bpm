@@ -72,7 +72,8 @@ public class StaticResourceConfigInternalController {
 
         List<StaticResourceConfig> staticResourceConfigs = staticResourceConfigRepository.selectByCondition(Condition.builder(StaticResourceConfig.class)
                 .andWhere(Sqls.custom().andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, organizationId)
-                        .andEqualTo(StaticResourceConfig.FIELD_SITE_CHECK_FLAG, BaseConstants.Flag.YES))
+                        .andEqualTo(StaticResourceConfig.FIELD_SITE_CHECK_FLAG, BaseConstants.Flag.YES)
+                        .andEqualTo(StaticResourceConfig.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
         if (CollectionUtils.isEmpty(staticResourceConfigs)) {
             return Results.success();
