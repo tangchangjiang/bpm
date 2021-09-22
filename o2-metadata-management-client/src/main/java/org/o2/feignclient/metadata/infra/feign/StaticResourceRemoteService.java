@@ -68,5 +68,13 @@ public interface StaticResourceRemoteService {
     ResponseEntity<String> getStaticResourceAndConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                       @RequestBody StaticResourceListDTO staticResourceListDTO);
 
+    /**
+     * 获取启用&支持站点校验的静态资源配置列表
+     * @param organizationId 租户ID
+     * @return 静态资源配置
+     */
+    @GetMapping("/{organizationId}/static-resource-configs-internal/list")
+    ResponseEntity<String> listStaticResourceConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
 }
 

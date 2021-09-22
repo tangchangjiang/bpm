@@ -36,6 +36,7 @@
             source_module_code,
             source_program,
             active_flag,
+            site_check_flag,
             tenant_id
         from o2md_static_resource_config
         <where>

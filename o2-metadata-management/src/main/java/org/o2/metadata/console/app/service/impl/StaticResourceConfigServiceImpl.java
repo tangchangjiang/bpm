@@ -37,7 +37,8 @@ public class StaticResourceConfigServiceImpl implements StaticResourceConfigServ
             staticResourceConfigRepository.updateOptional(staticResourceConfig,
                     StaticResourceConfig.FIELD_DESCRIPTION,
                     StaticResourceConfig.FIELD_ACTIVE_FLAG,
-                    StaticResourceConfig.FIELD_SOURCE_PROGRAM
+                    StaticResourceConfig.FIELD_SOURCE_PROGRAM,
+                    StaticResourceConfig.FIELD_SITE_CHECK_FLAG
             );
         }
 
