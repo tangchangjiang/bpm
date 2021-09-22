@@ -26,7 +26,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
 @RestController("lovAdapterInternalController.v1")
-@RequestMapping("/v1/{organizationId}/lov")
+@RequestMapping("/v1/{organizationId}/lov-internal")
 public class LovAdapterInternalController {
     private final LovAdapterService lovAdapterService;
 

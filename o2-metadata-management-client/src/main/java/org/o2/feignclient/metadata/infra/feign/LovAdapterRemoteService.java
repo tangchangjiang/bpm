@@ -1,10 +1,6 @@
 package org.o2.feignclient.metadata.infra.feign;
 
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.hzero.core.util.Results;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -35,7 +31,7 @@ public interface LovAdapterRemoteService {
      * @param currencyCodes 货币编码
      * @return 返回信息MAP
      */
-    @GetMapping("/{organizationId}/lov/currency-by-codes")
+    @GetMapping("/{organizationId}/lov-internal/currency-by-codes")
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 
@@ -45,7 +41,7 @@ public interface LovAdapterRemoteService {
      * @param uomCodes 单位编码
      * @return 单位信息MAP
      */
-    @GetMapping("/{organizationId}/lov/uom-by-codes")
+    @GetMapping("/{organizationId}/lov-internal/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
 
@@ -55,7 +51,7 @@ public interface LovAdapterRemoteService {
      * @param uomTypeCodes 单位类型编码
      * @return 单位类型信息MAP
      */
-    @GetMapping("/{organizationId}/lov/uomType-by-codes")
+    @GetMapping("/{organizationId}/lov-internal/uomType-by-codes")
     ResponseEntity<String> findUomTypeByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestParam(value = "uomTypeCodes", required = false) List<String> uomTypeCodes);
 
@@ -66,7 +62,7 @@ public interface LovAdapterRemoteService {
      * @param organizationId 租户id
      * @return str
      */
-    @GetMapping("/{organizationId}/lov/query-lov-value")
+    @GetMapping("/{organizationId}/lov-internal/query-lov-value")
     ResponseEntity<String> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                          @RequestParam String lovCode);
 
@@ -78,7 +74,7 @@ public interface LovAdapterRemoteService {
      * @param lovValue 值集value
      * @return String
      */
-    @GetMapping("/{organizationId}/lov/query-lov-value-meaning")
+    @GetMapping("/{organizationId}/lov-internal/query-lov-value-meaning")
     ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam String lovValue);
@@ -92,7 +88,7 @@ public interface LovAdapterRemoteService {
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
      */
-    @GetMapping("/{organizationId}/lov/batch-query-lov-value-meaning")
+    @GetMapping("/{organizationId}/lov-internal/batch-query-lov-value-meaning")
     ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam Map<String, String> queryLovValueMap);
@@ -108,7 +104,7 @@ public interface LovAdapterRemoteService {
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
      */
-    @GetMapping("/{organizationId}/lov/page-query-lov-value")
+    @GetMapping("/{organizationId}/lov-internal/page-query-lov-value")
     ResponseEntity<String> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                         @RequestParam String lovCode,
                                         @RequestParam(required = false) Integer page,
@@ -121,7 +117,7 @@ public interface LovAdapterRemoteService {
      * @param organizationId 租户ID
      * @return 值集集合
      */
-    @GetMapping("/{organizationId}/query-region-lov")
+    @GetMapping("/{organizationId}/lov-internal/query-region-lov")
     ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                        @RequestParam(required = false) Map<String, String> queryLovValueMap);
 
@@ -133,7 +129,7 @@ public interface LovAdapterRemoteService {
      * @param queryParam 查询参数
      * @return page
      */
-    @GetMapping("/{organizationId}/page-query-region-lov")
+    @GetMapping("/{organizationId}/lov-internal/page-query-region-lov")
     ResponseEntity<String> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam Integer page,
                                            @RequestParam Integer size,

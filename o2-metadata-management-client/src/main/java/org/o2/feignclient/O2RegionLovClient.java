@@ -28,7 +28,7 @@ public class O2RegionLovClient {
      * @param organizationId 租户ID
      * @return 值集集合
      */
-    List<RegionCO> queryRegion(Long organizationId, Map<String, String> queryLovValueMap) {
+    public List<RegionCO> queryRegion(Long organizationId, Map<String, String> queryLovValueMap) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryRegion(organizationId, queryLovValueMap), new TypeReference<List<RegionCO>>() {
         });
     }
@@ -41,7 +41,7 @@ public class O2RegionLovClient {
      * @param queryParam 查询参数
      * @return page
      */
-    PageCO<RegionCO> queryRegionPage(Long organizationId, Integer page, Integer size, Map<String, String> queryParam) {
+    public PageCO<RegionCO> queryRegionPage(Long organizationId, Integer page, Integer size, Map<String, String> queryParam) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryRegionPage(organizationId, page, size, queryParam), new TypeReference<PageCO<RegionCO>>() {
         });
     }
