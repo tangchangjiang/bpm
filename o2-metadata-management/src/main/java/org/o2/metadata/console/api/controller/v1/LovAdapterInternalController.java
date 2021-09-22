@@ -58,7 +58,7 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.findUomTypeByCodes(organizationId,uomTypeCodes));
     }
 
-    @ApiOperation(value = "查询值集详细信息")
+    @ApiOperation(value = "独立查询值集详细信息")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-lov-value")
     public ResponseEntity<List<LovValueDTO>> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,

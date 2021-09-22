@@ -17,7 +17,7 @@ import java.util.Map;
 public interface HzeroLovQueryRepository {
 
     /**
-     * 查询值集详细信息
+     * 独立值集详细信息
      *
      * @param lovCode  值集code
      * @param tenantId 租户id

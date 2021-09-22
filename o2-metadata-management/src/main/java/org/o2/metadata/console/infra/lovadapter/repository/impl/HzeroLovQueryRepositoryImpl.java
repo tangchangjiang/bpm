@@ -50,7 +50,7 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     }
 
     @Override
-    @Cacheable(value = "O2_LOV", key = "#tenantId+'_'+#lovCode")
+    @Cacheable(value = "O2_LOV", key = "'duli'+'_'+#tenantId+'_'+#lovCode")
     public List<LovValueDTO> queryLovValue(Long tenantId,
                                            String lovCode) {
         return lovAdapter.queryLovValue(lovCode, tenantId);
