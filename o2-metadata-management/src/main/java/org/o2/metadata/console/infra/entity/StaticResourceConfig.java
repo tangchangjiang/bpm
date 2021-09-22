@@ -45,6 +45,7 @@ public class StaticResourceConfig extends AuditDomain {
     public static final String FIELD_SOURCE_MODULE_CODE = "sourceModuleCode";
     public static final String FIELD_SOURCE_PROGRAM = "sourceProgram";
     public static final String FIELD_ACTIVE_FLAG = "activeFlag";
+    public static final String FIELD_SITE_CHECK_FLAG = "siteCheckFlag";
     public static final String O2MD_STATIC_RESOURCE_CONFIG_U1 = "o2md_static_resource_config_u1";
 
     //
@@ -95,6 +96,10 @@ public class StaticResourceConfig extends AuditDomain {
     @ApiModelProperty(value = "启用标识")
     @NotNull
     private Integer activeFlag;
+
+    @ApiModelProperty(value = "站点校验")
+    @NotNull
+    private Integer siteCheckFlag;
 
 	//
     // 非数据库字段
