@@ -41,7 +41,7 @@
         <where>
             <if test="resourceCode!=null">
                 <bind name="resourceCodeLike" value="'%'+resourceCode+'%'"/>
-                AND osr.resource_code=#{resourceCodeLike}
+                AND osr.resource_code like #{resourceCodeLike}
             </if>
             <if test="resourceLevel!=null">
                 AND osr.resource_level=#{resourceLevel}
