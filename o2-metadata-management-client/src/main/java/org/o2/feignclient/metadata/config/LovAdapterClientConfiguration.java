@@ -36,28 +36,28 @@ public class LovAdapterClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public O2CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2CurrencyLovClient(lovAdapterRemoteService);
+    public CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new CurrencyLovClient(lovAdapterRemoteService);
     }
     @Bean
     @ConditionalOnMissingBean
-    public O2UomLovClient o2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2UomLovClient(lovAdapterRemoteService);
+    public UomLovClient o2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new UomLovClient(lovAdapterRemoteService);
     }
     @Bean
     @ConditionalOnMissingBean
-    public O2UomTypeLovClient o2UomTypeLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2UomTypeLovClient(lovAdapterRemoteService);
+    public UomTypeLovClient o2UomTypeLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new UomTypeLovClient(lovAdapterRemoteService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public O2DuLiLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2DuLiLovClient(lovAdapterRemoteService);
+    public IdpLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new IdpLovClient(lovAdapterRemoteService);
     }
     @Bean
     @ConditionalOnMissingBean
-    public O2RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2RegionLovClient(lovAdapterRemoteService);
+    public RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new RegionLovClient(lovAdapterRemoteService);
     }
 }

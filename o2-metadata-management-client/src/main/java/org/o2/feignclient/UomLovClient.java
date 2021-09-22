@@ -14,11 +14,11 @@ import java.util.Map;
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
  **/
-public class O2UomLovClient {
+public class UomLovClient {
 
     private LovAdapterRemoteService lovAdapterRemoteService;
 
-    public O2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+    public UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
     }
 

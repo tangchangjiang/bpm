@@ -14,11 +14,11 @@ import java.util.Map;
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
  **/
-public class O2CurrencyLovClient {
+public class CurrencyLovClient {
 
     private LovAdapterRemoteService lovAdapterRemoteService;
 
-    public O2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+    public CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
     }
     /**
