@@ -47,6 +47,9 @@
                 <bind name="description" value="'%'+description+'%'"/>
                 and description like #{description}
             </if>
+            <if test="activeFlag != null and activeFlag != ''">
+                and active_flag = #{activeFlag}
+            </if>
             <choose>
                 <when test="tenantId != null">
                     and tenant_id = #{tenantId}
