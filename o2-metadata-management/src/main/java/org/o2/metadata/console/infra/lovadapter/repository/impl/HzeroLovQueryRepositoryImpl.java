@@ -65,6 +65,12 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
 
     @Override
     public String queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
+        if (!queryParam.containsKey(O2LovConstants.RequestParam.LOV_CODE)){
+            queryParam.put("lovCode", lovCode);
+        }
+        if (!queryParam.containsKey(O2LovConstants.RequestParam.ORGANIZATIONID)){
+            queryParam.put("organizationId", String.valueOf(tenantId));
+        }
         LovDTO lovDTO = lovAdapter.queryLovInfo(lovCode, tenantId);
         processPageInfo(queryParam, pageRequest.getPage(), pageRequest.getSize(), Objects.equals(lovDTO.getMustPageFlag(), BaseConstants.Flag.YES));
 
@@ -77,7 +83,7 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
         if (O2LovConstants.RequestParam.POST.equals(lovDTO.getRequestMethod())) {
             json = ResponseUtils.getResponse(this.restTemplate.postForEntity(this.preProcessUrlParam(url, queryParam), queryParam, String.class), String.class);
         } else {
-            json = (String) ResponseUtils.getResponse(this.restTemplate.getForEntity(preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);
+            json = ResponseUtils.getResponse(this.restTemplate.getForEntity(this.preProcessUrlParam(url, queryParam), String.class, queryParam), String.class);
         }
 
         return json;

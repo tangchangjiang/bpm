@@ -35,7 +35,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "通过编码查询货币(批量)")
-    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")
     public ResponseEntity<Map<String, CurrencyBO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                        @RequestParam(value = "currencyCodes" ,required = false) List<String> currencyCodes) {

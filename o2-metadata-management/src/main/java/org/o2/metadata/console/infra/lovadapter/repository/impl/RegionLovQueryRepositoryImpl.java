@@ -107,7 +107,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
         PageRequest pageRequest  = new PageRequest();
         pageRequest.setPage(page);
         pageRequest.setSize(size);
-        queryParam.put("organizationId", String.valueOf(tenantId));
         String json = hzeroLovQueryRepository.queryLovPage(queryParam,pageRequest,O2LovConstants.AddressType.CODE,tenantId);
         if (StringUtils.isNotEmpty(json)) {
             try {

@@ -12,6 +12,8 @@ public interface O2LovConstants {
         String POST = "POST";
 
         String URL_PREFIX = "http://";
+        String LOV_CODE = "lovCode";
+        String ORGANIZATIONID = "organizationId";
 
     }
     interface LovTypeCode {

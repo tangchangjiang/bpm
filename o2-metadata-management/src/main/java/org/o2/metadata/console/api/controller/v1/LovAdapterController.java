@@ -39,14 +39,13 @@ public class LovAdapterController {
     }
 
     @ApiOperation("")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/url/{lovCode}")
     public ResponseEntity<String> listCurrency(@PathVariable Long organizationId,
                                                      @RequestParam(required = false) Map<String, String> queryParams,
                                                      @PathVariable String lovCode,
                                                      PageRequest pageRequest) {
         // todo 后续替换组件
-        queryParams.put("organizationId", String.valueOf(organizationId));
         return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
     }
 
