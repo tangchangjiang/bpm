@@ -9,6 +9,9 @@ import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -22,6 +25,7 @@ import java.util.Map;
  */
 @Repository("baseLovQueryServiceImpl")
 @Slf4j
+@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
 public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
@@ -30,37 +34,13 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
 
-
-    @Override
-    public CurrencyBO findCurrencyByCode(Long tenantId, String currencyCode) {
-        final CurrencyBO currencyBO = new CurrencyBO();
-        String currencyMeaning = currencyCode;
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-        queryParams.put(O2LovConstants.Currency.PARAM_CURRENCY_CODE, currencyCode);
-        List<Map<String, Object>> maps;
-        try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.Currency.CODE, queryParams);
-        } catch (Exception e) {
-            maps = Collections.emptyList();
-        }
-
-        for (Map<String, Object> lov : maps) {
-            if (currencyCode.equals(lov.get(O2LovConstants.Currency.CURRENCY_CODE))) {
-                currencyMeaning = (String) lov.get(O2LovConstants.Currency.CURRENCY_NAME);
-                break;
-            }
-        }
-        currencyBO.setName(currencyMeaning);
-        return currencyBO;
-    }
-
     @Override
     public Map<String, CurrencyBO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
         final Map<String, CurrencyBO> currencyMap = Maps.newHashMapWithExpectedSize(2);
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
         List<Map<String, Object>> maps;
         try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.Currency.CODE, queryParams);
+            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
+            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.Currency.CODE);
         } catch (Exception e) {
             maps = Collections.emptyList();
         }
@@ -99,36 +79,15 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         return currencyMap;
     }
 
-    @Override
-    public UomBO findUomByCode(Long tenantId, String uomCode) {
-        final UomBO uomBO = new UomBO();
-        String uomName = uomCode;
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-        queryParams.put(O2LovConstants.Uom.PARAM_UOM_CODE, uomCode);
-        List<Map<String, Object>> maps;
-        try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE, queryParams);
-        } catch (Exception e) {
-            maps = Collections.emptyList();
-        }
 
-        for (Map<String, Object> lov : maps) {
-            if (uomCode.equals(lov.get(O2LovConstants.Uom.UOM_CODE))) {
-                uomName = (String) lov.get(O2LovConstants.Uom.UOM_NAME);
-                break;
-            }
-        }
-        uomBO.setName(uomName);
-        return uomBO;
-    }
 
     @Override
     public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
         final Map<String, UomBO> uomMap = Maps.newHashMapWithExpectedSize(2);
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
         List<Map<String, Object>> maps;
         try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE, queryParams);
+            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
+            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE);
         } catch (Exception e) {
             maps = Collections.emptyList();
         }
@@ -161,35 +120,12 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
     }
 
     @Override
-    public UomTypeBO findUomTypeByCode(Long tenantId, String uomTypeCode) {
-        final UomTypeBO uomTypeBO = new UomTypeBO();
-        String uomTypeName = uomTypeCode;
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-        queryParams.put(O2LovConstants.UomType.PARAM_UOM_TYPE_CODE, uomTypeCode);
-        List<Map<String, Object>> maps;
-        try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.UomType.CODE, queryParams);
-        } catch (Exception e) {
-            maps = Collections.emptyList();
-        }
-
-        for (Map<String, Object> lov : maps) {
-            if (uomTypeCode.equals(lov.get(O2LovConstants.UomType.UOM_TYPE_CODE))) {
-                uomTypeName = (String) lov.get(O2LovConstants.UomType.UOM_TYPE_NAME);
-                break;
-            }
-        }
-        uomTypeBO.setName(uomTypeName);
-        return uomTypeBO;
-    }
-
-    @Override
     public Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes) {
         final Map<String, UomTypeBO> uomTypeCodeMap = Maps.newHashMapWithExpectedSize(2);
-        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
         List<Map<String, Object>> maps;
         try {
-            maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.UomType.CODE, queryParams);
+            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
+            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.UomType.CODE);
         } catch (Exception e) {
             maps = Collections.emptyList();
         }
@@ -222,4 +158,15 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         return uomTypeCodeMap;
     }
 
+    /**
+     * 缓存基本单位值集
+     * @param lovCode 值集编码
+     * @return list
+     */
+    @Cacheable(value = "O2_LOV", key = "'baselov'+'_'+#lovCode")
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode) {
+        final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode, queryParams);
+    }
 }

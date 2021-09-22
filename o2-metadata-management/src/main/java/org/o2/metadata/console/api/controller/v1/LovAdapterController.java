@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
@@ -40,14 +39,13 @@ public class LovAdapterController {
     }
 
     @ApiOperation("")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/url/{lovCode}")
-    public ResponseEntity<Page<Object>> listCurrency(@PathVariable Long organizationId,
+    public ResponseEntity<String> listCurrency(@PathVariable Long organizationId,
                                                      @RequestParam(required = false) Map<String, String> queryParams,
                                                      @PathVariable String lovCode,
                                                      PageRequest pageRequest) {
         // todo 后续替换组件
-        queryParams.put("organizationId", String.valueOf(organizationId));
         return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
     }
 

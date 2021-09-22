@@ -1,10 +1,10 @@
 package org.o2.metadata.console.app.service;
 
-import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
@@ -44,6 +44,25 @@ public interface LovAdapterService {
      */
     Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes);
 
+
+    /**
+     * 查询地区值集
+     * @param tenantId 租户ID
+     * @param queryParam 查询条件
+     * @return  list
+     */
+    List<RegionCO> queryRegion(Long tenantId, Map<String,String> queryParam);
+
+    /**
+     * 分页查询地区值集
+     * @param tenantId 租户ID
+     * @param page page 页码
+     * @param size 大小
+     * @param queryParam 查询参数
+     * @return page
+     */
+    PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, Map<String,String> queryParam);
+
     /**
      * 根据编码以及租户ID批量查集值
      * @param queryMap 查询条件
@@ -60,10 +79,10 @@ public interface LovAdapterService {
      * @param tenantId 租户ID
      * @return  page
      */
-    <E> Page<E> queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    String queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 
     /**
-     * 查询值集详细信息
+     * 查询独立值集详细信息
      *
      * @param lovCode  值集code
      * @param tenantId 租户id

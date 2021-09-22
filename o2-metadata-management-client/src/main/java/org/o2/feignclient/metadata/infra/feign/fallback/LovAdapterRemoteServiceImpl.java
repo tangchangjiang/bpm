@@ -58,4 +58,16 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
         log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page, size,queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> queryRegion(Long organizationId, Map<String, String> queryLovValueMap) {
+        log.error("Error queryRegion, params[ organizationId = {},queryLovValueMap = {}]", organizationId,queryLovValueMap);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryRegionPage(Long organizationId, Integer page, Integer size, Map<String, String> queryParam) {
+        log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, queryParam = {} ]",  organizationId, page, size,queryParam);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

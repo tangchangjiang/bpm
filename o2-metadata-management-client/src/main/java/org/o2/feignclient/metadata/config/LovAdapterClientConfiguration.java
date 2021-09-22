@@ -1,6 +1,6 @@
 package org.o2.feignclient.metadata.config;
 
-import org.o2.feignclient.O2LovAdapterClient;
+import org.o2.feignclient.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -27,9 +27,37 @@ public class LovAdapterClientConfiguration {
     public LovAdapterRemoteServiceImpl lovAdapterRemoteServiceFallback() {
         return new LovAdapterRemoteServiceImpl();
     }
+
     @Bean
     @ConditionalOnMissingBean
     public O2LovAdapterClient o2LovAdapterClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new O2LovAdapterClient(lovAdapterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new CurrencyLovClient(lovAdapterRemoteService);
+    }
+    @Bean
+    @ConditionalOnMissingBean
+    public UomLovClient o2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new UomLovClient(lovAdapterRemoteService);
+    }
+    @Bean
+    @ConditionalOnMissingBean
+    public UomTypeLovClient o2UomTypeLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new UomTypeLovClient(lovAdapterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IDPLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new IDPLovClient(lovAdapterRemoteService);
+    }
+    @Bean
+    @ConditionalOnMissingBean
+    public RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new RegionLovClient(lovAdapterRemoteService);
     }
 }

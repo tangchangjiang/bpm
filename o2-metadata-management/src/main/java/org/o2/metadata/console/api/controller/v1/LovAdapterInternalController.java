@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
@@ -9,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
 @RestController("lovAdapterInternalController.v1")
-@RequestMapping("/v1/{organizationId}/lov")
+@RequestMapping("/v1/{organizationId}/lov-internal")
 public class LovAdapterInternalController {
     private final LovAdapterService lovAdapterService;
 
@@ -35,7 +35,7 @@ public class LovAdapterInternalController {
     }
 
     @ApiOperation(value = "通过编码查询货币(批量)")
-    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")
     public ResponseEntity<Map<String, CurrencyBO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                        @RequestParam(value = "currencyCodes" ,required = false) List<String> currencyCodes) {
@@ -58,7 +58,7 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.findUomTypeByCodes(organizationId,uomTypeCodes));
     }
 
-    @ApiOperation(value = "查询值集详细信息")
+    @ApiOperation(value = "独立查询值集详细信息")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-lov-value")
     public ResponseEntity<List<LovValueDTO>> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
@@ -87,11 +87,28 @@ public class LovAdapterInternalController {
     @ApiOperation(value = " 分页查询指定值集内容")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-query-lov-value")
-    public ResponseEntity<Page<Object>> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<String> queryLovPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                      @RequestParam String lovCode,
                                                      @RequestParam (required = false) Map<String, String> queryParams,
                                                      PageRequest pageRequest) {
         queryParams.put("organizationId", String.valueOf(organizationId));
         return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
+    }
+
+    @ApiOperation(value = "查询地区值")
+    @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/query-region-lov")
+    public ResponseEntity<List<RegionCO>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      @RequestParam (required = false) Map<String, String> queryLovValueMap) {
+        return Results.success(lovAdapterService.queryRegion(organizationId,queryLovValueMap));
+    }
+
+    @ApiOperation(value = "分页查询地区值")
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/page-query-region-lov")
+    public ResponseEntity<PageCO<RegionCO>> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                            @RequestParam (required = false) Map<String, String> queryLovValueMap,
+                                                            PageRequest pageRequest) {
+        return Results.success(lovAdapterService.queryRegionPage(organizationId,pageRequest.getPage(),pageRequest.getSize(),queryLovValueMap));
     }
 }

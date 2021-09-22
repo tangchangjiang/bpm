@@ -39,7 +39,7 @@ public class FreightTemplateDetail extends AuditDomain {
 
     public static final String FIELD_TEMPLATE_DETAIL_ID = "templateDetailId";
     public static final String FIELD_TRANSPORT_TYPE_CODE = "transportTypeCode";
-    public static final String FIELD_REGION_ID = "regionId";
+    public static final String FIELD_REGION_CODE = "regionCode";
     public static final String FIELD_FIRST_PIECE_WEIGHT = "firstPieceWeight";
     public static final String FIELD_FIRST_PRICE = "firstPrice";
     public static final String FIELD_NEXT_PIECE_WEIGHT = "nextPieceWeight";
@@ -136,7 +136,7 @@ public class FreightTemplateDetail extends AuditDomain {
         if (!isRegion) { return false;}
         final Sqls sqls = Sqls.custom();
         sqls.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, this.getTemplateId());
-            sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_ID, this.getRegionCode());
+            sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_CODE, this.getRegionCode());
 
         // 更新操作时，验证更新后的数据不与数据库中其他行重复
         if (this.getTemplateDetailId() != null) {
