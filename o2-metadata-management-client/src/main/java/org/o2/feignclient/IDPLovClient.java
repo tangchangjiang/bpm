@@ -13,10 +13,10 @@ import java.util.List;
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
  **/
-public class IdpLovClient {
+public class IDPLovClient {
     private LovAdapterRemoteService lovAdapterRemoteService;
 
-    public IdpLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+    public IDPLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
     }
 

@@ -52,8 +52,8 @@ public class LovAdapterClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public IdpLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new IdpLovClient(lovAdapterRemoteService);
+    public IDPLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new IDPLovClient(lovAdapterRemoteService);
     }
     @Bean
     @ConditionalOnMissingBean
