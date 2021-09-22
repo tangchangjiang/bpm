@@ -19,12 +19,16 @@ public class StaticResourceConfigRepositoryImpl extends BaseRepositoryImpl<Stati
 
     private final StaticResourceConfigMapper staticResourceConfigMapper;
 
-    public StaticResourceConfigRepositoryImpl(final StaticResourceConfigMapper staticResourceConfigMapper){
+    public StaticResourceConfigRepositoryImpl(final StaticResourceConfigMapper staticResourceConfigMapper) {
         this.staticResourceConfigMapper = staticResourceConfigMapper;
     }
 
     @Override
     public List<StaticResourceConfig> listStaticResourceConfig(StaticResourceConfigDTO staticResourceConfigDTO) {
+        if (!staticResourceConfigDTO.getResourceCode().isEmpty()) {
+            String resouceCode = staticResourceConfigDTO.getResourceCode();
+            staticResourceConfigDTO.setResourceCode(resouceCode.toUpperCase());
+        }
         return staticResourceConfigMapper.listStaticResourceConfig(staticResourceConfigDTO);
     }
 }

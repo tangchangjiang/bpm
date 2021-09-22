@@ -47,7 +47,7 @@
                 <bind name="description" value="'%'+description+'%'"/>
                 and description like #{description}
             </if>
-            <if test="activeFlag != null and activeFlag != ''">
+            <if test="activeFlag != null">
                 and active_flag = #{activeFlag}
             </if>
             <choose>
