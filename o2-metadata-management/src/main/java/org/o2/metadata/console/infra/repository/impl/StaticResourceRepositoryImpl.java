@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.repository.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.co.StaticResourceAndConfigCO;
 import org.o2.metadata.console.api.dto.StaticResourceListDTO;
@@ -25,6 +26,10 @@ public class StaticResourceRepositoryImpl extends BaseRepositoryImpl<StaticResou
 
     @Override
     public List<StaticResource> listStaticResourceByCondition(final StaticResource condition) {
+        if (StringUtils.isNotBlank(condition.getResourceCode())) {
+            String resouceCode = condition.getResourceCode();
+            condition.setResourceCode(resouceCode.toUpperCase());
+        }
         return staticResourceMapper.listStaticResourceByCondition(condition);
     }
 

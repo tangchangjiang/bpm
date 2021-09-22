@@ -40,7 +40,8 @@
         join o2md_static_resource_config osrc on osr.resource_code=osrc.resource_code and osr.tenant_id = osrc.tenant_id
         <where>
             <if test="resourceCode!=null">
-                AND osr.resource_code=#{resourceCode}
+                <bind name="resourceCodeLike" value="'%'+resourceCode+'%'"/>
+                AND osr.resource_code like #{resourceCodeLike}
             </if>
             <if test="resourceLevel!=null">
                 AND osr.resource_level=#{resourceLevel}
