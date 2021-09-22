@@ -23,4 +23,7 @@ public class StaticResourceConfigDTO {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
+    @ApiModelProperty(value = "启用标识")
+    private Integer activeFlag;
+
 }
