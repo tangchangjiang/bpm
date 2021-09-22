@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * description 静态资源配置
@@ -36,6 +37,10 @@ public class StaticResourceConfigInternalController {
     }
 
 
+    /**
+     * 根据资源编码获取配置对象
+     * @return
+     */
     @ApiOperation("根据资源编码获取配置对象")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{resourceCode}")
@@ -53,6 +58,27 @@ public class StaticResourceConfigInternalController {
             return Results.success(configCO);
         }
         return Results.success();
+
+    }
+
+    /**
+     * 获取启用&支持站点校验的静态资源配置列表
+     * @return
+     */
+    @ApiOperation("获取启用&支持站点校验的静态资源配置列表")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/list")
+    public ResponseEntity<List<StaticResourceConfigCO>> listStaticResourceConfigCO(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId){
+
+        List<StaticResourceConfig> staticResourceConfigs = staticResourceConfigRepository.selectByCondition(Condition.builder(StaticResourceConfig.class)
+                .andWhere(Sqls.custom().andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, organizationId)
+                        .andEqualTo(StaticResourceConfig.FIELD_SITE_CHECK_FLAG, BaseConstants.Flag.YES))
+                .build());
+        if (CollectionUtils.isEmpty(staticResourceConfigs)) {
+            return Results.success();
+        }
+        List<StaticResourceConfigCO> resourceConfigCOList = staticResourceConfigs.stream().map(StaticResourceConfigCO::new).collect(Collectors.toList());
+        return Results.success(resourceConfigCOList);
 
     }
 

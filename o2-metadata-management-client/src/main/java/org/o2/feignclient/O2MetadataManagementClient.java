@@ -331,4 +331,15 @@ public class O2MetadataManagementClient {
         return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceAndConfig(tenantId, staticResourceListDTO), new TypeReference<List<StaticResourceAndConfigCO>>() {});
     }
 
+    /**
+     * 获取启用&支持站点校验的静态资源配置列表
+     * @param tenantId 租户ID
+     * @return 结果
+     */
+    public List<StaticResourceConfigCO> listStaticResourceConfig(Long tenantId) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.listStaticResourceConfig(tenantId), new TypeReference<List<StaticResourceConfigCO>>() {
+        });
+    }
+
+
 }
