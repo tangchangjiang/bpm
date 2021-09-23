@@ -25,7 +25,7 @@ public interface HzeroLovQueryRepository {
                                     String lovCode);
 
     /**
-     * 查询值集中指定值的 描述信息（meaning）
+     * 查询独立值集中指定值的 描述信息
      *
      * @param tenantId 租户id
      * @param lovCode  值集code
@@ -39,8 +39,8 @@ public interface HzeroLovQueryRepository {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId
-     * @param lovCode
+     * @param tenantId 租户ID
+     * @param lovCode 值编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -76,4 +76,12 @@ public interface HzeroLovQueryRepository {
      * @return  page
      */
     String queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+
+    /**
+     * 获取缓存key
+     * @param tenantId 租户ID
+     * @param queryParam 查询参数
+     * @return  str
+     */
+    String getQueryParamStr(Long tenantId,Map<String, String> queryParam);
 }

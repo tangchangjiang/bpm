@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.boot.platform.lov.dto.LovDTO;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
@@ -12,8 +13,6 @@ import org.hzero.core.redis.RedisHelper;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +22,6 @@ import java.util.Objects;
 
 @Repository
 @Slf4j
-@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
 public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
 
     private LovAdapter lovAdapter;
@@ -38,7 +36,6 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     }
 
     @Override
-    @Cacheable(value = "O2_LOV", key = "'duli'+'_'+#tenantId+'_'+#lovCode")
     public List<LovValueDTO> queryLovValue(Long tenantId,
                                            String lovCode) {
         return lovAdapter.queryLovValue(lovCode, tenantId);
@@ -88,6 +85,22 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
 
         return json;
     }
+
+    @Override
+    public String getQueryParamStr(Long tenantId, Map<String, String> queryParam) {
+        StringBuilder cacheKey = new StringBuilder(tenantId.toString()).append("_");
+        if (!queryParam.isEmpty()) {
+            for (Map.Entry<String, String> entry : queryParam.entrySet()) {
+                String k = entry.getKey();
+                String v = entry.getValue();
+                if (StringUtils.isNotEmpty(v)) {
+                    cacheKey.append(k).append("_").append(v);
+                }
+            }
+        }
+        return cacheKey.toString();
+    }
+
     /**
      *  构造请求地址
      * @param url 请求url

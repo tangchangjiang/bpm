@@ -66,7 +66,7 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.queryLovValue(organizationId,lovCode));
     }
 
-    @ApiOperation(value = "查询值集中指定值的 描述信息（meaning）")
+    @ApiOperation(value = "独立查询值集中指定值的 描述信息（meaning）")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-lov-value-meaning")
     public ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
@@ -75,7 +75,7 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,lovValue));
     }
 
-    @ApiOperation(value = " 批量查询指定值集内容")
+    @ApiOperation(value = " 批量查询指定值集内容(sql&url)")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/batch-query-lov-value-meaning")
     public ResponseEntity<List<Map<String, Object>>> batchQueryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,

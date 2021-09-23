@@ -91,7 +91,7 @@ public interface LovAdapterService {
     List<LovValueDTO>queryLovValue (Long tenantId,  String lovCode);
 
     /**
-     * 查询值集中指定值的 描述信息（meaning）
+     * 查询独立值集中指定值的 描述信息（meaning）
      *
      * @param tenantId 租户id
      * @param lovCode  值集code
