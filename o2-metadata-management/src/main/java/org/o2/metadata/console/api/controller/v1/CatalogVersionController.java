@@ -10,7 +10,6 @@ import io.choerodon.mybatis.pagehelper.domain.Sort;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;

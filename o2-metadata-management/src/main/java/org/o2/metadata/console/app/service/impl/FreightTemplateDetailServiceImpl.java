@@ -13,9 +13,7 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import org.springframework.stereotype.Service;import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,16 +29,13 @@ import java.util.Map;
 public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperation implements FreightTemplateDetailService {
     private FreightTemplateDetailRepository freightTemplateDetailRepository;
     private FreightCacheService freightCacheService;
-    private RegionRepository regionRepository;
 
     public FreightTemplateDetailServiceImpl(FreightTemplateDetailRepository freightTemplateDetailRepository,
                                             FreightCacheService freightCacheService,
                                             RegionRepository regionRepository,
-                                            FreightTemplateRepository freightTemplateRepository,
-                                            RegionRepository regionRepository1) {
+                                            FreightTemplateRepository freightTemplateRepository) {
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightCacheService = freightCacheService;
-        this.regionRepository = regionRepository1;
         super.regionRepository = regionRepository;
         super.freightTemplateRepository = freightTemplateRepository;
     }
@@ -99,52 +94,6 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     /**
-     * 批量更新运费模板明细
-     *
-     * @param freightTemplateDetailList 更新的运费模板明细列表
-     * @param isRegion                  是否属于指定区域的运费模板明细列表
-     * @return
-     */
-    private List<FreightTemplateDetail> batchMerge(List<FreightTemplateDetail> freightTemplateDetailList, boolean isRegion) {
-        final Map<String, Object> map = new HashMap<>(freightTemplateDetailList.size());
-        final List<FreightTemplateDetail> updateList = new ArrayList<>();
-        final List<FreightTemplateDetail> insertList = new ArrayList<>();
-
-        for (int i = 0; i < freightTemplateDetailList.size(); i++) {
-            final FreightTemplateDetail detail = freightTemplateDetailList.get(i);
-            if (isRegion) {
-                detail.regionDetailValidate();
-            } else {
-                detail.defaultDetailValidate();
-            }
-
-            // list验重
-            String key = String.valueOf(detail.getRegionCode()) + String.valueOf(detail.getTemplateId());
-            Assert.isTrue(map.get(key) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
-            map.put(key, i);
-
-            // 数据库验重
-            Assert.isTrue(!detail.exist(freightTemplateDetailRepository, isRegion), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
-
-            if (detail.getTemplateDetailId() != null) {
-                updateList.add(detail);
-            } else {
-                insertList.add(detail);
-            }
-        }
-
-        final List<FreightTemplateDetail> resultList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(updateList)) {
-            resultList.addAll(freightTemplateDetailRepository.batchUpdateByPrimaryKey(updateList));
-        }
-        if (CollectionUtils.isNotEmpty(insertList)) {
-            resultList.addAll(freightTemplateDetailRepository.batchInsertSelective(insertList));
-        }
-
-        return resultList;
-    }
-
-    /**
      * 校验数据
      *
      * @param freightTemplateDetailList 需要校验的运费模板明细列表
@@ -176,29 +125,6 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             // 数据库验重
             Assert.isTrue(!freightTemplateDetail.exist(freightTemplateDetailRepository, isRegion), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
         }
-    }
-
-    /**
-     * 获取运费模板明细列表中，默认的运费模板明细
-     *
-     * @param freightTemplateDetailList 待更新的运费模板明细列表
-     * @param isRegion                  是否属于指定区域的运费模板明细列表
-     * @return 默认的运费模板明细
-     */
-    private FreightTemplateDetail containUniqleDefault(List<FreightTemplateDetail> freightTemplateDetailList, boolean isRegion) {
-        if (isRegion) {
-            return null;
-        }
-
-        int defaultCount = 0;
-        FreightTemplateDetail defaultFreightTemplateDetail = null;
-        for (FreightTemplateDetail detail : freightTemplateDetailList) {
-            if (detail.getDefaultFlag() != null && detail.getDefaultFlag() == 1) {
-                defaultFreightTemplateDetail = detail;
-            }
-        }
-
-        return defaultFreightTemplateDetail;
     }
 
     /**

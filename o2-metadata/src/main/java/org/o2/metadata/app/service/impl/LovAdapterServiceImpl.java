@@ -23,7 +23,7 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     }
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovCode);
+        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovValue);
     }
 
 }

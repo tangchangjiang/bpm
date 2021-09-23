@@ -1,8 +1,6 @@
 package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -11,17 +9,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.collections4.CollectionUtils;
-import org.o2.core.helper.JsonHelper;
-import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
-import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -31,11 +22,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 /**
  * 网店关联仓库
@@ -131,88 +118,4 @@ public class OnlineShopRelWarehouse extends AuditDomain {
         Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
     }
 
-    /**
-     * 拼写RedisHashMap
-     * @param onlineShopRelWarehouses onlineShopRelWarehouseVOs
-     * @return map
-     */
-    public Map<String, Object> buildRedisHashMap(List<OnlineShopRelWarehouseVO> onlineShopRelWarehouses) {
-       Map<String,Object> map = new HashMap<>(4);
-        onlineShopRelWarehouses.forEach(onlineShopRelWarehouseVO ->
-                map.put(onlineShopRelWarehouseVO.getWarehouseCode(),onlineShopRelWarehouseVO.getActiveFlag()));
-       return map;
-    }
-
-    /**
-     * 拼写hashKey
-     * @param onlineShopCode onlineShopCode
-     * @return hashKey
-     */
-    public String buildRedisHashKey(final String onlineShopCode) {
-        return  String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, this.tenantId,onlineShopCode);
-    }
-
-    /**
-     * 组黄map
-     * @param onlineShopRelWarehouseVOList onlineShopRelWarehouseVOList
-     * @return map
-     */
-    public Map<Integer, List<OnlineShopRelWarehouseVO>> groupMap (List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList) {
-        return onlineShopRelWarehouseVOList.stream().collect(Collectors.groupingBy(
-                onlineShopRelWarehouseVO -> onlineShopRelWarehouseVO.getActiveFlag() == 1 ? 1 : 0
-        ));
-    }
-
-
-    /**
-     * 同步到redis
-     * @param onlineShopRelWarehouseVOList  onlineShopRelWarehouseVOList
-     * @param saveResourceScriptSource      saveResourceScriptSource
-     * @param deleteResourceScriptSource    deleteResourceScriptSource
-     * @param redisCacheClient              redisCacheClient
-     */
-    public void syncToRedis (final List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList,
-                             final ResourceScriptSource saveResourceScriptSource,
-                             final ResourceScriptSource deleteResourceScriptSource,
-                             final RedisCacheClient redisCacheClient) {
-        // 根据是否有效分组 无效 删除
-        Map<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseMap = this.groupMap(onlineShopRelWarehouseVOList);
-        for (Map.Entry<Integer, List<OnlineShopRelWarehouseVO>> onlineShopRelWarehouseEntry : onlineShopRelWarehouseMap.entrySet()){
-            // 根据 onlineShopCode 分组
-            Map<String, List<OnlineShopRelWarehouseVO>>  synToRedisMap = onlineShopRelWarehouseEntry.getValue().stream()
-                    .collect(Collectors.groupingBy(OnlineShopRelWarehouseVO::getOnlineShopCode));
-
-            for (Map.Entry<String, List<OnlineShopRelWarehouseVO>> onlineShopRelWhEntry : synToRedisMap.entrySet()) {
-                List<OnlineShopRelWarehouseVO> groupOnlineShopRelWarehouseVos = onlineShopRelWhEntry.getValue();
-                if (CollectionUtils.isNotEmpty(groupOnlineShopRelWarehouseVos)) {
-                    // 获取hashKey
-                    final String hashKey = this.buildRedisHashKey(groupOnlineShopRelWarehouseVos.get(0).getOnlineShopCode());
-                    if (onlineShopRelWarehouseEntry.getKey() == 1) {
-                        try {
-                            redisCacheClient.opsForHash().putAll(hashKey, new ObjectMapper().readValue(JsonHelper.objectToString(this.buildRedisHashMap(groupOnlineShopRelWarehouseVos)), new TypeReference<Map<String, String>>() {
-                            }));
-                        } catch (IOException e) {
-                        }
-                    } else {
-                        redisCacheClient.opsForHash().delete(hashKey, groupOnlineShopRelWarehouseVos.stream().map(OnlineShopRelWarehouseVO::getWarehouseCode).toArray());
-                    }
-                }
-            }
-
-        }
-    }
-
-    /**
-     *  operation redis
-     * @param filedMaps filedMaps
-     * @param keyList   keyList
-     */
-    public void executeScript(final Map<String, Map<String, Object>> filedMaps,
-                              final List<String> keyList,
-                              final ResourceScriptSource resourceScriptSource,
-                              final RedisCacheClient redisCacheClient) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
-        redisCacheClient.execute(defaultRedisScript,keyList, JsonHelper.mapToString(filedMaps));
-    }
 }

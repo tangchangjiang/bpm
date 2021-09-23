@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.lovadapter.repository;
 
-import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 

@@ -1,8 +1,6 @@
 package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.base.Preconditions;
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -14,7 +12,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
 import javax.persistence.*;

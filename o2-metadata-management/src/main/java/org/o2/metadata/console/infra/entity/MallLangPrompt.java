@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

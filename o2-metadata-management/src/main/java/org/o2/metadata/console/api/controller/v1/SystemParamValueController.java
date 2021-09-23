@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;

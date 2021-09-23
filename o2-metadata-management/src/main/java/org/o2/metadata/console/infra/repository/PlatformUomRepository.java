@@ -2,10 +2,6 @@ package org.o2.metadata.console.infra.repository;
 
 
 
-import org.o2.metadata.console.api.vo.PlatformUomVO;
-
-import java.util.List;
-
 /**
  * PlatformUomRepository
  *

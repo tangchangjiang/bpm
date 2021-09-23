@@ -4,18 +4,9 @@ import com.google.common.base.Preconditions;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
-import org.o2.core.copier.PropertiesCopier;
-import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
-import org.o2.metadata.console.infra.entity.Country;
-import org.o2.metadata.console.infra.repository.CountryRepository;
-
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * description
@@ -44,14 +35,6 @@ public class CarrierDeliveryRangeSaveDTO {
     @ApiModelProperty(value = "承运商id")
     @NotNull
     private Long carrierId;
-
-
-    public CarrierDeliveryRange convertToCarrierDeliveryRange(Long tenantId) {
-        CarrierDeliveryRange carrierDeliveryRange = new CarrierDeliveryRange();
-        PropertiesCopier.copyEntities(this, carrierDeliveryRange);
-        return carrierDeliveryRange;
-    }
-
 
 
     public void baseValidate() {

@@ -18,9 +18,4 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = MetadataManagementAutoConfiguration.PLATFORM_UOM)
 public class PlatformUomController extends BaseController {
 
-    private PlatformUomService platformUomService;
-
-    public PlatformUomController(PlatformUomService platformUomService) {
-        this.platformUomService = platformUomService;
-    }
 }

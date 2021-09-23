@@ -1,9 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.co.PlatformInfoMappingCO;
-import org.o2.metadata.console.api.vo.OnlineShopVO;
 import org.o2.metadata.console.api.vo.PlatformInfMappingVO;
-import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 
 import java.util.ArrayList;

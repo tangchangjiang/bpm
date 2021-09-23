@@ -3,27 +3,22 @@ package org.o2.metadata.console.api.controller.v1;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.dto.CarrierDeliveryRangeSaveDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
-import org.o2.metadata.console.infra.repository.CountryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
@@ -43,13 +38,11 @@ import io.choerodon.swagger.annotation.Permission;
 public class CarrierDeliveryRangeController extends BaseController {
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
     private final CarrierDeliveryRangeService carrierDeliveryRangeService;
-    private final CountryRepository countryRepository;
 
     public CarrierDeliveryRangeController(final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
-                                          final CarrierDeliveryRangeService carrierDeliveryRangeService, CountryRepository countryRepository) {
+                                          final CarrierDeliveryRangeService carrierDeliveryRangeService) {
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.carrierDeliveryRangeService = carrierDeliveryRangeService;
-        this.countryRepository = countryRepository;
     }
 
     @ApiOperation(value = "承运商送达范围列表")

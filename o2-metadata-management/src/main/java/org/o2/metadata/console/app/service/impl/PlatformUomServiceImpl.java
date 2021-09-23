@@ -13,10 +13,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlatformUomServiceImpl implements PlatformUomService {
 
-    private PlatformUomRepository platformUomRepository;
-
-    public PlatformUomServiceImpl(PlatformUomRepository platformUomRepository) {
-        this.platformUomRepository = platformUomRepository;
-    }
 
 }

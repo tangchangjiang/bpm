@@ -21,16 +21,6 @@ public interface O2LovConstants {
          String URL = "URL";
     }
 
-    interface LovProperties {
-        /**
-         * LOV Value
-         */
-        String lovValue = "value";
-        /**
-         * LOV Meaning
-         */
-        String lovMeaning = "meaning";
-    }
 
     /**
      * Exception ErrorCode

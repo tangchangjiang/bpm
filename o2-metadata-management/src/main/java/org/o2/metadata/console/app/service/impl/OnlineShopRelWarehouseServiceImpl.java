@@ -3,19 +3,18 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseConstants.Flag;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.entity.*;
@@ -24,7 +23,6 @@ import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +47,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final OnlineShopRepository onlineShopRepository;
     private final WarehouseRepository warehouseRepository;
-    private final PosRepository posRepository;
     private O2InventoryClient o2InventoryClient;
     private RedisCacheClient redisCacheClient;
     private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
@@ -58,7 +55,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                              OnlineShopRepository onlineShopRepository,
                                              WarehouseRepository warehouseRepository,
-                                             PosRepository posRepository,
                                              O2InventoryClient o2InventoryClient,
                                              RedisCacheClient redisCacheClient,
                                              OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
@@ -66,7 +62,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRepository = onlineShopRepository;
         this.warehouseRepository = warehouseRepository;
-        this.posRepository = posRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
@@ -211,7 +206,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
                         .andEqualTo(OnlineShopRelWarehouse.FIELD_ONLINE_SHOP_ID, onlineShopId)).build());
 
         log.info("updateByShop onlineShopId({}), tenantId({}), activeFlag({}), onlineShopRelWarehouses({})",
-                onlineShopId, tenantId, activeFlag, JSONArray.toJSONString(onlineShopRelWarehouses));
+                onlineShopId, tenantId, activeFlag, JsonHelper.objectToString(onlineShopRelWarehouses));
         onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
 
         String key = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
@@ -267,34 +262,4 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         return 1;
     }
 
-    /**
-     * 同步到redis
-     * @param relationships relationships
-     */
-    private void syncToRedis (final List<OnlineShopRelWarehouse> relationships) {
-        List<OnlineShopRelWarehouseVO> onlineShopRelWarehouseVOList = new ArrayList<>();
-        for (OnlineShopRelWarehouse onlineShopRelWarehouse : relationships) {
-            final Pos pos = posRepository.selectByPrimaryKey(onlineShopRelWarehouse.getPosId());
-            final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
-            final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-            onlineShopRelWarehouseVOList.add(buildOnlineShopRelWarehouseVO(pos,warehouse,onlineShop,onlineShopRelWarehouse));
-        }
-        OnlineShopRelWarehouse warehouse = new OnlineShopRelWarehouse();
-        if (CollectionUtils.isNotEmpty(onlineShopRelWarehouseVOList)) {
-            warehouse.syncToRedis(onlineShopRelWarehouseVOList,
-                    MetadataConstants.LuaCode.BATCH_SAVE_REDIS_HASH_VALUE_LUA,
-                    MetadataConstants.LuaCode.BATCH_DELETE_SHOP_REL_WH_REDIS_HASH_VALUE_LUA,
-                    redisCacheClient);
-        }
-    }
-    private OnlineShopRelWarehouseVO buildOnlineShopRelWarehouseVO (final Pos pos, final Warehouse warehouse, final OnlineShop onlineShop, final OnlineShopRelWarehouse onlineShopRelWarehouse) {
-        OnlineShopRelWarehouseVO onlineShopRelWarehouseVO = new OnlineShopRelWarehouseVO();
-        onlineShopRelWarehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
-        onlineShopRelWarehouseVO.setActiveFlag(onlineShopRelWarehouse.getActiveFlag());
-        onlineShopRelWarehouseVO.setTenantId(onlineShopRelWarehouse.getTenantId());
-        onlineShopRelWarehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
-        onlineShopRelWarehouseVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
-        onlineShopRelWarehouseVO.setBusinessActiveFlag(onlineShopRelWarehouse.getBusinessActiveFlag());
-        return onlineShopRelWarehouseVO;
-    }
 }

@@ -45,7 +45,6 @@ public class LovAdapterController {
                                                      @RequestParam(required = false) Map<String, String> queryParams,
                                                      @PathVariable String lovCode,
                                                      PageRequest pageRequest) {
-        // todo 后续替换组件
         return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
     }
 
