@@ -48,12 +48,6 @@ public class RegionAreaInitialJob implements IJobHandler {
             return ReturnT.FAILURE;
         }
 
-//        {
-//            "tenantId":"2",
-//            "HB":"10000,20000,30000",
-//            "HD":"10000,20000,30000",
-//            "HN":"10000,20000,30000"
-//        }
 
         final Long tenantId = Long.parseLong(organizationId);
 

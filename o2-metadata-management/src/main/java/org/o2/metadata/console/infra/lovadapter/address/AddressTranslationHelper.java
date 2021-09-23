@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -23,11 +22,9 @@ import java.util.Map;
 @Slf4j
 public class AddressTranslationHelper {
 
-    private final LovAdapter lovAdapter;
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
-    public AddressTranslationHelper(LovAdapter lovAdapter, HzeroLovQueryRepository hzeroLovQueryRepository) {
-        this.lovAdapter = lovAdapter;
+    public AddressTranslationHelper(HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
 

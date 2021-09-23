@@ -12,7 +12,6 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

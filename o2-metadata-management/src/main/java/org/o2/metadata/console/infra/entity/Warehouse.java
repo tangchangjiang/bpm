@@ -20,9 +20,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 仓库
@@ -50,7 +47,7 @@ public class Warehouse extends AuditDomain {
     public static final String FIELD_PICKUP_FLAG = "pickedUpFlag";
     public static final String FIELD_EXPRESS_FLAG = "expressedFlag";
     public static final String FIELD_SCORE = "score";
-    public static final String FIELD__ACTIVE_DATE_FROM = "activedDateFrom";
+    public static final String FIELD_ACTIVE_DATE_FROM = "activedDateFrom";
     public static final String FIELD_ACTIVE_DATE_TO = "activedDateTo";
     public static final String FIELD_INV_ORGANIZATION_CODE = "invOrganizationCode";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -161,7 +158,6 @@ public class Warehouse extends AuditDomain {
     @Transient
     private String warehouseStatus;
 
-
     @Transient
     private String countryCode;
     @Transient
@@ -178,21 +174,5 @@ public class Warehouse extends AuditDomain {
     private String mobilePhone;
     @Transient
     private String phoneNumber;
-
-
-    /**
-     * 仓库分组
-     * @param warehouses 仓库
-     * @return
-     */
-    public Map<Integer, List<Warehouse>> warehouseGroupMap (List<Warehouse> warehouses) {
-        return warehouses.stream().collect(Collectors.groupingBy(
-                warehouse -> warehouse.getActiveFlag() == 1
-                        && ( warehouse.getActivedDateTo() == null
-                        || warehouse.getActivedDateTo().after(new Date())) ? 1 : 0
-        ));
-    }
-
-
 
 }

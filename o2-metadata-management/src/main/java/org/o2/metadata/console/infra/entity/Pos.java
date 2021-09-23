@@ -115,15 +115,13 @@ public class Pos extends AuditDomain {
     }
 
     public List<PosRelCarrier> posRelCarrier (PosRelCarrierRepository posRelCarrierRepository, Integer defaultFlag) {
-        List<PosRelCarrier> posRelCarriers = posRelCarrierRepository.selectByCondition(
-                Condition.builder(PosRelCarrier.class)
-                        .andWhere(Sqls.custom()
-                                .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())
-                                .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, this.getTenantId())
-                                .andEqualTo(PosRelCarrier.FIELD_IS_DEFAULT, defaultFlag)
-                        ).build()
-        );
-        return posRelCarriers;
+        Condition condition =   Condition.builder(PosRelCarrier.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())
+                        .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, this.getTenantId())
+                        .andEqualTo(PosRelCarrier.FIELD_IS_DEFAULT, defaultFlag)
+                ).build();
+        return posRelCarrierRepository.selectByCondition(condition);
     }
 
     //

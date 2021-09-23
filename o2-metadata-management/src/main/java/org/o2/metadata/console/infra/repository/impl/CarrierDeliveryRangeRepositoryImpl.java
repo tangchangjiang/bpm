@@ -32,6 +32,6 @@ public class CarrierDeliveryRangeRepositoryImpl extends BaseRepositoryImpl<Carri
         final CarrierDeliveryRange carrierDeliveryRange = new CarrierDeliveryRange();
         carrierDeliveryRange.setDeliveryRangeId(deliveryRangeId);
         final List<CarrierDeliveryRange> list = carrierDeliveryRangeMapper.list(carrierDeliveryRange);
-        return list.size() > 0 ? list.get(0) : null;
+        return !list.isEmpty() ? list.get(0) : null;
     }
 }

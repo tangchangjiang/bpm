@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.PosDTO;
-import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
 import java.util.List;

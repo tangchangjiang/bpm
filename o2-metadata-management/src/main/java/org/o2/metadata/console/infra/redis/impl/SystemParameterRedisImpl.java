@@ -1,11 +1,11 @@
 package org.o2.metadata.console.infra.redis.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -59,7 +59,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
         if (null != object) {
-            systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(object, SystemParamValue.class)));
+            List<SystemParamValue> list = JsonHelper.stringToArray(object, SystemParamValue.class);
+            Set<SystemParamValue> set = new HashSet<>(16);
+            set.addAll(list);
+            systemParameter.setSetSystemParamValue(set);
             return systemParameter;
         }
         //map类型
@@ -87,7 +90,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             for (int i = 0; i < paramCodeList.size(); i++) {
                 SystemParameter systemParameter = new SystemParameter();
                 systemParameter.setParamCode(paramCodeList.get(i));
-                systemParameter.setSetSystemParamValue(new HashSet(JSONArray.parseArray(listSet.get(i), SystemParamValue.class)));
+                List<SystemParamValue> values = JsonHelper.stringToArray(listSet.get(i), SystemParamValue.class);
+                Set<SystemParamValue> set = new HashSet<>(16);
+                set.addAll(values);
+                systemParameter.setSetSystemParamValue(set);
                 doList.add(systemParameter);
             }
             return doList;
@@ -153,7 +159,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                         } else if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
                             List<SystemParamValue> voList = systemParamValueMapper.getSysSetWithParams(paramCode, tenantId);
                             if (CollectionUtils.isNotEmpty(voList)) {
-                                setHashMap.put(paramCode, JSONArray.toJSONString(voList));
+                                setHashMap.put(paramCode, JsonHelper.objectToString(voList));
                             }
                         }
                     }
@@ -189,7 +195,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             final String setHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
             List<SystemParamValue> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
             if (CollectionUtils.isNotEmpty(voList)) {
-                redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JSONArray.toJSONString(voList));
+                redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JsonHelper.objectToString(voList));
                 return;
             }
             redisCacheClient.opsForHash().delete(setHashKey, systemParameter.getParamCode());

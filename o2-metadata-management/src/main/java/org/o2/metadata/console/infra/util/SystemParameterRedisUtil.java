@@ -1,19 +1,11 @@
 package org.o2.metadata.console.infra.util;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
-
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,57 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SystemParameterRedisUtil {
 
-    private static final String METHOD_GROUP_MAP = "groupMap";
-    private static final String METHOD_BUILD_REDIS_HASH_KEY = "buildRedisHashKey";
-    private static final String METHOD_BUILD_REDIS_HASH_MAP = "buildRedisHashMap";
 
-    /**
-     * synToRedis
-     *
-     * @param ts                   list
-     * @param resourceScriptSource resourceScriptSource
-     * @param redisCacheClient     redisCacheClient
-     */
-    public static <T> void synToRedis(final List<T> ts,
-                                      final ResourceScriptSource resourceScriptSource,
-                                      final RedisCacheClient redisCacheClient) {
-        if (CollectionUtils.isEmpty(ts)) {
-            return;
-        }
-        try {
-            Class<?> entityClass = ts.get(0).getClass();
-            Method method = entityClass.getMethod(METHOD_GROUP_MAP, List.class);
-            // 分组  0失效delete，1有效save
-            Map<Integer, List<T>> map = (Map<Integer, List<T>>) method.invoke(null, ts);
-            Map<String, Map<String, Object>> filedMaps = new HashMap<>(8);
-            for (Map.Entry<Integer, List<T>> tEntry : map.entrySet()) {
-                // 新增/更新
-                if (tEntry.getKey() == 1) {
-                    for (T t : tEntry.getValue()) {
-                        Method buildRedisHashKeyMethod = entityClass.getMethod(METHOD_BUILD_REDIS_HASH_KEY);
-                        Method buildRedisHashMapMethod = entityClass.getMethod(METHOD_BUILD_REDIS_HASH_MAP);
-                        // 获取hashKey
-                        final String hashKey = String.valueOf(buildRedisHashKeyMethod.invoke(t));
-                        // 获取hashMap
-                        filedMaps.put(hashKey, (Map<String, Object>) buildRedisHashMapMethod.invoke(t));
-                    }
-                }
-                // 删除
-                else {
-                    for (T t : tEntry.getValue()) {
-                        Method buildRedisHashKeyMethod = entityClass.getMethod(METHOD_BUILD_REDIS_HASH_KEY);
-                        // 获取hashKey
-                        final String hashKey = String.valueOf(buildRedisHashKeyMethod.invoke(t));
-                        // 获取hashMap
-                        filedMaps.put(hashKey, null);
-                    }
-                }
-            }
-            executeScript(filedMaps, Collections.emptyList(), resourceScriptSource, redisCacheClient);
-        } catch (Exception e) {
-            throw new CommonException(SystemParameterConstants.Message.SYSTEM_PARAMETER_SUCCESS_NUM);
-        }
-    }
 
     /**
      * redis execute

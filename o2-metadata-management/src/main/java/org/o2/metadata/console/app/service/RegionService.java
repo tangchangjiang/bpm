@@ -3,7 +3,6 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.api.vo.RegionVO;
-import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
 

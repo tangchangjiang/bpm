@@ -1,11 +1,8 @@
 package org.o2.metadata.console.api.co;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 
 
