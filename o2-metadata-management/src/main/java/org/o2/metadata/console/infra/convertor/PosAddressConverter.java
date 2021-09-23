@@ -97,7 +97,7 @@ public class PosAddressConverter {
         co.setLongitude(posAddress.getLongitude());
         co.setLatitude(posAddress.getLatitude());
         co.setTenantId(posAddress.getTenantId());
-        co.setDistrict(posAddress.getStreetName());
+        co.setDistrict(posAddress.getDistrictName());
         co.setCity(posAddress.getCityName());
         co.setCountry(posAddress.getCountryName());
         co.setRegion(posAddress.getRegionName());
