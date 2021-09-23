@@ -5,15 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.AopProxy;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,8 +26,7 @@ import java.util.Map;
  **/
 @Repository
 @Slf4j
-@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
-public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
+public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, AopProxy<RegionLovQueryRepositoryImpl> {
     private HzeroLovQueryRepository hzeroLovQueryRepository;
 
     private ObjectMapper objectMapper;
@@ -40,37 +38,17 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository {
 
     @Override
     public List<RegionCO> queryRegion(Long tenantId, Map<String, String> queryParam) {
-        String cacheKey = getCacheKey(tenantId,queryParam);
-        RegionLovQueryRepositoryImpl currentProxy = (RegionLovQueryRepositoryImpl) AopContext.currentProxy();
-        return currentProxy.queryRegion(tenantId, queryParam, cacheKey);
+        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,queryParam);
+        return self().queryRegion(tenantId, queryParam, cacheKey);
     }
 
     @Override
     public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, Map<String, String> queryParam) {
-        String cacheKey = getCacheKey(tenantId,queryParam);
-        RegionLovQueryRepositoryImpl currentProxy = (RegionLovQueryRepositoryImpl) AopContext.currentProxy();
-        return currentProxy.queryRegionPage(tenantId,page,size,queryParam,cacheKey);
+        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,queryParam);
+        return self().queryRegionPage(tenantId,page,size,queryParam,cacheKey);
     }
     
-    /**
-     * 获取缓存key
-     * @param tenantId 租户ID
-     * @param queryParam 查询参数
-     * @return  str
-     */
-    private String getCacheKey(Long tenantId,Map<String, String> queryParam) {
-        StringBuilder cacheKey = new StringBuilder(tenantId.toString()).append("_");
-        if (!queryParam.isEmpty()) {
-            for (Map.Entry<String, String> entry : queryParam.entrySet()) {
-                String k = entry.getKey();
-                String v = entry.getValue();
-                if (StringUtils.isNotEmpty(v)) {
-                    cacheKey.append(k).append("_").append(v);
-                }
-            }
-        }
-        return cacheKey.toString();
-    }
+
 
     /**
      * 查询地区值集

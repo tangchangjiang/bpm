@@ -51,7 +51,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询系统参数
+     * 从redis查询系统参数1
      *
      * @param paramCode 参数编码
      * @param tenantId  租户ID
@@ -61,7 +61,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 从redis查询系统参数
+     * 从redis查询系统参数1
      *
      * @param paramCodes 参数编码
      * @param tenantId   租户ID
@@ -73,7 +73,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 更新系统参数
+     * 更新系统参数1
      *
      * @param systemParameterQueryInnerDTO 系统
      * @param tenantId           租户ID
@@ -83,7 +83,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 查询仓库
+     * 查询仓库1
      *
      * @param innerDTO 入参
      * @param tenantId       租户ID
@@ -94,7 +94,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 页面查询仓库
+     * 页面查询仓库1
      *
      * @param innerDTO 入参
      * @param tenantId       租户ID
@@ -104,7 +104,7 @@ public class O2MetadataManagementClient {
         });
     }
     /**
-     * 从redis查询网店关联有效的仓库
+     * 从redis查询网店关联有效的仓库1
      *
      * @param onlineShopCode 网店编码
      * @param tenantId        租户ID
@@ -116,7 +116,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取模版
+     * 获取模版1
      *
      * @param freight 运费参数
      * @return 运费结果
@@ -126,7 +126,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取默认模版
+     * 获取默认模版1
      *
      * @param tenantId 租户id
      * @return 模版
@@ -136,7 +136,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询目录版本
+     * 批量查询目录版本1
      * @param catalogVersionQueryInnerDTO 目录版本集合
      * @param tenantId 租户ID
      * @return map key:编码 value:名称
@@ -147,7 +147,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询承运商
+     * 批量查询承运商 1
      *
      * @param carrierQueryInnerDTO 承运商
      * @param tenantId   租户ID
@@ -159,7 +159,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询承运商匹配规则
+     * 批量查询承运商匹配规则 1
      *
      * @param carrierMappingQueryInnerDTO 承运商
      * @param tenantId   租户ID
@@ -171,7 +171,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询网店
+     * 批量查询网店 1
      *
      * @param onlineShopQueryInnerDTO 网店
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
@@ -182,7 +182,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 目录版本+ 目录 批量查询网店
+     * 目录版本+ 目录 批量查询网店 1
      *
      * @param onlineShopCatalogVersionList 网店
      * @return map key:catalogCode-catalogVersionCode
@@ -193,7 +193,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询服务点地址
+     * 批量查询服务点地址 1
      * @param posAddressQueryInnerDTO 服务点地址
      * @param tenantId 租户ID
      * @return string
@@ -204,7 +204,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 批量查询地址匹配
+     * 批量查询地址匹配 1
      *
      * @param queryInnerDTO 地址匹配
      * @param tenantId   租户ID
@@ -217,7 +217,7 @@ public class O2MetadataManagementClient {
 
 
     /**
-     * 查询临近省
+     * 查询临近省 1
      * @param tenantId 租户ID
      * @return LIST
      */
@@ -227,7 +227,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取快递配送接单量到达上限的仓库
+     * 获取快递配送接单量到达上限的仓库 1
      *
      * @param organizationId 租户id
      * @return 快递配送接单量到达上限的仓库集合
@@ -238,7 +238,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取自提接单量到达上限的仓库
+     * 获取自提接单量到达上限的仓库1
      *
      * @param organizationId 租户id
      * @return 自提接单量到达上限的仓库集合
@@ -249,7 +249,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 重置仓库快递配送接单量值
+     * 重置仓库快递配送接单量值1
      *
      * @param organizationId 租户ID
      * @param warehouseCode  仓库编码
@@ -259,7 +259,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 重置仓库自提接单量限制值
+     * 重置仓库自提接单量限制值  1
      *
      * @param organizationId 租户ID
      * @param warehouseCode  仓库编码
@@ -269,7 +269,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 查询静态资源文件code&url映射
+     * 查询静态资源文件code&url映射  1
      *
      * @param staticResourceQueryDTO staticResourceQueryDTO
      * @return code&url映射
@@ -281,7 +281,7 @@ public class O2MetadataManagementClient {
 
 
     /**
-     * 仓库快递配送接单量增量更新
+     * 仓库快递配送接单量增量更新 1
      *
      * @param organizationId 租户ID
      * @param warehouseCode  仓库编码
@@ -293,7 +293,7 @@ public class O2MetadataManagementClient {
 
 
     /**
-     * 保存静态资源文件表
+     * 保存静态资源文件表 1
      *
      * @param staticResourceSaveDTOList staticResourceSaveDTOList
      */
@@ -302,7 +302,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 查询平台信息
+     * 查询平台信息 1
      * @param tenantId 租户id
      * @param platformQueryInnerDTO 平台入参
      * @return key : platformCode（平台编码）
@@ -312,7 +312,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取静态资源配置
+     * 获取静态资源配置 1
      * @param resourceCode 资源编码
      * @param tenantId 租户ID
      * @return StaticResourceConfigCO 配置
@@ -322,7 +322,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取json_key 和 resource_url
+     * 获取json_key 和 resource_url 1
      * @param tenantId 租户ID
      * @param staticResourceListDTO 查询条件
      * @return List<StaticResourceAndConfigCO> 结果
@@ -332,7 +332,7 @@ public class O2MetadataManagementClient {
     }
 
     /**
-     * 获取启用&支持站点校验的静态资源配置列表
+     * 获取启用&支持站点校验的静态资源配置列表1
      * @param tenantId 租户ID
      * @return 结果
      */

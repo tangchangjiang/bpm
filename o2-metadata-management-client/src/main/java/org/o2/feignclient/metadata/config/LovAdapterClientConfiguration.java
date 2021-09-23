@@ -55,9 +55,16 @@ public class LovAdapterClientConfiguration {
     public IDPLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new IDPLovClient(lovAdapterRemoteService);
     }
+
     @Bean
     @ConditionalOnMissingBean
     public RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new RegionLovClient(lovAdapterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AdapterLovClient adapterLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new AdapterLovClient(lovAdapterRemoteService);
     }
 }

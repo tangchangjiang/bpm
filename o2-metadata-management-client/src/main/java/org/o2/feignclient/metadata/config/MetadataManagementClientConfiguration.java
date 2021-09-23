@@ -1,6 +1,6 @@
 package org.o2.feignclient.metadata.config;
 
-import org.o2.feignclient.O2MetadataManagementClient;
+import org.o2.feignclient.*;
 import org.o2.feignclient.metadata.infra.feign.*;
 import org.o2.feignclient.metadata.infra.feign.fallback.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -87,6 +87,57 @@ public class MetadataManagementClientConfiguration {
     public AddressMappingRemoteServiceImpl addressMappingRemoteServiceFallback() {
         return new AddressMappingRemoteServiceImpl();
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AddressClient addressClient(AddressMappingRemoteService addressMappingService) { return new AddressClient( addressMappingService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SystemParameterClient systemParameterClient(SysParameterRemoteService sysParameterRemoteService) { return new SystemParameterClient( sysParameterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WarehouseClient warehousesClient(WarehouseRemoteService warehouseRemoteService) { return new WarehouseClient( warehouseRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FreightClient freightClient(FreightRemoteService freightRemoteService) { return new FreightClient( freightRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OnlineShopClient onlineShopClient(OnlineShopRemoteService onlineShopRemoteService) { return new OnlineShopClient( onlineShopRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CarrierClient carrierClient(CarrierRemoteService carrierRemoteService) { return new CarrierClient( carrierRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CatalogClient catalogClient(CatalogVersionRemoteService catalogVersionRemoteService) { return new CatalogClient( catalogVersionRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PosClient posClient(PosRemoteService posRemoteService) { return new PosClient( posRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PlatformClient platformClient(PlatformRemoteService platformRemoteService) { return new PlatformClient( platformRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public StaticResourceClient staticResourceClient(StaticResourceRemoteService staticResourceRemoteService) { return new StaticResourceClient( staticResourceRemoteService);
+    }
+
 
     @Bean
     @ConditionalOnMissingBean
