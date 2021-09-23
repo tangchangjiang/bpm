@@ -1,8 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.collections4.CollectionUtils;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.service.FreightCacheService;
@@ -158,7 +157,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         for (FreightTemplateDetail detail : freightTemplateDetails) {
             regionCodes.add(detail.getRegionCode());
         }
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
         Long tenantId = freightTemplateDetails.get(0).getTenantId();
         dto.setTenantId(tenantId);

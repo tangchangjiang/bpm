@@ -3,7 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.o2.metadata.console.api.co.NeighboringRegionCO;
 import org.o2.metadata.console.api.dto.NeighboringRegionQueryDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.infra.convertor.NeighboringRegionConverter;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
@@ -56,7 +56,7 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
             regionCodes.add(bean.getSourceRegionCode());
             regionCodes.add(bean.getTargetRegionCode());
         }
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(neighboringRegion.getTenantId());
         dto.setRegionCodes(regionCodes);
         List<Region> regionList = regionRepository.listRegionLov(dto, neighboringRegion.getTenantId());

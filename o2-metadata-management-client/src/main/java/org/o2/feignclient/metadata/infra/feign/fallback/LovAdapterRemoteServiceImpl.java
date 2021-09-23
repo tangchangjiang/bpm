@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.feignclient.metadata.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,14 +61,14 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> queryRegion(Long organizationId, Map<String, String> queryLovValueMap) {
-        log.error("Error queryRegion, params[ organizationId = {},queryLovValueMap = {}]", organizationId,queryLovValueMap);
+    public ResponseEntity<String> queryRegion(Long organizationId, RegionQueryLovInnerDTO innerDTO) {
+        log.error("Error queryRegion, params[ organizationId = {},innerDTO = {}]", organizationId,innerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
-    public ResponseEntity<String> queryRegionPage(Long organizationId, Integer page, Integer size, Map<String, String> queryParam) {
-        log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, queryParam = {} ]",  organizationId, page, size,queryParam);
+    public ResponseEntity<String> queryRegionPage(Long organizationId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
+        log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, innerDTO = {} ]",  organizationId, page, size,innerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

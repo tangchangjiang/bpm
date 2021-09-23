@@ -2,7 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.bo.RegionBO;
@@ -65,12 +65,9 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
 
     @Override
     public List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO, Long organizationId) {
-        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
-        queryLovDTO.setParentRegionId(regionQueryDTO.getParentRegionId());
+        RegionQueryLovInnerDTO queryLovDTO = new RegionQueryLovInnerDTO();
         queryLovDTO.setCountryCode(regionQueryDTO.getCountryCode());
-        queryLovDTO.setEnabledFlag(regionQueryDTO.getEnabledFlag());
         queryLovDTO.setTenantId(organizationId);
-        queryLovDTO.setParentRegionCode(regionQueryDTO.getParentRegionCode());
         queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
         return RegionConverter.poToVoListObjects(regionList);

@@ -9,6 +9,7 @@ import org.hzero.core.base.AopProxy;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.co.RegionCO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
@@ -37,15 +38,17 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
     }
 
     @Override
-    public List<RegionCO> queryRegion(Long tenantId, Map<String, String> queryParam) {
-        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,queryParam);
-        return self().queryRegion(tenantId, queryParam, cacheKey);
+    public List<RegionCO> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
+        Map<String,String> map = JsonHelper.stringToMap(JsonHelper.objectToString(innerDTO));
+        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,map);
+        return self().queryRegion(tenantId, map, cacheKey);
     }
 
     @Override
-    public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, Map<String, String> queryParam) {
-        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,queryParam);
-        return self().queryRegionPage(tenantId,page,size,queryParam,cacheKey);
+    public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
+        Map<String,String> map = JsonHelper.stringToMap(JsonHelper.objectToString(innerDTO));
+        String cacheKey = hzeroLovQueryRepository.getQueryParamStr(tenantId,map);
+        return self().queryRegionPage(tenantId,page,size,map,cacheKey);
     }
     
 

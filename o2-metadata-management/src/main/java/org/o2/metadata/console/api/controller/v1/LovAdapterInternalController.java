@@ -9,6 +9,7 @@ import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.co.RegionCO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
@@ -99,16 +100,16 @@ public class LovAdapterInternalController {
     @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-region-lov")
     public ResponseEntity<List<RegionCO>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                      @RequestParam (required = false) Map<String, String> queryLovValueMap) {
-        return Results.success(lovAdapterService.queryRegion(organizationId,queryLovValueMap));
+                                                      RegionQueryLovInnerDTO innerDTO) {
+        return Results.success(lovAdapterService.queryRegion(organizationId,innerDTO));
     }
 
     @ApiOperation(value = "分页查询地区值")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-query-region-lov")
     public ResponseEntity<PageCO<RegionCO>> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                            @RequestParam (required = false) Map<String, String> queryLovValueMap,
+                                                            RegionQueryLovInnerDTO innerDTO,
                                                             PageRequest pageRequest) {
-        return Results.success(lovAdapterService.queryRegionPage(organizationId,pageRequest.getPage(),pageRequest.getSize(),queryLovValueMap));
+        return Results.success(lovAdapterService.queryRegionPage(organizationId,pageRequest.getPage(),pageRequest.getSize(),innerDTO));
     }
 }
