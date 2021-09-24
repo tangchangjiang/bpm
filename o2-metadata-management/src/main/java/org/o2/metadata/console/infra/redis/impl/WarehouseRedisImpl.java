@@ -71,15 +71,31 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         for (WarehouseCacheBO bo : list) {
             updateMap.put(bo.getWarehouseCode(), JsonHelper.objectToString(bo));
         }
+        List<String> keyList = new ArrayList<>(3);
+        // 库存缓存key
+        String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
+        keyList.add(warehouseCacheKey);
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
+        keyList.add(expressLimitKey);
+        // 仓库自提单量限制 key
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
+        keyList.add(pickUpLimitKey);
         redisCacheClient.opsForHash().putAll(key, updateMap);
-
+        final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
+        defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
+        try {
+            this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
+        }catch ( Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public Integer updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
         // 仓库快递配送接单量限制 key
-        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId) ;
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
         // 库存缓存key
         String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
         List<String> keyList = new ArrayList<>(2);

@@ -2,7 +2,7 @@ package org.o2.metadata.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.app.service.LovAdapterService;
-import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -15,15 +15,16 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class LovAdapterServiceImpl implements LovAdapterService {
-    private HzeroLovQueryRepository hzeroLovQueryRepository;
+    private IdpLovQueryRepository idpLovQueryRepository;
 
-
-    public LovAdapterServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
-        this.hzeroLovQueryRepository = hzeroLovQueryRepository;
+    public LovAdapterServiceImpl(IdpLovQueryRepository idpLovQueryRepository) {
+        this.idpLovQueryRepository = idpLovQueryRepository;
     }
+
+
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovValue);
+        return idpLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovValue);
     }
 
 }

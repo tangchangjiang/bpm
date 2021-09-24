@@ -3,7 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.Region;
@@ -46,7 +46,7 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
             regionCodes.add(deliveryRange.getDistrictCode());
 
         }
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
         dto.setTenantId(carrierDeliveryRange.getTenantId());
         List<Region> regionList = regionRepository.listRegionLov(dto,carrierDeliveryRange.getTenantId());

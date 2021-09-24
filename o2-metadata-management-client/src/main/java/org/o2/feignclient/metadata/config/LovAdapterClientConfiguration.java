@@ -62,9 +62,4 @@ public class LovAdapterClientConfiguration {
         return new RegionLovClient(lovAdapterRemoteService);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public AdapterLovClient adapterLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new AdapterLovClient(lovAdapterRemoteService);
-    }
 }

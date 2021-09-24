@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.file.FileStorageProperties;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
@@ -74,7 +74,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         Map<String,String> resourceUrlMap=new HashMap<>(4);
 
         // 查询地区sql值集并存入map
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(tenantId);
         dto.setCountryCode(countryCode);
 

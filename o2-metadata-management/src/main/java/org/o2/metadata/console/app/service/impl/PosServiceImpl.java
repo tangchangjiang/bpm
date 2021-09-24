@@ -5,7 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
@@ -122,7 +122,7 @@ public class PosServiceImpl implements PosService {
     private void updatePosAddress(PosAddress address,Long tenantId) {
         List<String> regionCodes = new ArrayList<>();
         regionCodes.add(address.getRegionCode());
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
         List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
         if (!regionList.isEmpty()) {
@@ -151,7 +151,7 @@ public class PosServiceImpl implements PosService {
             regionCodes.add(address.getDistrictCode());
             regionCodes.add(address.getRegionCode());
         }
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
         List<Region> regionList =  regionRepository.listRegionLov(dto,tenantId);
         Map<String,Region> regionMap =  Maps.newHashMapWithExpectedSize(regionList.size());

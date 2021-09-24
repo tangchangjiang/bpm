@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.PosDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.entity.PostTime;
@@ -61,7 +61,7 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
                 regionCodes.add(bean.getDistrictCode());
             }
         });
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(pos.getTenantId());
         dto.setRegionCodes(regionCodes);
         List<Region> regionList = regionRepository.listRegionLov(dto,pos.getTenantId());
@@ -100,7 +100,7 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
             if (StringUtils.isNotEmpty(regionCode)){
                 regionCodes.add(regionCode);
             }
-            RegionQueryLovDTO dto = new RegionQueryLovDTO();
+            RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
             dto.setRegionCodes(regionCodes);
             dto.setTenantId(tenantId);
             Map<String,String> map = new HashMap<>();

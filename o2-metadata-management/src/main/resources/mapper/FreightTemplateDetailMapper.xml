@@ -3,7 +3,7 @@
 <mapper namespace="org.o2.metadata.console.infra.mapper.FreightTemplateDetailMapper">
     <resultMap id="freightTemplateDetailResultMap" type="org.o2.metadata.console.infra.entity.FreightTemplateDetail">
         <id column="template_detail_id" property="templateDetailId" jdbcType="DECIMAL"/>
-        <result column="region_id" property="regionId" jdbcType="DECIMAL"/>
+        <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
         <result column="region_name" property="regionName" jdbcType="VARCHAR"/>
         <result column="parent_region_name" property="parentRegionName" jdbcType="VARCHAR"/>
         <result column="transport_type_code" property="transportTypeCode" jdbcType="VARCHAR"/>

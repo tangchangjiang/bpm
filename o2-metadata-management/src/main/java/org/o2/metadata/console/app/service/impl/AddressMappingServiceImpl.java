@@ -7,12 +7,12 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.RegionConstants;
+import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.AddressMapping;
@@ -70,7 +70,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
         }
         //获取地区
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(addressMappingQueryDTO.getTenantId());
         dto.setRegionCodes(regionCodes);
         dto.setCountryCode(countryCode);
@@ -126,7 +126,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode, Long tenantId) {
         final AddressMapping addressMapping = addressMappingRepository.selectByPrimaryKey(addressMappingId);
-        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO queryLovDTO = new RegionQueryLovInnerDTO();
         queryLovDTO.setCountryCode(countryCode);
         queryLovDTO.setRegionCode(addressMapping.getRegionCode());
         queryLovDTO.setTenantId(tenantId);
@@ -143,7 +143,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             String[] paths = levelPath.split(MetadataConstants.Constants.ADDRESS_SPLIT_REGEX);
             List<String> regionCodes = new ArrayList<>();
             Collections.addAll(regionCodes, paths);
-            RegionQueryLovDTO queryLov = new RegionQueryLovDTO();
+            RegionQueryLovInnerDTO queryLov = new RegionQueryLovInnerDTO();
             queryLov.setCountryCode(countryCode);
             queryLov.setRegionCodes(regionCodes);
             queryLov.setTenantId(tenantId);
@@ -172,7 +172,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @return map
      */
     private Map<String, AddressMappingCO> buildAddressMappingTree(Long tenantId, List<AddressMappingCO> list) {
-        RegionQueryLovDTO queryLovDTO = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO queryLovDTO = new RegionQueryLovInnerDTO();
         queryLovDTO.setTenantId(tenantId);
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, tenantId);
         Map<String, Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, v -> v));
@@ -302,11 +302,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private List<Region> parentRegion(Map<String, List<RegionTreeChild>> map,Long tenantId) {
         List<String> parentRegionCodes = new ArrayList<>();
         map.forEach((k,v)->{
-            if (!RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(k)) {
+            if (!O2LovConstants.RegionLov.DEFAULT_CODE.equals(k)) {
                 parentRegionCodes.add(k);
             }
         });
-        RegionQueryLovDTO dto = new RegionQueryLovDTO();
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(tenantId);
         if (parentRegionCodes.isEmpty()) {
             return  new ArrayList<>();
@@ -334,7 +334,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         for (Map.Entry<String,List<RegionTreeChild>> entry : collect.entrySet()) {
             String key = entry.getKey();
             //根节点
-            if (RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(key)) {
+            if (O2LovConstants.RegionLov.DEFAULT_CODE.equals(key)) {
                 if (!tree.containsAll(collect.get(key))) {
                     tree.addAll(collect.get(key));
                 }
@@ -361,7 +361,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final Map<String, List<RegionTreeChild>> parentMap = new HashMap<>();
         for (RegionTreeChild node : result) {
             if (node.getParentRegionCode() == null) {
-                node.setParentRegionCode(RegionConstants.RegionLov.DEFAULT_CODE.getCode());
+                node.setParentRegionCode(O2LovConstants.RegionLov.DEFAULT_CODE);
             }
             parentMap.computeIfAbsent(node.getParentRegionCode(), k -> new ArrayList<>()).add(node);
         }

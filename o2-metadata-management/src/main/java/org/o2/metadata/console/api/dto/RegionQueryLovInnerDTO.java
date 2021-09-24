@@ -11,7 +11,7 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-08-03
  **/
 @Data
-public class RegionQueryLovDTO {
+public class RegionQueryLovInnerDTO {
     /**
      * 地区名称
      */
@@ -25,28 +25,30 @@ public class RegionQueryLovDTO {
      */
    private String countryCode;
 
-   private Long parentRegionId;
-
-   private String parentRegionCode;
-
+    /**
+     *  父地区编码
+     */
    private List<String> parentRegionCodes;
 
-   private Integer enabledFlag;
-
-   private Long tenantId;
-
    private List<String> notInRegionCodes;
-
-   private List<Long> parentRegionIds;
-
-   private List<Long> regionIds;
-
+    /**
+     *  租户ID
+     */
+   private Long tenantId;
+    /**
+     *  级别
+     */
    private Integer levelNumber;
 
+   private String addressType;
+    /**
+     *  语言
+     */
    private String lang;
-
     /**
      * 地址集合
      */
    private List<String> regionCodes;
+
+    private String parentRegionCode;
 }

@@ -1,6 +1,10 @@
 package org.o2.metadata.infra.lovadapter.repository;
 
 
+import org.hzero.boot.platform.lov.dto.LovValueDTO;
+
+import java.util.List;
+
 /**
  * hzero lov查询工具
  *
@@ -11,14 +15,12 @@ public interface HzeroLovQueryRepository {
 
 
     /**
-     * 查询值集中指定值的 描述信息（meaning）
+     * 独立值集详细信息
      *
-     * @param tenantId 租户id
      * @param lovCode  值集code
-     * @param lovValue 值集value
-     * @return String
+     * @param tenantId 租户id
+     * @return List<LovValueDTO>
      */
-    String queryLovValueMeaning(Long tenantId,
-                                String lovCode,
-                                String lovValue);
+    List<LovValueDTO> queryLovValue(Long tenantId,
+                                    String lovCode);
 }

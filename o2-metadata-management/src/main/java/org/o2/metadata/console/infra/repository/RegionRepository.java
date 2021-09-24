@@ -1,8 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
-import org.o2.metadata.console.api.dto.RegionQueryLovDTO;
-import org.o2.metadata.console.api.vo.RegionVO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
@@ -24,38 +23,9 @@ public interface RegionRepository extends BaseRepository<Region> {
     List<Region> listRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
     /**
-     * 查询地区
-     *
-     * @param countryIdOrCode 国家ID或CODE
-     * @param enabledFlag     筛选条件
-     * @param parentRegionId  级联父节点ID
-     * @param tenantId        租户ID
-     * @return 地区列表
-     */
-    List<RegionVO> listChildren(String countryIdOrCode, Long parentRegionId, Integer enabledFlag, Long tenantId);
-
-    /**
-     * 根据 levelPath 查询地区列表
-     *
-     * @param levelPathList 等级路径列表
-     * @param tenantId 租户ID
-     * @return 地区列表
-     */
-    List<Region> listRegionByLevelPath(List<String> levelPathList, Long tenantId);
-
-    /**
-     * 查询地区以及子地区
-     *
-     * @param levelPath 等级路径
-     * @param tenantId 租户ID
-     * @return 地区以及子地区
-     */
-    List<Region> listRegionChildrenByLevelPath(String levelPath, Long tenantId);
-
-    /**
      *  查询地区sql值集
      * @param  regionQueryLov 查询条件
      * @param  tenantId 租户ID
      * @return map     */
-    List<Region> listRegionLov(RegionQueryLovDTO regionQueryLov, Long tenantId);
+    List<Region> listRegionLov(RegionQueryLovInnerDTO regionQueryLov, Long tenantId);
 }

@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -112,27 +113,27 @@ public interface LovAdapterRemoteService {
                                         @RequestParam(required = false) Map<String, String> queryLovValueMap);
 
     /**
-     * 根据编码以及租户ID批量查集值
-     * @param queryLovValueMap 查询条件
+     * 查询地区值集
+     * @param innerDTO 查询条件
      * @param organizationId 租户ID
      * @return 值集集合
      */
     @GetMapping("/{organizationId}/lov-internal/query-region-lov")
     ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                       @RequestParam(required = false) Map<String, String> queryLovValueMap);
+                                       RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
      * @param organizationId 租户ID
      * @param page page 页码
      * @param size 大小
-     * @param queryParam 查询参数
+     * @param innerDTO 查询参数
      * @return page
      */
     @GetMapping("/{organizationId}/lov-internal/page-query-region-lov")
     ResponseEntity<String> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam Integer page,
                                            @RequestParam Integer size,
-                                           @RequestParam(required = false) Map<String, String> queryParam);
+                                           RegionQueryLovInnerDTO innerDTO);
 
 }

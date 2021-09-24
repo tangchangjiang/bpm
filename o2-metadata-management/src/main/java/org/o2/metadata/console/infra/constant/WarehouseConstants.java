@@ -38,7 +38,6 @@ public interface WarehouseConstants {
         String EXPRESS_LIMIT_KEY = "o2md:warehouse:express:%d:limit";
         String PICK_UP_LIMIT_KEY = "o2md:warehouse:pick_up:%d:limit";
         String FLAG= "limitFlag";
-
         /**
          * 格式化的字符串
          *
@@ -54,7 +53,7 @@ public interface WarehouseConstants {
          * 格式化的字符串
          * @param key           limit
          * @param tenantId      租户ID
-         * @return
+         * @return redis key
          */
         static String getLimitCacheKey(final String key, final long tenantId) {
             return String.format(key, tenantId);
@@ -65,6 +64,9 @@ public interface WarehouseConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
          ResourceScriptSource PICK_UP_LIMIT_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_limit_cache.lua"));
+
+         ResourceScriptSource UPDATE_WAREHOUSE_CACHE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
 
     }
 }

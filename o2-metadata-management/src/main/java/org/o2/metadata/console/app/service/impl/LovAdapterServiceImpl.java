@@ -6,10 +6,12 @@ import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.co.RegionCO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,13 +66,13 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     }
 
     @Override
-    public List<RegionCO> queryRegion(Long tenantId, Map<String, String> queryParam) {
-        return regionLovQueryRepository.queryRegion(tenantId, queryParam);
+    public List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
+        return regionLovQueryRepository.queryRegion(tenantId, innerDTO);
     }
 
     @Override
-    public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, Map<String, String> queryParam) {
-        return regionLovQueryRepository.queryRegionPage(tenantId, page, size, queryParam);
+    public PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
+        return regionLovQueryRepository.queryRegionPage(tenantId, page, size, innerDTO);
     }
 
     @Override
