@@ -11,6 +11,7 @@ import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -65,12 +66,12 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     }
 
     @Override
-    public List<RegionCO> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
+    public List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
         return regionLovQueryRepository.queryRegion(tenantId, innerDTO);
     }
 
     @Override
-    public PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
+    public PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
         return regionLovQueryRepository.queryRegionPage(tenantId, page, size, innerDTO);
     }
 

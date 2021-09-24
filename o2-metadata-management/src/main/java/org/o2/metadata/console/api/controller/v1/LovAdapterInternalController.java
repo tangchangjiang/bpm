@@ -8,12 +8,12 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PageCO;
-import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.entity.Region;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,15 +99,15 @@ public class LovAdapterInternalController {
     @ApiOperation(value = "查询地区值")
     @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-region-lov")
-    public ResponseEntity<List<RegionCO>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                      RegionQueryLovInnerDTO innerDTO) {
+    public ResponseEntity<List<Region>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                    RegionQueryLovInnerDTO innerDTO) {
         return Results.success(lovAdapterService.queryRegion(organizationId,innerDTO));
     }
 
     @ApiOperation(value = "分页查询地区值")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-query-region-lov")
-    public ResponseEntity<PageCO<RegionCO>> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<PageCO<Region>> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                             RegionQueryLovInnerDTO innerDTO,
                                                             PageRequest pageRequest) {
         return Results.success(lovAdapterService.queryRegionPage(organizationId,pageRequest.getPage(),pageRequest.getSize(),innerDTO));

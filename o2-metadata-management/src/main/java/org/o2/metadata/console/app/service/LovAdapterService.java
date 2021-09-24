@@ -9,6 +9,7 @@ import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
+import org.o2.metadata.console.infra.entity.Region;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public interface LovAdapterService {
      * @param innerDTO 查询条件
      * @return  list
      */
-    List<RegionCO> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
+    List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
@@ -62,7 +63,7 @@ public interface LovAdapterService {
      * @param innerDTO 查询参数
      * @return page
      */
-    PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO);
+    PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 根据编码以及租户ID批量查集值

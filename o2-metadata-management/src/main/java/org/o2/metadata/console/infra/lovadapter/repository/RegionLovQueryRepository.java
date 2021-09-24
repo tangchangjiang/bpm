@@ -1,11 +1,10 @@
 package org.o2.metadata.console.infra.lovadapter.repository;
 
 import org.o2.metadata.console.api.co.PageCO;
-import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -21,7 +20,7 @@ public interface RegionLovQueryRepository {
      * @param innerDTO 查询条件
      * @return  list
      */
-    List<RegionCO> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
+    List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
@@ -31,6 +30,6 @@ public interface RegionLovQueryRepository {
      * @param innerDTO 查询参数
      * @return page
      */
-    PageCO<RegionCO> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO);
+    PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO);
 
 }

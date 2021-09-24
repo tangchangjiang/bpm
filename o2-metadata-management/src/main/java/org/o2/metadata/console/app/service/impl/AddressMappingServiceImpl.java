@@ -12,7 +12,7 @@ import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.constant.RegionConstants;
+import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.AddressMapping;
@@ -302,7 +302,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private List<Region> parentRegion(Map<String, List<RegionTreeChild>> map,Long tenantId) {
         List<String> parentRegionCodes = new ArrayList<>();
         map.forEach((k,v)->{
-            if (!RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(k)) {
+            if (!O2LovConstants.RegionLov.DEFAULT_CODE.equals(k)) {
                 parentRegionCodes.add(k);
             }
         });
@@ -334,7 +334,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         for (Map.Entry<String,List<RegionTreeChild>> entry : collect.entrySet()) {
             String key = entry.getKey();
             //根节点
-            if (RegionConstants.RegionLov.DEFAULT_CODE.getCode().equals(key)) {
+            if (O2LovConstants.RegionLov.DEFAULT_CODE.equals(key)) {
                 if (!tree.containsAll(collect.get(key))) {
                     tree.addAll(collect.get(key));
                 }
@@ -361,7 +361,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         final Map<String, List<RegionTreeChild>> parentMap = new HashMap<>();
         for (RegionTreeChild node : result) {
             if (node.getParentRegionCode() == null) {
-                node.setParentRegionCode(RegionConstants.RegionLov.DEFAULT_CODE.getCode());
+                node.setParentRegionCode(O2LovConstants.RegionLov.DEFAULT_CODE);
             }
             parentMap.computeIfAbsent(node.getParentRegionCode(), k -> new ArrayList<>()).add(node);
         }
