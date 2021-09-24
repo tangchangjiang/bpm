@@ -18,7 +18,7 @@ if not limitHashValue  then
     return 1;
 end
 -- 更新仓库已快递配送接单量
-if limitHashValue ~= nil then
+if limitHashValue then
     -- 获取仓库信息
     local warehouse = redis.call("hget", warehouseCacheKey, warehouseCode);
     local warehouseObject = cjson.decode(warehouse);

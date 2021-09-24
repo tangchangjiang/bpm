@@ -19,6 +19,7 @@ import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.WarehouseLimitBO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -242,9 +243,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
-            JSONObject object = JsonHelper.stringToJsonObject(v);
-            boolean flag = object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
-            if (Boolean.TRUE.equals(flag)) {
+            WarehouseLimitBO bo= JsonHelper.stringToObject(v,WarehouseLimitBO.class);
+            if (Boolean.TRUE.equals(bo.getLimitFlag())) {
                 set.add(k);
             }
         }
