@@ -1,15 +1,14 @@
 package org.o2.metadata.infra.redis.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.core.base.AopProxy;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParamValue;
 import org.o2.metadata.infra.entity.SystemParameter;
 import org.o2.metadata.infra.redis.SystemParameterRedis;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,8 +20,7 @@ import java.util.*;
  * @author yipeng.zhu@hand-china.com 2021-07-11
  **/
 @Component
-@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
-public class SystemParameterRedisImpl implements SystemParameterRedis {
+public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<SystemParameterRedisImpl> {
     private final RedisCacheClient redisCacheClient;
 
     public SystemParameterRedisImpl(RedisCacheClient redisCacheClient) {
@@ -31,19 +29,17 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
 
     @Override
     public SystemParameter getSystemParameter(String paramCode, Long tenantId) {
-        SystemParameterRedisImpl currentProxy = (SystemParameterRedisImpl) AopContext.currentProxy();
-        return currentProxy.querySystemParameter(paramCode,tenantId);
+        return self().querySystemParameter(paramCode,tenantId);
 
     }
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
-        SystemParameterRedisImpl currentProxy = (SystemParameterRedisImpl) AopContext.currentProxy();
         List<SystemParameter> doList = new ArrayList<>();
         if (CollectionUtils.isEmpty(paramCodeList)) {
             return doList;
         }
         for (String str : paramCodeList) {
-            SystemParameter systemParameter = currentProxy.querySystemParameter(str,tenantId);
+            SystemParameter systemParameter = self().querySystemParameter(str,tenantId);
             doList.add(systemParameter);
         }
         return doList;
