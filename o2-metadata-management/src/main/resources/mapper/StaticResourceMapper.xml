@@ -59,6 +59,10 @@
             <if test="sourceModuleCode!=null">
                 AND osrc.source_module_code=#{sourceModuleCode}
             </if>
+            <if test="jsonKey != null and jsonKey != ''">
+                <bind name="jsonKeyLike" value="'%' + jsonKey + '%'"/>
+                AND osrc.json_key like #{jsonKeyLike}
+            </if>
             <choose>
                 <when test="tenantId != null">
                     and osr.tenant_id = #{tenantId}
