@@ -115,7 +115,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isNotEmpty(regionCode)) {
             regionList = regionList.stream().filter(region ->  regionCode.equals(region.getRegionCode())).collect(Collectors.toList());
         }
-        // 父地区编码
+        // 父地区
         List<String> parentRegionCodes = queryLov.getParentRegionCodes();
         if (CollectionUtils.isNotEmpty(parentRegionCodes)) {
             regionList = regionList.stream().filter(region ->  parentRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
@@ -134,6 +134,11 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (CollectionUtils.isNotEmpty(regionCodes)) {
             regionList = regionList.stream().filter(region ->  regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
 
+        }
+        // 地区的上一级为
+        String parentRegionCode = queryLov.getParentRegionCode();
+        if (StringUtils.isNotEmpty(parentRegionCode)) {
+            regionList = regionList.stream().filter(region ->  parentRegionCode.equals(region.getParentRegionCode())).collect(Collectors.toList());
         }
         return regionList;
     }

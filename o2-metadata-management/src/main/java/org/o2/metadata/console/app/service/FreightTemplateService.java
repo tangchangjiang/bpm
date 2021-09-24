@@ -93,8 +93,8 @@ public interface FreightTemplateService {
     /**
      * 设置默默认运费模板
      *
-     * @param organizationId
-     * @param templateId
+     * @param organizationId 租户ID
+     * @param templateId 模板ID
      */
     void setDefaultTemp(final Long organizationId, final Long templateId);
 
@@ -104,13 +104,13 @@ public interface FreightTemplateService {
      * @param organizationId organizationId 租户ID
      * @return 运费模板和运费模板明细
      */
-    FreightTemplateManagementVO querydefaultTemplate(final Long organizationId);
+    FreightTemplateManagementVO queryDefaultTemplateDetail(final Long organizationId);
 
 
     /**
-     * 手动转换值集视图
-     * @param freightTemplates
-     * @param organizationId
+     * 获取计价单位含义
+     * @param freightTemplates  模板
+     * @param organizationId 租户ID
      */
     void tranLov(List<FreightTemplate> freightTemplates,Long organizationId);
 
@@ -122,7 +122,7 @@ public interface FreightTemplateService {
     FreightInfoCO getFreightTemplate(FreightDTO freight);
 
     /**
-     * 默认模版信息
+     * 内部方法 默认模版信息
      * @param  organizationId 租户ID
      * @return  默认模版信息
      */

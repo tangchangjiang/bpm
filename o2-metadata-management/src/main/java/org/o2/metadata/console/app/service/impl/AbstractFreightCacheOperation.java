@@ -8,7 +8,6 @@ import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
-import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;

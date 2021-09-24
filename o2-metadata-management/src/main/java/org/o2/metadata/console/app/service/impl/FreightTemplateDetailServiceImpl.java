@@ -71,13 +71,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
     @Override
     public List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId) {
-        List<FreightTemplateDetail> details = freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
-        Map<String,Region>  map = getRegionMap(details);
-        for (FreightTemplateDetail detail : details) {
-            Region region = map.get(detail.getRegionCode());
-            detail.setRegionName(region.getRegionName());
-        }
-        return details;
+       return freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
     }
 
     @Override

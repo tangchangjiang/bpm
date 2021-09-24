@@ -69,6 +69,7 @@ public class RegionServiceImpl extends BaseServiceImpl<Region> implements Region
         queryLovDTO.setCountryCode(regionQueryDTO.getCountryCode());
         queryLovDTO.setTenantId(organizationId);
         queryLovDTO.setLevelNumber(regionQueryDTO.getLevelNumber());
+        queryLovDTO.setParentRegionCode(regionQueryDTO.getParentRegionCode());
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, organizationId);
         return RegionConverter.poToVoListObjects(regionList);
     }

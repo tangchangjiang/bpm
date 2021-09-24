@@ -49,4 +49,6 @@ public class RegionQueryLovInnerDTO {
      * 地址集合
      */
    private List<String> regionCodes;
+
+    private String parentRegionCode;
 }

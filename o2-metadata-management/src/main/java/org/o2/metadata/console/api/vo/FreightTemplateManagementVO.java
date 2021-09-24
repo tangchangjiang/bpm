@@ -15,6 +15,7 @@ import org.springframework.cglib.beans.BeanCopier;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,62 +99,6 @@ public class FreightTemplateManagementVO extends FreightTemplate {
         return  regionDetailList ;
 
     }
-
-    /***
-     * 跟进中台给过来的数据转化成数据库需要的数据格式
-     * @param regionDetailTemplateList
-     * @return
-     */
-    public  List<FreightTemplateDetail>  exchangeRegionDetailTemplateList2Displayist(List<FreightTemplateDetail> regionDetailTemplateList){
-
-        final List<FreightTemplateDetail> regionDetailDisplayList = new ArrayList<>();
-        if (CollectionUtils.isEmpty(regionDetailTemplateList)){return regionDetailDisplayList;}
-        //转化成前端需要的显示格式~
-        Map<String, List<FreightTemplateDetail>> complexMap = regionDetailTemplateList.stream().collect(Collectors.groupingBy(detail -> fetchGroupKey(detail)));
-
-        Long tenantId = DetailsHelper.getUserDetails().getTenantId();
-        complexMap.forEach((key,value)->{
-            FreightTemplateDetail fist =   value.get(0);
-            FreightTemplateDetail detail =  new FreightTemplateDetail();
-            detail.setFirstPieceWeight(fist.getFirstPieceWeight());
-            detail.setFirstPrice(fist.getFirstPrice());
-            detail.setNextPieceWeight(fist.getNextPieceWeight());
-            detail.setNextPrice(fist.getNextPrice());
-            detail.setTransportTypeCode(fist.getTransportTypeCode());
-            detail.setTransportTypeMeaning(fist.getTransportTypeMeaning());
-            detail.setTemplateId(fist.getTemplateId());
-            detail.setDefaultFlag(fist.getDefaultFlag());
-            detail.setTenantId(fist.getTenantId()==null ? tenantId:fist.getTenantId());
-            detail.setRegionIdArr(value.stream().map(e -> e.getRegionCode()).collect(Collectors.toList()));
-            Map<String ,List<FreightTemplateDetail>> regionMap = value.stream().collect(
-                    Collectors.groupingBy(regionItem -> StringUtils.isEmpty(regionItem.getParentRegionName())?"":regionItem.getParentRegionName()));
-            List<String>  displayRegion = new ArrayList<>();
-            regionMap.forEach((parentRegion,region)->{
-              String    curStr = parentRegion+":["+ StringUtils.join(region.stream().map(e -> e.getRegionName()).collect(Collectors.toList()), ",") +"]" ;
-              displayRegion.add(curStr);
-            });
-
-            detail.setRegionName(StringUtils.join(displayRegion, ","));
-            detail.setRegionNameArr(value.stream().map(e -> e.getRegionName()).collect(Collectors.toList()));
-            detail.setObjectVersionNumberArr(value.stream().map(e -> e.getObjectVersionNumber()).collect(Collectors.toList()));
-            detail.setTemplateDetailIdArr(value.stream().map(e -> e.getTemplateDetailId()).collect(Collectors.toList()));
-
-
-            regionDetailDisplayList.add(detail);
-        });
-
-        return  regionDetailDisplayList;
-    }
-
-    /**
-     * 前端分组依据
-     * @param detail
-     * @return
-     */
-    public static String fetchGroupKey(final FreightTemplateDetail detail) {
-        return detail.getFirstPieceWeight()+""+detail.getFirstPrice()+""+detail.getNextPieceWeight()+""+detail.getNextPrice()+""+detail.getTransportTypeCode();
-    }
-
 
 
     @Override

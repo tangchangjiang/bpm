@@ -107,7 +107,7 @@ public class FreightTemplateController extends BaseController {
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_TEMPLATE_DETAILS})
     @GetMapping("/defaultTemplate")
     public ResponseEntity<FreightTemplateManagementVO> querydefaultTemplate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
-        final FreightTemplateManagementVO freightTemplate = freightTemplateService.querydefaultTemplate(organizationId);
+        final FreightTemplateManagementVO freightTemplate = freightTemplateService.queryDefaultTemplateDetail(organizationId);
         return Results.success(freightTemplate);
     }
 
