@@ -18,9 +18,10 @@ public class PageCO<E> {
     private Integer size;
     private Integer number;
     private List<E> content;
+    private List<E> emptyList = new ArrayList<>();
 
     public PageCO() {
-        this.content = new ArrayList();
+        this.content = emptyList;
     }
 
     public PageCO(List<E> content, Integer page,Integer size, Integer total) {

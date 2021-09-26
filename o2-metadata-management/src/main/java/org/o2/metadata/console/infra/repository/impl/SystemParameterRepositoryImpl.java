@@ -27,4 +27,9 @@ public class SystemParameterRepositoryImpl extends BaseRepositoryImpl<SystemPara
     public List<SystemParameter> fuzzyQuery(SystemParameter systemParameter, Long tenantId) {
         return systemParameterMapper.fuzzyQuery(systemParameter, tenantId);
     }
+
+    @Override
+    public List<SystemParameter> queryInitData(Long tenantId) {
+        return systemParameterMapper.queryInitData(tenantId);
+    }
 }

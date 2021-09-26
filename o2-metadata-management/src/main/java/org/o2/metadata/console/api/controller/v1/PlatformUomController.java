@@ -2,7 +2,6 @@ package org.o2.metadata.console.api.controller.v1;
 
 import io.swagger.annotations.Api;
 import org.hzero.core.base.BaseController;
-import org.o2.metadata.console.app.service.PlatformUomService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

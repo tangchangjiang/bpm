@@ -18,7 +18,7 @@ for configKey, configValue in pairs(configMap) do
             expressObject['limitFlag'] = false;
             redis.call("hset", expressKey, configKey, cjson.encode(expressObject));
         end
-        if warehouseExpressedQuantity < expressedQuantity then
+        if warehouseExpressedQuantity <= expressedQuantity then
             expressObject['limitFlag'] = true;
             redis.call("hset", expressKey, configKey, cjson.encode(expressObject));
         end
@@ -36,7 +36,7 @@ for configKey, configValue in pairs(configMap) do
             pickUpObject['limitFlag'] = false;
             redis.call("hset", pickUpKey, configKey, cjson.encode(pickUpObject));
         end
-        if warehousePickUpQuantity <  pickUpQuantity then
+        if warehousePickUpQuantity <= pickUpQuantity then
             pickUpObject['limitFlag'] = true;
             redis.call("hset", pickUpKey, configKey, cjson.encode(pickUpObject));
         end

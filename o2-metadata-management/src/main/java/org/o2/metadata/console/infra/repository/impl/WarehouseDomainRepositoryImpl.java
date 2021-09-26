@@ -30,6 +30,5 @@ public class WarehouseDomainRepositoryImpl implements WarehouseDomainRepository 
 
     @Override
     public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
-
     }
 }

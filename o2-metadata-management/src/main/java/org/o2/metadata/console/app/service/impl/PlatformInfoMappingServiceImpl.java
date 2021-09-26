@@ -49,18 +49,16 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
         // 更新
         if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
             List<PlatformInfoMapping> updateList = statusMap.get(AuditDomain.RecordStatus.update);
-            updateList.forEach(item -> {
-                // TODO: 唯一性校验
+            for (PlatformInfoMapping item : updateList) {
                 platformInfoMappingRepository.updateByPrimaryKeySelective(item);
-            });
+            }
         }
         // 新增
         if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
             List<PlatformInfoMapping> createList = statusMap.get(AuditDomain.RecordStatus.create);
-            createList.forEach(item -> {
-                // TODO: 唯一性校验
+            for (PlatformInfoMapping item : createList) {
                 platformInfoMappingRepository.insertSelective(item);
-            });
+            }
         }
         return platformInfoMappingList;
     }

@@ -17,6 +17,16 @@
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
     </resultMap>
+    <resultMap id="parameterMap" type="org.o2.metadata.console.infra.entity.SystemParameter" extends="BaseResultMap">
+        <collection property="setSystemParamValue" resultMap="valueMap" columnPrefix="value_"/>
+    </resultMap>
+    <resultMap id="valueMap" type="org.o2.metadata.console.infra.entity.SystemParamValue">
+        <result column="param_value" property="paramValue" jdbcType="VARCHAR"/>
+        <result column="param_key" property="paramKey" jdbcType="VARCHAR"/>
+        <result column="param1" property="param1" jdbcType="VARCHAR"/>
+        <result column="param2" property="param2" jdbcType="VARCHAR"/>
+        <result column="param3" property="param3" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <sql id="BaseSql">
         ${tb}.param_id,
@@ -66,5 +76,26 @@
             </choose>
         </where>
     </select>
-
+    <select id="queryInitData" resultMap="parameterMap">
+        select param.param_code,
+        param.param_type_code,
+        param.default_value,
+        param.param_name,
+        va.param_value as value_param_value,
+        va.param_key as value_param_key,
+        va.param1 as value_param1,
+        va.param2 as value_param2,
+        va.param3 as value_param3
+        from o2md_system_parameter param
+        left join o2md_system_param_value va on param.param_id = va.param_id
+        where 1=1 and param.active_flag =1
+        <choose>
+            <when test="tenantId != null">
+                AND param.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

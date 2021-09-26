@@ -69,12 +69,6 @@
             <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
             and  w.warehouse_name LIKE #{warehouseNameLike}
         </if>
-        <if test="_databaseId == 'mysql'">
-            and w.actived_date_to <![CDATA[>]]> sysdate()
-        </if>
-        <if test="_databaseId == 'oracle'">
-            and w.actived_date_to <![CDATA[>]]> sysdate
-        </if>
         order by w.warehouse_code asc
     </select>
 

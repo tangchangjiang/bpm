@@ -72,7 +72,7 @@ public class WarehouseInternalController {
     @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/updateExpressValue"})
-    public ResponseEntity<Integer> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    public ResponseEntity<Long> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                 @RequestParam(value = "warehouseCode") String warehouseCode,
                                                 @RequestParam(value = "increment") String increment) {
         return Results.success(warehouseService.updateExpressValue(warehouseCode, increment, organizationId));
@@ -81,7 +81,7 @@ public class WarehouseInternalController {
     @ApiOperation("仓库自提接单量增量更新(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/updatePickUpValue"})
-    public ResponseEntity<Integer> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    public ResponseEntity<Long> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                @RequestParam(value = "warehouseCode") String warehouseCode,
                                                @RequestParam(value = "increment") String increment) {
         return Results.success(warehouseService.updatePickUpValue(warehouseCode, increment, organizationId));

@@ -61,7 +61,7 @@ public interface WarehouseService {
      * @param increment      快递配送接单量增量
      * @return 1 成功 -1 失败
      */
-    Integer updateExpressValue(String warehouseCode, String increment, Long tenantId);
+    Long updateExpressValue(String warehouseCode, String increment, Long tenantId);
 
     /**
      * 仓库自提接单量增量更新
@@ -71,7 +71,7 @@ public interface WarehouseService {
      * @param increment     自提单量增量
      * @return 1 成功 -1 失败
      */
-    Integer updatePickUpValue(String warehouseCode, String increment, Long tenantId);
+    Long updatePickUpValue(String warehouseCode, String increment, Long tenantId);
 
     /**
      * 仓库limit缓存KEY

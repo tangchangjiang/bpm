@@ -91,7 +91,6 @@
                 AND 1 =0
             </otherwise>
         </choose>
-        and enabled_flag = 1
     </select>
 
     <!-- SQL 要优化 都是一个SQL  -->

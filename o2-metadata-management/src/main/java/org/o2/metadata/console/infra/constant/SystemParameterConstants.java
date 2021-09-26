@@ -1,5 +1,8 @@
 package org.o2.metadata.console.infra.constant;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.scripting.support.ResourceScriptSource;
+
 /**
  *
  * 系统参数常量
@@ -77,10 +80,11 @@ public interface SystemParameterConstants {
         String FILE_SUFFIX_JSON = ".json";
 
         String FILE_JSON_TYPE = "application/json";
-
         /**
          * 上传路径
          */
         String FILE_PREFIX = "FILE_PREFIX";
     }
+    ResourceScriptSource INIT_DATA_REDIS_HASH_VALUE_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/systemParameter/init_data_redis_hash_value.lua"));
 }

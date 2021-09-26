@@ -180,12 +180,12 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 
     @Override
-    public Integer updateExpressValue(String warehouseCode, String increment, Long tenantId) {
+    public Long updateExpressValue(String warehouseCode, String increment, Long tenantId) {
          return warehouseRedis.updateExpressQuantity(warehouseCode,increment,tenantId);
     }
 
     @Override
-    public Integer updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
+    public Long updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
         return warehouseRedis.updatePickUpValue(warehouseCode,increment,tenantId);
     }
 
