@@ -165,9 +165,6 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public void updateToRedis(SystemParameter systemParameter, Long tenantId) {
         String paramTypeCode = systemParameter.getParamTypeCode();
-        // 去除多余的字段
-        systemParameter.set_token(null);
-        systemParameter.setFlex(null);
         //kv 类型 redis更新
         if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(paramTypeCode)) {
             updateKv(systemParameter,tenantId);
@@ -215,6 +212,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
         List<SystemParamValue> voList = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
         if (CollectionUtils.isNotEmpty(voList)) {
+            for (SystemParamValue value : voList) {
+                value.setFlex(null);
+                value.set_token(null);
+            }
             redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JsonHelper.objectToString(voList));
         }
     }

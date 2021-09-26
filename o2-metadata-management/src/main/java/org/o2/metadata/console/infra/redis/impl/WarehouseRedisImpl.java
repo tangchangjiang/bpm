@@ -84,16 +84,11 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         redisCacheClient.opsForHash().putAll(key, updateMap);
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
-        try {
-            this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
-        }catch ( Exception e) {
-            e.printStackTrace();
-        }
-
+        this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
     }
 
     @Override
-    public Integer updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
+    public Long updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
         // 仓库快递配送接单量限制 key
         String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
         // 库存缓存key
@@ -105,7 +100,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     }
 
     @Override
-    public Integer updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId) {
+    public Long updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId) {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
         // 库存缓存key
@@ -125,15 +120,15 @@ public class WarehouseRedisImpl implements WarehouseRedis {
      * @param scriptSource lua
      * @return integer
      */
-    private Integer executeScript(List<String> keyList, final String warehouseCode, final String num, ScriptSource scriptSource) {
-        final DefaultRedisScript<Integer> defaultRedisScript = new DefaultRedisScript<>();
+    private Long executeScript(List<String> keyList, final String warehouseCode, final String num, ScriptSource scriptSource) {
+        final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(scriptSource);
-        defaultRedisScript.setResultType(Integer.class);
+        defaultRedisScript.setResultType(Long.class);
         try {
             return this.redisCacheClient.execute(defaultRedisScript, keyList, warehouseCode, num);
         } catch (Exception e) {
             log.error("execute script error", e);
-            return -1;
+            return -1L;
         }
     }
 }
