@@ -1,7 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.o2.metadata.console.app.service.PlatformUomService;
-import org.o2.metadata.console.infra.repository.PlatformUomRepository;
 import org.springframework.stereotype.Service;
 
 

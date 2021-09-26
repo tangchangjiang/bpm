@@ -4,7 +4,6 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 
 import org.o2.metadata.console.api.co.PageCO;
-import org.o2.metadata.console.api.co.RegionCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;

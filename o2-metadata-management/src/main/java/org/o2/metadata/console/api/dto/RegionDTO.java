@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 @ApiModel("省份")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegionDTO {
+public class RegionDTO  implements Serializable {
     private Long regionId;
 
     private String regionCode;

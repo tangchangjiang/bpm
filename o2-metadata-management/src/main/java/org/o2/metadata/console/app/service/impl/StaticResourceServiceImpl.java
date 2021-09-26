@@ -4,7 +4,6 @@ import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.metadata.console.app.service.StaticResourceService;
 import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,11 @@ import io.choerodon.mybatis.domain.AuditDomain;
 @Service
 public class StaticResourceServiceImpl implements StaticResourceService {
 
-    @Autowired
     private StaticResourceRepository staticResourceRepository;
+
+    public StaticResourceServiceImpl(StaticResourceRepository staticResourceRepository) {
+        this.staticResourceRepository = staticResourceRepository;
+    }
 
 
     @Override
@@ -40,7 +42,6 @@ public class StaticResourceServiceImpl implements StaticResourceService {
         if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
             List<StaticResource> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
-                // TODO: 唯一性校验
                 UniqueHelper.valid(item, StaticResource.O2MD_STATIC_RESOURCE_U1);
                 staticResourceRepository.updateByPrimaryKeySelective(item);
             });
@@ -49,15 +50,12 @@ public class StaticResourceServiceImpl implements StaticResourceService {
         if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
             List<StaticResource> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
-                // TODO: 唯一性校验
                 UniqueHelper.valid(item, StaticResource.O2MD_STATIC_RESOURCE_U1);
                 staticResourceRepository.insertSelective(item);
             });
         }
         return staticResourceList;
     }
-
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public StaticResource save(StaticResource staticResource) {

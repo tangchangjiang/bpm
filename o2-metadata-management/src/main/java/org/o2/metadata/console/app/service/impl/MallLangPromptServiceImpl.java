@@ -23,6 +23,7 @@ import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.MallLangPromptService;
 import org.o2.metadata.console.app.service.StaticResourceConfigService;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
+import org.o2.metadata.console.infra.constant.MallLangConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
@@ -67,9 +68,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
-    private final String SITE_CODE = "siteCode";
-    private final String SITE_NAME = "siteName";
-    private final String LOV_CODE = "O2CMS.SITE";
 
     public MallLangPromptServiceImpl(MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
@@ -165,7 +163,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
             }
         }
         //详情页面校验报错
-        if (mallLangPromptList.size() == 0 && CollectionUtils.isNotEmpty(errorMsg)) {
+        if (mallLangPromptList.isEmpty() && CollectionUtils.isNotEmpty(errorMsg)) {
             StringBuilder stringBuilder = new StringBuilder();
             errorMsg.forEach(eMsg -> stringBuilder.append(MessageAccessor.getMessage(eMsg)).append("\r\n"));
             throw new CommonException(stringBuilder.toString());
@@ -194,8 +192,8 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
             String[] result = siteCode.split(",");
             for (String siteCodeResult : result) {
                 for (Map<String, Object> s : maps) {
-                    if (siteCodeResult.equals(s.get(SITE_CODE))) {
-                        siteRangName.put(siteCodeResult, s.get(SITE_NAME));
+                    if (siteCodeResult.equals(s.get(MallLangConstants.MallLangPrompt.SITE_CODE))) {
+                        siteRangName.put(siteCodeResult, s.get(MallLangConstants.MallLangPrompt.SITE_NAME));
                     }
                 }
             }
@@ -217,7 +215,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
      */
     @Cacheable(cacheNames = "O2_LOV", key = "#root.methodName + '_' + '#organizationId'")
     public List<Map<String, Object>> queryCmsSiteLovValue(Long organizationId) {
-        return hzeroLovQueryRepository.queryLovValueMeaning(organizationId, LOV_CODE, new HashMap<>());
+        return hzeroLovQueryRepository.queryLovValueMeaning(organizationId, MallLangConstants.MallLangPrompt.LOV_CODE, new HashMap<>());
     }
 
 

@@ -58,7 +58,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             return  new PageCO<>();
         }
         page = page +1;
-        List<Region> collect = regionList.stream().skip((page - 1)*size) .limit(size).collect(Collectors.toList());
+        List<Region> collect = regionList.stream().skip((page - 1) * size) .limit(size).collect(Collectors.toList());
         return new PageCO<>(collect,page,size,regionList.size());
     }
     
