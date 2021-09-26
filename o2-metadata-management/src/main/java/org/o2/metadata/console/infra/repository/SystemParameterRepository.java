@@ -19,4 +19,10 @@ public interface SystemParameterRepository extends BaseRepository<SystemParamete
      */
     List<SystemParameter> fuzzyQuery(SystemParameter systemParameter, Long tenantId);
 
+    /**
+     * 系统初始化数据
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<SystemParameter> queryInitData(Long tenantId);
 }

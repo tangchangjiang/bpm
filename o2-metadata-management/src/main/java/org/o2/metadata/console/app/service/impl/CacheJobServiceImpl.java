@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.message.MessageAccessor;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.CacheJobService;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
@@ -72,14 +70,12 @@ public class CacheJobServiceImpl implements CacheJobService {
     @Override
     public void refreshSysParameter(Long tenantId) {
         // 获取系统参数
-        List<SystemParameter> systemParameterList = systemParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
-                .andWhere(Sqls.custom().andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)).build());
+        List<SystemParameter> systemParameterList = systemParameterRepository.queryInitData(tenantId);
 
         if (CollectionUtils.isEmpty(systemParameterList)) {
             log.warn(MessageAccessor.getMessage(SystemParameterConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
             return;
         }
-
         systemParameterRedis.synToRedis(systemParameterList, tenantId);
     }
 

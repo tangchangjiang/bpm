@@ -21,4 +21,10 @@ public interface SystemParameterMapper extends BaseMapper<SystemParameter> {
     List<SystemParameter> fuzzyQuery(@Param("systemParameter") SystemParameter systemParameter,
                                      @Param("tenantId") Long tenantId);
 
+    /**
+     * 系统参数初始化数据
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<SystemParameter> queryInitData(@Param("tenantId")Long tenantId);
 }
