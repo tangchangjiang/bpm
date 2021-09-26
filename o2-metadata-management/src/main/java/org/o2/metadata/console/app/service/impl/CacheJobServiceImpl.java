@@ -13,6 +13,7 @@ import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -71,10 +72,19 @@ public class CacheJobServiceImpl implements CacheJobService {
     public void refreshSysParameter(Long tenantId) {
         // 获取系统参数
         List<SystemParameter> systemParameterList = systemParameterRepository.queryInitData(tenantId);
-
         if (CollectionUtils.isEmpty(systemParameterList)) {
             log.warn(MessageAccessor.getMessage(SystemParameterConstants.Message.SYSTEM_PARAMETER_NOT_FOUND).desc());
             return;
+        }
+        for (SystemParameter systemParameter : systemParameterList) {
+            Set<SystemParamValue> systemParamValues = systemParameter.getSetSystemParamValue();
+            if (CollectionUtils.isEmpty(systemParameterList)) {
+                break;
+            }
+            for (SystemParamValue value : systemParamValues) {
+                value.set_token(null);
+                value.setFlex(null);
+            }
         }
         systemParameterRedis.synToRedis(systemParameterList, tenantId);
     }

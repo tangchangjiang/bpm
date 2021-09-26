@@ -165,6 +165,9 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public void updateToRedis(SystemParameter systemParameter, Long tenantId) {
         String paramTypeCode = systemParameter.getParamTypeCode();
+        // 去除多余的字段
+        systemParameter.set_token(null);
+        systemParameter.setFlex(null);
         //kv 类型 redis更新
         if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(paramTypeCode)) {
             updateKv(systemParameter,tenantId);
