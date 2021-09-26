@@ -4,6 +4,8 @@ import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -117,6 +119,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             List<Long> templateDetailIdArr = value.stream().map(FreightTemplateDetail::getTemplateDetailId).collect(Collectors.toList());
             detail.setRegionIdArr(regionId);
             detail.setRegionNameArr(regionNames);
+            if (CollectionUtils.isNotEmpty(regionNames)) {
+                detail.setRegionName(StringUtils.join(regionNames, BaseConstants.Symbol.COMMA));
+            }
             detail.setTemplateDetailIdArr(templateDetailIdArr);
             regionDetailDisplayList.add(detail);
         });
@@ -495,7 +500,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 更新运费模板缓存(包含运费模板、运费模板明细)
      *
-     * @param resultVO
+     * @param resultVO 运费模板
      */
     private void saveFreightCache(FreightTemplateManagementVO resultVO) {
         FreightTemplateBO freightTemplate = convertToFreightTemplate(resultVO);
@@ -523,7 +528,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     /**
      * 删除运费模板和运费模板明细信息
      *
-     * @param freightTemplate
+     * @param freightTemplate 模板
      */
     private void deleteFreightCache(FreightTemplate freightTemplate) {
         FreightTemplateBO template = new FreightTemplateBO();
@@ -536,7 +541,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         // 查询默认模板
         final List<FreightTemplate> list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID, organizationId)
-                        .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, Integer.valueOf(1))).build());
+                        .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, 1)).build());
 
         Assert.isTrue(!CollectionUtils.isEmpty(list), "Default freight template does not exist");
         Assert.isTrue(list.size() == 1, "Default freight template is not unique");
