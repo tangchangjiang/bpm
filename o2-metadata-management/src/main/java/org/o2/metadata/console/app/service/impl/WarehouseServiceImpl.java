@@ -77,8 +77,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
-        // 准备触发线上可用库存计算的数据
-        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(warehouses);
         // 更新MySQL
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
@@ -87,11 +85,22 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         // 更新 redis
         warehouseRedis.batchUpdateWarehouse(warehouseCodes,tenantId);
+        return list;
+
+    }
+
+    @Override
+    public void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> warehouses) {
+        // 准备触发线上可用库存计算的数据
+        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(warehouses);
         // 触发线上可用库存计算
         if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
-            o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
+            try {
+                o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
         }
-        return list;
     }
 
     @Override

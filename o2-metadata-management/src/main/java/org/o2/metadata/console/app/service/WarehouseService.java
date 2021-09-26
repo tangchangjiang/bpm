@@ -36,6 +36,13 @@ public interface WarehouseService {
     List<Warehouse> updateBatch(Long tenantId, List<Warehouse> warehouses);
 
     /**
+     *触发线上可用库存计算
+     * @param  warehouses 仓库
+     * @param  tenantId 租户id
+     */
+    void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> warehouses);
+
+    /**
      * 批量操作仓库
      * @date 2020-05-22
      * @param tenantId 租户ID

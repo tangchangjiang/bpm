@@ -91,6 +91,7 @@ public class WarehouseController extends BaseController {
             w.setActiveFlag(1);
         });
         List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses);
         return Results.success(list);
     }
     @ApiOperation(value = "批量操作仓库")
@@ -103,6 +104,7 @@ public class WarehouseController extends BaseController {
             w.setActiveFlag(1);
         });
         List<Warehouse> list = warehouseService.batchHandle(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses);
         return  Results.success(list);
     }
 
