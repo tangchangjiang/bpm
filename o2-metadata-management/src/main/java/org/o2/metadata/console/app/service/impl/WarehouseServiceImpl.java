@@ -90,9 +90,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> warehouses) {
+    public void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses) {
         // 准备触发线上可用库存计算的数据
-        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(warehouses);
+        List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(oldWarehouses, newWarehouses);
         // 触发线上可用库存计算
         if (CollectionUtils.isNotEmpty(triggerCalInfoList)) {
             try {
@@ -145,37 +145,38 @@ public class WarehouseServiceImpl implements WarehouseService {
         return WarehouseConverter.doToCoListObjects(warehouseDomainService.listWarehouses(queryInnerDTO.getWarehouseCodes(), tenantId));
     }
 
-    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> warehouses) {
+    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> oldWarehouses,List<Warehouse> newWarehouses) {
         // 触发线上可用库存计算
         List<TriggerStockCalWithWhVO> calInfoList = new ArrayList<>(4);
-        for (Warehouse warehouse : warehouses) {
-            List<Warehouse> warehouseList = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class).andWhere(Sqls.custom()
-                    .andEqualTo(Warehouse.FIELD_WAREHOUSE_ID, warehouse.getWarehouseId())
-                    .andEqualTo(Warehouse.FIELD_TENANT_ID, warehouse.getTenantId())).build());
-            if (CollectionUtils.isEmpty(warehouseList)) {
+        Map<String,Warehouse> map = new HashMap<>(16);
+        for (Warehouse warehouse : newWarehouses) {
+            map.put(warehouse.getWarehouseCode(), warehouse);
+        }
+        for (Warehouse warehouse : oldWarehouses) {
+            Warehouse old = map.get(warehouse.getWarehouseCode());
+            if (null == old) {
                 continue;
             }
-            Warehouse origin = warehouseList.get(0);
-            String warehouseCode = origin.getWarehouseCode();
-                if (!warehouse.getWarehouseStatusCode().equals(origin.getWarehouseStatusCode())) {
+            String warehouseCode = old.getWarehouseCode();
+                if (!warehouse.getWarehouseStatusCode().equals(old.getWarehouseStatusCode())) {
                     TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
                     vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
                     vo.setWarehouseCode(warehouseCode);
                     calInfoList.add(vo);
                 }
-                if (!warehouse.getActiveFlag().equals(origin.getActiveFlag())) {
+                if (!warehouse.getActiveFlag().equals(old.getActiveFlag())) {
                     TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
                     vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
                     vo.setWarehouseCode(warehouseCode);
                     calInfoList.add(vo);
                 }
-                if (!warehouse.getExpressedFlag().equals(origin.getExpressedFlag())) {
+                if (!warehouse.getExpressedFlag().equals(old.getExpressedFlag())) {
                     TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
                     vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
                     vo.setWarehouseCode(warehouseCode);
                     calInfoList.add(vo);
                 }
-                if (!warehouse.getPickedUpFlag().equals(origin.getPickedUpFlag())) {
+                if (!warehouse.getPickedUpFlag().equals(old.getPickedUpFlag())) {
                     TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
                     vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
                     vo.setWarehouseCode(warehouseCode);
@@ -185,8 +186,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         return calInfoList;
     }
-
-
 
     @Override
     public Long updateExpressValue(String warehouseCode, String increment, Long tenantId) {

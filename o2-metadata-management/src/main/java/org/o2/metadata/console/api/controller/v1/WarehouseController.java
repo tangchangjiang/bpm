@@ -12,6 +12,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -90,8 +91,10 @@ public class WarehouseController extends BaseController {
             w.setTenantId(organizationId);
             w.setActiveFlag(1);
         });
+        // 更新前数据
+        List<Warehouse> oldWarehouse = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses, oldWarehouse);
         return Results.success(list);
     }
     @ApiOperation(value = "批量操作仓库")
@@ -103,9 +106,12 @@ public class WarehouseController extends BaseController {
             w.setTenantId(organizationId);
             w.setActiveFlag(1);
         });
-        List<Warehouse> list = warehouseService.batchHandle(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses);
-        return  Results.success(list);
+        // 更新前数据
+        List<Warehouse> oldWarehouse = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
+        // 更新后的数据
+        List<Warehouse> newlist = warehouseService.batchHandle(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newlist);
+        return  Results.success(newlist);
     }
 
     @ApiOperation(value = "服务点查询")

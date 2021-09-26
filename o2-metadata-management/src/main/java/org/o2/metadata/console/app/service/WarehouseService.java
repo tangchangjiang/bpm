@@ -37,10 +37,11 @@ public interface WarehouseService {
 
     /**
      *触发线上可用库存计算
-     * @param  warehouses 仓库
+     * @param  oldWarehouses 仓库更新前
+     * @param  newWarehouses 仓库更新后
      * @param  tenantId 租户id
      */
-    void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> warehouses);
+    void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses,List<Warehouse> newWarehouses);
 
     /**
      * 批量操作仓库
