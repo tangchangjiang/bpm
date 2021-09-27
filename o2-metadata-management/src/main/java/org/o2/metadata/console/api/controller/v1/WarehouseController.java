@@ -7,6 +7,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -26,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,8 +94,12 @@ public class WarehouseController extends BaseController {
             w.setActiveFlag(1);
         });
         // 更新前数据
-        List<Warehouse> oldWarehouse = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
-        List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
+        List<Long> ids = new ArrayList<>();
+        for (Warehouse warehouse : warehouses) {
+            ids.add(warehouse.getWarehouseId());
+        }
+        // 更新前数据
+        List<Warehouse> oldWarehouse = warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));        List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
         warehouseService.triggerWhStockCalWithWh(organizationId,warehouses, oldWarehouse);
         return Results.success(list);
     }
@@ -106,12 +112,16 @@ public class WarehouseController extends BaseController {
             w.setTenantId(organizationId);
             w.setActiveFlag(1);
         });
+        List<Long> ids = new ArrayList<>();
+        for (Warehouse warehouse : warehouses) {
+            ids.add(warehouse.getWarehouseId());
+        }
         // 更新前数据
-        List<Warehouse> oldWarehouse = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
+        List<Warehouse> oldWarehouse = warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));
         // 更新后的数据
-        List<Warehouse> newlist = warehouseService.batchHandle(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newlist);
-        return  Results.success(newlist);
+        List<Warehouse> newList = warehouseService.batchHandle(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newList);
+        return  Results.success(newList);
     }
 
     @ApiOperation(value = "服务点查询")
