@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.redis;
 
+import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 
 import java.util.List;
@@ -49,4 +50,10 @@ public interface SystemParameterRedis {
      */
     void extraOperate(String paramCode, Long tenantId);
 
+    /**
+     * 删除系统参数行
+     * @param  systemParameter 系统参数头
+     * @param  systemParamValue 系统参数行
+     */
+    void deleteSystemParamValue(SystemParameter systemParameter,SystemParamValue systemParamValue);
 }

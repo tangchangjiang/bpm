@@ -86,7 +86,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
     public void removeSystemParamValue(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
-        systemParameterRedis.updateToRedis(systemParameter, systemParameter.getTenantId());
+        systemParameterRedis.deleteSystemParamValue(systemParameter,systemParamValue);
     }
 
     @Override
