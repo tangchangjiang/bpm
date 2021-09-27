@@ -73,7 +73,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     public List<OnlineShopRelWarehouse> batchInsertSelective(Long organizationId, final List<OnlineShopRelWarehouse> relationships) {
         // 判断是否重复
         List<OnlineShopRelWarehouse> queryList = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
-        if (CollectionUtils.isEmpty(queryList)) {
+        if (!CollectionUtils.isEmpty(queryList)) {
             throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
         }
         Set<String> shopCodeSet = new HashSet<>();
@@ -125,7 +125,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.setOnlineShopCode(origin.getOnlineShopCode());
         }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        onlineShopRedis.batchUpdateShopRelWh(originList, tenantId, OnlineShopConstants.Redis.UPDATE);
+        onlineShopRedis.batchUpdateShopRelWh(relationships, tenantId, OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             try {
                 o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
