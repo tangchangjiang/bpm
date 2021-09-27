@@ -38,7 +38,7 @@ public class WarehouseInternalController {
     }
 
     @ApiOperation(value = "仓库信息列表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION,permissionPublic = true)
     @GetMapping("/page")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<WarehouseCO>> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
