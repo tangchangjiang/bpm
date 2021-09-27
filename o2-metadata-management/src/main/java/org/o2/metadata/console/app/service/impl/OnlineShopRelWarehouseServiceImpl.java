@@ -85,7 +85,12 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
         onlineShopRedis.batchUpdateShopRelWh(list,organizationId,OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
-            o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
+            try {
+                o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
+            }catch (Exception e) {
+                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]",organizationId,shopCodeSet,O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+                log.error(e.getMessage(),e);
+            }
         }
         return list;
     }
@@ -113,7 +118,12 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
         onlineShopRedis.batchUpdateShopRelWh(relationships,tenantId,OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
-            o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+            try {
+                o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+            }catch (Exception e) {
+                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]",tenantId,shopCodeSet,O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+                log.error(e.getMessage(),e);
+            }
         }
         return list;
     }

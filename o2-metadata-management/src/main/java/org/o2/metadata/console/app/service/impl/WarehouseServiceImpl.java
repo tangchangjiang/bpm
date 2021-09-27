@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
@@ -98,6 +96,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             try {
                 o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
             } catch (Exception e) {
+                log.error(" error.inner.request:o2Inventory#triggerWhStockCalWithWh,param =[tenantId: {},calInfoList: {}]",tenantId,JsonHelper.objectToString(triggerCalInfoList));
                 log.error(e.getMessage(),e);
             }
         }

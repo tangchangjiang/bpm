@@ -13,7 +13,6 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -94,14 +93,11 @@ public class WarehouseController extends BaseController {
             w.setActiveFlag(1);
         });
         // 更新前数据
-        List<Long> ids = new ArrayList<>();
-        for (Warehouse warehouse : warehouses) {
-            ids.add(warehouse.getWarehouseId());
-        }
-        // 更新前数据
-        List<Warehouse> oldWarehouse = warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));        List<Warehouse> list = warehouseService.updateBatch(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,warehouses, oldWarehouse);
-        return Results.success(list);
+        List<Warehouse> oldWarehouse =  getOldWarehouse(warehouses);
+        // 更后数据
+        List<Warehouse> newList = warehouseService.updateBatch(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,newList, oldWarehouse);
+        return Results.success(newList);
     }
     @ApiOperation(value = "批量操作仓库")
     @Permission(level = ResourceLevel.ORGANIZATION)
@@ -112,16 +108,26 @@ public class WarehouseController extends BaseController {
             w.setTenantId(organizationId);
             w.setActiveFlag(1);
         });
+        // 更新前数据
+        List<Warehouse> oldWarehouse =  getOldWarehouse(warehouses);
+        // 更新后的数据
+        List<Warehouse> newList = warehouseService.batchHandle(organizationId, warehouses);
+        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newList);
+        return  Results.success(newList);
+    }
+
+    /**
+     *  更新前数据
+     * @param warehouses 仓库
+     * @return  list
+     */
+    private List<Warehouse> getOldWarehouse(List<Warehouse> warehouses) {
         List<Long> ids = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
             ids.add(warehouse.getWarehouseId());
         }
         // 更新前数据
-        List<Warehouse> oldWarehouse = warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));
-        // 更新后的数据
-        List<Warehouse> newList = warehouseService.batchHandle(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newList);
-        return  Results.success(newList);
+        return warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));
     }
 
     @ApiOperation(value = "服务点查询")
