@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
@@ -26,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -68,28 +70,30 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<OnlineShopRelWarehouse>  batchInsertSelective(Long organizationId,final List<OnlineShopRelWarehouse> relationships) {
+    public List<OnlineShopRelWarehouse> batchInsertSelective(Long organizationId, final List<OnlineShopRelWarehouse> relationships) {
+        // 判断是否重复
+        List<OnlineShopRelWarehouse> queryList = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
+        if (CollectionUtils.isEmpty(queryList)) {
+            throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
+        }
         Set<String> shopCodeSet = new HashSet<>();
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
-            Assert.isTrue(!relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_EXISTS);
-            relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
-            OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
-            final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(relationship.getWarehouseId());
-            relationship.setWarehouseCode(warehouse.getWarehouseCode());
-            relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
-            shopCodeSet.add(onlineShop.getOnlineShopCode());
         });
-
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        onlineShopRedis.batchUpdateShopRelWh(list,organizationId,OnlineShopConstants.Redis.UPDATE);
+        // 关联查询 网店编码和仓库编码
+        List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
+        for (OnlineShopRelWarehouse warehouse : onlineShopRelWarehouses) {
+            shopCodeSet.add(warehouse.getOnlineShopCode());
+        }
+        onlineShopRedis.batchUpdateShopRelWh(onlineShopRelWarehouses, organizationId, OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             try {
                 o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
-            }catch (Exception e) {
-                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]",organizationId,shopCodeSet,O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
-                log.error(e.getMessage(),e);
+            } catch (Exception e) {
+                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]", organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+                log.error(e.getMessage(), e);
             }
         }
         return list;
@@ -98,38 +102,43 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long tenantId, final List<OnlineShopRelWarehouse> relationships) {
+        List<OnlineShopRelWarehouse> originList = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, tenantId);
+        if (originList.isEmpty()) {
+            throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
+        }
+        Map<Long, OnlineShopRelWarehouse> originMap = Maps.newHashMapWithExpectedSize(originList.size());
+        for (OnlineShopRelWarehouse rel : originList) {
+            originMap.put(rel.getOnlineShopRelWarehouseId(), rel);
+        }
         Set<String> shopCodeSet = new HashSet<>();
         for (OnlineShopRelWarehouse relationship : relationships) {
             relationship.setTenantId(tenantId);
-            Assert.isTrue(relationship.exist(onlineShopRelWarehouseRepository), BaseConstants.ErrorCode.DATA_NOT_EXISTS);
-            relationship.baseValidate(onlineShopRepository, warehouseRepository);
             relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
-            OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(relationship.getOnlineShopId());
-            Warehouse warehouse = warehouseRepository.selectByPrimaryKey(relationship.getWarehouseId());
-            OnlineShopRelWarehouse origin = onlineShopRelWarehouseRepository.selectByPrimaryKey(relationship);
-            if (null != onlineShop && null != warehouse && null != origin) {
-                if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
-                    shopCodeSet.add(onlineShop.getOnlineShopCode());
-                }
-                relationship.setWarehouseCode(warehouse.getWarehouseCode());
-                relationship.setOnlineShopCode(onlineShop.getOnlineShopCode());
+            OnlineShopRelWarehouse origin = originMap.get(relationship.getOnlineShopRelWarehouseId());
+            if (null == origin) {
+                throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
             }
+            if (!relationship.getActiveFlag().equals(origin.getActiveFlag())) {
+                shopCodeSet.add(origin.getOnlineShopCode());
+            }
+            relationship.setWarehouseCode(origin.getWarehouseCode());
+            relationship.setOnlineShopCode(origin.getOnlineShopCode());
         }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        onlineShopRedis.batchUpdateShopRelWh(relationships,tenantId,OnlineShopConstants.Redis.UPDATE);
+        onlineShopRedis.batchUpdateShopRelWh(originList, tenantId, OnlineShopConstants.Redis.UPDATE);
         if (!shopCodeSet.isEmpty()) {
             try {
                 o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
-            }catch (Exception e) {
-                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]",tenantId,shopCodeSet,O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
-                log.error(e.getMessage(),e);
+            } catch (Exception e) {
+                log.error(" error.inner.request:o2Inventory#triggerShopStockCalByShopCode,param =[tenantId: {},shopCodeSet: {},triggerSource: {}]", tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
+                log.error(e.getMessage(), e);
             }
         }
         return list;
     }
 
     @Override
-    public List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode,final Long tenantId) {
+    public List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId) {
         OnlineShop onlineShop = null;
         Warehouse warehouse = null;
 

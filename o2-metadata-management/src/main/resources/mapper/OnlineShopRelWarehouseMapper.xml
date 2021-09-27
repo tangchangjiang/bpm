@@ -124,5 +124,30 @@
             </otherwise>
         </choose>
     </select>
+    <select id="selectByShopIdAndWareIdAndPosId" resultType="org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse">
+        select house.warehouse_code,
+        shop.online_shop_code,
+        rel.active_flag
+        from o2md_shop_rel_warehouse rel
+        inner join o2md_online_shop shop on shop.online_shop_id = rel.online_shop_id
+        inner join o2md_warehouse house on house.warehouse_id = rel.warehouse_id
+        inner join o2md_pos pos on pos.pos_id = rel.pos_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and rel.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
+            <if test="query !=null ">
+                and
+                <foreach collection="query" item="item" open="(" separator="or"  close=")">
+                    (rel.online_shop_id = #{item.onlineShopId} and  rel.warehouse_id = #{item.warehouseId} and rel.pos_id = #{posId} )
+                </foreach>
+            </if>
+        </where>
+    </select>
 
 </mapper>

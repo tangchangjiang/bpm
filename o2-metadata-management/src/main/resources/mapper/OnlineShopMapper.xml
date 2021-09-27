@@ -190,6 +190,9 @@
             <if test="catalogCode!=null and catalogCode!=''">
                 AND os.catalog_code = #{catalogCode}
             </if>
+            <if test="platformCode!=null and platformCode!=''">
+                AND os.platform_code = #{platformCode}
+            </if>
             <if test="activeFlag!=null ">
                 AND os.active_flag = #{activeFlag}
             </if>

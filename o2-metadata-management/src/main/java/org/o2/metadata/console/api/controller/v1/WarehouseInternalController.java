@@ -38,11 +38,11 @@ public class WarehouseInternalController {
     }
 
     @ApiOperation(value = "仓库信息列表")
-    @Permission(level = ResourceLevel.ORGANIZATION,permissionWithin =true)
-    @PostMapping("/page")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/page")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<WarehouseCO>> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                 @RequestBody WarehousePageQueryInnerDTO innerDTO) {
+                                                 WarehousePageQueryInnerDTO innerDTO) {
         innerDTO.setTenantId(organizationId);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setSize(innerDTO.getPageSize());
