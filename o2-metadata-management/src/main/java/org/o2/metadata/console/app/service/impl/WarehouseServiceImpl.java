@@ -268,7 +268,14 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         String warehouseCode = innerDTO.getWarehouseCode();
         if (StringUtils.isNotEmpty(warehouseCode)) {
-            innerDTO.setWarehouseCodeList(Arrays.asList(StringUtils.split(warehouseCode, BaseConstants.Symbol.COMMA)));
+            List<String> codeList = Arrays.asList(StringUtils.split(warehouseCode, BaseConstants.Symbol.COMMA));
+            if (codeList.size() ==  1) {
+                innerDTO.setWarehouseCode(warehouseCode);
+                innerDTO.setWarehouseCodeList(null);
+            } else {
+                innerDTO.setWarehouseCodeList(codeList);
+                innerDTO.setWarehouseCode(null);
+            }
         }
         return warehouseRepository.pageWarehouses(innerDTO);
     }
