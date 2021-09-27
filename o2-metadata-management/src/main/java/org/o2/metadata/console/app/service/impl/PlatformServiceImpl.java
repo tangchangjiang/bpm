@@ -13,7 +13,6 @@ import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;

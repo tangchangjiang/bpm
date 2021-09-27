@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
@@ -19,7 +18,6 @@ import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
 import org.o2.metadata.console.app.bo.WarehouseLimitBO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.WarehouseConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -100,33 +98,6 @@ public class WarehouseServiceImpl implements WarehouseService {
                 log.error(e.getMessage(),e);
             }
         }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses) {
-        List<Warehouse> updateList = new ArrayList<>();
-        List<Warehouse> insertList = new ArrayList<>();
-        for (Warehouse warehouse : warehouses) {
-            if (MetadataConstants.Status.CREATE.equals(warehouse.get_status().name())) {
-                insertList.add(warehouse);
-            }
-            if (MetadataConstants.Status.UPDATE.equals(warehouse.get_status().name())) {
-                SecurityTokenHelper.validToken(warehouse);
-                updateList.add(warehouse);
-            }
-        }
-        List<Warehouse> totalList = new ArrayList<>();
-        if (!insertList.isEmpty()) {
-            List<Warehouse> createList = createBatch(tenantId, insertList);
-            totalList.addAll(createList);
-
-        }
-        if (!updateList.isEmpty()) {
-            List<Warehouse> list = updateBatch(tenantId, updateList);
-            totalList.addAll(list);
-        }
-        return totalList ;
     }
 
     @Override

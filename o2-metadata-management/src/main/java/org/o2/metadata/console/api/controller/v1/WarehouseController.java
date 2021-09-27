@@ -7,6 +7,7 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
@@ -99,23 +100,6 @@ public class WarehouseController extends BaseController {
         warehouseService.triggerWhStockCalWithWh(organizationId,newList, oldWarehouse);
         return Results.success(newList);
     }
-    @ApiOperation(value = "批量操作仓库")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-handle")
-    public ResponseEntity<List<Warehouse>> batchHandle(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                         @RequestBody final List<Warehouse> warehouses) {
-        warehouses.forEach(w -> {
-            w.setTenantId(organizationId);
-            w.setActiveFlag(1);
-        });
-        // 更新前数据
-        List<Warehouse> oldWarehouse =  getOldWarehouse(warehouses);
-        // 更新后的数据
-        List<Warehouse> newList = warehouseService.batchHandle(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,oldWarehouse,newList);
-        return  Results.success(newList);
-    }
-
     /**
      *  更新前数据
      * @param warehouses 仓库
@@ -125,6 +109,9 @@ public class WarehouseController extends BaseController {
         List<Long> ids = new ArrayList<>();
         for (Warehouse warehouse : warehouses) {
             ids.add(warehouse.getWarehouseId());
+        }
+        if (CollectionUtils.isEmpty(ids)) {
+            return  new ArrayList<>();
         }
         // 更新前数据
         return warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));
