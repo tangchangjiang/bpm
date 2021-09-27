@@ -43,7 +43,6 @@ public class PlatformServiceImpl implements PlatformService {
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Platform save(Platform platform) {
         // 唯一性校验
         Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())).build();
