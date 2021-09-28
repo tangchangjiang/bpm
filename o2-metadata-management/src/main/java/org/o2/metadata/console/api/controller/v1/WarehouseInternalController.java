@@ -43,13 +43,19 @@ public class WarehouseInternalController extends BaseController {
     @PostMapping("/page")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<WarehouseCO>> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                 @RequestBody WarehousePageQueryInnerDTO innerDTO) {
+                                                            PageRequest pageRequest,
+                                                            @RequestBody(required = false) WarehousePageQueryInnerDTO innerDTO) {
+
+        Page<WarehouseCO> posList = new Page<>();
+        if (null == innerDTO) {
+            WarehousePageQueryInnerDTO query =new  WarehousePageQueryInnerDTO();
+            query.setTenantId(organizationId);
+            posList = PageHelper.doPage(pageRequest,
+                    () -> warehouseService.pageWarehouses(query));
+            return Results.success(posList);
+        }
         innerDTO.setTenantId(organizationId);
-        validObject(innerDTO);
-        PageRequest pageRequest = new PageRequest();
-        pageRequest.setSize(innerDTO.getPageSize());
-        pageRequest.setPage(innerDTO.getPage());
-        final Page<WarehouseCO> posList = PageHelper.doPage(pageRequest,
+        posList = PageHelper.doPage(pageRequest,
                 () -> warehouseService.pageWarehouses(innerDTO));
         return Results.success(posList);
     }
