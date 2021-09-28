@@ -122,7 +122,7 @@
     <select id="selectCondition" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
         select
         inf.inf_type_code,
-        inf.platform_code,
+        pf.platform_code,
         inf.inf_code,
         inf.inf_name,
         inf.platform_inf_code,
@@ -134,7 +134,7 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND inf.tenant_id = #{tenantId}
+                    AND pf.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
@@ -142,7 +142,7 @@
             </choose>
             <if test="platformCodes != null and platformCodes.size() > 0">
                 and pf.platform_code in
-                <foreach collection="platformCodes" item="item" open="(" separator="or" close=")">
+                <foreach collection="platformCodes" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
