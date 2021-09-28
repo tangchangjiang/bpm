@@ -141,7 +141,7 @@
                 </otherwise>
             </choose>
             <if test="platformCodes != null and platformCodes.size() > 0">
-                and inf.platform_code in
+                and pf.platform_code in
                 <foreach collection="platformCodes" item="item" open="(" separator="or" close=")">
                     #{item}
                 </foreach>
