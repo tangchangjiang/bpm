@@ -61,7 +61,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation(value = "查询仓库(内部调用)")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                    @RequestBody WarehouseQueryInnerDTO queryInnerDTO) {
@@ -78,7 +78,7 @@ public class WarehouseInternalController extends BaseController {
 
 
     @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @PostMapping({"/updateExpressValue"})
     public ResponseEntity<Long> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                 @RequestParam(value = "warehouseCode") String warehouseCode,
@@ -87,7 +87,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("仓库自提接单量增量更新(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @PostMapping({"/updatePickUpValue"})
     public ResponseEntity<Long> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                @RequestParam(value = "warehouseCode") String warehouseCode,
@@ -96,7 +96,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("获取仓库limit缓存KEY(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @GetMapping({"/warehouseLimitCacheKey"})
     public ResponseEntity<String> warehouseLimitCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                     @RequestParam(value = "limit") String limit) {
@@ -104,7 +104,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("是否仓库快递配送接单量到达上限(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @GetMapping({"/isWarehouseExpressLimit"})
     public ResponseEntity<Boolean> isWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                      @RequestParam(value = "warehouseCode") String warehouseCode) {
@@ -113,7 +113,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("是否仓库自提接单量到达上限(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @GetMapping({"/isWarehousePickUpLimit"})
     public ResponseEntity<Boolean> isWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                     @RequestParam(value = "warehouseCode") String warehouseCode) {
@@ -121,21 +121,21 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("获取快递配送接单量到达上限的仓库(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @GetMapping({"/expressLimitWarehouseCollection"})
     public ResponseEntity<Set<String>> expressLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
         return Results.success(warehouseService.expressLimitWarehouseCollection(organizationId));
     }
 
     @ApiOperation("获取自提接单量到达上限的仓库(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @GetMapping({"/pickUpLimitWarehouseCollection"})
     public ResponseEntity<Set<String> > pickUpLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
         return Results.success(warehouseService.pickUpLimitWarehouseCollection(organizationId));
     }
 
     @ApiOperation("重置仓库快递配送接单量值(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @PostMapping({"/resetWarehouseExpressLimit"})
     public ResponseEntity<Void> resetWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                         @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
@@ -144,7 +144,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation("重置仓库自提接单量限制值(内部调用)")
-    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @PostMapping({"/resetWarehousePickUpLimit"})
     public ResponseEntity<Void> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                        @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
