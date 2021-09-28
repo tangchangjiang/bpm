@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.co;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.Date;
  */
 @Data
 @ApiModel("仓库表")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WarehouseCO {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")

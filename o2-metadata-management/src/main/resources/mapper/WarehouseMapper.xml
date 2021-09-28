@@ -444,7 +444,7 @@
                     and 1 = 0
                 </otherwise>
             </choose>
-            <if test="warehouseCodeList != null and warehouseCodeList.size() > 0 ">
+            <if test="warehouseCodeList != null and warehouseCodeList.size() > 1 ">
                 and w.warehouse_code IN
                 <foreach collection="warehouseCodeList" item="code" open="(" separator="," close=")">
                     #{code}
@@ -456,7 +456,14 @@
                     #{item}
                 </foreach>
             </if>
-
+            <if test="warehouseName != null and warehouseName != ''">
+                <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
+                and wtl.warehouse_name like #{warehouseNameLike}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                <bind name="warehouseCode" value="'%' + warehouseCode + '%'"/>
+                and w.warehouse_code like #{warehouseCode}
+            </if>
             <if test="activeFlag != null">
                 and w.active_flag = #{activeFlag}
             </if>

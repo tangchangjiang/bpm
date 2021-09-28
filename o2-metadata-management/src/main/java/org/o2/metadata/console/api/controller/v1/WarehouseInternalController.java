@@ -9,6 +9,7 @@ import io.swagger.annotations.*;
 
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
+import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
@@ -30,20 +31,21 @@ import java.util.Set;
 @RestController("warehouseInternalController.v1")
 @RequestMapping("v1/{organizationId}/warehouse-internal")
 @Api(tags = MetadataManagementAutoConfiguration.WAREHOUSE)
-public class WarehouseInternalController {
+public class WarehouseInternalController extends BaseController {
 
     private WarehouseService warehouseService;
     public WarehouseInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
 
-    @ApiOperation(value = "仓库信息列表")
-    @Permission(level = ResourceLevel.ORGANIZATION,permissionWithin =true)
+    @ApiOperation(value = "仓库信息列表 wms调用")
+    @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/page")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<WarehouseCO>> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                  @RequestBody WarehousePageQueryInnerDTO innerDTO) {
         innerDTO.setTenantId(organizationId);
+        validObject(innerDTO);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setSize(innerDTO.getPageSize());
         pageRequest.setPage(innerDTO.getPage());

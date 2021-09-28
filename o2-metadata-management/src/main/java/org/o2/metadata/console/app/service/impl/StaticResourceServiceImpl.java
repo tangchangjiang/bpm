@@ -57,7 +57,6 @@ public class StaticResourceServiceImpl implements StaticResourceService {
         return staticResourceList;
     }
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public StaticResource save(StaticResource staticResource) {
         //保存静态资源文件表
         UniqueHelper.valid(staticResource,StaticResource.O2MD_STATIC_RESOURCE_U1);

@@ -25,15 +25,15 @@ public interface OnlineShopRelWarehouseRepository extends BaseRepository<OnlineS
     /**
      * 查询所有的关联
      * @param tenantId 租户ID
-     * @return
+     * @return list
      */
     List<OnlineShopRelWarehouse> queryAllShopRelWarehouseByTenantId(Long tenantId);
 
     /**
-     * 查询网店关联有效仓库
-     * @param onlineShopCode 网店编码
+     *  通过网店，仓库，服务点 id 查询
+     * @param query 查询条件
      * @param tenantId 租户ID
-     * @return list
+     * @return  list
      */
-    List<OnlineShopRelWarehouse> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
+    List<OnlineShopRelWarehouse> selectByShopIdAndWareIdAndPosId(List<OnlineShopRelWarehouse> query, Long tenantId);
 }

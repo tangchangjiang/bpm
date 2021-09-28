@@ -231,7 +231,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, paramCode);
         // 删除
         if (BaseConstants.Flag.NO.equals(activeFlag)) {
-            redisCacheClient.opsForHash().delete(hashMapKey, systemParameter.getParamCode());
+            redisCacheClient.delete(hashMapKey);
             return;
         }
         List<SystemParamValue> list = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
@@ -251,6 +251,19 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
         if (SystemParameterConstants.Parameter.DEFAULT_SHOP_UPLOAD_RATIO.equals(paramCode) || SystemParameterConstants.Parameter.DEFAULT_SHOP_SAFETY_STOCK.equals(paramCode)) {
             o2InventoryClient.triggerAllShopStockCal(tenantId);
+        }
+    }
+
+    @Override
+    public void deleteSystemParamValue(SystemParameter systemParameter, SystemParamValue systemParamValue) {
+        String paramTypeCode = systemParameter.getParamTypeCode();
+        if (SystemParameterConstants.ParamType.MAP.equals(paramTypeCode)) {
+            String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, systemParameter.getTenantId(), systemParameter.getParamCode());
+            redisCacheClient.opsForHash().delete(hashMapKey,systemParamValue.getParamKey());
+        }
+        //参数值redis更新
+        if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(paramTypeCode)) {
+            updateSet(systemParameter,systemParameter.getTenantId());
         }
     }
 

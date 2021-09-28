@@ -2,6 +2,7 @@ package org.o2.metadata.console.api.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,9 +31,12 @@ public class WarehousePageQueryInnerDTO {
 
     private List<String> warehouseCodeList;
 
+    @NotNull
     private Integer page;
-
+    @NotNull
     private Integer pageSize;
+
+    private String warehouseName;
 
     private Long tenantId;
 }

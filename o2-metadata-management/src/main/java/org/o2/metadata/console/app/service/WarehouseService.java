@@ -36,13 +36,13 @@ public interface WarehouseService {
     List<Warehouse> updateBatch(Long tenantId, List<Warehouse> warehouses);
 
     /**
-     * 批量操作仓库
-     * @date 2020-05-22
-     * @param tenantId 租户ID
-     * @param warehouses  仓库
-     * @return  list 仓库集合
+     *触发线上可用库存计算
+     * @param  oldWarehouses 仓库更新前
+     * @param  newWarehouses 仓库更新后
+     * @param  tenantId 租户id
      */
-    List<Warehouse> batchHandle(Long tenantId, List<Warehouse> warehouses);
+    void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses,List<Warehouse> newWarehouses);
+
 
     /**
      * 获取仓库信息

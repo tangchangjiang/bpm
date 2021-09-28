@@ -3,7 +3,6 @@ package org.o2.metadata.console.app.service.impl;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.repository.StaticResourceConfigRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.o2.metadata.console.app.service.StaticResourceConfigService;
@@ -27,7 +26,6 @@ public class StaticResourceConfigServiceImpl implements StaticResourceConfigServ
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public StaticResourceConfig save(StaticResourceConfig staticResourceConfig) {
         //保存静态资源配置
         UniqueHelper.valid(staticResourceConfig,StaticResourceConfig.O2MD_STATIC_RESOURCE_CONFIG_U1);
