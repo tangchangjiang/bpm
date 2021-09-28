@@ -32,6 +32,15 @@ if limitHashValue then
     local expressedQuantity = expressObject["expressedQuantity"];
 
     local number = tonumber(expressedQuantity) + insert;
+
+    -- 未设置配送限制量
+    if not expressLimit then
+        expressObject["expressedQuantity"] = number;
+        expressObject["limitFlag"] = false;
+        redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
+        return 1;
+    end
+
     -- 更新
     if number < expressLimit then
         expressObject["expressedQuantity"] = number;

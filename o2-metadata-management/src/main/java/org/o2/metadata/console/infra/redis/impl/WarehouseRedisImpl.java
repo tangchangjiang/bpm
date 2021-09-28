@@ -64,9 +64,6 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         if (null == list || list.isEmpty()) {
             return;
         }
-
-        String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
-
         Map<String, String> updateMap = Maps.newHashMapWithExpectedSize(list.size());
         for (WarehouseCacheBO bo : list) {
             updateMap.put(bo.getWarehouseCode(), JsonHelper.objectToString(bo));
@@ -81,7 +78,6 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
         keyList.add(pickUpLimitKey);
-        redisCacheClient.opsForHash().putAll(key, updateMap);
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
         this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));

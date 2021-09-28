@@ -31,7 +31,7 @@ public class PlatformInternalController{
     }
 
     @ApiOperation(value = "查询平台信息匹配结果")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION,permissionPublic = true)
     @PostMapping("/list")
     public ResponseEntity<Map<String, PlatformCO>> getPlatformInfMappings(@PathVariable(value = "organizationId") Long organizationId,
                                                                           @RequestBody PlatformQueryInnerDTO queryInnerDTO) {
