@@ -13,9 +13,6 @@ import java.util.Map;
  */
 public interface PlatformService {
 
-
-
-
     /**
      * 保存平台定义表
      *

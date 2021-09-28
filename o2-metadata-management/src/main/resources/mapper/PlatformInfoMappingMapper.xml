@@ -129,8 +129,8 @@
         inf.platform_inf_name,
         inf.tenant_id,
         pf.platform_name
-        from o2md_platform_info_mapping inf
-        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        from o2md_platform pf
+        left join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code
         <where>
             <choose>
                 <when test="tenantId != null">
