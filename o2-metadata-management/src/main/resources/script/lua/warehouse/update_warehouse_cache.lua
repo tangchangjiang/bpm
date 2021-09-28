@@ -8,11 +8,19 @@ for configKey, configValue in pairs(configMap) do
     local warehouseObject = cjson.decode(configValue);
     --仓库设置派送量
     local warehouseExpressedQuantity = tonumber(warehouseObject['expressedQuantity']);
+    --已派送
+    local expressHashValue = redis.call('hget', expressKey, configKey);
+    local expressObject = cjson.decode(expressHashValue);
+    -- 设置为空
+    if not warehouseExpressedQuantity then
+        expressObject['limitFlag'] = false;
+        redis.call("hset", expressKey, configKey, cjson.encode(expressObject));
+    end
+
+    -- 仓库设置派送量 未设置为空
     if  warehouseExpressedQuantity then
-        --已派送
-        local expressHashValue = redis.call('hget', expressKey, configKey);
         if  expressHashValue then
-            local expressObject = cjson.decode(expressHashValue);
+
             local expressedQuantity = tonumber(expressObject['expressedQuantity']);
             -- 仓库设置派送量 大于 已派送
             if warehouseExpressedQuantity > expressedQuantity then
@@ -25,13 +33,21 @@ for configKey, configValue in pairs(configMap) do
             end
         end
     end
+
     --自提量
     local  warehousePickUpQuantity = tonumber(warehouseObject['pickUpQuantity']);
+    --已自提
+    local pickUpHashValue = redis.call('hget', pickUpKey, configKey);
+    local pickUpObject = cjson.decode(pickUpHashValue);
+    -- 仓库设置自提量 设置为空
+    if not warehousePickUpQuantity then
+        pickUpObject['limitFlag'] = false;
+        redis.call("hset", pickUpKey, configKey, cjson.encode(pickUpObject));
+    end
+
+    -- 仓库设置自提量 未设置为空
     if warehousePickUpQuantity then
-        --已自提
-        local pickUpHashValue = redis.call('hget', pickUpKey, configKey);
         if  pickUpHashValue then
-            local pickUpObject = cjson.decode(pickUpHashValue);
             local pickUpQuantity = tonumber(pickUpObject['pickUpQuantity']);
             -- 仓库设置自提量 大于 已自提
             if warehousePickUpQuantity > pickUpQuantity then

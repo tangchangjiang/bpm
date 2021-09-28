@@ -35,8 +35,8 @@ if limitHashValue then
 
     -- 未设置配送限制量
     if not expressLimit then
-        expressObject["expressedQuantity"] = expressLimit;
-        expressObject["limitFlag"] = true;
+        expressObject["expressedQuantity"] = number;
+        expressObject["limitFlag"] = false;
         redis.call("hset", limitKey, warehouseCode, cjson.encode(expressObject));
         return 1;
     end
