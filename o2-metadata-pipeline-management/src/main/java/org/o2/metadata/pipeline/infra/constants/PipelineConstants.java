@@ -33,7 +33,6 @@ public interface PipelineConstants {
         ResourceScriptSource PIPELINE_CONF_UPDATE_LUA =
                 new ResourceScriptSource(new ClassPathResource("lua/pipeline_conf_update.lua"));
 
-
     }
 
     /**

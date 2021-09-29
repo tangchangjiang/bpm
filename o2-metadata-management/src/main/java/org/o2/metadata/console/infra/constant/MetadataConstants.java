@@ -292,7 +292,7 @@ public interface MetadataConstants {
 
         /**
          * 元数据 - 供C端使用的Lov值集数据文件
-        */
+         */
         String O2MD_PUB_LOV = "O2MD_PUB_LOV";
 
         String O2MD_IDP_LOV= "O2MD_IDP_LOV";
@@ -307,6 +307,11 @@ public interface MetadataConstants {
          * 元数据 - 值集数据文件
          */
         String LOV_DESCRIPTION = "值集数据文件";
+
+        /**
+         * 元数据 - 商城端公共的Lov值集
+         */
+        String O2MD_PUBLIC_LOV = "O2MD_PUB_LOV";
 
 
         static String buildMetadataRegionCode() {
@@ -326,6 +331,7 @@ public interface MetadataConstants {
 
 
     interface MallLangPromptConstants {
+
         String LOV_CODE = "O2CMS.APPROVE_STATUS";
 
         String UNAPPROVED = "UNAPPROVED";
