@@ -122,12 +122,14 @@ public class PipelineServiceImpl implements PipelineService {
         pipelineDTO.setStartAction(pipeline.getStartAction());
         pipelineDTO.setEndAction(pipeline.getEndAction());
         pipelineDTO.setCode(pipeline.getCode());
-        pipelineDTO.setIsEnable(pipeline.getActiveFlag());
+        pipelineDTO.setActiveFlag(pipeline.getActiveFlag());
+        pipelineDTO.setTenantId(pipeline.getTenantId());
         for (PipelineNode pipelineNode : pipelineNodes) {
             PipelineNodeDTO pipelineNodeDTO = new PipelineNodeDTO();
             pipelineNodeDTO.setCurAction(pipelineNode.getCurAction());
             pipelineNodeDTO.setNextAction(pipelineNode.getNextAction());
             pipelineNodeDTO.setCurDescription(pipelineNode.getCurDescription());
+            pipelineNodeDTO.setTenantId(pipeline.getTenantId());
             pipelineNodeDTO.setStrategyType(pipelineNode.getStrategyType());
             pipelineDTO.getPipelineNodes().put(pipelineNodeDTO.uniqueKey(), pipelineNodeDTO);
         }

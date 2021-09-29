@@ -35,7 +35,12 @@ public class PipelineDTO {
     /**
      * 是否启用
      */
-    private Integer isEnable;
+    private Integer activeFlag;
+
+    /**
+     * 租户id
+     */
+    private Long tenantId;
 
 
     public PipelineDTO() {
