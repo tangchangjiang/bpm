@@ -46,7 +46,7 @@ public interface FreightConstants {
          * key: HEAD/region <br />
          * value: freight detail json <br />
          */
-        String FREIGHT_DETAIL_KEY = "o2md:freight:%s:{%s}";
+        String FREIGHT_DETAIL_KEY = "o2md:freight:{%s}:%s";
 
         /**
          * GetFreightDefaultKey

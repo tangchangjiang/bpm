@@ -63,8 +63,8 @@ public interface SystemParameterConstants {
      * o2ext:parameter:[tenantId]:[parameterType]
      */
     interface Redis {
-        String KEY = "o2md:parameter:%d:{%s}";
-        String MAP_KEY = "o2md:parameter:%d:map:{%s}";
+        String KEY = "o2md:parameter:{%d}:%s";
+        String MAP_KEY = "o2md:parameter:{%d}:map:%s";
 
     }
 
