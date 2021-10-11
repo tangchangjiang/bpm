@@ -18,7 +18,7 @@ public interface OnlineShopConstants {
         /**
          *  o2md:onlineShop:[tenantId]:all
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:%d:all";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
         /**
          * Redis OnlineShopRelWarehouse
          * o2md:shopRelwh:[tenantId]:[shopCode]

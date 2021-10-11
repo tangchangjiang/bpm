@@ -2,7 +2,7 @@ package org.o2.metadata.infra.constants;
 
 /**
  *
- * 承运商
+ * 网店
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
@@ -12,7 +12,7 @@ public interface OnlineShopConstants {
         /**
          *  o2md:onlineShop:[tenantId]:[shopCode]
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%s}";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
 
         /**
          *  获取key
