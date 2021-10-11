@@ -1,7 +1,8 @@
 local objMap = cjson.decode(ARGV[1]);
 
-for hashKey, filedMap in pairs(objMap) do
-    for fieldKey, fieldValue in pairs(filedMap) do
-        redis.call("hset",hashKey, fieldKey, fieldValue);
+for i=1,#KEYS  do
+    local map =  objMap[KEYS[i]];
+    for fieldKey, fieldValue in pairs(map) do
+        redis.call("hset",KEYS[i], fieldKey, fieldValue);
     end
 end

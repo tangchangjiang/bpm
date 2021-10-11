@@ -71,6 +71,7 @@ public class FreightRedisImpl implements FreightRedis {
             map.put(detail.getRegionCode(),JsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
 
         }
+        List<String> key = new ArrayList<>();
         for (Map.Entry<String, FreightTemplate> entry : templateMap.entrySet()) {
             Map<String, String> hashMap = new HashMap<>();
             FreightTemplate v = entry.getValue();
@@ -82,10 +83,11 @@ public class FreightRedisImpl implements FreightRedis {
                 hashMap.putAll(regionMap.get(k));
             }
             String redisKey = FreightConstants.Redis.getFreightDetailKey(tenantId, k);
+            key.add(redisKey);
             groupMap.put(redisKey,hashMap);
         }
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), JsonHelper.objectToString(groupMap));
+        this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
     }
 }

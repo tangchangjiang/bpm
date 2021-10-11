@@ -8,8 +8,7 @@ import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,6 +29,9 @@ import javax.validation.constraints.NotNull;
 @MultiLanguage
 @Table(name = "o2md_catalog_version")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CatalogVersion extends AuditDomain {
 
     public static final String FIELD_CATALOG_VERSION_ID = "catalogVersionId";

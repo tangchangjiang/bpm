@@ -31,12 +31,12 @@ public interface WarehouseConstants {
      * 对应数据库表：o2md_warehouse
      */
     interface WarehouseCache {
-        String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:all";
+        String WAREHOUSE_INFO_KEY = "o2md:warehouse:{%d}:all";
         /**
          * 达到仓库
          */
-        String EXPRESS_LIMIT_KEY = "o2md:warehouse:express:%d:limit";
-        String PICK_UP_LIMIT_KEY = "o2md:warehouse:pick_up:%d:limit";
+        String EXPRESS_LIMIT_KEY = "o2md:warehouse:express:{%d}:limit";
+        String PICK_UP_LIMIT_KEY = "o2md:warehouse:pick_up:{%d}:limit";
         String FLAG= "limitFlag";
         /**
          * 格式化的字符串

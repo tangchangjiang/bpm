@@ -60,6 +60,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (list.isEmpty() || StringUtils.isEmpty(handleType)) {
             return;
         }
+        List<String> key = new ArrayList<>();
         Map<String, List<OnlineShopRelWarehouse>> map = list.stream().collect(Collectors.groupingBy(OnlineShopRelWarehouse::getOnlineShopCode));
         Map<String, Map<String, String>> groupMap = Maps.newHashMapWithExpectedSize(map.size());
         for (Map.Entry<String, List<OnlineShopRelWarehouse>> entry : map.entrySet()) {
@@ -69,6 +70,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             for (OnlineShopRelWarehouse warehouse : v) {
                 hashMap.put(warehouse.getWarehouseCode(), String.valueOf(warehouse.getActiveFlag()));
             }
+            key.add(redisKey);
             groupMap.put(redisKey, hashMap);
         }
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
@@ -77,7 +79,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         } else {
             defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.DELETE_CACHE_LUA);
         }
-        this.redisCacheClient.execute(defaultRedisScript, new ArrayList<>(), JsonHelper.objectToString(groupMap));
+        this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
 
     }
 

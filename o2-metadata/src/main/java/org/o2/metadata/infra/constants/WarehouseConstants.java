@@ -14,8 +14,8 @@ public interface WarehouseConstants {
      */
     interface WarehouseCache {
         String WAREHOUSE_INFO_KEY = "o2md:warehouse:%d:{%s}";
-        String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:%d:limit";
-        String PICK_UP_LIMIT_COLLECTION = "o2md:warehouse:pick_up:%d:limit";
+        String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:{%d}:limit";
+        String PICK_UP_LIMIT_COLLECTION = "o2md:warehouse:pick_up:{%d}:limit";
         String POS_CODE = "posCode";
         String WAREHOUSE_STATUS_CODE= "warehouseStatusCode";
         String WAREHOUSE_TYPE_CODE = "warehouseTypeCode";

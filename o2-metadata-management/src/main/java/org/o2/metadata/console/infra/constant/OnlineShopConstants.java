@@ -18,14 +18,14 @@ public interface OnlineShopConstants {
         /**
          *  o2md:onlineShop:[tenantId]:all
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:%d:all";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
         /**
          * Redis OnlineShopRelWarehouse
          * o2md:shopRelwh:[tenantId]:[shopCode]
          * key:value [warehouseCode:businessActiveFlag]
          * 对应数据库表：o2md_online_shop_rel_warehouse
          */
-        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelWh:%d:{%s}";
+        String KEY_ONLINE_SHOP_REL_WAREHOUSE = "o2md:shopRelWh:{%d}:%s";
         
         /**
          *  获取key
