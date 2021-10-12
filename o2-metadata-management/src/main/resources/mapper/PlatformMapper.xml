@@ -21,6 +21,7 @@
         pf.platform_id,
         pf.platform_code,
         tl.platform_name,
+        pf.platform_type_code,
         pf.active_flag,
         pf.tenant_id,
         pf.created_by,
