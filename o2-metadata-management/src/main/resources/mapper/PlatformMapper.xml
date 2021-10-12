@@ -26,7 +26,7 @@
         pf.created_by,
         pf.last_updated_by,
         pf.creation_date,
-        pf.last_update_date
+        pf.last_update_date,
         pf.OBJECT_VERSION_NUMBER
         from o2md_platform pf
         left join o2md_platform_tl tl on tl.platform_id = pf.platform_id
