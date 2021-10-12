@@ -33,6 +33,7 @@ public class Platform extends AuditDomain {
 
     public static final String FIELD_PLATFORM_ID = "platformId";
     public static final String FIELD_PLATFORM_CODE = "platformCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "platformTypeCode";
     public static final String FIELD_PLATFORM_NAME = "platformName";
     public static final String FIELD_ACTIVE_FLAG = "activeFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
