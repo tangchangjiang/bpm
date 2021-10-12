@@ -29,7 +29,7 @@
         pf.last_update_date,
         pf.OBJECT_VERSION_NUMBER
         from o2md_platform pf
-        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang}
         <where>
             <choose>
                 <when test="tenantId != null">
