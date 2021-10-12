@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.mybatis.annotation.ModifyAudit;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 
 /**
  * 平台定义表
@@ -52,6 +54,7 @@ public class Platform extends AuditDomain {
     private String platformName;
     @ApiModelProperty(value = "是否有效")
     @NotNull
+    @LovValue(lovCode = "HPFM.ENABLED_FLAG",meaningField = "activeMeaning")
     private Integer activeFlag;
     @ApiModelProperty(value = "租户id", required = true)
     @NotNull
@@ -64,5 +67,8 @@ public class Platform extends AuditDomain {
     // getter/setter
     // ------------------------------------------------------------------------------
 
+    @ApiModelProperty(value = "启用含义字段")
+    @Transient
+    private String activeMeaning;
 }
 
