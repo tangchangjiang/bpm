@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="org.o2.metadata.console.infra.entity.Platform">
         <result column="platform_id" property="platformId" jdbcType="DECIMAL"/>
         <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
+        <result column="platform_type_code" property="platformTypeCode" jdbcType="VARCHAR"/>
         <result column="platform_name" property="platformName" jdbcType="VARCHAR"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
@@ -14,22 +15,21 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
-    <sql id="baseSql">
-        platform_id,
-        platform_code,
-        platform_name,
-        active_flag,
-        tenant_id,
-        created_by,
-        last_updated_by,
-        creation_date,
-        last_update_date,
-        object_version_number
-    </sql>
     <select id="listPlatform" resultType="org.o2.metadata.console.infra.entity.Platform">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
-        <include refid="baseSql"></include>
+        pf.platform_id,
+        pf.platform_code,
+        tl.platform_name,
+        pf.active_flag,
+        pf.tenant_id,
+        pf.created_by,
+        pf.last_updated_by,
+        pf.creation_date,
+        pf.last_update_date
+        pf.OBJECT_VERSION_NUMBER
         from o2md_platform pf
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -49,6 +49,9 @@
             </if>
             <if test="activeFlag != null">
                 and pf.active_flag = #{activeFlag}
+            </if>
+            <if test="platformTypeCode != null and platformTypeCode != ''">
+                and pf.platform_type_code = #{platformTypeCode}
             </if>
         </where>
     </select>

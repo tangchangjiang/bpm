@@ -29,8 +29,11 @@ public class CarrierMappingQueryDTO{
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
-    @ApiModelProperty(value = "版本编码")
+    @ApiModelProperty(value = "平台编码")
     private String platformCode;
+
+    @ApiModelProperty(value = "平台类型编码")
+    private String platformTypeCode;
 
     @ApiModelProperty(value = "版本名称")
     private String platformName;

@@ -36,11 +36,12 @@
         cm.created_by,
         cm.last_updated_by,
         cm.last_update_date,
-        plat.platform_name
+        ptl.platform_name
         FROM
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
         JOIN O2md_platform plat on plat.platform_code = cm.platform_code and plat.tenant_id = #{tenantId}
+        left join O2md_platform_tl ptl on ptl.platform_id = plat.platform_id and ptl.lang = #{lang}
         left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang}
         where 1 = 1
         <choose>
@@ -57,6 +58,9 @@
         <if test="carrierCode!=null and carrierCode!=''">
             <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
             AND c.carrier_code LIKE #{carrierCode}
+        </if>
+        <if test="platformCode!=null and platformCode!=''">
+            AND plat.platform_type_code = #{platformCode}
         </if>
         <if test="platformCarrierCode != null and platformCarrierCode != ''">
             <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>
