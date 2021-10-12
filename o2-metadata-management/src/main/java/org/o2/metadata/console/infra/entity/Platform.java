@@ -5,6 +5,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -24,11 +27,13 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 @ApiModel("平台定义表")
 @VersionAudit
 @ModifyAudit
+@MultiLanguage
 @Table(name = "o2md_platform")
 public class Platform extends AuditDomain {
 
     public static final String FIELD_PLATFORM_ID = "platformId";
     public static final String FIELD_PLATFORM_CODE = "platformCode";
+    public static final String FIELD_PLATFORM_TYPE_CODE = "platformTypeCode";
     public static final String FIELD_PLATFORM_NAME = "platformName";
     public static final String FIELD_ACTIVE_FLAG = "activeFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -49,8 +54,13 @@ public class Platform extends AuditDomain {
     @ApiModelProperty(value = "平台编码")
     @NotNull
     private String platformCode;
+
+    @ApiModelProperty(value = "平台类型编码")
+    @LovValue(lovCode = "O2MD.PLATFORM_TYPE")
+    private String platformTypeCode;
     @ApiModelProperty(value = "平台名称")
     @NotNull
+    @MultiLanguageField
     private String platformName;
     @ApiModelProperty(value = "是否有效")
     @NotNull
@@ -64,8 +74,14 @@ public class Platform extends AuditDomain {
     // 非数据库字段
     // ------------------------------------------------------------------------------
     //
-    // getter/setter
-    // ------------------------------------------------------------------------------
+
+    /**
+     * 平台类型含义
+     */
+    @Transient
+    @ApiModelProperty(value = "平台类型编码")
+    private String platformTypeMeaning;
+
 
     @ApiModelProperty(value = "启用含义字段")
     @Transient

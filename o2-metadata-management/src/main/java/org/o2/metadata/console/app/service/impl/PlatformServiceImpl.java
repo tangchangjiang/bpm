@@ -64,7 +64,8 @@ public class PlatformServiceImpl implements PlatformService {
                     Platform.FIELD_PLATFORM_CODE,
                     Platform.FIELD_PLATFORM_NAME,
                     Platform.FIELD_ACTIVE_FLAG,
-                    Platform.FIELD_TENANT_ID
+                    Platform.FIELD_TENANT_ID,
+                    Platform.FIELD_PLATFORM_TYPE_CODE
             );
         }
 

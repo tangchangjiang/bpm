@@ -21,5 +21,7 @@ public class PlatformDTO {
     private Long tenantId;
     @ApiModelProperty(value = "启用标志")
     private Integer activeFlag;
+    @ApiModelProperty(value = "平台类型编码")
+    private String platformTypeCode;
 
 }
