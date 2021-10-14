@@ -52,6 +52,10 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             catalogVersion.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
         }
+        CatalogVersion query = catalogVersionRepository.selectOne(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionCode()).build());
+        if (null != query) {
+            throw new CommonException(MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_UNIQUE);
+        }
         catalogVersionRepository.insertSelective(catalogVersion);
     }
 
