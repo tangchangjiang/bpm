@@ -26,6 +26,9 @@ public class OnlineShopQueryInnerDTO {
     @ApiModelProperty(value = "平台编码")
     private String platformCode;
 
+    @ApiModelProperty(value = "平台网店编码")
+    private List<String> platformShopCodes;
+
 
 
 
