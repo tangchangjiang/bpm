@@ -47,7 +47,7 @@ public class PlatformController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<Platform>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                             PlatformDTO platform,
-                                                            @ApiIgnore @SortDefault(value = Platform.FIELD_PLATFORM_ID,
+                                                            @ApiIgnore @SortDefault(value = Platform.FIELD_CREATION_DATE,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platform.setTenantId(organizationId);
         Page<Platform> list = PageHelper.doPageAndSort(pageRequest,
