@@ -40,6 +40,7 @@ public interface MetadataConstants {
         String O2MD_ERROR_CHECK_FAILED = "o2md.error.check.failed";
         String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
+        String O2MD_CATALOG_VERSION_UNIQUE = "o2md.catalog_version_unique_error";
 
     }
 
