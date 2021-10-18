@@ -58,7 +58,6 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
         staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
-        staticResource.setLastUpdatedBy(DetailsHelper.getUserDetails().getUserId());
 
         Sqls sqls=Sqls.custom()
                 .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
