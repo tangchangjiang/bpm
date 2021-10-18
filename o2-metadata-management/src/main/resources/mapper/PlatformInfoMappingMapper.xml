@@ -146,6 +146,9 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="infTypeCode != null and infTypeCode != ''">
+                and inf.inf_type_code = #{infTypeCode}
+            </if>
         </where>
     </select>
 

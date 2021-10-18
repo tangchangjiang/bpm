@@ -13,8 +13,12 @@ import java.util.List;
 @Data
 public class PlatformQueryInnerDTO {
 
-    @ApiModelProperty(value = "平台编码", required = true)
+    @ApiModelProperty(value = "平台编码")
     private List<String> platformCodes;
-    @ApiModelProperty(value = "租户ID", required = true)
+
+    @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "平台类型编码")
+    private String infTypeCode;
 }
