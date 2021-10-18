@@ -140,8 +140,8 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                                                    String languageCode,
                                                    String resourceOwner,
                                                    StaticResourceConfig staticResourceConfig) {
-        String domainAndUrl=trimHttpPrefix(resourceUrl);
-        int indexOfSlash=domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
+        String host=domainPrefix(resourceUrl);
+        String url=trimDomainPrefix(resourceUrl);
 
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
@@ -152,9 +152,8 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                 .equals(saveDTO.getResourceLevel())){
             saveDTO.setResourceOwner(resourceOwner);
         }
-        saveDTO.setResourceHost(MetadataConstants.StaticResourceConstants.HOST_PREFIX
-                +domainAndUrl.substring(0,indexOfSlash));
-        saveDTO.setResourceUrl(domainAndUrl.substring(indexOfSlash));
+        saveDTO.setResourceHost(host);
+        saveDTO.setResourceUrl(url);
         if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
                 .equals(staticResourceConfig.getDifferentLangFlag())){
             saveDTO.setLang(languageCode);
@@ -163,13 +162,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         return saveDTO;
     }
 
-    /**
-     * 裁剪掉http前缀
-     *
-     * @param resourceUrl resourceUrl
-     * @return result
-     */
-    private static String trimHttpPrefix(String resourceUrl) {
+    private static String trimDomainPrefix(String resourceUrl) {
         if (StringUtils.isBlank(resourceUrl)) {
             return "";
         }
@@ -179,6 +172,18 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
             return resourceUrl;
         }
 
-        return httpSplits[1];
+        String domainSuffix = httpSplits[1];
+        return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
+    }
+
+    private static String domainPrefix(String resourceUrl) {
+        if (StringUtils.isBlank(resourceUrl)) {
+            return "";
+        }
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return "";
+        }
+        return resourceUrl.substring(0, resourceUrl.indexOf(BaseConstants.Symbol.SLASH, resourceUrl.indexOf(BaseConstants.Symbol.SLASH) + 2));
     }
 }

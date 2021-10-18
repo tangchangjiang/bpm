@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.core.exception.CommonException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
@@ -10,10 +9,8 @@ import org.o2.metadata.console.api.dto.StaticResourceListDTO;
 import org.o2.metadata.console.api.dto.StaticResourceQueryDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.app.service.StaticResourceInternalService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.StaticResourceRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -54,17 +51,10 @@ public class StaticResourceInternalController extends BaseController {
     @ApiOperation(value = "保存静态资源文件code&url映射")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping("/save")
-    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Boolean> saveResource(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestBody List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
         validList(staticResourceSaveDTOList);
-        for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
-            if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC.equals(saveDTO.getResourceLevel())
-                    &&saveDTO.getResourceOwner()==null){
-                throw new CommonException("Resource owner is null",saveDTO.getResourceCode());
-            }
-            staticResourceInternalService.saveResource(saveDTO);
-        }
+        staticResourceInternalService.batchSaveResource(staticResourceSaveDTOList);
         return Results.success(true);
     }
 

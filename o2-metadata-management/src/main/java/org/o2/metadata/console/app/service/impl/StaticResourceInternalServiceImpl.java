@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.mybatis.service.BaseServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * description
@@ -52,6 +54,7 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
         staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
@@ -79,6 +82,18 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
             staticResource.setObjectVersionNumber(originResource.getObjectVersionNumber());
             staticResource.setResourceId(originResource.getResourceId());
             staticResourceRepository.updateByPrimaryKey(staticResource);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchSaveResource(List<StaticResourceSaveDTO> staticResourceSaveDTOList) {
+        for (StaticResourceSaveDTO saveDTO : staticResourceSaveDTOList) {
+            if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC.equals(saveDTO.getResourceLevel())
+                    &&saveDTO.getResourceOwner()==null){
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_RESOURCE_OWNER_IS_NULL, saveDTO.getResourceCode());
+            }
+            saveResource(saveDTO);
         }
     }
 }

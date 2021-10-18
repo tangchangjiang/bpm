@@ -5,6 +5,7 @@ import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.infra.entity.StaticResource;
 
 
+import java.util.List;
 import java.util.Map;
 
 import io.choerodon.mybatis.service.BaseService;
@@ -33,4 +34,9 @@ public interface StaticResourceInternalService extends BaseService<StaticResourc
      */
     void saveResource(StaticResourceSaveDTO staticResourceSaveDTO);
 
+    /**
+     * 静态资源批量创建/更新
+     * @param staticResourceSaveDTOList 静态资源 SaveDTO List
+     */
+    void batchSaveResource(List<StaticResourceSaveDTO> staticResourceSaveDTOList);
 }
