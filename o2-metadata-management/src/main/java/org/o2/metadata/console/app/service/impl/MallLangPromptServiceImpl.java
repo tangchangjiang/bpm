@@ -7,6 +7,7 @@ import io.choerodon.core.oauth.DetailsHelper;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
@@ -278,8 +279,8 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
             return resource;
         }
-        String domainAndUrl = trimDomainPrefix(resource.getResourceUrl());
-        int indexOfSlash = domainAndUrl.indexOf(BaseConstants.Symbol.SLASH);
+        String host=domainPrefix(resource.getResourceUrl());
+        String url = trimDomainPrefix(resource.getResourceUrl());
         //记录上传文件信息
         resource.setSourceModuleCode(MetadataConstants.Constants.MODE_NAME);
 
@@ -294,26 +295,34 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
         if (!"PUBLIC".equals(staticResourceConfig.getResourceLevel())) {
             resource.setResourceOwner(mallLangPrompt.getSiteRang());
         }
-        resource.setResourceUrl(domainAndUrl.substring(indexOfSlash));
-        resource.setResourceHost("http://" + domainAndUrl.substring(0, indexOfSlash));
+        resource.setResourceUrl(url);
+        resource.setResourceHost(host);
         return resource;
     }
 
-    /**
-     * 裁剪掉域名 + 端口
-     *
-     * @param resourceUrl resourceUrl
-     * @return result
-     */
     private static String trimDomainPrefix(String resourceUrl) {
-        if (org.apache.commons.lang3.StringUtils.isBlank(resourceUrl)) {
+        if (StringUtils.isBlank(resourceUrl)) {
             return "";
         }
+
         String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
         if (httpSplits.length < 2) {
             return resourceUrl;
         }
-        return httpSplits[1];
+
+        String domainSuffix = httpSplits[1];
+        return domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
+    }
+
+    private static String domainPrefix(String resourceUrl) {
+        if (StringUtils.isBlank(resourceUrl)) {
+            return "";
+        }
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return "";
+        }
+        return resourceUrl.substring(0, resourceUrl.indexOf(BaseConstants.Symbol.SLASH, resourceUrl.indexOf(BaseConstants.Symbol.SLASH) + 2));
     }
 
 }
