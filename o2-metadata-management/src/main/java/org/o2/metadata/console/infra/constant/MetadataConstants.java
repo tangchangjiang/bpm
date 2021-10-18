@@ -41,6 +41,7 @@ public interface MetadataConstants {
         String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
         String O2MD_CATALOG_VERSION_UNIQUE = "o2md.catalog_version_unique_error";
+        String O2MD_RESOURCE_OWNER_IS_NULL="o2md.resource_owner.should.is.not.null";
 
     }
 
@@ -356,8 +357,6 @@ public interface MetadataConstants {
 
     interface StaticResourceConstants{
         Integer ENABLE_FLAG=1;
-
-        String HOST_PREFIX="http://";
 
         String LEVEL_PUBLIC="PUBLIC";
 
