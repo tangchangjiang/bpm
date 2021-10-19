@@ -102,7 +102,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
                     entry.setLevelNumber(region.getLevelNumber());
                     entry.setParentRegionCode(region.getParentRegionCode());
                     result.add(entry);
-                    iteratorBo.remove();
                     break;
                 }
             }
