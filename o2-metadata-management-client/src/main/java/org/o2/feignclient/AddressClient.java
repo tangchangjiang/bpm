@@ -28,7 +28,7 @@ public class AddressClient {
      *
      * @param queryInnerDTO 地址匹配
      * @param tenantId   租户ID
-     * @return map key:carrierCode
+     * @return  map key: externalName
      */
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(queryInnerDTO, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
