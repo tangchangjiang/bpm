@@ -17,6 +17,7 @@ import java.util.Set;
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
+@Deprecated
 public class O2MetadataManagementClient {
 
     private final SysParameterRemoteService sysParameterRemoteService;

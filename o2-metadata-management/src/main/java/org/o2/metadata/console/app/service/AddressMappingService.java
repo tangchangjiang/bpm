@@ -40,7 +40,7 @@ public interface AddressMappingService {
      * 内部方法 批量查询地址匹配
      * @param addressMappingDTO 入参
      * @param tenantId 租户ID
-     * @return  list
+     * @return  map key: externalName
      */
     Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingDTO, Long tenantId);
 

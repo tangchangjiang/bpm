@@ -125,8 +125,9 @@
         </choose>
           <if test="query.addressMappingInnerList !=null ">
             and
+
             <foreach collection="query.addressMappingInnerList" item="item" open="(" separator="or"  close=")">
-                (ad.external_name = #{item.externalName} and  ad.address_type_code = #{item.addressTypeCode} and ad.platform_code = #{item.platformCode} )
+                (ad.external_name   LIKE concat('%',concat(#{item.externalName}),'%')  and  ad.address_type_code = #{item.addressTypeCode} and ad.platform_code = #{item.platformCode} )
             </foreach>
 
           </if>

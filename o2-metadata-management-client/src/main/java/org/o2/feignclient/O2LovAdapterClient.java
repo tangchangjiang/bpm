@@ -14,6 +14,7 @@ import java.util.Map;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
+@Deprecated
 public class O2LovAdapterClient {
     private LovAdapterRemoteService lovAdapterRemoteService;
 

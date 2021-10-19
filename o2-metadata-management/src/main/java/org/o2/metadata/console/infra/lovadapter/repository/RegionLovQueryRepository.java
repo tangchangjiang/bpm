@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.lovadapter.repository;
 
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.List;
@@ -31,5 +32,17 @@ public interface RegionLovQueryRepository {
      * @return page
      */
     PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO);
+
+    /**
+     * 地区名称模糊查询
+     * @param tenantId 租户ID
+     * @param countryCode 国家编码
+     * @param queryList 查询
+     * @param lang 多语言
+     * @return  list
+     */
+    List<Region> fuzzyMatching(Long tenantId, String countryCode, String lang, List<RegionNameMatchBO> queryList);
+
+
 
 }
