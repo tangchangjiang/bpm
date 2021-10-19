@@ -6,9 +6,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 
+import org.o2.metadata.api.co.CurrencyCO;
 import org.o2.metadata.app.service.LovAdapterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,5 +36,12 @@ public class LovAdapterInternalController {
                                                        @RequestParam String lovCode,
                                                        @RequestParam (required = false)String lovValue) {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,lovValue));
+    }
+    @ApiOperation(value = "通过编码查询货币(批量)")
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/currency-by-codes")
+    public ResponseEntity<Map<String, CurrencyCO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                       @RequestParam(value = "currencyCodes" ,required = false) List<String> currencyCodes) {
+        return Results.success(lovAdapterService.findCurrencyByCodes(organizationId,currencyCodes));
     }
 }

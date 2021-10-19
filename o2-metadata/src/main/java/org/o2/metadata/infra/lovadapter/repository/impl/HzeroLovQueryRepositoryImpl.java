@@ -1,8 +1,6 @@
 package org.o2.metadata.infra.lovadapter.repository.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.hzero.boot.platform.lov.adapter.LovAdapter;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -10,6 +8,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  *
  * lov
@@ -31,4 +31,13 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
         return lovAdapter.queryLovValue(lovCode, tenantId);
     }
+
+
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode,
+                                                          Map<String, String> queryLovValueMap) {
+        return lovAdapter.queryLovData(lovCode, tenantId, null, null, null, queryLovValueMap);
+    }
+
 }

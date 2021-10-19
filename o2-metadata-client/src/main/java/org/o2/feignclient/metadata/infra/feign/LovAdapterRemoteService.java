@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  *
  * 值集查询
@@ -35,4 +37,14 @@ public interface LovAdapterRemoteService {
     ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam String lovValue);
+
+    /**
+     * 通过编码查询货币(批量)
+     * @param organizationId 租户ID
+     * @param currencyCodes 货币编码
+     * @return 返回信息MAP
+     */
+    @GetMapping("/{organizationId}/lov/currency-by-codes")
+    ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                               @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 }
