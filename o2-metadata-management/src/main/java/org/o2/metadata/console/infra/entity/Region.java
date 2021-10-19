@@ -69,7 +69,6 @@ public class Region extends AuditDomain {
     private String parentRegionName;
 
     @ApiModelProperty("等级路径")
-    @JsonIgnore
     private String levelPath;
 
     @ApiModelProperty("是否启用")

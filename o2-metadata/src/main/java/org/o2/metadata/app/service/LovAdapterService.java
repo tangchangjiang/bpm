@@ -1,6 +1,11 @@
 package org.o2.metadata.app.service;
 
 
+import org.o2.metadata.api.co.CurrencyCO;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * 值集查询
@@ -19,4 +24,13 @@ public interface LovAdapterService {
      * @return String
      */
     String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue);
+
+
+    /**
+     * 通过编码查询货币(批量)
+     * @param tenantId 租户ID
+     * @param currencyCodes 货币编码
+     * @return 返回信息MAP
+     */
+    Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes);
 }

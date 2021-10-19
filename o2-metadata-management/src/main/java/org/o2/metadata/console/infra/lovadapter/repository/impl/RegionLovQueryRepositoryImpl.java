@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.AopProxy;
 import org.o2.core.helper.JsonHelper;
@@ -24,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -106,7 +102,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
                     entry.setLevelNumber(region.getLevelNumber());
                     entry.setParentRegionCode(region.getParentRegionCode());
                     result.add(entry);
-                    iteratorBo.remove();
                     break;
                 }
             }

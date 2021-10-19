@@ -1,5 +1,6 @@
 package org.o2.feignclient.metadata.config;
 
+import org.o2.feignclient.CurrencyLovClient;
 import org.o2.feignclient.O2LovAdapterClient;
 import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
@@ -31,5 +32,11 @@ public class LovAdapterClientConfiguration {
     @ConditionalOnMissingBean
     public O2LovAdapterClient o2LovAdapterClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new O2LovAdapterClient(lovAdapterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new CurrencyLovClient(lovAdapterRemoteService);
     }
 }

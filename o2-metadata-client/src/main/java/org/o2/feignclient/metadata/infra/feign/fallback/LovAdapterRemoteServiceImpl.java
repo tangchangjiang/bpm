@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 /**
  *
@@ -20,6 +22,13 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, String lovValue) {
         log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, lovValue= {}]", lovCode, organizationId,lovValue);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> findCurrencyByCodes(Long organizationId, List<String> currencyCodes) {
+        log.error("Error findCurrencyByCodes, params[lovCode = {}, organizationId = {}]", organizationId,currencyCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
     }
 
 
