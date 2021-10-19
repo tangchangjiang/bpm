@@ -2,15 +2,19 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.co.AddressMappingCO;
+import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
+import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.app.service.AddressMappingService;
+import org.o2.metadata.console.infra.constant.AddressConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
@@ -19,6 +23,7 @@ import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
+import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
@@ -39,15 +44,17 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private final RegionRepository regionRepository;
     private final AddressMappingRepository addressMappingRepository;
     private final PlatformRepository platformRepository;
+    private final RegionLovQueryRepository regionLovQueryRepository;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
                                      RegionRepository regionRepository,
                                      AddressMappingRepository addressMappingRepository,
-                                      PlatformRepository platformRepository) {
+                                     PlatformRepository platformRepository, RegionLovQueryRepository regionLovQueryRepository) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
         this.addressMappingRepository = addressMappingRepository;
         this.platformRepository = platformRepository;
+        this.regionLovQueryRepository = regionLovQueryRepository;
     }
 
     /**
@@ -160,10 +167,53 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
-        List<AddressMappingCO> list = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
+
+        List<AddressMappingCO> list = new ArrayList<>(16);
+        // 匹配hzero地区数据
+        List<Region> regionList = regionLovQueryRepository.fuzzyMatching(tenantId,null,null,getQuery(addressMappingQueryInts));
+        if (CollectionUtils.isNotEmpty(regionList)) {
+            for (Region region : regionList) {
+                AddressMappingCO  co = new AddressMappingCO();
+                co.setExternalName(region.getRegionName());
+                co.setRegionCode(region.getRegionCode());
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
+                   co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
+                }
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
+                    co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
+                }
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
+                    co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
+                }
+                co.setParentRegionCode(region.getParentRegionCode());
+                list.add(co);
+            }
+            return buildAddressMappingTree(tenantId, list);
+        }
+
+        list = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
         return buildAddressMappingTree(tenantId, list);
     }
 
+    private  List<RegionNameMatchBO> getQuery(AddressMappingQueryInnerDTO addressMappingQueryInts) {
+        List<RegionNameMatchBO> query = new ArrayList<>();
+        List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
+        for (AddressMappingInnerDTO dto : addressMappingInnerList) {
+            RegionNameMatchBO bo = new RegionNameMatchBO();
+            bo.setRegionName(dto.getExternalName());
+            if (AddressConstants.AddressMapping.REGION.equals(dto.getAddressTypeCode())) {
+                bo.setLevelNumber(AddressConstants.AddressMapping.LEVEL_NUMBER_1);
+            }
+            if (AddressConstants.AddressMapping.CITY.equals(dto.getAddressTypeCode())) {
+                bo.setLevelNumber(AddressConstants.AddressMapping.LEVEL_NUMBER_2);
+            }
+            if (AddressConstants.AddressMapping.DISTRICT.equals(dto.getAddressTypeCode())) {
+                bo.setLevelNumber(AddressConstants.AddressMapping.LEVEL_NUMBER_3);
+            }
+            query.add(bo);
+        }
+        return query;
+    }
 
     /**
      * 返回地址对象集合
@@ -193,7 +243,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         }
         Map<String, AddressMappingCO> result = new HashMap<>(16);
         for (AddressMappingCO co : addressMappingTree) {
-            result.put(co.getRegionName(), co);
+            result.put(co.getExternalName(), co);
         }
         return result;
     }

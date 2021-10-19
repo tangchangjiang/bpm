@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.AopProxy;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -17,8 +20,12 @@ import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryReposit
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +68,51 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         List<Region> collect = regionList.stream().skip((page - 1) * size) .limit(size).collect(Collectors.toList());
         return new PageCO<>(collect,page,size,regionList.size());
     }
-    
+
+    @Override
+    public List<Region> fuzzyMatching(Long tenantId, String countryCode, String lang, List<RegionNameMatchBO> queryList) {
+        if (StringUtils.isEmpty(countryCode)) {
+            countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
+        }
+        if (StringUtils.isEmpty(lang)) {
+            lang = O2LovConstants.RegionLov.DEFAULT_LANG;
+        }
+        List<Region> regionList = self().queryRegionCache(tenantId, countryCode, lang);
+        if (regionList.isEmpty()|| queryList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Iterator<Region> iteratorRegion = regionList.iterator();
+        // 匹配结果
+        List<Region> result = new ArrayList<>();
+        while (iteratorRegion.hasNext()) {
+            if (queryList.isEmpty()) {
+                return result;
+            }
+            Region region = iteratorRegion.next();
+            String name = region.getRegionName();
+            int levelNumber = region.getLevelNumber();
+            // 更据名称模糊匹配
+            Iterator<RegionNameMatchBO> iteratorBo = queryList.iterator();
+            while (iteratorBo.hasNext()) {
+                RegionNameMatchBO bo = iteratorBo.next();
+                // 全模糊匹配 %名称%
+                boolean nameFlag = name.contains(bo.getRegionName());
+                boolean levelFlag = bo.getLevelNumber().equals(levelNumber);
+                if (nameFlag && levelFlag) {
+                    // 匹配的数据
+                    Region entry = new Region();
+                    entry.setRegionName(bo.getRegionName());
+                    entry.setRegionCode(region.getRegionCode());
+                    entry.setLevelNumber(region.getLevelNumber());
+                    entry.setParentRegionCode(region.getParentRegionCode());
+                    result.add(entry);
+                    iteratorBo.remove();
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 
 
     /**
