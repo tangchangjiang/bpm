@@ -18,10 +18,7 @@ import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryReposit
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -88,12 +85,10 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             String name = region.getRegionName();
             int levelNumber = region.getLevelNumber();
             // 更据名称模糊匹配
-            Iterator<RegionNameMatchBO> iteratorBo = queryList.iterator();
-            while (iteratorBo.hasNext()) {
-                RegionNameMatchBO bo = iteratorBo.next();
+            for (RegionNameMatchBO bo : queryList) {
                 // 全模糊匹配 %名称%
                 boolean nameFlag = name.contains(bo.getRegionName());
-                boolean levelFlag = bo.getLevelNumber().equals(levelNumber);
+                boolean levelFlag = Objects.equals(bo.getLevelNumber(), levelNumber);
                 if (nameFlag && levelFlag) {
                     // 匹配的数据
                     Region entry = new Region();
