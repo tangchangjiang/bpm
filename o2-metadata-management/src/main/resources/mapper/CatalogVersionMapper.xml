@@ -69,6 +69,9 @@
             <if test="catalogId != null and catalogId != ''">
                 AND cl.catalog_id = #{catalogId}
             </if>
+            <if test="activeFlag != null ">
+                AND clv.active_flag = #{activeFlag}
+            </if>
             <if test="catalogVersionId != null and catalogVersionId != ''">
                 AND clv.catalog_version_id = #{catalogVersionId}
             </if>
