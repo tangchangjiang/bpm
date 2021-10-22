@@ -23,4 +23,8 @@ public class CatalogRelVersionQueryDTO {
     private Integer containMasterFlag;
 
     private String catalogVersionName;
+    /**
+     *  是否有效
+     */
+    private String activeFlag;
 }

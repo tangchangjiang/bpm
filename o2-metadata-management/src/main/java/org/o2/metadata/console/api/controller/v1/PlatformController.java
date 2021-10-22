@@ -48,7 +48,7 @@ public class PlatformController extends BaseController {
     public ResponseEntity<Page<Platform>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                             PlatformDTO platform,
                                                             @ApiIgnore @SortDefault(value = Platform.FIELD_CREATION_DATE,
-                                                                     direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                                     direction = Sort.Direction.ASC) PageRequest pageRequest) {
         platform.setTenantId(organizationId);
         Page<Platform> list = PageHelper.doPageAndSort(pageRequest,
                 ()-> platformRepository.listPlatform(platform));
