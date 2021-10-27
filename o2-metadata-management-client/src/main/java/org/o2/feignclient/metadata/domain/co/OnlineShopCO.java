@@ -46,4 +46,7 @@ public class OnlineShopCO {
     @ApiModelProperty("平台名称")
     private String platformName;
 
+    @ApiModelProperty("是否寻源")
+    private Integer sourcedFlag;
+
 }
