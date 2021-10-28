@@ -46,4 +46,20 @@ public class OnlineShopCO {
     @ApiModelProperty("平台名称")
     private String platformName;
 
+
+    @ApiModelProperty(value = "是否支持寻源")
+    private Integer sourcedFlag;
+
+    @ApiModelProperty(value = "是否支持自提")
+    private Integer pickedUpFlag;
+
+    @ApiModelProperty(value = "是否支持到店退")
+    private Integer returnedFlag;
+
+    @ApiModelProperty(value = "是否有换货权限")
+    private Integer exchangedFlag;
+
+    @ApiModelProperty(value = "是否拆分平台订单")
+    private Integer enableSplitFlag;
+
 }

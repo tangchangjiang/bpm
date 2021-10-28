@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 
 /**
  * 网店
@@ -15,7 +19,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OnlineShopCO {
 
-    @ApiModelProperty(value = "表ID", hidden = true)
+    @ApiModelProperty(value = "表ID")
     private Long onlineShopId;
 
     @ApiModelProperty(value = "网点编码")
@@ -38,7 +42,7 @@ public class OnlineShopCO {
     private Integer activeFlag;
 
     @ApiModelProperty("平台编码")
-    private String  platformCode;
+    private String platformCode;
 
     @ApiModelProperty("平台网店编码")
     private String platformShopCode;
@@ -46,5 +50,19 @@ public class OnlineShopCO {
     @ApiModelProperty("平台名称")
     private String platformName;
 
+    @ApiModelProperty(value = "是否支持寻源")
+    private Integer sourcedFlag;
+
+    @ApiModelProperty(value = "是否支持自提")
+    private Integer pickedUpFlag;
+
+    @ApiModelProperty(value = "是否支持到店退")
+    private Integer returnedFlag;
+
+    @ApiModelProperty(value = "是否有换货权限")
+    private Integer exchangedFlag;
+
+    @ApiModelProperty(value = "是否拆分平台订单")
+    private Integer enableSplitFlag;
 
 }
