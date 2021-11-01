@@ -59,8 +59,8 @@
             <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
             AND c.carrier_code LIKE #{carrierCode}
         </if>
-        <if test="platformCode!=null and platformCode!=''">
-            AND plat.platform_type_code = #{platformCode}
+        <if test="platformTypeCode!=null and platformTypeCode!=''">
+            AND plat.platform_type_code = #{platformTypeCode}
         </if>
         <if test="platformCarrierCode != null and platformCarrierCode != ''">
             <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>

@@ -18,5 +18,20 @@
             </choose>
         </where>
     </select>
+<select id="">
 
+    select email,
+    login_name,
+    real_name,
+    phone from
+    iam_user user
+    <where>
+        <if test="idList != null and idList.size > 0" >
+            and user.id IN
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </where>
+</select>
 </mapper>

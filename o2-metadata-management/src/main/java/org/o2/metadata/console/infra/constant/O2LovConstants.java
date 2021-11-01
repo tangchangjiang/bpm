@@ -46,6 +46,14 @@ public interface O2LovConstants {
 
     }
 
+    interface IamUserLov {
+        String IAM_USER_LOV_CODE = "O2MD.IAM_USER";
+        String TENANT_ID = "tenantId";
+        String idList = "idList";
+
+
+    }
+
     /**
      * Exception ErrorCode
      */
