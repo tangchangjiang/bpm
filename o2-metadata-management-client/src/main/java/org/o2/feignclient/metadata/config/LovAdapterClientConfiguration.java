@@ -2,6 +2,7 @@ package org.o2.feignclient.metadata.config;
 
 import org.o2.feignclient.*;
 import org.o2.feignclient.metadata.infra.feign.*;
+import org.o2.feignclient.metadata.infra.feign.fallback.IamUserRemoteServiceImpl;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableFeignClients(
         basePackageClasses = {
-               LovAdapterRemoteService.class
+               LovAdapterRemoteService.class, IamUserRemoteService.class
         }
 )
 public class LovAdapterClientConfiguration {
@@ -26,6 +27,12 @@ public class LovAdapterClientConfiguration {
     @ConditionalOnMissingBean
     public LovAdapterRemoteServiceImpl lovAdapterRemoteServiceFallback() {
         return new LovAdapterRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IamUserRemoteServiceImpl iamUserRemoteServiceFallback() {
+        return new IamUserRemoteServiceImpl();
     }
 
     @Bean
@@ -61,5 +68,12 @@ public class LovAdapterClientConfiguration {
     public RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new RegionLovClient(lovAdapterRemoteService);
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public IamUserClient iamUserClient(IamUserRemoteService iamUserRemoteService) {
+        return new IamUserClient(iamUserRemoteService);
+    }
+
 
 }
