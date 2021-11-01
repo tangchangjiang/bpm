@@ -40,6 +40,11 @@ public class OnlineShopConverter {
         co.setPlatformCode(onlineShop.getPlatformCode());
         co.setPlatformShopCode(onlineShop.getPlatformShopCode());
         co.setPlatformName(onlineShop.getPlatformName());
+        co.setSourcedFlag(onlineShop.getSourcedFlag());
+        co.setPickedUpFlag(onlineShop.getPickedUpFlag());
+        co.setReturnedFlag(onlineShop.getReturnedFlag());
+        co.setExchangedFlag(onlineShop.getExchangedFlag());
+        co.setEnableSplitFlag(onlineShop.getEnableSplitFlag());
         return co;
     }
 
