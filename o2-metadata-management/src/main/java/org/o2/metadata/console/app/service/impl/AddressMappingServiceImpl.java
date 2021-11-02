@@ -167,28 +167,28 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
-
         List<AddressMappingCO> list = new ArrayList<>(16);
-        // 匹配hzero地区数据
-        List<Region> regionList = regionLovQueryRepository.fuzzyMatching(tenantId,null,null,getQuery(addressMappingQueryInts));
-        if (CollectionUtils.isNotEmpty(regionList)) {
-            for (Region region : regionList) {
-                AddressMappingCO  co = new AddressMappingCO();
-                co.setExternalName(region.getRegionName());
-                co.setRegionCode(region.getRegionCode());
-                if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
-                   co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
+        if (CollectionUtils.isNotEmpty(addressMappingQueryInts.getAddressMappingInnerList())) {
+            // 匹配hzero地区数据
+            List<Region> regionList = regionLovQueryRepository.fuzzyMatching(tenantId,null,null,getQuery(addressMappingQueryInts));
+            if (CollectionUtils.isNotEmpty(regionList)) {
+                for (Region region : regionList) {
+                    AddressMappingCO  co = new AddressMappingCO();
+                    co.setExternalName(region.getRegionName());
+                    co.setRegionCode(region.getRegionCode());
+                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
+                        co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
+                    }
+                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
+                        co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
+                    }
+                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
+                        co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
+                    }
+                    co.setParentRegionCode(region.getParentRegionCode());
+                    list.add(co);
                 }
-                if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
-                    co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
-                }
-                if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
-                    co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
-                }
-                co.setParentRegionCode(region.getParentRegionCode());
-                list.add(co);
             }
-
         }
         List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
         if (addressMappingInnerList.size() == list.size()) {
