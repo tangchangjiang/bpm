@@ -23,8 +23,13 @@ public interface CatalogService {
     List<CatalogVO> export(final  ExportParam exportParam, final Long tenantId );
     /**
      * 修改目录版本
-     * @date 2020-05-22
-     * @param catalog
+     * @param catalog 目录
      */
     void update(final Catalog catalog);
+
+    /**
+     * 插入目录版本
+     * @param catalog 目录
+     */
+    void insertSelective(Catalog catalog);
 }

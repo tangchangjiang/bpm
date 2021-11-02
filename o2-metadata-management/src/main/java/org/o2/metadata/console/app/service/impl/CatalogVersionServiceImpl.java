@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
@@ -33,9 +34,10 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     }
 
     @Override
-    public void update(final  CatalogVersion catalogVersion) {
+    public void update(final CatalogVersion catalogVersion) {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
+        validCatalogVersion(catalogVersion,tenantId);
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CATALOG_FORBIDDEN);
@@ -48,15 +50,29 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     public void insert(CatalogVersion catalogVersion) {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
+        validCatalogVersion(catalogVersion,tenantId);
         Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             catalogVersion.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
         }
-        CatalogVersion query = catalogVersionRepository.selectOne(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionCode()).build());
-        if (null != query) {
-            throw new CommonException(MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_UNIQUE);
-        }
         catalogVersionRepository.insertSelective(catalogVersion);
+    }
+
+    /**
+     * 验证目录版本唯一性
+     * @param catalogVersion 目录版本
+     * @param tenantId 租户ID
+     */
+    private void validCatalogVersion(CatalogVersion catalogVersion, Long tenantId) {
+        CatalogVersion code = catalogVersionRepository.selectOne(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionCode()).build());
+        if (null != code) {
+            throw new O2CommonException(null,MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_UNIQUE,MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_UNIQUE);
+        }
+        List<CatalogVersion> name = catalogVersionRepository.select(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionName()).build());
+        if (CollectionUtils.isNotEmpty(name)) {
+            throw new O2CommonException(null,MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_NAME_UNIQUE,MetadataConstants.ErrorCode.O2MD_CATALOG_VERSION_NAME_UNIQUE);
+        }
+
     }
 
     @Override
@@ -82,7 +98,6 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
                 }
             }
         }
-
         return map;
     }
 

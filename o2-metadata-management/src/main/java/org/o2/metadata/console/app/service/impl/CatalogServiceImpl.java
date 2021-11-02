@@ -1,6 +1,8 @@
 package org.o2.metadata.console.app.service.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.export.vo.ExportParam;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
@@ -46,7 +48,7 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
-
+        validCatalogName(catalog);
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
                     .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
@@ -56,5 +58,24 @@ public class CatalogServiceImpl implements CatalogService {
             catalogVersionRepository.batchUpdateByPrimaryKeySelective(versions);
         }
         catalogRepository.updateByPrimaryKeySelective(catalog);
+    }
+
+    @Override
+    public void insertSelective(Catalog catalog) {
+        validCatalogName(catalog);
+        catalogRepository.insert(catalog);
+    }
+
+    /**
+     * 校验目录名称唯一性
+     * @param catalog 目录
+     */
+    private void validCatalogName(Catalog catalog) {
+        List<Catalog> catalogs =catalogRepository.select(Catalog.builder().
+                tenantId(catalog.getTenantId()).
+                catalogName(catalog.getCatalogName()).build());
+        if (CollectionUtils.isNotEmpty(catalogs)) {
+            throw new O2CommonException(null,MetadataConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE, MetadataConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE);
+        }
     }
 }

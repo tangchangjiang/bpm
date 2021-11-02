@@ -72,7 +72,8 @@ public class CatalogController extends BaseController {
     @PostMapping
     public ResponseEntity<Catalog> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
-        catalogRepository.insertSelective(catalog);
+        validObject(catalog);
+        catalogService.insertSelective(catalog);
         return Results.success(catalog);
     }
 
