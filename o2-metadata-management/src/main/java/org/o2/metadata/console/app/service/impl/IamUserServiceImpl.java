@@ -10,7 +10,6 @@ import org.o2.metadata.console.api.co.IamUserCO;
 import org.o2.metadata.console.api.dto.IamUserQueryInnerDTO;
 import org.o2.metadata.console.app.service.IamUserService;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
-import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.stereotype.Service;
 

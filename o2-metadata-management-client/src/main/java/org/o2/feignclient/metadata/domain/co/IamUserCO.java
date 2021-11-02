@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class IamUserCO {
     /**
+     * 用户ID
+     */
+    private Long id;
+    /**
      * 邮箱
      */
     private String email;
