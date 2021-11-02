@@ -189,12 +189,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                     list.add(co);
                 }
             }
+            List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
+            if (addressMappingInnerList.size() == list.size()) {
+                return buildAddressMappingTree(tenantId, list);
+            }
         }
-        List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
-        if (addressMappingInnerList.size() == list.size()) {
-            return buildAddressMappingTree(tenantId, list);
-        }
-
         List<AddressMappingCO> listMapping = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
         list.addAll(listMapping);
         return buildAddressMappingTree(tenantId, list);
