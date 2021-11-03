@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.CatalogQueryInnerDTO;
 import org.o2.feignclient.metadata.domain.dto.CatalogVersionQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.CatalogVersionRemoteServiceImpl;
@@ -32,4 +33,13 @@ public interface CatalogVersionRemoteService {
     @PostMapping("/{organizationId}/catalogVersion-internal/select-name")
     ResponseEntity<String> listCatalogVersions(@RequestBody CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO,
                                                @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+    /**
+     * 查询目录 父子结构
+     * @param queryInner 查询条件
+     * @param organizationId 租户ID
+     * @return map key:编码 value:名称
+     */
+    @PostMapping("/{organizationId}/catalogVersion-internal/catalog-and-version")
+    ResponseEntity<String> listCatalogAndVersion(@RequestBody CatalogQueryInnerDTO queryInner,
+                                                 @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.feignclient.metadata.domain.dto.CatalogQueryInnerDTO;
 import org.o2.feignclient.metadata.domain.dto.CatalogVersionQueryInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.CatalogVersionRemoteService;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ public class CatalogVersionRemoteServiceImpl implements CatalogVersionRemoteServ
     @Override
     public ResponseEntity<String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long organizationId) {
         log.error("Error batchSelectNameByCode, params[catalogVersionDTO = {}, organizationId = {}]", catalogVersionQueryInnerDTO,organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId) {
+        log.error("Error batchSelectNameByCode, params[catalogVersionDTO = {}, organizationId = {}]", queryInner,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

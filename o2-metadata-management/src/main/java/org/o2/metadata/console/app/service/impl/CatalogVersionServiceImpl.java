@@ -4,6 +4,8 @@ import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.exception.O2CommonException;
+import org.o2.metadata.console.api.co.CatalogCO;
+import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
@@ -104,5 +106,10 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     @Override
     public List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO) {
         return catalogVersionRepository.catalogRelVersion(queryDTO);
+    }
+
+    @Override
+    public List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId) {
+        return catalogVersionRepository.listCatalogAndVersion(queryInner, organizationId);
     }
 }

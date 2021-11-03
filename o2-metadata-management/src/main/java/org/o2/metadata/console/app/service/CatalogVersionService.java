@@ -1,5 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.metadata.console.api.co.CatalogCO;
+import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
@@ -40,4 +42,12 @@ public interface CatalogVersionService {
      * @return  list
      */
     List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
+    /**
+     *  目录&目录版本 父子结构 内部接口
+     * @param queryInner 入参
+     * @param organizationId 租户ID
+     * @return  list
+     */
+
+    List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId);
 }

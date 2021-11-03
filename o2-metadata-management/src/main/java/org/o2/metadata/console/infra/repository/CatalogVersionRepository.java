@@ -1,7 +1,10 @@
 package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.metadata.console.api.co.CatalogCO;
+import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
+import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 
 import java.util.List;
@@ -27,4 +30,12 @@ public interface CatalogVersionRepository extends BaseRepository<CatalogVersion>
      * @return  list
      */
     List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
+
+    /**
+     * 查询目录&目录版本 父子接口 内部接口逻辑
+     * @param queryInner 入参
+     * @param organizationId 租户ID
+     * @return  list
+     */
+    List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId);
 }

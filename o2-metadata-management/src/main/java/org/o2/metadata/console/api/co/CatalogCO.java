@@ -24,6 +24,11 @@ public class CatalogCO {
     private String catalogName;
 
     /**
+     * 是否有效
+     */
+    private Integer activeFlag;
+
+    /**
      * 目录版本集合
      */
     private List<CatalogVersionCO> catalogVersionList;

@@ -16,6 +16,17 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
     </resultMap>
+    <resultMap id="catalogMap" type="org.o2.metadata.console.api.co.CatalogCO">
+        <result column="catalog_code" property="catalogCode" jdbcType="VARCHAR"/>
+        <result column="catalog_name" property="catalogName" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <collection property="catalogVersionList" resultMap="versionMap" columnPrefix="entry_" />
+    </resultMap>
+    <resultMap id="versionMap" type="org.o2.metadata.console.api.co.CatalogVersionCO">
+        <result column="catalog_version_code" property="catalogVersionCode" jdbcType="VARCHAR"/>
+        <result column="catalog_version_name" property="catalogVersionName" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+    </resultMap>
     <select id="batchSelectByCodes" resultType="org.o2.metadata.console.infra.entity.CatalogVersion">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
@@ -90,5 +101,38 @@
                 AND clvtl.catalog_version_name like #{catalogVersionName}
             </if>
         </where>
+    </select>
+    <select id="listCatalogAndVersion" resultMap="catalogMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()" />
+        SELECT
+        cl.catalog_code,
+        cl.active_flag,
+        cltl.catalog_name,
+
+        clv.catalog_version_code as entry_catalog_version_code,
+        clv.active_flag as entry_active_flag,
+        clvtl.catalog_version_name as entry_catalog_version_name
+        FROM
+        o2md_catalog_version AS clv
+        JOIN o2md_catalog AS cl ON clv.catalog_id = cl.catalog_id
+        inner JOIN o2md_catalog_version_tl AS clvtl ON clv.catalog_version_id = clvtl.catalog_version_id AND clvtl.lang = #{lang}
+        inner JOIN o2md_catalog_tl AS cltl ON cl.catalog_id = cltl.catalog_id AND cltl.lang= #{lang}
+         <where>
+             <choose>
+                 <when test="tenantId != null">
+                     AND clv.tenant_id = #{tenantId} and cl.tenant_id = #{tenantId}
+                 </when>
+                 <otherwise>
+                     AND clv.tenant_id =0 and cl.tenant_id = 0
+                 </otherwise>
+             </choose>
+             <if test="queryInner.catalogNames != null and queryInner.catalogNames.size > 0" >
+                 and cl.catalog_name IN
+                 <foreach collection="queryInner.catalogNames" item="name" open="(" separator="," close=")">
+                     #{name}
+                 </foreach>
+             </if>
+         </where>
+
     </select>
 </mapper>
