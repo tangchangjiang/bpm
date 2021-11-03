@@ -1,7 +1,6 @@
 package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.base.Preconditions;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
@@ -10,10 +9,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
-import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.repository.WarehouseRepository;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -59,10 +54,6 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @NotNull
     private Long onlineShopId;
 
-    @ApiModelProperty(value = "服务点id,关联o2md_pos.pos_id")
-    @NotNull
-    private Long posId;
-
     @ApiModelProperty(value = "仓库id，关联o2md_warehouse.warehouse_id")
     @NotNull
     private Long warehouseId;
@@ -103,19 +94,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
             return relPosRepository.existsWithPrimaryKey(this);
         }
         final OnlineShopRelWarehouse rel = new OnlineShopRelWarehouse();
-        rel.setPosId(this.posId);
         rel.setWarehouseId(this.warehouseId);
         rel.setOnlineShopId(this.onlineShopId);
         return relPosRepository.selectCount(rel) > 0;
-    }
-
-    public void baseValidate(final OnlineShopRepository shopRepository, final WarehouseRepository warehouseRepository) {
-        Assert.notNull(this.posId, "pos id must not null");
-        Assert.notNull(this.warehouseId, "warehouseId id must not null");
-        Assert.isTrue(warehouseRepository.existsWithPrimaryKey(this.warehouseId), "associate warehouse must exist");
-        Assert.notNull(this.onlineShopId, "online shop id must not null");
-        Assert.isTrue(shopRepository.existsWithPrimaryKey(this.onlineShopId), "associate online shop must exist");
-        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
     }
 
 }

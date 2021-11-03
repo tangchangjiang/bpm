@@ -30,7 +30,6 @@ public class OnlineShopRelWarehouseConverter {
         OnlineShopRelWarehouseDO onlineShopRelWarehouseDO = new OnlineShopRelWarehouseDO();
         onlineShopRelWarehouseDO.setOnlineShopRelWarehouseId(warehouse.getOnlineShopRelWarehouseId());
         onlineShopRelWarehouseDO.setOnlineShopId(warehouse.getOnlineShopId());
-        onlineShopRelWarehouseDO.setPosId(warehouse.getPosId());
         onlineShopRelWarehouseDO.setWarehouseId(warehouse.getWarehouseId());
         onlineShopRelWarehouseDO.setActiveFlag(warehouse.getActiveFlag());
         onlineShopRelWarehouseDO.setBusinessActiveFlag(warehouse.getBusinessActiveFlag());
