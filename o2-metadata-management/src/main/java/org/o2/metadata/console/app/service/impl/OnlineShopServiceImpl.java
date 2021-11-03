@@ -130,8 +130,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
-            //触发网店关联仓库更新
-            onlineShopRelWarehouseService.updateByShop(onlineShop.getOnlineShopId(), origin.getOnlineShopCode(), onlineShop.getActiveFlag(), onlineShop.getTenantId());
             // 触发渠道可用库存计算
             o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
         }

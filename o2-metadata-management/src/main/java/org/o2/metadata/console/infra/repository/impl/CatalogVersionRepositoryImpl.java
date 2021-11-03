@@ -1,7 +1,10 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.co.CatalogCO;
+import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
+import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.mapper.CatalogVersionMapper;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
@@ -30,5 +33,10 @@ public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVers
     @Override
     public List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO) {
         return catalogVersionMapper.catalogRelVersion(queryDTO);
+    }
+
+    @Override
+    public List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId) {
+        return catalogVersionMapper.listCatalogAndVersion(queryInner,organizationId);
     }
 }

@@ -178,8 +178,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         }
         if (warehouse != null) {
             onlineShopRelWarehouse.setWarehouseId(warehouse.getWarehouseId());
-            onlineShopRelWarehouse.setPosId(warehouse.getPosId());
-
         }
 
         //进行更新数据

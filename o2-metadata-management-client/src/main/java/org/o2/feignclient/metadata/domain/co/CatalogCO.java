@@ -12,6 +12,10 @@ import java.util.List;
  **/
 @Data
 public class CatalogCO {
+    /**
+     * 是否有效
+     */
+    private Integer activeFlag;
 
     /**
      * 目录编码

@@ -2,7 +2,10 @@ package org.o2.metadata.console.infra.mapper;
 
         import io.choerodon.mybatis.common.BaseMapper;
         import org.apache.ibatis.annotations.Param;
+        import org.o2.metadata.console.api.co.CatalogCO;
+        import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
         import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
+        import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
         import org.o2.metadata.console.infra.entity.CatalogVersion;
 
         import java.util.List;
@@ -29,4 +32,12 @@ public interface CatalogVersionMapper extends BaseMapper<CatalogVersion> {
      * @return  list
      */
     List<CatalogVersion> catalogRelVersion(CatalogRelVersionQueryDTO queryDTO);
+
+    /**
+     * 查询目录&目录版本 父子接口 内部接口逻辑
+     * @param queryInner 入参
+     * @param organizationId 租户ID
+     * @return  list
+     */
+    List<CatalogCO> listCatalogAndVersion(@Param(value = "queryInner") CatalogQueryInnerDTO queryInner, @Param("tenantId") Long organizationId);
 }

@@ -11,9 +11,21 @@ import lombok.Data;
  **/
 @Data
 public class CatalogVersionCO {
+
+    /**
+     * 版本目录编码
+     */
     @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
 
+    /**
+     * 版本目录名称
+     */
     @ApiModelProperty(value = "版本目录名称")
     private String catalogVersionName;
+
+    /**
+     * 是否有效
+     */
+    private Integer activeFlag;
 }

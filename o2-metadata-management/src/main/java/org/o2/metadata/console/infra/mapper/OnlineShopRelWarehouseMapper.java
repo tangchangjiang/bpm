@@ -49,5 +49,5 @@ public interface OnlineShopRelWarehouseMapper extends BaseMapper<OnlineShopRelWa
      * @param tenantId 租户ID
      * @return  list
      */
-    List<OnlineShopRelWarehouse> selectByShopIdAndWareIdAndPosId(@Param("query")List<OnlineShopRelWarehouse> query, @Param("tenantId") Long tenantId);
+    List<OnlineShopRelWarehouse> selectByShopIdAndWareId(@Param("query")List<OnlineShopRelWarehouse> query, @Param("tenantId") Long tenantId);
 }
