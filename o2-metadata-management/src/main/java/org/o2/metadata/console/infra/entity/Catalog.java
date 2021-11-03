@@ -13,6 +13,7 @@ import lombok.*;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * 版本
@@ -53,10 +54,12 @@ public class Catalog extends AuditDomain {
     private Long catalogId;
 
     @ApiModelProperty(value = "版本编码")
+    @NotNull
     private String catalogCode;
 
     @ApiModelProperty(value = "版本名称")
     @MultiLanguageField
+    @NotNull
     private String catalogName;
 
     @ApiModelProperty(value = "版本描述")
