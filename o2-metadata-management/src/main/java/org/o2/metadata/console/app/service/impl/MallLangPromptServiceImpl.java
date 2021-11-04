@@ -261,14 +261,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
         String directory = fileStorageProperties.getStoragePath() + Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
                 MetadataConstants.MallLangPromptConstants.NAME, mallLangPrompt.getMallType(),
                 mallLangPrompt.getLang()).toLowerCase();
-        // 下载
-        String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
-        Object valueObj = redisCacheClient.opsForHash().get(key, SystemParameterConstants.FileConfig.FILE_PREFIX);
 
-        log.info("redis systemParameter file_prefix ({}), ({})", key, valueObj);
-        if (valueObj == null) {
-            return resource;
-        }
         // 上传/新增
         try {
             String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
