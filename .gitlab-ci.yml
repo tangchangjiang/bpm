@@ -1,4 +1,5 @@
 image: registry.cn-shanghai.aliyuncs.com/c7n/cibase:0.11.0
+
 stages:
   - sonar
   - maven_package
@@ -23,6 +24,8 @@ maven_package:
     - mvn clean -U -Dmaven.test.skip=true -Dspring-boot.repackage.skip=true -Dfile.encoding=UTF-8 deploy
   only:
     - dev
+    - master
+    - prod
     - test
     - /^*-SNAPSHOT$/
 
