@@ -97,7 +97,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private void validNameUnique(Warehouse warehouse) {
         if (null != warehouse.getWarehouseId()) {
             Warehouse original = warehouseRepository.selectByPrimaryKey(warehouse);
-            if (original.getWarehouseName().equals(warehouse.getPosName())) {
+            if (original.getWarehouseName().equals(warehouse.getWarehouseName())) {
                 return;
             }
         }
