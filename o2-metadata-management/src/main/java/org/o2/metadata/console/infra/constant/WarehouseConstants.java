@@ -11,6 +11,9 @@ import org.springframework.scripting.support.ResourceScriptSource;
  **/
 public interface WarehouseConstants {
 
+    interface ErrorCode {
+        String ERROR_WAREHOUSE_NAME_DUPLICATE= "error.warehouse_name.duplicate";
+    }
     /**
      * 仓库类型
      */
