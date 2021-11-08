@@ -160,7 +160,6 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "营业类型")
     @Size(max = 255)
-    @NotNull
     @LovValue(lovCode = MetadataConstants.BusinessType.LOV_CODE)
     @Column(name = "business_type_code")
     private String businessTypeCode;
