@@ -10,6 +10,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.copier.PropertiesCopier;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
@@ -182,7 +183,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateManagementVO createTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
-        final List<FreightTemplate> list = Arrays.asList(freightTemplateManagementVO);
+        validNameUnique(freightTemplateManagementVO.getTemplateName(),freightTemplateManagementVO.getTenantId());
+        final List<FreightTemplate> list = Collections.singletonList(freightTemplateManagementVO);
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateManagementVO.getDefaultFreightTemplateDetails();
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
         if (!CollectionUtils.isEmpty(freightTemplateManagementVO.getRegionFreightDetailDisplayList())) {
@@ -199,7 +201,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateManagementVO updateTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
-        final List<FreightTemplate> list = Arrays.asList(freightTemplateManagementVO);
+        validNameUnique(freightTemplateManagementVO.getTemplateName(),freightTemplateManagementVO.getTenantId());
+        final List<FreightTemplate> list = Collections.singletonList(freightTemplateManagementVO);
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
         if (!CollectionUtils.isEmpty(freightTemplateManagementVO.getRegionFreightDetailDisplayList())) {
             final List<FreightTemplateDetail> regionDetailListInput = freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(freightTemplateManagementVO.getRegionFreightDetailDisplayList());
@@ -222,13 +225,24 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             freightTemplateDetailRepository.batchDeleteByPrimaryKey(oldList);
         }
         deleteFreightCache(resultVO);
-
         resultVO = insertTemplateDetails(resultVO, defaultDetailList, regionDetailList);
-
         return resultVO;
-
     }
 
+    /**
+     * 验证名称唯一性
+     * @param name 名称
+     * @param tenantId 租户ID
+     */
+    private void validNameUnique(String name,Long tenantId) {
+        FreightTemplate query = new FreightTemplate();
+        query.setTemplateName(name);
+        query.setTenantId(tenantId);
+       List<FreightTemplate>  list = freightTemplateRepository.select(query);
+       if (!list.isEmpty()) {
+           throw new O2CommonException(null,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE);
+       }
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateManagementVO insertTemplateDetails(FreightTemplateManagementVO resultVO, final List<FreightTemplateDetail> defaultDetailList, final List<FreightTemplateDetail> regionDetailList) {
