@@ -2,9 +2,13 @@ package org.o2.metadata.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.api.co.CurrencyCO;
+import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.app.service.LovAdapterService;
+import org.o2.metadata.infra.entity.Region;
 import org.o2.metadata.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
+import org.o2.metadata.infra.lovadapter.repository.RegionLovQueryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +26,14 @@ import java.util.Map;
 public class LovAdapterServiceImpl implements LovAdapterService {
     private IdpLovQueryRepository idpLovQueryRepository;
     private BaseLovQueryRepository baseLovQueryRepository;
+    private RegionLovQueryRepository regionLovQueryRepository;
 
-    public LovAdapterServiceImpl(IdpLovQueryRepository idpLovQueryRepository, BaseLovQueryRepository baseLovQueryRepository) {
+    public LovAdapterServiceImpl(IdpLovQueryRepository idpLovQueryRepository,
+                                 BaseLovQueryRepository baseLovQueryRepository,
+                                 RegionLovQueryRepository regionLovQueryRepository) {
         this.idpLovQueryRepository = idpLovQueryRepository;
         this.baseLovQueryRepository = baseLovQueryRepository;
+        this.regionLovQueryRepository = regionLovQueryRepository;
     }
 
 
@@ -36,5 +44,14 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     @Override
     public Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
         return baseLovQueryRepository.findCurrencyByCodes(tenantId, currencyCodes);
+    }
+
+    @Override
+    public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
+        return baseLovQueryRepository.findUomByCodes(tenantId, uomCodes);
+    }
+    @Override
+    public List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
+        return regionLovQueryRepository.queryRegion(tenantId, innerDTO);
     }
 }

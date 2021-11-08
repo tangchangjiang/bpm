@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.api.co.CurrencyCO;
 
+import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -78,7 +79,43 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
     }
 
 
+    @Override
+    public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
+        final Map<String, UomBO> uomMap = Maps.newHashMapWithExpectedSize(2);
+        List<Map<String, Object>> maps;
+        try {
+            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
+            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE);
+        } catch (Exception e) {
+            maps = Collections.emptyList();
+        }
 
+        final Map<String, Map<String, Object>> resultsMap = Maps.newHashMapWithExpectedSize(maps.size());
+        for (Map<String, Object> lov : maps) {
+            resultsMap.put((String)lov.get(O2LovConstants.Uom.UOM_CODE), lov);
+        }
+        // 单位编码为空
+        if (null == uomCodes || uomCodes.isEmpty()) {
+            for (Map.Entry<String, Map<String, Object>> entry : resultsMap.entrySet()) {
+                String k = entry.getKey();
+                Map<String, Object> v = entry.getValue();
+                final UomBO uomBO = new UomBO();
+                uomBO.setName((String) v.get(O2LovConstants.Uom.UOM_NAME));
+                uomMap.put(k, uomBO);
+            }
+            return uomMap;
+        }
+        for (String uomCode : uomCodes) {
+            final Map<String, Object> lov = resultsMap.get(uomCode);
+            if (null != lov) {
+                final UomBO uomBO = new UomBO();
+                uomBO.setName((String) lov.get(O2LovConstants.Uom.UOM_NAME));
+                uomMap.put(uomCode, uomBO);
+            }
+        }
+
+        return uomMap;
+    }
 
 
 

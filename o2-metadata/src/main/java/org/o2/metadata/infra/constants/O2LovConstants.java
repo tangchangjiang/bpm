@@ -19,6 +19,30 @@ public interface O2LovConstants {
          String URL = "URL";
     }
 
+    interface RegionLov {
+        /**
+         * 查询条件
+         */
+        String REGION_CODES = "regionCodes";
+        /**
+         * 值集编码
+         */
+        String REGION_LOV_CODE = "O2MD.REGION";
+        String LEVEL_NUMBER = "levelNumber";
+        String REGION_NAME = "regionName";
+        String ADDRESS_TYPE = "addressType";
+        String REGION_CODE = "regionCode";
+        String NOT_IN_REGION_CODE = "notInRegionCodes";
+        String PARENT_REGION_CODES = "parentRegionCodes";
+        String COUNTRY_CODE = "countryCode";
+        String DEFAULT_COUNTRY_CODE = "CN";
+        String TENANT_ID = "tenantId";
+        String LANG = "lang";
+        String DEFAULT_LANG = "zh_CN";
+        String DEFAULT_CODE = "-1";
+        String DEFAULT_DATA = "region";
+
+    }
     interface LovProperties {
         /**
          * LOV Value
@@ -106,6 +130,7 @@ public interface O2LovConstants {
         String COUNTRY_DETAIL = "countryDetail";
         // 地区
         String REGION = "region";
+        String CODE = "O2MD.REGION";
     }
 
     /**

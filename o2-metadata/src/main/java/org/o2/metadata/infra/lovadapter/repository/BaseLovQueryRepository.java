@@ -1,6 +1,7 @@
 package org.o2.metadata.infra.lovadapter.repository;
 
 import org.o2.metadata.api.co.CurrencyCO;
+import org.o2.metadata.app.bo.UomBO;
 
 
 import java.util.List;
@@ -22,7 +23,11 @@ public interface BaseLovQueryRepository {
      */
     Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes);
 
-
-
-
+    /**
+     * 通过编码查询单位(批量)
+     * @param tenantId 租户ID
+     * @param uomCodes 单位编码
+     * @return 单位信息MAP
+     */
+    Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes);
 }
