@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
@@ -57,7 +58,9 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
+        // 中台页面 控制了不能批量新建/更新数据
         for (Carrier carrier : carrierList) {
+            validCarrierNameUnique(carrier.getCarrierName(),organizationId);
             carrier.setTenantId(organizationId);
         }
         checkData(carrierList, true);
@@ -77,7 +80,9 @@ public class CarrierServiceImpl implements CarrierService {
         }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
+        // 中台页面 控制了不能批量新建/更新数据
         for (Carrier carrier : carrierList) {
+            validCarrierNameUnique(carrier.getCarrierName(),organizationId);
             carrier.setTenantId(organizationId);
             carrier.validate();
             if (carrier.getCarrierId() != null) {
@@ -101,6 +106,20 @@ public class CarrierServiceImpl implements CarrierService {
         return resultList;
     }
 
+    /**
+     * 验证承运商名称唯一性
+     * @param name 运费名称
+     * @param tenantId 租户ID
+     */
+    private void validCarrierNameUnique(String name,Long tenantId){
+        Carrier query = new Carrier();
+        query.setCarrierName(name);
+        query.setTenantId(tenantId);
+        List<Carrier> list = carrierRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE);
+        }
+    }
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(Long organizationId, List<Carrier> carrierList) {

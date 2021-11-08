@@ -3,11 +3,13 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
@@ -53,7 +55,10 @@ public class PosServiceImpl implements PosService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pos create(final Pos pos) {
+        // 名称校验
+        validPosNameUnique(pos.getPosName(),pos.getTenantId());
         pos.baseValidate(posRepository);
+        //  服务点是否存在
         pos.validatePosCode(posRepository);
 
         Assert.isTrue(!pos.exist(posRepository), BaseConstants.ErrorCode.DATA_EXISTS);
@@ -85,6 +90,7 @@ public class PosServiceImpl implements PosService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
+        validPosNameUnique(pos.getPosName(),pos.getTenantId());
         pos.baseValidate(posRepository);
 
         final PosAddress address;
@@ -113,6 +119,21 @@ public class PosServiceImpl implements PosService {
         }
         updateCarryIsDefault(pos);
         return pos;
+    }
+
+    /**
+     * 名称唯一性校验
+     * @param name 名称
+     * @param tenantId 租户ID
+     */
+    private void validPosNameUnique(String name, Long tenantId) {
+        Pos query = new Pos();
+        query.setPosName(name);
+        query.setTenantId(tenantId);
+       List<Pos> list = posRepository.select(query);
+       if (!list.isEmpty()) {
+           throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE,PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE);
+       }
     }
     /**
      * 更新服务点地址
