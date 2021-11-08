@@ -58,7 +58,9 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
+        // 中台页面 控制了不能批量新建/更新数据
         for (Carrier carrier : carrierList) {
+            validCarrierNameUnique(carrier.getCarrierName(),organizationId);
             carrier.setTenantId(organizationId);
         }
         checkData(carrierList, true);
