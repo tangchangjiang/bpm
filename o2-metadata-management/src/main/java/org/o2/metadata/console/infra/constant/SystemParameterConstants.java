@@ -54,7 +54,7 @@ public interface SystemParameterConstants {
         /**
          * 值集编码
          */
-        String LOV_CODE = "O2EXT.PARAM_TYPE";
+        String LOV_CODE = "O2MD.PARAM_TYPE";
     }
 
     /**

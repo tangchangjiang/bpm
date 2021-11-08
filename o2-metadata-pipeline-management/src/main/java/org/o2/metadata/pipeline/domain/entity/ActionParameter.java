@@ -88,7 +88,7 @@ public class ActionParameter extends AuditDomain {
     @ApiModelProperty(value = "行为，关联表o2ext.action.action_id")
     @NotNull
     private Long actionId;
-    @ApiModelProperty(value = "数据类型，值集：O2EXT.RULE_DATA_TYPE")
+    @ApiModelProperty(value = "数据类型，值集：O2MD.RULE_DATA_TYPE")
     @LovValue(value = PipelineConstants.RuleDataType.CODE)
     private String dataTypeCode;
     @ApiModelProperty(value = "租户ID")
