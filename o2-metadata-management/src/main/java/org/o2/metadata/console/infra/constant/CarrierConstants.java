@@ -31,6 +31,7 @@ public interface CarrierConstants {
         String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
         String O2MD_ERROR_PLATFORM_NOT_EXISTS = "o2md.error.platform.not.exist";
         String O2MD_ERROR_PLATFORM_CODE_DUPLICATE = "o2md.error.platform.code.duplicate";
+        String ERROR_CARRIER_NAME_DUPLICATE = "error.carrier.name.duplicate";
     }
 
     interface Redis {

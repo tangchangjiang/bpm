@@ -28,6 +28,7 @@ public interface FreightConstants {
         String BASIC_DATA_FREIGHT_DETAIL_NEXT_PRICE_IS_NULL = "error.basic_data.freight_template_detail.next_price.not_null";
         String BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL = "error.basic_data.freight_template_detail.template_id.not_null";
         String BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE = "error.basic_data.freight_template_detail.duplicate";
+        String FREIGHT_NAME_DUPLICATE= "error.freight_template_name.duplicate";
     }
     interface Redis {
 

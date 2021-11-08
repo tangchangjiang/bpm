@@ -3,11 +3,13 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
@@ -53,7 +55,10 @@ public class PosServiceImpl implements PosService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pos create(final Pos pos) {
+        // 名称校验
+        validPosNameUnique(pos);
         pos.baseValidate(posRepository);
+        //  服务点是否存在
         pos.validatePosCode(posRepository);
 
         Assert.isTrue(!pos.exist(posRepository), BaseConstants.ErrorCode.DATA_EXISTS);
@@ -85,6 +90,7 @@ public class PosServiceImpl implements PosService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
+        validPosNameUnique(pos);
         pos.baseValidate(posRepository);
 
         final PosAddress address;
@@ -113,6 +119,26 @@ public class PosServiceImpl implements PosService {
         }
         updateCarryIsDefault(pos);
         return pos;
+    }
+
+    /**
+     * 名称唯一性校验
+     * @param pos 服务点
+     */
+    private void validPosNameUnique(Pos pos) {
+        if (null != pos.getPosId()) {
+            Pos original = posRepository.selectByPrimaryKey(pos);
+            if (original.getPosName().equals(pos.getPosName())) {
+                return;
+            }
+        }
+        Pos query = new Pos();
+        query.setPosName(pos.getPosName());
+        query.setTenantId(pos.getTenantId());
+       List<Pos> list = posRepository.select(query);
+       if (!list.isEmpty()) {
+           throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE,PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE);
+       }
     }
     /**
      * 更新服务点地址

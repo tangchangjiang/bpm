@@ -25,7 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
@@ -134,18 +134,18 @@ public class Pos extends AuditDomain {
     private Long posId;
 
     @ApiModelProperty(value = "服务点编码")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     private String posCode;
 
     @ApiModelProperty(value = "服务点名称")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     @MultiLanguageField
     private String posName;
 
     @ApiModelProperty(value = "服务点状态")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     @LovValue(lovCode = MetadataConstants.PosStatus.LOV_CODE)
     @Column(name = "pos_status_code")
@@ -153,7 +153,7 @@ public class Pos extends AuditDomain {
 
     @ApiModelProperty(value = "服务点类型,值集O2MD.POS_TYPE")
     @LovValue(lovCode = MetadataConstants.PosType.LOV_CODE)
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     @Column(name = "pos_type_code")
     private String posTypeCode;

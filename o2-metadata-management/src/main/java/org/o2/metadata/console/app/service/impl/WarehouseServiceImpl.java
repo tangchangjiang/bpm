@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
@@ -61,7 +62,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
+        // 中台页面 控制了不能批量新建
         for (Warehouse warehouse : warehouses) {
+            validNameUnique(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         warehouseRepository.batchInsert(warehouses);
@@ -77,6 +80,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
         for (Warehouse warehouse : warehouses) {
+            // 中台页面 控制了不能批量更新
+            validNameUnique(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         // 更新 redis
@@ -85,6 +90,25 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     }
 
+    /**
+     * 名称校验唯一性
+     * @param warehouse 仓库
+     */
+    private void validNameUnique(Warehouse warehouse) {
+        if (null != warehouse.getWarehouseId()) {
+            Warehouse original = warehouseRepository.selectByPrimaryKey(warehouse);
+            if (original.getWarehouseName().equals(warehouse.getWarehouseName())) {
+                return;
+            }
+        }
+        Warehouse query = new Warehouse();
+        query.setWarehouseName(warehouse.getWarehouseName());
+        query.setTenantId(warehouse.getTenantId());
+        List<Warehouse> list =  warehouseRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null,WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
+        }
+    }
     @Override
     public void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses) {
         // 准备触发线上可用库存计算的数据
