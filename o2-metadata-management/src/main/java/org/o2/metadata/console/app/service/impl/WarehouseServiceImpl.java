@@ -64,7 +64,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
         // 中台页面 控制了不能批量新建
         for (Warehouse warehouse : warehouses) {
-            validNameUnique(warehouse.getPosName(),warehouse.getTenantId());
+            validNameUnique(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         warehouseRepository.batchInsert(warehouses);
@@ -81,7 +81,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
         for (Warehouse warehouse : warehouses) {
             // 中台页面 控制了不能批量更新
-            validNameUnique(warehouse.getPosName(),warehouse.getTenantId());
+            validNameUnique(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         // 更新 redis
@@ -92,13 +92,18 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     /**
      * 名称校验唯一性
-     * @param name 名称校验
-     * @param tenantId 租户ID
+     * @param warehouse 仓库
      */
-    private void validNameUnique(String name, Long tenantId) {
+    private void validNameUnique(Warehouse warehouse) {
+        if (null != warehouse.getWarehouseId()) {
+            Warehouse original = warehouseRepository.selectByPrimaryKey(warehouse);
+            if (original.getWarehouseName().equals(warehouse.getPosName())) {
+                return;
+            }
+        }
         Warehouse query = new Warehouse();
-        query.setWarehouseName(name);
-        query.setTenantId(tenantId);
+        query.setWarehouseName(warehouse.getWarehouseName());
+        query.setTenantId(warehouse.getTenantId());
         List<Warehouse> list =  warehouseRepository.select(query);
         if (!list.isEmpty()) {
             throw new O2CommonException(null,WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
