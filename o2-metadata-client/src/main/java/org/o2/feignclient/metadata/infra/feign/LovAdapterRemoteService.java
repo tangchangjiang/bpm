@@ -1,6 +1,7 @@
 package org.o2.feignclient.metadata.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.feignclient.metadata.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -47,4 +48,25 @@ public interface LovAdapterRemoteService {
     @GetMapping("/{organizationId}/lov/currency-by-codes")
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
+
+
+    /**
+     * 查询地区值集
+     * @param innerDTO 查询条件
+     * @param organizationId 租户ID
+     * @return 值集集合
+     */
+    @GetMapping("/{organizationId}/lov/query-region-lov")
+    ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                       RegionQueryLovInnerDTO innerDTO);
+
+    /**
+     * 通过编码查询单位(批量)
+     * @param organizationId 租户ID
+     * @param uomCodes 单位编码
+     * @return 单位信息MAP
+     */
+    @GetMapping("/{organizationId}/lov/uom-by-codes")
+    ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                          @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
 }
