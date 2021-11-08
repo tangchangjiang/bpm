@@ -56,7 +56,7 @@ public interface LovAdapterRemoteService {
      * @param organizationId 租户ID
      * @return 值集集合
      */
-    @GetMapping("/{organizationId}/lov-internal/query-region-lov")
+    @GetMapping("/{organizationId}/lov/query-region-lov")
     ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                        RegionQueryLovInnerDTO innerDTO);
 
@@ -66,7 +66,7 @@ public interface LovAdapterRemoteService {
      * @param uomCodes 单位编码
      * @return 单位信息MAP
      */
-    @GetMapping("/{organizationId}/lov-internal/uom-by-codes")
+    @GetMapping("/{organizationId}/lov/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
 }
