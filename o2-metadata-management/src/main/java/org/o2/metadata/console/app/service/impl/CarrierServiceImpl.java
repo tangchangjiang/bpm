@@ -60,7 +60,7 @@ public class CarrierServiceImpl implements CarrierService {
     public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
         // 中台页面 控制了不能批量新建/更新数据
         for (Carrier carrier : carrierList) {
-            validCarrierNameUnique(carrier.getCarrierName(),organizationId);
+            validCarrierNameUnique(carrier);
             carrier.setTenantId(organizationId);
         }
         checkData(carrierList, true);
@@ -82,7 +82,7 @@ public class CarrierServiceImpl implements CarrierService {
         final List<Carrier> insertList = new ArrayList<>();
         // 中台页面 控制了不能批量新建/更新数据
         for (Carrier carrier : carrierList) {
-            validCarrierNameUnique(carrier.getCarrierName(),organizationId);
+            validCarrierNameUnique(carrier);
             carrier.setTenantId(organizationId);
             carrier.validate();
             if (carrier.getCarrierId() != null) {
@@ -108,13 +108,18 @@ public class CarrierServiceImpl implements CarrierService {
 
     /**
      * 验证承运商名称唯一性
-     * @param name 运费名称
-     * @param tenantId 租户ID
+     * @param carrier 承运商
      */
-    private void validCarrierNameUnique(String name,Long tenantId){
+    private void validCarrierNameUnique(Carrier carrier){
+        if (null != carrier.getCarrierId()) {
+            Carrier  original =  carrierRepository.selectByPrimaryKey(carrier);
+            if (original.getCarrierName().equals(carrier.getCarrierName())) {
+                return;
+            }
+        }
         Carrier query = new Carrier();
-        query.setCarrierName(name);
-        query.setTenantId(tenantId);
+        query.setCarrierName(carrier.getCarrierName());
+        query.setTenantId(carrier.getTenantId());
         List<Carrier> list = carrierRepository.select(query);
         if (!list.isEmpty()) {
             throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE);

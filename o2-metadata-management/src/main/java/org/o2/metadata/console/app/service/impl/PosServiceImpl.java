@@ -56,7 +56,7 @@ public class PosServiceImpl implements PosService {
     @Transactional(rollbackFor = Exception.class)
     public Pos create(final Pos pos) {
         // 名称校验
-        validPosNameUnique(pos.getPosName(),pos.getTenantId());
+        validPosNameUnique(pos);
         pos.baseValidate(posRepository);
         //  服务点是否存在
         pos.validatePosCode(posRepository);
@@ -90,7 +90,7 @@ public class PosServiceImpl implements PosService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
-        validPosNameUnique(pos.getPosName(),pos.getTenantId());
+        validPosNameUnique(pos);
         pos.baseValidate(posRepository);
 
         final PosAddress address;
@@ -123,13 +123,18 @@ public class PosServiceImpl implements PosService {
 
     /**
      * 名称唯一性校验
-     * @param name 名称
-     * @param tenantId 租户ID
+     * @param pos 服务点
      */
-    private void validPosNameUnique(String name, Long tenantId) {
+    private void validPosNameUnique(Pos pos) {
+        if (null != pos.getPosId()) {
+            Pos original = posRepository.selectByPrimaryKey(pos);
+            if (original.getPosName().equals(pos.getPosName())) {
+                return;
+            }
+        }
         Pos query = new Pos();
-        query.setPosName(name);
-        query.setTenantId(tenantId);
+        query.setPosName(pos.getPosName());
+        query.setTenantId(pos.getTenantId());
        List<Pos> list = posRepository.select(query);
        if (!list.isEmpty()) {
            throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE,PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE);

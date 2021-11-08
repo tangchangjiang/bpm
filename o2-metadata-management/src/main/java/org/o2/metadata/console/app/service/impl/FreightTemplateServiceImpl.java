@@ -183,7 +183,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateManagementVO createTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
-        validNameUnique(freightTemplateManagementVO.getTemplateName(),freightTemplateManagementVO.getTenantId());
+        validNameUnique(freightTemplateManagementVO);
         final List<FreightTemplate> list = Collections.singletonList(freightTemplateManagementVO);
         final List<FreightTemplateDetail> defaultDetailList = freightTemplateManagementVO.getDefaultFreightTemplateDetails();
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
@@ -201,7 +201,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     @Transactional(rollbackFor = Exception.class)
     public FreightTemplateManagementVO updateTemplateAndDetails(final FreightTemplateManagementVO freightTemplateManagementVO) {
-        validNameUnique(freightTemplateManagementVO.getTemplateName(),freightTemplateManagementVO.getTenantId());
+        validNameUnique(freightTemplateManagementVO);
         final List<FreightTemplate> list = Collections.singletonList(freightTemplateManagementVO);
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
         if (!CollectionUtils.isEmpty(freightTemplateManagementVO.getRegionFreightDetailDisplayList())) {
@@ -231,13 +231,21 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     /**
      * 验证名称唯一性
-     * @param name 名称
-     * @param tenantId 租户ID
+     * @param freightTemplateManagement 模板
      */
-    private void validNameUnique(String name,Long tenantId) {
+    private void validNameUnique(FreightTemplateManagementVO freightTemplateManagement) {
+        if (null != freightTemplateManagement.getTemplateId()) {
+            FreightTemplate only = new FreightTemplate();
+            only.setTenantId(freightTemplateManagement.getTenantId());
+            only.setTemplateId(freightTemplateManagement.getTemplateId());
+            FreightTemplate original = freightTemplateRepository.selectByPrimaryKey(only);
+            if (original.getTemplateName().equals(freightTemplateManagement.getTemplateName())) {
+                return;
+            }
+        }
         FreightTemplate query = new FreightTemplate();
-        query.setTemplateName(name);
-        query.setTenantId(tenantId);
+        query.setTemplateName(freightTemplateManagement.getTemplateName());
+        query.setTenantId(freightTemplateManagement.getTenantId());
        List<FreightTemplate>  list = freightTemplateRepository.select(query);
        if (!list.isEmpty()) {
            throw new O2CommonException(null,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE);
