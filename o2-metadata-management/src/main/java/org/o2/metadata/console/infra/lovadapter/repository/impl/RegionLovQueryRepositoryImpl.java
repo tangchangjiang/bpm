@@ -92,7 +92,9 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
                 if (nameFlag && levelFlag) {
                     // 匹配的数据
                     Region entry = new Region();
-                    entry.setRegionName(bo.getRegionName());
+                    entry.setRegionName(name);
+                    entry.setExternalCode(bo.getExternalCode());
+                    entry.setExternalName(bo.getExternalName());
                     entry.setRegionCode(region.getRegionCode());
                     entry.setLevelNumber(region.getLevelNumber());
                     entry.setParentRegionCode(region.getParentRegionCode());
