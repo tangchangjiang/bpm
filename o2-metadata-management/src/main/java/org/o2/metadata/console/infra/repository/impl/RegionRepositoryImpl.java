@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.repository.impl;
 
-import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
@@ -14,7 +13,7 @@ import java.util.*;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Component
-public class RegionRepositoryImpl extends BaseRepositoryImpl<Region> implements RegionRepository {
+public class RegionRepositoryImpl implements RegionRepository {
     private final RegionLovQueryRepository regionLovQueryRepository;
 
     public RegionRepositoryImpl(RegionLovQueryRepository regionLovQueryRepository) {
