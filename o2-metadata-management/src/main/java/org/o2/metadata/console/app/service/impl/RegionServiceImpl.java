@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-import io.choerodon.mybatis.service.BaseServiceImpl;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Service
-public class RegionServiceImpl extends BaseServiceImpl<Region> implements RegionService {
+public class RegionServiceImpl implements RegionService {
 
     private RegionRepository regionRepository;
 

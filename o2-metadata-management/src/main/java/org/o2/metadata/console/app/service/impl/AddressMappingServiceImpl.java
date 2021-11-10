@@ -33,6 +33,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+
 /**
  * 地址匹配应用服务默认实现
  *
@@ -169,42 +172,67 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
         List<AddressMappingCO> list = new ArrayList<>(16);
         if (CollectionUtils.isNotEmpty(addressMappingQueryInts.getAddressMappingInnerList())) {
-            // 匹配hzero地区数据
-            List<Region> regionList = regionLovQueryRepository.fuzzyMatching(tenantId,null,null,getQuery(addressMappingQueryInts));
-            if (CollectionUtils.isNotEmpty(regionList)) {
-                for (Region region : regionList) {
-                    AddressMappingCO  co = new AddressMappingCO();
-                    co.setExternalName(region.getRegionName());
-                    co.setRegionCode(region.getRegionCode());
-                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
-                        co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
-                    }
-                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
-                        co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
-                    }
-                    if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
-                        co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
-                    }
-                    co.setParentRegionCode(region.getParentRegionCode());
-                    list.add(co);
-                }
-            }
+            list = regionBaseMapping(tenantId,addressMappingQueryInts);
             List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
             if (addressMappingInnerList.size() == list.size()) {
                 return buildAddressMappingTree(tenantId, list);
             }
         }
+        // 查询地址匹配的数据
         List<AddressMappingCO> listMapping = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(addressMappingQueryInts, tenantId));
         list.addAll(listMapping);
-        return buildAddressMappingTree(tenantId, list);
+        ArrayList<AddressMappingCO> collect = list.stream().collect(
+                collectingAndThen(
+                        toCollection(() -> new TreeSet<>(Comparator.comparing(AddressMappingCO::getRegionCode))), ArrayList::new)
+        );
+        return buildAddressMappingTree(tenantId, collect);
+    }
+     /**
+      * 批量hzero基础数据
+      * @param tenantId 租户ID
+      * @param addressMappingQueryInts 查询条件
+      * @return  list
+      */
+    private List<AddressMappingCO> regionBaseMapping(Long tenantId, AddressMappingQueryInnerDTO addressMappingQueryInts) {
+        List<AddressMappingCO> list = new ArrayList<>(16);
+        // 匹配hzero地区数据
+        List<Region> regionList = regionLovQueryRepository.fuzzyMatching(tenantId,null,null,getQuery(addressMappingQueryInts));
+        if (CollectionUtils.isNotEmpty(regionList)) {
+            for (Region region : regionList) {
+                AddressMappingCO  co = new AddressMappingCO();
+                co.setExternalName(region.getRegionName());
+                co.setRegionCode(region.getRegionCode());
+                co.setExternalName(region.getRegionName());
+                co.setExternalCode(region.getExternalCode());
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
+                    co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
+                }
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
+                    co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
+                }
+                if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
+                    co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
+                }
+                co.setParentRegionCode(region.getParentRegionCode());
+                list.add(co);
+            }
+        }
+        return list;
     }
 
+   /**
+    * 构造查询条件
+    * @param addressMappingQueryInts 查询条件
+    * @return  list
+    */
     private  List<RegionNameMatchBO> getQuery(AddressMappingQueryInnerDTO addressMappingQueryInts) {
         List<RegionNameMatchBO> query = new ArrayList<>();
         List<AddressMappingInnerDTO> addressMappingInnerList = addressMappingQueryInts.getAddressMappingInnerList();
         for (AddressMappingInnerDTO dto : addressMappingInnerList) {
             RegionNameMatchBO bo = new RegionNameMatchBO();
             bo.setRegionName(dto.getExternalName());
+            bo.setExternalCode(dto.getExternalCode());
+            bo.setExternalName(dto.getExternalName());
             if (AddressConstants.AddressMapping.REGION.equals(dto.getAddressTypeCode())) {
                 bo.setLevelNumber(AddressConstants.AddressMapping.LEVEL_NUMBER_1);
             }
@@ -226,8 +254,13 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @return map
      */
     private Map<String, AddressMappingCO> buildAddressMappingTree(Long tenantId, List<AddressMappingCO> list) {
+        List<String> codes = new ArrayList<>(list.size());
+        for (AddressMappingCO co : list) {
+            codes.add(co.getRegionCode());
+        }
         RegionQueryLovInnerDTO queryLovDTO = new RegionQueryLovInnerDTO();
         queryLovDTO.setTenantId(tenantId);
+        queryLovDTO.setRegionCodes(codes);
         List<Region> regionList = regionRepository.listRegionLov(queryLovDTO, tenantId);
         Map<String, Region> regionMap = regionList.stream().collect(Collectors.toMap(Region::getRegionCode, v -> v));
         for (AddressMappingCO co : list) {

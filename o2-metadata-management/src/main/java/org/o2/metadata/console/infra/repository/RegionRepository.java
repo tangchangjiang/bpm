@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.repository;
 
-import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.entity.Region;
 
@@ -9,7 +8,7 @@ import java.util.List;
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
  */
-public interface RegionRepository extends BaseRepository<Region> {
+public interface RegionRepository  {
 
     /**
      * 查询地区树，返回父级ID

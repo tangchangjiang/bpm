@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.bo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -19,4 +20,16 @@ public class RegionNameMatchBO {
      *  级别
      */
     private Integer levelNumber;
+
+    /**
+     *  级别
+     */
+    @ApiModelProperty(value = "外部区域代码")
+    private String externalCode;
+
+    /**
+     *  级别
+     */
+    @ApiModelProperty(value = "外部区域名称")
+    private String externalName;
 }
