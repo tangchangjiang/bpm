@@ -56,14 +56,14 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
-        final List<Carrier> updateList = new ArrayList<>();
-        final List<Carrier> insertList = new ArrayList<>();
+        List<Carrier> updateList = new ArrayList<>();
+        List<Carrier> insertList = new ArrayList<>();
         // 中台页面 控制了不能批量新建/更新数据 后续前端改成批量在优化
-        final List<Carrier> resultList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(updateList)) {
-            for (Carrier carrier: carrierList) {
+        List<Carrier> resultList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(carrierList)) {
+            for (Carrier carrier : carrierList) {
                 // 新增
-                if (null ==carrier.getCarrierId()){
+                if (null == carrier.getCarrierId()) {
                     validCarrierNameUnique(carrier);
                     validCarrierCodeUnique(carrier);
                     insertList.add(carrier);
@@ -75,15 +75,17 @@ public class CarrierServiceImpl implements CarrierService {
                         validCarrierNameUnique(carrier);
                     }
                     if (!original.getCarrierCode().equals(carrier.getCarrierCode())) {
-                        throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE);
+                        throw new O2CommonException(null, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE);
                     }
                     updateList.add(carrier);
                 }
             }
+            carrierRepository.batchUpdateByPrimaryKey(updateList);
+            carrierRepository.batchInsertSelective(insertList);
+            carrierRedis.batchUpdateRedis(organizationId);
+            resultList.addAll(updateList);
+            resultList.addAll(insertList);
         }
-        carrierRepository.batchUpdateByPrimaryKey(updateList);
-        carrierRepository.batchInsertSelective(insertList);
-        carrierRedis.batchUpdateRedis(organizationId);
         return resultList;
     }
 
