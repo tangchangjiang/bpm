@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
@@ -22,7 +21,6 @@ import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -56,63 +54,7 @@ public class Pos extends AuditDomain {
     public static final String FIELD_BUSINESS_TIME = "businessTime";
     public static final String FIELD_NOTICE = "notice";
 
-    
-    /**
-     *
-     * 业务方法(按public protected private顺序排列)
-     * @param posRepository 服务点调用
-     * @return boolean
-     */
-    public boolean exist(final PosRepository posRepository) {
-        if (this.posId != null) {
-            return posRepository.existsWithPrimaryKey(this.posId);
-        }
 
-        final Pos pos = new Pos();
-        pos.setPosCode(this.posCode);
-        pos.setTenantId(this.tenantId);
-        pos.setPosName(this.posName);
-        pos.setPosTypeCode(this.posTypeCode);
-        pos.setPosStatusCode(this.posStatusCode);
-        return posRepository.selectCount(pos) > 0;
-    }
-
-   /**
-    * 基本数据校验
-    * @param posRepository 服务点调用
-    */
-    public void baseValidate(final PosRepository posRepository) {
-        if (this.getPosId() != null) {
-            final Pos record = posRepository.selectByPrimaryKey(this.posId);
-            Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-            Assert.isTrue(record.getPosCode().equals(this.posCode), "pos code must not be changed");
-            Assert.isTrue(record.getPosTypeCode().equals(this.posTypeCode), "pos type code must not be changed");
-        }
-
-        Assert.notNull(this.getAddress(), "pos must contains an address");
-        Assert.notNull(this.getAddress().getDistrictCode(), "pos must contains an address");
-        Assert.notNull(this.tenantId, "pos must contains tenantId");
-        if (MetadataConstants.PosType.WAREHOUSE.equalsIgnoreCase(this.posTypeCode)) {
-            Assert.isNull(this.businessTypeCode, "pos business type code should be null on warehouse type");
-        }
-
-        if (CollectionUtils.isNotEmpty(this.postTimes)) {
-            this.postTimes.forEach(PostTime::validate);
-        }
-    }
-    /**
-     * 服务点是否存在
-     * @param posRepository 服务点调用
-     */
-    public void validatePosCode(final PosRepository posRepository) {
-        final Pos pos = new Pos();
-        pos.setPosCode(this.posCode);
-        pos.setTenantId(this.tenantId);
-        final List<Pos> mayEmpty = posRepository.select(pos);
-        if (CollectionUtils.isNotEmpty(mayEmpty)) {
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Pos(" + pos.getPosId() + ")");
-        }
-    }
 
     public List<PosRelCarrier> posRelCarrier (PosRelCarrierRepository posRelCarrierRepository, Integer defaultFlag) {
         Condition condition =   Condition.builder(PosRelCarrier.class)
