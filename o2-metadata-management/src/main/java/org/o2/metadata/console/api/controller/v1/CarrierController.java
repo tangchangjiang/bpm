@@ -63,22 +63,14 @@ public class CarrierController extends BaseController {
         return Results.success(carrier);
     }
 
-    @ApiOperation(value = "批量新增或修改承运商")
+    @ApiOperation(value = "批量新增")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<List<Carrier>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
-        final List<Carrier> insertResult = carrierService.batchMerge(organizationId, carrierList);
+        List<Carrier> insertResult = carrierService.batchMerge(organizationId, carrierList);
         return Results.success(insertResult);
     }
 
-    @ApiOperation(value = "批量修改承运商")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PutMapping
-    public ResponseEntity<List<Carrier>> batchUpdate(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
-        SecurityTokenHelper.validToken(carrierList);
-        final List<Carrier> insertResult = carrierService.batchUpdate(organizationId, carrierList);
-        return Results.success(insertResult);
-    }
 
     @ApiOperation(value = "批量删除承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
