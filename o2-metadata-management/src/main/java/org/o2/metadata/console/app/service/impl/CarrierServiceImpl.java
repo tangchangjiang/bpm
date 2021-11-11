@@ -108,7 +108,7 @@ public class CarrierServiceImpl implements CarrierService {
      */
     private void validCarrierCodeUnique(Carrier carrier){
         Carrier query = new Carrier();
-        query.setCarrierName(carrier.getCarrierCode());
+        query.setCarrierCode(carrier.getCarrierCode());
         query.setTenantId(carrier.getTenantId());
         List<Carrier> list = carrierRepository.select(query);
         if (!list.isEmpty()) {
