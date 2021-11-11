@@ -120,6 +120,7 @@ public class PosServiceImpl implements PosService {
             if (!original.getPosCode().equals(pos.getPosCode())) {
                 throw new O2CommonException(null,PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE, PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE);
             }
+            return;
         }
         Pos query = new Pos();
         query.setTenantId(pos.getTenantId());
