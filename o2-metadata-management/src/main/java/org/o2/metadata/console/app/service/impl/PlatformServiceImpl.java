@@ -5,9 +5,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.PlatformConstants;
 import org.o2.metadata.console.infra.convertor.PlatformConverter;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
@@ -43,22 +45,18 @@ public class PlatformServiceImpl implements PlatformService {
 
     @Override
     public Platform save(Platform platform) {
-        // 唯一性校验
-        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())).build();
-        List<Platform> platforms = platformRepository.selectByCondition(condition);
         //保存平台定义表
         if (platform.getPlatformId() == null) {
-            if (CollectionUtils.isNotEmpty(platforms)) {
-                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED,MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED).desc());
-            }
+            validCodeUnique(platform);
+            validNameUnique(platform);
             platformRepository.insertSelective(platform);
         } else {
-            if (CollectionUtils.isNotEmpty(platforms)) {
-                Platform temp = platforms.get(0);
-                if (!temp.getPlatformId().equals(platform.getPlatformId())) {
-                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED, MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_FAILED).desc());
-                }
-
+            Platform original = platformRepository.selectByPrimaryKey(platform);
+            if (!original.getPlatformCode().equals(platform.getPlatformCode())) {
+                throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE,PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE);
+            }
+            if (!original.getPlatformName().equals(platform.getPlatformName())){
+                validNameUnique(platform);
             }
             platformRepository.updateOptional(platform,
                     Platform.FIELD_PLATFORM_CODE,
@@ -68,7 +66,6 @@ public class PlatformServiceImpl implements PlatformService {
                     Platform.FIELD_PLATFORM_TYPE_CODE
             );
         }
-
         return platform;
     }
 
@@ -91,5 +88,21 @@ public class PlatformServiceImpl implements PlatformService {
             map.put(k,co);
         }
         return map;
+    }
+    private void validNameUnique(Platform platform) {
+        // 唯一性校验
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_NAME,platform.getPlatformName())).build();
+        List<Platform> platforms = platformRepository.selectByCondition(condition);
+        if (CollectionUtils.isNotEmpty(platforms)) {
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE,PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE);
+        }
+    }
+    private void validCodeUnique(Platform platform) {
+        // 唯一性校验
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())).build();
+        List<Platform> platforms = platformRepository.selectByCondition(condition);
+        if (CollectionUtils.isNotEmpty(platforms)) {
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE,PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE);
+        }
     }
 }
