@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 承运商应用服务默认实现
@@ -57,51 +55,34 @@ public class CarrierServiceImpl implements CarrierService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<Carrier> batchUpdate(Long organizationId, final List<Carrier> carrierList) {
-        // 中台页面 控制了不能批量新建/更新数据
-        for (Carrier carrier : carrierList) {
-            validCarrierNameUnique(carrier);
-            carrier.setTenantId(organizationId);
-        }
-        checkData(carrierList, true);
-        List<Carrier> list = carrierRepository.batchUpdateByPrimaryKey(carrierList);
-        carrierRedis.batchUpdateRedis(organizationId);
-        return list;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public List<Carrier> batchMerge(Long organizationId, final List<Carrier> carrierList) {
-        List<Carrier> unique = carrierList.stream().collect(
-                Collectors.collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Carrier::getCarrierCode))), ArrayList::new));
-        if (unique.size() != carrierList.size()) {
-            throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
-        }
         final List<Carrier> updateList = new ArrayList<>();
         final List<Carrier> insertList = new ArrayList<>();
-        // 中台页面 控制了不能批量新建/更新数据
-        for (Carrier carrier : carrierList) {
-            validCarrierNameUnique(carrier);
-            carrier.setTenantId(organizationId);
-            carrier.validate();
-            if (carrier.getCarrierId() != null) {
-                SecurityTokenHelper.validToken(carrier);
-                updateList.add(carrier);
-            } else {
-                if (carrier.exist(carrierRepository)) {
-                    throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_CARRIER_EXISTS);
-                }
-                insertList.add(carrier);
-            }
-        }
+        // 中台页面 控制了不能批量新建/更新数据 后续前端改成批量在优化
         final List<Carrier> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(updateList)) {
-            resultList.addAll(carrierRepository.batchUpdateByPrimaryKey(updateList));
+            for (Carrier carrier: carrierList) {
+                // 新增
+                if (null ==carrier.getCarrierId()){
+                    validCarrierNameUnique(carrier);
+                    validCarrierCodeUnique(carrier);
+                    insertList.add(carrier);
+                } else {
+                    SecurityTokenHelper.validToken(carrier);
+                    // 更新
+                    Carrier original = carrierRepository.selectByPrimaryKey(carrier);
+                    if (!original.getCarrierName().equals(carrier.getCarrierName())) {
+                        validCarrierNameUnique(carrier);
+                    }
+                    if (!original.getCarrierCode().equals(carrier.getCarrierCode())) {
+                        throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE);
+                    }
+                    updateList.add(carrier);
+                }
+            }
         }
-        if (CollectionUtils.isNotEmpty(insertList)) {
-            resultList.addAll(carrierRepository.batchInsertSelective(insertList));
-        }
+        carrierRepository.batchUpdateByPrimaryKey(updateList);
+        carrierRepository.batchInsertSelective(insertList);
         carrierRedis.batchUpdateRedis(organizationId);
         return resultList;
     }
@@ -111,18 +92,25 @@ public class CarrierServiceImpl implements CarrierService {
      * @param carrier 承运商
      */
     private void validCarrierNameUnique(Carrier carrier){
-        if (null != carrier.getCarrierId()) {
-            Carrier  original =  carrierRepository.selectByPrimaryKey(carrier);
-            if (original.getCarrierName().equals(carrier.getCarrierName())) {
-                return;
-            }
-        }
         Carrier query = new Carrier();
         query.setCarrierName(carrier.getCarrierName());
         query.setTenantId(carrier.getTenantId());
         List<Carrier> list = carrierRepository.select(query);
         if (!list.isEmpty()) {
             throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE);
+        }
+    }
+    /**
+     * 验证承运商编码唯一性
+     * @param carrier 承运商
+     */
+    private void validCarrierCodeUnique(Carrier carrier){
+        Carrier query = new Carrier();
+        query.setCarrierName(carrier.getCarrierCode());
+        query.setTenantId(carrier.getTenantId());
+        List<Carrier> list = carrierRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE);
         }
     }
     @Override

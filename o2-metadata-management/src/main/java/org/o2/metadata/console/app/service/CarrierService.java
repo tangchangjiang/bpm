@@ -15,14 +15,6 @@ import java.util.Map;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 public interface CarrierService {
-    /**
-     * 更新承运商
-     *
-     * @param carrierList 承运商
-     * @param organizationId 租户ID
-     * @return 承运商集合
-     */
-    List<Carrier> batchUpdate(Long organizationId, List<Carrier> carrierList);
 
     /**
      * 更新承运商
