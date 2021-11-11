@@ -8,11 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
@@ -71,9 +73,8 @@ public class SysParamServiceImpl implements SysParamService {
         int number = systemParameterRepository.selectCountByCondition(
                 Condition.builder(SystemParameter.class).andWhere(sqls).build());
         if (number > 0){
-            throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "paramCode(" + systemParameter.getParamCode() + ")");
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_CODE_UNIQUE, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_CODE_UNIQUE);
         }
-
         systemParameterRepository.insertSelective(systemParameter);
         systemParameterRedis.updateToRedis(systemParameter, tenantId);
     }
