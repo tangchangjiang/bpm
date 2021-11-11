@@ -36,14 +36,12 @@ public interface MetadataConstants {
         String BASIC_DATA_CATALOG_CODE_IS_NULL = "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_PLATFORM_CODE_IS_NULL = "error.basic_data.platformCode.should.is.not.null";
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
-        String O2MD_ERROR_CATALOG_FORBIDDEN = "o2md.error.catalog.forbidden";
         String O2MD_ERROR_CHECK_FAILED = "o2md.error.check.failed";
         String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
-        String O2MD_CATALOG_VERSION_CODE_UNIQUE = "o2md.catalog_version_unique_error";
-        String O2MD_CATALOG_VERSION_NAME_UNIQUE = "o2md.catalog_version_name_unique_error";
+
         String O2MD_RESOURCE_OWNER_IS_NULL="o2md.resource_owner.should.is.not.null";
-        String O2MD_CATALOG_NAME_UNIQUE = "o2md.catalog_name_unique_error";
+
     }
 
     /**

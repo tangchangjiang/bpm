@@ -55,8 +55,10 @@ public class CatalogVersion extends AuditDomain {
     @GeneratedValue
     private Long catalogVersionId;
     @ApiModelProperty(value = "版本目录编码")
+    @NotNull
     private String catalogVersionCode;
     @ApiModelProperty(value = "版本目录名称")
+    @NotNull
     @MultiLanguageField
     private String catalogVersionName;
     @ApiModelProperty(value = "版本目录表述")

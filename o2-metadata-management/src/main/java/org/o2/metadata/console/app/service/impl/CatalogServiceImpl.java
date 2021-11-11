@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.export.vo.ExportParam;
 import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.app.service.CatalogService;
+import org.o2.metadata.console.infra.constant.CatalogConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
@@ -48,7 +49,13 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
-        validCatalogName(catalog);
+        Catalog original = catalogRepository.selectByPrimaryKey(catalog);
+        if (!original.getCatalogName().equals(catalog.getCatalogName())) {
+            validCatalogName(catalog);
+        }
+        if (!original.getCatalogCode().equals(catalog.getCatalogCode())) {
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE);
+        }
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
                     .catalogId(catalog.getCatalogId()).tenantId(catalog.getTenantId()).build());
@@ -63,6 +70,7 @@ public class CatalogServiceImpl implements CatalogService {
     @Override
     public void insertSelective(Catalog catalog) {
         validCatalogName(catalog);
+        validCatalogCode(catalog);
         catalogRepository.insert(catalog);
     }
 
@@ -75,7 +83,19 @@ public class CatalogServiceImpl implements CatalogService {
                 tenantId(catalog.getTenantId()).
                 catalogName(catalog.getCatalogName()).build());
         if (CollectionUtils.isNotEmpty(catalogs)) {
-            throw new O2CommonException(null,MetadataConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE, MetadataConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE);
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE, CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE);
+        }
+    }
+    /**
+     * 校验目录名称唯一性
+     * @param catalog 目录
+     */
+    private void validCatalogCode(Catalog catalog) {
+        List<Catalog> catalogs =catalogRepository.select(Catalog.builder().
+                tenantId(catalog.getTenantId()).
+                catalogCode(catalog.getCatalogCode()).build());
+        if (CollectionUtils.isNotEmpty(catalogs)) {
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE);
         }
     }
 }
