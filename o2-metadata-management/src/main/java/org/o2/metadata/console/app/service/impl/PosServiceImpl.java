@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
@@ -16,7 +15,6 @@ import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,21 +55,15 @@ public class PosServiceImpl implements PosService {
     public Pos create(final Pos pos) {
         // 名称校验
         validPosNameUnique(pos);
-        pos.baseValidate(posRepository);
-        //  服务点是否存在
-        pos.validatePosCode(posRepository);
-
-        Assert.isTrue(!pos.exist(posRepository), BaseConstants.ErrorCode.DATA_EXISTS);
-        final PosAddress address = pos.getAddress();
+        validatePosCode(pos);
+        PosAddress address = pos.getAddress();
         if (address != null && address.getRegionCode() != null) {
             updatePosAddress(address,pos.getTenantId());
             address.setTenantId(pos.getTenantId());
             posAddressRepository.insertSelective(address);
             pos.setAddressId(address.getPosAddressId());
         }
-
         posRepository.insertSelective(pos);
-
         if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
             pos.getPostTimes().forEach(postTime -> {
                 // 过滤无意义数据
@@ -91,17 +83,14 @@ public class PosServiceImpl implements PosService {
     @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
         validPosNameUnique(pos);
-        pos.baseValidate(posRepository);
-
+        validatePosCode(pos);
         final PosAddress address;
         if ((address = pos.getAddress()) != null) {
             updatePosAddress(address,pos.getTenantId());
             address.setTenantId(pos.getTenantId());
             posAddressRepository.updateByPrimaryKey(address);
         }
-
         posRepository.updateByPrimaryKey(pos);
-
         if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
             pos.getPostTimes().forEach(postTime -> {
                 // 过滤无意义数据
@@ -119,6 +108,26 @@ public class PosServiceImpl implements PosService {
         }
         updateCarryIsDefault(pos);
         return pos;
+    }
+
+    /**
+     * 服务点是否存在
+     * @param pos 服务点调用
+     */
+    private void validatePosCode(Pos pos) {
+        if (null != pos.getPosId()) {
+            Pos original = posRepository.selectByPrimaryKey(pos);
+            if (!original.getPosCode().equals(pos.getPosCode())) {
+                throw new O2CommonException(null,PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE, PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE);
+            }
+        }
+        Pos query = new Pos();
+        query.setTenantId(pos.getTenantId());
+        query.setPosCode(pos.getPosCode());
+        final List<Pos> mayEmpty = posRepository.select(query);
+        if (CollectionUtils.isNotEmpty(mayEmpty)) {
+            throw new O2CommonException(null,PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE, PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE);
+        }
     }
 
     /**
