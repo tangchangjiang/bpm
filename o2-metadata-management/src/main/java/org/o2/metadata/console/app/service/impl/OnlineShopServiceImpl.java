@@ -154,9 +154,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      */
     private void validateOnlineShopName(OnlineShop onlineShop) {
         Sqls sqls = Sqls.custom();
-        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopCode());
+        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
-        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getOnlineShopName());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
             throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE);
