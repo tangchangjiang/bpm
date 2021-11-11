@@ -60,9 +60,9 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             catalogVersion.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
         }
-        catalogVersionRepository.insertSelective(catalogVersion);
         validCatalogVersionCode(catalogVersion,tenantId);
         validCatalogVersionName(catalogVersion,tenantId);
+        catalogVersionRepository.insertSelective(catalogVersion);
     }
 
     /**
