@@ -62,6 +62,7 @@ public class CarrierServiceImpl implements CarrierService {
         List<Carrier> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(carrierList)) {
             for (Carrier carrier : carrierList) {
+                carrier.setTenantId(organizationId);
                 // 新增
                 if (null == carrier.getCarrierId()) {
                     validCarrierNameUnique(carrier);
