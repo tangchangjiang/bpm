@@ -11,7 +11,6 @@ import org.o2.metadata.infra.entity.FreightInfo;
 public interface FreightRedis {
     /**
      * 获取运费模版信息
-     * @date 2021-07-19
      * @param regionCode 地区ID
      * @param templateCode 模版ID
      * @param tenantId 租户

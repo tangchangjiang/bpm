@@ -25,7 +25,7 @@ public class FreightServiceImpl implements FreightService {
     @Override
     @Cacheable(value = "O2MD_METADATA", key = "'freight'+'_'+#freight")
     public FreightInfoCO getFreightTemplate(FreightDTO freight) {
-      return FreightConverter.doToVoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCodes(),freight.getTenantId()));
+      return FreightConverter.doToCoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCode(),freight.getTenantId()));
     }
 
 }
