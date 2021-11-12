@@ -17,6 +17,7 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.pipeline.api.dto.PipelineDTO;
+import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
 import org.o2.metadata.pipeline.app.service.PipelineRedisService;
 import org.o2.metadata.pipeline.app.service.PipelineService;
 import org.o2.metadata.pipeline.config.PipelineManagerAutoConfiguration;
@@ -31,7 +32,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -81,26 +81,18 @@ public class PipelineController extends BaseController {
     @ApiOperation(value = "批量新增流程器")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
-        return createOrUpdatePipelines(pipelines, organizationId);
+    public ResponseEntity<List<PipelineCreatedResultVO>> create(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
+        pipelines.forEach(pipeline -> pipeline.setTenantId(organizationId));
+        return  Results.success(pipelineService.batchMerge(pipelines));
     }
 
-    private ResponseEntity<?> createOrUpdatePipelines(@RequestBody List<Pipeline> pipelines, @PathVariable Long organizationId) {
-        pipelines.forEach(pipeline -> pipeline.setTenantId(organizationId));
-        int errorCount = pipelineService.batchMerge(pipelines);
-        if (0 == errorCount) {
-            return Results.success();
-        } else {
-            String resultString = MessageAccessor.getMessage(PipelineConstants.Message.PIPELINE_SUCCESS_NUM, String.valueOf((pipelines.size() - errorCount))).desc();
-            return Results.success(Collections.singletonList(resultString));
-        }
-    }
 
     @ApiOperation(value = "批量修改流程器")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
-        return createOrUpdatePipelines(pipelines, organizationId);
+    public ResponseEntity<List<PipelineCreatedResultVO>> update(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
+        pipelines.forEach(pipeline -> pipeline.setTenantId(organizationId));
+        return Results.success(pipelineService.batchMerge(pipelines));
     }
 
     @ApiOperation(value = "批量删除流程器")
