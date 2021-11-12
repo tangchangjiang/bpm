@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -20,6 +21,7 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
 @Component
+@Slf4j
 public class FreightRedisImpl implements FreightRedis {
     private final RedisCacheClient redisCacheClient;
 
@@ -47,6 +49,7 @@ public class FreightRedisImpl implements FreightRedis {
         } else {
             freightInfo.setRegionTemplate(JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
         }
+        log.info("freightInfo=== {}",JsonHelper.objectToString(freightInfo));
         return freightInfo;
     }
 }
