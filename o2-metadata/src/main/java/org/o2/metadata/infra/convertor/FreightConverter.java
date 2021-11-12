@@ -38,7 +38,7 @@ public class FreightConverter {
      * @param 
      * @return 
      */
-    public static FreightInfoCO doToVoObject(FreightInfoDO freightInfoDO) {
+    public static FreightInfoCO doToCoObject(FreightInfoDO freightInfoDO) {
 
         if (freightInfoDO == null) {
             return null;
