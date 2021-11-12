@@ -28,7 +28,6 @@ public class FreightInternalController {
     }
 
     @ApiOperation(value = "查询运费模版信息")
-    @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/template")
     public ResponseEntity<FreightInfoCO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                             @RequestBody FreightDTO freight) {
