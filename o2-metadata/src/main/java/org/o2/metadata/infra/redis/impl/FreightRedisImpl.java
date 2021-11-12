@@ -31,6 +31,7 @@ public class FreightRedisImpl implements FreightRedis {
 
     @Override
     public FreightInfo getFreightTemplate(String regionCode, String templateCode, Long tenantId) {
+        log.info("FreightInfo===request==={},{},{}",regionCode,templateCode,templateCode);
         FreightInfo freightInfo = new FreightInfo();
         freightInfo.setFreightTemplateCode(templateCode);
         String freightDetailKey = FreightConstants.RedisKey.getFreightDetailKey(tenantId, templateCode);

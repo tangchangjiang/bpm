@@ -1,10 +1,13 @@
 package org.o2.metadata.api.controller.v1;
 
+import com.alibaba.fastjson.JSON;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.api.dto.FreightDTO;
 import org.o2.metadata.api.co.FreightInfoCO;
 import org.o2.metadata.app.service.FreightService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController("freightInternalController.v1")
 @RequestMapping({"v1/{organizationId}/freight-internal"})
+@Slf4j
 public class FreightInternalController {
     private final FreightService freightService;
 
@@ -32,6 +36,7 @@ public class FreightInternalController {
     public ResponseEntity<FreightInfoCO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                             @RequestBody FreightDTO freight) {
         freight.setTenantId(organizationId);
+        log.info("查询运费模版信息 =={}", JsonHelper.objectToString(freight));
         return Results.success(freightService.getFreightTemplate(freight));
     }
 }
