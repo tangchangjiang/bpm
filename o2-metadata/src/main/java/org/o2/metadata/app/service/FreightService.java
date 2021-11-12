@@ -14,7 +14,7 @@ public interface FreightService {
 
     /**
      * 获取运费
-     * @param  freight
+     * @param  freight 查询参数
      * @return 运费
      */
     FreightInfoCO getFreightTemplate(FreightDTO freight);
