@@ -6,6 +6,8 @@ import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.message.MessageAccessor;
+import org.o2.core.helper.JsonHelper;
+import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
 import org.o2.metadata.pipeline.app.service.PipelineService;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
@@ -40,10 +42,9 @@ public class PipelineCacheSyncJob implements IJobHandler {
         if (CollectionUtils.isEmpty(pipelines)) {
             tool.warn(MessageAccessor.getMessage(PipelineConstants.Message.PIPELINE_NOT_FOUND).desc());
         }
-        int errorCount = pipelineService.batchMerge(pipelines);
-        if (0 != errorCount) {
-            String resultString = MessageAccessor.getMessage(PipelineConstants.Message.PIPELINE_SUCCESS_NUM, String.valueOf((pipelines.size() - errorCount))).desc();
-            tool.info(resultString);
+        List<PipelineCreatedResultVO> errorCount = pipelineService.batchMerge(pipelines);
+        if (CollectionUtils.isNotEmpty(errorCount)) {
+            tool.info(JsonHelper.objectToString(errorCount));
         }
         return ReturnT.SUCCESS;
     }

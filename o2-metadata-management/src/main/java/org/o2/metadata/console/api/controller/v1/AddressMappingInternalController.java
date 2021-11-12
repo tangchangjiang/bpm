@@ -33,7 +33,7 @@ public class AddressMappingInternalController {
 
 
     @ApiOperation(value = "批量查询地址批量表")
-    @Permission(permissionWithin = true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, AddressMappingCO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                              @RequestBody AddressMappingQueryInnerDTO queryInnerDTO){
