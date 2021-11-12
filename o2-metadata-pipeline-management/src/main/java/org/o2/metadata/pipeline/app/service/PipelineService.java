@@ -1,6 +1,7 @@
 package org.o2.metadata.pipeline.app.service;
 
 import org.o2.metadata.pipeline.api.dto.PipelineDTO;
+import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +18,7 @@ public interface PipelineService {
      * @param pipelines 已修改流水线头
      * @return 更新的条数
      */
-    int batchMerge(List<Pipeline> pipelines);
+    List<PipelineCreatedResultVO> batchMerge(List<Pipeline> pipelines);
 
     /**
      * 通过code获取yaml
