@@ -32,19 +32,20 @@ public class FreightRedisImpl implements FreightRedis {
         FreightInfo freightInfo = new FreightInfo();
         freightInfo.setFreightTemplateCode(templateCode);
         String freightDetailKey = FreightConstants.RedisKey.getFreightDetailKey(tenantId, templateCode);
+        // 按头模板 ,默认模板，地区模板取值
         List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, Arrays.asList(FreightConstants.RedisKey.FREIGHT_HEAD_KEY, FreightConstants.RedisKey.FREIGHT_DEFAULT_KEY, regionCode));
         String headTemplate =  freightTemplates.get(0);
         if (StringUtils.isEmpty(headTemplate)) {
             freightInfo.setHeadTemplate(null);
         } else {
-            JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
+            freightInfo.setHeadTemplate(JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
         }
-
+        // 地区模板没有值，取默认模板
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
         if (StringUtils.isEmpty(cityTemplate)) {
             freightInfo.setRegionTemplate(null);
         } else {
-            JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class);
+            freightInfo.setRegionTemplate(JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
         }
         return freightInfo;
     }
