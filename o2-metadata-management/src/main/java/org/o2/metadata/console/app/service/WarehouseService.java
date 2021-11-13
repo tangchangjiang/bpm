@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -150,4 +151,13 @@ public interface WarehouseService {
      * @return list
      */
     List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO);
+
+
+    /**
+     * 查询可发货仓库
+     *
+     * @param tenantId 租户id
+     * @return 仓库
+     */
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
 }
