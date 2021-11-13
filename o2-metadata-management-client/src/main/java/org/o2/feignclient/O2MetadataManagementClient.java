@@ -77,7 +77,7 @@ public class O2MetadataManagementClient {
      * 更新系统参数1
      *
      * @param systemParameterQueryInnerDTO 系统
-     * @param tenantId           租户ID
+     * @param tenantId                     租户ID
      */
     public ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.updateSysParameter(systemParameterQueryInnerDTO, tenantId), ResponseCO.class);
@@ -87,7 +87,7 @@ public class O2MetadataManagementClient {
      * 查询仓库1
      *
      * @param innerDTO 入参
-     * @param tenantId       租户ID
+     * @param tenantId 租户ID
      */
     public Map<String, WarehouseCO> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(innerDTO, tenantId), new TypeReference<Map<String, WarehouseCO>>() {
@@ -98,17 +98,18 @@ public class O2MetadataManagementClient {
      * 页面查询仓库1
      *
      * @param innerDTO 入参
-     * @param tenantId       租户ID
+     * @param tenantId 租户ID
      */
     public Page<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.pageWarehouses(tenantId, innerDTO), new TypeReference<Page<WarehouseCO>>() {
         });
     }
+
     /**
      * 从redis查询网店关联有效的仓库1
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId        租户ID
+     * @param tenantId       租户ID
      * @return map<warehouseCode, OnlineShopRelWarehouseCO>
      */
     public Map<String, OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
@@ -133,13 +134,14 @@ public class O2MetadataManagementClient {
      * @return 模版
      */
     public FreightTemplateCO getDefaultTemplate(Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateCO.class);
+        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate(tenantId), FreightTemplateCO.class);
     }
 
     /**
      * 批量查询目录版本1
+     *
      * @param catalogVersionQueryInnerDTO 目录版本集合
-     * @param tenantId 租户ID
+     * @param tenantId                    租户ID
      * @return map key:编码 value:名称
      */
     public Map<String, String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long tenantId) {
@@ -151,7 +153,7 @@ public class O2MetadataManagementClient {
      * 批量查询承运商 1
      *
      * @param carrierQueryInnerDTO 承运商
-     * @param tenantId   租户ID
+     * @param tenantId             租户ID
      * @return map key:carrierCode
      */
     public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
@@ -163,7 +165,7 @@ public class O2MetadataManagementClient {
      * 批量查询承运商匹配规则 1
      *
      * @param carrierMappingQueryInnerDTO 承运商
-     * @param tenantId   租户ID
+     * @param tenantId                    租户ID
      * @return map key:carrierCode
      */
     public Map<String, CarrierMappingCO> listCarrierMappings(CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO, Long tenantId) {
@@ -189,14 +191,15 @@ public class O2MetadataManagementClient {
      * @return map key:catalogCode-catalogVersionCode
      */
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopCO>>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String, List<OnlineShopCO>>>() {
         });
     }
 
     /**
      * 批量查询服务点地址 1
+     *
      * @param posAddressQueryInnerDTO 服务点地址
-     * @param tenantId 租户ID
+     * @param tenantId                租户ID
      * @return string
      */
     public Map<String, PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
@@ -208,7 +211,7 @@ public class O2MetadataManagementClient {
      * 批量查询地址匹配 1
      *
      * @param queryInnerDTO 地址匹配
-     * @param tenantId   租户ID
+     * @param tenantId      租户ID
      * @return map key:carrierCode
      */
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
@@ -219,6 +222,7 @@ public class O2MetadataManagementClient {
 
     /**
      * 查询临近省 1
+     *
      * @param tenantId 租户ID
      * @return LIST
      */
@@ -247,16 +251,6 @@ public class O2MetadataManagementClient {
     public Set<String> pickUpLimitWarehouseCollection(final Long organizationId) {
         return ResponseUtils.getResponse(warehouseRemoteService.pickUpLimitWarehouseCollection(organizationId), new TypeReference<Set<String>>() {
         });
-    }
-
-    /**
-     * 重置仓库快递配送接单量值1
-     *
-     * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
-     */
-    public Boolean resetWarehouseExpressLimit(final Long organizationId, final String warehouseCode) {
-        return ResponseUtils.isFailed(warehouseRemoteService.resetWarehouseExpressLimit(organizationId, warehouseCode));
     }
 
     /**
@@ -289,7 +283,7 @@ public class O2MetadataManagementClient {
      * @param increment      快递配送接单量增量 1 成功 -1 失败
      */
     public Integer updateExpressValue(final Long organizationId, final String warehouseCode, final String increment) {
-        return ResponseUtils.getResponse(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment),Integer.class);
+        return ResponseUtils.getResponse(warehouseRemoteService.updateExpressValue(organizationId, warehouseCode, increment), Integer.class);
     }
 
 
@@ -304,36 +298,42 @@ public class O2MetadataManagementClient {
 
     /**
      * 查询平台信息 1
-     * @param tenantId 租户id
+     *
+     * @param tenantId              租户id
      * @param platformQueryInnerDTO 平台入参
      * @return key : platformCode（平台编码）
      */
     public Map<String, PlatformCO> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
+        return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO, tenantId), new TypeReference<Map<String, PlatformCO>>() {
+        });
     }
 
     /**
      * 获取静态资源配置 1
+     *
      * @param resourceCode 资源编码
-     * @param tenantId 租户ID
+     * @param tenantId     租户ID
      * @return StaticResourceConfigCO 配置
      */
-    public StaticResourceConfigCO getStaticResourceConfig(String resourceCode,Long tenantId) {
-        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceConfig(tenantId,resourceCode),StaticResourceConfigCO.class);
+    public StaticResourceConfigCO getStaticResourceConfig(String resourceCode, Long tenantId) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceConfig(tenantId, resourceCode), StaticResourceConfigCO.class);
     }
 
     /**
      * 获取json_key 和 resource_url 1
-     * @param tenantId 租户ID
+     *
+     * @param tenantId              租户ID
      * @param staticResourceListDTO 查询条件
      * @return List<StaticResourceAndConfigCO> 结果
      */
-    public List<StaticResourceAndConfigCO> getStaticResourceAndConfig(Long tenantId,StaticResourceListDTO staticResourceListDTO){
-        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceAndConfig(tenantId, staticResourceListDTO), new TypeReference<List<StaticResourceAndConfigCO>>() {});
+    public List<StaticResourceAndConfigCO> getStaticResourceAndConfig(Long tenantId, StaticResourceListDTO staticResourceListDTO) {
+        return ResponseUtils.getResponse(staticResourceRemoteService.getStaticResourceAndConfig(tenantId, staticResourceListDTO), new TypeReference<List<StaticResourceAndConfigCO>>() {
+        });
     }
 
     /**
      * 获取启用&支持站点校验的静态资源配置列表1
+     *
      * @param tenantId 租户ID
      * @return 结果
      */

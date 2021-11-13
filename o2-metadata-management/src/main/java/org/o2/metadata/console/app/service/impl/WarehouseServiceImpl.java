@@ -13,6 +13,7 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -68,7 +69,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         warehouseRepository.batchInsert(warehouses);
-        warehouseRedis.batchUpdateWarehouse(warehouseCodes,tenantId);
+        warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
         return warehouses;
     }
 
@@ -85,13 +86,14 @@ public class WarehouseServiceImpl implements WarehouseService {
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
         // 更新 redis
-        warehouseRedis.batchUpdateWarehouse(warehouseCodes,tenantId);
+        warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
         return list;
 
     }
 
     /**
      * 名称校验唯一性
+     *
      * @param warehouse 仓库
      */
     private void validNameUnique(Warehouse warehouse) {
@@ -104,13 +106,14 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse query = new Warehouse();
         query.setWarehouseName(warehouse.getWarehouseName());
         query.setTenantId(warehouse.getTenantId());
-        List<Warehouse> list =  warehouseRepository.select(query);
+        List<Warehouse> list = warehouseRepository.select(query);
         if (!list.isEmpty()) {
-            throw new O2CommonException(null,WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
+            throw new O2CommonException(null, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
         }
     }
+
     @Override
-    public void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses) {
+    public void triggerWhStockCalWithWh(Long tenantId, List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses) {
         // 准备触发线上可用库存计算的数据
         List<TriggerStockCalWithWhVO> triggerCalInfoList = this.buildTriggerCalInfoList(oldWarehouses, newWarehouses);
         // 触发线上可用库存计算
@@ -118,8 +121,8 @@ public class WarehouseServiceImpl implements WarehouseService {
             try {
                 o2InventoryClient.triggerWhStockCalWithWh(tenantId, triggerCalInfoList);
             } catch (Exception e) {
-                log.error(" error.inner.request:o2Inventory#triggerWhStockCalWithWh,param =[tenantId: {},calInfoList: {}]",tenantId,JsonHelper.objectToString(triggerCalInfoList));
-                log.error(e.getMessage(),e);
+                log.error(" error.inner.request:o2Inventory#triggerWhStockCalWithWh,param =[tenantId: {},calInfoList: {}]", tenantId, JsonHelper.objectToString(triggerCalInfoList));
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -139,10 +142,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         return WarehouseConverter.doToCoListObjects(warehouseDomainService.listWarehouses(queryInnerDTO.getWarehouseCodes(), tenantId));
     }
 
-    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> oldWarehouses,List<Warehouse> newWarehouses) {
+    private List<TriggerStockCalWithWhVO> buildTriggerCalInfoList(final List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses) {
         // 触发线上可用库存计算
         List<TriggerStockCalWithWhVO> calInfoList = new ArrayList<>(4);
-        Map<String,Warehouse> map = new HashMap<>(16);
+        Map<String, Warehouse> map = new HashMap<>(16);
         for (Warehouse warehouse : newWarehouses) {
             map.put(warehouse.getWarehouseCode(), warehouse);
         }
@@ -152,30 +155,30 @@ public class WarehouseServiceImpl implements WarehouseService {
                 continue;
             }
             String warehouseCode = old.getWarehouseCode();
-                if (!warehouse.getWarehouseStatusCode().equals(old.getWarehouseStatusCode())) {
-                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
-                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
-                    vo.setWarehouseCode(warehouseCode);
-                    calInfoList.add(vo);
-                }
-                if (!warehouse.getActiveFlag().equals(old.getActiveFlag())) {
-                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
-                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
-                    vo.setWarehouseCode(warehouseCode);
-                    calInfoList.add(vo);
-                }
-                if (!warehouse.getExpressedFlag().equals(old.getExpressedFlag())) {
-                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
-                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
-                    vo.setWarehouseCode(warehouseCode);
-                    calInfoList.add(vo);
-                }
-                if (!warehouse.getPickedUpFlag().equals(old.getPickedUpFlag())) {
-                    TriggerStockCalWithWhVO vo = new  TriggerStockCalWithWhVO();
-                    vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
-                    vo.setWarehouseCode(warehouseCode);
-                    calInfoList.add(vo);
-                }
+            if (!warehouse.getWarehouseStatusCode().equals(old.getWarehouseStatusCode())) {
+                TriggerStockCalWithWhVO vo = new TriggerStockCalWithWhVO();
+                vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_STATUS);
+                vo.setWarehouseCode(warehouseCode);
+                calInfoList.add(vo);
+            }
+            if (!warehouse.getActiveFlag().equals(old.getActiveFlag())) {
+                TriggerStockCalWithWhVO vo = new TriggerStockCalWithWhVO();
+                vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_ACTIVE);
+                vo.setWarehouseCode(warehouseCode);
+                calInfoList.add(vo);
+            }
+            if (!warehouse.getExpressedFlag().equals(old.getExpressedFlag())) {
+                TriggerStockCalWithWhVO vo = new TriggerStockCalWithWhVO();
+                vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_EXPRESS);
+                vo.setWarehouseCode(warehouseCode);
+                calInfoList.add(vo);
+            }
+            if (!warehouse.getPickedUpFlag().equals(old.getPickedUpFlag())) {
+                TriggerStockCalWithWhVO vo = new TriggerStockCalWithWhVO();
+                vo.setTriggerSource(O2InventoryConstant.invCalCase.WH_PICKUP);
+                vo.setWarehouseCode(warehouseCode);
+                calInfoList.add(vo);
+            }
 
         }
         return calInfoList;
@@ -183,39 +186,39 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Long updateExpressValue(String warehouseCode, String increment, Long tenantId) {
-         return warehouseRedis.updateExpressQuantity(warehouseCode,increment,tenantId);
+        return warehouseRedis.updateExpressQuantity(warehouseCode, increment, tenantId);
     }
 
     @Override
     public Long updatePickUpValue(String warehouseCode, String increment, Long tenantId) {
-        return warehouseRedis.updatePickUpValue(warehouseCode,increment,tenantId);
+        return warehouseRedis.updatePickUpValue(warehouseCode, increment, tenantId);
     }
 
 
     @Override
-    public String warehouseLimitCacheKey(String limit,Long tenantId) {
+    public String warehouseLimitCacheKey(String limit, Long tenantId) {
         if (tenantId == null) {
-            return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit,0);
+            return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit, 0);
         }
-        return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit,tenantId);
+        return WarehouseConstants.WarehouseCache.getLimitCacheKey(limit, tenantId);
     }
 
     @Override
     public boolean isWarehouseExpressLimit(String warehouseCode, Long tenantId) {
         // 仓库快递配送接单量限制 key
-        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
-        String result = this.redisCacheClient.<String, String>opsForHash().get(expressLimitKey,warehouseCode);
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
+        String result = this.redisCacheClient.<String, String>opsForHash().get(expressLimitKey, warehouseCode);
         JSONObject object = JsonHelper.stringToJsonObject(result);
-        return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
+        return object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
     @Override
     public boolean isWarehousePickUpLimit(String warehouseCode, Long tenantId) {
         // 仓库快递配送接单量限制 key
-        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
-        String result = this.redisCacheClient.<String, String>opsForHash().get(pickUpLimitKey,warehouseCode);
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
+        String result = this.redisCacheClient.<String, String>opsForHash().get(pickUpLimitKey, warehouseCode);
         JSONObject object = JsonHelper.stringToJsonObject(result);
-        return  object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
+        return object.getBoolean(WarehouseConstants.WarehouseCache.FLAG);
     }
 
     @Override
@@ -231,11 +234,13 @@ public class WarehouseServiceImpl implements WarehouseService {
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
         return getWarehouseCodes(pickUpLimitKey);
     }
-   /**
-    * 获取仓库编码
-    * @param key redis key
-    * @return  map
-    */
+
+    /**
+     * 获取仓库编码
+     *
+     * @param key redis key
+     * @return map
+     */
     private Set<String> getWarehouseCodes(String key) {
         Map<String, String> map = this.redisCacheClient.<String, String>opsForHash().entries(key);
         if (map.isEmpty()) {
@@ -245,18 +250,19 @@ public class WarehouseServiceImpl implements WarehouseService {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String k = entry.getKey();
             String v = entry.getValue();
-            WarehouseLimitBO bo= JsonHelper.stringToObject(v,WarehouseLimitBO.class);
+            WarehouseLimitBO bo = JsonHelper.stringToObject(v, WarehouseLimitBO.class);
             if (Boolean.TRUE.equals(bo.getLimitFlag())) {
                 set.add(k);
             }
         }
         return set;
     }
+
     @Override
     public void resetWarehouseExpressLimit(String warehouseCode, Long tenantId) {
         // 仓库快递配送接单量限制 key
         String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
-        this.redisCacheClient.opsForHash().delete(expressLimitKey,warehouseCode);
+        this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCode);
     }
 
 
@@ -264,7 +270,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
-        this.redisCacheClient.opsForHash().delete(pickUpLimitKey,warehouseCode);
+        this.redisCacheClient.opsForHash().delete(pickUpLimitKey, warehouseCode);
 
     }
 
@@ -283,7 +289,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         String warehouseId = innerDTO.getWarehouseId();
         if (StringUtils.isNotEmpty(warehouseId)) {
             List<Long> idsList = new ArrayList<>();
-            String[] strings = StringUtils.split(warehouseId,BaseConstants.Symbol.COMMA);
+            String[] strings = StringUtils.split(warehouseId, BaseConstants.Symbol.COMMA);
             for (String str : strings) {
                 Long id = Long.valueOf(str);
                 idsList.add(id);
@@ -293,7 +299,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         String warehouseCode = innerDTO.getWarehouseCode();
         if (StringUtils.isNotEmpty(warehouseCode)) {
             List<String> codeList = Arrays.asList(StringUtils.split(warehouseCode, BaseConstants.Symbol.COMMA));
-            if (codeList.size() ==  1) {
+            if (codeList.size() == 1) {
                 innerDTO.setWarehouseCode(warehouseCode);
                 innerDTO.setWarehouseCodeList(null);
             } else {
@@ -302,6 +308,11 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
         }
         return warehouseRepository.pageWarehouses(innerDTO);
+    }
+
+    @Override
+    public List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(Long tenantId) {
+        return warehouseRepository.selectAllDeliveryWarehouse(tenantId);
     }
 
 }
