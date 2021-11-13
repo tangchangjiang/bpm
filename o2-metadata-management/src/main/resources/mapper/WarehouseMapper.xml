@@ -469,4 +469,28 @@
             </if>
         </where>
     </select>
+
+    <select id="selectAllDeliveryWarehouse" resultType="org.o2.metadata.console.infra.entity.Warehouse">
+        SELECT ow.warehouse_code,
+        pos.pos_type_code as warehouse_type,
+        ow.score,
+        address.region_code,
+        address.city_code,
+        address.district_code
+        FROM o2md_warehouse ow join
+        o2md_pos pos on ow.pos_id = pos.pos_id
+        LEFT JOIN o2md_pos_address address ON address.pos_address_id = pos.address_id AND address.tenant_id =
+        #{tenantId}
+        WHERE ow.warehouse_status_code = 'NORMAL'
+        AND (pos.pos_type_code = 'WAREHOUSE' OR (pos.pos_type_code = 'STORE' AND ow.expressed_flag = 1))
+        <choose>
+            <when test="tenantId != null">
+                AND ow.tenant_id = #{tenantId}
+                AND pos.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+    </select>
 </mapper>

@@ -74,4 +74,9 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     public List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO) {
         return warehouseMapper.pageWarehouses(innerDTO);
     }
+
+    @Override
+    public List<Warehouse> selectAllDeliveryWarehouse(Long tenantId) {
+        return warehouseMapper.selectAllDeliveryWarehouse(tenantId);
+    }
 }

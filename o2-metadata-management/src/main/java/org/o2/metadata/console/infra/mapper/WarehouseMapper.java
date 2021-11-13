@@ -102,4 +102,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return list
      */
     List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO);
+
+    /**
+     * 查询所有服务点
+     *
+     * @param tenantId 租户ID
+     * @return 仓库
+     */
+    List<Warehouse> selectAllDeliveryWarehouse(@Param(value = "tenantId") final Long tenantId);
 }

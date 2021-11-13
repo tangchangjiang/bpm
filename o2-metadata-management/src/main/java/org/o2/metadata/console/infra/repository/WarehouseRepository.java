@@ -91,4 +91,13 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @return list
      */
     List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO);
+
+
+    /**
+     * 查询可发货服务点
+     *
+     * @param tenantId  租户id
+     * @return 仓库
+     */
+    List<Warehouse> selectAllDeliveryWarehouse(final Long tenantId);
 }
