@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.job;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.o2.core.thread.ThreadJobPojo;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -11,31 +12,29 @@ import org.o2.scheduler.job.AbstractThreadJob;
 import java.util.List;
 
 /**
- * 推单量计算
+ * 仓库推单量重置
  *
  * @author wenjun.deng01@hand-china.com 2019-07-03
  */
 @JobHandler("warehouseResetPushOrderLimitJob")
 @Slf4j
-public class WarehouseResetPushOrderLimitJob extends AbstractThreadJob<Warehouse> {
+public class WarehouseResetPushOrderLimitJob extends AbstractThreadJob<WarehouseRelAddressCO> {
 
     private final WarehouseService warehouseService;
-    private final WarehouseRepository warehouseRepository;
 
-    public WarehouseResetPushOrderLimitJob(WarehouseService warehouseService, WarehouseRepository warehouseRepository) {
+    public WarehouseResetPushOrderLimitJob(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
-        this.warehouseRepository = warehouseRepository;
     }
 
 
     @Override
-    protected void doExecute(Warehouse prepareData,
+    protected void doExecute(WarehouseRelAddressCO prepareData,
                              final ThreadJobPojo threadJobPojo) {
         warehouseService.resetWarehouseExpressLimit(prepareData.getWarehouseCode(), threadJobPojo.getTenantId());
     }
 
     @Override
-    protected List<Warehouse> prepareExecuteData(final ThreadJobPojo threadJobPojo) {
-        return warehouseRepository.selectAllDeliveryWarehouse(threadJobPojo.getTenantId());
+    protected List<WarehouseRelAddressCO> prepareExecuteData(final ThreadJobPojo threadJobPojo) {
+        return warehouseService.selectAllDeliveryWarehouse(threadJobPojo.getTenantId());
     }
 }
