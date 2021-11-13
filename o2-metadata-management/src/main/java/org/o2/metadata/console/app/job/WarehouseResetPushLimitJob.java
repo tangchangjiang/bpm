@@ -16,13 +16,13 @@ import java.util.List;
  *
  * @author wenjun.deng01@hand-china.com 2019-07-03
  */
-@JobHandler("warehouseResetPushOrderLimitJob")
+@JobHandler("warehouseResetPushLimitJob")
 @Slf4j
-public class WarehouseResetPushOrderLimitJob extends AbstractThreadJob<WarehouseRelAddressCO> {
+public class WarehouseResetPushLimitJob extends AbstractThreadJob<WarehouseRelAddressCO> {
 
     private final WarehouseService warehouseService;
 
-    public WarehouseResetPushOrderLimitJob(WarehouseService warehouseService) {
+    public WarehouseResetPushLimitJob(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
 
