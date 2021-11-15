@@ -51,6 +51,9 @@ public interface PipelineConstants {
          * 上传失败，确认yaml格式是否正确
          */
         String PIPELINE_UPLOAD_ERROR = "pipeline.upload_error";
+
+        String PIPELINE_CODE_NOT_UNIQUE ="o2md.error.pipeline_code.not.unique";
+        String PIPELINE_CODE_FORBID_UPDATE ="o2md.error.pipeline_code.forbid.update";
     }
 
     /**

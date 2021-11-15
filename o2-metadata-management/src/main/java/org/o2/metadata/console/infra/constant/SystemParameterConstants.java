@@ -14,6 +14,7 @@ public interface SystemParameterConstants {
     interface ErrorCode {
 
         String BASIC_DATA_MAP_KEY_IS_NULL = "error.basic_data.system_param_value.key.not_null";
+        String ERROR_SYSTEM_PARAM_CODE_UNIQUE ="o2md.error.system_param_code.not.unique";
     }
     /**
      * 提示信息

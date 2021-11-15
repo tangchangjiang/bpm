@@ -42,19 +42,6 @@ public class Pipeline extends AuditDomain {
     // 业务方法 (按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
-    public boolean exist(PipelineRepository pipelineRepository) {
-        Sqls sql = Sqls.custom();
-        if (this.id != null) {
-            sql.andNotEqualTo(Pipeline.FIELD_ID, this.id);
-        }
-        if (StringUtils.isNotBlank(this.code)) {
-            sql.andEqualTo(Pipeline.FIELD_CODE, this.code);
-        }
-        if (this.activeFlag != null) {
-            sql.andEqualTo(Pipeline.FIELD_ACTIVE_FLAG, this.activeFlag);
-        }
-        return pipelineRepository.selectCountByCondition(Condition.builder(Pipeline.class).andWhere(sql).build()) > 0;
-    }
 
     public void validate() {
         Assert.notNull(this.code, "流水线编码不能为空");

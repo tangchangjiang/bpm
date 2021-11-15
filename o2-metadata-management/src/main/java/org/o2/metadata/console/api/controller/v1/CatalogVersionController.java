@@ -72,6 +72,7 @@ public class CatalogVersionController extends BaseController {
     @PostMapping
     public ResponseEntity<CatalogVersion> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
+        validObject(catalogVersion);
         catalogVersionService.insert(catalogVersion);
         return Results.success(catalogVersion);
     }

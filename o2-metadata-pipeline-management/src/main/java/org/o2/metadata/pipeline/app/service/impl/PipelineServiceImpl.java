@@ -3,9 +3,14 @@ package org.o2.metadata.pipeline.app.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.message.MessageAccessor;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.pipeline.api.dto.PipelineDTO;
 import org.o2.metadata.pipeline.api.dto.PipelineNodeDTO;
+import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
 import org.o2.metadata.pipeline.app.service.PipelineNodeService;
 import org.o2.metadata.pipeline.app.service.PipelineRedisService;
 import org.o2.metadata.pipeline.app.service.PipelineService;
@@ -48,29 +53,50 @@ public class PipelineServiceImpl implements PipelineService {
     }
 
     @Override
-    public int batchMerge(final List<Pipeline> pipelines) {
-        int existNum = 0;
+    public List<PipelineCreatedResultVO> batchMerge(final List<Pipeline> pipelines) {
+        List<PipelineCreatedResultVO> result = new ArrayList<>(pipelines.size());
         for (Pipeline pipeline : pipelines) {
             // 非空字段校验
             pipeline.validate();
-            // 编码是否重复
-            if (pipeline.exist(pipelineRepository)) {
-                existNum++;
-            } else {
-                if (pipeline.getId() != null) {
+            PipelineCreatedResultVO vo = new PipelineCreatedResultVO();
+            vo.setCode(pipeline.getCode());
+            // 更新
+            if (pipeline.getId() != null) {
+                Pipeline original = pipelineRepository.selectByPrimaryKey(pipeline);
+                if (original.getCode().equals(pipeline.getCode())){
                     this.transactionalHelper.transactionOperation(() -> {
                         pipelineRepository.updateByPrimaryKey(pipeline);
                         pipelineRedisService.saveRedisPipelineNodeConf(pipeline.getId(), pipeline.getTenantId());
                     });
+                    vo.setSuccess(true);
+                } else {
+                    vo.setSuccess(false);
+                    vo.setMsg(MessageAccessor.getMessage(PipelineConstants.ErrorCode.PIPELINE_CODE_FORBID_UPDATE).getDesc());
+                }
+            } else {
+                // 新建
+                boolean exist = validPipelineCode(pipeline);
+                if (exist) {
+                    vo.setSuccess(false);
+                    vo.setMsg(MessageAccessor.getMessage(PipelineConstants.ErrorCode.PIPELINE_CODE_NOT_UNIQUE).getDesc());
                 } else {
                     this.transactionalHelper.transactionOperation(() -> {
                         pipelineRepository.insertSelective(pipeline);
                         pipelineRedisService.createRedisPipelineNodeConf(pipeline.getId(), pipeline.getTenantId());
                     });
+                    vo.setSuccess(true);
                 }
             }
+            result.add(vo);
         }
-        return existNum;
+        return result;
+    }
+
+    private boolean validPipelineCode(Pipeline pipeline) {
+        Sqls sql = Sqls.custom();
+        sql.andEqualTo(Pipeline.FIELD_CODE, pipeline.getCode());
+        sql.andEqualTo(Pipeline.FIELD_TENANT_ID,pipeline.getTenantId());
+        return   pipelineRepository.selectCountByCondition(Condition.builder(Pipeline.class).andWhere(sql).build()) > 0;
     }
 
     @Override

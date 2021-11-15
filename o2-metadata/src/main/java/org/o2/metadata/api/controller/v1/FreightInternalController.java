@@ -4,6 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.dto.FreightDTO;
 import org.o2.metadata.api.co.FreightInfoCO;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController("freightInternalController.v1")
 @RequestMapping({"v1/{organizationId}/freight-internal"})
+@Slf4j
 public class FreightInternalController {
     private final FreightService freightService;
 

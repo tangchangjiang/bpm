@@ -18,9 +18,10 @@ public class FreightDTO {
     /**
      * 模版编码
      */
-    private String templateCodes;
+    private String templateCode;
     /**
      * 租户ID
      */
     private Long tenantId;
+
 }

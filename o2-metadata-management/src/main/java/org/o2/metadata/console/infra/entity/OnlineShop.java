@@ -15,7 +15,6 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -105,22 +104,20 @@ public class OnlineShop extends AuditDomain {
     private String platformCode;
 
     @ApiModelProperty(value = "网点名称")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     @MultiLanguageField
     private String onlineShopName;
 
     @ApiModelProperty(value = "网点编码")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     private String onlineShopCode;
 
     @ApiModelProperty(value = "平台店铺 code")
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     private String platformShopCode;
-
-
 
     @ApiModelProperty(value = "是否支持寻源", hidden = true)
     @Column(name = "sourced_flag")
@@ -172,6 +169,7 @@ public class OnlineShop extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     @ApiModelProperty(value = "目录编码")
+    @NotNull
     private String catalogCode;
 
     @ApiModelProperty(value = "目录名称")
@@ -179,6 +177,7 @@ public class OnlineShop extends AuditDomain {
     private String catalogName;
 
     @ApiModelProperty(value = "版本目录编码")
+    @NotNull
     private String catalogVersionCode;
 
     @ApiModelProperty(value = "版本目录名称")

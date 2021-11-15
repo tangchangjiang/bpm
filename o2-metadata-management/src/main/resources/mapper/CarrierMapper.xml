@@ -52,7 +52,6 @@
             <if test="carrierTypeCode != null and carrierTypeCode != ''">
                 and c.carrier_type_code = #{carrierTypeCode}
             </if>
-        ORDER BY carrier_code
     </select>
     <select id="batchSelect" resultType="org.o2.metadata.console.infra.entity.Carrier">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
