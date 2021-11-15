@@ -81,7 +81,6 @@
         FROM
         o2md_shop_rel_warehouse srw
         JOIN o2md_warehouse w ON srw.warehouse_id = w.warehouse_id AND w.tenant_id = #{tenantId}
-        JOIN o2md_pos p ON srw.pos_id = p.pos_id AND p.tenant_id = #{tenantId}
         JOIN o2md_online_shop s ON srw.online_shop_id = s.online_shop_id AND s.tenant_id = #{tenantId}
         <where>
             <choose>
