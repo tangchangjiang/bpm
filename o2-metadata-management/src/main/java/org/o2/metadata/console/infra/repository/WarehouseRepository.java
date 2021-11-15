@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -23,16 +24,17 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
     /**
      * 查询未与网店关联的仓库
      *
-     * @param shopId   网店 id
-     * @param warehouseCode  仓库编码
-     * @param warehouseName  仓库名称
-     * @param tenantId 租户id
+     * @param shopId        网店 id
+     * @param warehouseCode 仓库编码
+     * @param warehouseName 仓库名称
+     * @param tenantId      租户id
      * @return 仓库列表
      */
     List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId);
 
     /**
-     *  条件查询仓促
+     * 条件查询仓促
+     *
      * @param warehouse 仓库
      * @return list
      */
@@ -40,15 +42,17 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
 
 
     /**
-     *  内部接口 条件查询仓库
+     * 内部接口 条件查询仓库
+     *
      * @param innerDTO 入参
      * @param tenantId 租户ID
      * @return list
      */
-    List<Warehouse> listWarehouses(WarehouseQueryInnerDTO innerDTO,Long tenantId);
+    List<Warehouse> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId);
 
     /**
      * 查询租户下的所有仓库
+     *
      * @param tenantId 租户ID
      * @return list
      */
@@ -56,6 +60,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
 
     /**
      * 查询有效的仓库
+     *
      * @param onlineShopCode 网店编码
      * @param organizationId 租户ID
      * @return list
@@ -63,9 +68,10 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
     List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId);
 
     /**
-     *  编码查询仓促
+     * 编码查询仓促
+     *
      * @param warehouseCodes 仓库
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      * @return list
      */
     List<WarehouseCacheBO> listWarehouseByCode(List<String> warehouseCodes, Long tenantId);
@@ -73,6 +79,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
 
     /**
      * 仓库关联承运商
+     *
      * @param queryDTO 查询条件
      * @return list
      */
@@ -80,6 +87,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
 
     /**
      * 仓库地址
+     *
      * @param queryDTO 查询条件
      * @return list
      */
@@ -87,8 +95,18 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
 
     /**
      * 仓库关内部
+     *
      * @param innerDTO 查询条件
      * @return list
      */
     List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO);
+
+
+    /**
+     * 查询可发货仓库
+     *
+     * @param tenantId 租户id
+     * @return 仓库
+     */
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
 }

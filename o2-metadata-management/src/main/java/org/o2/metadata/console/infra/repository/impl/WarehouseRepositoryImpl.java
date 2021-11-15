@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -73,5 +74,10 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     @Override
     public List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO) {
         return warehouseMapper.pageWarehouses(innerDTO);
+    }
+
+    @Override
+    public List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(Long tenantId) {
+        return warehouseMapper.selectAllDeliveryWarehouse(tenantId);
     }
 }

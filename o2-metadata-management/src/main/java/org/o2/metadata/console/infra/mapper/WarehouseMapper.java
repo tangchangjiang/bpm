@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -22,8 +23,9 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 主键查询
+     *
      * @param tenantId 租户ID
-     * @param posId 服务点 id
+     * @param posId    服务点 id
      * @return 带详细地址和接派单时间的仓库信息
      */
     Warehouse getWarehouseWithCarrierNameById(Long tenantId, Long posId);
@@ -31,10 +33,10 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
     /**
      * 查询未与网店关联的仓库
      *
-     * @param onlineShopId 网店 id
+     * @param onlineShopId  网店 id
      * @param warehouseCode 仓库编码
      * @param warehouseName 仓库名称
-     * @param tenantId 租户ID
+     * @param tenantId      租户ID
      * @return 仓库列表
      */
     List<Warehouse> listUnbindWarehouseList(@Param(value = "onlineShopId") Long onlineShopId,
@@ -43,7 +45,8 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
                                             @Param(value = "tenantId") Long tenantId);
 
     /**
-     *  条件查询仓促
+     * 条件查询仓促
+     *
      * @param warehouse 仓库
      * @return list
      */
@@ -52,6 +55,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 查询租户下的所有仓库
+     *
      * @param tenantId 租户ID
      * @return list
      */
@@ -59,22 +63,25 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 查询有效的仓库
+     *
      * @param onlineShopCode 网店编码
      * @param organizationId 租户ID
      * @return list
      */
-    List<Warehouse> listActiveWarehouseByShopCode(@Param("onlineShopCode") String onlineShopCode,@Param("tenantId") Long organizationId);
+    List<Warehouse> listActiveWarehouseByShopCode(@Param("onlineShopCode") String onlineShopCode, @Param("tenantId") Long organizationId);
 
     /**
-     *  编码查询仓促
+     * 编码查询仓促
+     *
      * @param warehouseCodes 仓库
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      * @return list
      */
     List<WarehouseCacheBO> listWarehouseByCode(@Param("warehouseCodes") List<String> warehouseCodes, @Param("tenantId") Long tenantId);
 
     /**
      * 查询仓库
+     *
      * @param innerDTO 网店编码
      * @param tenantId 租户ID
      * @return list
@@ -84,6 +91,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 仓库关联承运商
+     *
      * @param queryDTO 查询条件
      * @return list
      */
@@ -91,6 +99,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 仓库地址
+     *
      * @param queryDTO 查询条件
      * @return list
      */
@@ -98,8 +107,17 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     /**
      * 仓库关内部
+     *
      * @param innerDTO 查询条件
      * @return list
      */
     List<WarehouseCO> pageWarehouses(WarehousePageQueryInnerDTO innerDTO);
+
+    /**
+     * 查询所有服务点
+     *
+     * @param tenantId 租户ID
+     * @return 仓库
+     */
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(@Param(value = "tenantId") final Long tenantId);
 }

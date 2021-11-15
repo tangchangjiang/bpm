@@ -12,6 +12,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -34,6 +35,7 @@ import java.util.Set;
 public class WarehouseInternalController extends BaseController {
 
     private WarehouseService warehouseService;
+
     public WarehouseInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
@@ -46,9 +48,9 @@ public class WarehouseInternalController extends BaseController {
                                                             PageRequest pageRequest,
                                                             @RequestBody(required = false) WarehousePageQueryInnerDTO innerDTO) {
 
-        Page<WarehouseCO> posList = new Page<>();
+        Page<WarehouseCO> posList;
         if (null == innerDTO) {
-            WarehousePageQueryInnerDTO query =new  WarehousePageQueryInnerDTO();
+            WarehousePageQueryInnerDTO query = new WarehousePageQueryInnerDTO();
             query.setTenantId(organizationId);
             posList = PageHelper.doPage(pageRequest,
                     () -> warehouseService.pageWarehouses(query));
@@ -67,13 +69,13 @@ public class WarehouseInternalController extends BaseController {
                                                                    @RequestBody WarehouseQueryInnerDTO queryInnerDTO) {
         Map<String, WarehouseCO> map = new HashMap<>(16);
         List<WarehouseCO> cos = warehouseService.listWarehouses(queryInnerDTO, organizationId);
-        if (cos.isEmpty()){
-          return Results.success(map);
+        if (cos.isEmpty()) {
+            return Results.success(map);
         }
         for (WarehouseCO co : cos) {
             map.put(co.getWarehouseCode(), co);
         }
-        return  Results.success(map);
+        return Results.success(map);
     }
 
 
@@ -81,8 +83,8 @@ public class WarehouseInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/updateExpressValue"})
     public ResponseEntity<Long> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                @RequestParam(value = "warehouseCode") String warehouseCode,
-                                                @RequestParam(value = "increment") String increment) {
+                                                   @RequestParam(value = "warehouseCode") String warehouseCode,
+                                                   @RequestParam(value = "increment") String increment) {
         return Results.success(warehouseService.updateExpressValue(warehouseCode, increment, organizationId));
     }
 
@@ -90,8 +92,8 @@ public class WarehouseInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/updatePickUpValue"})
     public ResponseEntity<Long> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                               @RequestParam(value = "warehouseCode") String warehouseCode,
-                                               @RequestParam(value = "increment") String increment) {
+                                                  @RequestParam(value = "warehouseCode") String warehouseCode,
+                                                  @RequestParam(value = "increment") String increment) {
         return Results.success(warehouseService.updatePickUpValue(warehouseCode, increment, organizationId));
     }
 
@@ -99,7 +101,7 @@ public class WarehouseInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @GetMapping({"/warehouseLimitCacheKey"})
     public ResponseEntity<String> warehouseLimitCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                    @RequestParam(value = "limit") String limit) {
+                                                         @RequestParam(value = "limit") String limit) {
         return Results.success(warehouseService.warehouseLimitCacheKey(limit, organizationId));
     }
 
@@ -107,7 +109,7 @@ public class WarehouseInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @GetMapping({"/isWarehouseExpressLimit"})
     public ResponseEntity<Boolean> isWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                     @RequestParam(value = "warehouseCode") String warehouseCode) {
+                                                           @RequestParam(value = "warehouseCode") String warehouseCode) {
         Boolean result = warehouseService.isWarehouseExpressLimit(warehouseCode, organizationId);
         return Results.success(result);
     }
@@ -116,7 +118,7 @@ public class WarehouseInternalController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @GetMapping({"/isWarehousePickUpLimit"})
     public ResponseEntity<Boolean> isWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                    @RequestParam(value = "warehouseCode") String warehouseCode) {
+                                                          @RequestParam(value = "warehouseCode") String warehouseCode) {
         return Results.success(warehouseService.isWarehousePickUpLimit(warehouseCode, organizationId));
     }
 
@@ -130,24 +132,22 @@ public class WarehouseInternalController extends BaseController {
     @ApiOperation("获取自提接单量到达上限的仓库(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @GetMapping({"/pickUpLimitWarehouseCollection"})
-    public ResponseEntity<Set<String> > pickUpLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
+    public ResponseEntity<Set<String>> pickUpLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
         return Results.success(warehouseService.pickUpLimitWarehouseCollection(organizationId));
     }
 
-    @ApiOperation("重置仓库快递配送接单量值(内部调用)")
+    @ApiOperation("查询可发货仓库(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
-    @PostMapping({"/resetWarehouseExpressLimit"})
-    public ResponseEntity<Void> resetWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                        @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
-        warehouseService.resetWarehouseExpressLimit(warehouseCode, organizationId);
-        return Results.success();
+    @PostMapping({"/allDeliveryWarehouse"})
+    public ResponseEntity<List<WarehouseRelAddressCO>> listAllDeliveryWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
+        return Results.success(warehouseService.selectAllDeliveryWarehouse(organizationId));
     }
 
     @ApiOperation("重置仓库自提接单量限制值(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/resetWarehousePickUpLimit"})
     public ResponseEntity<Void> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
-                                                       @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
+                                                          @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
         warehouseService.resetWarehousePickUpLimit(warehouseCode, organizationId);
         return Results.success();
     }

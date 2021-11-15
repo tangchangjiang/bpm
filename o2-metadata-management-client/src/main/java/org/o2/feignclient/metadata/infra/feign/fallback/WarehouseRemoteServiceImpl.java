@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * 仓库
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
@@ -109,8 +108,8 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> resetWarehouseExpressLimit(Long organizationId, String warehouseCode) {
-        log.error("Error resetWarehouseExpressLimit, params[tenantId = {}, warehouseCode = {}]", new Object[]{organizationId, warehouseCode});
+    public ResponseEntity<String> listAllDeliveryWarehouse(Long organizationId) {
+        log.error("Error listAllDeliveryWarehouse, params[tenantId = {}]", organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
