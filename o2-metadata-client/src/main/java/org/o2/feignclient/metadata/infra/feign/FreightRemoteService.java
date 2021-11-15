@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 /**
  *
  * 运费
@@ -31,4 +33,14 @@ public interface FreightRemoteService {
      */
     @PostMapping("/{organizationId}/freight-internal/template")
     ResponseEntity<String> getFreightTemplate(@RequestBody FreightDTO freight, @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+
+    /**
+     * 获取运费
+     *
+     * @param freightList 运费参数
+     * @param organizationId 租户ID
+     * @return 运费
+     */
+    @PostMapping("/{organizationId}/freight-internal/template-list")
+    ResponseEntity<String> listFreightTemplates(@RequestBody List<FreightDTO> freightList, @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 }

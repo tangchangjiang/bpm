@@ -12,6 +12,9 @@ import org.o2.metadata.app.service.FreightService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  *
@@ -36,5 +39,14 @@ public class FreightInternalController {
                                                             @RequestBody FreightDTO freight) {
         freight.setTenantId(organizationId);
         return Results.success(freightService.getFreightTemplate(freight));
+    }
+
+    @ApiOperation(value = "批量查询运费模版信息")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/template-list")
+    public ResponseEntity<Map<String,FreightInfoCO>> listFreightTemplates(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                          @RequestBody List<FreightDTO> freightList) {
+        freightList.forEach(e->e.setTenantId(organizationId));
+        return Results.success(freightService.listFreightTemplates(freightList));
     }
 }

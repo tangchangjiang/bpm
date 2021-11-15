@@ -6,6 +6,6 @@ package org.o2.feignclient.metadata.infra.constants;
 public interface O2Service {
 
     interface Metadata {
-        String NAME = "${o2.service.metadata.name:o2-metadata}";
+        String NAME = "${o2.service.metadata.name:o2-metadata-18092}";
     }
 }
