@@ -4,6 +4,9 @@ package org.o2.metadata.app.service;
 import org.o2.metadata.api.dto.FreightDTO;
 import org.o2.metadata.api.co.FreightInfoCO;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * 运费计算服务
@@ -18,4 +21,11 @@ public interface FreightService {
      * @return 运费
      */
     FreightInfoCO getFreightTemplate(FreightDTO freight);
+
+    /**
+     * 批量获取运费
+     * @param  freightList 查询参数
+     * @return 运费
+     */
+    Map<String,FreightInfoCO> listFreightTemplates(List<FreightDTO> freightList);
 }

@@ -3,18 +3,16 @@ package org.o2.feignclient;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 
-
 /**
  *
- * 值集查询
+ * 独立值集
  *
- * @author yipeng.zhu@hand-china.com 2021-08-30
+ * @author yipeng.zhu@hand-china.com 2021-11-15
  **/
-@Deprecated
-public class O2LovAdapterClient {
+public class IDPLovClient {
     private LovAdapterRemoteService lovAdapterRemoteService;
 
-    public O2LovAdapterClient(LovAdapterRemoteService lovAdapterRemoteService) {
+    public IDPLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
     }
 

@@ -1,9 +1,6 @@
 package org.o2.feignclient.metadata.config;
 
-import org.o2.feignclient.CurrencyLovClient;
-import org.o2.feignclient.O2LovAdapterClient;
-import org.o2.feignclient.RegionLovClient;
-import org.o2.feignclient.UomLovClient;
+import org.o2.feignclient.*;
 import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -53,5 +50,10 @@ public class LovAdapterClientConfiguration {
     @ConditionalOnMissingBean
     public UomLovClient uomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new UomLovClient(lovAdapterRemoteService);
+    }
+    @Bean
+    @ConditionalOnMissingBean
+    public IDPLovClient idpLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new IDPLovClient(lovAdapterRemoteService);
     }
 }

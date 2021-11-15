@@ -9,6 +9,10 @@ import org.o2.metadata.infra.convertor.FreightConverter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 运费计算服务默认实现
  *
@@ -28,4 +32,13 @@ public class FreightServiceImpl implements FreightService {
       return FreightConverter.doToCoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCode(),freight.getTenantId()));
     }
 
+    @Override
+    public Map<String, FreightInfoCO> listFreightTemplates(List<FreightDTO> freightList) {
+        Map<String,FreightInfoCO> resultMap = new HashMap<>(freightList.size());
+        for (FreightDTO e : freightList) {
+            FreightInfoCO co = getFreightTemplate(e);
+            resultMap.put(co.getFreightTemplateCode(), co);
+        }
+        return resultMap;
+    }
 }

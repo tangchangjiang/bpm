@@ -17,6 +17,7 @@ import java.util.Map;
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
+@Deprecated
 public class O2MetadataClient {
 
     private final SysParameterRemoteService sysParameterRemoteService;
