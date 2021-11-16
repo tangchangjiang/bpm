@@ -14,6 +14,8 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
 public class CarrierConverter {
+
+    private CarrierConverter(){}
     /**
      * po->do
      * @date 2021-08-05

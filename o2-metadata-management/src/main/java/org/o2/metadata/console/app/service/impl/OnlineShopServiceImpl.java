@@ -1,20 +1,17 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
-import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.inventory.management.client.O2InventoryClient;
-import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
-import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
@@ -26,7 +23,6 @@ import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,25 +36,19 @@ import java.util.*;
 @Service
 public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRepository onlineShopRepository;
-    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
-    private O2InventoryClient o2InventoryClient;
     private final OnlineShopRedis onlineShopRedis;
     private final LovAdapterService lovAdapterService;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
-                                 OnlineShopRelWarehouseService onlineShopRelWarehouseService,
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
-                                 O2InventoryClient o2InventoryClient,
                                  OnlineShopRedis onlineShopRedis,
                                  final LovAdapterService lovAdapterService) {
         this.onlineShopRepository = onlineShopRepository;
-        this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
-        this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
     }
@@ -126,10 +116,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
         }
         onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
-            // 触发渠道可用库存计算
-            o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
-        }
         onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
         return onlineShop;
     }

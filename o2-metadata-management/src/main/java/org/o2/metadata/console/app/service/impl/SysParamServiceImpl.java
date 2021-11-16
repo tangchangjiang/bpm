@@ -1,7 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
 
-import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,6 @@ import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.app.service.SysParamService;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
@@ -82,9 +80,9 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSystemParameter(SystemParameter systemParameter, Long tenantId) {
+        systemParameterRedis.extraOperate(systemParameter.getParamCode(), tenantId);
         systemParameterRepository.updateByPrimaryKey(systemParameter);
         systemParameterRedis.updateToRedis(systemParameter, tenantId);
-        systemParameterRedis.extraOperate(systemParameter.getParamCode(), tenantId);
     }
 
     @Override

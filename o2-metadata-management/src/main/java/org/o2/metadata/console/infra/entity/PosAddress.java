@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -46,12 +45,6 @@ public class PosAddress extends AuditDomain {
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
-
-    public boolean isInvalid() {
-        return StringUtils.isEmpty(this.regionCode)
-                || StringUtils.isEmpty(this.cityCode)
-                || StringUtils.isEmpty(this.districtCode);
-    }
 
     //
     // 数据库字段

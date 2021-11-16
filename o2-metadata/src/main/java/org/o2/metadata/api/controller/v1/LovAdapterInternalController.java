@@ -41,7 +41,7 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,lovValue));
     }
     @ApiOperation(value = "通过编码查询货币(批量)")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")
     public ResponseEntity<Map<String, CurrencyCO>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                        @RequestParam(value = "currencyCodes" ,required = false) List<String> currencyCodes) {

@@ -5,8 +5,6 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.o2.core.thread.ThreadJobPojo;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.app.service.WarehouseService;
-import org.o2.metadata.console.infra.entity.Warehouse;
-import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.scheduler.job.AbstractThreadJob;
 
 import java.util.List;

@@ -14,12 +14,14 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
 public class WarehouseConverter {
+    private WarehouseConverter(){
+    }
     /**
      * po 转 do
      * @param warehouse po
      * @return do
      */
-    public static WarehouseDO poToDoObject(Warehouse warehouse) {
+    private static WarehouseDO poToDoObject(Warehouse warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -50,7 +52,7 @@ public class WarehouseConverter {
         return warehouseDO;
     }
 
-    public static WarehouseCO doToVoObject(WarehouseDO warehouse) {
+    private static WarehouseCO doToVoObject(WarehouseDO warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -82,7 +84,7 @@ public class WarehouseConverter {
     }
     /**
      * PO 转 DO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseDO> poToDoListObjects(List<Warehouse> warehouses) {
@@ -97,7 +99,7 @@ public class WarehouseConverter {
     }
     /**
      * DO 转 VO
-     * @param warehouses
+     * @param warehouses 仓库
      * @return  list
      */
     public static List<WarehouseCO> doToVoListObjects(List<WarehouseDO> warehouses) {

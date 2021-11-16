@@ -1,24 +1,7 @@
 package org.o2.metadata.console.infra.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.MultiLanguage;
-import io.choerodon.mybatis.annotation.MultiLanguageField;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.hzero.core.util.Regexs;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.*;
 import java.util.List;
 
 /**
