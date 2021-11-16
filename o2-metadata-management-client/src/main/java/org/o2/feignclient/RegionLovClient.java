@@ -8,7 +8,6 @@ import org.o2.feignclient.metadata.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *

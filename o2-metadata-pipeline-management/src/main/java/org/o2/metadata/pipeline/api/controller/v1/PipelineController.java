@@ -2,6 +2,7 @@ package org.o2.metadata.pipeline.api.controller.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -58,7 +59,7 @@ public class PipelineController extends BaseController {
     @ApiOperation(value = "流程器列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<?> list(final Pipeline pipeline, @ApiIgnore @SortDefault(value = Pipeline.FIELD_ID) final PageRequest pageRequest, @PathVariable Long organizationId) {
+    public ResponseEntity<Page<Pipeline>> list(final Pipeline pipeline, @ApiIgnore @SortDefault(value = Pipeline.FIELD_ID) final PageRequest pageRequest, @PathVariable Long organizationId) {
         pipeline.setTenantId(organizationId);
         return Results.success(PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(), () -> pipelineRepository.listPipeline(pipeline)));
     }
@@ -66,7 +67,7 @@ public class PipelineController extends BaseController {
     @ApiOperation(value = "流程器明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable final Long id, @PathVariable Long organizationId) {
+    public ResponseEntity<Pipeline> detail(@PathVariable final Long id, @PathVariable Long organizationId) {
         Pipeline pipeline = new Pipeline();
         pipeline.setTenantId(organizationId);
         pipeline.setId(id);
@@ -98,7 +99,7 @@ public class PipelineController extends BaseController {
     @ApiOperation(value = "批量删除流程器")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
+    public ResponseEntity<Void> remove(@RequestBody final List<Pipeline> pipelines, @PathVariable Long organizationId) {
         SecurityTokenHelper.validToken(pipelines);
         pipelines.forEach(pipeline -> pipeline.setTenantId(organizationId));
         pipelineRepository.batchDeleteByPrimaryKey(pipelines);
@@ -108,7 +109,7 @@ public class PipelineController extends BaseController {
     @ApiOperation(value = "流程器Redis缓存信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/cache/{code}")
-    public ResponseEntity<?> getRedisConfigInfo(@PathVariable final String code, @PathVariable Long organizationId) {
+    public ResponseEntity<String> getRedisConfigInfo(@PathVariable final String code, @PathVariable Long organizationId) {
         return Results.success(pipelineRedisService.getPipelineConf(organizationId,code));
     }
 

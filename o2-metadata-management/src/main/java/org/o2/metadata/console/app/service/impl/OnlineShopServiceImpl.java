@@ -1,7 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
-import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -26,7 +25,6 @@ import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +38,6 @@ import java.util.*;
 @Service
 public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRepository onlineShopRepository;
-    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
     private O2InventoryClient o2InventoryClient;
@@ -48,14 +45,12 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final LovAdapterService lovAdapterService;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
-                                 OnlineShopRelWarehouseService onlineShopRelWarehouseService,
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
                                  O2InventoryClient o2InventoryClient,
                                  OnlineShopRedis onlineShopRedis,
                                  final LovAdapterService lovAdapterService) {
         this.onlineShopRepository = onlineShopRepository;
-        this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
         this.o2InventoryClient = o2InventoryClient;

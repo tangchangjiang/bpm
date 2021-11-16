@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.MultiLanguage;
 import io.choerodon.mybatis.annotation.MultiLanguageField;
@@ -12,13 +11,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.collections.CollectionUtils;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
-import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 

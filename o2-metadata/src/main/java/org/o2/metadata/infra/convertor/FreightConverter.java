@@ -17,6 +17,7 @@ import org.o2.metadata.infra.entity.FreightTemplateDetail;
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
 public class FreightConverter {
+    private FreightConverter(){}
     /**
      * 
      * @param 

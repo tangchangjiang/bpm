@@ -2,7 +2,6 @@ package org.o2.metadata.console.api.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

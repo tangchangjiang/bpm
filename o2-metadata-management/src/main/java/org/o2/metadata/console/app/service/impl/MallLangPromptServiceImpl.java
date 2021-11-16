@@ -56,9 +56,6 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     private final MallLangPromptRepository mallLangPromptRepository;
 
     private final FileStorageProperties fileStorageProperties;
-
-    private final RedisCacheClient redisCacheClient;
-
     private final LockService lockService;
 
     private final FileClient fileClient;
@@ -72,12 +69,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
     public MallLangPromptServiceImpl(MallLangPromptRepository mallLangPromptRepository,
                                      LockService lockService, FileStorageProperties fileStorageProperties,
-                                     FileClient fileClient, RedisCacheClient redisCacheClient,
+                                     FileClient fileClient,
                                      StaticResourceInternalService staticResourceInternalService,
                                      StaticResourceConfigService staticResourceConfigService, HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.mallLangPromptRepository = mallLangPromptRepository;
         this.fileStorageProperties = fileStorageProperties;
-        this.redisCacheClient = redisCacheClient;
         this.lockService = lockService;
         this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
