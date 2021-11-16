@@ -247,10 +247,18 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
     @Override
     public void extraOperate(String paramCode, Long tenantId) {
         if (SystemParameterConstants.Parameter.DEFAULT_WH_UPLOAD_RATIO.equals(paramCode) || SystemParameterConstants.Parameter.DEFAULT_WH_SAFETY_STOCK.equals(paramCode)) {
-            o2InventoryClient.triggerAllWhStockCal(tenantId);
+           try {
+               o2InventoryClient.triggerAllWhStockCal(tenantId);
+           } catch (Exception e) {
+               log.error("o2InventoryClient: request triggerAllWhStockCal fail {}",e.getMessage());
+           }
         }
         if (SystemParameterConstants.Parameter.DEFAULT_SHOP_UPLOAD_RATIO.equals(paramCode) || SystemParameterConstants.Parameter.DEFAULT_SHOP_SAFETY_STOCK.equals(paramCode)) {
-            o2InventoryClient.triggerAllShopStockCal(tenantId);
+           try {
+               o2InventoryClient.triggerAllShopStockCal(tenantId);
+           }catch (Exception e) {
+               log.error("o2InventoryClient: request triggerAllShopStockCal fail {}",e.getMessage());
+           }
         }
     }
 
