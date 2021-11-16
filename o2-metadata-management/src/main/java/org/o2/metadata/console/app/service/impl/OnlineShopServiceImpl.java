@@ -7,13 +7,11 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.inventory.management.client.O2InventoryClient;
-import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
-import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
@@ -40,20 +38,17 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRepository onlineShopRepository;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
-    private O2InventoryClient o2InventoryClient;
     private final OnlineShopRedis onlineShopRedis;
     private final LovAdapterService lovAdapterService;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
-                                 O2InventoryClient o2InventoryClient,
                                  OnlineShopRedis onlineShopRedis,
                                  final LovAdapterService lovAdapterService) {
         this.onlineShopRepository = onlineShopRepository;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
-        this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
     }
