@@ -3,12 +3,11 @@ package org.o2.metadata.pipeline;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import io.choerodon.core.convertor.ApplicationContextHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.O2CoreConstants;
-import org.o2.core.helper.JsonHelper;
-import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.pipeline.constants.PipelineConfConstants;
 import org.o2.metadata.pipeline.data.PipelineExecParam;
 import org.o2.metadata.pipeline.exception.PipelineRuntimeException;
@@ -18,6 +17,7 @@ import org.o2.metadata.pipeline.vo.PipelineNodeVO;
 import org.o2.metadata.pipeline.vo.PipelineVO;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +26,7 @@ import java.util.Set;
  *
  * @author mark.bao@hand-china.com 2018/12/20
  */
+@Slf4j
 public class PipelineDriver {
 
 
@@ -70,13 +71,17 @@ public class PipelineDriver {
 
     private static <T extends PipelineExecParam> T evaluateGroovy(T pipelineExecParam, String script) {
         ClassLoader parent = ClassLoader.getSystemClassLoader();
-        GroovyClassLoader loader = new GroovyClassLoader(parent);
-        Class<?> clazz = loader.parseClass(script);
+        Class<?> clazz = null;
+        try (GroovyClassLoader loader = new GroovyClassLoader(parent)) {
+            clazz = loader.parseClass(script);
+        } catch (IOException e) {
+          log.error(e.getMessage());
+        }
         GroovyObject clazzObj = null;
         try {
             clazzObj = (GroovyObject) clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         assert clazzObj != null;
         return (T) clazzObj.invokeMethod("run", pipelineExecParam);
