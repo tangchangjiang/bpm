@@ -80,9 +80,9 @@ public class SysParamServiceImpl implements SysParamService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateSystemParameter(SystemParameter systemParameter, Long tenantId) {
+        systemParameterRedis.extraOperate(systemParameter.getParamCode(), tenantId);
         systemParameterRepository.updateByPrimaryKey(systemParameter);
         systemParameterRedis.updateToRedis(systemParameter, tenantId);
-        systemParameterRedis.extraOperate(systemParameter.getParamCode(), tenantId);
     }
 
     @Override
