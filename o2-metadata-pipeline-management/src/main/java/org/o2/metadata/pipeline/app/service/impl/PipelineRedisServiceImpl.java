@@ -2,7 +2,6 @@ package org.o2.metadata.pipeline.app.service.impl;
 
 import io.choerodon.core.convertor.ApplicationContextHelper;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.pipeline.api.vo.PipelineNodeVO;

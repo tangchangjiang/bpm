@@ -1,6 +1,7 @@
 package org.o2.metadata.pipeline.api.controller.v1;
 
 import io.choerodon.core.base.BaseController;
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -46,8 +47,8 @@ public class PipelineNodeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<?> list(final PipelineNode pipelineNode,
-                                  @ApiIgnore @SortDefault(value = PipelineNode.FIELD_ID) final PageRequest pageRequest, @PathVariable Long organizationId) {
+    public ResponseEntity<Page<PipelineNode>> list(final PipelineNode pipelineNode,
+                                     @ApiIgnore @SortDefault(value = PipelineNode.FIELD_ID) final PageRequest pageRequest, @PathVariable Long organizationId) {
         pipelineNode.setTenantId(organizationId);
         return Results.success(PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> pipelineNodeRepository.listPipelineNode(pipelineNode)));
@@ -57,7 +58,7 @@ public class PipelineNodeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/list")
-    public ResponseEntity<?> listAll(final PipelineNode pipelineNode, @PathVariable Long organizationId) {
+    public ResponseEntity<List<PipelineNode> > listAll(final PipelineNode pipelineNode, @PathVariable Long organizationId) {
         pipelineNode.setTenantId(organizationId);
         return Results.success(pipelineNodeRepository.listPipelineNode(pipelineNode));
     }
@@ -65,7 +66,7 @@ public class PipelineNodeController extends BaseController {
     @ApiOperation(value = "流程器节点明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable final Long id, @PathVariable Long organizationId) {
+    public ResponseEntity<PipelineNode> detail(@PathVariable final Long id, @PathVariable Long organizationId) {
         PipelineNode pipelineNode = new PipelineNode();
         pipelineNode.setTenantId(organizationId);
         pipelineNode.setId(id);
@@ -105,7 +106,7 @@ public class PipelineNodeController extends BaseController {
     @ApiOperation(value = "批量删除流程器节点")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
+    public ResponseEntity<Void> remove(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
         SecurityTokenHelper.validToken(pipelineNodes);
         pipelineNodes.forEach(pipelineNode -> pipelineNode.setTenantId(organizationId));
         pipelineNodeRepository.batchDeleteByPrimaryKey(pipelineNodes);

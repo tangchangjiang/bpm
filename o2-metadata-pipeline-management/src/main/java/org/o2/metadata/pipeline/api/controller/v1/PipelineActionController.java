@@ -1,5 +1,6 @@
 package org.o2.metadata.pipeline.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
@@ -47,7 +48,7 @@ public class PipelineActionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<?> list(PipelineAction pipelineAction, @ApiIgnore @SortDefault(value = PipelineAction.FIELD_ID,
+    public ResponseEntity<Page<PipelineAction>> list(PipelineAction pipelineAction, @ApiIgnore @SortDefault(value = PipelineAction.FIELD_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable Long organizationId) {
         pipelineAction.setTenantId(organizationId);
         return Results.success(PageHelper.doPage(pageRequest, () -> pipelineActionRepository.listPipelineAction(pipelineAction)));
@@ -67,7 +68,7 @@ public class PipelineActionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{id}")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<?> detail(@PathVariable Long id, @PathVariable Long organizationId) {
+    public ResponseEntity<PipelineAction> detail(@PathVariable Long id, @PathVariable Long organizationId) {
         PipelineAction pipelineAction = new PipelineAction();
         pipelineAction.setTenantId(organizationId);
         pipelineAction.setId(id);
@@ -83,7 +84,7 @@ public class PipelineActionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<?> create(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
+    public ResponseEntity<PipelineAction> create(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
         pipelineAction.setTenantId(organizationId);
         pipelineActionService.savePipelineAction(pipelineAction, organizationId);
         return Results.success(pipelineAction);
@@ -93,7 +94,7 @@ public class PipelineActionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    public ResponseEntity<?> update(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
+    public ResponseEntity<PipelineAction> update(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
         pipelineActionService.updatePipelineAction(pipelineAction, organizationId);
         return Results.success(pipelineAction);
     }
@@ -101,7 +102,7 @@ public class PipelineActionController extends BaseController {
     @ApiOperation(value = "删除流程器行为")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
+    public ResponseEntity<PipelineAction> remove(@RequestBody PipelineAction pipelineAction, @PathVariable Long organizationId) {
         SecurityTokenHelper.validToken(pipelineAction);
         pipelineAction.setTenantId(organizationId);
         pipelineActionService.delete(pipelineAction, organizationId);

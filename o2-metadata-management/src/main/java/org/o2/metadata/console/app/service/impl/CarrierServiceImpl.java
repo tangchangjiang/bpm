@@ -171,27 +171,4 @@ public class CarrierServiceImpl implements CarrierService {
         }
         return map;
     }
-
-    /**
-     * 校验查重
-     *
-     * @param carrieies 承运商
-     * @param isCheckId 是否
-     */
-    private void checkData(final List<Carrier> carrieies, final boolean isCheckId) {
-        final Map<String, Object> map = new HashMap<>(carrieies.size());
-        for (int i = 0; i < carrieies.size(); i++) {
-            final Carrier carrier = carrieies.get(i);
-            if (isCheckId) {
-                Assert.notNull(carrier.getCarrierId(), "carrierId must not be null");
-            }
-            carrier.validate();
-            // 数据库查重
-            Assert.isTrue(!carrier.exist(carrierRepository), "could not exist same carrier");
-            // list查重
-            Assert.isTrue(map.get(carrier.getCarrierCode()) == null, "could not exist same carrier");
-            map.put(carrier.getCarrierCode(), i);
-        }
-    }
-
 }

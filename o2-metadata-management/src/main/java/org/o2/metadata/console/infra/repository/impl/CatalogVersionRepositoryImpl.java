@@ -4,7 +4,6 @@ import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.co.CatalogCO;
 import org.o2.metadata.console.api.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
-import org.o2.metadata.console.api.dto.CatalogVersionQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.mapper.CatalogVersionMapper;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;

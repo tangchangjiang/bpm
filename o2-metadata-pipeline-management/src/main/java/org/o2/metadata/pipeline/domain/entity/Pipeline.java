@@ -7,10 +7,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;

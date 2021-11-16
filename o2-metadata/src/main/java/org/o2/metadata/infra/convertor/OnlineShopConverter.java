@@ -10,6 +10,7 @@ import org.o2.metadata.infra.entity.OnlineShop;
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
 public class OnlineShopConverter {
+    private OnlineShopConverter(){}
     /**
      * po->Vo
      * @date 2021-08-09

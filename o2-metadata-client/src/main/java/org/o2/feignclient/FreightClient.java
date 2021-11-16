@@ -2,7 +2,6 @@ package org.o2.feignclient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.feignclient.metadata.domain.co.CurrencyCO;
 import org.o2.feignclient.metadata.domain.co.FreightInfoCO;
 import org.o2.feignclient.metadata.domain.dto.FreightDTO;
 import org.o2.feignclient.metadata.infra.feign.FreightRemoteService;
