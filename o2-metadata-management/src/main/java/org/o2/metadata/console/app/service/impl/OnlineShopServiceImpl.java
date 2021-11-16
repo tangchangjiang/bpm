@@ -121,10 +121,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
         }
         onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        if (!onlineShop.getActiveFlag().equals(origin.getActiveFlag())) {
-            // 触发渠道可用库存计算
-            o2InventoryClient.triggerShopStockCalByShopCode(onlineShop.getTenantId(), Collections.singleton(origin.getOnlineShopCode()), O2InventoryConstant.invCalCase.SHOP_ACTIVE);
-        }
         onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
         return onlineShop;
     }
