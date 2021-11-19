@@ -6,6 +6,7 @@ import org.o2.feignclient.metadata.domain.co.OnlineShopCO;
 import org.o2.feignclient.metadata.domain.co.OnlineShopRelWarehouseCO;
 import org.o2.feignclient.metadata.domain.dto.OnlineShopCatalogVersionDTO;
 import org.o2.feignclient.metadata.domain.dto.OnlineShopQueryInnerDTO;
+import org.o2.feignclient.metadata.domain.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.feignclient.metadata.infra.feign.OnlineShopRemoteService;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class OnlineShopClient {
     }
 
     /**
-     * 从redis查询网店关联有效的仓库
+     * 查询单个网店关联有效的仓库
      *
      * @param onlineShopCode 网店编码
      * @param tenantId        租户ID
@@ -36,6 +37,19 @@ public class OnlineShopClient {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseCO>>() {
         });
     }
+
+    /**
+     * 查询多个网店关联有效的仓库
+     *
+     * @param innerDTO 网店编码
+     * @param tenantId        租户ID
+     * @return map<warehouseCode, OnlineShopRelWarehouseCO>
+     */
+    public Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(innerDTO, tenantId), new TypeReference<Map<String, List<OnlineShopRelWarehouseCO>>>() {
+        });
+    }
+
 
     /**
      * 批量查询网店

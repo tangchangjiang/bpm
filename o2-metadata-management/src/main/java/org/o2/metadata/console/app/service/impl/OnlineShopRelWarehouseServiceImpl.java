@@ -15,6 +15,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
@@ -241,6 +242,17 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     @Override
     public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return OnlineShopRelWarehouseConverter.doToCoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
+    }
+
+    @Override
+    public Map<String,List<OnlineShopRelWarehouseCO>>  listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
+
+        List<String> onlineShopCodes = innerDTO.getOnlineShopCodes();
+        Map<String,List<OnlineShopRelWarehouseCO>> result = new HashMap<>(onlineShopCodes.size());
+        for (String code : onlineShopCodes){
+            result.put(code,listOnlineShopRelWarehouses(code,tenantId));
+        }
+        return result;
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {

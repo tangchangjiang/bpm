@@ -9,13 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,5 +52,14 @@ public class OnlineShopRelWarehouseInternalController {
         }
         return Results.success(map);
     }
+
+    @ApiOperation(value = "查询网店关联有效仓库")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/rel-warehouse/list")
+    public ResponseEntity<Map<String, List<OnlineShopRelWarehouseCO>>> onlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                             @RequestBody OnlineShopRelWarehouseInnerDTO innerDTO) {
+        return Results.success(onlineShopRelWarehouseService.listOnlineShopRelWarehouses(innerDTO, organizationId));
+    }
+
 
 }
