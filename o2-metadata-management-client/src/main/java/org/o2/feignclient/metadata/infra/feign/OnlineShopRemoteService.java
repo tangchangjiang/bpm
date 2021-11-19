@@ -3,6 +3,7 @@ package org.o2.feignclient.metadata.infra.feign;
 import io.swagger.annotations.ApiParam;
 import org.o2.feignclient.metadata.domain.dto.OnlineShopCatalogVersionDTO;
 import org.o2.feignclient.metadata.domain.dto.OnlineShopQueryInnerDTO;
+import org.o2.feignclient.metadata.domain.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.OnlineShopRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -34,6 +35,18 @@ public interface OnlineShopRemoteService {
     @GetMapping("/{organizationId}/onlineShopRelWarehouse-internal/{onlineShopCode}")
     ResponseEntity<String> listOnlineShopRelWarehouses(@PathVariable(value = "onlineShopCode") @ApiParam(value = "网店编码", required = true) String onlineShopCode,
                                                        @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)  Long organizationId);
+
+    /**
+     * 查询网店关联有效仓库
+     *
+     * @param onlineShopRelWarehouseInnerDTO 网店编码
+     * @param organizationId 租户ID
+     * @return ResponseEntity<String>
+     */
+    @PostMapping("/{organizationId}/onlineShopRelWarehouse-internal/rel-warehouse/list")
+    ResponseEntity<String> listOnlineShopRelWarehouses(@RequestBody OnlineShopRelWarehouseInnerDTO onlineShopRelWarehouseInnerDTO,
+                                                       @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
     /**
      * 批量查询网店
      * @param  onlineShopQueryInnerDTO 网店
