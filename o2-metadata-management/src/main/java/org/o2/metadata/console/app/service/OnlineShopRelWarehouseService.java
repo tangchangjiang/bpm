@@ -1,9 +1,11 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网店关联服务点应用服务
@@ -64,6 +66,7 @@ public interface OnlineShopRelWarehouseService {
      * @param tenantId 租户ID
      */
     void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
+
     /**
      * 查询网店关联有效仓库
      * @param onlineShopCode 网店编码
@@ -71,5 +74,12 @@ public interface OnlineShopRelWarehouseService {
      * @return list
      */
     List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
+    /**
+     * 查询网店关联有效仓库
+     * @param innerDTO 查询参数
+     * @param tenantId 租户ID
+     * @return list
+     */
+    Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId);
 
 }
