@@ -79,19 +79,7 @@ public class O2LovAdapterClient {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, lovValue), String.class);
     }
 
-    /**
-     * 批量查询指定值集内容
-     *
-     * @param tenantId 租户ID
-     * @param lovCode 值集编码
-     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
-     *                         * eg <countryCode,'CN'>
-     * @return List<Map < String, Object>>
-     */
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
-        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, queryLovValueMap), new TypeReference<List<Map<String, Object>>>() {
-        });
-    }
+
 
     /**
      * 分页查询URL值集

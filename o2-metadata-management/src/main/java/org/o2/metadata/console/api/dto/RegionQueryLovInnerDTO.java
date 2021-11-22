@@ -51,4 +51,9 @@ public class RegionQueryLovInnerDTO {
    private List<String> regionCodes;
 
     private String parentRegionCode;
+
+    /**
+     * 等级路径
+     */
+    private String levelPath;
 }
