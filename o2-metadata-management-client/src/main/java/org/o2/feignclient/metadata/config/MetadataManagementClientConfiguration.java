@@ -138,28 +138,4 @@ public class MetadataManagementClientConfiguration {
     public StaticResourceClient staticResourceClient(StaticResourceRemoteService staticResourceRemoteService) { return new StaticResourceClient( staticResourceRemoteService);
     }
 
-
-    @Bean
-    @ConditionalOnMissingBean
-    public O2MetadataManagementClient o2MetadataManagementClient(SysParameterRemoteService sysParameterRemoteService,
-                                                                 WarehouseRemoteService warehouseRemoteService,
-                                                                 FreightRemoteService freightRemoteService,
-                                                                 StaticResourceRemoteService staticResourceRemoteService,
-                                                                 CatalogVersionRemoteService catalogVersionRemoteService,
-                                                                 CarrierRemoteService carrierRemoteService,
-                                                                 PosRemoteService posRemoteService,
-                                                                 PlatformRemoteService platformRemoteService,
-                                                                 OnlineShopRemoteService onlineShopRemoteService,
-                                                                 AddressMappingRemoteService addressMappingService) {
-        return new O2MetadataManagementClient(sysParameterRemoteService,
-                warehouseRemoteService,
-                freightRemoteService,
-                staticResourceRemoteService,
-                catalogVersionRemoteService,
-                carrierRemoteService,
-                posRemoteService,
-                platformRemoteService,
-                onlineShopRemoteService,
-                addressMappingService);
-    }
 }

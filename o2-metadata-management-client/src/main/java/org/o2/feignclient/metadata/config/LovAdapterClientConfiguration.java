@@ -37,12 +37,6 @@ public class LovAdapterClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public O2LovAdapterClient o2LovAdapterClient(LovAdapterRemoteService lovAdapterRemoteService) {
-        return new O2LovAdapterClient(lovAdapterRemoteService);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new CurrencyLovClient(lovAdapterRemoteService);
     }
