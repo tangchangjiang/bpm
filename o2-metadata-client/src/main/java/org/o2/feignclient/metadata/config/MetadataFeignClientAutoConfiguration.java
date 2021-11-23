@@ -79,17 +79,4 @@ public class MetadataFeignClientAutoConfiguration {
         return new SystemParameterClient(sysParameterRemoteService);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    O2MetadataClient o2MetadataClient(SysParameterRemoteService sysParameterRemoteService,
-                                      WarehouseRemoteService warehouseRemoteService,
-                                      FreightRemoteService freightRemoteService,
-                                      OnlineShopRemoteService onlineShopRemoteService,
-                                      CarrierRemoteService carrierRemoteService) {
-        return new O2MetadataClient(sysParameterRemoteService,
-                warehouseRemoteService,
-                freightRemoteService,
-                onlineShopRemoteService,
-                carrierRemoteService);
-    }
 }
