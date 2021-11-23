@@ -8,7 +8,7 @@ sonar_check:
   stage: sonar
   script:
     - mvn --batch-mode clean verify sonar:sonar
-      -Dsonar.host.url=${SONAR_URL}
+      -Dsonar.host.url=${O2_SONAR_URL}
       -Dsonar.login=${SONAR_TOKEN}
       -Dsonar.sorceEncoding=UTF-8
       -Dsonar.projectKey=${SONAR_PROJECT_KEY}
@@ -16,6 +16,7 @@ sonar_check:
       -DskipTests=true
   only:
     - sonar
+    - master
 
 maven_package:
   stage: maven_package
