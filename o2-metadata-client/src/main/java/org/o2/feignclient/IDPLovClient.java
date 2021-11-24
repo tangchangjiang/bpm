@@ -5,7 +5,7 @@ import org.o2.feignclient.metadata.infra.feign.LovAdapterRemoteService;
 
 /**
  *
- * 独立值集
+ * IDPLovClient
  *
  * @author yipeng.zhu@hand-china.com 2021-11-15
  **/
