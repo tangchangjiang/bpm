@@ -58,7 +58,7 @@ public class LovAdapterInternalController {
     @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/query-region-lov")
     public ResponseEntity<List<Region>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                    RegionQueryLovInnerDTO innerDTO) {
+                                                    @RequestBody RegionQueryLovInnerDTO innerDTO) {
         return Results.success(lovAdapterService.queryRegion(organizationId,innerDTO));
     }
 }

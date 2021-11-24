@@ -21,12 +21,4 @@ public interface WarehouseRedis {
      */
     List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId);
 
-    /**
-     * 仓库快递配送接单量增量更新
-     *
-     * @param tenantId       租户ID
-     * @param warehouseCode  仓库编码
-     * @param increment      快递配送接单量增量
-     */
-    void updateExpressValue(String warehouseCode, String increment, Long tenantId);
 }

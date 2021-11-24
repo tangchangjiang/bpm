@@ -52,7 +52,7 @@ public class WarehouseConverter {
         return warehouseDO;
     }
 
-    private static WarehouseCO doToVoObject(WarehouseDO warehouse) {
+    private static WarehouseCO doToCoObject(WarehouseDO warehouse) {
 
         if (warehouse == null) {
             return null;
@@ -102,13 +102,13 @@ public class WarehouseConverter {
      * @param warehouses 仓库
      * @return  list
      */
-    public static List<WarehouseCO> doToVoListObjects(List<WarehouseDO> warehouses) {
+    public static List<WarehouseCO> doToCoListObjects(List<WarehouseDO> warehouses) {
         List<WarehouseCO> warehouseVOList = new ArrayList<>();
         if (warehouses == null) {
             return warehouseVOList;
         }
         for (WarehouseDO warehouse : warehouses) {
-            warehouseVOList.add(doToVoObject(warehouse));
+            warehouseVOList.add(doToCoObject(warehouse));
         }
         return warehouseVOList;
     }

@@ -18,7 +18,7 @@ public class OnlineShopClient {
     }
 
     /**
-     *
+     * 查询网店
      * @date 2021-08-10
      * @param onlineShopCode  网店编码
      * @return 网店
