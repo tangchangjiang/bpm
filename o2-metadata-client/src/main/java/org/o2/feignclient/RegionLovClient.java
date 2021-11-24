@@ -22,7 +22,7 @@ public class RegionLovClient {
     }
 
     /**
-     * 根据编码以及租户ID批量查集值
+     * 批量查集地区信息
      * @param innerDTO 查询条件
      * @param organizationId 租户ID
      * @return 值集集合

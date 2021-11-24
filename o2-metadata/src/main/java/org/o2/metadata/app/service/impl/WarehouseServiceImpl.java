@@ -22,7 +22,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
     @Override
     public List<WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return WarehouseConverter.doToVoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId));
+        return WarehouseConverter.doToCoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId));
     }
 
     @Override
