@@ -29,18 +29,18 @@
         p.strategy_type,
         p.next_action,
         (select pan.description from
-        o2md_pipeline_action pan where p.next_action = pan.id) as next_description,
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_description,
         p.pipeline_id,
         (select pa.description from
-        o2md_pipeline_action pa where p.cur_action = pa.id) as cur_description,
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_description,
         (select pan.bean_id from
-        o2md_pipeline_action pan where p.next_action = pan.id) as next_bean_id,
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_bean_id,
         (select pa.bean_id from
-        o2md_pipeline_action pa where p.cur_action = pa.id) as cur_bean_id,
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_bean_id,
         (select pan.script from
-        o2md_pipeline_action pan where p.next_action = pan.id) as next_script,
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_script,
         (select pa.script from
-        o2md_pipeline_action pa where p.cur_action = pa.id) as cur_script,
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_script,
         p.OBJECT_VERSION_NUMBER,
         p.CREATION_DATE,
         p.CREATED_BY,

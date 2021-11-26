@@ -94,7 +94,8 @@
         o2eap.parameter_code,
         o2eap.parameter_name,
         o2eap.data_type_code
-        FROM o2md_pipeline_action o2epa LEFT JOIN o2md_action_parameter o2eap ON o2epa.id = o2eap.action_id
+        FROM o2md_pipeline_action o2epa
+        LEFT JOIN o2md_action_parameter o2eap ON o2epa.id = o2eap.action_id and o2eap.tenant_id = #{tenantId}
         <where>
             AND o2epa.tenant_id = #{tenantId}
             <if test="code != null and code !='' ">

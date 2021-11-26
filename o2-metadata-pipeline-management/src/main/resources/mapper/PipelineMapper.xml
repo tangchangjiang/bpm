@@ -28,18 +28,18 @@
         p.code,
         p.start_action,
         (select pa.description from
-        o2md_pipeline_action pa where p.start_action = pa.id) as start_description,
+        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId} ) as start_description,
         p.end_action,
         (select pan.description from
-        o2md_pipeline_action pan where p.end_action = pan.id) as end_description,
+        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_description,
         (select pa.bean_id from
-        o2md_pipeline_action pa where p.start_action = pa.id) as start_bean_id,
+        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId}) as start_bean_id,
         (select pan.bean_id from
-        o2md_pipeline_action pan where p.end_action = pan.id) as end_bean_id,
+        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_bean_id,
         (select pa.script from
-        o2md_pipeline_action pa where p.start_action = pa.id) as start_script,
+        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId}) as start_script,
         (select pan.script from
-        o2md_pipeline_action pan where p.end_action = pan.id) as end_script,
+        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_script,
         p.description,
         p.active_flag,
         p.OBJECT_VERSION_NUMBER,
