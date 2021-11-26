@@ -19,6 +19,7 @@
     </resultMap>
 
     <select id="listInfMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         inf.platform_inf_mapping_id,
         inf.inf_type_code,
@@ -29,9 +30,10 @@
         inf.platform_inf_name,
         inf.tenant_id,
         inf.object_version_number,
-        pf.platform_name
+        tl.platform_name
         from o2md_platform_info_mapping inf
-        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -66,6 +68,7 @@
         </where>
     </select>
     <select id="selectById" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
             inf.platform_inf_mapping_id,
             inf.inf_type_code,
@@ -80,12 +83,14 @@
             inf.last_updated_by,
             inf.creation_date,
             inf.last_update_date,
-            pf.platform_name
+            tl.platform_name
         from o2md_platform_info_mapping inf
-        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         where inf.platform_inf_mapping_id = #{id}
     </select>
     <select id="selectOneMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         inf.platform_inf_mapping_id,
         inf.inf_type_code,
@@ -96,9 +101,10 @@
         inf.platform_inf_name,
         inf.tenant_id,
         inf.object_version_number,
-        pf.platform_name
+        tl.platform_name
         from o2md_platform_info_mapping inf
-        left join o2md_platform pf on pf.platform_code = inf.platform_code
+        left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -120,6 +126,7 @@
         </where>
     </select>
     <select id="selectCondition" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         inf.inf_type_code,
         pf.platform_code,
@@ -128,9 +135,10 @@
         inf.platform_inf_code,
         inf.platform_inf_name,
         inf.tenant_id,
-        pf.platform_name
+        tl.platform_name
         from o2md_platform pf
-        left join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code
+        left join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code and inf.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">

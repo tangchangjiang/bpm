@@ -21,14 +21,6 @@ import java.util.List;
  */
 public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
-    /**
-     * 主键查询
-     *
-     * @param tenantId 租户ID
-     * @param posId    服务点 id
-     * @return 带详细地址和接派单时间的仓库信息
-     */
-    Warehouse getWarehouseWithCarrierNameById(Long tenantId, Long posId);
 
     /**
      * 查询未与网店关联的仓库

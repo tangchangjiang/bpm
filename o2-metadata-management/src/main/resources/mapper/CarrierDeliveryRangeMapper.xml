@@ -14,11 +14,12 @@
     </resultMap>
 
     <select id="list" resultType="org.o2.metadata.console.infra.entity.CarrierDeliveryRange">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         rel.delivery_range_id,
         rel.carrier_id,
         rel.OBJECT_VERSION_NUMBER,
-        c.carrier_name,
+        tl.carrier_name,
         rel.city_code,
         rel.region_code,
         rel.district_code,
@@ -27,6 +28,7 @@
         FROM
         o2md_carrier_delivery_range rel
         JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id  and c.tenant_id = #{tenantId}
+        left join o2md_carrier_tl tl on  tl.carrier_id = c.carrier_id = and c.tenant_id = #{tenantId} and and tl.lang = #{lang}
         <where>
             <choose>
                 <when test="tenantId != null">

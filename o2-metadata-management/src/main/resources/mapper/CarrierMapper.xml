@@ -28,7 +28,7 @@
         c.tenant_id
         FROM
         o2md_carrier c
-        left join o2md_carrier_tl ct on ct.carrier_id = c.carrier_id and ct.lang = #{lang}
+        left join o2md_carrier_tl ct on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = #{tenantId}
         where 1=1
             <choose>
                 <when test="tenantId != null">
@@ -57,9 +57,10 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         c.carrier_code,
-        t.carrier_name
+        tl.carrier_name
         FROM
-        o2md_carrier c left join o2md_carrier_tl t on c.carrier_id = t.carrier_id
+        o2md_carrier c
+        left join o2md_carrier_tl tl on tl.carrier_id = c.carrier_id  and tl.tenant_id = #{tenantId} AND tl.lang =#{lang}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
@@ -81,7 +82,6 @@
                 #{name}
             </foreach>
         </if>
-        AND t.lang =#{lang}
     </select>
 
 </mapper>

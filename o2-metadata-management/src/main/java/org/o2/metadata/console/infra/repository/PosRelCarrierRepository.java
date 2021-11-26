@@ -35,7 +35,8 @@ public interface PosRelCarrierRepository extends BaseRepository<PosRelCarrier> {
      * @param relId relId
      * @param posId posId
       @param defaultFlag defaultFlag
+      @param tenantId 租户ID
      * @return 更新条数
      */
-    int updateIsDefault(Long relId, Long posId, final Integer defaultFlag);
+    int updateIsDefault(Long relId, Long posId, final Integer defaultFlag,Long tenantId );
 }

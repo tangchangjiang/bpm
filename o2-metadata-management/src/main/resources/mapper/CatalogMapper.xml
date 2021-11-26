@@ -26,7 +26,8 @@
         t.catalog_name catalogName,
         c.active_flag activeFlag
         FROM
-        o2md_catalog c left join o2md_catalog_tl t on c.catalog_id = t.catalog_id
+        o2md_catalog c
+        left join o2md_catalog_tl t on c.catalog_id = t.catalog_id  and t.tenant_id = #{tenantId} AND t.lang =#{lang}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
@@ -42,17 +43,17 @@
                 #{id}
             </foreach>
         </if>
-
-        AND t.lang =#{lang}
     </select>
     <select id="listCatalog" resultType="org.o2.metadata.console.infra.entity.Catalog">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select c.catalog_id,
         c.catalog_code,
-        c.catalog_name,
-        c.catalog_remarks,
+        t.catalog_name,
+        t.catalog_remarks,
         c.active_flag,
         c.object_version_number
         from o2md_catalog c
+        left join o2md_catalog_tl t on c.catalog_id = t.catalog_id and  t.lang =  #{lang} and t.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -80,7 +81,8 @@
         c.catalog_code catalogCode,
         t.catalog_name catalogName
         FROM
-        o2md_catalog c left join o2md_catalog_tl t on c.catalog_id = t.catalog_id
+        o2md_catalog c
+        left join o2md_catalog_tl t on c.catalog_id = t.catalog_id  and t.tenant_id = #{tenantId} AND t.lang =#{lang}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
@@ -96,7 +98,5 @@
                 #{code}
             </foreach>
         </if>
-
-        AND t.lang =#{lang}
     </select>
 </mapper>

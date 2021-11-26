@@ -60,6 +60,14 @@
         oft.last_update_date
         FROM o2md_freight_template oft
         <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND oft.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 =0
+                </otherwise>
+            </choose>
             <if test="templateId!=null and templateId!=''">
                 AND oft.template_id LIKE #{templateId}
             </if>
@@ -79,9 +87,6 @@
             </if>
             <if test="valuationUom!=null and valuationUom!=''">
                 AND oft.valuation_uom = #{valuationUom}
-            </if>
-            <if test="tenantId!=null ">
-                AND oft.tenant_id = #{tenantId}
             </if>
             <if test="activeFlag!=null">
                 AND oft.ACTIVE_FLAG = #{activeFlag}

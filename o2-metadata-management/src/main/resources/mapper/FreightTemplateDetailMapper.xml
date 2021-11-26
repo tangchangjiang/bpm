@@ -81,7 +81,7 @@
             o2mft.template_code,
             oftd.tenant_id
         FROM o2md_freight_tpl_detail oftd
-        inner join o2md_freight_template o2mft  on o2mft.template_id = oftd.template_id
+        inner join o2md_freight_template o2mft  on o2mft.template_id = oftd.template_id and o2mft.tenant_id = #{tenantId}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">
