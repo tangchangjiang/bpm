@@ -148,8 +148,8 @@ public class CarrierServiceImpl implements CarrierService {
         if (carriers.isEmpty()) {
             return map;
         }
-        CarrierCO carrierVO = new CarrierCO();
         for (Carrier carrier : carriers) {
+            CarrierCO carrierVO = new CarrierCO();
             carrierVO.setCarrierCode(carrier.getCarrierCode());
             carrierVO.setCarrierName(carrier.getCarrierName());
             map.put(carrier.getCarrierCode(), carrierVO);
