@@ -236,7 +236,7 @@ public class PosServiceImpl implements PosService {
         if (null != pos.getCarrierId()) {
             posRelCarriers.stream()
                     .filter( c -> c.getCarrierId().equals(pos.getCarrierId()))
-                    .forEach(c -> posRelCarrierRepository.updateIsDefault(c.getPosRelCarrierId(), c.getPosId(),1));
+                    .forEach(c -> posRelCarrierRepository.updateIsDefault(c.getPosRelCarrierId(), c.getPosId(),1,c.getTenantId()));
         }
     }
 

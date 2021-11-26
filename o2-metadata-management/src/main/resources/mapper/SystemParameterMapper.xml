@@ -87,7 +87,7 @@
         va.param2 as value_param2,
         va.param3 as value_param3
         from o2md_system_parameter param
-        left join o2md_system_param_value va on param.param_id = va.param_id
+        left join o2md_system_param_value va on param.param_id = va.param_id and va.tenant_id = #{tenantId}
         where 1=1 and param.active_flag =1
         <choose>
             <when test="tenantId != null">

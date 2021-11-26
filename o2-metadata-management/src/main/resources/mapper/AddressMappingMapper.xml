@@ -65,7 +65,7 @@
                 AND ad.tenant_id = #{tenantId}
             </when>
             <otherwise>
-                AND ad.tenant_id = 0
+                AND 1 = 0
             </otherwise>
         </choose>
         <if test="regionCode!=null ">

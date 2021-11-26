@@ -19,6 +19,7 @@
     </resultMap>
 
     <select id="listCarrierWithPos" resultMap="BaseResultMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         t.pos_rel_carrier_id,
         t.carrier_id,
@@ -31,6 +32,7 @@
         FROM
         o2md_pos_rel_carrier t
         JOIN o2md_carrier c ON t.carrier_id = c.carrier_id and c.tenant_id = #{tenantId}
+        left join o2md_carrier_tl tl on tl.carrier_id = c.carrier_id  and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         where 1=1
         <choose>
             <when test="tenantId != null">
@@ -114,6 +116,7 @@
         WHERE
             t.pos_rel_carrier_id != #{relId, jdbcType=DECIMAL}
             and t.pos_id = #{posId, jdbcType=DECIMAL}
+            and t.tenant_id = #{tenantId, jdbcType=DECIMAL}
     </update>
 
 </mapper>
