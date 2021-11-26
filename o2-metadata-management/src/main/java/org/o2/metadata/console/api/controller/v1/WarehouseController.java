@@ -16,6 +16,8 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelPosDTO;
+import org.o2.metadata.console.api.vo.WarehouseRelPosVO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -149,5 +151,24 @@ public class WarehouseController extends BaseController {
         queryDTO.setTenantId(organizationId);
         final Page<Warehouse> warehouses = PageHelper.doPageAndSort(pageRequest, () -> warehouseService.listWarehouseAddr(queryDTO));
         return Results.success(warehouses);
+    }
+
+    /**
+     * 仓库关联服务点
+     * @param organizationId 租户ID
+     * @param warehouseRelPosDTO 请求参数
+     * @param pageRequest 分页参数
+     * @return WarehouseRelPosVO
+     */
+    @ApiOperation(value = "仓库关联服务点")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/rel-pos")
+    public ResponseEntity<Page<WarehouseRelPosVO>> listWarehouseRelPos(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                       WarehouseRelPosDTO warehouseRelPosDTO,
+                                                                       final PageRequest pageRequest) {
+
+        warehouseRelPosDTO.setTenantId(organizationId);
+        final Page<WarehouseRelPosVO> warehouseRelPosVOS = PageHelper.doPageAndSort(pageRequest,() -> warehouseRepository.listWarehouseRelPos(warehouseRelPosDTO));
+        return Results.success(warehouseRelPosVOS);
     }
 }
