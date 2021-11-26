@@ -494,10 +494,11 @@
         </choose>
     </select>
     <select id="listWarehouseRelPos" resultType="org.o2.metadata.console.api.vo.WarehouseRelPosVO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         ow.warehouse_id,
         ow.warehouse_code,
-        ow.warehouse_name,
+        owl.warehouse_name,
         opa.contact,
         opa.mobile_phone,
         opa.phone_number,
@@ -514,6 +515,7 @@
         AND op.tenant_id = ow.tenant_id
         LEFT JOIN o2md_pos_address opa ON opa.pos_address_id = op.address_id
         AND opa.tenant_id = ow.tenant_id
+        LEFT JOIN o2md_warehouse_tl owl ON owl.warehouse_id = ow.warehouse_id AND owl.lang = #{lang} AND owl.tenant_id = #{tenantId}
         <where>
             <if test="warehouseCode!= null and warehouseCode!= ''">
                 <bind name="warehouseCodeLike" value="warehouseCode+ '%'"/>
