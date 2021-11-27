@@ -70,6 +70,7 @@ public class Catalog extends AuditDomain {
     private Integer activeFlag;
 
     @ApiModelProperty(value = "租户ID")
+    @MultiLanguageField
     private Long tenantId;
 
 }

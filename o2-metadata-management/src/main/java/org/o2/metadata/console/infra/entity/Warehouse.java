@@ -126,6 +126,7 @@ public class Warehouse extends AuditDomain {
 
     @ApiModelProperty(value = "租户ID")
     @NotNull
+    @MultiLanguageField
     private Long tenantId;
 
     @ApiModelProperty(value = "生效状态")

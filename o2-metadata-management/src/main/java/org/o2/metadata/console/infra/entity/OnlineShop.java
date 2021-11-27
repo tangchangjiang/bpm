@@ -156,6 +156,7 @@ public class OnlineShop extends AuditDomain {
     private Integer enableSplitFlag;
 
     @ApiModelProperty(value = "组织ID")
+    @MultiLanguageField
     private Long tenantId;
 
     @ApiModelProperty(value = "是否默认网店", hidden = true)
