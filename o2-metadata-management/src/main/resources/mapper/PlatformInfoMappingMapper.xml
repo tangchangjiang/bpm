@@ -33,7 +33,7 @@
         tl.platform_name
         from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
-        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -86,7 +86,7 @@
             tl.platform_name
         from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
-        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         where inf.platform_inf_mapping_id = #{id}
     </select>
     <select id="selectOneMapping" resultType="org.o2.metadata.console.infra.entity.PlatformInfoMapping">
@@ -104,7 +104,7 @@
         tl.platform_name
         from o2md_platform_info_mapping inf
         left join o2md_platform pf on pf.platform_code = inf.platform_code and pf.tenant_id = #{tenantId}
-        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -138,7 +138,7 @@
         tl.platform_name
         from o2md_platform pf
         left join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code and inf.tenant_id = #{tenantId}
-        left join o2md_platform_tl tl on tl.platform_id and pf.platform_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
+        left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
