@@ -160,4 +160,5 @@ public interface WarehouseService {
      * @return 仓库
      */
     List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
+
 }
