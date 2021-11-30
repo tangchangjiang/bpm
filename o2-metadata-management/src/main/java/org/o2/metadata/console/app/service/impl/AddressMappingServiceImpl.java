@@ -69,6 +69,19 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingQueryDTO addressMappingQueryDTO, final String countryCode) {
         checkData(addressMappingQueryDTO,countryCode);
+        // 更据名称查询地区
+        if (StringUtils.isNotEmpty(addressMappingQueryDTO.getRegionName())) {
+            RegionQueryLovInnerDTO name = new RegionQueryLovInnerDTO();
+            name.setRegionName(addressMappingQueryDTO.getRegionName());
+            name.setTenantId(addressMappingQueryDTO.getTenantId());
+            List<Region> nameList = regionRepository.listRegionLov(name, addressMappingQueryDTO.getTenantId());
+            List<String> nameCodes = new ArrayList<>();
+            for (Region region : nameList) {
+                nameCodes.add(region.getRegionCode());
+            }
+            addressMappingQueryDTO.setRegionCodes(nameCodes);
+        }
+
         List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingQueryDTO, countryCode);
         if (null == regionTreeChildList || regionTreeChildList.isEmpty()) {
             return new ArrayList<>();
@@ -113,7 +126,6 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
         //递归获取树形结构数据
         getParent(collect, tree, addressMappingQueryDTO.getPlatformCode(), addressMappingQueryDTO.getTenantId());
-        sortList(tree);
         return RegionConverter.poToVoChildObjects(tree);
     }
     /**
@@ -311,29 +323,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         addressMappingRepository.insertSelective(addressMapping);
     }
 
-    /**
-     * 排序返回结果集
-     *
-     * @param tree 树形返回结果集
-     */
-    private void sortList(final List<RegionTreeChild> tree) {
-        //省排序
-        Collections.sort(tree);
-        //市排序
-        for (final RegionTreeChild regionTreeChild : tree) {
-            if (regionTreeChild.getChildren() != null && regionTreeChild.getChildren().size() > 1) {
-                Collections.sort(regionTreeChild.getChildren());
-            }
-            //区排序
-            if (regionTreeChild.getChildren() != null) {
-                for (final RegionTreeChild cityTreeChild : regionTreeChild.getChildren()) {
-                    if (cityTreeChild.getChildren() != null && cityTreeChild.getChildren().size() > 1) {
-                        Collections.sort(cityTreeChild.getChildren());
-                    }
-                }
-            }
-        }
-    }
+
     /**
      * 父级的地址匹配数据
      * @param parentRegions 父地区

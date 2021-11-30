@@ -27,19 +27,13 @@
         p.id,
         p.code,
         p.start_action,
-        (select pa.description from
-        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId} ) as start_description,
+        pa.description as start_description,
         p.end_action,
-        (select pan.description from
-        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_description,
-        (select pa.bean_id from
-        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId}) as start_bean_id,
-        (select pan.bean_id from
-        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_bean_id,
-        (select pa.script from
-        o2md_pipeline_action pa where p.start_action = pa.id and pa.tenant_id = #{tenantId}) as start_script,
-        (select pan.script from
-        o2md_pipeline_action pan where p.end_action = pan.id and pan.tenant_id = #{tenantId}) as end_script,
+        pan.description as end_description,
+        pa.bean_id as start_bean_id,
+        pan.bean_id as end_bean_id,
+        pa.script as start_script,
+        pan.script as end_script,
         p.description,
         p.active_flag,
         p.OBJECT_VERSION_NUMBER,
@@ -48,7 +42,9 @@
         p.LAST_UPDATED_BY,
         p.LAST_UPDATE_DATE
         FROM
-        o2md_pipeline p
+        o2_metadata.o2md_pipeline p
+        left join  o2_metadata.o2md_pipeline_action pa on p.start_action = pa.id and pa.tenant_id = #{tenantId}
+        left join  o2_metadata.o2md_pipeline_action pan on p.end_action = pan.id and pan.tenant_id = #{tenantId}
         <where>
             p.tenant_id = #{tenantId}
             <if test="id != null">
@@ -58,13 +54,13 @@
                 <bind name="codeLike" value="'%' + code + '%'"/>
                 and p.code like #{codeLike}
             </if>
-            <if test="startAction != null and startAction != ''">
-                <bind name="startActionLike" value="'%' + startAction + '%'"/>
-                and p.start_action like #{startActionLike}
+            <if test="startDescription != null and startDescription != ''">
+                <bind name="startActionLike" value="'%' + startDescription + '%'"/>
+                and pa.description like #{startActionLike}
             </if>
-            <if test="endAction != null and endAction != ''">
-                <bind name="endActionLike" value="'%' + endAction + '%'"/>
-                and p.end_action like #{endActionLike}
+            <if test="endDescription != null and endDescription != ''">
+                <bind name="endActionLike" value="'%' + endDescription + '%'"/>
+                and pan.description like #{endActionLike}
             </if>
         </where>
         ORDER BY CREATION_DATE

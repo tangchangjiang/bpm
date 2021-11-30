@@ -69,7 +69,7 @@
                 <bind name="descriptionLike" value="'%'+description+'%'"/>
                 AND o2epa.description like #{descriptionLike}
             </if>
-            <if test="statusFlag != null and statusFlag !='' ">
+            <if test="statusFlag != null">
                 AND o2epa.status_flag = #{statusFlag}
             </if>
             <if test="serviceCode != null and serviceCode !='' ">
