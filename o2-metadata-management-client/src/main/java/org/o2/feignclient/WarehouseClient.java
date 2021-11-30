@@ -71,10 +71,9 @@ public class WarehouseClient {
     }
 
     /**
-     * 重置仓库快递配送接单量值
+     * 查询可发货仓库(内部调用)
      *
      * @param organizationId 租户ID
-     * @param warehouseCode  仓库编码
      */
     public List<WarehouseRelAddressCO> listAllDeliveryWarehouse(final Long organizationId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listAllDeliveryWarehouse(organizationId), new TypeReference<List<WarehouseRelAddressCO>>() {
