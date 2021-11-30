@@ -69,6 +69,19 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     @Override
     public List<RegionTreeChildVO> findAddressMappingGroupByCondition(final AddressMappingQueryDTO addressMappingQueryDTO, final String countryCode) {
         checkData(addressMappingQueryDTO,countryCode);
+        // 更据名称查询地区
+        if (StringUtils.isNotEmpty(addressMappingQueryDTO.getRegionName())) {
+            RegionQueryLovInnerDTO name = new RegionQueryLovInnerDTO();
+            name.setRegionName(addressMappingQueryDTO.getRegionName());
+            name.setTenantId(addressMappingQueryDTO.getTenantId());
+            List<Region> nameList = regionRepository.listRegionLov(name, addressMappingQueryDTO.getTenantId());
+            List<String> nameCodes = new ArrayList<>();
+            for (Region region : nameList) {
+                nameCodes.add(region.getRegionCode());
+            }
+            addressMappingQueryDTO.setRegionCodes(nameCodes);
+        }
+
         List<RegionTreeChild> regionTreeChildList = addressMappingMapper.findAddressMappingByCondition(addressMappingQueryDTO, countryCode);
         if (null == regionTreeChildList || regionTreeChildList.isEmpty()) {
             return new ArrayList<>();

@@ -45,6 +45,12 @@
         <if test="addressMapping.externalName!=null and addressMapping.externalName!=''">
             AND ad.external_name LIKE concat('%',concat(#{addressMapping.externalName}),'%')
         </if>
+        <if test="addressMapping.regionCodes != null and addressMapping.regionCodes.size > 0" >
+            and ad.region_code IN
+            <foreach collection="addressMapping.regionCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
     </select>
 
     <!--更据catalogCode和regionId查询地址匹配数量-->

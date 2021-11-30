@@ -50,7 +50,7 @@ public class PosAddressCO {
     @ApiModelProperty(value = "手机号")
     private String mobilePhone;
 
-    @ApiModelProperty("经度")
+    @ApiModelProperty("手机号")
     private BigDecimal longitude;
 
     @ApiModelProperty("纬度")

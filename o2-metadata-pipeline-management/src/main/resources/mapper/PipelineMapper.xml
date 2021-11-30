@@ -60,11 +60,11 @@
             </if>
             <if test="startAction != null and startAction != ''">
                 <bind name="startActionLike" value="'%' + startAction + '%'"/>
-                and p.start_action like #{startActionLike}
+                and p.start_description like #{startActionLike}
             </if>
             <if test="endAction != null and endAction != ''">
                 <bind name="endActionLike" value="'%' + endAction + '%'"/>
-                and p.end_action like #{endActionLike}
+                and p.end_description like #{endActionLike}
             </if>
         </where>
         ORDER BY CREATION_DATE
