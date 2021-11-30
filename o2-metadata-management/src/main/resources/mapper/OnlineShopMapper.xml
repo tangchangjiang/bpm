@@ -65,7 +65,7 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId} and ost.tenant_id = #{tenantId} and ocvt.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
@@ -163,14 +163,15 @@
         os.platform_shop_code,
         ost.online_shop_name,
         os.active_flag,
-        plat.platform_name
+        platl.platform_name
         from o2md_online_shop os
-        inner join  o2md_platform plat on plat.platform_code = os.platform_code
-        left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang}
+        inner join  o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = #{tenantId}
+        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang}  and platl.tenant_id = #{tenantId}
+        left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang} and ost.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId} and plat.tenant_id = #{tenantId}
+                    AND os.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
@@ -210,7 +211,7 @@
         ocvt.catalog_version_name,
         online.active_flag,
         online.platform_code,
-        plat.platform_name,
+        platl.platform_name,
         online.platform_shop_code,
         online.picked_up_flag,
         online.returned_flag,
@@ -221,10 +222,11 @@
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
         inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id = #{tenantId}
-        left join  o2md_platform plat on plat.platform_code = online.platform_code
-        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang}
-        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang}
-        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang = #{lang}
+        left join  o2md_platform plat on plat.platform_code = online.platform_code and plat.tenant_id = #{tenantId}
+        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang}  and platl.tenant_id = #{tenantId}
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
+        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang}  and oct.tenant_id = #{tenantId}
+        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang = #{lang} and ocvt.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -267,7 +269,7 @@
         online.catalog_version_code,
         online.active_flag
         from o2md_online_shop online
-        inner join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id  and tl.tenant_id = #{tenantId} AND tl.lang =#{lang}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -287,7 +289,6 @@
                     #{item.catalogVersionCode}
                 </foreach>
             </if>
-            AND tl.lang =#{lang}
         </where>
     </select>
 </mapper>

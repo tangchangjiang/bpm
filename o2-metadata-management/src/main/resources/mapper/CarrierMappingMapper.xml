@@ -28,7 +28,6 @@
         cm.platform_code,
         oct.carrier_name,
         c.carrier_code,
-        oct.carrier_name,
         cm.platform_carrier_code,
         cm.platform_carrier_Name,
         cm.object_version_number,
@@ -41,8 +40,8 @@
         o2md_carrier c
         JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
         JOIN O2md_platform plat on plat.platform_code = cm.platform_code and plat.tenant_id = #{tenantId}
-        left join O2md_platform_tl ptl on ptl.platform_id = plat.platform_id and ptl.lang = #{lang}
-        left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang}
+        left join O2md_platform_tl ptl on ptl.platform_id = plat.platform_id and ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
+        left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang} and oct.tenant_id = #{tenantId}
         where 1 = 1
         <choose>
             <when test="tenantId != null">
@@ -76,8 +75,8 @@
                tl.carrier_name,
                cm.platform_carrier_name
         FROM o2md_carrier_mapping cm
-        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
-        JOIN o2md_carrier_tl tl on tl.carrier_id=c.carrier_id AND tl.lang =  #{lang}
+        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND c.tenant_id = #{tenantId}
+        left JOIN o2md_carrier_tl tl on tl.carrier_id=c.carrier_id AND tl.lang =  #{lang} and tl.tenant_id = #{tenantId}
         where 1 = 1
         <choose>
             <when test="tenantId != null">

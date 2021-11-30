@@ -36,5 +36,5 @@ public interface PosRelCarrierMapper extends BaseMapper<PosRelCarrier> {
      * @param defaultFlag defaultFlag
      * @return 更新条数
      */
-    int updateIsDefault(@Param("relId") Long relId, @Param("posId") Long posId, @Param("defaultFlag") Integer defaultFlag);
+    int updateIsDefault(@Param("relId") Long relId, @Param("posId") Long posId, @Param("defaultFlag") Integer defaultFlag, @Param("tenantId")Long tenantId);
 }

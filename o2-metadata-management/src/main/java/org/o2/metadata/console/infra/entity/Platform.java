@@ -68,6 +68,7 @@ public class Platform extends AuditDomain {
     private Integer activeFlag;
     @ApiModelProperty(value = "租户id", required = true)
     @NotNull
+    @MultiLanguageField
     private Long tenantId;
 
 	//

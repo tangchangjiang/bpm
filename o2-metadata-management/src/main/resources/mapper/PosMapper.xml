@@ -43,7 +43,7 @@
         address.street_name,
         pos.business_type_code
         from o2md_pos pos
-        left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang}
+        left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang} and post.tenant_id = #{tenantId}
         left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
 
         where 1=1
@@ -83,12 +83,14 @@
     </select>
 
     <select id="listUnbindPosList" resultMap="BaseResultMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         p.pos_id,
         p.pos_code,
         p.pos_name,
         p.pos_type_code
         from o2md_pos p
+        left join o2md_pos_tl tl on tl.pos_id = p.pos_id and tl.tenant_id = #{tenantId} and tl.lang = #{lang}
         where not exists(
         select 1 from o2md_online_shop_rel_pos srp where srp.pos_id = p.pos_id and srp.online_shop_id = #{onlineShopId}
         and srp.tenant_id = #{tenantId}
@@ -112,10 +114,11 @@
         order by p.pos_code
     </select>
     <select id="getPosWithCarrierNameById" resultMap="BaseResultMap">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         p.pos_id,
         p.pos_code,
-        p.pos_name,
+        tl.pos_name,
         p.pos_status_code,
         p.pos_type_code,
         p.business_type_code,
@@ -131,6 +134,7 @@
         p.notice
         FROM
         o2md_pos p
+        left join o2md_pos_tl tl on tl.pos_id = p.pos_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         where p.pos_id = #{posId}
         <choose>
             <when test="tenantId != null">
@@ -148,7 +152,7 @@
         p.tenant_id,
         p.pos_id,
         p.pos_code,
-        p.pos_name,
+        ptl.pos_name,
         p.pos_type_code,
         p.OBJECT_VERSION_NUMBER,
         p.CREATION_DATE,
@@ -157,7 +161,7 @@
         p.LAST_UPDATE_DATE
         FROM
         o2md_pos p
-        LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang}
+        LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
         <where>
             <if test="posCode != null and posCode != ''">
                 <bind name="posCodeLike" value="'%' + posCode + '%'"/>

@@ -30,7 +30,7 @@
                     AND osp.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND osp.tenant_id = 0
+                    AND 1=0
                 </otherwise>
             </choose>
         </where>
@@ -39,8 +39,7 @@
         SELECT ospv.param_value
         FROM
         o2md_system_param_value ospv
-        JOIN o2md_system_parameter osp
-        ON ospv.param_id = osp.param_id
+        JOIN o2md_system_parameter osp ON ospv.param_id = osp.param_id and  osp.tenant_id = #{tenantId}
         <where>
             <if test="paramCode != null and paramCode != ''">
             AND osp.param_code = #{paramCode}
@@ -50,7 +49,7 @@
                     AND ospv.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
-                    AND ospv.tenant_id = 0
+                    AND 1 = 0
                 </otherwise>
             </choose>
         </where>
@@ -59,8 +58,7 @@
         SELECT ospv.param_value
         FROM
         o2md_system_param_value ospv
-        JOIN o2md_system_parameter osp
-        ON ospv.param_id = osp.param_id
+        JOIN o2md_system_parameter osp ON ospv.param_id = osp.param_id osp.tenant_id = #{tenantId}
         <where>
             <if test="paramCode != null and paramCode != ''">
                 AND osp.param_code = #{paramCode}

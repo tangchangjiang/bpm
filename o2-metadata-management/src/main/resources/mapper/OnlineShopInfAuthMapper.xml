@@ -20,11 +20,12 @@
     </resultMap>
     <select id="listOnlineShopInfAuthByOption" parameterType="org.o2.metadata.console.infra.entity.OnlineShopInfAuth"
             resultType="org.o2.metadata.console.infra.entity.OnlineShopInfAuth">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         ia.online_shop_inf_auth_id as onlineShopInfAuthId,
         ia.online_shop_id as onlineShopId,
         ia.online_shop_code as onlineShopCode,
-        os.online_shop_name as onlineShopName,
+        tl.online_shop_name as onlineShopName,
         ia.app_url as appUrl,
         ia.app_key as appKey,
         ia.app_secret as appSecret,
@@ -33,6 +34,7 @@
         ia.object_version_number
         FROM o2md_online_shop_inf_auth ia
         JOIN o2md_online_shop os ON os.online_shop_id = ia.online_shop_id and os.tenant_id = #{tenantId}
+        left JOIN o2md_online_shop_tl tl on tl.online_shop_id= os.online_shop_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         WHERE 1=1
         <choose>
             <when test="tenantId != null">

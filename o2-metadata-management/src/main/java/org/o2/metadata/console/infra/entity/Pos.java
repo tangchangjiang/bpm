@@ -161,6 +161,7 @@ public class Pos extends AuditDomain {
     private Long carrierId;
 
     @ApiModelProperty(value = "组织ID", hidden = true)
+    @MultiLanguageField
     private Long tenantId;
 
 
