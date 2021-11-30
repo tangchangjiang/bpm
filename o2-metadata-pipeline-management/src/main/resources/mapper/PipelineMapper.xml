@@ -58,12 +58,12 @@
                 <bind name="codeLike" value="'%' + code + '%'"/>
                 and p.code like #{codeLike}
             </if>
-            <if test="startAction != null and startAction != ''">
-                <bind name="startActionLike" value="'%' + startAction + '%'"/>
+            <if test="startDescription != null and startDescription != ''">
+                <bind name="startActionLike" value="'%' + startDescription + '%'"/>
                 and p.start_description like #{startActionLike}
             </if>
-            <if test="endAction != null and endAction != ''">
-                <bind name="endActionLike" value="'%' + endAction + '%'"/>
+            <if test="endDescription != null and endDescription != ''">
+                <bind name="endActionLike" value="'%' + endDescription + '%'"/>
                 and p.end_description like #{endActionLike}
             </if>
         </where>
