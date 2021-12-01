@@ -6,9 +6,7 @@ import org.o2.feignclient.metadata.infra.constants.O2Service;
 import org.o2.feignclient.metadata.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -118,9 +116,9 @@ public interface LovAdapterRemoteService {
      * @param organizationId 租户ID
      * @return 值集集合
      */
-    @GetMapping("/{organizationId}/lov-internal/query-region-lov")
+    @PostMapping("/{organizationId}/lov-internal/query-region-lov")
     ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                       RegionQueryLovInnerDTO innerDTO);
+                                       @RequestBody RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
@@ -130,10 +128,10 @@ public interface LovAdapterRemoteService {
      * @param innerDTO 查询参数
      * @return page
      */
-    @GetMapping("/{organizationId}/lov-internal/page-query-region-lov")
+    @PostMapping("/{organizationId}/lov-internal/page-query-region-lov")
     ResponseEntity<String> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam Integer page,
                                            @RequestParam Integer size,
-                                           RegionQueryLovInnerDTO innerDTO);
+                                           @RequestBody RegionQueryLovInnerDTO innerDTO);
 
 }

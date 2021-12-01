@@ -98,18 +98,18 @@ public class LovAdapterInternalController {
 
     @ApiOperation(value = "查询地区值")
     @Permission(permissionWithin= true , level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/query-region-lov")
+    @PostMapping("/query-region-lov")
     public ResponseEntity<List<Region>> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                    RegionQueryLovInnerDTO innerDTO) {
+                                                    @RequestBody RegionQueryLovInnerDTO innerDTO) {
         return Results.success(lovAdapterService.queryRegion(organizationId,innerDTO));
     }
 
     @ApiOperation(value = "分页查询地区值")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/page-query-region-lov")
+    @PostMapping("/page-query-region-lov")
     public ResponseEntity<PageCO<Region>> queryRegionPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                            RegionQueryLovInnerDTO innerDTO,
-                                                            PageRequest pageRequest) {
+                                                          @RequestBody RegionQueryLovInnerDTO innerDTO,
+                                                           PageRequest pageRequest) {
         return Results.success(lovAdapterService.queryRegionPage(organizationId,pageRequest.getPage(),pageRequest.getSize(),innerDTO));
     }
 }

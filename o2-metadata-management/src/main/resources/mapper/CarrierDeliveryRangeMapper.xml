@@ -28,7 +28,7 @@
         FROM
         o2md_carrier_delivery_range rel
         JOIN o2md_carrier c ON rel.carrier_id = c.carrier_id  and c.tenant_id = #{tenantId}
-        left join o2md_carrier_tl tl on  tl.carrier_id = c.carrier_id = and c.tenant_id = #{tenantId} and and tl.lang = #{lang}
+        left join o2md_carrier_tl tl on  tl.carrier_id = c.carrier_id  and c.tenant_id = #{tenantId}  and tl.lang = #{lang}
         <where>
             <choose>
                 <when test="tenantId != null">
