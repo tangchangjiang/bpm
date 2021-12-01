@@ -186,7 +186,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         // 等级路径
         String levelPath = queryLov.getLevelPath();
         if (StringUtils.isNotEmpty(levelPath)) {
-            regionList = regionList.stream().filter(region ->  levelPath.equals(region.getLevelPath())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region ->  region.getLevelPath().startsWith(levelPath)).collect(Collectors.toList());
         }
         return regionList;
     }
