@@ -308,8 +308,6 @@
             w.warehouse_code = #{warehouseCode}
             AND c.active_flag = 1
             AND rel.active_flag = 1
-            AND w.actived_date_from <![CDATA[<]]>= CURRENT_TIMESTAMP
-            AND ((w.actived_date_to <![CDATA[>]]>= CURRENT_TIMESTAMP) OR (w.actived_date_to IS NULL))
             <if test="carrierCode != null and carrierCode != ''">
                 <bind name="carrierCodeLike" value="'%' + carrierCode + '%'"/>
                 AND c.carrier_code LIKE #{carrierCodeLike}
