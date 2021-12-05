@@ -26,8 +26,6 @@ maven_package:
     - dev
     - master
     - prod
-    - test
-    - /^*-SNAPSHOT$/
 
 before_script:
   - |
