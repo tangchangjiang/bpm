@@ -57,7 +57,7 @@
         FROM
         o2md_online_shop os
         inner join o2md_catalog oc on os.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
-        inner join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code
+        inner join o2md_catalog_version ocv on ocv.catalog_version_code = os.catalog_version_code and oc.catalog_id = ocv.catalog_id
         left join o2md_platform pf on pf.platform_code = os.platform_code
         left join o2md_platform_tl pftl on pf.platform_id = pftl.platform_id and  pftl.lang = #{lang} and pftl.tenant_id = #{tenantId}
         left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}  and ost.tenant_id = #{tenantId}
@@ -225,7 +225,7 @@
         online.is_default
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
-        inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id = #{tenantId}
+        inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id = #{tenantId} and  oc.catalog_id = ocv.catalog_id
         left join  o2md_platform plat on plat.platform_code = online.platform_code and plat.tenant_id = #{tenantId}
         left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang}  and platl.tenant_id = #{tenantId}
         left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
