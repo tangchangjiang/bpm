@@ -6,7 +6,6 @@
         <result column="online_shop_rel_pos_id" property="onlineShopRelWarehouseId" jdbcType="DECIMAL"/>
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
-        <result column="business_active_flag" property="businessActiveFlag" jdbcType="DECIMAL"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -21,7 +20,8 @@
         <result column="online_shop_id" property="onlineShopId" jdbcType="DECIMAL"/>
         <result column="warehouse_id" property="warehouseId" jdbcType="DECIMAL"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
-        <result column="business_active_flag" property="businessActiveFlag" jdbcType="DECIMAL"/>
+        <result column="online_shop_active_flag" property="onlineShopActiveFlag" jdbcType="DECIMAL"/>
+        <result column="warehouse_active_flag" property="warehouseActiveFlag" jdbcType="DECIMAL"/>
         <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
         <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
         <result column="warehouse_type_code" property="warehouseTypeCode" jdbcType="VARCHAR"/>
@@ -41,14 +41,16 @@
         wt.warehouse_name,
         w.warehouse_type_code,
         w.warehouse_status_code,
+        w.active_flag as warehouse_active_flag,
         srw.object_version_number,
         srw.online_shop_id,
         srw.active_flag,
-        srw.business_active_flag,
-        srw.online_shop_rel_warehouse_id
+        srw.online_shop_rel_warehouse_id,
+        shop.active_flag as online_shop_active_flag
         FROM
         o2md_warehouse w
         JOIN o2md_shop_rel_warehouse srw ON srw.warehouse_id = w.warehouse_id and srw.tenant_id = #{tenantId}
+        join o2md_online_shop shop on shop.online_shop_id = srw.online_shop_id and shop.tenant_id = #{tenantId}
         left join o2md_warehouse_tl wt on wt.warehouse_id = w.warehouse_id and wt.lang= #{lang}  and wt.tenant_id = #{tenantId}
         WHERE  srw.online_shop_id = #{onlineShopId}
         <choose>
@@ -76,7 +78,6 @@
         w.actived_date_to,
         s.online_shop_code,
         srw.active_flag,
-        srw.business_active_flag,
         srw.tenant_id
         FROM
         o2md_shop_rel_warehouse srw

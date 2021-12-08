@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
@@ -82,4 +83,12 @@ public interface OnlineShopRelWarehouseService {
      */
     Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId);
 
+    /**
+     * 条件查询
+     *
+     * @param onlineShopId 网店 id
+     * @param warehouseVO          服务点查询条件，可为空
+     * @return 查询列表
+     */
+    List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseVO warehouseVO);
 }

@@ -16,6 +16,7 @@ import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
@@ -80,7 +81,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         Set<String> shopCodeSet = new HashSet<>();
         relationships.forEach(relationship -> {
             relationship.setTenantId(organizationId);
-            relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
         });
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
         // 关联查询 网店编码和仓库编码
@@ -114,7 +114,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         Set<String> shopCodeSet = new HashSet<>();
         for (OnlineShopRelWarehouse relationship : relationships) {
             relationship.setTenantId(tenantId);
-            relationship.setBusinessActiveFlag(getIsInvCalculated(relationship));
             OnlineShopRelWarehouse origin = originMap.get(relationship.getOnlineShopRelWarehouseId());
             if (null == origin) {
                 throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
@@ -188,10 +187,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         int oldValue;
         int newValue;
         for (final OnlineShopRelWarehouse relWarehouse : onlineShopRelWarehouseList) {
-            oldValue = relWarehouse.getBusinessActiveFlag();
             newValue = getIsInvCalculated(relWarehouse);
-            if (oldValue != newValue) {
-                relWarehouse.setBusinessActiveFlag(newValue);
+            if (0 != newValue) {
                 toUpdateList.add(relWarehouse);
             }
         }
@@ -223,7 +220,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
         log.info("updateByShop onlineShopId({}), tenantId({}), activeFlag({}), onlineShopRelWarehouses({})",
                 onlineShopId, tenantId, activeFlag, JsonHelper.objectToString(onlineShopRelWarehouses));
-        onlineShopRelWarehouses.forEach(rel -> rel.setBusinessActiveFlag(activeFlag));
 
         String key = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
         Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
@@ -253,6 +249,24 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             result.put(code,listOnlineShopRelWarehouses(code,tenantId));
         }
         return result;
+    }
+
+    @Override
+    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseVO warehouseVO) {
+        List<OnlineShopRelWarehouseVO> list = onlineShopRelWarehouseRepository.listShopPosRelsByOption(onlineShopId,warehouseVO);
+        for (OnlineShopRelWarehouseVO vo : list) {
+            int relActiveFlag = vo.getActiveFlag();
+            int warehouseActiveFlag = vo.getWarehouseActiveFlag();
+            int onlineActiveFlag = vo.getOnlineShopActiveFlag();
+            boolean flag = Objects.equals(relActiveFlag, BaseConstants.Flag.YES) && Objects.equals(warehouseActiveFlag, BaseConstants.Flag.YES)
+                    && Objects.equals(onlineActiveFlag, BaseConstants.Flag.YES);
+            if (flag) {
+                vo.setBusinessActiveFlag(1);
+            } else {
+                vo.setBusinessActiveFlag(0);
+            }
+        }
+        return list;
     }
 
     private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {

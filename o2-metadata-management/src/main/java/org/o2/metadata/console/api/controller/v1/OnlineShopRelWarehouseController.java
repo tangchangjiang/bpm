@@ -95,7 +95,7 @@ public class OnlineShopRelWarehouseController extends BaseController {
                                @ApiIgnore final PageRequest pageRequest) {
         onlineShopRelWarehouseVO.setTenantId(organizationId);
         final Page<OnlineShopRelWarehouseVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> relationshipRepository.listShopPosRelsByOption(onlineShopId, onlineShopRelWarehouseVO));
+                () -> onlineShopRelWarehouseService.listShopPosRelsByOption(onlineShopId, onlineShopRelWarehouseVO));
         return Results.success(list);
     }
 
