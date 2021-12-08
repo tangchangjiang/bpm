@@ -3,6 +3,7 @@ package org.o2.metadata.console.api.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.SecurityToken;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -15,6 +16,7 @@ import java.util.Date;
  *
  * @author yuying.shi@hand-china.com 2020-03-02
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("网店关联仓库")
 @Data
 public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
@@ -42,6 +44,24 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
 
     @ApiModelProperty(value = "网店编码")
     private String onlineShopCode;
+
+    /**
+     * 网店是否启用
+     */
+    @ApiModelProperty(value = "网店是否启用")
+    private Integer onlineShopActiveFlag;
+
+    /**
+     * 仓库是否启用
+     */
+    @ApiModelProperty(value = "仓库是否启用")
+    private Integer warehouseActiveFlag;
+
+    /**
+     *  是否业务有效（寻源，库存计算 判断关联关系
+     */
+    @ApiModelProperty(value = "是否业务有效（寻源，库存计算 判断关联关系）")
+    private Integer businessActiveFlag;
 
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {

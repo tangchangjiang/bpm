@@ -38,7 +38,6 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     public static final String FIELD_POS_ID = "posId";
     public static final String FIELD_WAREHOUSE_ID = "warehouseId";
     public static final String FIELD_ACTIVE_FLAG = "activeFlag";
-    public static final String FIELD_BUSINESS_ACTIVE_FLAG = "businessActiveFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
 
     //
@@ -63,14 +62,7 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @Max(1)
     @Min(0)
     private Integer activeFlag;
-
-    @ApiModelProperty("是否业务有效（寻源，库存计算 判断关联关系）")
-    @NotNull
-    @Max(1)
-    @Min(0)
-    private Integer businessActiveFlag;
-
-
+    
     @ApiModelProperty(value = "租户ID")
     @NotNull
     private Long tenantId;

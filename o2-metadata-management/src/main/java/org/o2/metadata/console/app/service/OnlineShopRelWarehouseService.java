@@ -1,7 +1,9 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseDTO;
 import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
+import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
@@ -41,32 +43,6 @@ public interface OnlineShopRelWarehouseService {
      */
     List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long organizationId, List<OnlineShopRelWarehouse> relationships);
 
-
-    /**
-     * 重新设置'是否计算库存'字段
-     * <p>
-     * 满足以下条件，设置为1
-     * 1.网店关联POS有效
-     * 2.网店有效
-     * 3.POS状态为正常
-     * 4.如果POS为门店，需要满足POS可快递发货且接单量未达到上限
-     * </p>
-     *
-     * @param onlineShopCode 网店
-     * @param warehouseCode  仓库
-     * @param tenantId      租户ID
-     * @return 更新后的列表
-     */
-    List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId);
-    /**
-     * 更新网店
-     * @param onlineShopId 网店ID
-     * @param onlineShopCode 网店编码
-     * @param activeFlag 是否有效
-     * @param tenantId 租户ID
-     */
-    void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId);
-
     /**
      * 查询网店关联有效仓库
      * @param onlineShopCode 网店编码
@@ -82,4 +58,12 @@ public interface OnlineShopRelWarehouseService {
      */
     Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId);
 
+    /**
+     * 条件查询
+     *
+     * @param onlineShopId 网店 id
+     * @param onlineShopRelWarehouseDTO          服务点查询条件，可为空
+     * @return 查询列表
+     */
+    List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO);
 }
