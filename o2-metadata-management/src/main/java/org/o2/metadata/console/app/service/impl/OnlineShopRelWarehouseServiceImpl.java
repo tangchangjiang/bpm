@@ -1,20 +1,13 @@
 package org.o2.metadata.console.app.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.hzero.core.base.BaseConstants.Flag;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
-import org.o2.core.helper.JsonHelper;
-import org.o2.data.redis.client.RedisCacheClient;
-
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseDTO;
 import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
@@ -23,11 +16,7 @@ import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
-import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -43,29 +32,17 @@ import java.util.*;
 @Slf4j
 @Service
 public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouseService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OnlineShopRelWarehouseServiceImpl.class);
-
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
-    private final OnlineShopRepository onlineShopRepository;
-    private final WarehouseRepository warehouseRepository;
-    private O2InventoryClient o2InventoryClient;
-    private RedisCacheClient redisCacheClient;
+    private final O2InventoryClient o2InventoryClient;
     private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
     private final OnlineShopRedis onlineShopRedis;
 
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
-                                             OnlineShopRepository onlineShopRepository,
-                                             WarehouseRepository warehouseRepository,
                                              O2InventoryClient o2InventoryClient,
-                                             RedisCacheClient redisCacheClient,
                                              OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
                                              OnlineShopRedis onlineShopRedis) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
-        this.onlineShopRepository = onlineShopRepository;
-        this.warehouseRepository = warehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
-        this.redisCacheClient = redisCacheClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
         this.onlineShopRedis = onlineShopRedis;
     }
@@ -79,9 +56,9 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
         }
         Set<String> shopCodeSet = new HashSet<>();
-        relationships.forEach(relationship -> {
+        for (OnlineShopRelWarehouse relationship : relationships) {
             relationship.setTenantId(organizationId);
-        });
+        }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
         // 关联查询 网店编码和仓库编码
         List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
@@ -138,104 +115,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
-    public List<OnlineShopRelWarehouse> resetIsInvCalculated(final String onlineShopCode, final String warehouseCode, final Long tenantId) {
-        OnlineShop onlineShop = null;
-        Warehouse warehouse = null;
-
-        //分别获取OnlineShop和Pos
-        if (StringUtils.isNotEmpty(onlineShopCode)) {
-            OnlineShop shop = new OnlineShop();
-            shop.setTenantId(tenantId);
-            shop.setOnlineShopCode(onlineShopCode);
-            final List<OnlineShop> list = onlineShopRepository.select(shop);
-            if (list.size() == 1) {
-                onlineShop = list.get(0);
-            }
-        }
-
-        if (StringUtils.isNotEmpty(warehouseCode)) {
-            Warehouse provisional = new Warehouse();
-            provisional.setTenantId(tenantId);
-            provisional.setWarehouseCode(warehouseCode);
-            final List<Warehouse> list = warehouseRepository.select(provisional);
-            if (list.size() == 1) {
-                warehouse = list.get(0);
-            }
-        }
-
-        if (onlineShop == null && warehouse == null) {
-            LOG.error("onlineShop 和 warehouse 有且仅能传一个值");
-            return Collections.emptyList();
-        } else if (onlineShop != null && warehouse != null) {
-            LOG.error("onlineShop 和 pos 有且仅能传一个值");
-            return Collections.emptyList();
-        }
-
-        //查询对应的onlineShopRelPos
-        final OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
-        if (onlineShop != null) {
-            onlineShopRelWarehouse.setOnlineShopId(onlineShop.getOnlineShopId());
-        }
-        if (warehouse != null) {
-            onlineShopRelWarehouse.setWarehouseId(warehouse.getWarehouseId());
-        }
-
-        //进行更新数据
-        final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList = onlineShopRelWarehouseRepository.select(onlineShopRelWarehouse);
-        final List<OnlineShopRelWarehouse> toUpdateList = new ArrayList<>(onlineShopRelWarehouseList.size());
-
-        int oldValue;
-        int newValue;
-        for (final OnlineShopRelWarehouse relWarehouse : onlineShopRelWarehouseList) {
-            newValue = getIsInvCalculated(relWarehouse);
-            if (0 != newValue) {
-                toUpdateList.add(relWarehouse);
-            }
-        }
-        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(toUpdateList);
-
-        //触发网店计算库存
-        if (onlineShop != null) {
-
-        } else {
-            final Set<String> toUpdateCodeSet = new HashSet<>(toUpdateList.size());
-            OnlineShop shop;
-            for (final OnlineShopRelWarehouse o : toUpdateList) {
-                shop = onlineShopRepository.selectByPrimaryKey(o.getOnlineShopId());
-                if (shop != null) {
-                    toUpdateCodeSet.add(shop.getOnlineShopCode());
-                }
-            }
-        }
-        return onlineShopRelWarehouseList;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateByShop(Long onlineShopId, String onlineShopCode, Integer activeFlag, Long tenantId) {
-        List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByCondition(
-                Condition.builder(OnlineShopRelWarehouse.class).andWhere(Sqls.custom()
-                        .andEqualTo(OnlineShopRelWarehouse.FIELD_TENANT_ID, tenantId)
-                        .andEqualTo(OnlineShopRelWarehouse.FIELD_ONLINE_SHOP_ID, onlineShopId)).build());
-
-        log.info("updateByShop onlineShopId({}), tenantId({}), activeFlag({}), onlineShopRelWarehouses({})",
-                onlineShopId, tenantId, activeFlag, JsonHelper.objectToString(onlineShopRelWarehouses));
-
-        String key = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
-        Map<Object, Object> map = redisCacheClient.opsForHash().entries(key);
-        log.info("updateByShop key({}), hashKeySet({})", key, JSON.toJSONString(map.keySet()));
-        if (map.isEmpty()) {
-            return;
-        }
-        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(onlineShopRelWarehouses);
-        String activeFlagStr = String.valueOf(activeFlag);
-        Map<Object, String> m = new HashMap<>(2);
-        map.keySet().forEach(hashKey -> m.put(hashKey, activeFlagStr));
-        log.info("updateByShop key({}), m hashKeySet({}), value({})", key, JSON.toJSONString(m.keySet()), JSON.toJSONString(m.values()));
-        redisCacheClient.opsForHash().putAll(key, m);
-    }
-
-    @Override
     public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return OnlineShopRelWarehouseConverter.doToCoListObjects(onlineShopRelWarehouseDomainRepository.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
     }
@@ -252,8 +131,8 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
-    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseVO warehouseVO) {
-        List<OnlineShopRelWarehouseVO> list = onlineShopRelWarehouseRepository.listShopPosRelsByOption(onlineShopId,warehouseVO);
+    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO) {
+        List<OnlineShopRelWarehouseVO> list = onlineShopRelWarehouseRepository.listShopPosRelsByOption(onlineShopId,onlineShopRelWarehouseDTO);
         for (OnlineShopRelWarehouseVO vo : list) {
             int relActiveFlag = vo.getActiveFlag();
             int warehouseActiveFlag = vo.getWarehouseActiveFlag();
@@ -261,46 +140,11 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             boolean flag = Objects.equals(relActiveFlag, BaseConstants.Flag.YES) && Objects.equals(warehouseActiveFlag, BaseConstants.Flag.YES)
                     && Objects.equals(onlineActiveFlag, BaseConstants.Flag.YES);
             if (flag) {
-                vo.setBusinessActiveFlag(1);
+                vo.setBusinessActiveFlag(BaseConstants.Flag.YES);
             } else {
-                vo.setBusinessActiveFlag(0);
+                vo.setBusinessActiveFlag(BaseConstants.Flag.NO);
             }
         }
         return list;
     }
-
-    private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse) {
-        if (onlineShopRelWarehouse == null) {
-            return 0;
-        }
-
-        final OnlineShop onlineShop = onlineShopRepository.selectByPrimaryKey(onlineShopRelWarehouse.getOnlineShopId());
-        final Warehouse warehouse = warehouseRepository.selectByPrimaryKey(onlineShopRelWarehouse.getWarehouseId());
-        return getIsInvCalculated(onlineShopRelWarehouse, onlineShop, warehouse);
-    }
-
-
-    /**
-     * * 满足以下条件，返回1
-     * 1.网店o2md_online_shop.active_flag有效
-     * 2.仓库o2md_warehouse.active_flag有效
-     * 3.网店关联仓库o2md_online_shop_rel_warehouse.active_flag有效
-     * @return 判断结果
-     */
-    private int getIsInvCalculated(final OnlineShopRelWarehouse onlineShopRelWarehouse, final OnlineShop onlineShop, final Warehouse warehouse) {
-        if (onlineShopRelWarehouse == null || Flag.NO.equals(onlineShopRelWarehouse.getActiveFlag())) {
-            return 0;
-        }
-
-        if (onlineShop == null || Flag.NO.equals(onlineShop.getActiveFlag())) {
-            return 0;
-        }
-
-        if (warehouse == null || Flag.NO.equals(warehouse.getActiveFlag())) {
-            return 0;
-        }
-
-        return 1;
-    }
-
 }

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseDTO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
@@ -25,12 +26,12 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
     }
 
     @Override
-    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(final Long onlineShopId, final OnlineShopRelWarehouseVO warehouse) {
+    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(final Long onlineShopId, final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO) {
         Assert.notNull(onlineShopId, "online shop id could not be null");
-        final Optional<OnlineShopRelWarehouseVO> posOptional = Optional.ofNullable(warehouse);
+        final Optional<OnlineShopRelWarehouseDTO> posOptional = Optional.ofNullable(onlineShopRelWarehouseDTO);
         return onlineShopRelWarehouseMapper.listShopWarehouseRelsByOption(onlineShopId,
-                posOptional.map(OnlineShopRelWarehouseVO::getWarehouseCode).orElse(null),
-                posOptional.map(OnlineShopRelWarehouseVO::getWarehouseName).orElse(null),warehouse.getTenantId());
+                posOptional.map(OnlineShopRelWarehouseDTO::getWarehouseCode).orElse(null),
+                posOptional.map(OnlineShopRelWarehouseDTO::getWarehouseName).orElse(null),onlineShopRelWarehouseDTO.getTenantId());
     }
 
     @Override
