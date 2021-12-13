@@ -26,6 +26,7 @@
         n.source_region_code,
         n.target_region_code,
         n.target_country_code,
+        n.tenant_id,
         n.OBJECT_VERSION_NUMBER
         FROM
         o2md_neighboring_region n
