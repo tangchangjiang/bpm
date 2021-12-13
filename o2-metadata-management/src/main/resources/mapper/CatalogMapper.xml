@@ -51,8 +51,7 @@
         t.catalog_name,
         t.catalog_remarks,
         c.active_flag,
-        c.object_version_number,
-        c.tenantId
+        c.object_version_number
         from o2md_catalog c
         left join o2md_catalog_tl t on c.catalog_id = t.catalog_id and  t.lang =  #{lang} and t.tenant_id = #{tenantId}
         <where>
