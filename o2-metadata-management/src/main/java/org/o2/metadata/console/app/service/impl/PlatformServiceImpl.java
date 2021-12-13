@@ -6,19 +6,19 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
+import org.o2.metadata.console.app.service.PlatformService;
 import org.o2.metadata.console.infra.constant.PlatformConstants;
 import org.o2.metadata.console.infra.convertor.PlatformConverter;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
+import org.springframework.stereotype.Service;
+
 
 import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.o2.metadata.console.app.service.PlatformService;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -50,9 +50,9 @@ public class PlatformServiceImpl implements PlatformService {
         } else {
             Platform original = platformRepository.selectByPrimaryKey(platform);
             if (!original.getPlatformCode().equals(platform.getPlatformCode())) {
-                throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE,PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE);
+                throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE);
             }
-            if (!original.getPlatformName().equals(platform.getPlatformName())){
+            if (!original.getPlatformName().equals(platform.getPlatformName())) {
                 validNameUnique(platform);
             }
             platformRepository.updateOptional(platform,
@@ -68,13 +68,13 @@ public class PlatformServiceImpl implements PlatformService {
 
     @Override
     public Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
-        Map<String,PlatformCO> map = new HashMap<>(16);
+        Map<String, PlatformCO> map = new HashMap<>(16);
         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
         if (list.isEmpty()) {
             return map;
         }
 
-        Map<String,List<PlatformInfoMapping>> groupMap = list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
+        Map<String, List<PlatformInfoMapping>> groupMap = list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
         for (Map.Entry<String, List<PlatformInfoMapping>> entry : groupMap.entrySet()) {
             String k = entry.getKey();
             List<PlatformInfoMapping> value = entry.getValue();
@@ -82,24 +82,32 @@ public class PlatformServiceImpl implements PlatformService {
             co.setPlatformCode(k);
             co.setPlatformName(value.get(0).getPlatformName());
             co.setPlatformInfoMappings(PlatformConverter.poToCoListObjects(value));
-            map.put(k,co);
+            map.put(k, co);
         }
         return map;
     }
+
     private void validNameUnique(Platform platform) {
         // 唯一性校验
-        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_NAME,platform.getPlatformName())).build();
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom()
+                .andEqualTo(Platform.FIELD_PLATFORM_NAME, platform.getPlatformName())
+                .andEqualTo(Platform.FIELD_TENANT_ID, platform.getTenantId())
+        ).build();
         List<Platform> platforms = platformRepository.selectByCondition(condition);
         if (CollectionUtils.isNotEmpty(platforms)) {
-            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE,PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE);
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE);
         }
     }
+
     private void validCodeUnique(Platform platform) {
         // 唯一性校验
-        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom().andEqualTo(Platform.FIELD_PLATFORM_CODE,platform.getPlatformCode())).build();
+        Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom()
+                .andEqualTo(Platform.FIELD_PLATFORM_CODE, platform.getPlatformCode())
+                .andEqualTo(Platform.FIELD_TENANT_ID, platform.getTenantId())
+        ).build();
         List<Platform> platforms = platformRepository.selectByCondition(condition);
         if (CollectionUtils.isNotEmpty(platforms)) {
-            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE,PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE);
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE);
         }
     }
 }
