@@ -167,6 +167,7 @@
         os.platform_shop_code,
         ost.online_shop_name,
         os.active_flag,
+        plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
         inner join  o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = #{tenantId}
