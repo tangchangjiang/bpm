@@ -1,7 +1,9 @@
 package org.o2.metadata.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -14,6 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.metadata.app",
         "org.o2.metadata.infra",
         "org.o2.metadata.domain",
+        "org.o2.metadata.config"
 })
 public class MetadataAutoConfiguration {
 
@@ -24,6 +27,11 @@ public class MetadataAutoConfiguration {
     public MetadataAutoConfiguration(final Docket docket) {
         docket.tags(new Tag(MetadataAutoConfiguration.SYS_PARAMETER_INTERNAL, "系统参数内部接口"))
                 .tags(new Tag(MetadataAutoConfiguration.SYS_WAREHOUSE_INTERNAL, "仓库内部接口"));
+    }
+
+    @Bean
+    public MetadataExtraDataManager metadataExtraDataManager(final Environment environment){
+        return new MetadataExtraDataManager(environment);
     }
 
 
