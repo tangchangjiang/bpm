@@ -347,6 +347,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             regionTreeChild.setRegionId(parentRegion.getRegionId());
             regionTreeChild.setLevelPath(parentRegion.getLevelPath());
             regionTreeChild.setRegionId(parentRegion.getRegionId());
+            regionTreeChild.setTenantId(tenantId);
             result.add(regionTreeChild);
         }
         List<RegionTreeChild> queryList = addressMappingMapper.listAddressMapping(regionCodes,type,tenantId);
@@ -367,6 +368,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             regionTreeChild.setExternalName(queryAddressMapping.getExternalName());
             regionTreeChild.setAddressMappingId(queryAddressMapping.getAddressMappingId());
             regionTreeChild.set_token(queryAddressMapping.get_token());
+            regionTreeChild.setTenantId(tenantId);
         }
         return result.stream().collect(Collectors.groupingBy(RegionTreeChild::getRegionCode));
     }
