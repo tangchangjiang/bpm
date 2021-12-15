@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author miao.chen01@hand-china.com 2021-08-16
  */
-@Component
+@Component(value = "MdAddressTranslationHelper")
 @Slf4j
 public class AddressTranslationHelper {
 
