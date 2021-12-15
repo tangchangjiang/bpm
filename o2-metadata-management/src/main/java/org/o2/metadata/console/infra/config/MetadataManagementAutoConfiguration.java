@@ -5,6 +5,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+
 import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -75,5 +76,4 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         MessageAccessor.addBasenames("classpath:messages/metadata");
     }
-
 }
