@@ -34,6 +34,7 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
 
     private Long regionId;
 
+    private Long tenantId;
 
     @Override
     public boolean equals(Object o) {
