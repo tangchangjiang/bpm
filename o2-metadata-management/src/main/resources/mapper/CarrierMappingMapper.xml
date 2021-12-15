@@ -28,6 +28,7 @@
         cm.platform_code,
         oct.carrier_name,
         c.carrier_code,
+        c.tenant_id,
         cm.platform_carrier_code,
         cm.platform_carrier_Name,
         cm.object_version_number,
