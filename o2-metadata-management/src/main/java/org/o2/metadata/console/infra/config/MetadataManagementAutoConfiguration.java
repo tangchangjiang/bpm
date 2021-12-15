@@ -3,11 +3,8 @@ package org.o2.metadata.console.infra.config;
 import org.hzero.core.message.MessageAccessor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -79,8 +76,4 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
         MessageAccessor.addBasenames("classpath:messages/metadata");
     }
 
-    @Bean
-    public MetadataManagementExtraDataManager metadataManagementExtraDataManager(final Environment environment){
-        return new MetadataManagementExtraDataManager(environment);
-    }
 }
