@@ -45,6 +45,9 @@ public class OnlineShopRelWarehouseVO extends OnlineShopRelWarehouse {
     @ApiModelProperty(value = "网店编码")
     private String onlineShopCode;
 
+    @ApiModelProperty(value = "租户ID")
+    private Long tenantId;
+
     /**
      * 网店是否启用
      */
