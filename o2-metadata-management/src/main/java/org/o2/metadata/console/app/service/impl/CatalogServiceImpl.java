@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 版本应用服务默认实现
@@ -50,7 +51,7 @@ public class CatalogServiceImpl implements CatalogService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Catalog catalog) {
         Catalog original = catalogRepository.selectByPrimaryKey(catalog);
-        if (!original.getCatalogName().equals(catalog.getCatalogName())) {
+        if (!Objects.equals(original.getCatalogName(), catalog.getCatalogName())) {
             validCatalogName(catalog);
         }
         if (!original.getCatalogCode().equals(catalog.getCatalogCode())) {

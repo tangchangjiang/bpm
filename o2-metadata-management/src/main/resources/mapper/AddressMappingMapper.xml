@@ -27,6 +27,7 @@
         ad.external_code,
         ad.external_name,
         ad.active_flag,
+        ad.tenant_id,
         ad.OBJECT_VERSION_NUMBER
         FROM
         o2md_address_mapping ad
@@ -91,6 +92,7 @@
         ad.external_name,
         ad.active_flag,
         ad.region_code,
+        ad.tenant_id,
         ad.OBJECT_VERSION_NUMBER
         FROM
         o2md_address_mapping ad
@@ -117,7 +119,8 @@
         ad.region_code,
         ad.address_type_code,
         ad.external_code,
-        ad.external_name
+        ad.external_name,
+        ad.tenant_id
         FROM
         o2md_address_mapping ad
         WHERE 1=1
