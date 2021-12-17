@@ -62,6 +62,8 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
             // 5. 平台(OW,JD,TM)
             platformDefineTenantInitService.tenantInitialize(tenantId);
 
+            // 6. 目录&目录版本
+
         }
 
     }

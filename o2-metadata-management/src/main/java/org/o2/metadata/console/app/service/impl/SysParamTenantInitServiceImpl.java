@@ -89,15 +89,18 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
         for (SystemParameter platformSysParam : platformSysParams) {
             platformSysParam.setParamId(null);
             platformSysParam.setTenantId(targetTenantId);
-            systemParameterRepository.insert(platformSysParam);
+            // 查询关联表
             final List<SystemParamValue> platformSysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParameter.class)
                     .andWhere(Sqls.custom()
                             .andEqualTo(SystemParamValue.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
                             .andEqualTo(SystemParamValue.FIELD_PARAM_ID, platformSysParam.getParamId()))
                     .build());
+            // 插入，catalog携带插入后主键
+            systemParameterRepository.insert(platformSysParam);
             platformSysParamValues.forEach(platformSysParamValue -> {
                 platformSysParamValue.setValueId(null);
-                platformSysParam.setTenantId(targetTenantId);
+                platformSysParamValue.setParamId(platformSysParam.getParamId());
+                platformSysParamValue.setTenantId(targetTenantId);
             });
             systemParamValueRepository.batchInsert(platformSysParamValues);
         }
