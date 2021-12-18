@@ -30,12 +30,18 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final PlatformDefineTenantInitServiceImpl platformDefineTenantInitService;
 
-    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService, MallLangPromptTenantInitService mallLangPromptTenantInitService, ShopTenantInitService shopTenantInitService, PlatformDefineTenantInitServiceImpl platformDefineTenantInitService) {
+    private final CatalogTenantInitService catalogTenantInitService;
+
+    private final PlatformInfoMapTenantInitService platformInfoMapTenantInitService;
+
+    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService, MallLangPromptTenantInitService mallLangPromptTenantInitService, ShopTenantInitService shopTenantInitService, PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService, PlatformInfoMapTenantInitService platformInfoMapTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
         this.staticResourceTenantInitService = staticResourceTenantInitService;
         this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
         this.shopTenantInitService = shopTenantInitService;
         this.platformDefineTenantInitService = platformDefineTenantInitService;
+        this.catalogTenantInitService = catalogTenantInitService;
+        this.platformInfoMapTenantInitService = platformInfoMapTenantInitService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -63,7 +69,10 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
             platformDefineTenantInitService.tenantInitialize(tenantId);
 
             // 6. 目录&目录版本
+            catalogTenantInitService.tenantInitialize(tenantId);
 
+            // 7. 平台信息匹配
+            platformInfoMapTenantInitService.tenantInitialize(tenantId);
         }
 
     }

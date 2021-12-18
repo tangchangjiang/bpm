@@ -1,4 +1,4 @@
-package org.o2.metadata.console.app.job;
+package org.o2.metadata.pipeline.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -7,7 +7,7 @@ import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
-import org.o2.metadata.console.app.service.MetadataTenantInitService;
+import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 
 
 import java.util.Arrays;
@@ -15,21 +15,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 元数据多租户初始化Job
+ * description
  *
  * @author zhanpeng.jiang@hand-china.com
- * @date 2021/12/17 10:26
+ * @date 2021/12/18 13:04
  */
 @Slf4j
-@JobHandler(value = "metadataTenantInitializeJob")
-public class MetadataTenantInitializeJob implements IJobHandler {
+@JobHandler(value = "pipelineTenantInitializeJob")
+public class PipelineTenantInitializeJob implements IJobHandler {
 
     private static final String TENANT_IDS = "tenantIds";
 
-    private final MetadataTenantInitService metadataTenantInitService;
+    private final PipelineTenantInitService pipelineTenantInitService;
 
-    public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService) {
-        this.metadataTenantInitService = metadataTenantInitService;
+    public PipelineTenantInitializeJob(PipelineTenantInitService pipelineTenantInitService) {
+        this.pipelineTenantInitService = pipelineTenantInitService;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class MetadataTenantInitializeJob implements IJobHandler {
             return ReturnT.FAILURE;
         }
         List<String> tenantList = Arrays.asList(tenantIds.split(BaseConstants.Symbol.COMMA));
-        metadataTenantInitService.tenantInitialize(tenantList);
+        pipelineTenantInitService.tenantInitialize(tenantList);
         return ReturnT.SUCCESS;
     }
 }
