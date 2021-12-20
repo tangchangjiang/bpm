@@ -1,12 +1,12 @@
 package org.o2.metadata.pipeline.app.service;
 
 /**
- * 行为定义租户初始化
+ * description
  *
  * @author zhanpeng.jiang@hand-china.com
- * @date 2021/12/18 13:28
+ * @date 2021/12/20 11:10
  */
-public interface PipelineActionTenantInitService {
+public interface PipelineNodeTenantInitService {
     /**
      * 租户初始化
      *

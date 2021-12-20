@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.PlatformDefineTenantInitService;
@@ -36,7 +35,7 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(Platform.FIELD_TENANT_ID, sourceTenantId)
                         .andIn(Platform.FIELD_PLATFORM_CODE, Arrays.asList("OW", "TM", "JD"))
                 )
                 .build());
