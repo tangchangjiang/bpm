@@ -63,17 +63,20 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
         }
 
         // 流程器缓存同步
-        final List<Pipeline> cachePipelines = pipelineRepository.selectByCondition(Condition.builder(Pipeline.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(Pipeline.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(Pipeline.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
-                .build());
-        final List<PipelineCreatedResultVO> pipelineCreatedResultVOList;
-        try {
-            pipelineCreatedResultVOList = pipelineService.batchMerge(cachePipelines);
-            log.info("cache pipelines for sourceTenantId[{}],results[{}]", sourceTenantId, JsonHelper.objectToString(pipelineCreatedResultVOList));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        tenantList.forEach(targetTenantId -> {
+            final List<Pipeline> cachePipelines = pipelineRepository.selectByCondition(Condition.builder(Pipeline.class)
+                    .andWhere(Sqls.custom()
+                            .andEqualTo(Pipeline.FIELD_TENANT_ID, Long.valueOf(targetTenantId))
+                            .andEqualTo(Pipeline.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
+                    .build());
+            final List<PipelineCreatedResultVO> pipelineCreatedResultVOList;
+            try {
+                pipelineCreatedResultVOList = pipelineService.batchMerge(cachePipelines);
+                log.info("cache pipelines for sourceTenantId[{}],results[{}]", sourceTenantId, JsonHelper.objectToString(pipelineCreatedResultVOList));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        });
+
     }
 }
