@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.CatalogTenantInitService;
@@ -38,12 +37,12 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
     }
 
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeCatalogAndVersion start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）
         final List<Catalog> platformCatalogs = catalogRepository.selectByCondition(Condition.builder(Catalog.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Catalog.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(Catalog.FIELD_TENANT_ID, sourceTenantId)
                         .andIn(Catalog.FIELD_CATALOG_CODE, Arrays.asList("MASTER", "OW")))
                 .build());
 
@@ -83,7 +82,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
             // 查询关联表
             final List<CatalogVersion> catalogVersions = catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
                     .andWhere(Sqls.custom()
-                            .andEqualTo(Catalog.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                            .andEqualTo(Catalog.FIELD_TENANT_ID, sourceTenantId)
                             .andEqualTo(Catalog.FIELD_CATALOG_ID, catalog.getCatalogId()))
                     .build());
 

@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.PlatformInfoMapTenantInitService;
@@ -31,12 +30,12 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
 
 
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePlatformInfoMapping start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）
         final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, "TM")
                 )
                 .build());

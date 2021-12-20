@@ -30,12 +30,12 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
     }
 
     @Override
-    public void tenantInitialize(Long tenantId) {
+    public void tenantInitialize(long sourceTenantId, Long tenantId) {
         log.info("initializePipeline start, tenantId[{}]", tenantId);
         // 1. 查询平台级租户
         final List<Pipeline> platformPipelines = pipelineRepository.selectByCondition(Condition.builder(Pipeline.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Pipeline.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(Pipeline.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(Pipeline.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
 

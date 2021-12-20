@@ -32,7 +32,7 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
     }
 
     @Override
-    public void tenantInitialize(List<String> tenantList) {
+    public void tenantInitialize(long sourceTenantId, List<String> tenantList) {
         if (CollectionUtils.isEmpty(tenantList)) {
             return;
         }
@@ -40,10 +40,10 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
 
         for (Long tenantId : tenantIds) {
             // 1. 初始化流程器
-            pipelineTenantInitCoreService.tenantInitialize(tenantId);
+            pipelineTenantInitCoreService.tenantInitialize(sourceTenantId, tenantId);
 
             // 2. 初始化行为定义
-            pipelineActionTenantInitService.tenantInitialize(tenantId);
+            pipelineActionTenantInitService.tenantInitialize(sourceTenantId, tenantId);
         }
     }
 }

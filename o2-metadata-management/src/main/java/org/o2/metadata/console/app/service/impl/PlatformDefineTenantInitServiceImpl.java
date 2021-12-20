@@ -31,7 +31,7 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
     }
 
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePlatforms start");
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)

@@ -12,7 +12,8 @@ public interface MetadataTenantInitService {
     /**
      * 租户初始化
      *
-     * @param tenantList 目标租户集合
+     * @param sourceTenantId 源租户Id
+     * @param tenantList     目标租户集合
      */
-    void tenantInitialize(List<String> tenantList);
+    void tenantInitialize(long sourceTenantId, List<String> tenantList);
 }

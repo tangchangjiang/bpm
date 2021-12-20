@@ -34,16 +34,17 @@ public class StaticResourceTenantInitServiceImpl implements StaticResourceTenant
     /**
      * 租户初始化
      *
+     * @param sourceTenantId 源租户Id
      * @param targetTenantId 租户Id
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeStaticResourceConfig start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（所有已启用）
         final List<StaticResourceConfig> platformStaticResourceConfigs = staticResourceConfigRepository.selectByCondition(Condition.builder(StaticResourceConfig.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(StaticResourceConfig.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(StaticResourceConfig.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
 

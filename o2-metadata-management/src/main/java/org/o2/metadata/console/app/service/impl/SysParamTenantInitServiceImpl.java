@@ -47,15 +47,16 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
     /**
      * 租户初始化
      *
+     * @param sourceTenantId 源租户Id
      * @param targetTenantId 租户Id
      */
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeSystemParameter start");
         // 1. 查询平台租户（所有已启用）
         final List<SystemParameter> platformSysParams = systemParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(SystemParameter.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
 
@@ -92,7 +93,7 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
             // 查询关联表
             final List<SystemParamValue> platformSysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParameter.class)
                     .andWhere(Sqls.custom()
-                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID)
+                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, sourceTenantId)
                             .andEqualTo(SystemParamValue.FIELD_PARAM_ID, platformSysParam.getParamId()))
                     .build());
             // 插入，catalog携带插入后主键
