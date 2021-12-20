@@ -61,8 +61,8 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
             platform.setPlatformId(null);
             platform.setTenantId(targetTenantId);
         });
-        platformRepository.batchInsert(targetPlatforms);
+        platformRepository.batchInsert(platforms);
 
-        log.info("initializeMallLangPrompt finish, tenantId[{}]", targetTenantId);
+        log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
     }
 }
