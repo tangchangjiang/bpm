@@ -10,7 +10,8 @@ public interface PipelineTenantInitCoreService {
     /**
      * 租户初始化
      *
-     * @param tenantId 租户
+     * @param sourceTenantId
+     * @param tenantId       租户
      */
-    void tenantInitialize(Long tenantId);
+    void tenantInitialize(long sourceTenantId, Long tenantId);
 }

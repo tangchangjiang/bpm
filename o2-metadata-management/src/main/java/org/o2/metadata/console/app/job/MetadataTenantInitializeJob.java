@@ -24,7 +24,9 @@ import java.util.Map;
 @JobHandler(value = "metadataTenantInitializeJob")
 public class MetadataTenantInitializeJob implements IJobHandler {
 
-    private static final String TENANT_IDS = "tenantIds";
+    private static final String TARGET_TENANT_IDS = "targetTenants";
+
+    private static final String SOURCE_TENANT_ID = "sourceTenantId";
 
     private final MetadataTenantInitService metadataTenantInitService;
 
@@ -34,13 +36,15 @@ public class MetadataTenantInitializeJob implements IJobHandler {
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        final String tenantIds = map.get(TENANT_IDS);
-        if (StringUtils.isEmpty(tenantIds)) {
-            tool.error("Parameter [tenantIds] can't be null.Please check job configuration.");
+        final String targetTenants = map.get(TARGET_TENANT_IDS);
+        final String sourceTenantIdStr = map.getOrDefault(SOURCE_TENANT_ID, String.valueOf(BaseConstants.DEFAULT_TENANT_ID));
+        if (StringUtils.isEmpty(targetTenants)) {
+            tool.error("Parameter [targetTenants] can't be null.Please check job configuration.");
             return ReturnT.FAILURE;
         }
-        List<String> tenantList = Arrays.asList(tenantIds.split(BaseConstants.Symbol.COMMA));
-        metadataTenantInitService.tenantInitialize(tenantList);
+        List<String> tenantList = Arrays.asList(targetTenants.split(BaseConstants.Symbol.COMMA));
+        final long sourceTenantId = Long.parseLong(sourceTenantIdStr);
+        metadataTenantInitService.tenantInitialize(sourceTenantId, tenantList);
         return ReturnT.SUCCESS;
     }
 }

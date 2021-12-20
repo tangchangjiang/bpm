@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.MallLangPromptTenantInitService;
@@ -30,12 +29,12 @@ public class MallLangPromptTenantInitServiceImpl implements MallLangPromptTenant
     }
 
     @Override
-    public void tenantInitialize(Long targetTenantId) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeMallLangPrompt start");
         // 1. 查询平台租户（所有已启用）
         final List<MallLangPrompt> platformMallLangPrompts = mallLangPromptRepository.selectByCondition(Condition.builder(MallLangPrompt.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID))
+                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, sourceTenantId))
                 .build());
 
         if (CollectionUtils.isEmpty(platformMallLangPrompts)) {

@@ -46,7 +46,7 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void tenantInitialize(List<String> tenantList) {
+    public void tenantInitialize(long sourceTenantId, List<String> tenantList) {
         if (CollectionUtils.isEmpty(tenantList)) {
             return;
         }
@@ -54,25 +54,25 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         List<Long> tenantIds = tenantList.stream().map(Long::parseLong).collect(Collectors.toList());
         for (Long tenantId : tenantIds) {
             // 1. 系统参数
-            sysParamTenantInitService.tenantInitialize(tenantId);
+            sysParamTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 2. 静态资源配置
-            staticResourceTenantInitService.tenantInitialize(tenantId);
+            staticResourceTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 3. 多语言文件管理
-            mallLangPromptTenantInitService.tenantInitialize(tenantId);
+            mallLangPromptTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 4. 网店(OW-1)
-            shopTenantInitService.tenantInitialize(tenantId);
+            shopTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 5. 平台(OW,JD,TM)
-            platformDefineTenantInitService.tenantInitialize(tenantId);
+            platformDefineTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 6. 目录&目录版本
-            catalogTenantInitService.tenantInitialize(tenantId);
+            catalogTenantInitService.tenantInitialize(sourceTenantId, tenantId);
 
             // 7. 平台信息匹配
-            platformInfoMapTenantInitService.tenantInitialize(tenantId);
+            platformInfoMapTenantInitService.tenantInitialize(sourceTenantId, tenantId);
         }
 
     }

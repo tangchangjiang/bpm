@@ -10,7 +10,8 @@ public interface MallLangPromptTenantInitService {
     /**
      * 租户初始化
      *
+     * @param sourceTenantId
      * @param targetTenantId 租户Id
      */
-    void tenantInitialize(Long targetTenantId);
+    void tenantInitialize(long sourceTenantId, Long targetTenantId);
 }

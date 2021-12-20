@@ -2,7 +2,6 @@ package org.o2.metadata.pipeline.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.pipeline.app.service.PipelineActionTenantInitService;
@@ -31,12 +30,12 @@ public class PipelineActionTenantInitServiceImpl implements PipelineActionTenant
 
 
     @Override
-    public void tenantInitialize(Long tenantId) {
+    public void tenantInitialize(long sourceTenantId, Long tenantId) {
         log.info("initializePipelineAction start, tenantId[{}]", tenantId);
         // 1. 查询平台级租户
         final List<PipelineAction> platformPipelineActions = pipelineActionRepository.selectByCondition(Condition.builder(PipelineAction.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(PipelineAction.FIELD_TENANT_ID, BaseConstants.DEFAULT_TENANT_ID))
+                        .andEqualTo(PipelineAction.FIELD_TENANT_ID, sourceTenantId))
                 .build());
 
         if (CollectionUtils.isEmpty(platformPipelineActions)) {

@@ -11,7 +11,8 @@ public interface ShopTenantInitService {
     /**
      * 租户初始化
      *
+     * @param sourceTenantId 源租户Id
      * @param targetTenantId 租户Id
      */
-    void tenantInitialize(Long targetTenantId);
+    void tenantInitialize(long sourceTenantId, Long targetTenantId);
 }
