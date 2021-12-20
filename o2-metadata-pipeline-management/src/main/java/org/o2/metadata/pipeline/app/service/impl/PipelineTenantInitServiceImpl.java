@@ -3,6 +3,7 @@ package org.o2.metadata.pipeline.app.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.o2.metadata.pipeline.app.service.PipelineActionTenantInitService;
+import org.o2.metadata.pipeline.app.service.PipelineNodeTenantInitService;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitCoreService;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,12 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
 
     private final PipelineActionTenantInitService pipelineActionTenantInitService;
 
+    private final PipelineNodeTenantInitService pipelineNodeTenantInitService;
 
-    public PipelineTenantInitServiceImpl(PipelineTenantInitCoreService pipelineTenantInitCoreService, PipelineActionTenantInitService pipelineActionTenantInitService) {
+    public PipelineTenantInitServiceImpl(PipelineTenantInitCoreService pipelineTenantInitCoreService, PipelineActionTenantInitService pipelineActionTenantInitService, PipelineNodeTenantInitService pipelineNodeTenantInitService) {
         this.pipelineTenantInitCoreService = pipelineTenantInitCoreService;
         this.pipelineActionTenantInitService = pipelineActionTenantInitService;
+        this.pipelineNodeTenantInitService = pipelineNodeTenantInitService;
     }
 
     @Override
@@ -44,6 +47,9 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
 
             // 2. 初始化行为定义
             pipelineActionTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+
+            // 3. 初始化流程器节点
+            pipelineNodeTenantInitService.tenantInitialize(sourceTenantId, tenantId);
         }
     }
 }
