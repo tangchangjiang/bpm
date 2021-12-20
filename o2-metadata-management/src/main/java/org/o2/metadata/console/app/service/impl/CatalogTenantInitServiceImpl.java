@@ -76,9 +76,6 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
 
         // 3. 插入平台数据到目标租户
         platformCatalogs.forEach(catalog -> {
-            catalog.setCatalogId(null);
-            catalog.setTenantId(targetTenantId);
-
             // 查询关联表
             final List<CatalogVersion> catalogVersions = catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
                     .andWhere(Sqls.custom()
@@ -87,6 +84,8 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
                     .build());
 
             // 插入，catalog携带插入后主键
+            catalog.setCatalogId(null);
+            catalog.setTenantId(targetTenantId);
             catalogRepository.insert(catalog);
 
             catalogVersions.forEach(catalogVersion -> {
@@ -97,5 +96,6 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
 
             catalogVersionRepository.batchInsert(catalogVersions);
         });
+        log.info("initializeCatalogAndVersion finish, tenantId[{}]", targetTenantId);
     }
 }

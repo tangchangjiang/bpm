@@ -88,16 +88,18 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
         }
         // 3. 插入平台数据到目标租户
         for (SystemParameter platformSysParam : platformSysParams) {
-            platformSysParam.setParamId(null);
-            platformSysParam.setTenantId(targetTenantId);
             // 查询关联表
             final List<SystemParamValue> platformSysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParameter.class)
                     .andWhere(Sqls.custom()
                             .andEqualTo(SystemParamValue.FIELD_TENANT_ID, sourceTenantId)
                             .andEqualTo(SystemParamValue.FIELD_PARAM_ID, platformSysParam.getParamId()))
                     .build());
-            // 插入，catalog携带插入后主键
+
+            // 插入后，携带插入后主键
+            platformSysParam.setParamId(null);
+            platformSysParam.setTenantId(targetTenantId);
             systemParameterRepository.insert(platformSysParam);
+
             platformSysParamValues.forEach(platformSysParamValue -> {
                 platformSysParamValue.setValueId(null);
                 platformSysParamValue.setParamId(platformSysParam.getParamId());
