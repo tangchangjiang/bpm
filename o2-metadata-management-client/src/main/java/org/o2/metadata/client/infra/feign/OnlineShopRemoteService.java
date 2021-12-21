@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiParam;
 import org.o2.metadata.client.domain.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.client.domain.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.client.domain.dto.OnlineShopRelWarehouseInnerDTO;
-import org.o2.metadata.client.infra.constants.O2Service;
+import org.o2.core.common.O2Service;
 import org.o2.metadata.client.infra.feign.fallback.OnlineShopRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
