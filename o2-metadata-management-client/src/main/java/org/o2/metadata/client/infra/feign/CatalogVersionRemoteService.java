@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author yipeng.zhu@hand-china.com 2021-07-30
  **/
 @FeignClient(
-        value = O2Service.Metadata.NAME,
+        value = O2Service.MetadataManagement.NAME,
         path = "/v1",
         fallback = CatalogVersionRemoteServiceImpl.class
 )

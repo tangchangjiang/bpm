@@ -14,7 +14,7 @@ import java.util.List;
  * @author lei.tang02@hand-china.com 2020/8/27
  */
 @FeignClient(
-        value = O2Service.Metadata.NAME,
+        value = O2Service.MetadataManagement.NAME,
         path = "/v1",
         fallback = SysParameterRemoteServiceImpl.class
 )

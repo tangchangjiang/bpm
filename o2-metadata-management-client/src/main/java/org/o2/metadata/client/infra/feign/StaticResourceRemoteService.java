@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2021/07/30 15:33
  */
 @FeignClient(
-        value = O2Service.Metadata.NAME,
+        value = O2Service.MetadataManagement.NAME,
         path = "/v1",
         fallback = StaticResourceRemoteServiceImpl.class
 )
