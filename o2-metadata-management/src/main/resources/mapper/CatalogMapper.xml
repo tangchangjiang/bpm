@@ -72,6 +72,9 @@
                 <bind name="catalogName" value="'%' + catalogName + '%'"/>
                 AND c.catalog_name LIKE #{catalogName}
             </if>
+            <if test="activeFlag!=null">
+                AND c.active_flag = #{activeFlag}
+            </if>
             ORDER BY c.catalog_code
         </where>
     </select>
