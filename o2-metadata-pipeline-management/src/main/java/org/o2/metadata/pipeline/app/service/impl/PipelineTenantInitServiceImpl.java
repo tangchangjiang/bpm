@@ -72,7 +72,7 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
             final List<PipelineCreatedResultVO> pipelineCreatedResultVOList;
             try {
                 pipelineCreatedResultVOList = pipelineService.batchMerge(cachePipelines);
-                log.info("cache pipelines for sourceTenantId[{}],results[{}]", sourceTenantId, JsonHelper.objectToString(pipelineCreatedResultVOList));
+                log.info("cache pipelines for targetTenantId[{}],results[{}]", targetTenantId, JsonHelper.objectToString(pipelineCreatedResultVOList));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

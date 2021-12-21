@@ -1,7 +1,7 @@
 package org.o2.metadata.client.infra.feign;
 
 import org.o2.metadata.client.domain.dto.PlatformQueryInnerDTO;
-import org.o2.metadata.client.infra.constants.O2Service;
+import org.o2.core.common.O2Service;
 import org.o2.metadata.client.infra.feign.fallback.PlatformRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

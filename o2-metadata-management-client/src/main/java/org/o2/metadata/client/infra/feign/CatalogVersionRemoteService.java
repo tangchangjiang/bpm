@@ -3,7 +3,7 @@ package org.o2.metadata.client.infra.feign;
 import io.swagger.annotations.ApiParam;
 import org.o2.metadata.client.domain.dto.CatalogQueryInnerDTO;
 import org.o2.metadata.client.domain.dto.CatalogVersionQueryInnerDTO;
-import org.o2.metadata.client.infra.constants.O2Service;
+import org.o2.core.common.O2Service;
 import org.o2.metadata.client.infra.feign.fallback.CatalogVersionRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
