@@ -51,6 +51,7 @@ public class MallLangPromptController extends BaseController {
                                                      MallLangPrompt mallLangPrompt,
                                                      @ApiIgnore @SortDefault(value = MallLangPrompt.FIELD_LANG_PROMPT_ID,
                                                              direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        mallLangPrompt.setTenantId(organizationId);
         Page<MallLangPrompt> list = mallLangPromptRepository.pageAndSort(pageRequest, mallLangPrompt);
 
         mallLangPromptService.list(list, organizationId);
