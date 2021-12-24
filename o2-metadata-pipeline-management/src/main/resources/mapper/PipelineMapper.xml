@@ -40,7 +40,8 @@
         p.CREATION_DATE,
         p.CREATED_BY,
         p.LAST_UPDATED_BY,
-        p.LAST_UPDATE_DATE
+        p.LAST_UPDATE_DATE,
+        p.tenant_id
         FROM
         o2_metadata.o2md_pipeline p
         left join  o2_metadata.o2md_pipeline_action pa on p.start_action = pa.id and pa.tenant_id = #{tenantId}
