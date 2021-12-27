@@ -9,12 +9,14 @@ import org.o2.metadata.pipeline.app.service.PipelineTenantInitCoreService;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.entity.PipelineAction;
 import org.o2.metadata.pipeline.domain.entity.PipelineNode;
+import org.o2.metadata.pipeline.domain.repository.PipelineActionRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,9 +35,14 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
 
     private final PipelineNodeRepository pipelineNodeRepository;
 
-    public PipelineTenantInitCoreServiceImpl(PipelineRepository pipelineRepository, PipelineNodeRepository pipelineNodeRepository) {
+    private final PipelineActionRepository pipelineActionRepository;
+
+    public PipelineTenantInitCoreServiceImpl(PipelineRepository pipelineRepository,
+                                             PipelineNodeRepository pipelineNodeRepository,
+                                             PipelineActionRepository pipelineActionRepository) {
         this.pipelineRepository = pipelineRepository;
         this.pipelineNodeRepository = pipelineNodeRepository;
+        this.pipelineActionRepository = pipelineActionRepository;
     }
 
     @Override
@@ -54,6 +61,15 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
             return;
         }
 
+        // 1.2 查询平台级 所有行为定义
+        final List<PipelineAction> platformPipelineActions = pipelineActionRepository.selectByCondition(Condition.builder(PipelineAction.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(PipelineAction.FIELD_TENANT_ID, sourceTenantId))
+                .build());
+
+        // key: newId; value:oldId
+        final HashMap<Long, Long> oldNewPipeActionMap = new HashMap<>();
+
         // 1.5 查询平台级 关联的流程器节点
         final List<PipelineNode> platformPipelineNodes = pipelineNodeRepository.selectByCondition(Condition.builder(PipelineNode.class)
                 .andWhere(Sqls.custom()
@@ -63,7 +79,8 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
 
         final Map<Long, List<PipelineNode>> pipelineNodeMap = platformPipelineNodes.stream().collect(Collectors.groupingBy(PipelineNode::getPipelineId));
 
-        // 2. 查询目标租户是否存在数据
+
+        // 2. 查询目标租户是否存在数据 (需要提前删除已存在的旧数据)
         final List<Pipeline> targetPipelines = pipelineRepository.selectByCondition(Condition.builder(Pipeline.class)
                 .andWhere(Sqls.custom().andEqualTo(Pipeline.FIELD_TENANT_ID, targetTenantId))
                 .build());
@@ -71,6 +88,28 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
         if (CollectionUtils.isNotEmpty(targetPipelines)) {
             // 删除目标租户原数据
             pipelineRepository.batchDeleteByPrimaryKey(targetPipelines);
+        }
+
+
+        final List<PipelineAction> targetPipelineActions = pipelineActionRepository.selectByCondition(Condition.builder(PipelineAction.class)
+                .andWhere(Sqls.custom().andEqualTo(PipelineAction.FIELD_TENANT_ID, targetTenantId))
+                .build());
+
+        if (CollectionUtils.isNotEmpty(targetPipelineActions)) {
+            // 删除目标租户原数据
+            pipelineActionRepository.batchDeleteByPrimaryKey(targetPipelineActions);
+        }
+
+
+        // 2.2 目标租户的流程器行为定义先插入
+        if (CollectionUtils.isNotEmpty(platformPipelineActions)) {
+            platformPipelineActions.forEach(pipelineAction -> {
+                pipelineAction.setId(null);
+                pipelineAction.setTenantId(targetTenantId);
+                final Long oldActionId = pipelineAction.getId();
+                pipelineActionRepository.insert(pipelineAction);
+                oldNewPipeActionMap.put(oldActionId, pipelineAction.getId());
+            });
         }
 
 
@@ -91,14 +130,23 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
             pipeline.setId(null);
             pipeline.setTenantId(targetTenantId);
 
+            // 关联动作
+            pipeline.setStartAction(oldNewPipeActionMap.get(pipeline.getStartAction()));
+            pipeline.setEndAction(oldNewPipeActionMap.get(pipeline.getEndAction()));
+
             // 3.1 初始化关联的流程器节点
             pipelineRepository.insert(pipeline);
+
+
             if (CollectionUtils.isNotEmpty(pipelineNodes)) {
                 pipelineNodes.forEach(pipelineNode -> {
                     pipelineNode.setId(null);
                     pipelineNode.setTenantId(targetTenantId);
                     // 插入后主键
                     pipelineNode.setPipelineId(pipeline.getId());
+                    pipelineNode.setCurAction(oldNewPipeActionMap.get(pipelineNode.getCurAction()));
+                    pipelineNode.setNextAction(oldNewPipeActionMap.get(pipelineNode.getNextAction()));
+
                 });
                 pipelineNodeRepository.batchInsert(pipelineNodes);
             }
