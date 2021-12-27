@@ -12,6 +12,7 @@ import org.o2.metadata.pipeline.domain.entity.PipelineNode;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePipeline start, targetTenantId[{}]", targetTenantId);
         // 1. 查询平台级租户
@@ -91,13 +93,15 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
 
             // 3.1 初始化关联的流程器节点
             pipelineRepository.insert(pipeline);
-            pipelineNodes.forEach(pipelineNode -> {
-                pipelineNode.setId(null);
-                pipelineNode.setTenantId(targetTenantId);
-                // 插入后主键
-                pipelineNode.setPipelineId(pipeline.getId());
-            });
-            pipelineNodeRepository.batchInsert(pipelineNodes);
+            if (CollectionUtils.isNotEmpty(pipelineNodes)) {
+                pipelineNodes.forEach(pipelineNode -> {
+                    pipelineNode.setId(null);
+                    pipelineNode.setTenantId(targetTenantId);
+                    // 插入后主键
+                    pipelineNode.setPipelineId(pipeline.getId());
+                });
+                pipelineNodeRepository.batchInsert(pipelineNodes);
+            }
         });
     }
 }
