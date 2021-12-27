@@ -13,7 +13,6 @@ import org.o2.metadata.pipeline.domain.repository.PipelineActionRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+//    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePipeline start, targetTenantId[{}]", targetTenantId);
         // 1. 查询平台级租户
