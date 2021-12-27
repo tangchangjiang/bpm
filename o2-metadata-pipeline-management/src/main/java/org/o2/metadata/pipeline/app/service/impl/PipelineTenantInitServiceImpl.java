@@ -7,7 +7,10 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
-import org.o2.metadata.pipeline.app.service.*;
+import org.o2.metadata.pipeline.app.service.PipelineActionTenantInitService;
+import org.o2.metadata.pipeline.app.service.PipelineService;
+import org.o2.metadata.pipeline.app.service.PipelineTenantInitCoreService;
+import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
@@ -30,16 +33,17 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
 
     private final PipelineActionTenantInitService pipelineActionTenantInitService;
 
-    private final PipelineNodeTenantInitService pipelineNodeTenantInitService;
 
     private final PipelineRepository pipelineRepository;
 
     private final PipelineService pipelineService;
 
-    public PipelineTenantInitServiceImpl(PipelineTenantInitCoreService pipelineTenantInitCoreService, PipelineActionTenantInitService pipelineActionTenantInitService, PipelineNodeTenantInitService pipelineNodeTenantInitService, PipelineRepository pipelineRepository, PipelineService pipelineService) {
+    public PipelineTenantInitServiceImpl(PipelineTenantInitCoreService pipelineTenantInitCoreService,
+                                         PipelineActionTenantInitService pipelineActionTenantInitService,
+                                         PipelineRepository pipelineRepository,
+                                         PipelineService pipelineService) {
         this.pipelineTenantInitCoreService = pipelineTenantInitCoreService;
         this.pipelineActionTenantInitService = pipelineActionTenantInitService;
-        this.pipelineNodeTenantInitService = pipelineNodeTenantInitService;
         this.pipelineRepository = pipelineRepository;
         this.pipelineService = pipelineService;
     }
@@ -54,12 +58,8 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
         for (Long tenantId : tenantIds) {
             // 1. 初始化流程器
             pipelineTenantInitCoreService.tenantInitialize(sourceTenantId, tenantId);
-
             // 2. 初始化行为定义
             pipelineActionTenantInitService.tenantInitialize(sourceTenantId, tenantId);
-
-            // 3. 初始化流程器节点
-            pipelineNodeTenantInitService.tenantInitialize(sourceTenantId, tenantId);
         }
 
         // 流程器缓存同步
