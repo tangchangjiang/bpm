@@ -26,7 +26,7 @@ public class MetadataTenantInitializeJob implements IJobHandler {
 
     private static final String TARGET_TENANT_IDS = "targetTenants";
 
-    private static final String SOURCE_TENANT_ID = "sourceTenantId";
+    private static final String SOURCE_TENANT_ID = "sourceTenant";
 
     private final MetadataTenantInitService metadataTenantInitService;
 
