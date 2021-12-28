@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
-@Component
+@Component("sysParameterRemoteManagementService")
 @Slf4j
 public class SysParameterRemoteServiceImpl implements SysParameterRemoteService {
 
