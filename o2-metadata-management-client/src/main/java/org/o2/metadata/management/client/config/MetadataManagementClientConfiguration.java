@@ -27,13 +27,13 @@ import org.springframework.context.annotation.Configuration;
         }
 )
 public class MetadataManagementClientConfiguration {
-    @Bean
+    @Bean("sysParameterRemoteManagementService")
     @ConditionalOnMissingBean
     public SysParameterRemoteServiceImpl sysParameterRemoteServiceFallback() {
         return new SysParameterRemoteServiceImpl();
     }
 
-    @Bean
+    @Bean("warehouseRemoteManagementService")
     @ConditionalOnMissingBean
     public WarehouseRemoteServiceImpl warehouseRemoteServiceFallback() {
         return new WarehouseRemoteServiceImpl();
@@ -76,7 +76,7 @@ public class MetadataManagementClientConfiguration {
     }
 
 
-    @Bean
+    @Bean("onlineShopRemoteManagementService")
     @ConditionalOnMissingBean
     public OnlineShopRemoteServiceImpl onlineShopRemoteServiceFallback() {
         return new OnlineShopRemoteServiceImpl();
@@ -93,12 +93,12 @@ public class MetadataManagementClientConfiguration {
     public AddressClient addressClient(AddressMappingRemoteService addressMappingService) { return new AddressClient( addressMappingService);
     }
 
-    @Bean
+    @Bean("systemParameterManagementClient")
     @ConditionalOnMissingBean
     public SystemParameterClient systemParameterClient(SysParameterRemoteService sysParameterRemoteService) { return new SystemParameterClient( sysParameterRemoteService);
     }
 
-    @Bean
+    @Bean("warehouseManagementClient")
     @ConditionalOnMissingBean
     public WarehouseClient warehousesClient(WarehouseRemoteService warehouseRemoteService) { return new WarehouseClient( warehouseRemoteService);
     }

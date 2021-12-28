@@ -16,15 +16,15 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
-@Configuration
+@Configuration("managementLovAdapterClientConfiguration")
 @EnableFeignClients(
         basePackageClasses = {
-               LovAdapterRemoteService.class, IamUserRemoteService.class
+                LovAdapterRemoteService.class, IamUserRemoteService.class
         }
 )
 public class LovAdapterClientConfiguration {
 
-    @Bean
+    @Bean("lovAdapterRemoteManagementService")
     @ConditionalOnMissingBean
     public LovAdapterRemoteServiceImpl lovAdapterRemoteServiceFallback() {
         return new LovAdapterRemoteServiceImpl();
@@ -36,12 +36,13 @@ public class LovAdapterClientConfiguration {
         return new IamUserRemoteServiceImpl();
     }
 
-    @Bean
+    @Bean("currencyLovManagementClient")
     @ConditionalOnMissingBean
     public CurrencyLovClient o2CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new CurrencyLovClient(lovAdapterRemoteService);
     }
-    @Bean
+
+    @Bean("uomLovManagementClient")
     @ConditionalOnMissingBean
     public UomLovClient o2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new UomLovClient(lovAdapterRemoteService);
@@ -62,7 +63,8 @@ public class LovAdapterClientConfiguration {
     public SQLLovClient sqlLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new SQLLovClient(lovAdapterRemoteService);
     }
-    @Bean
+
+    @Bean("regionLovManagementClient")
     @ConditionalOnMissingBean
     public RegionLovClient o2RegionLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new RegionLovClient(lovAdapterRemoteService);

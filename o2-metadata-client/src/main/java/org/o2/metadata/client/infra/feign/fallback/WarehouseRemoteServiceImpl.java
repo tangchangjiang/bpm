@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
  */
-@Component
+@Component("warehouseRemoteService")
 public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     private static final Logger logger = LoggerFactory.getLogger(WarehouseRemoteServiceImpl.class);
 
