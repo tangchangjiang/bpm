@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
-@Component
+@Component("warehouseRemoteManagementService")
 @Slf4j
 public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
 

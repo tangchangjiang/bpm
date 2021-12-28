@@ -15,7 +15,7 @@ import java.util.Map;
  * 值集查询
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
-@Component
+@Component("lovAdapterRemoteManagementService")
 @Slf4j
 public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     @Override

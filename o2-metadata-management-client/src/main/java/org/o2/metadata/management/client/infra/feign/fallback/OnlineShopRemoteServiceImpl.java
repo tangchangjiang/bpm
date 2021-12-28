@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author zhilin.ren@hand-china.com 2021/08/05 16:48
  */
-@Service
+@Service("onlineShopRemoteManagementService")
 @Slf4j
 public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
 
