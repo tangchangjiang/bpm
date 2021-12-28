@@ -13,6 +13,7 @@ import org.o2.metadata.pipeline.domain.repository.PipelineActionRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
     }
 
     @Override
-//    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePipeline start, targetTenantId[{}]", targetTenantId);
         // 1. 查询平台级租户
@@ -67,7 +68,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
                 .build());
 
         // key: newId; value:oldId
-        final HashMap<Long, Long> oldNewPipeActionMap = new HashMap<>();
+        final HashMap<Long, Long> oldNewPipeActionMap = new HashMap<>(platformPipelineActions.size());
 
         // 1.5 查询平台级 关联的流程器节点
         final List<PipelineNode> platformPipelineNodes = pipelineNodeRepository.selectByCondition(Condition.builder(PipelineNode.class)
@@ -85,7 +86,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
                 .build());
 
         if (CollectionUtils.isNotEmpty(targetPipelines)) {
-            // 删除目标租户原数据
+            // 删除目标租户流程器定义
             pipelineRepository.batchDeleteByPrimaryKey(targetPipelines);
         }
 
@@ -95,7 +96,7 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
                 .build());
 
         if (CollectionUtils.isNotEmpty(targetPipelineActions)) {
-            // 删除目标租户原数据
+            // 删除目标租户行为定义
             pipelineActionRepository.batchDeleteByPrimaryKey(targetPipelineActions);
         }
 
@@ -103,9 +104,9 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
         // 2.2 目标租户的流程器行为定义先插入
         if (CollectionUtils.isNotEmpty(platformPipelineActions)) {
             platformPipelineActions.forEach(pipelineAction -> {
+                final Long oldActionId = pipelineAction.getId();
                 pipelineAction.setId(null);
                 pipelineAction.setTenantId(targetTenantId);
-                final Long oldActionId = pipelineAction.getId();
                 pipelineActionRepository.insert(pipelineAction);
                 oldNewPipeActionMap.put(oldActionId, pipelineAction.getId());
             });
