@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
@@ -18,6 +19,7 @@ import java.util.Set;
  * @author yipeng.zhu@hand-china.com 2021-08-10
  **/
 @Component
+@Slf4j
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private final RedisCacheClient redisCacheClient;
 
@@ -36,6 +38,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for(String onlineShopCodekey:keys) {
             if(onlineShopCode.equals(onlineShopCodekey)){
                 String onlineShopValue = map.get(onlineShopCodekey);
+                log.info("getOnlineShop onlineShopValue:{}",onlineShopValue);
                 return JsonHelper.stringToObject(onlineShopValue,OnlineShop.class);
             }
         }
