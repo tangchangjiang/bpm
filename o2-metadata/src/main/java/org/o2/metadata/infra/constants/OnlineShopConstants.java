@@ -16,11 +16,11 @@ public interface OnlineShopConstants {
 
         /**
          *  获取key
-         * @param shopCode 网店编码
+         * @param tenantId 网店编码
          * @return key
          */
-        static String getOnlineShopKey(String shopCode) {
-            return String.format(ONLINE_SHOP_KEY,shopCode);
+        static String getOnlineShopKey(Long tenantId) {
+            return String.format(ONLINE_SHOP_KEY,tenantId);
         }
     }
 }

@@ -14,6 +14,6 @@ public interface OnlineShopService {
      * @param onlineShopCode 网店编码
      * @return  网店
      */
-   OnlineShopCO getOnlineShop(String onlineShopCode);
+   OnlineShopCO getOnlineShop(String onlineShopCode,Long tenantId);
 
 }

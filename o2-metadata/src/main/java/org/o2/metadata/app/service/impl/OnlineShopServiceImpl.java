@@ -21,7 +21,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public OnlineShopCO getOnlineShop(String onlineShopCode) {
-        return OnlineShopConverter.poToVoObject(onlineShopRedis.getOnlineShop(onlineShopCode));
+    public OnlineShopCO getOnlineShop(String onlineShopCode,Long tenantId) {
+        return OnlineShopConverter.poToVoObject(onlineShopRedis.getOnlineShop(onlineShopCode,tenantId));
     }
 }
