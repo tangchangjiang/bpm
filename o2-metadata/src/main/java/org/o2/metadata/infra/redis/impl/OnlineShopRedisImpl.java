@@ -8,6 +8,8 @@ import org.o2.metadata.infra.redis.OnlineShopRedis;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -24,9 +26,19 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    public OnlineShop getOnlineShop(String onlineShopCode) {
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(onlineShopCode);
+    public OnlineShop getOnlineShop(String onlineShopCode,Long tenantId) {
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         Map<String,String> map = redisCacheClient.<String,String>opsForHash().entries(key);
-        return JsonHelper.stringToObject(JsonHelper.mapToString(map), OnlineShop.class);
+        Set<String> keys = map.keySet();
+        if(Objects.isNull(keys)){
+            return new OnlineShop();
+        }
+        for(String onlineShopCodekey:keys) {
+            if(onlineShopCode.equals(onlineShopCodekey)){
+                String onlineShopValue = map.get(onlineShopCodekey);
+                return JsonHelper.stringToObject(onlineShopValue,OnlineShop.class);
+            }
+        }
+        return new OnlineShop();
     }
 }

@@ -29,7 +29,7 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "查询运费模版信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/online-shop")
-    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String  onlineShopCode) {
-        return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
+    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String  onlineShopCode,@RequestParam Long tenantId) {
+        return Results.success(onlineShopService.getOnlineShop(onlineShopCode,tenantId));
     }
 }
