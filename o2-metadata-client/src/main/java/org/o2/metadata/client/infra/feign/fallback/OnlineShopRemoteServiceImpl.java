@@ -18,7 +18,7 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
 
 
     @Override
-    public ResponseEntity<String> getOnlineShop(String onlineShopCode,Long tenantId) {
+    public ResponseEntity<String> getOnlineShop(String onlineShopCode,String tenantId) {
         log.error("Error getOnlineShop, params[onlineShopCode = {},tenantId = {}]", onlineShopCode,tenantId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

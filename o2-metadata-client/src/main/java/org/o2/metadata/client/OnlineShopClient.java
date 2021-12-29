@@ -23,7 +23,7 @@ public class OnlineShopClient {
      * @param onlineShopCode  网店编码
      * @return 网店
      */
-    public OnlineShopCO getOnlineShop(String onlineShopCode,Long tenantId) {
+    public OnlineShopCO getOnlineShop(String onlineShopCode,String tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode,tenantId), OnlineShopCO.class);
     }
 }
