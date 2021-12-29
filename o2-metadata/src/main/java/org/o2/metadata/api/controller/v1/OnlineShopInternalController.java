@@ -7,10 +7,7 @@ import org.hzero.core.util.Results;
 import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -31,7 +28,7 @@ public class OnlineShopInternalController {
 
     @ApiOperation(value = "查询运费模版信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/online-shop")
+    @GetMapping("/online-shop")
     public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String  onlineShopCode) {
         return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
     }
