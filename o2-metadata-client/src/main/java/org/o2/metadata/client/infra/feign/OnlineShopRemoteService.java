@@ -26,5 +26,5 @@ public interface OnlineShopRemoteService {
      * @return 网店
      */
     @GetMapping("/onlineShop-internal/online-shop")
-    ResponseEntity<String> getOnlineShop(@RequestParam String onlineShopCode,Long tenantId);
+    ResponseEntity<String> getOnlineShop(@RequestParam String onlineShopCode,@RequestParam String tenantId);
 }
