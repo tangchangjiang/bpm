@@ -15,5 +15,5 @@ public interface OnlineShopRedis {
      * @param onlineShopCode 网店编码
      * @return  网店
      */
-    OnlineShop getOnlineShop(String onlineShopCode);
+    OnlineShop getOnlineShop(String onlineShopCode,Long tenantId);
 }
