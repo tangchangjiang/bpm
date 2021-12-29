@@ -25,4 +25,7 @@ public class OnlineShopCO {
     @ApiModelProperty(value = "网店")
     private Long tenantId;
 
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
+
 }
