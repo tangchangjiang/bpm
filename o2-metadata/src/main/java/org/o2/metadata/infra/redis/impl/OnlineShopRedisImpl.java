@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
@@ -8,6 +9,8 @@ import org.o2.metadata.infra.redis.OnlineShopRedis;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -16,6 +19,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2021-08-10
  **/
 @Component
+@Slf4j
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private final RedisCacheClient redisCacheClient;
 
@@ -24,9 +28,20 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    public OnlineShop getOnlineShop(String onlineShopCode) {
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(onlineShopCode);
+    public OnlineShop getOnlineShop(String onlineShopCode,Long tenantId) {
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         Map<String,String> map = redisCacheClient.<String,String>opsForHash().entries(key);
-        return JsonHelper.stringToObject(JsonHelper.mapToString(map), OnlineShop.class);
+        Set<String> keys = map.keySet();
+        if(Objects.isNull(keys)){
+            return new OnlineShop();
+        }
+        for(String onlineShopCodekey:keys) {
+            if(onlineShopCode.equals(onlineShopCodekey)){
+                String onlineShopValue = map.get(onlineShopCodekey);
+                log.info("getOnlineShop onlineShopValue:{}",onlineShopValue);
+                return JsonHelper.stringToObject(onlineShopValue,OnlineShop.class);
+            }
+        }
+        return new OnlineShop();
     }
 }
