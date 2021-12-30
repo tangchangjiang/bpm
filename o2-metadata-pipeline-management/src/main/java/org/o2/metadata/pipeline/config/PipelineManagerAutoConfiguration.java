@@ -2,8 +2,10 @@ package org.o2.metadata.pipeline.config;
 
 import org.hzero.core.message.MessageAccessor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
@@ -14,7 +16,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 @ComponentScan({
         "org.o2.metadata.pipeline.api",
         "org.o2.metadata.pipeline.app",
-        "org.o2.metadata.pipeline.config",
         "org.o2.metadata.pipeline.domain",
         "org.o2.metadata.pipeline.infra",
         "org.o2.metadata.pipeline.job"
@@ -34,5 +35,10 @@ public class PipelineManagerAutoConfiguration  implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         MessageAccessor.addBasenames("classpath:messages/pipeline");
+    }
+
+    @Bean
+    public PipelineManagementExtraDataManager pipelineManagementExtraDataManager(final Environment environment){
+        return new PipelineManagementExtraDataManager(environment);
     }
 }
