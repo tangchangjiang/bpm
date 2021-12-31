@@ -21,8 +21,8 @@ public class MetadataExtraDataManager implements ExtraDataManager {
         ChoerodonRouteData choerodonRouteData = new ChoerodonRouteData();
         choerodonRouteData.setName(this.environment.getProperty("o2.service.current.name", O2Service.Metadata.CODE));
         choerodonRouteData.setPath(this.environment.getProperty("o2.service.current.path", O2Service.Metadata.PATH));
-        choerodonRouteData.setServiceId(this.environment.getProperty("o2.service.current.service-name", O2Service.Metadata.NAME));
-        choerodonRouteData.setPackages("org.o2.metadata");
+        choerodonRouteData.setServiceId(this.environment.getProperty("o2.service.current.service-name", O2Service.Metadata.ID));
+        choerodonRouteData.setPackages("org.o2.metadata.api");
         extraData.put(ExtraData.ZUUL_ROUTE_DATA, choerodonRouteData);
         return extraData;
     }
