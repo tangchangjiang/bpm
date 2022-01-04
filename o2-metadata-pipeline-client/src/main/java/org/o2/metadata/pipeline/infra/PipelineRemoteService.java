@@ -1,7 +1,7 @@
 package org.o2.metadata.pipeline.infra;
 
 import io.swagger.annotations.ApiParam;
-import org.o2.metadata.pipeline.infra.constants.O2Service;
+import org.o2.core.common.O2Service;
 import org.o2.metadata.pipeline.infra.fallback.PipelineRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author miao.chen01@hand-china.com 2021-07-23
  */
 @FeignClient(
-        value = O2Service.Pipeline.NAME,
+        value = O2Service.MetadataManagement.NAME,
         path = "/v1",
         fallback = PipelineRemoteServiceImpl.class
 )
