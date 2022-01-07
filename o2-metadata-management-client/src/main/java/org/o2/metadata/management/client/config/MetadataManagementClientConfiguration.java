@@ -39,7 +39,7 @@ public class MetadataManagementClientConfiguration {
         return new WarehouseRemoteServiceImpl();
     }
 
-    @Bean
+    @Bean("freightServiceRemoteManagementService")
     @ConditionalOnMissingBean
     public FreightServiceRemoteServiceImpl freightServiceRemoteServiceFallback() {
         return new FreightServiceRemoteServiceImpl();
@@ -57,7 +57,7 @@ public class MetadataManagementClientConfiguration {
         return new CatalogVersionRemoteServiceImpl();
     }
 
-    @Bean
+    @Bean("carrierRemoteManagementService")
     @ConditionalOnMissingBean
     public CarrierRemoteServiceImpl carrierRemoteServiceFallback() {
         return new CarrierRemoteServiceImpl();
@@ -103,17 +103,17 @@ public class MetadataManagementClientConfiguration {
     public WarehouseClient warehousesClient(WarehouseRemoteService warehouseRemoteService) { return new WarehouseClient( warehouseRemoteService);
     }
 
-    @Bean
+    @Bean("freightManagementClient")
     @ConditionalOnMissingBean
     public FreightClient freightClient(FreightRemoteService freightRemoteService) { return new FreightClient( freightRemoteService);
     }
 
-    @Bean
+    @Bean("onlineShopManagementClient")
     @ConditionalOnMissingBean
     public OnlineShopClient onlineShopClient(OnlineShopRemoteService onlineShopRemoteService) { return new OnlineShopClient( onlineShopRemoteService);
     }
 
-    @Bean
+    @Bean("carrierManagementClient")
     @ConditionalOnMissingBean
     public CarrierClient carrierClient(CarrierRemoteService carrierRemoteService) { return new CarrierClient( carrierRemoteService);
     }
