@@ -38,6 +38,7 @@ public class IamUserServiceImpl implements IamUserService {
     public List<IamUserCO> listIamUser(IamUserQueryInnerDTO queryInner) {
         Map<String, String> queryLovValueMap = new HashMap<>(4);
         queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIdList(), BaseConstants.Symbol.COMMA));
+        queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
         List<Map<String, Object>> result = hzeroLovQueryRepository.queryLovValueMeaning(queryInner.getTenantId(), O2LovConstants.IamUserLov.IAM_USER_LOV_CODE,queryLovValueMap);
         List<IamUserCO> list = null;
         try {
