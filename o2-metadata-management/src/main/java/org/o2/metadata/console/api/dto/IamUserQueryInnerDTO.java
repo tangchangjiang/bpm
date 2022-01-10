@@ -21,4 +21,9 @@ public class IamUserQueryInnerDTO {
      * 租户ID
      */
     private Long tenantId;
+
+    /**
+     * 用户Name
+     */
+    private String realName;
 }
