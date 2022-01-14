@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Api(tags = {MetadataAutoConfiguration.SYS_WAREHOUSE_INTERNAL})
 @RestController("warehouseMetadataInternalController.v1")
-@RequestMapping("v1/{organizationId}")
+@RequestMapping("v1/{organizationId}/warehouse-internal")
 public class WarehouseMetadataInternalController {
     private WarehouseService warehouseService;
 
@@ -30,7 +30,7 @@ public class WarehouseMetadataInternalController {
     }
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/internal/list")
+    @GetMapping("/list")
     public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                    @RequestParam List<String> warehouseCodes) {
         Map<String, WarehouseCO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
@@ -45,7 +45,7 @@ public class WarehouseMetadataInternalController {
     }
     @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
-    @PostMapping({"/internal/updateExpressValue"})
+    @PostMapping({"/updateExpressValue"})
     public ResponseEntity<Void> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                 @RequestParam(value = "warehouseCode") String warehouseCode,
                                                 @RequestParam(value = "increment") String increment) {

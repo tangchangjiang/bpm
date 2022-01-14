@@ -34,7 +34,7 @@ public interface LovAdapterRemoteService {
      * @param lovValue 值集value
      * @return String
      */
-    @GetMapping("/{organizationId}/lov/query-lov-value-meaning")
+    @GetMapping("/{organizationId}/lov-internal/query-lov-value-meaning")
     ResponseEntity<String> queryLovValueMeaning(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                 @RequestParam String lovCode,
                                                 @RequestParam String lovValue);
@@ -45,7 +45,7 @@ public interface LovAdapterRemoteService {
      * @param currencyCodes 货币编码
      * @return 返回信息MAP
      */
-    @GetMapping("/{organizationId}/lov/currency-by-codes")
+    @GetMapping("/{organizationId}/lov-internal/currency-by-codes")
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 
@@ -56,7 +56,7 @@ public interface LovAdapterRemoteService {
      * @param organizationId 租户ID
      * @return 值集集合
      */
-    @GetMapping("/{organizationId}/lov/query-region-lov")
+    @GetMapping("/{organizationId}/lov-internal/query-region-lov")
     ResponseEntity<String> queryRegion(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                        RegionQueryLovInnerDTO innerDTO);
 
@@ -66,7 +66,7 @@ public interface LovAdapterRemoteService {
      * @param uomCodes 单位编码
      * @return 单位信息MAP
      */
-    @GetMapping("/{organizationId}/lov/uom-by-codes")
+    @GetMapping("/{organizationId}/lov-internal/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
 }
