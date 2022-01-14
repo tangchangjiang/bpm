@@ -32,7 +32,7 @@ public interface WarehouseRemoteService {
      * @param hashMap  map
      * @return string
      */
-    @PostMapping({"/{organizationId}/internal/saveWarehouse"})
+    @PostMapping({"/{organizationId}/warehouse-internal/saveWarehouse"})
     ResponseEntity<String> saveWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                          @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
                                          @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap);
@@ -44,7 +44,7 @@ public interface WarehouseRemoteService {
      * @param hashMap map
      * @return ResponseEntity
      */
-    @PostMapping({"/{organizationId}/internal/updateWarehouse"})
+    @PostMapping({"/{organizationId}/warehouse-internal/updateWarehouse"})
     ResponseEntity<String> updateWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                            @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
                                            @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap);
@@ -57,7 +57,7 @@ public interface WarehouseRemoteService {
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/internal/list")
+    @GetMapping("/{organizationId}/warehouse-internal/list")
     ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCodes") List<String> warehouseCodes);
     /**
@@ -67,7 +67,7 @@ public interface WarehouseRemoteService {
      * @param increment 增长量
      * @return ResponseEntity
      */
-    @PostMapping({"/{organizationId}/internal/updateExpressValue"})
+    @PostMapping({"/{organizationId}/warehouse-internal/updateExpressValue"})
     ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                               @RequestParam(value = "warehouseCode") String warehouseCode,
                                               @RequestParam(value = "increment") String increment);

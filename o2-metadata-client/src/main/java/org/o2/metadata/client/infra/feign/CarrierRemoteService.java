@@ -23,6 +23,6 @@ public interface CarrierRemoteService {
      * @param organizationId 租户id
      * @return  list
      */
-    @GetMapping({"/{organizationId}/internal/carriers/list"})
+    @GetMapping({"/{organizationId}/carriers-internal/list"})
     ResponseEntity<String> listCarriers(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
 }
