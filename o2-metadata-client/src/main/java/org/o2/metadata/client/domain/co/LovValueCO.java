@@ -9,7 +9,7 @@ import java.util.Map;
  * 值集
  * @author peng.xu@hand-china.com 2022/1/21
  */
-@ApiModel("运费模板")
+@ApiModel("值集")
 @Data
 public class LovValueCO {
     private String value;

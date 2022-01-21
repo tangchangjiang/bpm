@@ -26,6 +26,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     }
 
     @Override
+    public ResponseEntity<String> queryLov(Long organizationId, List<String> lovCodes) {
+        log.error("Error queryLov, params[lovCodes = {}, organizationId = {}]", lovCodes, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
     public ResponseEntity<String> findCurrencyByCodes(Long organizationId, List<String> currencyCodes) {
         log.error("Error findCurrencyByCodes, params[lovCode = {}, organizationId = {}]", organizationId,currencyCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
