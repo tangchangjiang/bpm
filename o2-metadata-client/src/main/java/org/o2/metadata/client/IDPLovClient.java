@@ -1,7 +1,13 @@
 package org.o2.metadata.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.metadata.client.domain.co.CurrencyCO;
+import org.o2.metadata.client.domain.co.LovValuesCO;
 import org.o2.metadata.client.infra.feign.LovAdapterRemoteService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -26,5 +32,17 @@ public class IDPLovClient {
      */
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, lovValue), String.class);
+    }
+
+
+    /**
+     * 通过值集编码查询值集信息
+     * @param tenantId 租户ID
+     * @param lovCodes 编码集合
+     * @return LovValuesCO
+     */
+    public List<LovValuesCO> queryLov(Long tenantId, List<String> lovCodes) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLov(tenantId, lovCodes), new TypeReference<List<LovValuesCO>>(){});
+
     }
 }

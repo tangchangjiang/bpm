@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 
 import org.o2.metadata.api.co.CurrencyCO;
+import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.app.service.LovAdapterService;
@@ -40,6 +41,15 @@ public class LovAdapterInternalController {
                                                        @RequestParam (required = false)String lovValue) {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,lovValue));
     }
+
+    @ApiOperation(value = "查询独立值集")
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/query-lov")
+    public ResponseEntity<List<LovValuesCO>>queryLov(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                     @RequestParam (required = true) List<String> lovCodes) {
+        return Results.success(lovAdapterService.queryIdpLov(organizationId,lovCodes));
+    }
+
     @ApiOperation(value = "通过编码查询货币(批量)")
     @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
     @GetMapping("/currency-by-codes")

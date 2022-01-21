@@ -40,6 +40,16 @@ public interface LovAdapterRemoteService {
                                                 @RequestParam String lovValue);
 
     /**
+     * 通过值集编码查询值集信息
+     * @param organizationId 租户ID
+     * @param lovCodes 编码集合
+     * @return LovValuesCO
+     */
+    @GetMapping("/{organizationId}/lov-internal/query-lov")
+    ResponseEntity<String> queryLov(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                    @RequestParam(value = "lovCodes") List<String> lovCodes);
+
+    /**
      * 通过编码查询货币(批量)
      * @param organizationId 租户ID
      * @param currencyCodes 货币编码
