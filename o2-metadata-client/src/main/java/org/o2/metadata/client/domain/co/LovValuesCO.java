@@ -1,11 +1,14 @@
 package org.o2.metadata.client.domain.co;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * 值集集合
  * @author peng.xu@hand-china.com 2022/1/21
  */
+@Data
 public class LovValuesCO {
     /**
      * 值集编码
