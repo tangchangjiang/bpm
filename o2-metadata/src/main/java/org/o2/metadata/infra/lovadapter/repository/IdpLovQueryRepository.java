@@ -2,6 +2,7 @@ package org.o2.metadata.infra.lovadapter.repository;
 
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
+import org.o2.metadata.api.co.LovValuesCO;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public interface IdpLovQueryRepository {
     List<LovValueDTO> queryLovValue(Long tenantId,
                                     String lovCode);
 
+
     /**
      * 查询独立值集中指定值的 描述信息
      *
@@ -34,4 +36,12 @@ public interface IdpLovQueryRepository {
     String queryLovValueMeaning(Long tenantId,
                                 String lovCode,
                                 String lovValue);
+
+    /**
+     * 查询独立值
+     * @param tenantId 租户id
+     * @param lovCodes  值集code
+     * @return co
+     */
+    List<LovValuesCO> queryIdpLov(Long tenantId, List<String> lovCodes);
 }

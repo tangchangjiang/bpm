@@ -2,6 +2,7 @@ package org.o2.metadata.app.service;
 
 
 import org.o2.metadata.api.co.CurrencyCO;
+import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.infra.entity.Region;
@@ -27,6 +28,14 @@ public interface LovAdapterService {
      * @return String
      */
     String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue);
+
+    /**
+     * 查询独立值
+     * @param tenantId 租户id
+     * @param lovCodes  值集code
+     * @return co
+     */
+    List<LovValuesCO>queryIdpLov(Long tenantId, List<String> lovCodes);
 
 
     /**

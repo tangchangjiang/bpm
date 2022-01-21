@@ -2,11 +2,16 @@ package org.o2.metadata.infra.lovadapter.repository.impl;
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.AopProxy;
+import org.o2.ehcache.util.CollectionCacheHelper;
+import org.o2.metadata.api.co.LovValuesCO;
+import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +22,7 @@ import java.util.List;
  **/
 @Repository
 public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProxy<IdpLovQueryRepositoryImpl> {
-    private HzeroLovQueryRepository hzeroLovQueryRepository;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
     public IdpLovQueryRepositoryImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
@@ -40,5 +45,30 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
             }
         }
         return "";
+    }
+
+    @Override
+    public List<LovValuesCO> queryIdpLov(Long tenantId, List<String> lovCodes) {
+        Collection<LovValuesCO> result = CollectionCacheHelper.getCache2Collection(O2LovConstants.IdpLov.cacheName, O2LovConstants.IdpLov.keyPrefix + tenantId, lovCodes, codes -> queryLovList(tenantId, codes), LovValuesCO::getLovCode);
+        return new ArrayList<>(result);
+    }
+
+    /**
+     * 批量查询独立值集
+     *
+     * @param tenantId 租户ID
+     * @param lovCodes 值集集合
+     * @return  Collection
+     */
+    private Collection<LovValuesCO> queryLovList(Long tenantId, Collection<String> lovCodes) {
+        List<LovValuesCO> list = new ArrayList<>(lovCodes.size());
+        for (String lovCode : lovCodes) {
+            List<LovValueDTO> lov = hzeroLovQueryRepository.queryLovValue(tenantId, lovCode);
+            LovValuesCO co = new LovValuesCO();
+            co.setLovCode(lovCode);
+            co.setLovValueList(lov);
+            list.add(co);
+        }
+        return list;
     }
 }
