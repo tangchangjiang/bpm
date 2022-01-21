@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Repository
 @Slf4j
 public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, AopProxy<RegionLovQueryRepositoryImpl> {
-    private HzeroLovQueryRepository hzeroLovQueryRepository;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public RegionLovQueryRepositoryImpl(HzeroLovQueryRepository hzeroLovQueryRepository, ObjectMapper objectMapper) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;

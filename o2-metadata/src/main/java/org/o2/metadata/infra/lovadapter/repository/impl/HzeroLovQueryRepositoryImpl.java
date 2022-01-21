@@ -21,7 +21,7 @@ import java.util.Map;
 @EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
 public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
 
-    private LovAdapter lovAdapter;
+    private final LovAdapter lovAdapter;
     public HzeroLovQueryRepositoryImpl(LovAdapter lovAdapter) {
         this.lovAdapter = lovAdapter;
     }

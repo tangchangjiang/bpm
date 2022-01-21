@@ -2,6 +2,7 @@ package org.o2.metadata.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.api.co.CurrencyCO;
+import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.app.service.LovAdapterService;
@@ -24,9 +25,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class LovAdapterServiceImpl implements LovAdapterService {
-    private IdpLovQueryRepository idpLovQueryRepository;
-    private BaseLovQueryRepository baseLovQueryRepository;
-    private RegionLovQueryRepository regionLovQueryRepository;
+    private final IdpLovQueryRepository idpLovQueryRepository;
+    private final BaseLovQueryRepository baseLovQueryRepository;
+    private final RegionLovQueryRepository regionLovQueryRepository;
 
     public LovAdapterServiceImpl(IdpLovQueryRepository idpLovQueryRepository,
                                  BaseLovQueryRepository baseLovQueryRepository,
@@ -41,6 +42,12 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
         return idpLovQueryRepository.queryLovValueMeaning(tenantId,lovCode,lovValue);
     }
+
+    @Override
+    public List<LovValuesCO> queryIdpLov(Long tenantId, List<String> lovCodes) {
+        return idpLovQueryRepository.queryIdpLov(tenantId, lovCodes);
+    }
+
     @Override
     public Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
         return baseLovQueryRepository.findCurrencyByCodes(tenantId, currencyCodes);
