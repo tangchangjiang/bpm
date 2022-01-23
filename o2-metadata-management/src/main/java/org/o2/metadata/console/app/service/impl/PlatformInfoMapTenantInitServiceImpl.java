@@ -8,6 +8,7 @@ import org.o2.metadata.console.app.service.PlatformInfoMapTenantInitService;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePlatformInfoMapping start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）

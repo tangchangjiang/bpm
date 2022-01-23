@@ -13,6 +13,7 @@ import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -51,6 +52,7 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
      * @param targetTenantId 租户Id
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeSystemParameter start");
         // 1. 查询平台租户（所有已启用）

@@ -8,6 +8,7 @@ import org.o2.metadata.console.app.service.PlatformDefineTenantInitService;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializePlatforms start");
         // 1. 查询平台租户（所有已启用）
