@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-metadata-pipeline-management</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.metadata</groupId>
             <artifactId>o2-metadata-management-client</artifactId>
         </dependency>
         <dependency>

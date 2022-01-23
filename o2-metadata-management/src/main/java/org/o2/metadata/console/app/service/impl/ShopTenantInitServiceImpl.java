@@ -9,6 +9,7 @@ import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeOnlineShop start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）

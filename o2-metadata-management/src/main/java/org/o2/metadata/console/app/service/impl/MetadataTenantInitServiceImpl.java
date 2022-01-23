@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.o2.metadata.console.app.service.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -34,7 +33,9 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final PlatformInfoMapTenantInitService platformInfoMapTenantInitService;
 
-    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService, MallLangPromptTenantInitService mallLangPromptTenantInitService, ShopTenantInitService shopTenantInitService, PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService, PlatformInfoMapTenantInitService platformInfoMapTenantInitService) {
+    private final WarehouseTenantInitService warehouseTenantInitService;
+
+    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService, MallLangPromptTenantInitService mallLangPromptTenantInitService, ShopTenantInitService shopTenantInitService, PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService, PlatformInfoMapTenantInitService platformInfoMapTenantInitService, WarehouseTenantInitService warehouseTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
         this.staticResourceTenantInitService = staticResourceTenantInitService;
         this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
@@ -42,9 +43,9 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         this.platformDefineTenantInitService = platformDefineTenantInitService;
         this.catalogTenantInitService = catalogTenantInitService;
         this.platformInfoMapTenantInitService = platformInfoMapTenantInitService;
+        this.warehouseTenantInitService = warehouseTenantInitService;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void tenantInitialize(long sourceTenantId, List<String> tenantList) {
         if (CollectionUtils.isEmpty(tenantList)) {
@@ -73,6 +74,10 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
             // 7. 平台信息匹配
             platformInfoMapTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+
+            // 8. 仓库（虚拟仓）
+            warehouseTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+
         }
 
     }

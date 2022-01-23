@@ -8,6 +8,7 @@ import org.o2.metadata.console.app.service.MallLangPromptTenantInitService;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class MallLangPromptTenantInitServiceImpl implements MallLangPromptTenant
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeMallLangPrompt start");
         // 1. 查询平台租户（所有已启用）
