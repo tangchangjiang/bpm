@@ -29,5 +29,9 @@ public class CarrierRemoteServiceImpl implements CarrierRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-
+    @Override
+    public ResponseEntity<String> importList(Long organizationId) {
+        log.error("Error importList, params[tenantId = {}]", organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

@@ -46,4 +46,16 @@ public class CarrierClient {
         return ResponseUtils.getResponse(carrierRemoteService.listCarrierMappings(carrierMappingQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierMappingCO>>() {
         });
     }
+
+
+    /**
+     * 租户id查询所有承运商数据
+     * @param tenantId   租户ID
+     * @return map key:carrierName
+     */
+    public Map<String, CarrierCO> importList(Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.importList(tenantId), new TypeReference<Map<String, CarrierCO>>() {
+        });
+    }
+
 }
