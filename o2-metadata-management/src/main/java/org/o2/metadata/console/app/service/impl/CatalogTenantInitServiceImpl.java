@@ -11,6 +11,7 @@ import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeCatalogAndVersion start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）

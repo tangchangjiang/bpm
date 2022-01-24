@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 import org.o2.metadata.console.app.service.MetadataTenantInitService;
+import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 
 
 import java.util.Collections;
@@ -20,13 +21,17 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
 
     private final MetadataTenantInitService metadataTenantInitService;
 
-    public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService) {
+    private final PipelineTenantInitService pipelineTenantInitService;
+
+    public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService, PipelineTenantInitService pipelineTenantInitService) {
         this.metadataTenantInitService = metadataTenantInitService;
+        this.pipelineTenantInitService = pipelineTenantInitService;
     }
 
     @Override
     public void initializeBasicData(Long sourceTenantId, Long targetTenantId) {
         metadataTenantInitService.tenantInitialize(sourceTenantId, Collections.singletonList(String.valueOf(targetTenantId)));
+        pipelineTenantInitService.tenantInitialize(sourceTenantId, Collections.singletonList(String.valueOf(targetTenantId)));
     }
 
     @Override
