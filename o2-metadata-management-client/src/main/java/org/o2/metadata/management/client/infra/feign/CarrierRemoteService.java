@@ -42,4 +42,13 @@ public interface CarrierRemoteService {
     @PostMapping("/{organizationId}/carrier-internal/mapping")
     ResponseEntity<String> listCarrierMappings(@RequestBody CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO,
                                               @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+
+    /**
+     * 查询对应租户所有承运商数据
+     * @param organizationId 租户ID
+     * @return map
+     */
+    @PostMapping("/{organizationId}/carrier-internal/import-list")
+    ResponseEntity<String> importList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

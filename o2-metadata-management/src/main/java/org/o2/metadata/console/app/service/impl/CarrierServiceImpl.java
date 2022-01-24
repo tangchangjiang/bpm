@@ -171,4 +171,23 @@ public class CarrierServiceImpl implements CarrierService {
         }
         return map;
     }
+
+    @Override
+    public Map<String, CarrierCO> importListCarriers(Long organizationId) {
+        Map<String, CarrierCO> map = new HashMap<>(16);
+        Carrier carrier = new Carrier();
+        carrier.setTenantId(organizationId);
+        List<Carrier> carriers = carrierRepository.listCarrier(carrier);
+        if (carriers.isEmpty()) {
+            return map;
+        }
+        for (Carrier carri : carriers) {
+            CarrierCO carrierVO = new CarrierCO();
+            carrierVO.setCarrierCode(carri.getCarrierCode());
+            carrierVO.setCarrierName(carri.getCarrierName());
+            carrierVO.setActiveFlag(carri.getActiveFlag());
+            map.put(carri.getCarrierName(), carrierVO);
+        }
+        return map;
+    }
 }
