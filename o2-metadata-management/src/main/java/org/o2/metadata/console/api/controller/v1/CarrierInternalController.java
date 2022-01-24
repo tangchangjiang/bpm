@@ -10,6 +10,7 @@ import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
+import org.o2.metadata.console.infra.entity.Carrier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,13 @@ public class CarrierInternalController{
     @PostMapping("/mapping")
     public ResponseEntity<Map<String, CarrierMappingCO>> listCarrierMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierMappingQueryInnerDTO queryInnerDTO) {
         return Results.success(carrierService.listCarrierMappings(queryInnerDTO,organizationId));
+    }
+
+    @ApiOperation(value = "导入承运商列表")
+    @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/import-list")
+    public ResponseEntity<Map<String, CarrierCO>> importList(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+        return Results.success(carrierService.importListCarriers(organizationId));
     }
 
 

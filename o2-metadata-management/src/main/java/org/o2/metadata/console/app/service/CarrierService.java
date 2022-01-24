@@ -47,4 +47,13 @@ public interface CarrierService {
      * @return map
      */
     Map<String, CarrierMappingCO> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO, Long organizationId);
+
+
+    /**
+     * 批量查询承运商
+     * @param organizationId 租户ID
+     * @return map
+     */
+    Map<String, CarrierCO> importListCarriers(Long organizationId);
+
 }
