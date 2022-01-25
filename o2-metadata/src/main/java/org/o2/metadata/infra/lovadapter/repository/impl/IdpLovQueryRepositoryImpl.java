@@ -10,9 +10,7 @@ import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -29,22 +27,19 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
     }
 
     @Override
-    @Cacheable(value = "O2_LOV", key = "'idp'+'_'+#tenantId+'_'+#lovCode")
-    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
-        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
-    }
-
-    @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        List<LovValueDTO> list = self().queryLovValue(tenantId,lovCode);
-        if (!list.isEmpty()) {
-            for (LovValueDTO dto : list) {
+        List<LovValuesCO> result =  queryIdpLov(tenantId,Collections.singletonList(lovCode));
+        if (result.isEmpty()){
+            return "";
+        }
+        List<LovValueDTO> valueList = result.get(0).getLovValueList();
+            for (LovValueDTO dto : valueList) {
                 if (dto.getValue().equals(lovValue)){
                     return dto.getMeaning();
                 }
-            }
+
         }
-        return "";
+       return "";
     }
 
     @Override
@@ -66,6 +61,9 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
             List<LovValueDTO> lov = hzeroLovQueryRepository.queryLovValue(tenantId, lovCode);
             LovValuesCO co = new LovValuesCO();
             co.setLovCode(lovCode);
+            if (lov.isEmpty()) {
+                co.setLovValueList(new ArrayList<>());
+            }
             co.setLovValueList(lov);
             list.add(co);
         }
