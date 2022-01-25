@@ -14,15 +14,6 @@ import java.util.List;
  **/
 public interface IdpLovQueryRepository {
 
-    /**
-     * 独立值集详细信息
-     *
-     * @param lovCode  值集code
-     * @param tenantId 租户id
-     * @return List<LovValueDTO>
-     */
-    List<LovValueDTO> queryLovValue(Long tenantId,
-                                    String lovCode);
 
 
     /**
