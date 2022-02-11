@@ -29,4 +29,12 @@ public interface CarrierMappingRepository extends BaseRepository<CarrierMapping>
      * @return list
      */
     List<CarrierMapping> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO);
+
+    /**
+     * 获取承运商匹配表
+     *
+     * @param carrierMapping  承运商匹配
+     * @return list
+     */
+    List<CarrierMapping> selectByCondition(CarrierMapping carrierMapping);
 }

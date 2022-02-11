@@ -36,4 +36,11 @@ public interface FreightTemplateDetailMapper extends BaseMapper<FreightTemplateD
      * @return list
      */
     List<FreightTemplateDetail> selectAllByTenantId(@Param("tenantId") Long tenantId);
+
+    /**
+     *  条件查询
+     * @param freightTemplateDetail 查询
+     * @return 运费模版详情
+     */
+    List<FreightTemplateDetail> selectByByCondition(FreightTemplateDetail freightTemplateDetail);
 }

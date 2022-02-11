@@ -195,4 +195,8 @@ public class Pos extends AuditDomain {
     @Transient
     private String countryCode;
 
+    @ApiModelProperty(value = "服务点编码", hidden = true)
+    @Transient
+    private List<String> posCodes;
+
 }

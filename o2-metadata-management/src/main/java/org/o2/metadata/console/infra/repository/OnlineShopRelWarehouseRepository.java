@@ -37,4 +37,11 @@ public interface OnlineShopRelWarehouseRepository extends BaseRepository<OnlineS
      * @return  list
      */
     List<OnlineShopRelWarehouse> selectByShopIdAndWareIdAndPosId(List<OnlineShopRelWarehouse> query, Long tenantId);
+
+    /**
+     * 条件查询
+     * @param query 服务点查询条件，可为空
+     * @return 查询列表
+     */
+    List<OnlineShopRelWarehouse> selectByCondition(OnlineShopRelWarehouse query);
 }

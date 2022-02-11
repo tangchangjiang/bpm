@@ -147,4 +147,9 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         }
         return list;
     }
+
+    @Override
+    public List<OnlineShopRelWarehouse> selectByCondition(OnlineShopRelWarehouse query) {
+        return onlineShopRelWarehouseRepository.selectByCondition(query);
+    }
 }

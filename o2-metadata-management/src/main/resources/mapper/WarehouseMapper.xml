@@ -99,6 +99,12 @@
                 <bind name="warehouseCodeLike" value="'%' + warehouseCode + '%'"/>
                 AND w.warehouse_code LIKE #{warehouseCodeLike}
             </if>
+            <if test="warehouseCodes != null and warehouseCodes.size() > 0 ">
+                and w.warehouse_code IN
+                <foreach collection="warehouseCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
             <if test="warehouseName != null and warehouseName != ''">
                 <bind name="warehouseNameLike" value="'%' + warehouseName + '%'"/>
                 AND wtl.warehouse_name LIKE #{warehouseNameLike}

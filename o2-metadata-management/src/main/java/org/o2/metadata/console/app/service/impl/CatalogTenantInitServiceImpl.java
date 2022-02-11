@@ -5,16 +5,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.CatalogTenantInitService;
+import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
-import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,14 +39,10 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitialize(Long sourceTenantId, Long targetTenantId) {
         log.info("initializeCatalogAndVersion start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）
-        final List<Catalog> platformCatalogs = catalogRepository.selectByCondition(Condition.builder(Catalog.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(Catalog.FIELD_TENANT_ID, sourceTenantId)
-                        .andIn(Catalog.FIELD_CATALOG_CODE, Arrays.asList("MASTER", "OW")))
-                .build());
+        final List<Catalog> platformCatalogs = selectCatalog(sourceTenantId, TenantInitConstants.CatalogBasis.CATALOG_CODE);
 
         if (CollectionUtils.isEmpty(platformCatalogs)) {
             log.info("platformCatalogs is empty.");
@@ -54,50 +50,131 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
         }
 
         // 2. 查询目标租户是否存在数据
-        final List<Catalog> targetCatalogs = catalogRepository.selectByCondition(Condition.builder(Catalog.class)
+        final List<Catalog> targetCatalogs = selectCatalog(targetTenantId, TenantInitConstants.CatalogBasis.CATALOG_CODE);
+        handleData(targetCatalogs, platformCatalogs, sourceTenantId, targetTenantId);
+        log.info("initializeCatalogAndVersion finish, tenantId[{}]", targetTenantId);
+    }
+
+    @Override
+    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+        log.info("Business :initializeCatalogAndVersion start, tenantId[{}]", targetTenantId);
+        // 1. 查询平台租户（默认OW-1）
+        final List<Catalog> platformCatalogs = selectCatalog(sourceTenantId, TenantInitConstants.CatalogBusiness.CATALOG_CODE);
+
+        if (CollectionUtils.isEmpty(platformCatalogs)) {
+            log.info(" Business : Catalogs is empty.");
+            return;
+        }
+
+        // 2. 查询目标租户是否存在数据
+        final List<Catalog> targetCatalogs = selectCatalog(targetTenantId, TenantInitConstants.CatalogBusiness.CATALOG_CODE);
+        handleData(targetCatalogs, platformCatalogs, sourceTenantId, targetTenantId);
+        log.info("Business :  initializeCatalogAndVersion finish, tenantId[{}]", targetTenantId);
+    }
+
+    /**
+     * 查询目录
+     *
+     * @param tenantId     租户ID
+     * @param catalogCodes 目录编码
+     * @return 目录
+     */
+    private List<Catalog> selectCatalog(Long tenantId, List<String> catalogCodes) {
+        return catalogRepository.selectByCondition(Condition.builder(Catalog.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(OnlineShop.FIELD_TENANT_ID, targetTenantId)
-                        .andIn(Catalog.FIELD_CATALOG_CODE, Arrays.asList("MASTER", "OW")))
+                        .andEqualTo(Catalog.FIELD_TENANT_ID, tenantId)
+                        .andIn(Catalog.FIELD_CATALOG_CODE, catalogCodes))
                 .build());
+    }
 
-        if (CollectionUtils.isNotEmpty(targetCatalogs)) {
-            // 2.1 删除目标租户数据
-            catalogRepository.batchDeleteByPrimaryKey(targetCatalogs);
+    /**
+     * 查询目录版本
+     *
+     * @param tenantId   租户id
+     * @param catalogIds 目录ID
+     * @return 目录版本
+     */
+    private List<CatalogVersion> selectCatalogVersion(Long tenantId, List<Long> catalogIds) {
+        return catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(Catalog.FIELD_TENANT_ID, tenantId)
+                        .andIn(Catalog.FIELD_CATALOG_ID, catalogIds))
+                .build());
+    }
 
-            // 2.2 关联目录版本
-            final List<Long> catalogIds = targetCatalogs.stream().map(Catalog::getCatalogId).collect(Collectors.toList());
-            final List<CatalogVersion> targetCatalogVersions = catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
-                    .andWhere(Sqls.custom()
-                            .andEqualTo(Catalog.FIELD_TENANT_ID, targetTenantId)
-                            .andIn(Catalog.FIELD_CATALOG_ID, catalogIds))
-                    .build());
+    /**
+     * 更新& 插入租户数据
+     *
+     * @param oldList        目标租户已存在的
+     * @param initList       目标租户 需要初始化的数据
+     * @param sourceTenantId 源租户
+     * @param targetTenantId 目标租户
+     */
+    private void handleData(List<Catalog> oldList, List<Catalog> initList, Long sourceTenantId, Long targetTenantId) {
+        // 3.更新&插入目录
+        List<Catalog> addList = new ArrayList<>(16);
+        List<Catalog> updateList = new ArrayList<>(16);
+        for (Catalog init : initList) {
+            String initCode = init.getCatalogCode();
+            boolean addFlag = true;
+            if (CollectionUtils.isNotEmpty(oldList)) {
+                addList.add(init);
+                continue;
+            }
+            for (Catalog old : oldList) {
+                String oldCode = old.getCatalogCode();
+                if (initCode.equals(oldCode)) {
+                    init.setCatalogId(old.getCatalogId());
+                    init.setTenantId(targetTenantId);
+                    init.setObjectVersionNumber(old.getObjectVersionNumber());
+                    updateList.add(init);
+                    addFlag = false;
+                    break;
+                }
+            }
+            if (addFlag) {
+                addList.add(init);
+            }
+        }
+        for (Catalog catalog : addList) {
+            catalog.setTenantId(targetTenantId);
+            catalog.setCatalogId(null);
+        }
+        //  4.更新&插入目录版本
+        List<Long> catalogIds = initList.stream().map(Catalog::getCatalogId).collect(Collectors.toList());
+        //  4.1查询源租户
+        List<CatalogVersion> sourceCatalogVersions = selectCatalogVersion(sourceTenantId, catalogIds);
+        // 4.2查询目标租户
+        List<CatalogVersion> targetCatalogVersions = selectCatalogVersion(targetTenantId, catalogIds);
+        List<CatalogVersion> addVersionList = new ArrayList<>(16);
+        List<CatalogVersion> updateVersionList = new ArrayList<>(16);
+        for (CatalogVersion init : sourceCatalogVersions) {
+            String initKey = init.getCatalogVersionCode() + "-" + init.getCatalogId();
+            boolean addFlag = true;
             if (CollectionUtils.isNotEmpty(targetCatalogVersions)) {
-                catalogVersionRepository.batchDeleteByPrimaryKey(targetCatalogVersions);
+                addVersionList.add(init);
+                continue;
+            }
+            for (CatalogVersion old : targetCatalogVersions) {
+                String oldKey = old.getCatalogVersionCode() + "-" + old.getCatalogId();
+                if (initKey.equals(oldKey)) {
+                    init.setTenantId(targetTenantId);
+                    init.setCatalogVersionId(old.getCatalogVersionId());
+                    init.setObjectVersionNumber(old.getObjectVersionNumber());
+                    updateVersionList.add(init);
+                    addFlag = false;
+                    break;
+                }
+            }
+            if (addFlag) {
+                addVersionList.add(init);
             }
         }
 
-        // 3. 插入平台数据到目标租户
-        platformCatalogs.forEach(catalog -> {
-            // 查询关联表
-            final List<CatalogVersion> catalogVersions = catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
-                    .andWhere(Sqls.custom()
-                            .andEqualTo(Catalog.FIELD_TENANT_ID, sourceTenantId)
-                            .andEqualTo(Catalog.FIELD_CATALOG_ID, catalog.getCatalogId()))
-                    .build());
-
-            // 插入，catalog携带插入后主键
-            catalog.setCatalogId(null);
-            catalog.setTenantId(targetTenantId);
-            catalogRepository.insert(catalog);
-
-            catalogVersions.forEach(catalogVersion -> {
-                catalogVersion.setCatalogVersionId(null);
-                catalogVersion.setCatalogId(catalog.getCatalogId());
-                catalogVersion.setTenantId(targetTenantId);
-            });
-
-            catalogVersionRepository.batchInsert(catalogVersions);
-        });
-        log.info("initializeCatalogAndVersion finish, tenantId[{}]", targetTenantId);
+        // 5. 更新
+        catalogRepository.batchUpdateByPrimaryKey(updateList);
+        catalogRepository.batchInsertSelective(addList);
+        catalogVersionRepository.batchUpdateByPrimaryKeySelective(updateVersionList);
+        catalogVersionRepository.batchInsert(addVersionList);
     }
 }

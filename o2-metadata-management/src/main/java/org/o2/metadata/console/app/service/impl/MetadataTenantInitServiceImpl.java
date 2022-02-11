@@ -27,6 +27,8 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final ShopTenantInitService shopTenantInitService;
 
+    private final OnlineShopRelHouseTenantInitService onlineShopRelHouseTenantInitService;
+
     private final PlatformDefineTenantInitServiceImpl platformDefineTenantInitService;
 
     private final CatalogTenantInitService catalogTenantInitService;
@@ -35,15 +37,30 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final WarehouseTenantInitService warehouseTenantInitService;
 
-    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService, MallLangPromptTenantInitService mallLangPromptTenantInitService, ShopTenantInitService shopTenantInitService, PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService, PlatformInfoMapTenantInitService platformInfoMapTenantInitService, WarehouseTenantInitService warehouseTenantInitService) {
+    private final PosTenantInitService posTenantInitService;
+
+    private final CarrierTenantInitService carrierTenantInitService;
+    private final CarrierMappingTenantInitService carrierMappingTenantInitService;
+
+    public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService,
+                                         MallLangPromptTenantInitService mallLangPromptTenantInitService,
+                                         ShopTenantInitService shopTenantInitService, OnlineShopRelHouseTenantInitService onlineShopRelHouseTenantInitService,
+                                         PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService,
+                                         PlatformInfoMapTenantInitService platformInfoMapTenantInitService, WarehouseTenantInitService warehouseTenantInitService,
+                                         PosTenantInitService posTenantInitService, CarrierTenantInitService carrierTenantInitService,
+                                         CarrierMappingTenantInitService carrierMappingTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
         this.staticResourceTenantInitService = staticResourceTenantInitService;
         this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
         this.shopTenantInitService = shopTenantInitService;
+        this.onlineShopRelHouseTenantInitService = onlineShopRelHouseTenantInitService;
         this.platformDefineTenantInitService = platformDefineTenantInitService;
         this.catalogTenantInitService = catalogTenantInitService;
         this.platformInfoMapTenantInitService = platformInfoMapTenantInitService;
         this.warehouseTenantInitService = warehouseTenantInitService;
+        this.posTenantInitService = posTenantInitService;
+        this.carrierTenantInitService = carrierTenantInitService;
+        this.carrierMappingTenantInitService = carrierMappingTenantInitService;
     }
 
     @Override
@@ -80,5 +97,40 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
         }
 
+    }
+
+    @Override
+    public void tenantInitializeBusiness(long sourceTenantId, List<String> tenantList) {
+        if (CollectionUtils.isEmpty(tenantList)) {
+            return;
+        }
+        List<Long> tenantIds = tenantList.stream().map(Long::parseLong).collect(Collectors.toList());
+        for (Long tenantId : tenantIds) {
+            // 1. 保留网店编码为TM-1、JD-1、OW-2、OW-1的网店
+            shopTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
+
+            // 2. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
+            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
+
+            // 3. 服务点 保留编码为SH001、BJ001的服务点
+            posTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+           // 4. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
+            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 5. 保留TM-01、JD-1、OW-1、OW-2关联关系
+            onlineShopRelHouseTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 6.保留编码为STO、YTO、SF、EMS、JD的承运商
+            carrierTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 7.OW、JD、TM三个平台下全部保留
+            carrierMappingTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+
+
+
+
+        }
     }
 }
