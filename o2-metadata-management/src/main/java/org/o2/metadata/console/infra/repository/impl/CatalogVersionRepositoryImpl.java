@@ -38,4 +38,9 @@ public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVers
     public List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId) {
         return catalogVersionMapper.listCatalogAndVersion(queryInner,organizationId);
     }
+
+    @Override
+    public List<CatalogVersion> selectByCondition(CatalogVersion catalogVersion) {
+        return catalogVersionMapper.selectByCondition(catalogVersion);
+    }
 }

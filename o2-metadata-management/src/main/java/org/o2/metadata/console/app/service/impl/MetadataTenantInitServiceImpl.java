@@ -40,7 +40,11 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
     private final PosTenantInitService posTenantInitService;
 
     private final CarrierTenantInitService carrierTenantInitService;
+
     private final CarrierMappingTenantInitService carrierMappingTenantInitService;
+
+    private final FreightTenantInitService freightTenantInitService;
+
 
     public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService, StaticResourceTenantInitService staticResourceTenantInitService,
                                          MallLangPromptTenantInitService mallLangPromptTenantInitService,
@@ -48,7 +52,7 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
                                          PlatformDefineTenantInitServiceImpl platformDefineTenantInitService, CatalogTenantInitService catalogTenantInitService,
                                          PlatformInfoMapTenantInitService platformInfoMapTenantInitService, WarehouseTenantInitService warehouseTenantInitService,
                                          PosTenantInitService posTenantInitService, CarrierTenantInitService carrierTenantInitService,
-                                         CarrierMappingTenantInitService carrierMappingTenantInitService) {
+                                         CarrierMappingTenantInitService carrierMappingTenantInitService, FreightTenantInitService freightTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
         this.staticResourceTenantInitService = staticResourceTenantInitService;
         this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
@@ -61,6 +65,7 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         this.posTenantInitService = posTenantInitService;
         this.carrierTenantInitService = carrierTenantInitService;
         this.carrierMappingTenantInitService = carrierMappingTenantInitService;
+        this.freightTenantInitService = freightTenantInitService;
     }
 
     @Override
@@ -124,8 +129,21 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
             // 6.保留编码为STO、YTO、SF、EMS、JD的承运商
             carrierTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            // 7.OW、JD、TM三个平台下全部保留
+
+            // 7. 承运商匹配 OW、JD、TM三个平台下全部保留
             carrierMappingTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 8.目录版本管理
+            catalogTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 9.运费模板
+            freightTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            //10.平台信息匹配
+            platformInfoMapTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+
+            // 11.平台定义
+            platformDefineTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
 
 

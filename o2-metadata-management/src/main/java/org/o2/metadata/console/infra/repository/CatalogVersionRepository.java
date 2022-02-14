@@ -37,4 +37,11 @@ public interface CatalogVersionRepository extends BaseRepository<CatalogVersion>
      * @return  list
      */
     List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId);
+
+    /**
+     * 条件查询
+     * @param catalogVersion 查询条件
+     * @return 目录版本
+     */
+    List<CatalogVersion> selectByCondition(CatalogVersion catalogVersion);
 }

@@ -134,4 +134,33 @@
          </where>
 
     </select>
+    <select id="selectByCondition" resultType="org.o2.metadata.console.infra.entity.CatalogVersion">
+        select version.catalog_version_id,
+               version.catalog_version_code,
+               version.catalog_version_name,
+               version.catalog_version_remarks,
+               catalog.catalog_id,
+               catalog.catalog_code,
+               version.object_version_number,
+               version.tenant_id,
+               version.active_flag
+        from o2md_catalog_version version
+        inner join o2md_catalog catalog on catalog.catalog_id = version.catalog_id and  catalog.tenant_id = #{tenantId}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND version.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1=0
+                </otherwise>
+            </choose>
+            <if test="catalogCodes != null and catalogCodes.size > 0" >
+                and catalog.catalog_code IN
+                <foreach collection="catalogCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

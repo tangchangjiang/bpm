@@ -14,4 +14,11 @@ public interface PlatformInfoMapTenantInitService {
      * @param tenantId       租户
      */
     void tenantInitialize(Long sourceTenantId, Long tenantId);
+
+    /**
+     * 租户业务数据初始化
+     * @param sourceTenantId 源租户
+     * @param targetTenantId  目标库租户
+     */
+    void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId);
 }

@@ -58,6 +58,31 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         handleData(targetPlatformInfoMappings,platformInfoMappings,targetTenantId);
     }
 
+    @Override
+    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+        log.info("Business ：initializePlatformInfoMapping start, tenantId[{}]", targetTenantId);
+        // 1. 查询平台租户（默认OW-1）
+        final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
+                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE)
+                )
+                .build());
+
+        if (CollectionUtils.isEmpty(platformInfoMappings)) {
+            log.info("platformInfoMappings is empty.");
+            return;
+        }
+
+        // 2. 查询目标租户是否存在数据
+        final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, targetTenantId)
+                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE))
+                .build());
+        handleData(targetPlatformInfoMappings,platformInfoMappings,targetTenantId);
+    }
+
     private void handleData(List<PlatformInfoMapping> oldList,List<PlatformInfoMapping> initList,Long targetTenantId) {
         List<PlatformInfoMapping> addList = new ArrayList<>(16);
         List<PlatformInfoMapping> updateList = new ArrayList<>(16);
