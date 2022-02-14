@@ -34,14 +34,14 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
         CarrierMapping query = new CarrierMapping();
         query.setTenantId(sourceTenantId);
         query.setPlatformCodes(TenantInitConstants.CarrierMappingBusiness.PLATFORM_CODES);
-        List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.selectByCondition(query);
+        List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceCarrierMapping)) {
             log.info("Business: carrier is empty.");
             return;
         }
         // 2. 查询目标租户
         query.setTenantId(targetTenantId);
-        List<CarrierMapping> targetCarrierMapping = carrierMappingRepository.selectByCondition(query);
+        List<CarrierMapping> targetCarrierMapping = carrierMappingRepository.listByCondition(query);
         handleData(targetCarrierMapping,sourceCarrierMapping,targetTenantId);
         log.info("Business: carrier finish");
     }

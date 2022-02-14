@@ -45,7 +45,7 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
     }
 
     @Override
-    public List<OnlineShopRelWarehouse> selectByCondition(OnlineShopRelWarehouse query) {
-        return onlineShopRelWarehouseMapper.selectByCondition(query);
+    public List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query) {
+        return onlineShopRelWarehouseMapper.listByCondition(query);
     }
 }

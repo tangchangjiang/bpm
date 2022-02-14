@@ -41,14 +41,14 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setTenantId(sourceTenantId);
         query.setOnlineShopCodes(TenantInitConstants.OnlineShopRelHouseBusiness.onlineShops);
-        List<OnlineShopRelWarehouse> sourceShopRelWarehouses = onlineShopRelWarehouseService.selectByCondition(query);
+        List<OnlineShopRelWarehouse> sourceShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceShopRelWarehouses)) {
             log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);
             return;
         }
         // 2. 查询目标数据库
         query.setTenantId(targetTenantId);
-        List<OnlineShopRelWarehouse> targetShopRelWarehouses = onlineShopRelWarehouseService.selectByCondition(query);
+        List<OnlineShopRelWarehouse> targetShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
         handleData(targetShopRelWarehouses,sourceShopRelWarehouses,targetTenantId);
     }
     private void handleData(List<OnlineShopRelWarehouse> oldList,List<OnlineShopRelWarehouse> initList ,Long targetTenantId) {

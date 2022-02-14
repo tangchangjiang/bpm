@@ -57,5 +57,5 @@ public interface OnlineShopRelWarehouseMapper extends BaseMapper<OnlineShopRelWa
      * @param query 服务点查询条件，可为空
      * @return 查询列表
      */
-    List<OnlineShopRelWarehouse> selectByCondition(OnlineShopRelWarehouse query);
+    List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query);
 }

@@ -35,7 +35,7 @@ public class CarrierMappingRepositoryImpl extends BaseRepositoryImpl<CarrierMapp
     }
 
     @Override
-    public List<CarrierMapping> selectByCondition(CarrierMapping carrierMapping) {
-        return carrierMappingMapper.selectByCondition(carrierMapping);
+    public List<CarrierMapping> listByCondition(CarrierMapping carrierMapping) {
+        return carrierMappingMapper.listByCondition(carrierMapping);
     }
 }

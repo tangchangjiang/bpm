@@ -91,7 +91,7 @@
             AND cm.platform_code = #{platformCode}
         </if>
     </select>
-    <select id="selectByCondition" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
+    <select id="listByCondition" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
         select cm.carrier_mapping_id,
                cm.platform_code,
                cm.carrier_id,

@@ -103,7 +103,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
         CatalogVersion query = new CatalogVersion();
         query.setTenantId(tenantId);
         query.setCatalogCodes(TenantInitConstants.CatalogBusiness.CATALOG_CODE);
-        return catalogVersionRepository.selectByCondition(query);
+        return catalogVersionRepository.listByCondition(query);
     }
 
     /**

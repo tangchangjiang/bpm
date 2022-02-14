@@ -40,7 +40,7 @@ public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVers
     }
 
     @Override
-    public List<CatalogVersion> selectByCondition(CatalogVersion catalogVersion) {
-        return catalogVersionMapper.selectByCondition(catalogVersion);
+    public List<CatalogVersion> listByCondition(CatalogVersion catalogVersion) {
+        return catalogVersionMapper.listByCondition(catalogVersion);
     }
 }

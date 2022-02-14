@@ -149,7 +149,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
-    public List<OnlineShopRelWarehouse> selectByCondition(OnlineShopRelWarehouse query) {
-        return onlineShopRelWarehouseRepository.selectByCondition(query);
+    public List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query) {
+        return onlineShopRelWarehouseRepository.listByCondition(query);
     }
 }

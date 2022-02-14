@@ -36,5 +36,5 @@ public interface CarrierMappingRepository extends BaseRepository<CarrierMapping>
      * @param carrierMapping  承运商匹配
      * @return list
      */
-    List<CarrierMapping> selectByCondition(CarrierMapping carrierMapping);
+    List<CarrierMapping> listByCondition(CarrierMapping carrierMapping);
 }

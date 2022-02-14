@@ -31,5 +31,5 @@ public interface CarrierMappingMapper extends BaseMapper<CarrierMapping> {
     List<CarrierMapping> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO);
 
 
-    List<CarrierMapping> selectByCondition(CarrierMapping carrierMapping);
+    List<CarrierMapping> listByCondition(CarrierMapping carrierMapping);
 }

@@ -124,9 +124,10 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         addList.forEach(onlineShop -> {
             onlineShop.setOnlineShopId(null);
             onlineShop.setTenantId(targetTenantId);
+            onlineShop.setObjectVersionNumber(1L);
         });
         // 3. 数据到目标租户
-        onlineShopRepository.batchInsert(addList);
+        onlineShopRepository.batchInsertSelective(addList);
         onlineShopRepository.batchUpdateByPrimaryKey(updateList);
 
         // 更新缓存

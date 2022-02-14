@@ -45,5 +45,5 @@ public interface CatalogVersionMapper extends BaseMapper<CatalogVersion> {
      * @param catalogVersion 查询条件
      * @return 目录版本
      */
-    List<CatalogVersion> selectByCondition(CatalogVersion catalogVersion);
+    List<CatalogVersion> listByCondition(CatalogVersion catalogVersion);
 }
