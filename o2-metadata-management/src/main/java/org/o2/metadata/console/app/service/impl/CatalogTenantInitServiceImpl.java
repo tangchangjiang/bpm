@@ -122,7 +122,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
         for (Catalog init : initList) {
             String initCode = init.getCatalogCode();
             boolean addFlag = true;
-            if (CollectionUtils.isNotEmpty(oldList)) {
+            if (CollectionUtils.isEmpty(oldList)) {
                 addList.add(init);
                 continue;
             }
@@ -166,7 +166,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
         List<CatalogVersion> addVersionList = new ArrayList<>(16);
         List<CatalogVersion> updateVersionList = new ArrayList<>(16);
         for (CatalogVersion init : sourceCatalogVersions) {
-            String initKey = init.getCatalogVersionCode() + "-" + init.getCatalogCode();
+            String initKey = init.getCatalogVersionCode();
             Long catalogId = catalogMap.get(init.getCatalogCode());
             if (catalogId == null) {
                 log.error("sourceTenantId: {},catalogCode {} ；The catalog  is empty ",targetTenantId,init.getCatalogCodes());
@@ -174,12 +174,12 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
             }
             init.setCatalogId(catalogId);
             boolean addFlag = true;
-            if (CollectionUtils.isNotEmpty(targetCatalogVersions)) {
+            if (CollectionUtils.isEmpty(targetCatalogVersions)) {
                 addVersionList.add(init);
                 continue;
             }
             for (CatalogVersion old : targetCatalogVersions) {
-                String oldKey = old.getCatalogVersionCode() + "-" + old.getCatalogCode();
+                String oldKey = old.getCatalogVersionCode();
                 if (initKey.equals(oldKey)) {
                     init.setTenantId(targetTenantId);
                     init.setCatalogVersionId(old.getCatalogVersionId());
@@ -193,7 +193,10 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
                 addVersionList.add(init);
             }
         }
-
+        for (CatalogVersion catalogVersion : addVersionList) {
+            catalogVersion.setCatalogVersionId(null);
+            catalogVersion.setTenantId(targetTenantId);
+        }
         catalogVersionRepository.batchUpdateByPrimaryKeySelective(updateVersionList);
         catalogVersionRepository.batchInsert(addVersionList);
     }

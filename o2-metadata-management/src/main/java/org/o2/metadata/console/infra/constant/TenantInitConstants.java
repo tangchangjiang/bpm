@@ -14,7 +14,13 @@ public interface TenantInitConstants {
      * 网店业务数据
      */
     interface InitOnlineShopBusiness {
-        List<String> onlineShops = Arrays.asList("TM-1","JD-1","OW-2","OW-1");
+        List<String> ONLINE_SHOP_CODE = Arrays.asList("TM-1","JD-1","OW-2","OW-1");
+    }
+    /**
+     * 目录基础数据
+     */
+    interface InitOnlineShopBasis {
+        List<String> ONLINE_SHOP_CODE = Arrays.asList("OW-1");
     }
 
     /**
@@ -28,7 +34,7 @@ public interface TenantInitConstants {
      * 网店业务数据
      */
     interface InitPosBusiness {
-        List<String> poss = Arrays.asList("SH001","BJ001");
+        List<String> POS_CODE= Arrays.asList("SH001","BJ001");
     }
     /**
      * 网店关联仓库业务数据

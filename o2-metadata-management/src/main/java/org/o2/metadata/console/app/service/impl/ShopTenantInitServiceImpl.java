@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.app.service.ShopTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -28,14 +27,12 @@ import java.util.List;
 public class ShopTenantInitServiceImpl implements ShopTenantInitService {
 
     private final OnlineShopRepository onlineShopRepository;
-    private final OnlineShopService onlineShopService;
 
     private final OnlineShopRedis onlineShopRedis;
 
 
-    public ShopTenantInitServiceImpl(OnlineShopRepository onlineShopRepository, OnlineShopService onlineShopService, OnlineShopRedis onlineShopRedis) {
+    public ShopTenantInitServiceImpl(OnlineShopRepository onlineShopRepository, OnlineShopRedis onlineShopRedis) {
         this.onlineShopRepository = onlineShopRepository;
-        this.onlineShopService = onlineShopService;
         this.onlineShopRedis = onlineShopRedis;
     }
 
@@ -45,53 +42,50 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeOnlineShop start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）
-        final List<OnlineShop> platformOnlineShops = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(OnlineShop.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, "OW-1")
-                )
-                .build());
+        List<OnlineShop> sourceOnlineShop = selectOnlineShop(sourceTenantId, TenantInitConstants.InitOnlineShopBasis.ONLINE_SHOP_CODE);
 
-        if (CollectionUtils.isEmpty(platformOnlineShops)) {
+        if (CollectionUtils.isEmpty(sourceOnlineShop)) {
             log.info("platformOnlineShops is empty.");
             return;
         }
 
         // 2. 查询目标租户是否存在数据
-        final List<OnlineShop> oldOnlineShops = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(OnlineShop.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, "OW-1"))
-                .build());
-        handleData(oldOnlineShops,platformOnlineShops,targetTenantId);
+        List<OnlineShop> oldOnlineShops = selectOnlineShop(targetTenantId, TenantInitConstants.InitOnlineShopBasis.ONLINE_SHOP_CODE);
+        handleData(oldOnlineShops, sourceOnlineShop, targetTenantId);
         log.info("initializeOnlineShop finish, tenantId[{}]", targetTenantId);
+    }
+
+    @Override
+    public List<OnlineShop> selectOnlineShop(Long tenantId, List<String> onlineShopCodes) {
+        return onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(OnlineShop.FIELD_TENANT_ID, tenantId)
+                        .andIn(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShopCodes))
+                .build());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
         // 1. 查询来源租户网店
-        OnlineShop query = new  OnlineShop();
-        query.setTenantId(sourceTenantId);
-        query.setOnlineShopCodes(TenantInitConstants.InitOnlineShopBusiness.onlineShops);
-        List<OnlineShop> onlineShops = onlineShopService.selectByCondition(query);
+        List<OnlineShop> onlineShops = selectOnlineShop(sourceTenantId, TenantInitConstants.InitOnlineShopBusiness.ONLINE_SHOP_CODE);
         if (CollectionUtils.isEmpty(onlineShops)) {
             log.info("Business: platformOnlineShops is empty.");
             return;
         }
         // 2. 查询目标租户是否存在数据
-        query.setTenantId(targetTenantId);
-        List<OnlineShop> oldOnlineShops = onlineShopService.selectByCondition(query);
-        handleData(oldOnlineShops,onlineShops,targetTenantId);
+        List<OnlineShop> oldOnlineShops = selectOnlineShop(targetTenantId, TenantInitConstants.InitOnlineShopBusiness.ONLINE_SHOP_CODE);
+        handleData(oldOnlineShops, onlineShops, targetTenantId);
         log.info("Business: initializeOnlineShop finish, tenantId[{}]", targetTenantId);
 
     }
 
     /**
      * 处理网店数据：更新已存在的网店数据，插入未存在的目标数据
-     * @param oldOnlineShops oldOnlineShops 已存在的数据
-     * @param initializeOnlineShops   初始化的数据
-     * @param targetTenantId 目标租户ID
+     *
+     * @param oldOnlineShops        oldOnlineShops 已存在的数据
+     * @param initializeOnlineShops 初始化的数据
+     * @param targetTenantId        目标租户ID
      */
     private void handleData(List<OnlineShop> oldOnlineShops, List<OnlineShop> initializeOnlineShops, Long targetTenantId) {
 
@@ -102,7 +96,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         for (OnlineShop initialize : initializeOnlineShops) {
             String shopCode = initialize.getOnlineShopCode();
             boolean addFlag = true;
-            if (CollectionUtils.isNotEmpty(oldOnlineShops)) {
+            if (CollectionUtils.isEmpty(oldOnlineShops)) {
                 addList.add(initialize);
                 continue;
             }

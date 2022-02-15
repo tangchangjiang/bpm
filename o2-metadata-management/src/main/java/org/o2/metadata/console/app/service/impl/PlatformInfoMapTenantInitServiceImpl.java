@@ -59,13 +59,14 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
     }
 
     @Override
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    @Transactional(rollbackFor = Exception.class)
+    public void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId) {
         log.info("Business ：initializePlatformInfoMapping start, tenantId[{}]", targetTenantId);
         // 1. 查询平台租户（默认OW-1）
         final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE)
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE)
                 )
                 .build());
 
@@ -78,26 +79,27 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBusiness.PLATFORM_CODE))
                 .build());
         handleData(targetPlatformInfoMappings,platformInfoMappings,targetTenantId);
+        log.info("Business ：initializePlatformInfoMapping finish, tenantId[{}]", targetTenantId);
     }
 
     private void handleData(List<PlatformInfoMapping> oldList,List<PlatformInfoMapping> initList,Long targetTenantId) {
         List<PlatformInfoMapping> addList = new ArrayList<>(16);
         List<PlatformInfoMapping> updateList = new ArrayList<>(16);
         for (PlatformInfoMapping init : initList) {
-            String initCode = init.getPlatformCode() + "-"+ init.getPlatformInfCode() +"-"+init.getInfCode();
+            String initCode = init.getPlatformCode() + "-"+ init.getPlatformInfCode() +"-"+init.getInfCode() +"-" +init.getInfTypeCode();
             boolean addFlag = true;
             if (CollectionUtils.isEmpty(oldList)) {
                addList.add(init);
                continue;
             }
             for (PlatformInfoMapping old : oldList) {
-                String oldCode = old.getPlatformCode() + "-"+ old.getPlatformInfCode() +"-"+old.getInfCode();
+                String oldCode = old.getPlatformCode() + "-"+ old.getPlatformInfCode() +"-"+old.getInfCode() +"-" +old.getInfTypeCode();;
                 if (initCode.equals(oldCode)) {
                     init.setPlatformInfMappingId(old.getPlatformInfMappingId());
-                    init.setTenantId(targetTenantId);
+                    init.setTenantId(old.getTenantId());
                     init.setObjectVersionNumber(old.getObjectVersionNumber());
                     addFlag = false;
                     updateList.add(init);

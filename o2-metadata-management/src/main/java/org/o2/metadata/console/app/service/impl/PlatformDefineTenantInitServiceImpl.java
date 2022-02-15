@@ -88,24 +88,30 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         log.info("Business initializePlatforms finish, tenantId[{}]", targetTenantId);
     }
 
+    /**
+     *  更新&插入 租户数据
+     * @param oldList 目标租户 已存在的
+     * @param initList 目标租户 重新初始化
+     * @param targetTenantId  目标租户
+     */
     private void handleData(List<Platform> oldList ,List<Platform> initList,Long targetTenantId) {
         List<Platform> addList = new ArrayList<>(16);
         List<Platform> updateList = new ArrayList<>(16);
         for (Platform init :initList) {
             String initCode = init.getPlatformCode();
             boolean addFlag = true;
-            if (CollectionUtils.isNotEmpty(oldList)) {
+            if (CollectionUtils.isEmpty(oldList)) {
                addList.add(init);
                continue;
             }
             for (Platform old : oldList) {
-                String oldCode = init.getPlatformCode();
+                String oldCode = old.getPlatformCode();
                 if (initCode.equals(oldCode)) {
-                    addFlag = false;
                     init.setPlatformId(old.getPlatformId());
-                    init.setTenantId(targetTenantId);
+                    init.setTenantId(old.getTenantId());
                     init.setObjectVersionNumber(old.getObjectVersionNumber());
                     updateList.add(init);
+                    addFlag = false;
                     break;
                 }
             }

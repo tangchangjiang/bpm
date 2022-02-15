@@ -94,8 +94,7 @@
     <select id="listByCondition" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
         select cm.carrier_mapping_id,
                cm.platform_code,
-               cm.carrier_id,
-               cm.carrier_code,
+               c.carrier_id,
                cm.platform_carrier_code,
                cm.platform_carrier_name,
                cm.tenant_id,

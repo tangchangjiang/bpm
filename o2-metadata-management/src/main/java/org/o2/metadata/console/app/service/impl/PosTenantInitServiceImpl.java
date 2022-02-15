@@ -36,7 +36,7 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
         log.info("Business: initializePos start, tenantId[{}]", targetTenantId);
         Pos query = new Pos();
         query.setTenantId(sourceTenantId);
-        query.setPosCodes(TenantInitConstants.InitPosBusiness.poss);
+        query.setPosCodes(TenantInitConstants.InitPosBusiness.POS_CODE);
         List<Pos> sourcePos = posService.selectByCondition(query);
         if (CollectionUtils.isEmpty(sourcePos)) {
             log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);

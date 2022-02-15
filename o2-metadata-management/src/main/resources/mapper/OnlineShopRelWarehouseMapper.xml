@@ -153,13 +153,13 @@
     </select>
     <select id="listByCondition" resultType="org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse">
         select rel.online_shop_rel_warehouse_id,
-        rel.online_shop_id,
-        rel.warehouse_id,
+        shop.online_shop_id,
+        house.warehouse_id,
         rel.active_flag,
         rel.tenant_id,
         rel.object_version_number,
         house.warehouse_code,
-        shop.online_shop_code,
+        shop.online_shop_code
         from o2md_shop_rel_warehouse rel
         inner join o2md_online_shop shop on shop.online_shop_id = rel.online_shop_id and shop.tenant_id = #{tenantId}
         inner join o2md_warehouse house on house.warehouse_id = rel.warehouse_id and rel.tenant_id = #{tenantId}

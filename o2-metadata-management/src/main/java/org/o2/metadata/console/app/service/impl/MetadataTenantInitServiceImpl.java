@@ -114,40 +114,33 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
             // 1. 保留网店编码为TM-1、JD-1、OW-2、OW-1的网店
             shopTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
 
-            // 2. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
-            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
-
-            // 3. 服务点 保留编码为SH001、BJ001的服务点
+            // 2. 服务点 保留编码为SH001、BJ001的服务点
             posTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-           // 4. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
-            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+            // 3. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
+            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
 
-            // 5. 保留TM-01、JD-1、OW-1、OW-2关联关系
+            // 4. 保留TM-01、JD-1、OW-1、OW-2关联关系
             onlineShopRelHouseTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            // 6.保留编码为STO、YTO、SF、EMS、JD的承运商
+            // 5.保留编码为STO、YTO、SF、EMS、JD的承运商
             carrierTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-
-            // 7. 承运商匹配 OW、JD、TM三个平台下全部保留
+            // 6. 承运商匹配 OW、JD、TM三个平台下全部保留
             carrierMappingTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            // 8.目录版本管理
+            // 7.目录版本管理
             catalogTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            // 9.运费模板
+            // 8.运费模板
             freightTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            //10.平台信息匹配
-            platformInfoMapTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-            // 11.平台定义
+            // 10.平台定义
             platformDefineTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
-
-
-
+            //9.平台信息匹配
+            platformInfoMapTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
 
         }
     }

@@ -79,9 +79,11 @@
         w.score,
         w.actived_date_from,
         w.actived_date_to,
-        w.pos_id,
+        p.pos_id,
+        w.active_flag,
         p.pos_code,
         ptl.pos_name,
+        w.inv_organization_code,
         w.OBJECT_VERSION_NUMBER,
         w.CREATION_DATE,
         w.CREATED_BY,
@@ -90,7 +92,7 @@
         w.tenant_id
         FROM
         o2md_warehouse w
-        left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
+        left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang} and wtl.tenant_id = #{tenantId}
         LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
         <where>

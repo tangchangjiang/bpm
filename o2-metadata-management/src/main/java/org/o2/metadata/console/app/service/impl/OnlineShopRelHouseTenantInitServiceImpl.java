@@ -4,16 +4,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.service.OnlineShopRelHouseTenantInitService;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
+import org.o2.metadata.console.app.service.ShopTenantInitService;
+import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
+import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网店关联服务点数据初始化
@@ -25,18 +32,26 @@ import java.util.List;
 public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHouseTenantInitService {
     private final OnlineShopRedis onlineShopRedis;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
-    private final OnlineShopRelWarehouseService  onlineShopRelWarehouseService;
+    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
+    private final ShopTenantInitService shopTenantInitService;
+    private final WarehouseService warehouseService;
 
-    public OnlineShopRelHouseTenantInitServiceImpl(OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository, OnlineShopRelWarehouseService onlineShopRelWarehouseService) {
+    public OnlineShopRelHouseTenantInitServiceImpl(OnlineShopRedis onlineShopRedis,
+                                                   OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
+                                                   OnlineShopRelWarehouseService onlineShopRelWarehouseService,
+                                                   ShopTenantInitService shopTenantInitService,
+                                                   WarehouseService warehouseService) {
         this.onlineShopRedis = onlineShopRedis;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
+        this.shopTenantInitService = shopTenantInitService;
+        this.warehouseService = warehouseService;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
-      // 1. 查询源目标数据库
+        // 1. 查询源目标数据库
         log.info("Business: initializeOnlineShopRelWarehouse start, tenantId[{}]", targetTenantId);
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setTenantId(sourceTenantId);
@@ -49,50 +64,50 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         // 2. 查询目标数据库
         query.setTenantId(targetTenantId);
         List<OnlineShopRelWarehouse> targetShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
-        handleData(targetShopRelWarehouses,sourceShopRelWarehouses,targetTenantId);
+        handleData(targetShopRelWarehouses, sourceShopRelWarehouses, targetTenantId);
     }
-    private void handleData(List<OnlineShopRelWarehouse> oldList,List<OnlineShopRelWarehouse> initList ,Long targetTenantId) {
-        // 3.1 插入目标数据库
+
+    private void handleData(List<OnlineShopRelWarehouse> oldList, List<OnlineShopRelWarehouse> initList, Long targetTenantId) {
+        // 插入目标数据库
         List<OnlineShopRelWarehouse> addList = new ArrayList<>(4);
-        // 3.2 更新目标数据库
-        List<OnlineShopRelWarehouse> updateList = new ArrayList<>(4);
+        // 获取网店编码&仓库编码
+        List<String> sourceShopCode = new ArrayList<>(initList.size());
+        List<String> sourceWarehouseCode = new ArrayList<>(initList.size());
+        for (OnlineShopRelWarehouse warehouse : initList) {
+            sourceShopCode.add(warehouse.getOnlineShopCode());
+            sourceWarehouseCode.add(warehouse.getWarehouseCode());
+        }
+        // 网店 编码和ID 对应关系
+        List<OnlineShop> targetShop = shopTenantInitService.selectOnlineShop(targetTenantId, sourceShopCode);
+        Map<String, Long> targetShopMap = new HashMap<>(targetShop.size());
+        for (OnlineShop onlineShop : targetShop) {
+            targetShopMap.put(onlineShop.getOnlineShopCode(), onlineShop.getOnlineShopId());
+        }
+        // 仓库 编码和ID  对应关系
+        Warehouse query = new Warehouse();
+        query.setTenantId(targetTenantId);
+        query.setWarehouseCodes(sourceWarehouseCode);
+        List<Warehouse> sourceWarehouses = warehouseService.selectByCondition(query);
+        Map<String, Long> targetWarehouseMap = new HashMap<>(sourceWarehouses.size());
+        for (Warehouse sourceWarehouse : sourceWarehouses) {
+            targetWarehouseMap.put(sourceWarehouse.getWarehouseCode(), sourceWarehouse.getWarehouseId());
+        }
+        if (CollectionUtils.isEmpty(oldList)) {
+            onlineShopRelWarehouseRepository.batchDeleteByPrimaryKey(oldList);
+        }
+        // 网店关联仓库
         for (OnlineShopRelWarehouse init : initList) {
             String wareHouseCode = init.getWarehouseCode();
             String shopCode = init.getOnlineShopCode();
-            boolean addFlag = true;
-            if (CollectionUtils.isEmpty(oldList)) {
-                addList.add(init);
-                continue;
-            }
-            for (OnlineShopRelWarehouse old :oldList ) {
-                String oldWareHouseCode = init.getWarehouseCode();
-                String oldShopCode = init.getOnlineShopCode();
-                if (wareHouseCode.equals(oldWareHouseCode) && shopCode.equals(oldShopCode)) {
-                    init.setOnlineShopRelWarehouseId(old.getOnlineShopRelWarehouseId());
-                    init.setObjectVersionNumber(old.getObjectVersionNumber());
-                    init.setTenantId(targetTenantId);
-                    updateList.add(init);
-                    addFlag = false;
-                    break;
-                }
-            }
-            if (addFlag) {
-                addList.add(init);
-            }
-        }
-        for (OnlineShopRelWarehouse onlineShopRelWarehouse : addList) {
-            onlineShopRelWarehouse.setOnlineShopRelWarehouseId(null);
-            onlineShopRelWarehouse.setTenantId(targetTenantId);
+            init.setOnlineShopId(targetShopMap.get(shopCode));
+            init.setWarehouseId(targetWarehouseMap.get(wareHouseCode));
+            init.setOnlineShopRelWarehouseId(null);
+            init.setTenantId(targetTenantId);
         }
         //  更新
         onlineShopRelWarehouseRepository.batchInsertSelective(addList);
-        onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(updateList);
-
-        for (OnlineShopRelWarehouse onlineShopRelWarehouse : initList) {
-            onlineShopRelWarehouse.setTenantId(targetTenantId);
-        }
         // 更新缓存
-        onlineShopRedis.batchUpdateShopRelWh(initList,targetTenantId, OnlineShopConstants.Redis.UPDATE);
+        onlineShopRedis.batchUpdateShopRelWh(initList, targetTenantId, OnlineShopConstants.Redis.UPDATE);
 
     }
 }
