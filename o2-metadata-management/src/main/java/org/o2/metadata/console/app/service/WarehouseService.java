@@ -161,4 +161,10 @@ public interface WarehouseService {
      */
     List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
 
+    /**
+     * 条件查询仓库
+     * @param query 查询条件
+     * @return 仓库
+     */
+    List<Warehouse> selectByCondition(Warehouse query);
 }

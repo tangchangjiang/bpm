@@ -13,5 +13,14 @@ public interface PlatformDefineTenantInitService {
      * @param sourceTenantId 源租户Id
      * @param targetTenantId 租户Id
      */
-    void tenantInitialize(long sourceTenantId, Long targetTenantId);
+    void tenantInitialize(Long sourceTenantId, Long targetTenantId);
+
+
+    /**
+     * 租户初始化
+     *
+     * @param sourceTenantId 源租户Id
+     * @param targetTenantId 租户Id
+     */
+    void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId);
 }

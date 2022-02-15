@@ -29,4 +29,7 @@ public interface CarrierMappingMapper extends BaseMapper<CarrierMapping> {
      * @return 承运商匹配表
      */
     List<CarrierMapping> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO);
+
+
+    List<CarrierMapping> listByCondition(CarrierMapping carrierMapping);
 }

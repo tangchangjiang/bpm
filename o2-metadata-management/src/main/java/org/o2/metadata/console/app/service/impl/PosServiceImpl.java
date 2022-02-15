@@ -219,6 +219,10 @@ public class PosServiceImpl implements PosService {
         return PosAddressConverter.poToCoListObjects(addresses);
     }
 
+    @Override
+    public List<Pos> selectByCondition(Pos query) {
+        return posRepository.listPosByCondition(query);
+    }
 
     /**
      * 更新默认承运商

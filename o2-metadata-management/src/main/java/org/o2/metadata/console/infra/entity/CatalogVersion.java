@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 版本目录
@@ -81,6 +82,10 @@ public class CatalogVersion extends AuditDomain {
     @ApiModelProperty(value = "目录编码")
     @Transient
     private String catalogCode;
+
+    @ApiModelProperty(value = "目录编码")
+    @Transient
+    private List<String> catalogCodes;
 
 
     @Transient

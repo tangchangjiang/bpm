@@ -52,6 +52,12 @@
             <if test="carrierTypeCode != null and carrierTypeCode != ''">
                 and c.carrier_type_code = #{carrierTypeCode}
             </if>
+        <if test="carrierCodes != null and carrierCodes.size() > 0 ">
+            and c.carrier_code IN
+            <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </if>
     </select>
     <select id="batchSelect" resultType="org.o2.metadata.console.infra.entity.Carrier">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
