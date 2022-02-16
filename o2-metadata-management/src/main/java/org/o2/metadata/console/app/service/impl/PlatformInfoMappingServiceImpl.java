@@ -72,7 +72,8 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
         Condition condition = Condition.builder(PlatformInfoMapping.class).andWhere(Sqls.custom()
                 .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, platformInfoMapping.getPlatformCode())
                 .andEqualTo(PlatformInfoMapping.FIELD_INF_TYPE_CODE, platformInfoMapping.getInfTypeCode())
-                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode()))
+                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode())
+                 .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID,platformInfoMapping.getTenantId()))
                 .build();
         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectByCondition(condition);
         //保存平台信息匹配表
