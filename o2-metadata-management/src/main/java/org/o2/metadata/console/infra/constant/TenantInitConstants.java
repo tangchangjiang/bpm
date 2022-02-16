@@ -102,4 +102,12 @@ public interface TenantInitConstants {
     interface PlatformInfoMappingBusiness {
         List<String> PLATFORM_CODE = Arrays.asList("JD", "OW", "TM", "KDN");
     }
+
+    /**
+     * 仓库基础数据
+     */
+    interface WarehouseBasis {
+        String VIRTUAL_WAREHOUSE = "VIRTUAL_POS";
+        long  POS_ID = 1L;
+    }
 }

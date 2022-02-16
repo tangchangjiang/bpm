@@ -77,11 +77,11 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
         if (CollectionUtils.isNotEmpty(oldList)) {
            carrierMappingRepository.batchDeleteByPrimaryKey(oldList);
         }
-        initList.forEach(carrierMapping -> {
+        for (CarrierMapping carrierMapping : initList) {
             carrierMapping.setCarrierMappingId(null);
             carrierMapping.setCarrierId(targetCarrierMap.get(carrierMapping.getCarrierCode()));
             carrierMapping.setTenantId(targetTenantId);
-        });
+        }
         carrierMappingRepository.batchInsert(initList);
     }
 }

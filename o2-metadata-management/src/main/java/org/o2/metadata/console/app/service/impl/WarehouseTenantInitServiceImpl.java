@@ -31,10 +31,6 @@ import java.util.Map;
 @Service
 public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitService {
 
-    /**
-     * 虚拟仓编码
-     */
-    private static final String VIRTUAL_WAREHOUSE = "VIRTUAL_POS";
     private final WarehouseRepository warehouseRepository;
     private final WarehouseService warehouseService;
     private final WarehouseRedis warehouseRedis;
@@ -58,7 +54,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         final List<Warehouse> sourceWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, VIRTUAL_WAREHOUSE)
+                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE)
                 ).build());
 
         if (CollectionUtils.isEmpty(sourceWarehouses)) {
@@ -70,7 +66,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         final List<Warehouse> targetWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, VIRTUAL_WAREHOUSE)
+                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE)
                 ).build());
         handleData(targetWarehouses,sourceWarehouses,targetTenantId);
         log.info("initializeWarehouse finish");
@@ -126,8 +122,13 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         List<String> warehouseCodeList = new ArrayList<>(4);
         for (Warehouse init : initializeWarehouses) {
             String initCode = init.getWarehouseCode();
-            Long posId = targetPosMap.get(init.getPosCode());
-            init.setPosId(posId);
+            // 虚拟仓库 服务点ID 默认1
+            if (TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE.equals(initCode)) {
+                init.setPosId(TenantInitConstants.WarehouseBasis.POS_ID);
+            } else {
+                Long posId = targetPosMap.get(init.getPosCode());
+                init.setPosId(posId);
+            }
             warehouseCodeList.add(initCode);
             boolean addFlag = true;
             if (oldWarehouses.isEmpty()) {
