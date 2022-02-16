@@ -40,7 +40,7 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBasis.PLATFORM_CODE)
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBasis.PLATFORM_CODE)
                 )
                 .build());
 
@@ -53,7 +53,7 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBasis.PLATFORM_CODE))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformInfoMappingBasis.PLATFORM_CODE))
                 .build());
         handleData(targetPlatformInfoMappings,platformInfoMappings,targetTenantId);
     }
@@ -89,14 +89,14 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         List<PlatformInfoMapping> addList = new ArrayList<>(16);
         List<PlatformInfoMapping> updateList = new ArrayList<>(16);
         for (PlatformInfoMapping init : initList) {
-            String initCode = init.getPlatformCode() + "-"+ init.getPlatformInfCode() +"-"+init.getInfCode() +"-" +init.getInfTypeCode();
+            String initCode = init.getPlatformCode() + "-"+ init.getPlatformInfCode() +"-" +init.getInfTypeCode();
             boolean addFlag = true;
             if (CollectionUtils.isEmpty(oldList)) {
                addList.add(init);
                continue;
             }
             for (PlatformInfoMapping old : oldList) {
-                String oldCode = old.getPlatformCode() + "-"+ old.getPlatformInfCode() +"-"+old.getInfCode() +"-" +old.getInfTypeCode();;
+                String oldCode = old.getPlatformCode() + "-"+ old.getPlatformInfCode() +"-" +old.getInfTypeCode();;
                 if (initCode.equals(oldCode)) {
                     init.setPlatformInfMappingId(old.getPlatformInfMappingId());
                     init.setTenantId(old.getTenantId());
