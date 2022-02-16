@@ -12,5 +12,5 @@ public interface PosTenantInitService {
      * @param sourceTenantId 源租户
      * @param targetTenantId  目标库租户
      */
-    void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId);
+    void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId);
 }

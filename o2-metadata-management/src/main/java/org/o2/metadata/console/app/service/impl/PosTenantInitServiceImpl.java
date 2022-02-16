@@ -2,10 +2,16 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.PosTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
+import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosAddress;
+import org.o2.metadata.console.infra.repository.PosAddressRepository;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +29,18 @@ import java.util.List;
 public class PosTenantInitServiceImpl implements PosTenantInitService {
     private final PosService posService;
     private final PosRepository posRepository;
+    private final PosAddressRepository addressRepository;
 
-    public PosTenantInitServiceImpl(PosService posService, PosRepository posRepository) {
+    public PosTenantInitServiceImpl(PosService posService, PosRepository posRepository,
+                                    PosAddressRepository addressRepository) {
         this.posService = posService;
         this.posRepository = posRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId) {
         // 1. 查询源租户数据
         log.info("Business: initializePos start, tenantId[{}]", targetTenantId);
         Pos query = new Pos();
@@ -50,6 +59,12 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
         log.info("Business: initializePos finish");
     }
 
+    /**
+     * 处理网网店：更新已存在的，插入未存在的目标数据
+     * @param oldPos  已存在的数据
+     * @param initPos 初始化的数据
+     * @param targetTenantId 目标租户ID
+     */
     private void handleData(List<Pos> oldPos, List<Pos> initPos, Long targetTenantId) {
         // 3.1 更新目标数据
         List<Pos> updateList = new ArrayList<>(4);
@@ -77,13 +92,26 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
                 addList.add(init);
             }
         }
-        addList.forEach(pos -> {
-            pos.setPosId(null);
-            pos.setTenantId(targetTenantId);
-        });
+
         // 4. 更新目标库
         posRepository.batchUpdateByPrimaryKey(updateList);
-        posRepository.batchInsert(addList);
+        for (Pos pos : addList) {
+            pos.setPosId(null);
+            pos.setTenantId(targetTenantId);
+            // 关联服务地址
+            Long sourceAddressId = pos.getAddressId();
+            PosAddress query = new PosAddress();
+            query.setPosAddressId(sourceAddressId);
+            PosAddress address = addressRepository.selectByPrimaryKey(query);
+            if (null == address) {
+                address = new PosAddress();
+            }
+            address.setTenantId(targetTenantId);
+            address.setPosAddressId(null);
+            addressRepository.insert(address);
+            pos.setAddressId(address.getPosAddressId());
+            posRepository.insert(pos);
 
+        }
     }
 }
