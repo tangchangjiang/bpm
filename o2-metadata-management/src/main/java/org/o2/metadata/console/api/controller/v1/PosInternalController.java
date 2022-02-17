@@ -47,7 +47,7 @@ public class PosInternalController extends BaseController {
         }
         List<PosAddressCO> voList = posService.listPosAddress(posAddressQueryInnerDTO,organizationId);
         for (PosAddressCO co : voList) {
-            map.put(co.getPostcode(), co);
+            map.put(co.getPosCode(), co);
         }
         return Results.success(map);
     }
