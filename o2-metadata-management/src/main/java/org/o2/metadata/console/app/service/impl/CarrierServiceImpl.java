@@ -186,7 +186,9 @@ public class CarrierServiceImpl implements CarrierService {
             carrierVO.setCarrierCode(carri.getCarrierCode());
             carrierVO.setCarrierName(carri.getCarrierName());
             carrierVO.setActiveFlag(carri.getActiveFlag());
-            map.put(carri.getCarrierName(), carrierVO);
+            if(Objects.nonNull(carri.getCarrierName()) && !carri.getCarrierName().trim().equals("")) {
+                map.put(carri.getCarrierName(), carrierVO);
+            }
         }
         return map;
     }

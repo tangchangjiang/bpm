@@ -70,4 +70,7 @@ public class PosAddressCO {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "服务点编码")
+    private String posCode;
 }
