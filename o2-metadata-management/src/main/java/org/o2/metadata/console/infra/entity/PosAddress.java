@@ -114,4 +114,7 @@ public class PosAddress extends AuditDomain {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "关联o2md_pos.pos_code 服务点编码")
+    private String posCode;
 }

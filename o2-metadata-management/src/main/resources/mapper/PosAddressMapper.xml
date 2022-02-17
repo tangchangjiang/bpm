@@ -50,7 +50,6 @@
     </select>
     <select id="listPosAddress" resultType="org.o2.metadata.console.infra.entity.PosAddress">
         SELECT
-
         address.pos_address_id,
         address.country_code,
         address.region_code,
@@ -58,11 +57,12 @@
         address.district_code,
         address.street_name,
         address.phone_number,
-        pos.pos_code as postcode,
+        pos.pos_code,
         address.contact,
         address.mobile_phone,
         address.longitude,
-        address.latitude
+        address.latitude,
+        address.postcode
         FROM
         o2md_pos_address address
         inner join o2md_pos pos on pos.address_id = address.pos_address_id and pos.tenant_id = #{tenantId}
