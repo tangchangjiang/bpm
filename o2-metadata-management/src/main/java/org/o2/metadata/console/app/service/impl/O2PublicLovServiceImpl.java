@@ -6,10 +6,10 @@ import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.boot.file.FileClient;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.file.FileStorageProperties;
+import org.o2.file.config.properties.O2FileProperties;
+import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.PublicLovVO;
@@ -35,19 +35,13 @@ import java.util.*;
 public class O2PublicLovServiceImpl implements O2PublicLovService {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
-    private final FileStorageProperties fileStorageProperties;
-    private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
     private final StaticResourceConfigService staticResourceConfigService;
 
     public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
-                                  FileStorageProperties fileStorageProperties,
-                                  FileClient fileClient,
                                   StaticResourceInternalService staticResourceInternalService,
                                   StaticResourceConfigService staticResourceConfigService) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
-        this.fileStorageProperties = fileStorageProperties;
-        this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
         this.staticResourceConfigService=staticResourceConfigService;
     }
@@ -119,16 +113,14 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)
                 .orElse(Joiner.on(BaseConstants.Symbol.SLASH)
-                        .skipNulls().join(fileStorageProperties.getStoragePath(),
+                        .skipNulls().join(
                                 MetadataConstants.Path.FILE,
                                 MetadataConstants.Path.LOV,
                                 lang).toLowerCase());
         log.info("O2MD.PUBLIC_LOV directory url {}", directory);
         final String fileName = MetadataConstants.Path.LOV_FILE_NAME + MetadataConstants.FileSuffix.JSON;
-        String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
-                directory, fileName, MetadataConstants.PublicLov.JSON_TYPE,
-                fileStorageProperties.getStorageCode(), jsonString.getBytes());
-        log.info("O2MD.PUBLIC_LOV: resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
+        String resultUrl = O2FileHelper.uploadFile(tenantId,
+                directory, fileName, MetadataConstants.PublicLov.JSON_TYPE, jsonString.getBytes());
         return resultUrl;
     }
 
