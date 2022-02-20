@@ -13,7 +13,6 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.core.response.BatchResponse;
-import org.o2.file.config.properties.O2FileProperties;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
