@@ -5,7 +5,6 @@ import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.file.config.properties.O2FileProperties;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;

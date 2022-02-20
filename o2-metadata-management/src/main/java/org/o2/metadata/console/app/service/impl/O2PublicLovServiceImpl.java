@@ -8,7 +8,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
-import org.o2.file.config.properties.O2FileProperties;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
