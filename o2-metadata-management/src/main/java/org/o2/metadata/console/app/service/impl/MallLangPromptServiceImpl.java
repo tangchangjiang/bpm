@@ -8,14 +8,12 @@ import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.helper.UniqueHelper;
-import org.o2.core.file.FileStorageProperties;
 import org.o2.core.response.BatchResponse;
-import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.file.helper.O2FileHelper;
 import org.o2.lock.app.service.LockService;
 import org.o2.lock.domain.data.LockData;
 import org.o2.lock.domain.data.LockType;
@@ -55,10 +53,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
     private final MallLangPromptRepository mallLangPromptRepository;
 
-    private final FileStorageProperties fileStorageProperties;
     private final LockService lockService;
-
-    private final FileClient fileClient;
 
     private final StaticResourceInternalService staticResourceInternalService;
 
@@ -68,14 +63,11 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
 
 
     public MallLangPromptServiceImpl(MallLangPromptRepository mallLangPromptRepository,
-                                     LockService lockService, FileStorageProperties fileStorageProperties,
-                                     FileClient fileClient,
+                                     LockService lockService,
                                      StaticResourceInternalService staticResourceInternalService,
                                      StaticResourceConfigService staticResourceConfigService, HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.mallLangPromptRepository = mallLangPromptRepository;
-        this.fileStorageProperties = fileStorageProperties;
         this.lockService = lockService;
-        this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
         this.staticResourceConfigService = staticResourceConfigService;
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
@@ -157,6 +149,7 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
                 if(resource.getResourceUrl() != null){
                     releaseProcess(mallLangPrompt,batchResponse,resource);
                 }
+
             }
         }
         //详情页面校验报错
@@ -250,19 +243,16 @@ public class MallLangPromptServiceImpl implements MallLangPromptService, AopProx
     private StaticResource uploadStaticFile(MallLangPrompt mallLangPrompt, StaticResource resource, List<String> errorMsg, StaticResourceConfig staticResourceConfig) {
         final Long tenantId = mallLangPrompt.getTenantId();
         final String fileName = mallLangPrompt.getMallType() + "_" + mallLangPrompt.getLang();
-        final String bucketCode = fileStorageProperties.getBucketCode();
-        final String storageCode = fileStorageProperties.getStorageCode();
         final String jsonFile = mallLangPrompt.getPromptDetail();
         // 上传路径全小写
-        String directory = fileStorageProperties.getStoragePath() + Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
+        String directory = Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
                 MetadataConstants.MallLangPromptConstants.NAME, mallLangPrompt.getMallType(),
                 mallLangPrompt.getLang()).toLowerCase();
 
         // 上传/新增
         try {
-            String resultUrl = fileClient.uploadFile(tenantId, bucketCode, directory,
-                    fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON, SystemParameterConstants.FileConfig.FILE_JSON_TYPE,
-                    storageCode, jsonFile.getBytes());
+            String resultUrl = O2FileHelper.uploadFile(tenantId, directory,
+                    fileName + SystemParameterConstants.FileConfig.FILE_SUFFIX_JSON,SystemParameterConstants.FileConfig.FILE_JSON_TYPE, jsonFile.getBytes());
             resource.setResourceUrl(resultUrl);
         } catch (Exception e) {
             errorMsg.add(MetadataConstants.ErrorCode.STATIC_FILE_UPLOAD_FAIL);
