@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 仓库
@@ -175,5 +176,8 @@ public class Warehouse extends AuditDomain {
     private String mobilePhone;
     @Transient
     private String phoneNumber;
+
+    @Transient
+    private List<String> warehouseCodes;
 
 }

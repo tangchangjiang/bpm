@@ -315,4 +315,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.selectAllDeliveryWarehouse(tenantId);
     }
 
+    @Override
+    public List<Warehouse> selectByCondition(Warehouse query) {
+        return warehouseRepository.listWarehouseByCondition(query);
+    }
+
 }

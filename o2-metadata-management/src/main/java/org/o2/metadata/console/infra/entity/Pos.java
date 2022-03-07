@@ -50,6 +50,7 @@ public class Pos extends AuditDomain {
     public static final String FIELD_ADDRESS_ID = "posAddressId";
     public static final String FIELD_BUSINESS_TIME = "businessTime";
     public static final String FIELD_NOTICE = "notice";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
 
 
@@ -194,5 +195,9 @@ public class Pos extends AuditDomain {
     private String streetName;
     @Transient
     private String countryCode;
+
+    @ApiModelProperty(value = "服务点编码", hidden = true)
+    @Transient
+    private List<String> posCodes;
 
 }

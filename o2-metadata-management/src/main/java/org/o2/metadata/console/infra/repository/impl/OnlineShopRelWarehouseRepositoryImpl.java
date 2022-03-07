@@ -43,4 +43,9 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
     public List<OnlineShopRelWarehouse> selectByShopIdAndWareIdAndPosId(List<OnlineShopRelWarehouse> query, Long tenantId) {
         return onlineShopRelWarehouseMapper.selectByShopIdAndWareId(query,tenantId);
     }
+
+    @Override
+    public List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query) {
+        return onlineShopRelWarehouseMapper.listByCondition(query);
+    }
 }

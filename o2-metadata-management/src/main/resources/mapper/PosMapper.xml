@@ -149,16 +149,22 @@
     <select id="listPosByCondition" resultType="org.o2.metadata.console.infra.entity.Pos">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
-        p.tenant_id,
+        ptl.pos_name,
         p.pos_id,
         p.pos_code,
-        ptl.pos_name,
+        p.pos_name,
+        p.pos_status_code,
         p.pos_type_code,
-        p.OBJECT_VERSION_NUMBER,
-        p.CREATION_DATE,
-        p.CREATED_BY,
-        p.LAST_UPDATED_BY,
-        p.LAST_UPDATE_DATE
+        p.business_type_code,
+        p.open_date,
+        p.address_id,
+        p.business_time,
+        p.tenant_id,p.object_version_number,
+        p.creation_date,
+        p.created_by,
+        p.last_updated_by,
+        p.last_update_date,
+        p.notice
         FROM
         o2md_pos p
         LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
@@ -170,6 +176,12 @@
             <if test="posName != null and posName != ''">
                 <bind name="posNameLike" value="'%' + posName + '%'"/>
                 and ptl.pos_name like #{posNameLike}
+            </if>
+            <if test="posCodes != null and posCodes.size() > 0 ">
+                and p.pos_code IN
+                <foreach collection="posCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
             </if>
             <choose>
                 <when test="tenantId != null">

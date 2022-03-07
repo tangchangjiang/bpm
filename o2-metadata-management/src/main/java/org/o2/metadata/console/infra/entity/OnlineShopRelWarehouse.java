@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 /**
@@ -76,6 +77,9 @@ public class OnlineShopRelWarehouse extends AuditDomain {
 
     @Transient
     private String onlineShopCode;
+
+    @Transient
+    private List<String> onlineShopCodes;
 
     //
     // 业务方法(按public protected private顺序排列)
