@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.boot.file.FileClient;
 import org.hzero.core.base.BaseConstants;
-import org.o2.core.file.FileStorageProperties;
+import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
 import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
@@ -36,23 +35,17 @@ import java.util.*;
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
 
-    private final FileStorageProperties fileStorageProperties;
     private final RegionRepository regionRepository;
-    private final FileClient fileClient;
     private final StaticResourceInternalService staticResourceInternalService;
     private final StaticResourceConfigService staticResourceConfigService;
 
 
-    public O2SiteRegionFileServiceImpl(FileStorageProperties fileStorageProperties,
-                                       RegionRepository regionRepository,
-                                       FileClient fileClient,
+    public O2SiteRegionFileServiceImpl(RegionRepository regionRepository,
                                        StaticResourceInternalService staticResourceInternalService,
                                        StaticResourceConfigService staticResourceConfigService) {
-        this.fileStorageProperties = fileStorageProperties;
         this.regionRepository = regionRepository;
-        this.fileClient = fileClient;
         this.staticResourceInternalService = staticResourceInternalService;
-        this.staticResourceConfigService=staticResourceConfigService;
+        this.staticResourceConfigService = staticResourceConfigService;
     }
 
     @Override
@@ -62,16 +55,16 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         log.info("static params are : {},{}", tenantId, countryCode);
 
         // 查询静态资源配置信息
-        StaticResourceConfigDTO staticResourceConfigDTO=new StaticResourceConfigDTO();
+        StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
         staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION);
         staticResourceConfigDTO.setTenantId(tenantId);
 
-        final List<StaticResourceConfig> staticResourceConfigList=staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
-        final StaticResourceConfig staticResourceConfig=staticResourceConfigList.get(0);
-        String uploadFolder=staticResourceConfig.getUploadFolder();
+        final List<StaticResourceConfig> staticResourceConfigList = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
+        final StaticResourceConfig staticResourceConfig = staticResourceConfigList.get(0);
+        String uploadFolder = staticResourceConfig.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
-        Map<String,String> resourceUrlMap=new HashMap<>(4);
+        Map<String, String> resourceUrlMap = new HashMap<>(4);
 
         // 查询地区sql值集并存入map
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
@@ -79,18 +72,18 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         dto.setCountryCode(countryCode);
 
         dto.setLang(MetadataConstants.Path.ZH_CN);
-        final List<Region> zhList = regionRepository.listRegionLov(dto,tenantId);
-        resourceUrlMap.put(dto.getLang(),this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId, countryCode));
+        final List<Region> zhList = regionRepository.listRegionLov(dto, tenantId);
+        resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId, countryCode));
 
-        if(staticResourceConfig.getDifferentLangFlag()
-                .equals(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG)){
+        if (staticResourceConfig.getDifferentLangFlag()
+                .equals(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG)) {
             dto.setLang(MetadataConstants.Path.EN_US);
-            final List<Region> enList = regionRepository.listRegionLov(dto,tenantId);
-            resourceUrlMap.put(dto.getLang(),this.staticFile(RegionConverter.poToBoListObjects(enList), uploadFolder, dto.getLang(), tenantId, countryCode));
+            final List<Region> enList = regionRepository.listRegionLov(dto, tenantId);
+            resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(enList), uploadFolder, dto.getLang(), tenantId, countryCode));
         }
 
         //  更新静态文件资源表
-        List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId,resourceUrlMap,resourceOwner,staticResourceConfig);
+        List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap, resourceOwner, staticResourceConfig);
         for (StaticResourceSaveDTO saveDTO : saveDTOList) {
             staticResourceInternalService.saveResource(saveDTO);
         }
@@ -110,27 +103,24 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)
                 .orElse(Joiner.on(BaseConstants.Symbol.SLASH).skipNulls()
-                        .join(fileStorageProperties.getStoragePath(),
-                                MetadataConstants.Path.FILE,
+                        .join(MetadataConstants.Path.FILE,
                                 MetadataConstants.Path.REGION,
                                 lang).toLowerCase());
 
         log.info("directory url {}", directory);
         final String fileName = MetadataConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + MetadataConstants.FileSuffix.JSON;
-        String resultUrl = fileClient.uploadFile(tenantId, fileStorageProperties.getBucketCode(),
-                directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE,
-                fileStorageProperties.getStorageCode(), jsonString.getBytes());
-        log.info("resultUrl url {},{},{}", resultUrl, fileStorageProperties.getBucketCode(), fileStorageProperties.getStorageCode());
+        String resultUrl = O2FileHelper.uploadFile(tenantId,
+                directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE, jsonString.getBytes());
         return resultUrl;
     }
 
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
-                                                                   Map<String,String> resourceUrlMap,
+                                                                   Map<String, String> resourceUrlMap,
                                                                    String resourceOwner,
                                                                    StaticResourceConfig staticResourceConfig) {
         List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
-        for(Map.Entry<String,String> entry:resourceUrlMap.entrySet()){
-            saveDTOList.add(fillCommonFields(tenantId,entry.getValue(),entry.getKey(),resourceOwner,staticResourceConfig));
+        for (Map.Entry<String, String> entry : resourceUrlMap.entrySet()) {
+            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(), resourceOwner, staticResourceConfig));
         }
         return saveDTOList;
     }
@@ -140,22 +130,22 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                                                    String languageCode,
                                                    String resourceOwner,
                                                    StaticResourceConfig staticResourceConfig) {
-        String host=domainPrefix(resourceUrl);
-        String url=trimDomainPrefix(resourceUrl);
+        String host = domainPrefix(resourceUrl);
+        String url = trimDomainPrefix(resourceUrl);
 
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
         saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
         saveDTO.setDescription(staticResourceConfig.getDescription());
         saveDTO.setResourceLevel(staticResourceConfig.getResourceLevel());
         saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
-        if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
-                .equals(saveDTO.getResourceLevel())){
+        if (!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
+                .equals(saveDTO.getResourceLevel())) {
             saveDTO.setResourceOwner(resourceOwner);
         }
         saveDTO.setResourceHost(host);
         saveDTO.setResourceUrl(url);
-        if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                .equals(staticResourceConfig.getDifferentLangFlag())){
+        if (MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
+                .equals(staticResourceConfig.getDifferentLangFlag())) {
             saveDTO.setLang(languageCode);
         }
         saveDTO.setTenantId(tenantId);

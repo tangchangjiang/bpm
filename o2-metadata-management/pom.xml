@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-build-parent</artifactId>
-        <version>1.5.0.TEST-SNAPSHOT</version>
+        <version>1.5.1.TEST-SNAPSHOT</version>
     </parent>
 
     <groupId>org.o2.metadata</groupId>
@@ -66,6 +66,10 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-tenant-init</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-file</artifactId>
+        </dependency>
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>
@@ -85,6 +89,7 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
 </project>
