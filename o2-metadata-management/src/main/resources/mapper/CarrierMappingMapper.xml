@@ -127,5 +127,8 @@
         <if test="platformCarrierCode != null and platformCarrierCode != ''">
             and cm.platform_carrier_code = #{platformCarrierCode}
         </if>
+        <if test="platformCode != null  and platformCode !=''">
+            and cm.platform_code = #{platformCode}
+        </if>
     </select>
 </mapper>
