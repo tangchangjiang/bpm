@@ -124,5 +124,8 @@
                 #{code}
             </foreach>
         </if>
+        <if test="platformCarrierCode != null and platformCarrierCode != ''">
+            and cm.platform_carrier_code = #{platformCarrierCode}
+        </if>
     </select>
 </mapper>

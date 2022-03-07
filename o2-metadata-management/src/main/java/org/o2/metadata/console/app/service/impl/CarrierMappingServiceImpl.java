@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.service.CarrierMappingService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
@@ -8,6 +9,8 @@ import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.mapper.PlatformMapper;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -42,11 +45,12 @@ public class CarrierMappingServiceImpl implements CarrierMappingService {
             throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_PLATFORM_NOT_EXISTS);
         }
         // 平台和承运商编码是否重复
-        carrierMapping.setPlatformCode(platform.getPlatformCode());
-        carrierMapping.setCarrierId(carrierMapping.getCarrierId());
-        carrierMapping.setCarrierCode(carrierMapping.getCarrierCode());
-        final boolean exist = carrierMapping.exist(carrierMappingRepository);
-        if (exist) {
+        CarrierMapping queryMapping = new CarrierMapping();
+        queryMapping.setPlatformCode(platform.getPlatformCode());
+        queryMapping.setPlatformCarrierCode(carrierMapping.getPlatformCarrierCode());
+        queryMapping.setTenantId(carrierMapping.getTenantId());
+        List<CarrierMapping> exist = carrierMappingRepository.listByCondition(queryMapping);
+        if (CollectionUtils.isNotEmpty(exist)) {
             throw new CommonException(CarrierConstants.ErrorCode.O2MD_ERROR_PLATFORM_CODE_DUPLICATE);
         }
         carrierMappingRepository.insertSelective(carrierMapping);
