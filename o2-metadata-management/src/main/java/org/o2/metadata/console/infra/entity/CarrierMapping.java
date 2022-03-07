@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 承运商匹配表
@@ -121,6 +122,14 @@ public class CarrierMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "承运商编码")
     private String carrierCode;
+
+    @Transient
+    @ApiModelProperty(value = "承运商编码")
+    private List<String> carrierCodes;
+
+    @ApiModelProperty(value = "平台编码")
+    @Transient
+    private List<String> platformCodes;
 
     @Transient
     @ApiModelProperty(value = "承运商名称")

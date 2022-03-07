@@ -96,4 +96,8 @@ public class Carrier extends AuditDomain {
     @ApiModelProperty(value = "组织ID")
     @MultiLanguageField
     private Long tenantId;
+
+    @ApiModelProperty(value = "承运商编码")
+    @Transient
+    private  List<String> carrierCodes;
 }

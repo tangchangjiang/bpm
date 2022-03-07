@@ -37,5 +37,6 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
     @Override
     public void initializeBusinessData(Long sourceTenantId, Long targetTenantId) {
         // do nothing
+        metadataTenantInitService.tenantInitializeBusiness(sourceTenantId, Collections.singletonList(String.valueOf(targetTenantId)));
     }
 }

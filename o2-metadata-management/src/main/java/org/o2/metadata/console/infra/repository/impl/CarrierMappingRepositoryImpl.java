@@ -33,4 +33,9 @@ public class CarrierMappingRepositoryImpl extends BaseRepositoryImpl<CarrierMapp
     public List<CarrierMapping> listCarrierMappings(CarrierMappingQueryInnerDTO queryInnerDTO) {
         return carrierMappingMapper.listCarrierMappings(queryInnerDTO);
     }
+
+    @Override
+    public List<CarrierMapping> listByCondition(CarrierMapping carrierMapping) {
+        return carrierMappingMapper.listByCondition(carrierMapping);
+    }
 }
