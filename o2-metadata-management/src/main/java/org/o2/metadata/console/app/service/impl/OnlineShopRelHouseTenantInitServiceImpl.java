@@ -98,7 +98,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         for (Warehouse sourceWarehouse : sourceWarehouses) {
             targetWarehouseMap.put(sourceWarehouse.getWarehouseCode(), sourceWarehouse.getWarehouseId());
         }
-        if (CollectionUtils.isEmpty(oldList)) {
+        if (CollectionUtils.isNotEmpty(oldList)) {
             onlineShopRelWarehouseRepository.batchDeleteByPrimaryKey(oldList);
             onlineShopRedis.batchUpdateShopRelWh(oldList, targetTenantId, OnlineShopConstants.Redis.DELETE);
         }
