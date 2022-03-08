@@ -67,6 +67,12 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         handleData(targetShopRelWarehouses, sourceShopRelWarehouses, targetTenantId);
     }
 
+    /**
+     *  更新&插入 租户数据
+     * @param oldList 目标租户 已存在的
+     * @param initList 目标租户 重新初始化
+     * @param targetTenantId  目标租户
+     */
     private void handleData(List<OnlineShopRelWarehouse> oldList, List<OnlineShopRelWarehouse> initList, Long targetTenantId) {
         // 插入目标数据库
         List<OnlineShopRelWarehouse> addList = new ArrayList<>(4);
@@ -94,6 +100,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         }
         if (CollectionUtils.isEmpty(oldList)) {
             onlineShopRelWarehouseRepository.batchDeleteByPrimaryKey(oldList);
+            onlineShopRedis.batchUpdateShopRelWh(oldList, targetTenantId, OnlineShopConstants.Redis.DELETE);
         }
         // 网店关联仓库
         for (OnlineShopRelWarehouse init : initList) {
