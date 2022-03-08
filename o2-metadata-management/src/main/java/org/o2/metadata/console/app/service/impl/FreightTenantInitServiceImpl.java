@@ -6,11 +6,12 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.app.service.FreightTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
-import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
+import org.o2.metadata.console.infra.redis.FreightRedis;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,9 +19,11 @@ import java.util.List;
 public class FreightTenantInitServiceImpl implements FreightTenantInitService {
 
     private final FreightTemplateRepository freightTemplateRepository;
+    private final FreightRedis redis;
 
-    public FreightTenantInitServiceImpl(FreightTemplateRepository freightTemplateRepository) {
+    public FreightTenantInitServiceImpl(FreightTemplateRepository freightTemplateRepository, FreightRedis redis) {
         this.freightTemplateRepository = freightTemplateRepository;
+        this.redis = redis;
     }
 
 
@@ -51,5 +54,6 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
             freightTemplate.setTenantId(targetTenantId);
         }
         freightTemplateRepository.batchInsert(sourceFreightTemplate);
+        redis.batchUpdateRedis(sourceFreightTemplate,new ArrayList<>(),targetTenantId);
     }
 }
