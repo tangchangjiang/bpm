@@ -178,6 +178,13 @@
                     #{code}
                 </foreach>
             </if>
+
+            <if test="warehouseCodes != null and warehouseCodes.size() > 0 ">
+                and house.warehouse_code IN
+                <foreach collection="warehouseCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
         </where>
     </select>
 

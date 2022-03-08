@@ -75,11 +75,17 @@ public class OnlineShopRelWarehouse extends AuditDomain {
     @Transient
     private String warehouseStatus;
 
+    @ApiModelProperty(value = "网店编码")
     @Transient
     private String onlineShopCode;
 
+    @ApiModelProperty(value = "网店编码集合")
     @Transient
     private List<String> onlineShopCodes;
+
+    @ApiModelProperty(value = "仓库编码集合")
+    @Transient
+    private List<String> warehouseCodes;
 
     //
     // 业务方法(按public protected private顺序排列)

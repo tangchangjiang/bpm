@@ -41,6 +41,7 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
         CarrierMapping query = new CarrierMapping();
         query.setTenantId(sourceTenantId);
         query.setPlatformCodes(TenantInitConstants.CarrierMappingBusiness.PLATFORM_CODES);
+        query.setCarrierCodes(TenantInitConstants.CarrierBusiness.CARRIERS);
         List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceCarrierMapping)) {
             log.info("Business: carrier is empty.");
