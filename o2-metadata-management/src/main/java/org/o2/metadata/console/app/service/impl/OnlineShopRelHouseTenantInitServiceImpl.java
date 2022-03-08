@@ -110,6 +110,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
             init.setWarehouseId(targetWarehouseMap.get(wareHouseCode));
             init.setOnlineShopRelWarehouseId(null);
             init.setTenantId(targetTenantId);
+            addList.add(init);
         }
         //  更新
         onlineShopRelWarehouseRepository.batchInsertSelective(addList);
