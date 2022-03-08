@@ -56,6 +56,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setTenantId(sourceTenantId);
         query.setOnlineShopCodes(TenantInitConstants.OnlineShopRelHouseBusiness.onlineShops);
+        query.setWarehouseCodes(TenantInitConstants.InitWarehouseBusiness.warehouses);
         List<OnlineShopRelWarehouse> sourceShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceShopRelWarehouses)) {
             log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);
@@ -102,7 +103,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
             onlineShopRelWarehouseRepository.batchDeleteByPrimaryKey(oldList);
             onlineShopRedis.batchUpdateShopRelWh(oldList, targetTenantId, OnlineShopConstants.Redis.DELETE);
         }
-        // 网店关联仓库
+        // 种子数据 关联关系 插入目标租户中
         for (OnlineShopRelWarehouse init : initList) {
             String wareHouseCode = init.getWarehouseCode();
             String shopCode = init.getOnlineShopCode();
