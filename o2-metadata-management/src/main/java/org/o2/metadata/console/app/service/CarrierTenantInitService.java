@@ -1,5 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.initialize.domain.context.TenantInitContext;
+
 /**
  * 承运商租户初始化
  *
@@ -8,8 +10,7 @@ package org.o2.metadata.console.app.service;
 public interface CarrierTenantInitService {
     /**
      * 租户业务数据初始化
-     * @param sourceTenantId 源租户
-     * @param targetTenantId  目标库租户
+     * @param context job参数
      */
-    void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId);
+    void tenantInitializeBusiness(TenantInitContext context);
 }

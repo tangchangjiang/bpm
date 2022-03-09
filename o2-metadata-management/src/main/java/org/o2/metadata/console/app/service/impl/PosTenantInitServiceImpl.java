@@ -2,13 +2,10 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.checkerframework.checker.units.qual.A;
-import org.hzero.mybatis.domian.Condition;
-import org.hzero.mybatis.util.Sqls;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.PosTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
-import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.repository.PosAddressRepository;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,22 +38,22 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源租户数据
-        log.info("Business: initializePos start, tenantId[{}]", targetTenantId);
+        log.info("Business: initializePos start, tenantId[{}]", context.getTargetTenantId());
         Pos query = new Pos();
-        query.setTenantId(sourceTenantId);
-        query.setPosCodes(TenantInitConstants.InitPosBusiness.POS_CODE);
+        query.setTenantId(context.getSourceTenantId());
+        query.setPosCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_POS).split(",")));
         List<Pos> sourcePos = posService.selectByCondition(query);
         if (CollectionUtils.isEmpty(sourcePos)) {
-            log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);
+            log.warn("Business data not exists in sourceTenantId[{}]", context.getSourceTenantId());
             return;
         }
         // 2. 查询目标租户数据
-        query.setTenantId(targetTenantId);
+        query.setTenantId(context.getTargetTenantId());
         List<Pos> targetPos = posService.selectByCondition(query);
         // 3. 操作数据
-        handleData(targetPos,sourcePos,targetTenantId);
+        handleData(targetPos,sourcePos,context.getTargetTenantId());
         log.info("Business: initializePos finish");
     }
 

@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.CarrierMappingTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -11,10 +12,7 @@ import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 承运商匹配租户初始化
@@ -35,22 +33,22 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源租户
         log.info("Business: carrier start");
         CarrierMapping query = new CarrierMapping();
-        query.setTenantId(sourceTenantId);
-        query.setPlatformCodes(TenantInitConstants.CarrierMappingBusiness.PLATFORM_CODES);
-        query.setCarrierCodes(TenantInitConstants.CarrierBusiness.CARRIERS);
+        query.setTenantId(context.getSourceTenantId());
+        query.setPlatformCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM_MAPPING).split(",")));
+        query.setCarrierCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER).split(",")));
         List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceCarrierMapping)) {
             log.info("Business: carrier is empty.");
             return;
         }
         // 2. 查询目标租户
-        query.setTenantId(targetTenantId);
+        query.setTenantId(context.getTargetTenantId());
         List<CarrierMapping> targetCarrierMapping = carrierMappingRepository.listByCondition(query);
-        handleData(targetCarrierMapping,sourceCarrierMapping,targetTenantId);
+        handleData(targetCarrierMapping,sourceCarrierMapping,context.getTargetTenantId());
         log.info("Business: carrier finish");
     }
 

@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.OnlineShopRelHouseTenantInitService;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.ShopTenantInitService;
@@ -10,17 +11,13 @@ import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
-import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 网店关联服务点数据初始化
@@ -50,22 +47,22 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源目标数据库
-        log.info("Business: initializeOnlineShopRelWarehouse start, tenantId[{}]", targetTenantId);
+        log.info("Business: initializeOnlineShopRelWarehouse start, tenantId[{}]", context.getTargetTenantId());
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
-        query.setTenantId(sourceTenantId);
-        query.setOnlineShopCodes(TenantInitConstants.OnlineShopRelHouseBusiness.onlineShops);
-        query.setWarehouseCodes(TenantInitConstants.InitWarehouseBusiness.warehouses);
+        query.setTenantId(context.getSourceTenantId());
+        query.setOnlineShopCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_ONLINE_SHOPS).split(",")));
+        query.setWarehouseCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_WAREHOUSE).split(",")));
         List<OnlineShopRelWarehouse> sourceShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceShopRelWarehouses)) {
-            log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);
+            log.warn("Business data not exists in sourceTenantId[{}]", context.getSourceTenantId());
             return;
         }
         // 2. 查询目标数据库
-        query.setTenantId(targetTenantId);
+        query.setTenantId(context.getTargetTenantId());
         List<OnlineShopRelWarehouse> targetShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
-        handleData(targetShopRelWarehouses, sourceShopRelWarehouses, targetTenantId);
+        handleData(targetShopRelWarehouses, sourceShopRelWarehouses, context.getTargetTenantId());
     }
 
     /**

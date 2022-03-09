@@ -2,11 +2,9 @@ package org.o2.metadata.pipeline.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
-
-
-import java.util.Collections;
 
 /**
  * description
@@ -25,12 +23,12 @@ public class PipelineTenantInitializeJob extends O2AbstractTenantInitializeJob {
     }
 
     @Override
-    public void initializeBasicData(Long sourceTenantId, Long targetTenantId) {
-        pipelineTenantInitService.tenantInitialize(sourceTenantId, Collections.singletonList(String.valueOf(targetTenantId)));
+    public void initializeBasicData(TenantInitContext context) {
+        pipelineTenantInitService.tenantInitialize(context);
     }
 
     @Override
-    public void initializeBusinessData(Long sourceTenantId, Long targetTenantId) {
+    public void initializeBusinessData(TenantInitContext context) {
         // do nothing
     }
 }

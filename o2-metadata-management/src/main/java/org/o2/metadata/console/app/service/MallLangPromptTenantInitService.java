@@ -1,5 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.initialize.domain.context.TenantInitContext;
+
 /**
  * 多语言文件租户初始化
  *
@@ -10,8 +12,7 @@ public interface MallLangPromptTenantInitService {
     /**
      * 租户初始化
      *
-     * @param sourceTenantId
-     * @param targetTenantId 租户Id
+     * @param context 租户
      */
-    void tenantInitialize(long sourceTenantId, Long targetTenantId);
+    void tenantInitialize(TenantInitContext context);
 }

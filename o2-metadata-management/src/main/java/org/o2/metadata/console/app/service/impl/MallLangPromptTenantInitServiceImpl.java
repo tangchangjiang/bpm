@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.MallLangPromptTenantInitService;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 
@@ -31,12 +31,12 @@ public class MallLangPromptTenantInitServiceImpl implements MallLangPromptTenant
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitialize(TenantInitContext context) {
         log.info("initializeMallLangPrompt start");
         // 1. 查询平台租户（所有已启用）
         final List<MallLangPrompt> platformMallLangPrompts = mallLangPromptRepository.selectByCondition(Condition.builder(MallLangPrompt.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, sourceTenantId))
+                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, context.getSourceTenantId()))
                 .build());
 
         if (CollectionUtils.isEmpty(platformMallLangPrompts)) {
@@ -47,7 +47,7 @@ public class MallLangPromptTenantInitServiceImpl implements MallLangPromptTenant
         // 2. 查询目标租户是否存在数据
         final List<MallLangPrompt> targetMallLangPrompts = mallLangPromptRepository.selectByCondition(Condition.builder(MallLangPrompt.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, targetTenantId))
+                        .andEqualTo(MallLangPrompt.FIELD_TENANT_ID, context.getTargetTenantId()))
                 .build());
 
         if (CollectionUtils.isNotEmpty(targetMallLangPrompts)) {
@@ -58,10 +58,10 @@ public class MallLangPromptTenantInitServiceImpl implements MallLangPromptTenant
         // 3. 插入平台数据到目标租户
         platformMallLangPrompts.forEach(mallLangPrompt -> {
             mallLangPrompt.setLangPromptId(null);
-            mallLangPrompt.setTenantId(targetTenantId);
+            mallLangPrompt.setTenantId(context.getTargetTenantId());
         });
         mallLangPromptRepository.batchInsert(platformMallLangPrompts);
 
-        log.info("initializeMallLangPrompt finish, tenantId[{}]", targetTenantId);
+        log.info("initializeMallLangPrompt finish, tenantId[{}]", context.getTargetTenantId());
     }
 }
