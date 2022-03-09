@@ -101,6 +101,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         }
         if (CollectionUtils.isNotEmpty(oldList)) {
             onlineShopRelWarehouseRepository.batchDeleteByPrimaryKey(oldList);
+            // 按key删除
             onlineShopRedis.batchUpdateShopRelWh(oldList, targetTenantId, OnlineShopConstants.Redis.DELETE);
         }
         // 种子数据 关联关系 插入目标租户中
