@@ -68,6 +68,7 @@ public class SysParamServiceImpl implements SysParamService {
         // 编码唯一性
         final Sqls sqls = Sqls.custom();
         sqls.andEqualTo(SystemParameter.FIELD_PARAM_CODE, systemParameter.getParamCode());
+        sqls.andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId);
         int number = systemParameterRepository.selectCountByCondition(
                 Condition.builder(SystemParameter.class).andWhere(sqls).build());
         if (number > 0){
