@@ -10,8 +10,6 @@ public interface TenantInitConstants {
     interface InitBaseParam {
 
         String BASE_ONLINE_SHOP = "base_online_shop";
-        String BASE_WAREHOUSES = "base_warehouses";
-        String BASE_POS = "base_pos";
         String BASE_CATALOG = "base_catalog";
         String BASE_PLATFORM_MAPPING = "base_platform_mapping";
         String BASE_WAREHOUSE = "base_warehouse";
@@ -21,7 +19,6 @@ public interface TenantInitConstants {
     interface InitBusinessParam {
         String BUSINESS_WAREHOUSE = "business_warehouse";
         String BUSINESS_ONLINE_SHOP = "business_online_shop";
-        String BUSINESS_ONLINE_SHOPS = "business_online_shops";
         String BUSINESS_SHOP_REL_HOUSE = "business_shop_rel_house";
         String BUSINESS_CARRIER = "business_carrier";
         String BUSINESS_CARRIER_MAPPING = "business_carrier_mapping";

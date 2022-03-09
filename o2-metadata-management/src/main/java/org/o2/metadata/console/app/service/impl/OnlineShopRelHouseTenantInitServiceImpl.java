@@ -52,7 +52,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
         log.info("Business: initializeOnlineShopRelWarehouse start, tenantId[{}]", context.getTargetTenantId());
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setTenantId(context.getSourceTenantId());
-        query.setOnlineShopCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_ONLINE_SHOP).split(",")));
+        query.setOnlineShopCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_SHOP_REL_HOUSE).split(",")));
         query.setWarehouseCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_WAREHOUSE).split(",")));
         List<OnlineShopRelWarehouse> sourceShopRelWarehouses = onlineShopRelWarehouseService.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceShopRelWarehouses)) {
