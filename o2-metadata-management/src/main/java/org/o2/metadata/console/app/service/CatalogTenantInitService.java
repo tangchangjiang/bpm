@@ -1,7 +1,7 @@
 package org.o2.metadata.console.app.service;
 
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.infra.entity.Catalog;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,17 +15,15 @@ public interface CatalogTenantInitService {
     /**
      * 租户初始化
      *
-     * @param sourceTenantId
-     * @param tenantId       租户
+     * @param context job参数
      */
-    void tenantInitialize(Long sourceTenantId, Long tenantId);
+    void tenantInitialize(TenantInitContext context);
 
     /**
      * 租户业务数据初始化
-     * @param sourceTenantId 源租户
-     * @param targetTenantId  目标库租户
+     * @param context job参数
      */
-    void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId);
+    void tenantInitializeBusiness(TenantInitContext context);
 
     /**
      * 更新& 插入租户数据
@@ -40,8 +38,7 @@ public interface CatalogTenantInitService {
     /**
      * 更新& 插入租户数据
      *
-     * @param sourceTenantId 源租户
-     * @param targetTenantId 目标租户
+     * @param context job参数
      */
-    void handleCatalogVersion(Long sourceTenantId, Long targetTenantId);
+    void handleCatalogVersion(TenantInitContext context);
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.FreightTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
@@ -28,12 +29,12 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
 
 
     @Override
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源租户
        List<FreightTemplate> sourceFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(FreightTemplate.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, TenantInitConstants.FreightBusiness.FREIGHT_CODE))
+                        .andEqualTo(FreightTemplate.FIELD_TENANT_ID, context.getSourceTenantId())
+                        .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_FREIGHT)))
                 .build());
         if (CollectionUtils.isEmpty(sourceFreightTemplate)) {
             log.info("Business: FreightTemplate is empty.");
@@ -42,8 +43,8 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
         // 2. 查询目标租户
         List<FreightTemplate> targetFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(FreightTemplate.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, TenantInitConstants.FreightBusiness.FREIGHT_CODE))
+                        .andEqualTo(FreightTemplate.FIELD_TENANT_ID, context.getTargetTenantId())
+                        .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_FREIGHT)))
                 .build());
 
        if (CollectionUtils.isNotEmpty(targetFreightTemplate)) {
@@ -51,9 +52,9 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
        }
         for (FreightTemplate freightTemplate : sourceFreightTemplate) {
             freightTemplate.setTemplateId(null);
-            freightTemplate.setTenantId(targetTenantId);
+            freightTemplate.setTenantId(context.getTargetTenantId());
         }
         freightTemplateRepository.batchInsert(sourceFreightTemplate);
-        redis.batchUpdateRedis(sourceFreightTemplate,new ArrayList<>(),targetTenantId);
+        redis.batchUpdateRedis(sourceFreightTemplate,new ArrayList<>(),context.getTargetTenantId());
     }
 }

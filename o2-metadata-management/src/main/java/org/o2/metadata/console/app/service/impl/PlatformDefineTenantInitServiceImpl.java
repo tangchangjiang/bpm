@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.PlatformDefineTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.Platform;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,13 +34,13 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitialize(Long sourceTenantId, Long targetTenantId) {
+    public void tenantInitialize(TenantInitContext context) {
         log.info("initializePlatforms start");
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, sourceTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBasis.PLATFORM_CODE)
+                        .andEqualTo(Platform.FIELD_TENANT_ID, context.getSourceTenantId())
+                        .andIn(Platform.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM).split(",")))
                 )
                 .build());
 
@@ -52,23 +52,23 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         // 2. 查询目标租户是否存在数据
         final List<Platform> targetPlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, targetTenantId)
-                .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBasis.PLATFORM_CODE))
+                        .andEqualTo(Platform.FIELD_TENANT_ID, context.getTargetTenantId())
+                .andIn(Platform.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM).split(","))))
                 .build());
 
-        handleData(targetPlatforms,platforms,targetTenantId);
-        log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
+        handleData(targetPlatforms,platforms,context.getTargetTenantId());
+        log.info("initializePlatforms finish, tenantId[{}]", context.getTargetTenantId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         log.info("Business :initializePlatforms start");
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, sourceTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBusiness.PLATFORM_CODE)
+                        .andEqualTo(Platform.FIELD_TENANT_ID, context.getSourceTenantId())
+                        .andIn(Platform.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM).split(",")))
                 )
                 .build());
 
@@ -80,12 +80,12 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         // 2. 查询目标租户是否存在数据
         final List<Platform> targetPlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, targetTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBusiness.PLATFORM_CODE))
+                        .andEqualTo(Platform.FIELD_TENANT_ID, context.getTargetTenantId())
+                        .andIn(Platform.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM).split(","))))
                 .build());
 
-        handleData(targetPlatforms,platforms,targetTenantId);
-        log.info("Business initializePlatforms finish, tenantId[{}]", targetTenantId);
+        handleData(targetPlatforms,platforms,context.getTargetTenantId());
+        log.info("Business initializePlatforms finish, tenantId[{}]", context.getTargetTenantId());
     }
 
     /**

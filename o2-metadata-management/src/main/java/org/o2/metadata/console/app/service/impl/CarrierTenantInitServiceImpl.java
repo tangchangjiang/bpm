@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.CarrierTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,20 +33,20 @@ public class CarrierTenantInitServiceImpl implements CarrierTenantInitService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
         //1. 查询源租户
         log.info("Business: carrier start");
         Carrier query = new Carrier();
-        query.setTenantId(sourceTenantId);
-        query.setCarrierCodes(TenantInitConstants.CarrierBusiness.CARRIERS);
+        query.setTenantId(context.getSourceTenantId());
+        query.setCarrierCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER).split(",")));
         List<Carrier> sourceCarriers = carrierRepository.listCarrier(query);
         if (CollectionUtils.isEmpty(sourceCarriers)) {
             log.info("Business: carrier is empty.");
         }
         // 2.查询目标租户
-        query.setTenantId(targetTenantId);
+        query.setTenantId(context.getTargetTenantId());
         List<Carrier> targetCarriers = carrierRepository.listCarrier(query);
-        handleData(targetCarriers,sourceCarriers,targetTenantId);
+        handleData(targetCarriers,sourceCarriers,context.getTargetTenantId());
         log.info("Business: carrier finish");
     }
 

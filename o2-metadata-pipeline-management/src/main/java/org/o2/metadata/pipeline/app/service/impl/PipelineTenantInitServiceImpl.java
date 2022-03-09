@@ -1,11 +1,11 @@
 package org.o2.metadata.pipeline.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.helper.JsonHelper;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.pipeline.api.vo.PipelineCreatedResultVO;
 import org.o2.metadata.pipeline.app.service.PipelineService;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitCoreService;
@@ -14,9 +14,8 @@ import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
 import org.springframework.stereotype.Service;
 
-
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 流程器租户初始化
@@ -43,22 +42,22 @@ public class PipelineTenantInitServiceImpl implements PipelineTenantInitService 
     }
 
     @Override
-    public void tenantInitialize(long sourceTenantId, List<String> tenantList) {
-        if (CollectionUtils.isEmpty(tenantList)) {
+    public void tenantInitialize(TenantInitContext context) {
+        if (null == context.getTargetTenantId()) {
             return;
         }
-        final List<Long> tenantIds = tenantList.stream().map(Long::parseLong).collect(Collectors.toList());
+        final List<Long> tenantIds = Collections.singletonList(context.getTargetTenantId());
 
         for (Long tenantId : tenantIds) {
             // 1. 初始化流程器
-            pipelineTenantInitCoreService.tenantInitialize(sourceTenantId, tenantId);
+            pipelineTenantInitCoreService.tenantInitialize(context.getSourceTenantId(), tenantId);
         }
 
         // 流程器缓存同步
-        tenantList.forEach(targetTenantId -> {
+        tenantIds.forEach(targetTenantId -> {
             final List<Pipeline> cachePipelines = pipelineRepository.selectByCondition(Condition.builder(Pipeline.class)
                     .andWhere(Sqls.custom()
-                            .andEqualTo(Pipeline.FIELD_TENANT_ID, Long.valueOf(targetTenantId))
+                            .andEqualTo(Pipeline.FIELD_TENANT_ID, targetTenantId)
                             .andEqualTo(Pipeline.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                     .build());
             final List<PipelineCreatedResultVO> pipelineCreatedResultVOList;

@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import java.util.List;
+import org.o2.initialize.domain.context.TenantInitContext;
 
 /**
  * 多租户初始化Service
@@ -12,15 +12,13 @@ public interface MetadataTenantInitService {
     /**
      * 租户初始化
      *
-     * @param sourceTenantId 源租户Id
-     * @param tenantList     目标租户集合
+     * @param context 参数
      */
-    void tenantInitialize(long sourceTenantId, List<String> tenantList);
+    void tenantInitialize(TenantInitContext context);
 
     /**
      * 租户业务数据初始化
-     * @param sourceTenantId 源租户Id
-     * @param tenantList 目标租户集合
+     * @param context 参数
      */
-    void tenantInitializeBusiness(long sourceTenantId, List<String> tenantList);
+    void tenantInitializeBusiness(TenantInitContext context);
 }

@@ -1,13 +1,9 @@
 package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.*;
 import org.springframework.stereotype.Service;
-
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * description
@@ -69,79 +65,73 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
     }
 
     @Override
-    public void tenantInitialize(long sourceTenantId, List<String> tenantList) {
-        if (CollectionUtils.isEmpty(tenantList)) {
+    public void tenantInitialize(TenantInitContext context) {
+        // long sourceTenantId, List<String> tenantList
+        if (null == context.getTargetTenantId()) {
             return;
         }
 
-        List<Long> tenantIds = tenantList.stream().map(Long::parseLong).collect(Collectors.toList());
-        for (Long tenantId : tenantIds) {
-            // 1. 系统参数
-            sysParamTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 1. 系统参数
+        sysParamTenantInitService.tenantInitialize(context);
 
-            // 2. 静态资源配置
-            staticResourceTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 2. 静态资源配置
+        staticResourceTenantInitService.tenantInitialize(context);
 
-            // 3. 多语言文件管理
-            mallLangPromptTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 3. 多语言文件管理
+        mallLangPromptTenantInitService.tenantInitialize(context);
 
-            // 4. 网店(OW-1)
-            shopTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 4. 网店(OW-1)
+        shopTenantInitService.tenantInitialize(context);
 
-            // 5. 平台(OW,JD,TM)
-            platformDefineTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 5. 平台(OW,JD,TM)
+        platformDefineTenantInitService.tenantInitialize(context);
 
-            // 6. 目录&目录版本
-            catalogTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 6. 目录&目录版本
+        catalogTenantInitService.tenantInitialize(context);
 
-            // 7. 平台信息匹配
-            platformInfoMapTenantInitService.tenantInitialize(sourceTenantId, tenantId);
+        // 7. 平台信息匹配
+        platformInfoMapTenantInitService.tenantInitialize(context);
 
-            // 8. 仓库（虚拟仓）
-            warehouseTenantInitService.tenantInitialize(sourceTenantId, tenantId);
-
-        }
+        // 8. 仓库（虚拟仓）
+        warehouseTenantInitService.tenantInitialize(context);
 
     }
 
     @Override
-    public void tenantInitializeBusiness(long sourceTenantId, List<String> tenantList) {
-        if (CollectionUtils.isEmpty(tenantList)) {
+    public void tenantInitializeBusiness(TenantInitContext context) {
+        if (null == context.getTargetTenantId()) {
             return;
         }
-        List<Long> tenantIds = tenantList.stream().map(Long::parseLong).collect(Collectors.toList());
-        for (Long tenantId : tenantIds) {
-            // 1. 保留网店编码为TM-1、JD-1、OW-2、OW-1的网店
-            shopTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
+        // 1. 保留网店编码为TM-1、JD-1、OW-2、OW-1的网店
+        shopTenantInitService.tenantInitializeBusiness(context);
 
-            // 2. 服务点 保留编码为SH001、BJ001的服务点
-            posTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 2. 服务点 保留编码为SH001、BJ001的服务点
+        posTenantInitService.tenantInitializeBusiness(context);
 
-            // 3. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
-            warehouseTenantInitService.tenantInitializeBusiness(sourceTenantId, tenantId);
+        // 3. 保留编码为VIRTUAL_POS、SH001、SH002、BJ001的仓库
+        warehouseTenantInitService.tenantInitializeBusiness(context);
 
-            // 4. 保留TM-01、JD-1、OW-1、OW-2关联关系
-            onlineShopRelHouseTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 4. 保留TM-01、JD-1、OW-1、OW-2关联关系
+        onlineShopRelHouseTenantInitService.tenantInitializeBusiness(context);
 
-            // 5.保留编码为STO、YTO、SF、EMS、JD的承运商
-            carrierTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 5.保留编码为STO、YTO、SF、EMS、JD的承运商
+        carrierTenantInitService.tenantInitializeBusiness(context);
 
-            // 6. 承运商匹配 OW、JD、TM三个平台下全部保留
-            carrierMappingTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 6. 承运商匹配 OW、JD、TM三个平台下全部保留
+        carrierMappingTenantInitService.tenantInitializeBusiness(context);
 
-            // 7.目录版本管理
-            catalogTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 7.目录版本管理
+        catalogTenantInitService.tenantInitializeBusiness(context);
 
-            // 8.运费模板
-            freightTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 8.运费模板
+        freightTenantInitService.tenantInitializeBusiness(context);
 
 
-            // 10.平台定义
-            platformDefineTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        // 10.平台定义
+        platformDefineTenantInitService.tenantInitializeBusiness(context);
 
-            //9.平台信息匹配
-            platformInfoMapTenantInitService.tenantInitializeBusiness(sourceTenantId,tenantId);
+        //9.平台信息匹配
+        platformInfoMapTenantInitService.tenantInitializeBusiness(context);
 
-        }
     }
 }
