@@ -38,7 +38,7 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
         log.info("Business: carrier start");
         CarrierMapping query = new CarrierMapping();
         query.setTenantId(context.getSourceTenantId());
-        query.setPlatformCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM_MAPPING).split(",")));
+        query.setPlatformCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER_MAPPING).split(",")));
         query.setCarrierCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER).split(",")));
         List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceCarrierMapping)) {
