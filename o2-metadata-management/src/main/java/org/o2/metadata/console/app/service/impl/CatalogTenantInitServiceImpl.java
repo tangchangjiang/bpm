@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.initialize.domain.context.TenantInitContext;
@@ -38,15 +39,20 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
     @Override
     public void tenantInitialize(TenantInitContext context) {
         log.info("initializeCatalogAndVersion start, tenantId[{}]", context.getTargetTenantId());
+        String catalog = context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_CATALOG);
+        if (StringUtils.isBlank(catalog)) {
+            log.info("base_catalog is null");
+            return;
+        }
         // 1. 查询平台租户（默认OW-1）
-        final List<Catalog> platformCatalogs = selectCatalog(context.getSourceTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_CATALOG).split(",")));
+        final List<Catalog> platformCatalogs = selectCatalog(context.getSourceTenantId(), Arrays.asList(catalog.split(",")));
         if (CollectionUtils.isEmpty(platformCatalogs)) {
             log.info("platformCatalogs is empty.");
             return;
         }
 
         // 2. 查询目标租户是否存在数据
-        final List<Catalog> targetCatalogs = selectCatalog(context.getTargetTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_CATALOG).split(",")));
+        final List<Catalog> targetCatalogs = selectCatalog(context.getTargetTenantId(), Arrays.asList(catalog.split(",")));
         // 3. 操作目录
         handleCatalog(targetCatalogs, platformCatalogs, context.getSourceTenantId(), context.getTargetTenantId());
         // 4. 操作目录版本
@@ -57,8 +63,13 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
     @Override
     public void tenantInitializeBusiness(TenantInitContext context) {
         log.info("Business :initializeCatalogAndVersion start, tenantId[{}]", context.getTargetTenantId());
+        String catalog = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CATALOG);
+        if (StringUtils.isBlank(catalog)) {
+            log.info("business_catalog is null");
+            return;
+        }
         // 1. 查询平台租户（默认OW-1）
-        final List<Catalog> platformCatalogs = selectCatalog(context.getSourceTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CATALOG).split(",")));
+        final List<Catalog> platformCatalogs = selectCatalog(context.getSourceTenantId(), Arrays.asList(catalog.split(",")));
 
         if (CollectionUtils.isEmpty(platformCatalogs)) {
             log.info(" Business : Catalogs is empty.");
@@ -66,7 +77,7 @@ public class CatalogTenantInitServiceImpl implements CatalogTenantInitService {
         }
 
         // 2. 查询目标租户是否存在数据
-        final List<Catalog> targetCatalogs = selectCatalog(context.getTargetTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CATALOG).split(",")));
+        final List<Catalog> targetCatalogs = selectCatalog(context.getTargetTenantId(), Arrays.asList(catalog.split(",")));
         // 3. 操作目录
         handleCatalog(targetCatalogs, platformCatalogs, context.getSourceTenantId(), context.getTargetTenantId());
         // 4. 操作目录版本

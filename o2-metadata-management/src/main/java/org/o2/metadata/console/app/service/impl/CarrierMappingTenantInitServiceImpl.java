@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.CarrierMappingTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
@@ -36,10 +37,20 @@ public class CarrierMappingTenantInitServiceImpl implements CarrierMappingTenant
     public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源租户
         log.info("Business: carrier start");
+        String carrierMapping = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER_MAPPING);
+        String carrier = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER);
+        if (StringUtils.isBlank(carrierMapping)) {
+            log.info("business_carrier_mapping is null");
+            return;
+        }
+        if (StringUtils.isBlank(carrier)) {
+            log.info("business_carrier is null");
+            return;
+        }
         CarrierMapping query = new CarrierMapping();
         query.setTenantId(context.getSourceTenantId());
-        query.setPlatformCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER_MAPPING).split(",")));
-        query.setCarrierCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER).split(",")));
+        query.setPlatformCodes(Arrays.asList(carrierMapping.split(",")));
+        query.setCarrierCodes(Arrays.asList(carrier.split(",")));
         List<CarrierMapping> sourceCarrierMapping = carrierMappingRepository.listByCondition(query);
         if (CollectionUtils.isEmpty(sourceCarrierMapping)) {
             log.info("Business: carrier is empty.");
