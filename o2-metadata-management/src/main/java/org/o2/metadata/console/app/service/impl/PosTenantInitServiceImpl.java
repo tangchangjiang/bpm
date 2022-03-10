@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.initialize.domain.context.TenantInitContext;
@@ -41,9 +42,14 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
     public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源租户数据
         log.info("Business: initializePos start, tenantId[{}]", context.getTargetTenantId());
+        String pos = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_POS);
+        if (StringUtil.isBlank(pos)) {
+            log.info("business_pos is null");
+            return;
+        }
         Pos query = new Pos();
         query.setTenantId(context.getSourceTenantId());
-        query.setPosCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_POS).split(",")));
+        query.setPosCodes(Arrays.asList(pos.split(",")));
         List<Pos> sourcePos = posService.selectByCondition(query);
         if (CollectionUtils.isEmpty(sourcePos)) {
             log.warn("Business data not exists in sourceTenantId[{}]", context.getSourceTenantId());

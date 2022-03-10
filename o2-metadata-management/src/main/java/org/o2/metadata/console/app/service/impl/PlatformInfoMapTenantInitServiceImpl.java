@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -37,11 +38,16 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(TenantInitContext context) {
         log.info("initializePlatformInfoMapping start, tenantId[{}]", context.getTargetTenantId());
+        String platformInfMapping = context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM_MAPPING);
+        if (StringUtil.isBlank(platformInfMapping)) {
+            log.info("base_platform_mapping is null");
+            return;
+        }
         // 1. 查询平台租户（默认OW-1）
         final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, context.getSourceTenantId())
-                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM_MAPPING).split(",")))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(platformInfMapping.split(",")))
                 )
                 .build());
 
@@ -54,7 +60,7 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, context.getTargetTenantId())
-                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM_MAPPING).split(","))))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(platformInfMapping.split(","))))
                 .build());
         handleData(targetPlatformInfoMappings,platformInfoMappings,context.getTargetTenantId());
     }
@@ -63,11 +69,16 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(TenantInitContext context) {
         log.info("Business ：initializePlatformInfoMapping start, tenantId[{}]", context.getTargetTenantId());
+        String platformInfoMappingBus = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM_MAPPING);
+        if (StringUtil.isBlank(platformInfoMappingBus)) {
+            log.info("business_platform_mapping is null");
+            return;
+        }
         // 1. 查询平台租户（默认OW-1）
         final List<PlatformInfoMapping> platformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, context.getSourceTenantId())
-                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM_MAPPING).split(",")))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(platformInfoMappingBus.split(",")))
                 )
                 .build());
 
@@ -80,7 +91,7 @@ public class PlatformInfoMapTenantInitServiceImpl implements PlatformInfoMapTena
         final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, context.getTargetTenantId())
-                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM_MAPPING).split(","))))
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, Arrays.asList(platformInfoMappingBus.split(","))))
                 .build());
         handleData(targetPlatformInfoMappings,platformInfoMappings,context.getTargetTenantId());
         log.info("Business ：initializePlatformInfoMapping finish, tenantId[{}]", context.getTargetTenantId());

@@ -102,6 +102,15 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         if (null == context.getTargetTenantId()) {
             return;
         }
+        // 1. 系统参数
+        sysParamTenantInitService.tenantInitialize(context);
+
+        // 2. 静态资源配置
+        staticResourceTenantInitService.tenantInitialize(context);
+
+        // 3. 多语言文件管理
+        mallLangPromptTenantInitService.tenantInitialize(context);
+
         // 1. 保留网店编码为TM-1、JD-1、OW-2、OW-1的网店
         shopTenantInitService.tenantInitializeBusiness(context);
 

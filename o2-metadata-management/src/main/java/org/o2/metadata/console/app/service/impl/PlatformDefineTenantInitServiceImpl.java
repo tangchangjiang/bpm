@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -36,6 +37,11 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(TenantInitContext context) {
         log.info("initializePlatforms start");
+        String platform  =context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_PLATFORM);
+        if (StringUtil.isBlank(platform)) {
+            log.info("base_platform is null");
+            return;
+        }
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
@@ -64,6 +70,12 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(TenantInitContext context) {
         log.info("Business :initializePlatforms start");
+
+        String platform  =context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_PLATFORM);
+        if (StringUtil.isBlank(platform)) {
+            log.info("business_platform is null");
+            return;
+        }
         // 1. 查询平台租户（所有已启用）
         final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()

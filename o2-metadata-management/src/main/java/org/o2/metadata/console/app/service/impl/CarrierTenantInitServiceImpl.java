@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.CarrierTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
@@ -36,9 +37,14 @@ public class CarrierTenantInitServiceImpl implements CarrierTenantInitService {
     public void tenantInitializeBusiness(TenantInitContext context) {
         //1. 查询源租户
         log.info("Business: carrier start");
+        String carrier = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER);
+        if (StringUtils.isBlank(carrier)) {
+            log.info("business_carrier is null");
+            return;
+        }
         Carrier query = new Carrier();
         query.setTenantId(context.getSourceTenantId());
-        query.setCarrierCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_CARRIER).split(",")));
+        query.setCarrierCodes(Arrays.asList(carrier.split(",")));
         List<Carrier> sourceCarriers = carrierRepository.listCarrier(query);
         if (CollectionUtils.isEmpty(sourceCarriers)) {
             log.info("Business: carrier is empty.");
