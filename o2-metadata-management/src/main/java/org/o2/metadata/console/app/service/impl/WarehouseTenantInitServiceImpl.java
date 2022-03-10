@@ -70,7 +70,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, context.getTargetTenantId())
                         .andIn(Warehouse.FIELD_WAREHOUSE_CODE, Arrays.asList(warehouse.split(",")))
                 ).build());
-        handleData(targetWarehouses,sourceWarehouses,context);
+        handleData(targetWarehouses,sourceWarehouses,Arrays.asList(warehouse.split(",")), context);
         log.info("initializeWarehouse finish");
     }
 
@@ -95,7 +95,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         // 2. 查询目标租户是否存在数据
         query.setTenantId(context.getTargetTenantId());
         List<Warehouse> oldWarehouses = warehouseService.selectByCondition(query);
-        handleData(oldWarehouses,sourceWarehouses,context);
+        handleData(oldWarehouses,sourceWarehouses,Arrays.asList(warehouse.split(",")), context);
         log.info("Business: initializeWarehouse finish");
     }
 
@@ -105,7 +105,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
      * @param initializeWarehouses 目标库需要重新初始化的数据
      * @param context 参数
      */
-    private void handleData(List<Warehouse> oldWarehouses, List<Warehouse> initializeWarehouses, TenantInitContext context) {
+    private void handleData(List<Warehouse> oldWarehouses, List<Warehouse> initializeWarehouses, List<String> warehouses, TenantInitContext context) {
         // 2.1 查询目标租户需要更新数据
         List<Warehouse> addList = new ArrayList<>(4);
         // 2.1 查询目标租户需要插入数据
@@ -130,7 +130,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         for (Warehouse init : initializeWarehouses) {
             String initCode = init.getWarehouseCode();
             // 虚拟仓库 服务点ID 默认1
-            if (context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_WAREHOUSE).equals(initCode)) {
+            if (warehouses.contains(initCode)) {
                 init.setPosId(TenantInitConstants.WarehouseBasis.POS_ID);
             } else {
                 Long posId = targetPosMap.get(init.getPosCode());

@@ -40,5 +40,5 @@ public interface CatalogTenantInitService {
      *
      * @param context job参数
      */
-    void handleCatalogVersion(TenantInitContext context);
+    void handleCatalogVersion(TenantInitContext context, List<String> catalogList);
 }
