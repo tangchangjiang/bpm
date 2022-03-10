@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -47,23 +48,27 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(TenantInitContext context) {
         log.info("initializeWarehouse start");
+        String warehouse = context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_WAREHOUSE);
+        if (StringUtil.isBlank(warehouse)) {
+            log.info("base_warehouse  is null");
+            return;
+        }
         // 1. 查询源租户
         final List<Warehouse> sourceWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, context.getSourceTenantId())
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_WAREHOUSE))
+                        .andIn(Warehouse.FIELD_WAREHOUSE_CODE, Arrays.asList(warehouse.split(",")))
                 ).build());
 
         if (CollectionUtils.isEmpty(sourceWarehouses)) {
             log.warn("VIRTUAL_POS not exists in sourceTenantId[{}]", context.getSourceTenantId());
             return;
         }
-
         // 2. 查询目标租户是否存在数据
         final List<Warehouse> targetWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, context.getTargetTenantId())
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_WAREHOUSE))
+                        .andIn(Warehouse.FIELD_WAREHOUSE_CODE, Arrays.asList(warehouse.split(",")))
                 ).build());
         handleData(targetWarehouses,sourceWarehouses,context);
         log.info("initializeWarehouse finish");
@@ -73,6 +78,11 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(TenantInitContext context) {
         log.info("Business: initializeWarehouse start");
+        String warehouse = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_WAREHOUSE);
+        if (StringUtil.isBlank(warehouse)) {
+            log.info("business_warehouse  is null");
+            return;
+        }
         // 1. 查询源租户
         Warehouse query = new Warehouse();
         query.setTenantId(context.getSourceTenantId());

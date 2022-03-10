@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -42,8 +43,13 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(TenantInitContext context) {
         log.info("initializeOnlineShop start, tenantId[{}]", context.getTargetTenantId());
+        String onlineShop = context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_ONLINE_SHOP);
+        if (StringUtil.isBlank(onlineShop)) {
+            log.info("base_online_shop is null");
+            return;
+        }
         // 1. 查询平台租户（默认OW-1）
-        List<OnlineShop> sourceOnlineShop = selectOnlineShop(context.getSourceTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_ONLINE_SHOP).split(",")));
+        List<OnlineShop> sourceOnlineShop = selectOnlineShop(context.getSourceTenantId(), Arrays.asList(onlineShop.split(",")));
 
         if (CollectionUtils.isEmpty(sourceOnlineShop)) {
             log.info("platformOnlineShops is empty.");
@@ -51,7 +57,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         }
 
         // 2. 查询目标租户是否存在数据
-        List<OnlineShop> oldOnlineShops = selectOnlineShop(context.getTargetTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBaseParam.BASE_ONLINE_SHOP).split(",")));
+        List<OnlineShop> oldOnlineShops = selectOnlineShop(context.getTargetTenantId(), Arrays.asList(onlineShop.split(",")));
         handleData(oldOnlineShops, sourceOnlineShop, context.getTargetTenantId());
         log.info("initializeOnlineShop finish, tenantId[{}]", context.getTargetTenantId());
     }
@@ -69,13 +75,18 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询来源租户网店
-        List<OnlineShop> onlineShops = selectOnlineShop(context.getSourceTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_ONLINE_SHOP).split(",")));
+        String onlineShop = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_ONLINE_SHOP);
+        if (StringUtil.isBlank(onlineShop)) {
+            log.info("business_online_shop is null");
+            return;
+        }
+        List<OnlineShop> onlineShops = selectOnlineShop(context.getSourceTenantId(), Arrays.asList(onlineShop.split(",")));
         if (CollectionUtils.isEmpty(onlineShops)) {
             log.info("Business: platformOnlineShops is empty.");
             return;
         }
         // 2. 查询目标租户是否存在数据
-        List<OnlineShop> oldOnlineShops = selectOnlineShop(context.getTargetTenantId(), Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_ONLINE_SHOP).split(",")));
+        List<OnlineShop> oldOnlineShops = selectOnlineShop(context.getTargetTenantId(), Arrays.asList(onlineShop.split(",")));
         handleData(oldOnlineShops, onlineShops, context.getTargetTenantId());
         log.info("Business: initializeOnlineShop finish, tenantId[{}]", context.getTargetTenantId());
 

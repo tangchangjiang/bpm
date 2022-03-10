@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
+import jodd.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.initialize.domain.context.TenantInitContext;
@@ -50,6 +51,16 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
     public void tenantInitializeBusiness(TenantInitContext context) {
         // 1. 查询源目标数据库
         log.info("Business: initializeOnlineShopRelWarehouse start, tenantId[{}]", context.getTargetTenantId());
+        String shopRelHouse = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_SHOP_REL_HOUSE);
+        String warehouse = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_WAREHOUSE);
+        if (StringUtil.isBlank(shopRelHouse)) {
+            log.info(" initializeOnlineShopRelWarehouse is shop_rel_house  null");
+            return;
+        }
+        if (StringUtil.isBlank(warehouse)) {
+            log.info(" initializeOnlineShopRelWarehouse is warehouse  is null");
+            return;
+        }
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setTenantId(context.getSourceTenantId());
         query.setOnlineShopCodes(Arrays.asList(context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_SHOP_REL_HOUSE).split(",")));

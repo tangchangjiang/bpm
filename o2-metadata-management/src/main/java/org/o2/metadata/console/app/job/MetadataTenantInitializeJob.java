@@ -35,6 +35,7 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
     @Override
     public void initializeBusinessData(TenantInitContext context) {
         // do nothing
+        pipelineTenantInitService.tenantInitialize(context);
         metadataTenantInitService.tenantInitializeBusiness(context);
     }
 }
