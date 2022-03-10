@@ -123,6 +123,7 @@ public class OnlineShopRelHouseTenantInitServiceImpl implements OnlineShopRelHou
             addList.add(init);
         }
         //  更新
+        addList.removeIf(item -> item.getOnlineShopId() == null);
         onlineShopRelWarehouseRepository.batchInsertSelective(addList);
         // 更新缓存
         onlineShopRedis.batchUpdateShopRelWh(initList, targetTenantId, OnlineShopConstants.Redis.UPDATE);
