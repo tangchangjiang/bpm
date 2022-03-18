@@ -6,10 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.api.co.AddressMappingCO;
-import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.api.dto.*;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
@@ -321,6 +318,12 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         }
         Preconditions.checkArgument(null != addressMapping.getPlatformCode(), MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         addressMappingRepository.insertSelective(addressMapping);
+    }
+
+    @Override
+    public void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO) {
+        List<AddressMapping> addressMappings = addressMappingRepository.queryAddress(addressReleaseDTO);
+        List<Region> regions = regionLovQueryRepository.queryRegion(addressReleaseDTO.getTenantId(), new RegionQueryLovInnerDTO());
     }
 
 
