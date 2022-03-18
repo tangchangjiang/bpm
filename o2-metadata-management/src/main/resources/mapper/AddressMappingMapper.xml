@@ -144,4 +144,25 @@
             and ad.platform_code = #{query.platformCode}
         </if>
     </select>
+
+    <select id="queryAddress" resultType="org.o2.metadata.console.infra.entity.AddressMapping">
+        SELECT
+        ad.region_code,
+        ad.external_name
+        FROM
+        o2md_address_mapping ad
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    ad.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    1 = 0
+                </otherwise>
+            </choose>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(platformCode)">
+                and ad.platform_code = #{platformCode}
+            </if>
+        </where>
+    </select>
 </mapper>

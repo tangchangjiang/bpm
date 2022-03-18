@@ -11,7 +11,9 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
+import org.o2.metadata.console.api.dto.AddressReleaseDTO;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
@@ -122,5 +124,15 @@ public class AddressMappingController extends BaseController {
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
         return Results.success();
+    }
+
+    @ApiOperation(value = "发布地区信息")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/release")
+    public ResponseEntity<?> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                     @RequestBody AddressReleaseDTO addressRelease){
+        addressRelease.setTenantId(organizationId);
+        addressMappingService.releaseAddressMapping(addressRelease);
+        return Results.success(OperateResponse.success());
     }
 }
