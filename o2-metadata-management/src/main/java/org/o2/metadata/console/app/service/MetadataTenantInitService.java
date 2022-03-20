@@ -13,14 +13,8 @@ public interface MetadataTenantInitService {
      * 租户初始化
      *
      * @param sourceTenantId 源租户Id
-     * @param tenantList     目标租户集合
+     * @param targetTenantId     目标租户
      */
-    void tenantInitialize(long sourceTenantId, List<String> tenantList);
+    void tenantInitialize(Long sourceTenantId, Long targetTenantId);
 
-    /**
-     * 租户业务数据初始化
-     * @param sourceTenantId 源租户Id
-     * @param tenantList 目标租户集合
-     */
-    void tenantInitializeBusiness(long sourceTenantId, List<String> tenantList);
 }

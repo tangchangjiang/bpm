@@ -39,6 +39,7 @@ public class Carrier extends AuditDomain {
     public static final String FIELD_CARRIER_CODE = "carrierCode";
     public static final String FIELD_CARRIER_NAME = "carrierName";
     public static final String FIELD_CARRIER_TYPE_CODE = "carrierTypeCode";
+    public static final String FIELD_TENANT_ID = "tenantId";
 
     //
     // 业务方法(按public protected private顺序排列)

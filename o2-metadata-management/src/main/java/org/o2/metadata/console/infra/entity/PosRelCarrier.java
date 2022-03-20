@@ -20,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 服务点关联承运商
@@ -103,6 +104,21 @@ public class PosRelCarrier extends AuditDomain {
     @ApiModelProperty(value = "服务点")
     @Transient
     private Pos pos;
+
+    @ApiModelProperty(value = "服务点编码")
+    @Transient
+    private List<String> posCodes;
+    @ApiModelProperty(value = "服务点编码")
+    @Transient
+    private String posCode;
+
+
+    @ApiModelProperty(value = "承运商编码")
+    @Transient
+    private List<String> carrierCodes;
+    @ApiModelProperty(value = "承运商编码")
+    @Transient
+    private String carrierCode;
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 

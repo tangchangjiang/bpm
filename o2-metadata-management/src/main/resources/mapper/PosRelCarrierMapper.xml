@@ -18,7 +18,7 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <select id="listCarrierWithPos" resultMap="BaseResultMap">
+    <select id="listCarrierWithPos" resultType="org.o2.metadata.console.infra.entity.PosRelCarrier">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         t.pos_rel_carrier_id,
@@ -28,10 +28,13 @@
         t.default_flag,
         t.priority,
         t.OBJECT_VERSION_NUMBER,
-        c.carrier_name
+        c.carrier_name,
+        c.carrier_code,
+        pos.pos_code
         FROM
         o2md_pos_rel_carrier t
         JOIN o2md_carrier c ON t.carrier_id = c.carrier_id and c.tenant_id = #{tenantId}
+        join o2md_pos pos on pos.pos_id = t.pos_id and pos.tenant_id = #{tenantId}
         left join o2md_carrier_tl tl on tl.carrier_id = c.carrier_id  and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
         where 1=1
         <choose>

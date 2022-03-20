@@ -8,19 +8,9 @@ package org.o2.metadata.console.app.service;
  */
 public interface PlatformDefineTenantInitService {
     /**
-     * 租户初始化
-     *
+     * d
      * @param sourceTenantId 源租户Id
      * @param targetTenantId 租户Id
      */
     void tenantInitialize(Long sourceTenantId, Long targetTenantId);
-
-
-    /**
-     * 租户初始化
-     *
-     * @param sourceTenantId 源租户Id
-     * @param targetTenantId 租户Id
-     */
-    void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId);
 }
