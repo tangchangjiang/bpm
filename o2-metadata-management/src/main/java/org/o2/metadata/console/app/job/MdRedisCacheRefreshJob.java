@@ -26,7 +26,7 @@ import java.util.Map;
 public class MdRedisCacheRefreshJob implements IJobHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MdRedisCacheRefreshJob.class);
-    private CacheJobService cacheJobService;
+    private final CacheJobService cacheJobService;
 
     public MdRedisCacheRefreshJob(CacheJobService cacheJobService) {
         this.cacheJobService = cacheJobService;

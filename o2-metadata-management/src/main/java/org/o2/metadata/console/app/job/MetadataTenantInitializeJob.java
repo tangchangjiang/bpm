@@ -32,7 +32,6 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
     @Override
     public void initializeBasicData(TenantInitContext context) {
         metadataTenantInitService.tenantInitialize(context.getSourceTenantId(), context.getTargetTenantId());
-
     }
 
     @Override

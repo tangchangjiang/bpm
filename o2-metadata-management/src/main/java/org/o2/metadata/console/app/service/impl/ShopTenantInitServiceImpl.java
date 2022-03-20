@@ -5,10 +5,15 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.TenantInitBO;
+import org.o2.metadata.console.app.service.CacheJobService;
 import org.o2.metadata.console.app.service.ShopTenantInitService;
+import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Service;
@@ -40,7 +45,9 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     private final WarehouseRepository warehouseRepository;
     private final CarrierRepository carrierRepository;
     private final CarrierMappingRepository carrierMappingRepository;
-    private final OnlineShopRedis onlineShopRedis;
+    private final RedisCacheClient redisCacheClient;
+    private  final CacheJobService cacheJobService;
+
 
 
     public ShopTenantInitServiceImpl(OnlineShopRepository onlineShopRepository,
@@ -52,7 +59,9 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
                                      PosRepository posRepository, PosAddressRepository posAddressRepository,
                                      PosRelCarrierRepository posRelCarrierRepository,
                                      WarehouseRepository warehouseRepository, CarrierRepository carrierRepository,
-                                     CarrierMappingRepository carrierMappingRepository, OnlineShopRedis onlineShopRedis) {
+                                     CarrierMappingRepository carrierMappingRepository,
+                                     RedisCacheClient redisCacheClient,
+                                     CacheJobService cacheJobService) {
         this.onlineShopRepository = onlineShopRepository;
         this.platformRepository = platformRepository;
         this.platformInfoMappingRepository = platformInfoMappingRepository;
@@ -65,7 +74,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         this.warehouseRepository = warehouseRepository;
         this.carrierRepository = carrierRepository;
         this.carrierMappingRepository = carrierMappingRepository;
-        this.onlineShopRedis = onlineShopRedis;
+        this.cacheJobService = cacheJobService;
+        this.redisCacheClient = redisCacheClient;
     }
 
 
@@ -97,6 +107,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         handleCarrier(sourceTenantId, targetTenantId, carrierCodes);
         // 8.处理服务点关联承运商
         handlePosRel(sourceTenantId,targetTenantId,warehouseCode,carrierCodes);
+        // 9. 处理缓存数据
+        handleRedis(targetTenantId,bo.getOnlineShopCode());
     }
 
     /**
@@ -162,8 +174,6 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             relWarehouse.setOnlineShopId(targetOnlineShop.getOnlineShopId());
             relWarehouse.setOnlineShopCode(onlineShopCode);
             onlineShopRelWarehouseRepository.delete(relWarehouse);
-            // 删除redis
-            onlineShopRedis.batchUpdateShopRelWh(Collections.singletonList(relWarehouse), targetTenantId, OnlineShopConstants.Redis.DELETE);
         }
         // 3. 新建网店
         sourceOnlineShop.setTenantId(targetTenantId);
@@ -384,7 +394,6 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         }
         warehouseRepository.batchInsert(sourceWarehouses);
 
-
     }
 
     /**
@@ -420,7 +429,6 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             relWarehouse.setOnlineShopRelWarehouseId(null);
         }
         onlineShopRelWarehouseRepository.batchInsert(sourceList);
-        onlineShopRedis.batchUpdateShopRelWh(sourceList, targetTenantId, OnlineShopConstants.Redis.UPDATE);
 
     }
 
@@ -524,5 +532,24 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             sourceRelCarrier.setTenantId(targetTenantId);
         }
         posRelCarrierRepository.batchInsert(sourceRelCarriers);
+    }
+
+    /**
+     * 处理缓存数据
+     * @param targetTenantId 目标租户ID
+     * @param onlineShopCode 网店编码
+     */
+    private void handleRedis(Long targetTenantId,String onlineShopCode) {
+        String carrierKey =  CarrierConstants.Redis.getCarrierKey(targetTenantId);
+        redisCacheClient.delete(carrierKey);
+        cacheJobService.refreshCarrier(targetTenantId);
+        cacheJobService.refreshOnlineShop(targetTenantId);
+        String onlineShopRelWarehouseKey = OnlineShopConstants.Redis.getOnlineShopRelWarehouseKey(onlineShopCode, targetTenantId);
+        redisCacheClient.delete(onlineShopRelWarehouseKey);
+        cacheJobService.refreshOnlineShopRelWarehouse(targetTenantId);
+        String warehouseKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(targetTenantId);
+        redisCacheClient.delete(warehouseKey);
+        cacheJobService.refreshWarehouse(targetTenantId);
+
     }
 }
