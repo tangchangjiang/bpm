@@ -12,8 +12,8 @@ public interface PipelineTenantInitService {
     /**
      * 租户初始化
      *
-     * @param sourceTenantId
-     * @param tenantList     目标租户集合
+     * @param sourceTenantId 源租户
+     * @param targetTenantId 目标租户
      */
-    void tenantInitialize(long sourceTenantId, List<String> tenantList);
+    void tenantInitialize(Long sourceTenantId, Long targetTenantId);
 }

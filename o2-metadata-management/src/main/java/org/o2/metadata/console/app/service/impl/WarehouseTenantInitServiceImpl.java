@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.O2CoreConstants;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.app.service.WarehouseTenantInitService;
@@ -32,16 +33,13 @@ import java.util.Map;
 public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitService {
 
     private final WarehouseRepository warehouseRepository;
-    private final WarehouseService warehouseService;
     private final WarehouseRedis warehouseRedis;
     private final PosService posService;
 
     public WarehouseTenantInitServiceImpl(WarehouseRepository warehouseRepository,
-                                          WarehouseService warehouseService,
                                           WarehouseRedis warehouseRedis,
                                           PosService posService) {
         this.warehouseRepository = warehouseRepository;
-        this.warehouseService = warehouseService;
         this.warehouseRedis = warehouseRedis;
         this.posService = posService;
     }
@@ -54,7 +52,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         final List<Warehouse> sourceWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, sourceTenantId)
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE)
+                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, O2CoreConstants.VirtualWarehouse.VIRTUAL_CODE)
                 ).build());
 
         if (CollectionUtils.isEmpty(sourceWarehouses)) {
@@ -66,32 +64,11 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         final List<Warehouse> targetWarehouses = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, targetTenantId)
-                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE)
+                        .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, O2CoreConstants.VirtualWarehouse.VIRTUAL_CODE)
                 ).build());
         handleData(targetWarehouses,sourceWarehouses,targetTenantId);
         log.info("initializeWarehouse finish");
     }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
-        log.info("Business: initializeWarehouse start");
-        // 1. 查询源租户
-        Warehouse query = new Warehouse();
-        query.setTenantId(sourceTenantId);
-        query.setWarehouseCodes(TenantInitConstants.InitWarehouseBusiness.warehouses);
-        List<Warehouse> sourceWarehouses = warehouseService.selectByCondition(query);
-        if (CollectionUtils.isEmpty(sourceWarehouses)) {
-            log.warn("Business data not exists in sourceTenantId[{}]", sourceTenantId);
-            return;
-        }
-        // 2. 查询目标租户是否存在数据
-        query.setTenantId(targetTenantId);
-        List<Warehouse> oldWarehouses = warehouseService.selectByCondition(query);
-        handleData(oldWarehouses,sourceWarehouses,targetTenantId);
-        log.info("Business: initializeWarehouse finish");
-    }
-
     /**
      *  更新目标库已存在的数据 插入需要初始化的数据
      * @param oldWarehouses  目标库已存在的数据

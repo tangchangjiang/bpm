@@ -4,16 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.O2CoreConstants;
 import org.o2.metadata.console.app.service.PlatformDefineTenantInitService;
 import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.entity.Platform;
+import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
+import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,104 +29,67 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
 
     private final PlatformRepository platformRepository;
 
-    public PlatformDefineTenantInitServiceImpl(PlatformRepository platformRepository) {
+    private final PlatformInfoMappingRepository platformInfoMappingRepository;
+
+
+    public PlatformDefineTenantInitServiceImpl(PlatformRepository platformRepository, PlatformInfoMappingRepository platformInfoMappingRepository) {
         this.platformRepository = platformRepository;
+        this.platformInfoMappingRepository = platformInfoMappingRepository;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitialize(Long sourceTenantId, Long targetTenantId) {
         log.info("initializePlatforms start");
-        // 1. 查询平台租户（所有已启用）
-        final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
+        // 1. 查询平台定义租户（所有已启用）
+        final List<Platform> sourcePlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Platform.FIELD_TENANT_ID, sourceTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBasis.PLATFORM_CODE)
+                        .andIn(Platform.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST)
                 )
                 .build());
 
-        if (CollectionUtils.isEmpty(platforms)) {
+        if (CollectionUtils.isEmpty(sourcePlatforms)) {
             log.info("platforms is empty.");
             return;
         }
-
         // 2. 查询目标租户是否存在数据
         final List<Platform> targetPlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Platform.FIELD_TENANT_ID, targetTenantId)
-                .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBasis.PLATFORM_CODE))
+                .andIn(Platform.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
                 .build());
 
-        handleData(targetPlatforms,platforms,targetTenantId);
-        log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
-    }
+        // 删除目标租户存在的数据
+        platformRepository.batchUpdateByPrimaryKey(targetPlatforms);
+        // 新增源租户数据 到目标租户数据
+        platformRepository.batchInsert(sourcePlatforms);
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void tenantInitializeBusiness(Long sourceTenantId, Long targetTenantId) {
-        log.info("Business :initializePlatforms start");
-        // 1. 查询平台租户（所有已启用）
-        final List<Platform> platforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
+        // 1. 查询源租户平台信息匹配
+        final List<PlatformInfoMapping> sourcePlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, sourceTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBusiness.PLATFORM_CODE)
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST)
                 )
                 .build());
 
-        if (CollectionUtils.isEmpty(platforms)) {
-            log.info("Business platforms is empty.");
+        if (CollectionUtils.isEmpty(sourcePlatformInfoMappings)) {
+            log.info("platformInfoMappings is empty.");
             return;
         }
 
-        // 2. 查询目标租户是否存在数据
-        final List<Platform> targetPlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
+        // 2. 查询目标租户平台信息匹配
+        final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(Platform.FIELD_TENANT_ID, targetTenantId)
-                        .andIn(Platform.FIELD_PLATFORM_CODE, TenantInitConstants.PlatformBusiness.PLATFORM_CODE))
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, targetTenantId)
+                        .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
                 .build());
-
-        handleData(targetPlatforms,platforms,targetTenantId);
-        log.info("Business initializePlatforms finish, tenantId[{}]", targetTenantId);
+        platformInfoMappingRepository.batchDeleteByPrimaryKey(targetPlatformInfoMappings);
+        platformInfoMappingRepository.batchInsert(sourcePlatformInfoMappings);
+        log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
     }
 
-    /**
-     *  更新&插入 租户数据
-     * @param oldList 目标租户 已存在的
-     * @param initList 目标租户 重新初始化
-     * @param targetTenantId  目标租户
-     */
-    private void handleData(List<Platform> oldList ,List<Platform> initList,Long targetTenantId) {
-        List<Platform> addList = new ArrayList<>(16);
-        List<Platform> updateList = new ArrayList<>(16);
-        for (Platform init :initList) {
-            String initCode = init.getPlatformCode();
-            boolean addFlag = true;
-            if (CollectionUtils.isEmpty(oldList)) {
-               addList.add(init);
-               continue;
-            }
-            for (Platform old : oldList) {
-                String oldCode = old.getPlatformCode();
-                if (initCode.equals(oldCode)) {
-                    init.setPlatformId(old.getPlatformId());
-                    init.setTenantId(old.getTenantId());
-                    init.setObjectVersionNumber(old.getObjectVersionNumber());
-                    updateList.add(init);
-                    addFlag = false;
-                    break;
-                }
-            }
-            if (addFlag) {
-                addList.add(init);
-            }
-        }
-        addList.forEach(platform -> {
-            platform.setPlatformId(null);
-            platform.setTenantId(targetTenantId);
-        });
 
-        platformRepository.batchInsert(addList);
-        platformRepository.batchUpdateByPrimaryKey(updateList);
 
-    }
+
 }

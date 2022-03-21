@@ -16,10 +16,10 @@ public interface PosRelCarrierRepository extends BaseRepository<PosRelCarrier> {
     /**
      * 服务点关联承运商查询
      *
-     * @param shippingAddress 服务点关联承运商资源库
+     * @param posRelCarrier 服务点关联承运商资源库
      * @return 结果集
      */
-    List<PosRelCarrier> listCarrierWithPos(PosRelCarrier shippingAddress);
+    List<PosRelCarrier> listCarrierWithPos(PosRelCarrier posRelCarrier);
 
     /**
      * 服务点关联承运商查重
