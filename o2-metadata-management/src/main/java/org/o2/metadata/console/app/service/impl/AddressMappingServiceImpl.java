@@ -1,25 +1,28 @@
 package org.o2.metadata.console.app.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import io.choerodon.core.exception.CommonException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.*;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.app.service.AddressMappingService;
+import org.o2.metadata.console.app.service.StaticResourceConfigService;
+import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.AddressConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
-import org.o2.metadata.console.infra.entity.AddressMapping;
-import org.o2.metadata.console.infra.entity.Platform;
-import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.entity.RegionTreeChild;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
@@ -39,22 +42,27 @@ import static java.util.stream.Collectors.toCollection;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Service
+@Slf4j
 public class AddressMappingServiceImpl implements AddressMappingService {
     private final AddressMappingMapper addressMappingMapper;
     private final RegionRepository regionRepository;
     private final AddressMappingRepository addressMappingRepository;
     private final PlatformRepository platformRepository;
     private final RegionLovQueryRepository regionLovQueryRepository;
+    private final StaticResourceConfigService staticResourceConfigService;
+    private final StaticResourceInternalService staticResourceInternalService;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
                                      RegionRepository regionRepository,
                                      AddressMappingRepository addressMappingRepository,
-                                     PlatformRepository platformRepository, RegionLovQueryRepository regionLovQueryRepository) {
+                                     PlatformRepository platformRepository, RegionLovQueryRepository regionLovQueryRepository, StaticResourceConfigService staticResourceConfigService, StaticResourceInternalService staticResourceInternalService) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
         this.addressMappingRepository = addressMappingRepository;
         this.platformRepository = platformRepository;
         this.regionLovQueryRepository = regionLovQueryRepository;
+        this.staticResourceConfigService = staticResourceConfigService;
+        this.staticResourceInternalService = staticResourceInternalService;
     }
 
     /**
@@ -322,8 +330,53 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO) {
+        //构建地址匹配json数据
         List<AddressMapping> addressMappings = addressMappingRepository.queryAddress(addressReleaseDTO);
         List<Region> regions = regionLovQueryRepository.queryRegion(addressReleaseDTO.getTenantId(), new RegionQueryLovInnerDTO());
+        for(AddressMapping addressMapping:addressMappings){
+            for (Region region:regions){
+                if (region.getRegionCode().equals(addressMapping.getRegionCode())){
+                    region.setExternalName(addressMapping.getExternalName());
+                    break;
+                }
+            }
+        }
+        // 查询静态资源配置信息
+        StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
+        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION_EXTERNAL);
+        staticResourceConfigDTO.setTenantId(addressReleaseDTO.getTenantId());
+        final List<StaticResourceConfig> staticResourceConfigList = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
+        final StaticResourceConfig staticResourceConfig = staticResourceConfigList.get(0);
+        String uploadFolder = staticResourceConfig.getUploadFolder();
+        // 上传路径全小写，多语言用中划线
+        final String directory = Optional.ofNullable(uploadFolder)
+                .orElse(Joiner.on(BaseConstants.Symbol.SLASH).skipNulls()
+                        .join(MetadataConstants.Path.FILE,
+                                MetadataConstants.Path.REGION,
+                                MetadataConstants.Path.ZH_CN).toLowerCase());
+
+        log.info("directory url {}", directory);
+        final String jsonString = JSON.toJSONString(AddressMappingConverter.toAddressMappingBO(regions));
+        final String fileName = MetadataConstants.Path.FILE_NAME + "-" + addressReleaseDTO.getPlatformCode() + MetadataConstants.FileSuffix.JSON;
+        String resourceUrl = O2FileHelper.uploadFile(addressReleaseDTO.getTenantId(),
+                directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE, jsonString.getBytes());
+
+        //更新静态资源表
+        String host = "";
+        String url = "";
+        if (StringUtils.isNotBlank(resourceUrl)){
+            host = domainPrefix(resourceUrl);
+            url = trimDomainPrefix(resourceUrl,fileName);
+        }
+        StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
+        saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
+        saveDTO.setDescription(staticResourceConfig.getDescription());
+        saveDTO.setResourceLevel(staticResourceConfig.getResourceLevel());
+        saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
+        saveDTO.setResourceHost(host);
+        saveDTO.setResourceUrl(url);
+        saveDTO.setTenantId(addressReleaseDTO.getTenantId());
+        staticResourceInternalService.saveResource(saveDTO);
     }
 
 
@@ -480,5 +533,23 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         return parent;
     }
 
+    private static String trimDomainPrefix(String resourceUrl,String fileName) {
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return resourceUrl;
+        }
+
+        String domainSuffix = httpSplits[1];
+        String url = domainSuffix.substring(domainSuffix.indexOf(BaseConstants.Symbol.SLASH));
+        return StringUtils.remove(url,fileName);
+    }
+
+    private static String domainPrefix(String resourceUrl) {
+        String[] httpSplits = resourceUrl.split(BaseConstants.Symbol.DOUBLE_SLASH);
+        if (httpSplits.length < 2) {
+            return "";
+        }
+        return resourceUrl.substring(0, resourceUrl.indexOf(BaseConstants.Symbol.SLASH, resourceUrl.indexOf(BaseConstants.Symbol.SLASH) + 2));
+    }
 
 }
