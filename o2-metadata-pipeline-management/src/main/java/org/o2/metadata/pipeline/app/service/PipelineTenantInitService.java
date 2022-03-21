@@ -1,6 +1,6 @@
 package org.o2.metadata.pipeline.app.service;
 
-import org.o2.initialize.domain.context.TenantInitContext;
+import java.util.List;
 
 /**
  * 流程器 租户初始化
@@ -12,7 +12,8 @@ public interface PipelineTenantInitService {
     /**
      * 租户初始化
      *
-     * @param context 参数
+     * @param sourceTenantId 源租户
+     * @param targetTenantId 目标租户
      */
-    void tenantInitialize(TenantInitContext context);
+    void tenantInitialize(Long sourceTenantId, Long targetTenantId);
 }

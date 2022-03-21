@@ -6,6 +6,9 @@ import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 
+
+import java.util.Collections;
+
 /**
  * description
  *
@@ -24,11 +27,11 @@ public class PipelineTenantInitializeJob extends O2AbstractTenantInitializeJob {
 
     @Override
     public void initializeBasicData(TenantInitContext context) {
-        pipelineTenantInitService.tenantInitialize(context);
+        pipelineTenantInitService.tenantInitialize(context.getSourceTenantId(),context.getTargetTenantId());
     }
 
     @Override
     public void initializeBusinessData(TenantInitContext context) {
-        // do nothing
+
     }
 }

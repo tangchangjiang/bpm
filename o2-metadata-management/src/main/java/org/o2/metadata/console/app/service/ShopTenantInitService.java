@@ -1,6 +1,6 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.initialize.domain.context.TenantInitContext;
+import org.o2.metadata.console.app.bo.TenantInitBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 
 import java.util.List;
@@ -13,19 +13,11 @@ import java.util.List;
  */
 public interface ShopTenantInitService {
 
-    /**
-     * 租户初始化
-     *
-     * @param context 租户
-     */
-    void tenantInitialize(TenantInitContext context);
 
     /**
      * 租户业务数据初始化
-     * @param context job参数
+     * @param bo job参数
      */
-    void tenantInitializeBusiness(TenantInitContext context);
+    void tenantInitializeBusiness(TenantInitBO bo);
 
-
-    List<OnlineShop> selectOnlineShop(Long tenantId, List<String> onlineShopCodes);
 }
