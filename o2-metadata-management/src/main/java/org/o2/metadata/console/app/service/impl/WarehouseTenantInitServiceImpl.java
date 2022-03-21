@@ -100,7 +100,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         for (Warehouse init : initializeWarehouses) {
             String initCode = init.getWarehouseCode();
             // 虚拟仓库 服务点ID 默认1
-            if (TenantInitConstants.WarehouseBasis.VIRTUAL_WAREHOUSE.equals(initCode)) {
+            if (O2CoreConstants.VirtualWarehouse.VIRTUAL_CODE.equals(initCode)) {
                 init.setPosId(TenantInitConstants.WarehouseBasis.POS_ID);
             } else {
                 Long posId = targetPosMap.get(init.getPosCode());
