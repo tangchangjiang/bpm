@@ -31,4 +31,9 @@ public class IamUserCO {
      * 手机号
      */
     private String phone;
+
+    /**
+     * 微信唯一标示 openId
+     */
+    private String openId;
 }
