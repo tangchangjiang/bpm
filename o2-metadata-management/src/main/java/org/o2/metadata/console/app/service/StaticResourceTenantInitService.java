@@ -1,7 +1,5 @@
 package org.o2.metadata.console.app.service;
 
-import org.o2.initialize.domain.context.TenantInitContext;
-
 /**
  * 静态资源租户初始化
  *
@@ -12,7 +10,8 @@ public interface StaticResourceTenantInitService {
     /**
      * 租户初始化
      *
-     * @param context 租户
+     * @param sourceTenantId
+     * @param targetTenantId 租户Id
      */
-    void tenantInitialize(TenantInitContext context);
+    void tenantInitialize(long sourceTenantId, Long targetTenantId);
 }

@@ -5,7 +5,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.service.CacheJobService;
 import org.o2.metadata.console.app.service.SysParamTenantInitService;
 import org.o2.metadata.console.app.service.SystemParamValueService;
@@ -15,6 +14,7 @@ import org.o2.metadata.console.infra.repository.SystemParamValueRepository;
 import org.o2.metadata.console.infra.repository.SystemParameterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,16 +48,17 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
     /**
      * 租户初始化
      *
-     * @param context 租户
+     * @param sourceTenantId 源租户Id
+     * @param targetTenantId 租户Id
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void tenantInitialize(TenantInitContext context) {
+    public void tenantInitialize(long sourceTenantId, Long targetTenantId) {
         log.info("initializeSystemParameter start");
         // 1. 查询平台租户（所有已启用）
         final List<SystemParameter> platformSysParams = systemParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, context.getSourceTenantId())
+                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(SystemParameter.FIELD_ACTIVE_FLAG, BaseConstants.Flag.YES))
                 .build());
 
@@ -69,7 +70,7 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
         // 2. 查询目标租户是否存在数据
         final List<SystemParameter> targetSysParams = systemParameterRepository.selectByCondition(Condition.builder(SystemParameter.class)
                 .andWhere(Sqls.custom()
-                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, context.getTargetTenantId()))
+                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, targetTenantId))
                 .build());
 
         if (CollectionUtils.isNotEmpty(targetSysParams)) {
@@ -78,7 +79,7 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
 
             final List<SystemParamValue> targetSysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParameter.class)
                     .andWhere(Sqls.custom()
-                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, context.getTargetTenantId())
+                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, targetTenantId)
                             .andIn(SystemParamValue.FIELD_PARAM_ID, targetSysParamIds))
                     .build());
             for (SystemParamValue targetSysParamValue : targetSysParamValues) {
@@ -92,25 +93,25 @@ public class SysParamTenantInitServiceImpl implements SysParamTenantInitService 
             // 查询关联表
             final List<SystemParamValue> platformSysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParameter.class)
                     .andWhere(Sqls.custom()
-                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, context.getSourceTenantId())
+                            .andEqualTo(SystemParamValue.FIELD_TENANT_ID, sourceTenantId)
                             .andEqualTo(SystemParamValue.FIELD_PARAM_ID, platformSysParam.getParamId()))
                     .build());
 
             // 插入后，携带插入后主键
             platformSysParam.setParamId(null);
-            platformSysParam.setTenantId(context.getTargetTenantId());
+            platformSysParam.setTenantId(targetTenantId);
             systemParameterRepository.insert(platformSysParam);
 
             platformSysParamValues.forEach(platformSysParamValue -> {
                 platformSysParamValue.setValueId(null);
                 platformSysParamValue.setParamId(platformSysParam.getParamId());
-                platformSysParamValue.setTenantId(context.getTargetTenantId());
+                platformSysParamValue.setTenantId(targetTenantId);
             });
             systemParamValueRepository.batchInsert(platformSysParamValues);
         }
 
         // 4. 刷新缓存
-        cacheJobService.refreshSysParameter(context.getTargetTenantId());
+        cacheJobService.refreshSysParameter(targetTenantId);
 
         log.info("initializeSystemParameter finish");
     }
