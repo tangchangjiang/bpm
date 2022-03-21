@@ -6,9 +6,10 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.bo.TenantInitBO;
 import org.o2.metadata.console.app.service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class MetadataBusinessTenantInitServiceImpl implements MetadataBusinessTenantInitService {
 
     private final ShopTenantInitService shopTenantInitService;
