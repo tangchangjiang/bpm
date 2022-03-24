@@ -49,7 +49,6 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     @Override
     public void tenantInitialize(Long sourceTenantId, Long targetTenantId) {
-
         // 1. 系统参数
         sysParamTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 

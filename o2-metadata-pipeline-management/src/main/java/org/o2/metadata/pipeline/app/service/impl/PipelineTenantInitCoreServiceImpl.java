@@ -6,9 +6,11 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitCoreService;
+import org.o2.metadata.pipeline.domain.entity.ActionParameter;
 import org.o2.metadata.pipeline.domain.entity.Pipeline;
 import org.o2.metadata.pipeline.domain.entity.PipelineAction;
 import org.o2.metadata.pipeline.domain.entity.PipelineNode;
+import org.o2.metadata.pipeline.domain.repository.ActionParameterRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineActionRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineNodeRepository;
 import org.o2.metadata.pipeline.domain.repository.PipelineRepository;
@@ -36,13 +38,16 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
     private final PipelineNodeRepository pipelineNodeRepository;
 
     private final PipelineActionRepository pipelineActionRepository;
+    private final ActionParameterRepository actionParameterRepository;
 
     public PipelineTenantInitCoreServiceImpl(PipelineRepository pipelineRepository,
                                              PipelineNodeRepository pipelineNodeRepository,
-                                             PipelineActionRepository pipelineActionRepository) {
+                                             PipelineActionRepository pipelineActionRepository,
+                                             ActionParameterRepository actionParameterRepository) {
         this.pipelineRepository = pipelineRepository;
         this.pipelineNodeRepository = pipelineNodeRepository;
         this.pipelineActionRepository = pipelineActionRepository;
+        this.actionParameterRepository = actionParameterRepository;
     }
 
     @Override
@@ -66,6 +71,9 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
                 .andWhere(Sqls.custom()
                         .andEqualTo(PipelineAction.FIELD_TENANT_ID, sourceTenantId))
                 .build());
+        List<ActionParameter> actionParameters = actionParameterRepository.selectByCondition(Condition.builder(ActionParameter.class)
+                .andWhere(Sqls.custom().andEqualTo(ActionParameter.FIELD_TENANT_ID, sourceTenantId)).build());
+        final Map<Long, List<ActionParameter>> actionParameterMap = actionParameters.stream().collect(Collectors.groupingBy(ActionParameter::getActionId));
 
         // key: newId; value:oldId
         final HashMap<Long, Long> oldNewPipeActionMap = new HashMap<>(platformPipelineActions.size());
@@ -94,10 +102,14 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
         final List<PipelineAction> targetPipelineActions = pipelineActionRepository.selectByCondition(Condition.builder(PipelineAction.class)
                 .andWhere(Sqls.custom().andEqualTo(PipelineAction.FIELD_TENANT_ID, targetTenantId))
                 .build());
+        final List<ActionParameter> targetActionParameter = actionParameterRepository.selectByCondition(Condition.builder(ActionParameter.class)
+                .andWhere(Sqls.custom().andEqualTo(PipelineAction.FIELD_TENANT_ID, targetTenantId))
+                .build());
 
         if (CollectionUtils.isNotEmpty(targetPipelineActions)) {
             // 删除目标租户行为定义
             pipelineActionRepository.batchDeleteByPrimaryKey(targetPipelineActions);
+            actionParameterRepository.batchDeleteByPrimaryKey(targetActionParameter);
         }
 
 
@@ -108,6 +120,15 @@ public class PipelineTenantInitCoreServiceImpl implements PipelineTenantInitCore
                 pipelineAction.setId(null);
                 pipelineAction.setTenantId(targetTenantId);
                 pipelineActionRepository.insert(pipelineAction);
+                List<ActionParameter> sourceActionParameter = actionParameterMap.get(oldActionId);
+                if (CollectionUtils.isNotEmpty(sourceActionParameter)){
+                    for (ActionParameter actionParameter : sourceActionParameter) {
+                        actionParameter.setActionParameterId(null);
+                        actionParameter.setActionId(pipelineAction.getId());
+                        actionParameter.setTenantId(targetTenantId);
+                    }
+                    actionParameterRepository.batchInsert(sourceActionParameter);
+                }
                 oldNewPipeActionMap.put(oldActionId, pipelineAction.getId());
             });
         }
