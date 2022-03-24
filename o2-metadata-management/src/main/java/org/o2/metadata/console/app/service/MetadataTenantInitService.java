@@ -1,7 +1,5 @@
 package org.o2.metadata.console.app.service;
 
-import java.util.List;
-
 /**
  * 多租户初始化Service
  *
