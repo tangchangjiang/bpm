@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
@@ -13,8 +14,6 @@ import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.*;
-import org.o2.metadata.console.infra.redis.CarrierRedis;
-import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +45,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     private final CarrierRepository carrierRepository;
     private final CarrierMappingRepository carrierMappingRepository;
     private final RedisCacheClient redisCacheClient;
-    private  final CacheJobService cacheJobService;
-
+    private final CacheJobService cacheJobService;
 
 
     public ShopTenantInitServiceImpl(OnlineShopRepository onlineShopRepository,
@@ -96,19 +94,19 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         // 3.处理目录
         handleCatalog(sourceTenantId, targetTenantId, sourceOnlineShop.getCatalogCode(), sourceOnlineShop.getCatalogVersionCode());
         // 4.处理服务点
-        List<String> warehouseCode = Arrays.asList(bo.getWarehouseCode().split(","));
+        List<String> warehouseCode = Arrays.asList(bo.getWarehouseCode().split(BaseConstants.Symbol.COMMA));
         handlePos(sourceTenantId, targetTenantId, warehouseCode);
         // 5.处理仓库
         handleWarehouse(sourceTenantId, targetTenantId, warehouseCode);
         // 6.处理网店关联仓库
         handleOnlineRelWare(sourceTenantId, targetTenantId, warehouseCode, bo.getOnlineShopCode());
         // 7. 处理承运商
-        List<String> carrierCodes = Arrays.asList(bo.getCarrierCode().split(","));
+        List<String> carrierCodes = Arrays.asList(bo.getCarrierCode().split(BaseConstants.Symbol.COMMA));
         handleCarrier(sourceTenantId, targetTenantId, carrierCodes);
         // 8.处理服务点关联承运商
-        handlePosRel(sourceTenantId,targetTenantId,warehouseCode,carrierCodes);
+        handlePosRel(sourceTenantId, targetTenantId, warehouseCode, carrierCodes);
         // 9. 处理缓存数据
-        handleRedis(targetTenantId,bo.getOnlineShopCode());
+        handleRedis(targetTenantId, bo.getOnlineShopCode());
     }
 
     /**
@@ -179,6 +177,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         sourceOnlineShop.setTenantId(targetTenantId);
         sourceOnlineShop.setOnlineShopId(null);
         onlineShopRepository.insert(sourceOnlineShop);
+        log.info("initializeOnlineShop end, tenantId[{}]", targetTenantId);
 
     }
 
@@ -190,6 +189,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      * @param platformCode   平台编码
      */
     private void handlePlatform(Long sourceTenantId, Long targetTenantId, String platformCode) {
+        log.info("initializePlatform start, tenantId[{}]", targetTenantId);
         Platform source = selectPlatform(sourceTenantId, platformCode);
         boolean flag = O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST.contains(platformCode);
         if (null == source) {
@@ -225,6 +225,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             sourceMapping.setPlatformInfMappingId(null);
         }
         platformInfoMappingRepository.batchDeleteByPrimaryKey(sourceMappings);
+        log.info("initializePlatform end, tenantId[{}]", targetTenantId);
+
     }
 
     /**
@@ -236,6 +238,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      * @param catalogVersionCode 目录版本编码
      */
     private void handleCatalog(Long sourceTenantId, Long targetTenantId, String catalogCode, String catalogVersionCode) {
+        log.info("initializeCatalog start, tenantId[{}]", targetTenantId);
         Catalog query = new Catalog();
         query.setTenantId(sourceTenantId);
         query.setCatalogCode(catalogCode);
@@ -247,7 +250,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         }
         // 查询源租户目录版本
         CatalogVersion queryVersion = new CatalogVersion();
-        queryVersion.setCatalogVersionId(sourceCatalog.getCatalogId());
+        queryVersion.setCatalogId(sourceCatalog.getCatalogId());
         queryVersion.setTenantId(sourceTenantId);
         queryVersion.setCatalogVersionCode(catalogVersionCode);
         CatalogVersion sourceCatalogVersion = catalogVersionRepository.selectOne(queryVersion);
@@ -263,9 +266,12 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         CatalogVersion targetCatalogVersion = catalogVersionRepository.selectOne(queryVersion);
 
         // 删除目标租户 目标版本和目录
-        catalogRepository.deleteByPrimaryKey(targetCatalog);
-        catalogVersionRepository.deleteByPrimaryKey(targetCatalogVersion);
-
+        if (null != targetCatalog) {
+            catalogRepository.deleteByPrimaryKey(targetCatalog);
+        }
+        if (null != targetCatalogVersion) {
+            catalogVersionRepository.deleteByPrimaryKey(targetCatalogVersion);
+        }
         // 新建目标租户 目录 和目标版本
         sourceCatalog.setTenantId(targetTenantId);
         sourceCatalog.setCatalogId(null);
@@ -274,6 +280,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         sourceCatalogVersion.setCatalogId(sourceCatalog.getCatalogId());
         sourceCatalogVersion.setCatalogVersionId(null);
         catalogVersionRepository.insert(sourceCatalogVersion);
+        log.info("initializeCatalog end, tenantId[{}]", targetTenantId);
+
     }
 
     /**
@@ -284,6 +292,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      * @param warehouseCodes 仓库编码
      */
     private void handlePos(Long sourceTenantId, Long targetTenantId, List<String> warehouseCodes) {
+        log.info("initializePos start, tenantId[{}]", targetTenantId);
+
         // 通过仓库获取服务点编码
         Warehouse query = new Warehouse();
         query.setTenantId(sourceTenantId);
@@ -315,24 +325,27 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         List<Pos> targetPos = posRepository.selectByCondition(Condition.builder(Pos.class)
                 .andWhere(Sqls.custom().andEqualTo(Pos.FIELD_TENANT_ID, targetTenantId)
                         .andIn(Pos.FIELD_POS_CODE, posCodes)).build());
-        // 目标租户 服务点ID集合
-        List<Long> targetPosIds = new ArrayList<>();
-        // 目标租户 服务点地址集合
-        List<PosAddress> targetPosAddress = new ArrayList<>();
-        for (Pos pos : targetPos) {
-            targetPosIds.add(pos.getPosId());
-            PosAddress address = new PosAddress();
-            address.setPosAddressId(pos.getAddressId());
-            targetPosAddress.add(address);
+        if (CollectionUtils.isNotEmpty(targetPos)) {
+            // 目标租户 服务点ID集合
+            List<Long> targetPosIds = new ArrayList<>();
+            // 目标租户 服务点地址集合
+            List<PosAddress> targetPosAddress = new ArrayList<>();
+            for (Pos pos : targetPos) {
+                targetPosIds.add(pos.getPosId());
+                PosAddress address = new PosAddress();
+                address.setPosAddressId(pos.getAddressId());
+                targetPosAddress.add(address);
+            }
+            //删除目标服务点 服务点地址 服务点关联承运商数据
+            posRepository.batchDeleteByPrimaryKey(targetPos);
+            posAddressRepository.batchDeleteByPrimaryKey(targetPosAddress);
+            // 先查询服务关联承运商 在通过主键删除
+            List<PosRelCarrier> relCarriers = posRelCarrierRepository.selectByCondition(Condition.builder(PosRelCarrier.class)
+                    .andWhere(Sqls.custom().andEqualTo(PosRelCarrier.FIELD_TENANT_ID, targetTenantId)
+                            .andIn(PosRelCarrier.FIELD_POS_ID, targetPosIds)).build());
+            posRelCarrierRepository.batchDeleteByPrimaryKey(relCarriers);
         }
-        //删除目标服务点 服务点地址 服务点关联承运商数据
-        posRepository.batchDeleteByPrimaryKey(targetPos);
-        posAddressRepository.batchDeleteByPrimaryKey(targetPosAddress);
-        // 先查询服务关联承运商 在通过主键删除
-        List<PosRelCarrier> relCarriers = posRelCarrierRepository.selectByCondition(Condition.builder(PosRelCarrier.class)
-                .andWhere(Sqls.custom().andEqualTo(PosRelCarrier.FIELD_TENANT_ID, targetTenantId)
-                        .andIn(PosRelCarrier.FIELD_POS_ID, targetPosIds)).build());
-        posRelCarrierRepository.batchDeleteByPrimaryKey(relCarriers);
+
         // 新建服务点 服务点地址
         for (Map.Entry<Pos, PosAddress> entry : sourcePosRelAddressMap.entrySet()) {
             Pos k = entry.getKey();
@@ -341,12 +354,12 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             v.setPosAddressId(null);
             posAddressRepository.insert(v);
 
-            k.setTenantId(sourceTenantId);
+            k.setTenantId(targetTenantId);
             k.setPosId(null);
             k.setAddressId(v.getPosAddressId());
             posRepository.insert(k);
         }
-
+        log.info("initializePos end, tenantId[{}]", targetTenantId);
     }
 
     /**
@@ -357,6 +370,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      * @param warehouseCodes 仓库编码
      */
     private void handleWarehouse(Long sourceTenantId, Long targetTenantId, List<String> warehouseCodes) {
+        log.info("initializeWarehouse start, tenantId[{}]", targetTenantId);
         // 查询 源仓库
         Warehouse query = new Warehouse();
         query.setTenantId(sourceTenantId);
@@ -370,13 +384,11 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         for (Warehouse warehouse : warehouses) {
             sourceWareRelPosMap.put(warehouse.getWarehouseId(), warehouse.getPosCode());
         }
-
         // 查询 目标仓库
         List<Warehouse> targetWarehouse = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
-                .andWhere(Sqls.custom().andEqualTo(Warehouse.FIELD_TENANT_ID, sourceTenantId)
+                .andWhere(Sqls.custom().andEqualTo(Warehouse.FIELD_TENANT_ID, targetTenantId)
                         .andIn(Warehouse.FIELD_WAREHOUSE_CODE, warehouseCodes)).build());
         warehouseRepository.batchDeleteByPrimaryKey(targetWarehouse);
-        // todo 删除目标 网店关联仓库 还有redis
         // 新建
         List<Warehouse> sourceWarehouses = new ArrayList<>();
         for (Map.Entry<Long, String> entry : sourceWareRelPosMap.entrySet()) {
@@ -386,6 +398,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             List<Pos> target = posRepository.selectByCondition(Condition.builder(Pos.class)
                     .andWhere(Sqls.custom().andEqualTo(Warehouse.FIELD_TENANT_ID, targetTenantId)
                             .andEqualTo(Pos.FIELD_POS_CODE, postCode)).build());
+
             Warehouse source = warehouseRepository.selectByPrimaryKey(warehouseId);
             source.setTenantId(targetTenantId);
             source.setPosId(target.get(0).getPosId());
@@ -393,7 +406,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             sourceWarehouses.add(source);
         }
         warehouseRepository.batchInsert(sourceWarehouses);
-
+        log.info("initializeWarehouse end, tenantId[{}]", targetTenantId);
     }
 
     /**
@@ -406,6 +419,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      */
     private void handleOnlineRelWare(Long sourceTenantId, Long targetTenantId, List<String> warehouseCodes, String onlineShopCode) {
         // 查询源网店关联仓库
+        log.info("initializeOnlineRelWare start, tenantId[{}]", targetTenantId);
         OnlineShopRelWarehouse query = new OnlineShopRelWarehouse();
         query.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
         query.setTenantId(sourceTenantId);
@@ -429,7 +443,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             relWarehouse.setOnlineShopRelWarehouseId(null);
         }
         onlineShopRelWarehouseRepository.batchInsert(sourceList);
-
+        log.info("initializeOnlineRelWare end, tenantId[{}]", targetTenantId);
     }
 
     /**
@@ -441,6 +455,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      */
     private void handleCarrier(Long sourceTenantId, Long targetTenantId, List<String> carrierCodes) {
         // 查询 源承运商
+        log.info("initializeCarrier start, tenantId[{}]", targetTenantId);
         List<Carrier> sourceCarrier = carrierRepository.selectByCondition(Condition.builder(Carrier.class)
                 .andWhere(Sqls.custom().andEqualTo(Carrier.FIELD_TENANT_ID, sourceTenantId)
                         .andIn(Carrier.FIELD_CARRIER_CODE, carrierCodes)).build());
@@ -457,17 +472,19 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         List<Carrier> targetCarrier = carrierRepository.selectByCondition(Condition.builder(Carrier.class)
                 .andWhere(Sqls.custom().andEqualTo(Carrier.FIELD_TENANT_ID, targetTenantId)
                         .andIn(Carrier.FIELD_CARRIER_CODE, carrierCodes)).build());
-        List<Long> targetCarrierIds = new ArrayList<>();
-        for (Carrier carrier : targetCarrier) {
-            targetCarrierIds.add(carrier.getCarrierId());
+        if (CollectionUtils.isNotEmpty(targetCarrier)) {
+            List<Long> targetCarrierIds = new ArrayList<>();
+            for (Carrier carrier : targetCarrier) {
+                targetCarrierIds.add(carrier.getCarrierId());
+            }
+            // 查询 目标承运商匹配
+            List<CarrierMapping> targetCarrierMapping = carrierMappingRepository.selectByCondition(Condition.builder(CarrierMapping.class)
+                    .andWhere(Sqls.custom().andEqualTo(CarrierMapping.FIELD_TENANT_ID, targetTenantId)
+                            .andIn(CarrierMapping.FIELD_CARRIER_ID, targetCarrierIds)).build());
+            //删除目标数据
+            carrierRepository.batchDeleteByPrimaryKey(targetCarrier);
+            carrierMappingRepository.batchDeleteByPrimaryKey(targetCarrierMapping);
         }
-        // 查询 目标承运商匹配
-        List<CarrierMapping> targetCarrierMapping = carrierMappingRepository.selectByCondition(Condition.builder(CarrierMapping.class)
-                .andWhere(Sqls.custom().andEqualTo(CarrierMapping.FIELD_TENANT_ID, targetTenantId)
-                        .andIn(CarrierMapping.FIELD_CARRIER_ID, targetCarrierIds)).build());
-        //删除目标数据
-        carrierRepository.batchDeleteByPrimaryKey(targetCarrier);
-        carrierMappingRepository.batchDeleteByPrimaryKey(targetCarrierMapping);
         // 新建
         for (Map.Entry<Carrier, List<CarrierMapping>> entry : sourceCarrierMappingMap.entrySet()) {
             Carrier carrier = entry.getKey();
@@ -481,6 +498,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
                 carrierMapping.setCarrierId(carrier.getCarrierId());
             }
             carrierMappingRepository.batchInsert(carrierMappings);
+            log.info("initializeCarrier end, tenantId[{}]", targetTenantId);
         }
     }
 
@@ -494,6 +512,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
      */
     private void handlePosRel(Long sourceTenantId, Long targetTenantId, List<String> warehouseCodes, List<String> carrierCodes) {
         // 通过仓库获取服务点编码
+        log.info("initializePosRel start, tenantId[{}]", targetTenantId);
         Warehouse warehouse = new Warehouse();
         warehouse.setTenantId(sourceTenantId);
         warehouse.setWarehouseCodes(warehouseCodes);
@@ -519,12 +538,12 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         List<Pos> targetPos = posRepository.selectByCondition(Condition.builder(Pos.class).where(Sqls.custom()
                 .andEqualTo(Pos.FIELD_TENANT_ID, targetTenantId)
                 .andIn(Pos.FIELD_POS_CODE, posCodes)).build());
-        Map<String,Long> targetPosMap = new HashMap<>(4);
+        Map<String, Long> targetPosMap = new HashMap<>(4);
         for (Pos pos : targetPos) {
-            targetPosMap.put(pos.getPosCode(),pos.getPosId());
+            targetPosMap.put(pos.getPosCode(), pos.getPosId());
         }
         for (PosRelCarrier sourceRelCarrier : sourceRelCarriers) {
-            String posCode  = sourceRelCarrier.getPosCode();
+            String posCode = sourceRelCarrier.getPosCode();
             String carrierCode = sourceRelCarrier.getCarrierCode();
             sourceRelCarrier.setCarrierId(targetCarrierMap.get(carrierCode));
             sourceRelCarrier.setPosId(targetPosMap.get(posCode));
@@ -532,15 +551,17 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
             sourceRelCarrier.setTenantId(targetTenantId);
         }
         posRelCarrierRepository.batchInsert(sourceRelCarriers);
+        log.info("initializePosRel end, tenantId[{}]", targetTenantId);
     }
 
     /**
      * 处理缓存数据
+     *
      * @param targetTenantId 目标租户ID
      * @param onlineShopCode 网店编码
      */
-    private void handleRedis(Long targetTenantId,String onlineShopCode) {
-        String carrierKey =  CarrierConstants.Redis.getCarrierKey(targetTenantId);
+    private void handleRedis(Long targetTenantId, String onlineShopCode) {
+        String carrierKey = CarrierConstants.Redis.getCarrierKey(targetTenantId);
         redisCacheClient.delete(carrierKey);
         cacheJobService.refreshCarrier(targetTenantId);
         cacheJobService.refreshOnlineShop(targetTenantId);

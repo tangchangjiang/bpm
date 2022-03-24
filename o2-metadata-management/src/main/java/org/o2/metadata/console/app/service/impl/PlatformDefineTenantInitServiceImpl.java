@@ -61,8 +61,12 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
                 .build());
 
         // 删除目标租户存在的数据
-        platformRepository.batchUpdateByPrimaryKey(targetPlatforms);
+        platformRepository.batchDeleteByPrimaryKey(targetPlatforms);
         // 新增源租户数据 到目标租户数据
+        for (Platform sourcePlatform : sourcePlatforms) {
+            sourcePlatform.setTenantId(targetTenantId);
+            sourcePlatform.setPlatformId(null);
+        }
         platformRepository.batchInsert(sourcePlatforms);
 
         // 1. 查询源租户平台信息匹配
@@ -85,6 +89,10 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
                         .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
                 .build());
         platformInfoMappingRepository.batchDeleteByPrimaryKey(targetPlatformInfoMappings);
+        for (PlatformInfoMapping sourcePlatformInfoMapping : sourcePlatformInfoMappings) {
+            sourcePlatformInfoMapping.setPlatformInfMappingId(null);
+            sourcePlatformInfoMapping.setTenantId(targetTenantId);
+        }
         platformInfoMappingRepository.batchInsert(sourcePlatformInfoMappings);
         log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
     }
