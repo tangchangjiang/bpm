@@ -36,4 +36,9 @@ public class IamUserCO {
      * 微信唯一标示 openId
      */
     private String openId;
+    /**
+     * 用户类型 中台P C端C
+     */
+    private String userType;
+
 }
