@@ -290,6 +290,10 @@ public interface MetadataConstants {
          * 元数据 - 地区数据文件
          */
         String O2MD_REGION = "O2MD_REGION";
+        /**
+         * 元数据 - external地区数据文件
+         */
+        String O2MD_REGION_EXTERNAL = "O2MD_REGION_EXTERNAL";
 
         /**
          * 元数据 - 供C端使用的Lov值集数据文件

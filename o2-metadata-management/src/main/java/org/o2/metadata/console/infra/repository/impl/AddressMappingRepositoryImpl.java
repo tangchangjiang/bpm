@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.AddressReleaseDTO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
@@ -38,6 +39,11 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
     @Override
     public List<AddressMapping> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
         return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId);
+    }
+
+    @Override
+    public List<AddressMapping> queryAddress(AddressReleaseDTO addressReleaseDTO) {
+        return addressMappingMapper.queryAddress(addressReleaseDTO);
     }
 
 }

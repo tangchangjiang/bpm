@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.AddressReleaseDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
@@ -49,5 +50,11 @@ public interface AddressMappingService {
      * @param addressMapping 地址匹配
      */
     void createAddressMapping(AddressMapping addressMapping);
+
+    /**
+     * 地区匹配发布
+     * @param addressReleaseDTO 发布信息
+     */
+    void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO);
 
 }

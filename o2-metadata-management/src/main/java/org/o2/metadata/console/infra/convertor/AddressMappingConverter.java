@@ -2,7 +2,10 @@ package org.o2.metadata.console.infra.convertor;
 
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
+import org.o2.metadata.console.app.bo.AddressMappingBO;
+import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.Region;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +106,28 @@ public class AddressMappingConverter {
             cos.add(poToCoObject(addressMapping));
         }
         return cos;
+    }
+
+    /**
+     * regions -> AddressMappingBO
+     * @param regions regions
+     * @return AddressMappingBO
+     */
+    public static List<AddressMappingBO> toAddressMappingBO(List<Region> regions){
+        List<AddressMappingBO> addressMappingBOList = new ArrayList<>();
+        if (regions.isEmpty()) {
+            return  addressMappingBOList;
+        }
+        for (Region region : regions) {
+            AddressMappingBO addressMappingBO = new AddressMappingBO();
+            addressMappingBO.setParentRegionCode(region.getParentRegionCode());
+            addressMappingBO.setCountryCode(region.getCountryCode());
+            addressMappingBO.setExternalName(region.getExternalName());
+            addressMappingBO.setRegionCode(region.getRegionCode());
+            addressMappingBO.setRegionName(region.getRegionName());
+            addressMappingBOList.add(addressMappingBO);
+        }
+        return addressMappingBOList;
     }
 
 }
