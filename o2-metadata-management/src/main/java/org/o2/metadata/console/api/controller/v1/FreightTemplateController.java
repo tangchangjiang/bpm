@@ -13,6 +13,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -87,17 +88,17 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "删除运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
         freightTemplateService.removeTemplateAndDetails(freightTemplateList,organizationId);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "设置默认模板")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/setDefaultTemp")
-    public ResponseEntity<Void> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplate freightTemplate) {
+    public ResponseEntity<OperateResponse> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplate freightTemplate) {
         freightTemplateService.setDefaultTemp(organizationId,freightTemplate.getTemplateId());
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "获取默认的运费模板及其明细")
