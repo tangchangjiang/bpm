@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.repository.PosAddressRepository;
@@ -74,11 +75,11 @@ public class PosAddressController extends BaseController {
     @ApiOperation(value = "删除详细地址")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
         SecurityTokenHelper.validToken(posAddress);
         posAddress.setTenantId(organizationId);
         posAddressRepository.deleteByPrimaryKey(posAddress);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 

@@ -6,6 +6,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
@@ -102,7 +103,7 @@ public class PlatformInfoMappingController extends BaseController {
     @ApiOperation(value = "平台信息匹配表维护-删除平台信息匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<OperateResponse> remove(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody List<PlatformInfoMapping> platformInfoMapping) {
         for (PlatformInfoMapping infMapping : platformInfoMapping) {
             infMapping.setTenantId(organizationId);
@@ -110,7 +111,7 @@ public class PlatformInfoMappingController extends BaseController {
         SecurityTokenHelper.validToken(platformInfoMapping);
 
         platformInfoMappingRepository.batchDeleteByPrimaryKey(platformInfoMapping);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }

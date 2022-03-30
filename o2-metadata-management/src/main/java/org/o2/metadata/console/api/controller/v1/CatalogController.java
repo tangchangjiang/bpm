@@ -16,6 +16,7 @@ import org.hzero.core.util.Results;
 import org.hzero.export.annotation.ExcelExport;
 import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.vo.CatalogVO;
 import org.o2.metadata.console.app.service.CatalogService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -90,11 +91,11 @@ public class CatalogController extends BaseController {
     @ApiOperation(value = "删除版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody Catalog catalog) {
         catalog.setTenantId(organizationId);
         SecurityTokenHelper.validToken(catalog);
         catalogRepository.deleteByPrimaryKey(catalog);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "版本导出Excel")

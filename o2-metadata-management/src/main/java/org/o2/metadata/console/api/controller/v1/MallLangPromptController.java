@@ -14,6 +14,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.response.BatchResponse;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.MallLangPromptService;
 import org.o2.metadata.console.infra.entity.MallLangPrompt;
 import org.o2.metadata.console.infra.repository.MallLangPromptRepository;
@@ -100,11 +101,11 @@ public class MallLangPromptController extends BaseController {
     @ApiOperation(value = "商城前端多语言内容维护表维护-删除商城前端多语言内容维护表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<OperateResponse> remove(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody MallLangPrompt mallLangPrompt) {
         SecurityTokenHelper.validToken(mallLangPrompt);
         mallLangPromptRepository.deleteByPrimaryKey(mallLangPrompt);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 

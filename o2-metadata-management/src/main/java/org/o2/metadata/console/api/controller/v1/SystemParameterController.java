@@ -8,6 +8,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParameter;
@@ -92,11 +93,11 @@ public class SystemParameterController extends BaseController {
     @ApiOperation(value = "删除系统参数")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> removeSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<OperateResponse> removeSystemParameter(@RequestBody SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParameter);
         systemParameterRepository.deleteByPrimaryKey(systemParameter);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }

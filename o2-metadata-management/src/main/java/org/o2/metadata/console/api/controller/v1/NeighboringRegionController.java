@@ -15,6 +15,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.NeighboringRegionQueryDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -67,9 +68,9 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "批量删除临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
         SecurityTokenHelper.validToken(neighboringRegions);
         neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 }

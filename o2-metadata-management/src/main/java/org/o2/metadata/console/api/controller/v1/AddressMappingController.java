@@ -118,12 +118,12 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "删除地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<OperateResponse> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                      @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "发布地区信息")
