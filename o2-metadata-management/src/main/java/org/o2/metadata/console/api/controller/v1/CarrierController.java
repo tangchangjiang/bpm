@@ -13,6 +13,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -72,9 +73,9 @@ public class CarrierController extends BaseController {
     @ApiOperation(value = "批量删除承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<Carrier> carrierList) {
         SecurityTokenHelper.validToken(carrierList);
         carrierService.batchDelete(organizationId,carrierList);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 }

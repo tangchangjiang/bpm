@@ -7,6 +7,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.hzero.core.base.BaseController;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.PlatformDTO;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Platform;
@@ -94,7 +95,7 @@ public class PlatformController extends BaseController {
     @ApiOperation(value = "平台定义表维护-删除平台定义表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
+    public ResponseEntity<OperateResponse> remove(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody List<Platform> platforms) {
 
         SecurityTokenHelper.validToken(platforms);
@@ -103,7 +104,7 @@ public class PlatformController extends BaseController {
         }
         platformRepository.batchDeleteByPrimaryKey(platforms);
 
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }

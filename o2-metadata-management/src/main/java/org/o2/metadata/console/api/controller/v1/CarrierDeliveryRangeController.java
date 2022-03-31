@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.CarrierDeliveryRangeService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
@@ -76,9 +77,9 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "批量删除承运商送达范围")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         SecurityTokenHelper.validToken(carrierDeliveryRanges);
         carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(carrierDeliveryRanges);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 }

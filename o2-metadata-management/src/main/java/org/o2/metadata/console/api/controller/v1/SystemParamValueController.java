@@ -5,6 +5,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
@@ -99,11 +100,11 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "删除系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<OperateResponse> removeSystemParamValue(@RequestBody SystemParamValue systemParamValue, @PathVariable("organizationId") Long organizationId) {
         systemParamValue.setTenantId(organizationId);
         SecurityTokenHelper.validToken(systemParamValue);
         systemParamValueService.removeSystemParamValue(systemParamValue);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "获取KV系统参数值")

@@ -13,6 +13,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.OnlineShopInfAuthService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -84,11 +85,11 @@ public class OnlineShopInfAuthController extends BaseController {
     @ApiOperation(value = "删除网店接口表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final OnlineShopInfAuth onlineShopInfAuth) {
         SecurityTokenHelper.validToken(onlineShopInfAuth);
         onlineShopInfAuth.setTenantId(organizationId);
         onlineShopInfAuthRepository.deleteByPrimaryKey(onlineShopInfAuth);
-        return Results.success(BaseConstants.FIELD_SUCCESS);
+        return Results.success(OperateResponse.success());
     }
 
 }

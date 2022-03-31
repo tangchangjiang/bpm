@@ -13,6 +13,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryDTO;
 import org.o2.metadata.console.app.service.CarrierMappingService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -83,10 +84,10 @@ public class CarrierMappingController extends BaseController {
     @ApiOperation(value = "删除承运商匹配表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<String> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<CarrierMapping> carrierMappings) {
         SecurityTokenHelper.validToken(carrierMappings);
         carrierMappingRepository.batchDeleteByPrimaryKey(carrierMappings);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }

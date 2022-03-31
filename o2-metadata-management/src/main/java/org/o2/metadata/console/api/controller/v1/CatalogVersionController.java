@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.CatalogRelVersionQueryDTO;
 import org.o2.metadata.console.app.service.CatalogVersionService;
 import org.o2.metadata.console.infra.entity.Catalog;
@@ -89,10 +90,10 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "删除目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody CatalogVersion catalogVersion) {
         SecurityTokenHelper.validToken(catalogVersion);
         catalogVersionRepository.deleteByPrimaryKey(catalogVersion);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "目录&目录版本")

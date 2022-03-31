@@ -12,6 +12,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.FreightTemplateDetailService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
@@ -70,9 +71,9 @@ public class FreightTemplateDetailController extends BaseController {
     @ApiOperation(value = "批量删除运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplateDetail> freightTemplateDetailList) {
         freightTemplateDetailService.batchDelete(freightTemplateDetailList);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }

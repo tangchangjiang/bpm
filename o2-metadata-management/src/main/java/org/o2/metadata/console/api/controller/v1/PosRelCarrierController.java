@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.PosRelCarrierService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
@@ -81,10 +82,10 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量删除服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<PosRelCarrier> posRelCarrieies) {
         SecurityTokenHelper.validToken(posRelCarrieies);
         posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrieies);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 
 }
