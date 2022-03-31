@@ -3,11 +3,13 @@ package org.o2.metadata.pipeline;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import io.choerodon.core.convertor.ApplicationContextHelper;
+import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.O2CoreConstants;
+import org.o2.ehcache.util.CollectionCacheHelper;
 import org.o2.metadata.pipeline.constants.PipelineConfConstants;
 import org.o2.metadata.pipeline.data.PipelineExecParam;
 import org.o2.metadata.pipeline.exception.PipelineRuntimeException;
@@ -18,8 +20,8 @@ import org.o2.metadata.pipeline.vo.PipelineVO;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 流水线驱动
@@ -91,8 +93,7 @@ public class PipelineDriver {
         if (StringUtils.isBlank(pipelineCode)) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_CODE_NULL);
         }
-        PipelineRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(PipelineRemoteService.class);
-        final PipelineVO pipeline = ResponseUtils.getResponse(pipelineRemoteService.getPipelineByCode(tenantId, pipelineCode), PipelineVO.class);
+        final PipelineVO pipeline = getPipelineByRemote(pipelineCode, tenantId);
         if (pipeline == null || MapUtils.isEmpty(pipeline.getPipelineNodes())) {
             throw new PipelineRuntimeException(PipelineConfConstants.ErrorMessage.PIPELINE_NULL, pipelineCode);
         }
@@ -124,5 +125,23 @@ public class PipelineDriver {
         }
 
         return pipeline;
+    }
+
+    private static PipelineVO getPipelineByRemote(String pipelineCode, Long tenantId){
+        Map<String, PipelineVO> result;
+        try {
+            result = CollectionCacheHelper.getCache(PipelineConfConstants.CacheParam.CACHE_NAME, tenantId.toString(),
+                    Collections.singletonList(pipelineCode), pipelines -> {
+                        PipelineRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(PipelineRemoteService.class);
+                        PipelineVO pipeline = ResponseUtils.getResponse(pipelineRemoteService.getPipelineByCode(tenantId, pipelineCode), PipelineVO.class);
+                        Map<String, PipelineVO> pipelineMap = new HashMap<>(1);
+                        pipelineMap.put(pipelineCode, pipeline);
+                        return pipelineMap;
+                    });
+        }catch (Exception e){
+            log.error("metadata->PipelineDriver->getPipelineByRemote error:{}", e.getMessage());
+            throw new CommonException(PipelineConfConstants.ErrorMessage.PIPELINE_NETWORK_REQUEST_ERROR, pipelineCode);
+        }
+        return result.getOrDefault(pipelineCode, null);
     }
 }
