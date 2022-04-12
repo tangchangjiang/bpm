@@ -300,6 +300,9 @@
             <if test="innerDTO.onlineShopCode != null">
                 AND os.online_shop_code = #{innerDTO.onlineShopCode}
             </if>
+            <if test="innerDTO.posCode != null">
+                AND p.pos_code = #{innerDTO.posCode}
+            </if>
         </where>
     </select>
     <select id="listCarriers" resultType="org.o2.metadata.console.infra.entity.Carrier">
