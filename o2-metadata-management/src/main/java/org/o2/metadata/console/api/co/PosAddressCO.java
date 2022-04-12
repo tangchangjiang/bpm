@@ -73,4 +73,7 @@ public class PosAddressCO {
 
     @ApiModelProperty(value = "服务点编码")
     private String posCode;
+
+    @ApiModelProperty(value = "服务点名称")
+    private String posName;
 }

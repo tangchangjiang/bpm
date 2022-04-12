@@ -118,4 +118,8 @@ public class PosAddress extends AuditDomain {
     @ApiModelProperty(value = "关联o2md_pos.pos_code 服务点编码")
     @Transient
     private String posCode;
+
+    @ApiModelProperty(value = "服务点名称")
+    @Transient
+    private String posName;
 }

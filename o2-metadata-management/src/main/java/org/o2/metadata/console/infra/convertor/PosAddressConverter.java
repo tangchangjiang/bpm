@@ -102,6 +102,7 @@ public class PosAddressConverter {
         co.setCountry(posAddress.getCountryName());
         co.setRegion(posAddress.getRegionName());
         co.setPosCode(posAddress.getPosCode());
+        co.setPosName(posAddress.getPosName());
         return co;
     }
 
