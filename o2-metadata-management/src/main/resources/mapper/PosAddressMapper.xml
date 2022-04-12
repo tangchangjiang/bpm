@@ -62,7 +62,8 @@
         address.mobile_phone,
         address.longitude,
         address.latitude,
-        address.postcode
+        address.postcode,
+        address.pos_name
         FROM
         o2md_pos_address address
         inner join o2md_pos pos on pos.address_id = address.pos_address_id and pos.tenant_id = #{tenantId}
