@@ -35,4 +35,6 @@ public class WarehouseQueryInnerDTO {
     private String warehouseTypeCode;
 
     private String warehouseName;
+
+    private String posCode;
 }
