@@ -33,6 +33,11 @@ public class SQLLovClient {
         });
     }
 
+    public List<Map<String, Object>> queryLovValueMeaningPage(Long tenantId, String lovCode, Map<String, String> queryLovValueMap,Integer page,Integer size) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaningPage(tenantId, lovCode, queryLovValueMap,page,size), new TypeReference<List<Map<String, Object>>>() {
+        });
+    }
+
     /**
      * 分页查询指定值集
      *
@@ -44,7 +49,7 @@ public class SQLLovClient {
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
      */
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap,int page,int size) {
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap,Integer page,Integer size) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovPage(tenantId, lovCode,page,size, queryLovValueMap), new TypeReference<List<Map<String, Object>>>() {
         });
     }

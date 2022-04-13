@@ -17,6 +17,7 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,17 @@ public class LovAdapterInternalController {
                                                        @RequestParam String lovCode,
                                                        @RequestParam (required = false) Map<String, String> queryLovValueMap) {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,lovCode,queryLovValueMap));
+    }
+
+    @ApiOperation(value = " 批量查询指定值集内容(sql&url)")
+    @Permission(permissionWithin = true , level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/batch-page-query-lov-value-meaning")
+    public ResponseEntity<List<Map<String, Object>>> batchQueryLovValueMeaningPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                               @RequestParam String lovCode,
+                                                                               @RequestParam (required = false) Map<String, String> queryLovValueMap,
+                                                                                   @RequestParam(required = false) Integer page,
+                                                                                   @RequestParam(required = false) Integer size) {
+        return Results.success(lovAdapterService.queryLovValueMeaning(organizationId, lovCode, page, size, queryLovValueMap));
     }
 
     @ApiOperation(value = " 分页查询指定值集内容")
