@@ -48,4 +48,5 @@ public class SQLLovClient {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovPage(tenantId, lovCode,page,size, queryLovValueMap), new TypeReference<List<Map<String, Object>>>() {
         });
     }
+
 }
