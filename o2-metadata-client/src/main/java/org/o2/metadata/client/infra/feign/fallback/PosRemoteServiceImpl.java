@@ -1,7 +1,6 @@
 package org.o2.metadata.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
-import org.o2.metadata.client.domain.co.PosPickUpInfoCO;
 import org.o2.metadata.client.infra.feign.PosRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class PosRemoteServiceImpl implements PosRemoteService {
     @Override
     public ResponseEntity<String> getPosPickUpInfo(String posCode, Long tenantId) {
-        log.error("Error getOnlineShop, params[onlineShopCode = {},tenantId = {}]", posCode,tenantId);
+        log.error("Error getPosPickUpInfo, params[posCode = {},tenantId = {}]", posCode,tenantId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
