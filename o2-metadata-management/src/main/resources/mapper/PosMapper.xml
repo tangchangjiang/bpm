@@ -195,7 +195,7 @@
         ORDER BY p.pos_code
     </select>
     
-    <select id="listPosInfoByCode" resultType="org.o2.metadata.console.infra.entity.Pos">
+    <select id="listPosInfoByCode" resultType="org.o2.metadata.console.infra.entity.PosInfo">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
         pos.pos_code,
