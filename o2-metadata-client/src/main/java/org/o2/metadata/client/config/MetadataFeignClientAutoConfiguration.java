@@ -52,6 +52,12 @@ public class MetadataFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public PosRemoteServiceImpl posRemoteServiceFallback() {
+        return new PosRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public WarehouseClient warehouseClient(WarehouseRemoteService warehouseRemoteService) {
         return new WarehouseClient(warehouseRemoteService);
     }
