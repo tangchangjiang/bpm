@@ -2,11 +2,13 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -28,10 +31,13 @@ import java.util.Map;
 public class WarehouseRedisImpl implements WarehouseRedis {
     private final RedisCacheClient redisCacheClient;
     private final WarehouseRepository warehouseRepository;
+    private final PosRedis posRedis;
 
-    public WarehouseRedisImpl(RedisCacheClient redisCacheClient, WarehouseRepository warehouseRepository) {
+    public WarehouseRedisImpl(RedisCacheClient redisCacheClient, WarehouseRepository warehouseRepository,
+                              PosRedis posRedis) {
         this.redisCacheClient = redisCacheClient;
         this.warehouseRepository = warehouseRepository;
+        this.posRedis = posRedis;
     }
 
     @Override
@@ -81,6 +87,10 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
         this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
+
+        // 同步服务点自提信息
+        List<String> posCodes = list.stream().filter(w -> StringUtils.isNotBlank(w.getPosCode())).map(WarehouseCacheBO::getPosCode).collect(Collectors.toList());
+        posRedis.syncPosToRedis(posCodes, tenantId);
     }
 
     @Override

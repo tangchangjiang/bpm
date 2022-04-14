@@ -5,14 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
-import org.o2.metadata.console.infra.entity.Pos;
-import org.o2.metadata.console.infra.entity.PosAddress;
-import org.o2.metadata.console.infra.entity.PostTime;
-import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.repository.PosRepository;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;
 import org.o2.metadata.console.infra.mapper.PosMapper;
 import org.o2.metadata.console.infra.mapper.PostTimeMapper;
+import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Component;
 
@@ -140,5 +137,10 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     @Override
     public List<Pos> listPosByCondition(Pos pos) {
         return posMapper.listPosByCondition(pos);
+    }
+
+    @Override
+    public List<PosInfo> listPosInfoByCode(List<String> posCodes, Long tenantId) {
+        return posMapper.listPosInfoByCode(posCodes, tenantId);
     }
 }
