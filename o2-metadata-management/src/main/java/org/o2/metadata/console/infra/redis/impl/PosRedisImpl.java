@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -55,8 +56,8 @@ public class PosRedisImpl implements PosRedis {
                 String posAllStoreKey = PosConstants.RedisKey.getPosAllStoreKey(tenantId);
                 String posDetailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
                 Map<String, String> storeMap = new HashMap<>();
-                List<String> posCodeList = pickUpInfoList.stream().map(PosInfo::getPosCode).collect(Collectors.toList());
-                operations.opsForSet().add(posAllStoreKey, posCodeList);
+                Set<String> posCodeSet = pickUpInfoList.stream().map(PosInfo::getPosCode).collect(Collectors.toSet());
+                operations.opsForSet().add(posAllStoreKey, posCodeSet.toArray());
                 for (PosInfo pos : pickUpInfoList) {
                     storeMap.put(pos.getPosCode(), JsonHelper.objectToString(pos));
                     if (StringUtils.isNotBlank(pos.getRegionCode()) && StringUtils.isNotBlank(pos.getCityCode())) {
