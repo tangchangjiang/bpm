@@ -16,4 +16,12 @@ public interface PosRedis {
      * @param tenantId 租户Id
      */
     void syncPosToRedis(List<String> posCodes, Long tenantId);
+
+    /**
+     * 更新门店信息
+     *
+     * @param posCodes 服务店编码
+     * @param tenantId 租户Id
+     */
+    void updatePodDetail(List<String> posCodes, Long tenantId);
 }
