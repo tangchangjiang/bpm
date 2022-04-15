@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.o2.core.exception.O2CommonException;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
@@ -12,7 +13,11 @@ import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.repository.*;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +39,8 @@ public class PosServiceImpl implements PosService {
     private final RegionRepository regionRepository;
     private final PosRelCarrierRepository posRelCarrierRepository;
     private CarrierRepository carrierRepository;
+    private final PosRedis posRedis;
+    private final RedisCacheClient redisCacheClient;
 
 
     public PosServiceImpl(PosRepository posRepository,
@@ -41,13 +48,17 @@ public class PosServiceImpl implements PosService {
                           PosAddressRepository posAddressRepository,
                           RegionRepository regionRepository,
                           PosRelCarrierRepository posRelCarrierRepository,
-                          CarrierRepository carrierRepository) {
+                          CarrierRepository carrierRepository,
+                          PosRedis posRedis,
+                          RedisCacheClient redisCacheClient) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
         this.regionRepository = regionRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRepository = carrierRepository;
+        this.posRedis = posRedis;
+        this.redisCacheClient = redisCacheClient;
     }
 
     @Override
@@ -76,6 +87,10 @@ public class PosServiceImpl implements PosService {
             });
         }
         updateCarryIsDefault(pos);
+        List<String> posCodes = new ArrayList<>();
+        posCodes.add(pos.getPosCode());
+        // 同步Redis
+        posRedis.syncPosToRedis(posCodes, pos.getTenantId());
         return pos;
     }
 
@@ -84,8 +99,19 @@ public class PosServiceImpl implements PosService {
     public Pos update(final Pos pos) {
         validPosNameUnique(pos);
         validatePosCode(pos);
+        PosAddress oldAddress = null;
         final PosAddress address;
         if ((address = pos.getAddress()) != null) {
+            // 查询旧地址信息
+            PosAddressQueryInnerDTO posAddressQueryInnerDTO = new PosAddressQueryInnerDTO();
+            List<String> posCodes = new ArrayList<>();
+            posCodes.add(pos.getPosCode());
+            posAddressQueryInnerDTO.setPosCodes(posCodes);
+            List<PosAddress> oldAddressList = posAddressRepository.listPosAddress(posAddressQueryInnerDTO, pos.getTenantId());
+            if (CollectionUtils.isNotEmpty(oldAddressList)) {
+                oldAddress = oldAddressList.get(0);
+            }
+
             updatePosAddress(address,pos.getTenantId());
             address.setTenantId(pos.getTenantId());
             posAddressRepository.updateByPrimaryKey(address);
@@ -107,6 +133,8 @@ public class PosServiceImpl implements PosService {
             });
         }
         updateCarryIsDefault(pos);
+        // 更新同步服务点Redis
+        updatePosRedis(oldAddress, pos);
         return pos;
     }
 
@@ -244,5 +272,27 @@ public class PosServiceImpl implements PosService {
         }
     }
 
+    private void updatePosRedis(PosAddress oldPosAddress, Pos newPos) {
+        // 删除旧的服务点门店信息
+        if (newPos.getAddress() != null && oldPosAddress != null) {
+            redisCacheClient.executePipelined(new RedisCallback<Object>() {
+
+                @Override
+                public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                    String allStoreKey = PosConstants.RedisKey.getPosAllStoreKey(newPos.getTenantId());
+                    String cityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(newPos.getTenantId(), oldPosAddress.getRegionCode(), oldPosAddress.getCityCode());
+                    String districtStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(newPos.getTenantId(), oldPosAddress.getRegionCode(), oldPosAddress.getCityCode(), oldPosAddress.getDistrictCode());
+                    connection.sRem(allStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
+                    connection.sRem(cityStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
+                    connection.sRem(districtStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
+                    return null;
+                }
+            });
+        }
+
+        // 插入新的服务点门店信息
+        List<String> posCodes = new ArrayList<>();
+        posRedis.syncPosToRedis(posCodes, newPos.getTenantId());
+    }
 
 }

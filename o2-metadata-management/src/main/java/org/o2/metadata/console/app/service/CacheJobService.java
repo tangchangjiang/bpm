@@ -46,4 +46,11 @@ public interface CacheJobService {
       * @param tenantId 租户ID
       */
     void refreshOnlineShop(Long tenantId);
+
+    /**
+     * 服务店
+     *
+     * @param tenantId 租户Id
+     */
+    void refreshPos(Long tenantId);
 }
