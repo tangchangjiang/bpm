@@ -106,10 +106,10 @@ public class WarehouseController extends BaseController {
         List<Warehouse> newList = warehouseService.updateBatch(organizationId, warehouses);
         warehouseService.triggerWhStockCalWithWh(organizationId,newList, oldWarehouse);
         // 更新Pos的redis信息
-        List<String> posCodes = new ArrayList<>();
-        posCodes.addAll(warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList()));
-        posCodes.addAll(oldWarehouse.stream().map(Warehouse::getPosCode).collect(Collectors.toList()));
-        posRedis.updatePodDetail(posCodes, organizationId);
+        List<Long> posIds = new ArrayList<>();
+        posIds.addAll(warehouses.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
+        posIds.addAll(oldWarehouse.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
+        posRedis.updatePodDetail(posIds, null, organizationId);
         return Results.success(newList);
     }
     /**

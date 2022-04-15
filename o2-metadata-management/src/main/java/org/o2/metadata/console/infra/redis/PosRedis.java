@@ -20,8 +20,9 @@ public interface PosRedis {
     /**
      * 更新门店信息
      *
+     * @param posIds 服务点id
      * @param posCodes 服务店编码
      * @param tenantId 租户Id
      */
-    void updatePodDetail(List<String> posCodes, Long tenantId);
+    void updatePodDetail(List<Long> posIds, List<String> posCodes, Long tenantId);
 }
