@@ -2,7 +2,6 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -87,10 +85,6 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
         this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
-
-        // 同步服务点自提信息
-        List<String> posCodes = list.stream().filter(w -> StringUtils.isNotBlank(w.getPosCode())).map(WarehouseCacheBO::getPosCode).collect(Collectors.toList());
-        posRedis.syncPosToRedis(posCodes, tenantId);
     }
 
     @Override

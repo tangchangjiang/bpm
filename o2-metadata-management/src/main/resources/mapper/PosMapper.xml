@@ -226,6 +226,9 @@
                     #{code}
                 </foreach>
             </if>
+            <if test="posTypeCode != null and posTypeCode != ''">
+                pos.pos_type_code = #{posTypeCode}
+            </if>
             <choose>
                 <when test="tenantId != null">
                     AND pos.tenant_id = #{tenantId}

@@ -35,6 +35,7 @@ public class CacheJobServiceImpl implements CacheJobService {
     private final FreightTemplateDetailRepository freightTemplateDetailRepository;
     private final WarehouseRedis warehouseRedis;
     private final OnlineShopRepository onlineShopRepository;
+    private final PosRedis posRedis;
 
     public CacheJobServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                SystemParameterRepository systemParameterRepository,
@@ -43,7 +44,8 @@ public class CacheJobServiceImpl implements CacheJobService {
                                OnlineShopRedis onlineShopRedis,
                                FreightRedis freightRedis, FreightTemplateRepository freightTemplateRepository,
                                FreightTemplateDetailRepository freightTemplateDetailRepository,
-                               WarehouseRedis warehouseRedis, OnlineShopRepository onlineShopRepository) {
+                               WarehouseRedis warehouseRedis, OnlineShopRepository onlineShopRepository,
+                               PosRedis posRedis) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.systemParameterRepository = systemParameterRepository;
         this.systemParameterRedis = systemParameterRedis;
@@ -54,6 +56,7 @@ public class CacheJobServiceImpl implements CacheJobService {
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.warehouseRedis = warehouseRedis;
         this.onlineShopRepository = onlineShopRepository;
+        this.posRedis = posRedis;
     }
 
     @Override
@@ -108,5 +111,10 @@ public class CacheJobServiceImpl implements CacheJobService {
         query.setActiveFlag(BaseConstants.Flag.YES);
         List<OnlineShop> onlineShops = onlineShopRepository.select(query);
         onlineShopRedis.batchUpdateRedis(onlineShops,tenantId);
+    }
+
+    @Override
+    public void refreshPos(Long tenantId) {
+        posRedis.syncPosToRedis(null, tenantId);
     }
 }

@@ -24,6 +24,7 @@ import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.WarehouseConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author NieYong
@@ -46,16 +48,19 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final RedisCacheClient redisCacheClient;
     private final WarehouseDomainService warehouseDomainService;
     private final WarehouseRedis warehouseRedis;
+    private final PosRedis posRedis;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
-                                WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis) {
+                                WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis,
+                                PosRedis posRedis) {
         this.warehouseRepository = warehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
         this.warehouseDomainService = warehouseDomainService;
         this.warehouseRedis = warehouseRedis;
+        this.posRedis = posRedis;
     }
 
 
@@ -70,6 +75,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         warehouseRepository.batchInsert(warehouses);
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+        // 同步服务点Redis
+        List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
+        posRedis.syncPosToRedis(posCodes, tenantId);
         return warehouses;
     }
 
@@ -87,6 +95,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         // 更新 redis
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+        // 同步服务点Redis
+        List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
+        posRedis.syncPosToRedis(posCodes, tenantId);
         return list;
 
     }
