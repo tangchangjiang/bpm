@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Bean;
                 WarehouseRemoteService.class,
                 FreightRemoteService.class,
                 OnlineShopRemoteService.class,
-                CarrierRemoteService.class}
+                CarrierRemoteService.class,
+                PosRemoteService.class}
 )
 public class MetadataFeignClientAutoConfiguration {
     @Bean
@@ -51,6 +52,12 @@ public class MetadataFeignClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public PosRemoteServiceImpl posRemoteServiceFallback() {
+        return new PosRemoteServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public WarehouseClient warehouseClient(WarehouseRemoteService warehouseRemoteService) {
         return new WarehouseClient(warehouseRemoteService);
     }
@@ -77,6 +84,12 @@ public class MetadataFeignClientAutoConfiguration {
     @ConditionalOnMissingBean
     public SystemParameterClient systemParameterClient(SysParameterRemoteService sysParameterRemoteService) {
         return new SystemParameterClient(sysParameterRemoteService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public PosClient posClient(PosRemoteService posRemoteService) {
+        return new PosClient(posRemoteService);
     }
 
 }

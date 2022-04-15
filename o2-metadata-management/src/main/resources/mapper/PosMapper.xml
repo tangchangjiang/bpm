@@ -194,4 +194,56 @@
         </where>
         ORDER BY p.pos_code
     </select>
+    
+    <select id="listPosInfoByCode" resultType="org.o2.metadata.console.infra.entity.PosInfo">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        pos.pos_code,
+        post.pos_name,
+        pos.pos_status_code,
+        pos.pos_type_code,
+        pos.business_type_code,
+        pos.business_time,
+        address.phone_number,
+        address.longitude,
+        address.latitude,
+        address.region_code,
+        address.country_code,
+        address.district_code,
+        address.city_code,
+        address.street_name,
+        ware.warehouse_code,
+        ware.picked_up_flag,
+        ware.pick_up_quantity
+        from o2md_pos pos
+        left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang} and post.tenant_id = #{tenantId}
+        left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
+        left join o2md_warehouse ware on pos.pos_id = ware.pos_id and address.tenant_id = #{tenantId}
+        <where>
+            <if test="posIds != null and posIds.size() > 0">
+                and pos.pos_id IN
+                <foreach collection="posIds" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="posCodes != null and posCodes.size() > 0 ">
+                and pos.pos_code IN
+                <foreach collection="posCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="posTypeCode != null and posTypeCode != ''">
+                and pos.pos_type_code = #{posTypeCode}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND pos.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+        order by pos.pos_code
+    </select>
 </mapper>

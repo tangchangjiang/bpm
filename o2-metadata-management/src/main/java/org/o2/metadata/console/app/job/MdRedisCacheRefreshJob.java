@@ -43,6 +43,7 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             final String carrier = map.getOrDefault(MetadataConstants.CacheJob.CARRIER, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String freight = map.getOrDefault(MetadataConstants.CacheJob.FREIGHT,MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String onlinShop = map.getOrDefault(MetadataConstants.CacheJob.ONLINE_SHOP,MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String pos = map.getOrDefault(MetadataConstants.CacheJob.POS,MetadataConstants.CacheJob.DEFAULT_ACTION);
 
             if (MetadataConstants.CacheJob.REFRESH.equals(warehouse)) {
                 // 全量同步 仓库 数据到Redis，判断失效时间
@@ -72,6 +73,10 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
             // 全量同步 网店
             if (MetadataConstants.CacheJob.REFRESH.equals(onlinShop)) {
                 cacheJobService.refreshOnlineShop(tenantId);
+            }
+            // 全量同步 服务点门店
+            if (MetadataConstants.CacheJob.REFRESH.equals(pos)) {
+                cacheJobService.refreshPos(tenantId);
             }
         }
         return ReturnT.SUCCESS;

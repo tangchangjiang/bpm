@@ -1,8 +1,13 @@
 package org.o2.metadata.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.client.domain.co.PosPickUpInfoCO;
+import org.o2.metadata.client.domain.co.PosStoreInfoCO;
+import org.o2.metadata.client.domain.dto.StoreQueryDTO;
 import org.o2.metadata.client.infra.feign.PosRemoteService;
+
+import java.util.List;
 
 /**
  * 服务点
@@ -24,6 +29,17 @@ public class PosClient {
      * @return 服务点信息
      */
     public PosPickUpInfoCO getPosPickUpInfo(String posCode, Long tenantId) {
-        return ResponseUtils.getResponse(posRemoteService.getPosPickUpInfo(posCode, tenantId), PosPickUpInfoCO.class);
+        return ResponseUtils.getResponse(posRemoteService.getPosPickUpInfo(tenantId, posCode), PosPickUpInfoCO.class);
+    }
+
+    /**
+     * 条件批量查询门店信息
+     *
+     * @param storeQueryDTO 查询条件
+     * @param tenantId 租户Id
+     * @return 门店信息
+     */
+    public List<PosStoreInfoCO> getStoreInfoList(StoreQueryDTO storeQueryDTO, Long tenantId) {
+        return ResponseUtils.getResponse(posRemoteService.getStoreInfoList(storeQueryDTO, tenantId), new TypeReference<List<PosStoreInfoCO>>(){});
     }
 }

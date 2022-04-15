@@ -23,6 +23,7 @@ import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author NieYong
@@ -47,13 +49,16 @@ public class WarehouseController extends BaseController {
     private final WarehouseService warehouseService;
     private final WarehouseRepository warehouseRepository;
     private final PosRepository posRepository;
+    private final PosRedis posRedis;
 
     public WarehouseController(WarehouseService warehouseService,
                                WarehouseRepository warehouseRepository,
-                               PosRepository posRepository) {
+                               PosRepository posRepository,
+                               PosRedis posRedis) {
         this.warehouseService = warehouseService;
         this.warehouseRepository = warehouseRepository;
         this.posRepository = posRepository;
+        this.posRedis = posRedis;
     }
 
     @ApiOperation(value = "仓库信息列表")
@@ -100,6 +105,11 @@ public class WarehouseController extends BaseController {
         // 更后数据
         List<Warehouse> newList = warehouseService.updateBatch(organizationId, warehouses);
         warehouseService.triggerWhStockCalWithWh(organizationId,newList, oldWarehouse);
+        // 更新Pos的redis信息
+        List<Long> posIds = new ArrayList<>();
+        posIds.addAll(warehouses.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
+        posIds.addAll(oldWarehouse.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
+        posRedis.updatePodDetail(posIds, null, organizationId);
         return Results.success(newList);
     }
     /**

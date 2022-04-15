@@ -7,6 +7,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.Warehouse;
+import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -28,10 +29,13 @@ import java.util.Map;
 public class WarehouseRedisImpl implements WarehouseRedis {
     private final RedisCacheClient redisCacheClient;
     private final WarehouseRepository warehouseRepository;
+    private final PosRedis posRedis;
 
-    public WarehouseRedisImpl(RedisCacheClient redisCacheClient, WarehouseRepository warehouseRepository) {
+    public WarehouseRedisImpl(RedisCacheClient redisCacheClient, WarehouseRepository warehouseRepository,
+                              PosRedis posRedis) {
         this.redisCacheClient = redisCacheClient;
         this.warehouseRepository = warehouseRepository;
+        this.posRedis = posRedis;
     }
 
     @Override

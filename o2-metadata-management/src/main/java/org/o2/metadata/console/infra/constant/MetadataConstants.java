@@ -98,6 +98,7 @@ public interface MetadataConstants {
         String CARRIER = "Carrier";
         String FREIGHT = "Freight";
         String ONLINE_SHOP = "OnlineShop";
+        String POS = "Pos";
     }
 
 

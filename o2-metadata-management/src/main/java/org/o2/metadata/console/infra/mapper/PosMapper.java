@@ -4,6 +4,7 @@ import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosInfo;
 
 import java.util.List;
 
@@ -52,5 +53,18 @@ public interface PosMapper extends BaseMapper<Pos> {
      * @return  list
      */
     List<Pos> listPosByCondition(Pos pos);
+
+    /**
+     * 查询服务点信息（提货信息）
+     * @param posIds 服务点id
+     * @param posCodes 服务点code
+     * @param posTypeCode 服务店类型
+     * @param tenantId 租户Id
+     * @return list
+     */
+    List<PosInfo> listPosInfoByCode(@Param("posIds") List<Long> posIds,
+                                    @Param("posCodes") List<String> posCodes,
+                                    @Param("posTypeCode") String posTypeCode,
+                                    @Param("tenantId") Long tenantId);
 
 }

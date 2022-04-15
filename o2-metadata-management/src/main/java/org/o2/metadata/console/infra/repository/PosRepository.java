@@ -4,6 +4,7 @@ package org.o2.metadata.console.infra.repository;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosInfo;
 
 import java.util.List;
 
@@ -62,4 +63,14 @@ public interface PosRepository extends BaseRepository<Pos> {
      * @return  list
      */
     List<Pos> listPosByCondition(Pos pos);
+
+    /**
+     * 查询服务点信息（提货信息）
+     * @param posIds 服务点id
+     * @param posCodes 服务点code
+     * @param posTypeCode 服务店类型
+     * @param tenantId 租户Id
+     * @return list
+     */
+    List<PosInfo> listPosInfoByCode(List<Long> posIds, List<String> posCodes, String posTypeCode, Long tenantId);
 }

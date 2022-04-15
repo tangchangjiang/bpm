@@ -1,18 +1,14 @@
-package org.o2.metadata.console.infra.constant;
+package org.o2.metadata.infra.constants;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 /**
- *
  * 服务点常量
  *
- * @author yipeng.zhu@hand-china.com 2021-11-08
- **/
+ * @author chao.yang05@hand-china.com 2022/4/14
+ */
 public interface PosConstants {
-
-    interface ErrorCode {
-        String ERROR_POS_NAME_DUPLICATE= "o2md.error.pos_name.duplicate";
-        String ERROR_POS_CODE_DUPLICATE= "o2md.error.pos_code.duplicate";
-        String ERROR_POS_CODE_NOT_UPDATE = "o2md.error.pos_code.forbidden.update";
-    }
 
     interface RedisKey {
         /**
@@ -80,4 +76,7 @@ public interface PosConstants {
             return String.format(POS_DETAIL_KEY, tenantId);
         }
     }
+
+    ResourceScriptSource SEARCH_POS_LIST_LUA =
+            new ResourceScriptSource(new ClassPathResource("script/lua/pos/search_pos_list.lua"));
 }
