@@ -41,7 +41,7 @@ public class PosRedisImpl implements PosRedis {
 
     @Override
     public void syncPosToRedis(List<String> posCodes, Long tenantId) {
-        List<PosInfo> posInfos = posRepository.listPosInfoByCode(posCodes, MetadataConstants.PosType.STORE, tenantId);
+        List<PosInfo> posInfos = posRepository.listPosInfoByCode(null, posCodes, MetadataConstants.PosType.STORE, tenantId);
         List<PosInfo> pickUpInfoList = posInfos.stream()
                 .filter(pos -> pos.getLongitude() != null && pos.getLatitude() != null)
                 .collect(Collectors.toList());
@@ -77,8 +77,8 @@ public class PosRedisImpl implements PosRedis {
     }
 
     @Override
-    public void updatePodDetail(List<String> posCodes, Long tenantId) {
-        List<PosInfo> posInfos = posRepository.listPosInfoByCode(posCodes, MetadataConstants.PosType.STORE, tenantId);
+    public void updatePodDetail(List<Long> posIds, List<String> posCodes, Long tenantId) {
+        List<PosInfo> posInfos = posRepository.listPosInfoByCode(posIds, null, MetadataConstants.PosType.STORE, tenantId);
         List<PosInfo> pickUpInfoList = posInfos.stream()
                 .filter(pos -> pos.getLongitude() != null && pos.getLatitude() != null)
                 .collect(Collectors.toList());

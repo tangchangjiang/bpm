@@ -66,10 +66,11 @@ public interface PosRepository extends BaseRepository<Pos> {
 
     /**
      * 查询服务点信息（提货信息）
+     * @param posIds 服务点id
      * @param posCodes 服务点code
      * @param posTypeCode 服务店类型
      * @param tenantId 租户Id
      * @return list
      */
-    List<PosInfo> listPosInfoByCode(List<String> posCodes, String posTypeCode, Long tenantId);
+    List<PosInfo> listPosInfoByCode(List<Long> posIds, List<String> posCodes, String posTypeCode, Long tenantId);
 }

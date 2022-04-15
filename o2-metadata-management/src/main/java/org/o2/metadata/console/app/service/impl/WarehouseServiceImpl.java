@@ -75,9 +75,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         warehouseRepository.batchInsert(warehouses);
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
-        // 更新服务点Redis
+        // 更新服务点门店Redis
         List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
-        posRedis.updatePodDetail(posCodes, tenantId);
+        posRedis.updatePodDetail(null, posCodes, tenantId);
         return warehouses;
     }
 
@@ -95,6 +95,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         // 更新 redis
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+        // 更新服务点门店Redis
+
         return list;
 
     }
