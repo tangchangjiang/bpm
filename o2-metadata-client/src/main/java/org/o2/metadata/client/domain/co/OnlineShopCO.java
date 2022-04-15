@@ -28,4 +28,7 @@ public class OnlineShopCO {
     @ApiModelProperty(value = "平台编码")
     private String platformCode;
 
+    @ApiModelProperty(value = "是否支持自提")
+    private Integer pickedUpFlag;
+
 }
