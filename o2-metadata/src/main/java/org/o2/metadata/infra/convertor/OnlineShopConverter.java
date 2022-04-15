@@ -27,6 +27,7 @@ public class OnlineShopConverter {
         co.setOnlineShopName(onlineShop.getOnlineShopName());
         co.setTenantId(onlineShop.getTenantId());
         co.setPlatformCode(onlineShop.getPlatformCode());
+        co.setPickedUpFlag(onlineShop.getPickedUpFlag());
         return co;
     }
 

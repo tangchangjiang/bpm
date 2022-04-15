@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -31,6 +32,9 @@ public class OnlineShop {
     private String platformShopCode;
 
     private Long tenantId;
+
+    @ApiModelProperty(value = "是否支持自提")
+    private Integer pickedUpFlag;
 
 
 }
