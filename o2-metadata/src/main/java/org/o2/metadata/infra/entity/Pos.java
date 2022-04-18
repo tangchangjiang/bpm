@@ -56,9 +56,6 @@ public class Pos {
     @ApiModelProperty(value = "仓库编码")
     private String warehouseCode;
 
-    @ApiModelProperty(value = "自提发货接单量")
-    private Long pickUpQuantity;
-
     @ApiModelProperty("仓库自提标识")
     private Integer pickedUpFlag;
 }

@@ -33,6 +33,15 @@ public class PosStoreInfoCO {
     @ApiModelProperty(value = "营业时间")
     private String businessTime;
 
+    @ApiModelProperty(value = "省")
+    private String regionCode;
+
+    @ApiModelProperty(value = "市")
+    private String cityCode;
+
+    @ApiModelProperty(value = "区")
+    private String districtCode;
+
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;
 
@@ -47,9 +56,6 @@ public class PosStoreInfoCO {
 
     @ApiModelProperty(value = "仓库编码")
     private String warehouseCode;
-
-    @ApiModelProperty(value = "自提发货接单量")
-    private Long pickUpQuantity;
 
     @ApiModelProperty("仓库自提标识")
     private Integer pickedUpFlag;
