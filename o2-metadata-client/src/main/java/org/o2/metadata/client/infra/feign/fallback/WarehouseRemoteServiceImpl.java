@@ -42,5 +42,11 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> listWarehousePickupLimit(Long organizationId, List<String> warehouseCodes) {
+        logger.error("Error listWarehousePickupLimit, params[tenantId = {}, warehouseCodes = {}]", organizationId, warehouseCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 
 }

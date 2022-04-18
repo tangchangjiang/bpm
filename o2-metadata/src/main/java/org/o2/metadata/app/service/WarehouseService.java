@@ -1,6 +1,7 @@
 package org.o2.metadata.app.service;
 
 import org.o2.metadata.api.co.WarehouseCO;
+import org.o2.metadata.api.co.WarehousePickupLimitCO;
 
 import java.util.List;
 
@@ -24,4 +25,13 @@ public interface WarehouseService {
      * @param increment      快递配送接单量增量
      */
     void updateExpressValue(String warehouseCode, String increment, Long tenantId);
+
+    /**
+     * 查询仓库已自提量
+     *
+     * @param warehouseCodes 仓库code
+     * @param tenantId 租户Id
+     * @return 已自提量
+     */
+    List<WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId);
 }

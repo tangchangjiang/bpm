@@ -71,4 +71,15 @@ public interface WarehouseRemoteService {
     ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                               @RequestParam(value = "warehouseCode") String warehouseCode,
                                               @RequestParam(value = "increment") String increment);
+
+    /**
+     * 仓库已自提量查询
+     *
+     * @param organizationId 租户Id
+     * @param warehouseCodes 仓库编码
+     * @return list
+     */
+    @GetMapping("/{organizationId}/warehouse-internal/limit-list")
+    ResponseEntity<String> listWarehousePickupLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+                                                    @RequestParam List<String> warehouseCodes);
 }

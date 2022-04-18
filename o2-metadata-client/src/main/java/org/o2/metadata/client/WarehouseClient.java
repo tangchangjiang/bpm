@@ -3,6 +3,7 @@ package org.o2.metadata.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.client.domain.co.WarehouseCO;
+import org.o2.metadata.client.domain.co.WarehousePickupLimitCO;
 import org.o2.metadata.client.infra.feign.WarehouseRemoteService;
 
 import java.util.List;
@@ -30,6 +31,17 @@ public class WarehouseClient {
     public Map<String, WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId){
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseCO>>() {
         });
+    }
+
+    /**
+     * 仓库已自提量查询
+     *
+     * @param warehouseCodes 仓库code
+     * @param tenantId 租户Id
+     * @return list
+     */
+    public List<WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<List<WarehousePickupLimitCO>>(){});
     }
 
 }
