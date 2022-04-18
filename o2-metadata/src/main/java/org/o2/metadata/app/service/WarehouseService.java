@@ -1,9 +1,10 @@
 package org.o2.metadata.app.service;
 
 import org.o2.metadata.api.co.WarehouseCO;
-import org.o2.metadata.api.co.WarehousePickupLimitCO;
+import org.o2.metadata.infra.entity.WarehouseLimit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lei.tang02@hand-china.com 2020/8/27
@@ -33,5 +34,5 @@ public interface WarehouseService {
      * @param tenantId 租户Id
      * @return 已自提量
      */
-    List<WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId);
+    Map<String, WarehouseLimit> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId);
 }

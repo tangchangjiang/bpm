@@ -11,6 +11,7 @@ import org.o2.metadata.infra.redis.WarehouseRedis;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,9 +39,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
-        List<WarehouseLimit> warehouseLimitList = warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
-        return WarehouseLimitConverter.doToCoObjects(warehouseLimitList);
+    public Map<String, WarehouseLimit> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
+        Map<String, WarehouseLimit> warehouseLimitMap = warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
+        return warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
     }
 
 }

@@ -5,6 +5,7 @@ import org.o2.metadata.infra.entity.Warehouse;
 import org.o2.metadata.infra.entity.WarehouseLimit;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,6 +29,6 @@ public interface WarehouseRedis {
      * @param tenantId 租户ID
      * @return 仓库已自提量
      */
-    List<WarehouseLimit> listWarehouseLimit(List<String> warehouseCodes, Long tenantId);
+    Map<String, WarehouseLimit> listWarehouseLimit(List<String> warehouseCodes, Long tenantId);
 
 }

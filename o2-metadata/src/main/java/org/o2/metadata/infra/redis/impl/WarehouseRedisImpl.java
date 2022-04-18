@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.WarehouseConstants;
@@ -10,7 +10,10 @@ import org.o2.metadata.infra.redis.WarehouseRedis;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -39,18 +42,23 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     }
 
     @Override
-    public List<WarehouseLimit> listWarehouseLimit(List<String> warehouseCodes, Long tenantId) {
+    public Map<String, WarehouseLimit> listWarehouseLimit(List<String> warehouseCodes, Long tenantId) {
         List<WarehouseLimit> list = new ArrayList<>(warehouseCodes.size());
         String limitKey = WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION, tenantId);
-        List<String> warehouseLimitList = redisCacheClient.<String, String>opsForHash().multiGet(limitKey, warehouseCodes);
-        if (CollectionUtils.isEmpty(warehouseLimitList)) {
+        Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(limitKey);
+        if (MapUtils.isEmpty(map)) {
             return null;
         }
-        for (String jsonStr : warehouseLimitList) {
-            WarehouseLimit warehouseLimit = JsonHelper.stringToObject(jsonStr, WarehouseLimit.class);
-            list.add(warehouseLimit);
+        Map<String, String> warehouseMap = map.entrySet().stream().filter(m -> warehouseCodes.contains(m.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        if (MapUtils.isEmpty(warehouseMap)) {
+            return null;
         }
-        return list;
+        Map<String, WarehouseLimit> limitMap = new HashMap<>();
+        for(Map.Entry<String, String> entry : warehouseMap.entrySet()) {
+            WarehouseLimit warehouseLimit = JsonHelper.stringToObject(entry.getValue(), WarehouseLimit.class);
+            limitMap.put(entry.getKey(), warehouseLimit);
+        }
+        return limitMap;
     }
 
 }

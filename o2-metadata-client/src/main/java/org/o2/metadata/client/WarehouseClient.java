@@ -40,8 +40,8 @@ public class WarehouseClient {
      * @param tenantId 租户Id
      * @return list
      */
-    public List<WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<List<WarehousePickupLimitCO>>(){});
+    public Map<String, WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<Map<String, WarehousePickupLimitCO>>(){});
     }
 
 }
