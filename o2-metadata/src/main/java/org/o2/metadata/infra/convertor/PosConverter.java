@@ -36,7 +36,6 @@ public class PosConverter {
         posStoreInfoCO.setLatitude(pos.getLatitude());
         posStoreInfoCO.setPhoneNumber(pos.getPhoneNumber());
         posStoreInfoCO.setPickedUpFlag(pos.getPickedUpFlag());
-        posStoreInfoCO.setPickUpQuantity(pos.getPickUpQuantity());
         return posStoreInfoCO;
     }
 
