@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.api.co.WarehouseCO;
+import org.o2.metadata.api.co.WarehousePickupLimitCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +52,14 @@ public class WarehouseMetadataInternalController {
                                                 @RequestParam(value = "increment") String increment) {
         warehouseService.updateExpressValue(warehouseCode, increment, organizationId);
         return Results.success();
+    }
+
+    @ApiOperation(value = "查询仓库已自提量")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/limit-list")
+    public ResponseEntity<List<WarehousePickupLimitCO>> listWarehousePickupLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+                                                                                @RequestParam List<String> warehouseCodes) {
+        List<WarehousePickupLimitCO> limitCOList = warehouseService.listWarehousePickupLimit(warehouseCodes, organizationId);
+        return Results.success(limitCOList);
     }
 }

@@ -67,4 +67,7 @@ public class Pos {
 
     @ApiModelProperty("仓库自提标识")
     private Integer pickedUpFlag;
+
+    @ApiModelProperty(value = "自提接单量")
+    private Long pickUpQuantity;
 }
