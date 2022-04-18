@@ -30,6 +30,9 @@ public class PosConverter {
         posStoreInfoCO.setCityCode(pos.getCityCode());
         posStoreInfoCO.setRegionCode(pos.getRegionCode());
         posStoreInfoCO.setCityCode(pos.getCityCode());
+        posStoreInfoCO.setRegionName(pos.getRegionName());
+        posStoreInfoCO.setCityName(pos.getCityName());
+        posStoreInfoCO.setDistrictName(pos.getDistrictName());
         posStoreInfoCO.setDistrictCode(pos.getDistrictCode());
         posStoreInfoCO.setStreetName(pos.getStreetName());
         posStoreInfoCO.setLongitude(pos.getLongitude());
