@@ -33,6 +33,15 @@ public class PosStoreInfoCO {
     @ApiModelProperty(value = "营业时间")
     private String businessTime;
 
+    @ApiModelProperty(value = "省")
+    private String regionCode;
+
+    @ApiModelProperty(value = "市")
+    private String cityCode;
+
+    @ApiModelProperty(value = "区")
+    private String districtCode;
+
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;
 

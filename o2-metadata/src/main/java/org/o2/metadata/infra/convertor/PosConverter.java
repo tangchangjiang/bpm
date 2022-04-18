@@ -27,6 +27,10 @@ public class PosConverter {
         posStoreInfoCO.setPosTypeCode(pos.getPosTypeCode());
         posStoreInfoCO.setBusinessTypeCode(pos.getBusinessTypeCode());
         posStoreInfoCO.setBusinessTime(pos.getBusinessTime());
+        posStoreInfoCO.setCityCode(pos.getCityCode());
+        posStoreInfoCO.setRegionCode(pos.getRegionCode());
+        posStoreInfoCO.setCityCode(pos.getCityCode());
+        posStoreInfoCO.setDistrictCode(pos.getDistrictCode());
         posStoreInfoCO.setStreetName(pos.getStreetName());
         posStoreInfoCO.setLongitude(pos.getLongitude());
         posStoreInfoCO.setLatitude(pos.getLatitude());
