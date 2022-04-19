@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.api.dto.PlatformInfMappingDTO;
@@ -10,6 +11,7 @@ import org.o2.metadata.console.infra.mapper.PlatformInfoMappingMapper;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +41,10 @@ public class PlatformInfoMappingRepositoryImpl extends BaseRepositoryImpl<Platfo
 
     @Override
     public List<PlatformInfoMapping> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
-        return platformInfoMappingMapper.selectCondition(queryInnerDTO);
+        List<PlatformInfoMapping> list = platformInfoMappingMapper.selectCondition(queryInnerDTO);
+        if (CollectionUtils.isEmpty(list)){
+            return new ArrayList<>(4);
+        }
+        return list;
     }
 }

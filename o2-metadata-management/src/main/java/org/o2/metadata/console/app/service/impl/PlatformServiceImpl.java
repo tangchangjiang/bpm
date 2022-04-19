@@ -4,9 +4,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
+import org.o2.ehcache.util.CollectionCacheHelper;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.app.service.PlatformService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PlatformConstants;
 import org.o2.metadata.console.infra.convertor.PlatformConverter;
 import org.o2.metadata.console.infra.entity.Platform;
@@ -16,6 +18,7 @@ import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,13 +72,14 @@ public class PlatformServiceImpl implements PlatformService {
     @Override
     public Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
         Map<String, PlatformCO> map = new HashMap<>(16);
-        List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
-        if (list.isEmpty()) {
-            return map;
-        }
-
-        Map<String, List<PlatformInfoMapping>> groupMap = list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
-        for (Map.Entry<String, List<PlatformInfoMapping>> entry : groupMap.entrySet()) {
+        Map<String, List<PlatformInfoMapping>> result = CollectionCacheHelper.getCache(MetadataConstants.MappingCacheName.METADATA_CACHE_NAME,
+                String.format(PlatformConstants.CacheKeyPrefix.PLATFORM_CACHE_MAPPING_KEY_PREFIX,queryInnerDTO.getTenantId(),queryInnerDTO.getInfTypeCode()),
+                         queryInnerDTO.getPlatformCodes(),k->{
+                         queryInnerDTO.setPlatformCodes(new ArrayList<>(k));
+                         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
+                         return list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
+                        });
+        for (Map.Entry<String, List<PlatformInfoMapping>> entry : result.entrySet()) {
             String k = entry.getKey();
             List<PlatformInfoMapping> value = entry.getValue();
             PlatformCO co = new PlatformCO();

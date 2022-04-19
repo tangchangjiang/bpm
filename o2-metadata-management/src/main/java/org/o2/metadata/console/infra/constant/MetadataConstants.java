@@ -43,7 +43,9 @@ public interface MetadataConstants {
         String O2MD_RESOURCE_OWNER_IS_NULL="o2md.resource_owner.should.is.not.null";
 
     }
-
+    interface  MappingCacheName {
+        String METADATA_CACHE_NAME = "O2_METADATA";
+    }
     /**
      * 公共值集
      */
