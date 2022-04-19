@@ -19,6 +19,24 @@ public class PosPickUpInfoCO {
     @ApiModelProperty(value = "服务点名称")
     private String posName;
 
+    @ApiModelProperty(value = "省")
+    private String regionCode;
+
+    @ApiModelProperty(value = "市")
+    private String cityCode;
+
+    @ApiModelProperty(value = "区")
+    private String districtCode;
+
+    @ApiModelProperty(value = "省name")
+    private String regionName;
+
+    @ApiModelProperty(value = "市name")
+    private String cityName;
+
+    @ApiModelProperty(value = "区name")
+    private String districtName;
+
     @ApiModelProperty(value = "街道,门牌号")
     private String streetName;
 

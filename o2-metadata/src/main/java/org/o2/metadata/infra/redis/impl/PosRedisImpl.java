@@ -44,10 +44,6 @@ public class PosRedisImpl implements PosRedis {
         }
         String indexKey;
         String detailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
-        if (storeQueryDTO.getLongitude() != null && storeQueryDTO.getLatitude() != null) {
-            indexKey = PosConstants.RedisKey.getPosAllStoreKey(tenantId);
-            return searchPosList(indexKey, detailKey);
-        }
         if (StringUtils.isNotBlank(storeQueryDTO.getRegionCode()) && StringUtils.isNotBlank(storeQueryDTO.getCityCode())) {
             if (StringUtils.isNotBlank(storeQueryDTO.getDistrictCode())) {
                 indexKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, storeQueryDTO.getRegionCode(),
@@ -55,9 +51,10 @@ public class PosRedisImpl implements PosRedis {
             } else {
                 indexKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, storeQueryDTO.getRegionCode(), storeQueryDTO.getCityCode());
             }
-            return searchPosList(indexKey, detailKey);
+        } else {
+            indexKey = PosConstants.RedisKey.getPosAllStoreKey(tenantId);
         }
-        return null;
+        return searchPosList(indexKey, detailKey);
     }
 
     private List<Pos> searchPosList(String indexKey, String detailKey) {
