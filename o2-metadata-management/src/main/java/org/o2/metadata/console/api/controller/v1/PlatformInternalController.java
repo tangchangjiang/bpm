@@ -4,6 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
@@ -22,7 +23,7 @@ import java.util.Map;
 @Api(tags= MetadataManagementAutoConfiguration.PLATFORM)
 @RestController("platformInternalController.v1")
 @RequestMapping("/v1/{organizationId}/platform-internal")
-public class PlatformInternalController{
+public class PlatformInternalController extends BaseController {
 
     private final PlatformService platformService;
 
@@ -36,6 +37,7 @@ public class PlatformInternalController{
     public ResponseEntity<Map<String, PlatformCO>> getPlatformInfMappings(@PathVariable(value = "organizationId") Long organizationId,
                                                                           @RequestBody PlatformQueryInnerDTO queryInnerDTO) {
         queryInnerDTO.setTenantId(organizationId);
+        validObject(queryInnerDTO);
         return Results.success(platformService.selectCondition(queryInnerDTO));
     }
 }
