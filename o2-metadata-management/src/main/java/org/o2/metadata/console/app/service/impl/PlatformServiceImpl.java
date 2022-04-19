@@ -8,6 +8,7 @@ import org.o2.ehcache.util.CollectionCacheHelper;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.app.service.PlatformService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PlatformConstants;
 import org.o2.metadata.console.infra.convertor.PlatformConverter;
 import org.o2.metadata.console.infra.entity.Platform;
@@ -71,7 +72,7 @@ public class PlatformServiceImpl implements PlatformService {
     @Override
     public Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
         Map<String, PlatformCO> map = new HashMap<>(16);
-        Map<String, List<PlatformInfoMapping>> result = CollectionCacheHelper.getCache(PlatformConstants.PlatformMappingCacheName.PLATFORM_CACHE_MAPPING_NAME,
+        Map<String, List<PlatformInfoMapping>> result = CollectionCacheHelper.getCache(MetadataConstants.MappingCacheName.METADATA_CACHE_NAME,
                 String.format(PlatformConstants.CacheKeyPrefix.PLATFORM_CACHE_MAPPING_KEY_PREFIX,queryInnerDTO.getTenantId(),queryInnerDTO.getInfTypeCode()),
                          queryInnerDTO.getPlatformCodes(),k->{
                          queryInnerDTO.setPlatformCodes(new ArrayList<>(k));
