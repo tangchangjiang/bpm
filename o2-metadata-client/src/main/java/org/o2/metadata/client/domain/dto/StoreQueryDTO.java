@@ -3,8 +3,6 @@ package org.o2.metadata.client.domain.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 /**
  * 门店查询
  *
@@ -12,12 +10,6 @@ import java.math.BigDecimal;
  */
 @Data
 public class StoreQueryDTO {
-
-    @ApiModelProperty("经度")
-    private BigDecimal longitude;
-
-    @ApiModelProperty("纬度")
-    private BigDecimal latitude;
 
     @ApiModelProperty(value = "省")
     private String regionCode;
