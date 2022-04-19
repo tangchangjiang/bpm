@@ -27,18 +27,19 @@ public class PosConverter {
         posStoreInfoCO.setPosTypeCode(pos.getPosTypeCode());
         posStoreInfoCO.setBusinessTypeCode(pos.getBusinessTypeCode());
         posStoreInfoCO.setBusinessTime(pos.getBusinessTime());
-        posStoreInfoCO.setCityCode(pos.getCityCode());
         posStoreInfoCO.setRegionCode(pos.getRegionCode());
         posStoreInfoCO.setCityCode(pos.getCityCode());
+        posStoreInfoCO.setDistrictCode(pos.getDistrictCode());
         posStoreInfoCO.setRegionName(pos.getRegionName());
         posStoreInfoCO.setCityName(pos.getCityName());
         posStoreInfoCO.setDistrictName(pos.getDistrictName());
-        posStoreInfoCO.setDistrictCode(pos.getDistrictCode());
         posStoreInfoCO.setStreetName(pos.getStreetName());
         posStoreInfoCO.setLongitude(pos.getLongitude());
         posStoreInfoCO.setLatitude(pos.getLatitude());
         posStoreInfoCO.setPhoneNumber(pos.getPhoneNumber());
         posStoreInfoCO.setPickedUpFlag(pos.getPickedUpFlag());
+        posStoreInfoCO.setWarehouseCode(pos.getWarehouseCode());
+        posStoreInfoCO.setPickUpQuantity(pos.getPickUpQuantity());
         return posStoreInfoCO;
     }
 
