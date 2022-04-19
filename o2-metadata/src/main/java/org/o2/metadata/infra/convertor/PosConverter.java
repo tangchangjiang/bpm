@@ -1,6 +1,7 @@
 package org.o2.metadata.infra.convertor;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.o2.metadata.api.co.PosPickUpInfoCO;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.infra.entity.Pos;
 
@@ -52,5 +53,24 @@ public class PosConverter {
             posStoreInfoCOList.add(doToCoObject(pos));
         }
         return posStoreInfoCOList;
+    }
+
+    public static PosPickUpInfoCO doToPickUpInfoCoObject(Pos pos) {
+        if (pos == null) {
+            return null;
+        }
+        PosPickUpInfoCO posPickUpInfoCO = new PosPickUpInfoCO();
+        posPickUpInfoCO.setPosCode(pos.getPosCode());
+        posPickUpInfoCO.setPosName(pos.getPosName());
+        posPickUpInfoCO.setBusinessTime(pos.getBusinessTime());
+        posPickUpInfoCO.setRegionCode(pos.getRegionCode());
+        posPickUpInfoCO.setCityCode(pos.getCityCode());
+        posPickUpInfoCO.setDistrictCode(pos.getDistrictCode());
+        posPickUpInfoCO.setRegionName(pos.getRegionName());
+        posPickUpInfoCO.setCityName(pos.getCityName());
+        posPickUpInfoCO.setDistrictName(pos.getDistrictName());
+        posPickUpInfoCO.setStreetName(pos.getStreetName());
+        posPickUpInfoCO.setPhoneNumber(pos.getPhoneNumber());
+        return posPickUpInfoCO;
     }
 }
