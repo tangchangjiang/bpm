@@ -13,4 +13,11 @@ public interface PlatformConstants {
         String ERROR_PLATFORM_CODE_UPDATE ="o2md.error.platform_code.is.forbidden.update";
     }
 
+    interface  PlatformMappingCacheName {
+         String PLATFORM_CACHE_MAPPING_NAME = "O2_PLATFORM_MAPPING";
+    }
+    interface CacheKeyPrefix {
+        String PLATFORM_CACHE_MAPPING_KEY_PREFIX = "PLATFORM_MAPPING_%S_%S";
+
+    }
 }
