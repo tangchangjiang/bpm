@@ -39,13 +39,20 @@ public class PosServiceImpl implements PosService {
         if (ObjectUtils.isEmpty(pos)) {
             return null;
         }
-        PosPickUpInfoCO posPickUpInfoCO = new PosPickUpInfoCO();
-        posPickUpInfoCO.setPosCode(pos.getPosCode());
-        posPickUpInfoCO.setPosName(pos.getPosName());
-        posPickUpInfoCO.setBusinessTime(pos.getBusinessTime());
-        posPickUpInfoCO.setStreetName(pos.getStreetName());
-        posPickUpInfoCO.setPhoneNumber(pos.getPhoneNumber());
-        return posPickUpInfoCO;
+        // 查询地区值集
+        Map<String,String> map = new HashMap<>();
+        RegionQueryLovInnerDTO regionQueryLovInnerDTO = new RegionQueryLovInnerDTO();
+        regionQueryLovInnerDTO.setTenantId(tenantId);
+        List<Region> regionList = lovAdapterService.queryRegion(tenantId, regionQueryLovInnerDTO);
+        if (!regionList.isEmpty()) {
+            for (Region region : regionList) {
+                map.put(region.getRegionCode(), region.getRegionName());
+            }
+            pos.setRegionName(map.get(pos.getRegionCode()));
+            pos.setCityName(map.get(pos.getCityCode()));
+            pos.setDistrictName(map.get(pos.getDistrictCode()));
+        }
+        return PosConverter.doToPickUpInfoCoObject(pos);
     }
 
     @Override
