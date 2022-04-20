@@ -23,6 +23,5 @@ public class PlatformQueryInnerDTO {
     private Long tenantId;
 
     @ApiModelProperty(value = "平台类型编码")
-    @NotNull
     private String infTypeCode;
 }
