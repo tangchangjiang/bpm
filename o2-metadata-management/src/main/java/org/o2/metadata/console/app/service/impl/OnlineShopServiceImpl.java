@@ -126,11 +126,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopCode(OnlineShop onlineShop) {
-        // 以租户id+平台编码+网店编码+平台网店编码为唯一
+        // 租户id+平台编码+平台网店编码
         Sqls sqls = Sqls.custom();
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
-        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShop.getOnlineShopCode());
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE,onlineShop.getPlatformShopCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
@@ -143,11 +142,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopName(OnlineShop onlineShop) {
-        // 租户id+平台编码+网店编码+网店名称
+        // 租户id+平台编码+网店名称
         Sqls sqls = Sqls.custom();
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
-        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE,onlineShop.getOnlineShopCode());
         sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
