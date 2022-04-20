@@ -32,7 +32,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         Map<String,String> map = redisCacheClient.<String,String>opsForHash().entries(key);
         Set<String> keys = map.keySet();
-        if(Objects.isNull(keys)){
+        if(keys.isEmpty()){
             return new OnlineShop();
         }
         for(String onlineShopCodekey:keys) {
