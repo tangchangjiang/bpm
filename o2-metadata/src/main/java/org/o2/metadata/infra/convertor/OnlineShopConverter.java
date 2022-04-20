@@ -17,7 +17,7 @@ public class OnlineShopConverter {
      * @param onlineShop 网店
      * @return  Vo
      */
-    public static OnlineShopCO poToVoObject(OnlineShop onlineShop) {
+    public static OnlineShopCO poToCoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
@@ -28,6 +28,14 @@ public class OnlineShopConverter {
         co.setTenantId(onlineShop.getTenantId());
         co.setPlatformCode(onlineShop.getPlatformCode());
         co.setPickedUpFlag(onlineShop.getPickedUpFlag());
+        co.setCatalogCode(onlineShop.getCatalogCode());
+        co.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
+        co.setEnableSplitFlag(onlineShop.getEnableSplitFlag());
+        co.setExchangedFlag(onlineShop.getExchangedFlag());
+        co.setIsDefault(onlineShop.getIsDefault());
+        co.setPlatformShopCode(onlineShop.getPlatformShopCode());
+        co.setReturnedFlag(onlineShop.getReturnedFlag());
+        co.setSourcedFlag(onlineShop.getSourcedFlag());
         return co;
     }
 
