@@ -6,7 +6,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
-import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
@@ -27,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static org.o2.metadata.console.infra.entity.OnlineShop.FIELD_PLATFORM_CODE;
 
 /**
  * 网店应用服务默认实现
@@ -125,9 +126,12 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopCode(OnlineShop onlineShop) {
+        // 以租户id+平台编码+网店编码+平台网店编码为唯一
         Sqls sqls = Sqls.custom();
-        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShop.getOnlineShopCode());
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
+        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShop.getOnlineShopCode());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE,onlineShop.getPlatformShopCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
             throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
@@ -139,10 +143,12 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopName(OnlineShop onlineShop) {
+        // 租户id+平台编码+网店编码+网店名称
         Sqls sqls = Sqls.custom();
-        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
+        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE,onlineShop.getOnlineShopCode());
+        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
             throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE);

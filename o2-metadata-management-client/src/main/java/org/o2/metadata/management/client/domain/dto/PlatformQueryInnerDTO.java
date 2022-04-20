@@ -3,6 +3,7 @@ package org.o2.metadata.management.client.domain.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -13,12 +14,14 @@ import java.util.List;
 @Data
 public class PlatformQueryInnerDTO {
 
-    @ApiModelProperty(value = "平台编码")
+    @ApiModelProperty(value = "平台编码，必输")
+    @NotNull
     private List<String> platformCodes;
 
-    @ApiModelProperty(value = "租户ID")
+    @ApiModelProperty(value = "租户ID，必输")
+    @NotNull
     private Long tenantId;
 
-    @ApiModelProperty(value = "平台类型编码")
+    @ApiModelProperty(value = "平台类型编码，必输")
     private String infTypeCode;
 }
