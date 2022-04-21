@@ -73,7 +73,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             validNameUnique(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
-        warehouseRepository.batchInsert(warehouses);
+        warehouseRepository.batchInsertSelective(warehouses);
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
         // 更新服务点门店Redis
         List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
