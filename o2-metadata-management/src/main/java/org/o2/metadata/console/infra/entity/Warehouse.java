@@ -135,7 +135,6 @@ public class Warehouse extends AuditDomain {
     private Integer activeFlag;
 
     @ApiModelProperty(value = "仓库到店退标示")
-    @NotNull
     private Integer storeReturnFlag;
 
     //
