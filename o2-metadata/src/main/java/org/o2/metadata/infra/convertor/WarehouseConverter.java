@@ -80,6 +80,7 @@ public class WarehouseConverter {
         co.setWarehouseTypeMeaning(warehouse.getWarehouseTypeMeaning());
         co.setExpressLimitValue(warehouse.getExpressLimitValue());
         co.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         return co;
     }
     /**
@@ -103,13 +104,13 @@ public class WarehouseConverter {
      * @return  list
      */
     public static List<WarehouseCO> doToCoListObjects(List<WarehouseDO> warehouses) {
-        List<WarehouseCO> warehouseVOList = new ArrayList<>();
+        List<WarehouseCO> warehouseCOList = new ArrayList<>();
         if (warehouses == null) {
-            return warehouseVOList;
+            return warehouseCOList;
         }
         for (WarehouseDO warehouse : warehouses) {
-            warehouseVOList.add(doToCoObject(warehouse));
+            warehouseCOList.add(doToCoObject(warehouse));
         }
-        return warehouseVOList;
+        return warehouseCOList;
     }
 }
