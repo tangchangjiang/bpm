@@ -15,19 +15,11 @@ import java.util.Date;
 @Data
 public class WarehouseCacheBO {
 
-
-
-
-
     @ApiModelProperty(value = "仓库编码")
-
     private String warehouseCode;
 
     @ApiModelProperty(value = "仓库名称")
-
     private String warehouseName;
-
-
 
     @ApiModelProperty(value = "仓库类型,值集: O2MD.WAREHOUSE_TYPE （良品仓/不良品仓/退货仓）")
     private String warehouseTypeCode;
@@ -58,9 +50,14 @@ public class WarehouseCacheBO {
     @ApiModelProperty(value = "生效状态")
     private Integer activeFlag;
 
+    @ApiModelProperty(value = "仓库到店退标示")
+    private Integer storeReturnFlag;
+
     private String posCode;
     private String expressLimitValue;
     private String pickUpLimitValue;
     private String warehouseStatusCode;
+
+
 
 }

@@ -134,6 +134,10 @@ public class Warehouse extends AuditDomain {
     @NotNull
     private Integer activeFlag;
 
+    @ApiModelProperty(value = "仓库到店退标示")
+    @NotNull
+    private Integer storeReturnFlag;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
