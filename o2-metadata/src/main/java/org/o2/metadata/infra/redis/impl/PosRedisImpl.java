@@ -39,11 +39,13 @@ public class PosRedisImpl implements PosRedis {
 
     @Override
     public List<Pos> getStoreInfoList(StoreQueryDTO storeQueryDTO, Long tenantId) {
-        if (ObjectUtils.isEmpty(storeQueryDTO)) {
-            return null;
-        }
         String indexKey;
         String detailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
+        if (ObjectUtils.isEmpty(storeQueryDTO)) {
+            indexKey = PosConstants.RedisKey.getPosAllStoreKey(tenantId);
+            return searchPosList(indexKey, detailKey);
+        }
+
         if (StringUtils.isNotBlank(storeQueryDTO.getRegionCode()) && StringUtils.isNotBlank(storeQueryDTO.getCityCode())) {
             if (StringUtils.isNotBlank(storeQueryDTO.getDistrictCode())) {
                 indexKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, storeQueryDTO.getRegionCode(),
