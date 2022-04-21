@@ -89,7 +89,8 @@
         w.CREATED_BY,
         w.LAST_UPDATED_BY,
         w.LAST_UPDATE_DATE,
-        w.tenant_id
+        w.tenant_id,
+        w.store_return_flag
         FROM
         o2md_warehouse w
         left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
@@ -153,7 +154,8 @@
         w.inv_organization_code,
         p.pos_code,
         w.tenant_id,
-        w.active_flag
+        w.active_flag,
+        w.store_return_flag
         FROM
         o2md_warehouse w
         JOIN o2md_pos p ON p.pos_id = w.pos_id  and p.tenant_id = #{tenantId}
@@ -216,7 +218,8 @@
         p.pos_code,
         w.tenant_id,
         wtl.warehouse_name,
-        w.active_flag
+        w.active_flag,
+        w.store_return_flag
         FROM
         o2md_warehouse w
         JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
@@ -257,6 +260,7 @@
         w.tenant_id,
         wtl.warehouse_name,
         w.active_flag,
+        w.store_return_flag,
         p.pos_name
         FROM
         o2md_warehouse w
@@ -412,7 +416,8 @@
         w.actived_date_to,
         w.inv_organization_code,
         w.tenant_id,
-        w.active_flag
+        w.active_flag,
+        w.store_return_flag
          FROM
         o2md_warehouse w
         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang} and wtl.tenant_id = #{tenantId}

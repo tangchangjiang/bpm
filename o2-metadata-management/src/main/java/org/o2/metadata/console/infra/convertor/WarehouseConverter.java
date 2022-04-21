@@ -63,28 +63,29 @@ public class WarehouseConverter {
         if (warehouse == null) {
             return null;
         }
-        WarehouseCO warehouseVO = new WarehouseCO();
-        warehouseVO.setWarehouseId(warehouse.getWarehouseId());
-        warehouseVO.setPosId(warehouse.getPosId());
-        warehouseVO.setWarehouseCode(warehouse.getWarehouseCode());
-        warehouseVO.setWarehouseName(warehouse.getWarehouseName());
-        warehouseVO.setWarehouseStatusCode(warehouse.getWarehouseStatusCode());
-        warehouseVO.setWarehouseTypeCode(warehouse.getWarehouseTypeCode());
-        warehouseVO.setPickUpQuantity(warehouse.getPickUpQuantity());
-        warehouseVO.setExpressedQuantity(warehouse.getExpressedQuantity());
-        warehouseVO.setPickedUpFlag(warehouse.getPickedUpFlag());
-        warehouseVO.setExpressedFlag(warehouse.getExpressedFlag());
-        warehouseVO.setScore(warehouse.getScore());
-        warehouseVO.setActivedDateFrom(warehouse.getActivedDateFrom());
-        warehouseVO.setActivedDateTo(warehouse.getActivedDateTo());
-        warehouseVO.setInvOrganizationCode(warehouse.getInvOrganizationCode());
-        warehouseVO.setTenantId(warehouse.getTenantId());
-        warehouseVO.setActiveFlag(warehouse.getActiveFlag());
-        warehouseVO.setPosCode(warehouse.getPosCode());
-        warehouseVO.setPosName(warehouse.getPosName());
-         warehouseVO.setExpressLimitValue(warehouse.getExpressLimitValue());
-        warehouseVO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
-        return warehouseVO;
+        WarehouseCO co = new WarehouseCO();
+        co.setWarehouseId(warehouse.getWarehouseId());
+        co.setPosId(warehouse.getPosId());
+        co.setWarehouseCode(warehouse.getWarehouseCode());
+        co.setWarehouseName(warehouse.getWarehouseName());
+        co.setWarehouseStatusCode(warehouse.getWarehouseStatusCode());
+        co.setWarehouseTypeCode(warehouse.getWarehouseTypeCode());
+        co.setPickUpQuantity(warehouse.getPickUpQuantity());
+        co.setExpressedQuantity(warehouse.getExpressedQuantity());
+        co.setPickedUpFlag(warehouse.getPickedUpFlag());
+        co.setExpressedFlag(warehouse.getExpressedFlag());
+        co.setScore(warehouse.getScore());
+        co.setActivedDateFrom(warehouse.getActivedDateFrom());
+        co.setActivedDateTo(warehouse.getActivedDateTo());
+        co.setInvOrganizationCode(warehouse.getInvOrganizationCode());
+        co.setTenantId(warehouse.getTenantId());
+        co.setActiveFlag(warehouse.getActiveFlag());
+        co.setPosCode(warehouse.getPosCode());
+        co.setPosName(warehouse.getPosName());
+        co.setExpressLimitValue(warehouse.getExpressLimitValue());
+        co.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
+        return co;
     }
     private static WarehouseVO poToVoObject(Warehouse warehouse) {
 
@@ -212,6 +213,7 @@ public class WarehouseConverter {
         co.setPosName(warehouse.getPosName());
         co.setExpressLimitValue(warehouse.getExpressLimitValue());
         co.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         return co;
     }
 }
