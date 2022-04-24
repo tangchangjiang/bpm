@@ -62,6 +62,9 @@ public class WarehouseDO  {
     @ApiModelProperty(value = "生效状态")
     private Integer activeFlag;
 
+    @ApiModelProperty(value = "仓库到店退标示")
+    private Integer storeReturnFlag;
+
 
     private String posCode;
 
@@ -74,6 +77,14 @@ public class WarehouseDO  {
     private String expressLimitValue;
 
     private String pickUpLimitValue;
+
+    public Integer getStoreReturnFlag() {
+        return storeReturnFlag;
+    }
+
+    public void setStoreReturnFlag(Integer storeReturnFlag) {
+        this.storeReturnFlag = storeReturnFlag;
+    }
 
     public Long getWarehouseId() {
         return warehouseId;
