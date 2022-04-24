@@ -49,6 +49,7 @@ public class WarehouseConverter {
         warehouseDO.setWarehouseTypeMeaning(warehouse.getWarehouseTypeMeaning());
         warehouseDO.setExpressLimitValue(warehouse.getExpressLimitValue());
         warehouseDO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
+        warehouseDO.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         return warehouseDO;
     }
 
