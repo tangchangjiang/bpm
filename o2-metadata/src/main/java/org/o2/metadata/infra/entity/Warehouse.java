@@ -69,6 +69,9 @@ public class Warehouse  {
     @ApiModelProperty(value = "生效状态")
     private Integer activeFlag;
 
+    @ApiModelProperty(value = "仓库到店退标示")
+    private Integer storeReturnFlag;
+
     private String posCode;
 
     private String posName;
