@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
@@ -46,6 +47,10 @@ public class PosRedisImpl implements PosRedis {
             return searchPosList(indexKey, detailKey);
         }
 
+        if (CollectionUtils.isNotEmpty(storeQueryDTO.getPosCodes())) {
+            return searchPosByCodes(storeQueryDTO.getPosCodes(), tenantId);
+        }
+
         if (StringUtils.isNotBlank(storeQueryDTO.getRegionCode()) && StringUtils.isNotBlank(storeQueryDTO.getCityCode())) {
             if (StringUtils.isNotBlank(storeQueryDTO.getDistrictCode())) {
                 indexKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, storeQueryDTO.getRegionCode(),
@@ -76,6 +81,21 @@ public class PosRedisImpl implements PosRedis {
         List<Pos> posList = new ArrayList<>();
         for (String str : posListStr) {
             posList.add(JsonHelper.stringToObject(str, Pos.class));
+        }
+        return posList;
+    }
+
+    private List<Pos> searchPosByCodes(List<String> posCodes, Long tenantId) {
+        List<Object> objectList = new ArrayList<>(posCodes);
+        String posDetailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
+        List<Object> objects = redisCacheClient.opsForHash().multiGet(posDetailKey, objectList);
+        if (CollectionUtils.isEmpty(objects)) {
+            return null;
+        }
+        List<Pos> posList = new ArrayList<>();
+        for (Object obj : objects) {
+            String posStr = String.valueOf(obj);
+            posList.add(JsonHelper.stringToObject(posStr, Pos.class));
         }
         return posList;
     }
