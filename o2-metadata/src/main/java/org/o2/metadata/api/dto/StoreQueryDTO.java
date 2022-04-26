@@ -3,6 +3,8 @@ package org.o2.metadata.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 门店查询
  *
@@ -19,4 +21,7 @@ public class StoreQueryDTO {
 
     @ApiModelProperty(value = "区")
     private String districtCode;
+
+    @ApiModelProperty(value = "服务点编码")
+    private List<String> posCodes;
 }
