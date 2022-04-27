@@ -20,10 +20,7 @@ import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -150,5 +147,21 @@ public class WarehouseInternalController extends BaseController {
                                                           @RequestParam(value = "warehouseCode", required = true) String warehouseCode) {
         warehouseService.resetWarehousePickUpLimit(warehouseCode, organizationId);
         return Results.success();
+    }
+
+    @ApiOperation(value = "查询仓库(内部调用)")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/list-warehouse")
+    public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestParam(value = "posCodes") List<String> posCodes) {
+        Map<String, List<WarehouseCO>> map = new HashMap<>(16);
+        List<WarehouseCO> cos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
+        if (cos.isEmpty()) {
+            return Results.success(map);
+        }
+        for (WarehouseCO co : cos) {
+            map.computeIfAbsent(co.getPosCode(),key -> new ArrayList<>()).add(co);
+        }
+        return Results.success(map);
     }
 }
