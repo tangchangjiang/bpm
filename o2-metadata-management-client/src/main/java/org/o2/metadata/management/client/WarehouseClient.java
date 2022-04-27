@@ -107,8 +107,8 @@ public class WarehouseClient {
      * @param posCodes 入参
      * @param tenantId 租户ID
      */
-    public Map<String, WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(posCodes, tenantId), new TypeReference<Map<String, WarehouseCO>>() {
+    public Map<String, List<WarehouseCO>> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(posCodes, tenantId), new TypeReference<Map<String, List<WarehouseCO>>>() {
         });
     }
 }
