@@ -100,4 +100,15 @@ public class WarehouseClient {
         return ResponseUtils.getResponse(warehouseRemoteService.expressLimitWarehouseCollection(organizationId), new TypeReference<Set<String>>() {
         });
     }
+
+    /**
+     * 查询仓库
+     *
+     * @param posCodes 入参
+     * @param tenantId 租户ID
+     */
+    public Map<String, WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(posCodes, tenantId), new TypeReference<Map<String, WarehouseCO>>() {
+        });
+    }
 }

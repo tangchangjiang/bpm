@@ -9,6 +9,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * 仓库
@@ -196,7 +198,6 @@ public interface WarehouseRemoteService {
      * 重置仓库快递配送接单量值
      *
      * @param organizationId
-     * @param warehouseCode
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/allDeliveryWarehouse"})
@@ -234,4 +235,13 @@ public interface WarehouseRemoteService {
     @PostMapping("/{organizationId}/warehouse-internal/page")
     ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                           @RequestBody WarehousePageQueryInnerDTO innerDTO);
+
+    /**
+     * 通过服务点查询仓库
+     * @param posCodes 服务点编码
+     * @param organizationId 租户ID
+     * @return 仓库
+     */
+    @PostMapping("/{organizationId}/warehouse-internal/list-warehouse")
+    ResponseEntity<String> listWarehousesByPosCode(@RequestParam(value = "posCodes", required = true) List<String> posCodes, @PathVariable @ApiParam(value = "租户ID", required = true) final  Long organizationId);
 }

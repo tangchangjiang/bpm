@@ -106,4 +106,9 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
         }
         return relPosVOS;
     }
+
+    @Override
+    public List<Warehouse> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return warehouseMapper.listWarehousesByPosCode(posCodes,tenantId);
+    }
 }

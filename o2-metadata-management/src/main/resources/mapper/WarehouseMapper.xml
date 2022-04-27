@@ -521,4 +521,45 @@
             </choose>
         </where>
     </select>
+    <select id="listWarehousesByPosCode" resultType="org.o2.metadata.console.infra.entity.Warehouse">
+        SELECT
+        w.warehouse_id,
+        w.warehouse_code,
+        w.warehouse_type_code,
+        w.warehouse_status_code,
+        w.picked_up_flag,
+        w.pick_up_quantity,
+        w.expressed_flag,
+        w.expressed_quantity,
+        w.score,
+        w.actived_date_from,
+        w.actived_date_to,
+        w.inv_organization_code,
+        p.pos_code,
+        w.tenant_id,
+        w.active_flag,
+        w.store_return_flag,
+        p.pos_name
+        FROM
+        o2md_warehouse w
+        left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and w.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    and 1 = 0
+                </otherwise>
+            </choose>
+
+            <if test="posCodes != null and posCodes.size() > 0 ">
+                and p.pos_code IN
+                <foreach collection="posCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+
+        </where>
+    </select>
 </mapper>

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * 仓库
  *
@@ -128,6 +130,12 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     @Override
     public ResponseEntity<String> pageWarehouses(Long organizationId, WarehousePageQueryInnerDTO innerDTO) {
         log.error("Error pageWarehouses, params[tenantId = {}, WarehousePageQueryInnerDTO = {}]", organizationId, innerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listWarehousesByPosCode(List<String> posCodes, Long organizationId) {
+        log.error("Error pageWarehouses, params[tenantId = {}, WarehousePageQueryInnerDTO = {}]", organizationId, posCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
