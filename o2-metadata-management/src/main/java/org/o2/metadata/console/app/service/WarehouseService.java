@@ -167,4 +167,12 @@ public interface WarehouseService {
      * @return 仓库
      */
     List<Warehouse> selectByCondition(Warehouse query);
+
+    /**
+     * 通过服务点批量查询仓库
+     * @param posCodes 服务点编码
+     * @param tenantId 租户id
+     * @return 仓库
+     */
+    List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId);
 }

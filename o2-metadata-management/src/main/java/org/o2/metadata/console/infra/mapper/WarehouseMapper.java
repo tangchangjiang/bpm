@@ -118,4 +118,12 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @return 结果
      */
     List<WarehouseRelPosVO> listWarehouseRelPos(WarehouseRelPosDTO warehouseRelPosDTO);
+
+    /**
+     * 服务点查询仓库
+     * @param posCodes 服务点编码
+     * @param tenantId 租户id
+     * @return 仓库
+     */
+    List<Warehouse> listWarehousesByPosCode(List<String> posCodes, Long tenantId);
 }

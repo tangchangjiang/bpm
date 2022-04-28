@@ -330,4 +330,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.listWarehouseByCondition(query);
     }
 
+    @Override
+    public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehousesByPosCode(posCodes, tenantId));
+    }
+
 }
