@@ -54,25 +54,6 @@
             </choose>
         </where>
     </select>
-    <select id="getSysSetByParam" resultType="java.lang.String">
-        SELECT ospv.param_value
-        FROM
-        o2md_system_param_value ospv
-        JOIN o2md_system_parameter osp ON ospv.param_id = osp.param_id osp.tenant_id = #{tenantId}
-        <where>
-            <if test="paramCode != null and paramCode != ''">
-                AND osp.param_code = #{paramCode}
-            </if>
-            <choose>
-                <when test="tenantId != null">
-                    AND ospv.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND ospv.tenant_id = 0
-                </otherwise>
-            </choose>
-        </where>
-    </select>
 
     <select id="getSysSetWithParams" resultType="org.o2.metadata.console.infra.entity.SystemParamValue">
         SELECT

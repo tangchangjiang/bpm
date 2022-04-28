@@ -30,14 +30,6 @@ public interface SystemParamValueService {
      */
     List<String> getSysListByParam(String paramCode, Long tenantId);
 
-    /**
-     * 获取参数类型为set的参数值
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return Set<String>
-     */
-    Set<String> getSysSetByParam(String paramCode, Long tenantId);
 
     /**
      * 新建参数值
