@@ -66,7 +66,7 @@ public class WarehouseMetadataInternalController {
 
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/list-pos")
+    @PostMapping("/list-pos")
     public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                    @RequestParam("posCodes") List<String> posCodes) {
         Map<String, List<WarehouseCO>> map = Maps.newHashMapWithExpectedSize(posCodes.size());
