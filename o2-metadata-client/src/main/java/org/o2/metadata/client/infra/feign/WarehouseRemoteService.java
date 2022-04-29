@@ -89,7 +89,7 @@ public interface WarehouseRemoteService {
      * @param posCodes 服务点
      * @return 仓库
      */
-    @GetMapping("/{organizationId}/warehouse-internal/list-pos")
+    @PostMapping("/{organizationId}/warehouse-internal/list-pos")
     ResponseEntity<String> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(value = "posCodes") List<String> posCodes);
 }
