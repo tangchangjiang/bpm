@@ -2,6 +2,7 @@ package org.o2.metadata.infra.convertor;
 
 import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
+import org.o2.metadata.infra.entity.Pos;
 import org.o2.metadata.infra.entity.Warehouse;
 
 import java.util.ArrayList;
@@ -111,6 +112,26 @@ public class WarehouseConverter {
         }
         for (WarehouseDO warehouse : warehouses) {
             warehouseCOList.add(doToCoObject(warehouse));
+        }
+        return warehouseCOList;
+    }
+
+    /**
+     * pos 转 warehouses
+     * @param poses pos
+     * @return WarehouseCO
+     */
+    public static List<WarehouseCO> toWarehouse(List<Pos> poses) {
+        List<WarehouseCO> warehouseCOList = new ArrayList<>();
+
+        if (poses == null) {
+            return warehouseCOList;
+        }
+        for (Pos pos : poses) {
+            WarehouseCO warehouse = new WarehouseCO();
+            warehouse.setPosCode(pos.getPosCode());
+            warehouse.setWarehouseCode(pos.getWarehouseCode());
+            warehouseCOList.add(warehouse);
         }
         return warehouseCOList;
     }

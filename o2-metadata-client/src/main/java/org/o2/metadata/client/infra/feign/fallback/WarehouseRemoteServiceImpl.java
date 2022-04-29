@@ -48,5 +48,11 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> listWarehousesByPosCode(Long organizationId, List<String> posCodes) {
+        logger.error("Error listWarehousesByPosCode, params[tenantId = {}, posCodes = {}]", organizationId, posCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 
 }
