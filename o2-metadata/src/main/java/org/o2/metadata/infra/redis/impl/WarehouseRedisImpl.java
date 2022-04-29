@@ -3,7 +3,9 @@ package org.o2.metadata.infra.redis.impl;
 import org.apache.commons.collections.MapUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.infra.constants.PosConstants;
 import org.o2.metadata.infra.constants.WarehouseConstants;
+import org.o2.metadata.infra.entity.Pos;
 import org.o2.metadata.infra.entity.Warehouse;
 import org.o2.metadata.infra.entity.WarehouseLimit;
 import org.o2.metadata.infra.redis.WarehouseRedis;
@@ -59,6 +61,18 @@ public class WarehouseRedisImpl implements WarehouseRedis {
             limitMap.put(entry.getKey(), warehouseLimit);
         }
         return limitMap;
+    }
+
+    @Override
+    public List<Pos> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        List<Pos> list = new ArrayList<>(posCodes.size());
+        String key = PosConstants.RedisKey.getPosDetailKey(tenantId);
+        List<String> posStr = redisCacheClient.<String,String>opsForHash().multiGet(key,posCodes);
+        for (String jsonStr : posStr) {
+            Pos pos =  JsonHelper.stringToObject(jsonStr,Pos.class);
+            list.add(pos);
+        }
+        return list;
     }
 
 }

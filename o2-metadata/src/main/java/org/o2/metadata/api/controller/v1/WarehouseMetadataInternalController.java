@@ -14,6 +14,7 @@ import org.o2.metadata.infra.entity.WarehouseLimit;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,5 +62,21 @@ public class WarehouseMetadataInternalController {
                                                                                 @RequestParam List<String> warehouseCodes) {
         Map<String, WarehouseLimit> limitMap = warehouseService.listWarehousePickupLimit(warehouseCodes, organizationId);
         return Results.success(limitMap);
+    }
+
+    @ApiOperation(value = "查询仓库")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/list-pos")
+    public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestParam List<String> posCodes) {
+        Map<String, List<WarehouseCO>> map = Maps.newHashMapWithExpectedSize(posCodes.size());
+        List<WarehouseCO> vos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
+        if (vos.isEmpty()){
+            return Results.success(map);
+        }
+        for (WarehouseCO co : vos) {
+            map.computeIfAbsent(co.getPosCode(),key -> new ArrayList<>()).add(co);
+        }
+        return  Results.success(map);
     }
 }
