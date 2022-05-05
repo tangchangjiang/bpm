@@ -44,4 +44,14 @@ public class WarehouseClient {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<Map<String, WarehousePickupLimitCO>>(){});
     }
 
+    /**
+     * 批量查询服务点对应仓库
+     * @param posCodes 服务点
+     * @param tenantId 租户id
+     * @return 仓库
+     */
+    public Map<String, List<WarehouseCO>> listWarehousesByPosCode(List<String> posCodes, Long tenantId){
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(tenantId, posCodes), new TypeReference<Map<String, List<WarehouseCO>>>() {
+        });
+    }
 }

@@ -44,4 +44,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
     }
 
+    @Override
+    public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return WarehouseConverter.toWarehouse(warehouseRedis.listWarehousesByPosCode(posCodes,tenantId));
+    }
+
 }

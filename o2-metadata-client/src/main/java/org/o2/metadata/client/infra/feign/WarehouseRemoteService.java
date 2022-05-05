@@ -82,4 +82,14 @@ public interface WarehouseRemoteService {
     @GetMapping("/{organizationId}/warehouse-internal/limit-list")
     ResponseEntity<String> listWarehousePickupLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                     @RequestParam List<String> warehouseCodes);
+
+    /**
+     * 批量查询服务点对应仓库
+     * @param organizationId 租户id
+     * @param posCodes 服务点
+     * @return 仓库
+     */
+    @PostMapping("/{organizationId}/warehouse-internal/list-pos")
+    ResponseEntity<String> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                   @RequestParam(value = "posCodes") List<String> posCodes);
 }

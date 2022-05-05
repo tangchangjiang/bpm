@@ -35,4 +35,12 @@ public interface WarehouseService {
      * @return 已自提量
      */
     Map<String, WarehouseLimit> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId);
+
+    /**
+     * 服务点获取仓库信息
+     * @param posCodes 服务点编码
+     * @param tenantId 租户ID
+     * @return 仓库
+     */
+    List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId);
 }
