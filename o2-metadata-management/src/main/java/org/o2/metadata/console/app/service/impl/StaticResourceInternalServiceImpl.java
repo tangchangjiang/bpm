@@ -57,7 +57,6 @@ public class StaticResourceInternalServiceImpl extends BaseServiceImpl<StaticRes
     @Transactional(rollbackFor = Exception.class)
     public void saveResource(StaticResourceSaveDTO staticResourceSaveDTO) {
         final StaticResource staticResource = StaticResourceConverter.toStaticResource(staticResourceSaveDTO);
-        staticResource.setTenantId(Optional.ofNullable(staticResourceSaveDTO.getTenantId()).orElse(DetailsHelper.getUserDetails().getTenantId()));
 
         Sqls sqls=Sqls.custom()
                 .andEqualTo(StaticResource.FIELD_RESOURCE_CODE, staticResource.getResourceCode())
