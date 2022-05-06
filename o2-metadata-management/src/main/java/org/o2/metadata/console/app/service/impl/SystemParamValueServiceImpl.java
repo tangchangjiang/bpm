@@ -56,14 +56,6 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     }
 
-    @Override
-    public Set<String> getSysSetByParam(String paramCode, Long tenantId) {
-        if (SystemParameterConstants.ParamType.SET.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
-            return systemParamValueRepository.getSysSetByParam(paramCode, tenantId);
-        }
-        return new HashSet<>();
-
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

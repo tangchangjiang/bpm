@@ -123,12 +123,5 @@ public class SystemParamValueController extends BaseController {
         return Results.success(sysListByParam);
     }
 
-    @ApiOperation(value = "获取SET系统参数值")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{paramCode}/SET")
-    public ResponseEntity<Set<String>> getSysSetByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
-        Set<String> sysSetByParam = systemParamValueService.getSysSetByParam(paramCode, organizationId);
-        return Results.success(sysSetByParam);
-    }
 
 }
