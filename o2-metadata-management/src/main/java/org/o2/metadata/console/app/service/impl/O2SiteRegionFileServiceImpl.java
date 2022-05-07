@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.file.helper.O2FileHelper;
@@ -72,7 +73,12 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         dto.setCountryCode(countryCode);
 
         dto.setLang(MetadataConstants.Path.ZH_CN);
-        final List<Region> zhList = regionRepository.listRegionLov(dto, tenantId);
+        final List<Region> zhList = regionRepository.listRegionLov(dto, BaseConstants.DEFAULT_TENANT_ID);
+        if (CollectionUtils.isEmpty(zhList)) {
+            log.error("Can't find any region !");
+            return;
+        }
+
         resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId, countryCode));
 
         if (staticResourceConfig.getDifferentLangFlag()

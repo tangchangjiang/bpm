@@ -15,6 +15,7 @@ import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
+import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,15 +38,17 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final O2InventoryClient o2InventoryClient;
     private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
     private final OnlineShopRedis onlineShopRedis;
+    private final OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis;
 
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                              O2InventoryClient o2InventoryClient,
                                              OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
-                                             OnlineShopRedis onlineShopRedis) {
+                                             OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
         this.onlineShopRedis = onlineShopRedis;
+        this.onlineShopRelWarehouseRedis = onlineShopRelWarehouseRedis;
     }
 
     @Override
@@ -121,13 +125,9 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     public Map<String,List<OnlineShopRelWarehouseCO>>  listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
-
         List<String> onlineShopCodes = innerDTO.getOnlineShopCodes();
-        Map<String,List<OnlineShopRelWarehouseCO>> result = new HashMap<>(onlineShopCodes.size());
-        for (String code : onlineShopCodes){
-            result.put(code,listOnlineShopRelWarehouses(code,tenantId));
-        }
-        return result;
+        List<OnlineShopRelWarehouseCO> onlineShopRelWarehouseList =onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCodes,tenantId);
+        return onlineShopRelWarehouseList.stream().collect(Collectors.groupingBy(OnlineShopRelWarehouseCO::getOnlineShopCode));
     }
 
     @Override
