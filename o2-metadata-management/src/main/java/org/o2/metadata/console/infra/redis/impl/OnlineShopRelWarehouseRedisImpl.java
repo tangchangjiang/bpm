@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- *
  * 网店关联仓库
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
@@ -55,10 +55,10 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
     @Override
     public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(List<String> onlineShopCodes, Long tenantId) {
         List<String> keys = new ArrayList<>(onlineShopCodes.size());
-        onlineShopCodes.forEach(code->{
+        for (String code : onlineShopCodes) {
             String hashKey = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, code);
             keys.add(hashKey);
-        });
+        }
         List<Object> objects = null;
         try {
             objects = redisCacheClient.executePipelined(new RedisCallback<OnlineShopRelWarehouseCO>() {
@@ -66,15 +66,28 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
                 public OnlineShopRelWarehouseCO doInRedis(@NonNull RedisConnection redisConnection) throws DataAccessException {
                     StringRedisConnection stringConnection = (StringRedisConnection) redisConnection;
                     for (String key : keys) {
-                        stringConnection.hGetAll(key);
+                        stringConnection.hGetAll(key.getBytes());
                     }
                     return null;
                 }
             });
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("query  OnlineShopRelWarehouse redis error");
         }
-        assert objects != null;
-        return JsonHelper.stringToArray(JsonHelper.objectToString(objects), OnlineShopRelWarehouseCO.class);
+        List<OnlineShopRelWarehouseCO> coList = new ArrayList<>(4);
+        for (int i = 0; i < onlineShopCodes.size(); ++i) {
+            Object object = Objects.requireNonNull(objects).get(i);
+            Map<String, String> map = JsonHelper.byteToMap(JsonHelper.objectToByte(object));
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                OnlineShopRelWarehouseCO co = new OnlineShopRelWarehouseCO();
+                String key = String.valueOf(entry.getKey());
+                Integer value = Integer.parseInt(String.valueOf(entry.getValue()));
+                co.setActiveFlag(value);
+                co.setWarehouseCode(key);
+                co.setOnlineShopCode(onlineShopCodes.get(i));
+                coList.add(co);
+            }
+        }
+        return coList;
     }
 }
