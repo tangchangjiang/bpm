@@ -119,7 +119,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
         queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE,O2LovConstants.RegionLov.DEFAULT_DATA);
         queryParam.put(O2LovConstants.RegionLov.LANG,lang);
-
+        queryParam.put(O2LovConstants.RegionLov.TENANT_ID,String.valueOf(tenantId));
         List<Map<String, Object>> maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.AddressType.CODE, queryParam);
 
         List<Region> list = null;
