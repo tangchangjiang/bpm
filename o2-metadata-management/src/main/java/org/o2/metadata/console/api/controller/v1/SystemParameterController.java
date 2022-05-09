@@ -100,4 +100,12 @@ public class SystemParameterController extends BaseController {
         return Results.success(OperateResponse.success());
     }
 
+    @ApiOperation(value = "系统参数列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
+    @GetMapping("find")
+    public ResponseEntity<SystemParameter> findOne(SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
+        systemParameter.setTenantId(organizationId);
+        return Results.success(systemParameterRepository.selectOne(systemParameter));
+    }
 }
