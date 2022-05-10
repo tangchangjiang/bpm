@@ -80,4 +80,18 @@ public interface PosConstants {
             return String.format(POS_DETAIL_KEY, tenantId);
         }
     }
+
+    /**
+     * 服务点类型
+     */
+    interface PosTypeCode {
+        /**
+         * 仓库
+         */
+        String WAREHOUSE = "WAREHOUSE";
+        /**
+         * 门店
+         */
+        String STORE = "STORE";
+    }
 }

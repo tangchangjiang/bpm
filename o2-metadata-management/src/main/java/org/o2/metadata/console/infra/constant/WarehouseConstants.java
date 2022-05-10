@@ -13,6 +13,10 @@ public interface WarehouseConstants {
 
     interface ErrorCode {
         String ERROR_WAREHOUSE_NAME_DUPLICATE= "error.warehouse_name.duplicate";
+        /**
+         * 一个门店服务点只能关联一个仓库，不能重复
+         */
+        String ERROR_WAREHOUSE_REL_POS_NOT_UNIQUE = "error.warehouse_rel_pos_not_unique";
     }
     /**
      * 仓库类型
