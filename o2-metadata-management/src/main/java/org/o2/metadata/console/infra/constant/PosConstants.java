@@ -94,4 +94,22 @@ public interface PosConstants {
          */
         String STORE = "STORE";
     }
+
+    /**
+     * 服务点状态
+     */
+    interface PosStatusCode {
+        /**
+         * 正常
+         */
+        String NORMAL = "NORMAL";
+        /**
+         * 暂停
+         */
+        String HOLD = "HOLD";
+        /**
+         * 关闭
+         */
+        String CLOSE = "CLOSE";
+    }
 }
