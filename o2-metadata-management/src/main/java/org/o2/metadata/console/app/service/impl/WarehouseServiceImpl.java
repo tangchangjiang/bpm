@@ -143,7 +143,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         Long posId = warehouse.getPosId();
         Pos pos = posRepository.selectByPrimaryKey(posId);
         String posTypeCode = pos.getPosTypeCode();
-        if(PosConstants.PosTypeCode.STORE.equals(posTypeCode)){
+        String posStatusCode = pos.getPosStatusCode();
+        if(PosConstants.PosTypeCode.STORE.equals(posTypeCode) &&
+                !PosConstants.PosStatusCode.CLOSE.equals(posStatusCode)){
             List<Warehouse> query = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                             .andWhere(Sqls.custom()
                             .andEqualTo(Warehouse.FIELD_TENANT_ID,warehouse.getTenantId())
