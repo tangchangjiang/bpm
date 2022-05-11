@@ -45,17 +45,16 @@ public class WarehouseRedisImpl implements WarehouseRedis {
 
     @Override
     public Map<String, WarehouseLimit> listWarehouseLimit(List<String> warehouseCodes, Long tenantId) {
-        List<WarehouseLimit> list = new ArrayList<>(warehouseCodes.size());
+        Map<String, WarehouseLimit> limitMap = new HashMap<>();
         String limitKey = WarehouseConstants.WarehouseCache.warehouseLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_COLLECTION, tenantId);
         Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(limitKey);
         if (MapUtils.isEmpty(map)) {
-            return null;
+            return limitMap;
         }
         Map<String, String> warehouseMap = map.entrySet().stream().filter(m -> warehouseCodes.contains(m.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         if (MapUtils.isEmpty(warehouseMap)) {
-            return null;
+            return limitMap;
         }
-        Map<String, WarehouseLimit> limitMap = new HashMap<>();
         for(Map.Entry<String, String> entry : warehouseMap.entrySet()) {
             WarehouseLimit warehouseLimit = JsonHelper.stringToObject(entry.getValue(), WarehouseLimit.class);
             limitMap.put(entry.getKey(), warehouseLimit);

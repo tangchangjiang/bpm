@@ -5,7 +5,6 @@ import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
-import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
 

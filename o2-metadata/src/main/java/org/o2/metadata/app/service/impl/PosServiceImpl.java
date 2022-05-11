@@ -14,6 +14,7 @@ import org.o2.metadata.infra.entity.Region;
 import org.o2.metadata.infra.redis.PosRedis;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,9 @@ public class PosServiceImpl implements PosService {
     @Override
     public List<PosStoreInfoCO> getStoreInfoList(StoreQueryDTO storeQueryDTO, Long tenantId) {
         List<Pos> posInfoList = posRedis.getStoreInfoList(storeQueryDTO, tenantId);
+        List<PosStoreInfoCO> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(posInfoList)) {
-            return null;
+            return result;
         }
         // 查询地区值集
         Map<String,String> map = new HashMap<>();

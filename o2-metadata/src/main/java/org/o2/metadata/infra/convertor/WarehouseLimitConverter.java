@@ -11,7 +11,9 @@ import java.util.List;
  * @author chao.yang05@hand-china.com 2022/4/18
  */
 public class WarehouseLimitConverter {
-    private WarehouseLimitConverter() {};
+    private WarehouseLimitConverter() {
+        // 转换类，不需要创建对象
+    }
 
     /**
      * do 转 co

@@ -10,7 +10,6 @@ import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
-import org.o2.metadata.console.infra.entity.Carrier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

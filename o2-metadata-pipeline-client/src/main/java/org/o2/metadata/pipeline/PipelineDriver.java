@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PipelineDriver {
 
-
     public static <T extends PipelineExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
         final PipelineVO pipeline = getPipelineDetail(tenantId, pipelineCode);
         start(pipeline, pipelineNodeParams);
@@ -103,8 +102,8 @@ public class PipelineDriver {
 
         PipelineNodeVO startNode = null;
         final Set<String> allNodeAction = pipeline.getAllNodeAction();
-        for (Map.Entry<String, PipelineNodeVO> var : pipeline.getPipelineNodes().entrySet()) {
-            final PipelineNodeVO pipelineNode = var.getValue();
+        for (Map.Entry<String, PipelineNodeVO> pipelineNodeVOEntry : pipeline.getPipelineNodes().entrySet()) {
+            final PipelineNodeVO pipelineNode = pipelineNodeVOEntry.getValue();
             if (pipeline.getStartBeanId().equalsIgnoreCase(pipelineNode.getCurBeanId())) {
                 startNode = pipelineNode;
             }

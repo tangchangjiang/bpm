@@ -15,7 +15,9 @@ import java.util.List;
  */
 public class PosConverter {
 
-    private PosConverter() {};
+    private PosConverter() {
+        // 转换类，不需要创建对象
+    }
 
     public static PosStoreInfoCO doToCoObject(Pos pos) {
         if (pos == null) {
@@ -47,7 +49,7 @@ public class PosConverter {
     public static List<PosStoreInfoCO> doToCoListObjects(List<Pos> posList) {
         List<PosStoreInfoCO> posStoreInfoCOList = new ArrayList<>();
         if (CollectionUtils.isEmpty(posList)) {
-            return null;
+            return posStoreInfoCOList;
         }
         for (Pos pos : posList) {
             posStoreInfoCOList.add(doToCoObject(pos));

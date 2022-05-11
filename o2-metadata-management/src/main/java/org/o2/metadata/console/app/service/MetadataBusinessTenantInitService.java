@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.initialize.domain.context.TenantInitContext;
 
-import java.util.List;
 /**
  * 多租户业务数据初始化Service
  *

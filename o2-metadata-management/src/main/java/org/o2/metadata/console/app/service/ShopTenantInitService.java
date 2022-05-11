@@ -1,9 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.app.bo.TenantInitBO;
-import org.o2.metadata.console.infra.entity.OnlineShop;
 
-import java.util.List;
 
 /**
  * 网店多租户初始化

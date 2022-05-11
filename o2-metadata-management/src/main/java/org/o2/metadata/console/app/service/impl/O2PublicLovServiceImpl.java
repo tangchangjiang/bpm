@@ -118,9 +118,8 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                                 lang).toLowerCase());
         log.info("O2MD.PUBLIC_LOV directory url {}", directory);
         final String fileName = MetadataConstants.Path.LOV_FILE_NAME + MetadataConstants.FileSuffix.JSON;
-        String resultUrl = O2FileHelper.uploadFile(tenantId,
+        return O2FileHelper.uploadFile(tenantId,
                 directory, fileName, MetadataConstants.PublicLov.JSON_TYPE, jsonString.getBytes());
-        return resultUrl;
     }
 
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
