@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.constant;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  *
  * 初始化数据常量
