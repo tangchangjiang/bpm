@@ -24,7 +24,6 @@ import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.*;
 

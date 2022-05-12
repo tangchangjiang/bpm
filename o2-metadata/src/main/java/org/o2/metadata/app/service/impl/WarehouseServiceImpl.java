@@ -1,11 +1,9 @@
 package org.o2.metadata.app.service.impl;
 
 import org.o2.metadata.api.co.WarehouseCO;
-import org.o2.metadata.api.co.WarehousePickupLimitCO;
 import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.domain.warehouse.repository.WarehouseDomainRepository;
 import org.o2.metadata.infra.convertor.WarehouseConverter;
-import org.o2.metadata.infra.convertor.WarehouseLimitConverter;
 import org.o2.metadata.infra.entity.WarehouseLimit;
 import org.o2.metadata.infra.redis.WarehouseRedis;
 import org.springframework.stereotype.Service;
@@ -40,7 +38,6 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Map<String, WarehouseLimit> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
-        Map<String, WarehouseLimit> warehouseLimitMap = warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
         return warehouseRedis.listWarehouseLimit(warehouseCodes, tenantId);
     }
 

@@ -129,7 +129,7 @@ public class AddressMappingController extends BaseController {
     @ApiOperation(value = "发布地区信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/release")
-    public ResponseEntity<?> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                      @RequestBody AddressReleaseDTO addressRelease){
         addressRelease.setTenantId(organizationId);
         addressMappingService.releaseAddressMapping(addressRelease);

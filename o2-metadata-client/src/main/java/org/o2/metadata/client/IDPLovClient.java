@@ -2,12 +2,10 @@ package org.o2.metadata.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
-import org.o2.metadata.client.domain.co.CurrencyCO;
 import org.o2.metadata.client.domain.co.LovValuesCO;
 import org.o2.metadata.client.infra.feign.LovAdapterRemoteService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *

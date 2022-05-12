@@ -20,7 +20,7 @@ import java.util.List;
 @ApiModel("地区下的省份")
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AreaRegionDTO implements Serializable, Comparable {
+public class AreaRegionDTO implements Serializable, Comparable<Object> {
     @ApiModelProperty("大区，值集O2MD.AREA_CODE")
     @LovValue(lovCode = MetadataConstants.AreaCode.LOV_CODE)
     private String areaCode;

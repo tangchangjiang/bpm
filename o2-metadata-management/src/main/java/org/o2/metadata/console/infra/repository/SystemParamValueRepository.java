@@ -4,7 +4,6 @@ import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 系统参数值资源库

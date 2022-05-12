@@ -115,9 +115,8 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         log.info("directory url {}", directory);
         final String fileName = MetadataConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + MetadataConstants.FileSuffix.JSON;
-        String resultUrl = O2FileHelper.uploadFile(tenantId,
+        return O2FileHelper.uploadFile(tenantId,
                 directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE, jsonString.getBytes());
-        return resultUrl;
     }
 
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,

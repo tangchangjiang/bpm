@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.constant;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
 
 /**
  *

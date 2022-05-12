@@ -7,7 +7,6 @@ import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 系统参数值 资源库实现
