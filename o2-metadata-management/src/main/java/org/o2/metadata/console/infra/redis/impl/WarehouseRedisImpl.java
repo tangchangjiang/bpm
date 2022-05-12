@@ -29,13 +29,11 @@ import java.util.Map;
 public class WarehouseRedisImpl implements WarehouseRedis {
     private final RedisCacheClient redisCacheClient;
     private final WarehouseRepository warehouseRepository;
-    private final PosRedis posRedis;
 
-    public WarehouseRedisImpl(RedisCacheClient redisCacheClient, WarehouseRepository warehouseRepository,
-                              PosRedis posRedis) {
+    public WarehouseRedisImpl(RedisCacheClient redisCacheClient,
+                              WarehouseRepository warehouseRepository) {
         this.redisCacheClient = redisCacheClient;
         this.warehouseRepository = warehouseRepository;
-        this.posRedis = posRedis;
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 
 
-import java.util.Collections;
 
 /**
  * description

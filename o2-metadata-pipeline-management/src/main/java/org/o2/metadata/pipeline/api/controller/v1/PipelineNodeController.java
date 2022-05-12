@@ -1,6 +1,5 @@
 package org.o2.metadata.pipeline.api.controller.v1;
 
-import io.choerodon.core.base.BaseController;
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -33,7 +32,7 @@ import java.util.List;
 @RestController("pipelineNodeController.v1")
 @RequestMapping("/v1/{organizationId}/pipeline-node")
 @Api(tags = PipelineManagerAutoConfiguration.PIPELINE_NODE)
-public class PipelineNodeController extends BaseController {
+public class PipelineNodeController {
     private final PipelineNodeRepository pipelineNodeRepository;
     private final PipelineNodeService pipelineNodeService;
 
@@ -81,11 +80,11 @@ public class PipelineNodeController extends BaseController {
     @ApiOperation(value = "批量新增流程器节点")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
+    public ResponseEntity<List<String>> create(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
         return createOrUpdateNodes(pipelineNodes, organizationId);
     }
 
-    private ResponseEntity<?> createOrUpdateNodes(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
+    private ResponseEntity<List<String>> createOrUpdateNodes(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
         pipelineNodes.forEach(pipelineNode -> pipelineNode.setTenantId(organizationId));
         int errorCount = pipelineNodeService.batchMerge(pipelineNodes);
         if (0 == errorCount) {
@@ -99,7 +98,7 @@ public class PipelineNodeController extends BaseController {
     @ApiOperation(value = "批量更新流程器节点")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
+    public ResponseEntity<List<String>> update(@RequestBody List<PipelineNode> pipelineNodes, @PathVariable Long organizationId) {
         return createOrUpdateNodes(pipelineNodes, organizationId);
     }
 

@@ -4,8 +4,6 @@ package org.o2.metadata.infra.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.infra.constants.SystemParameterConstants;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -32,7 +30,6 @@ public class SystemParameter  {
     @ApiModelProperty(value = "参数名称")
     private String paramName;
     @ApiModelProperty(value = "值集，KV（key-value） LIST(重复) SET（不重复）", required = true)
-    @LovValue(SystemParameterConstants.ParamType.LOV_CODE)
     private String paramTypeCode;
     @ApiModelProperty(value = "是否启用", required = true)
     @NotNull

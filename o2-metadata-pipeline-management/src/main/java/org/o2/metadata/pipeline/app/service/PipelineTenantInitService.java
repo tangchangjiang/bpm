@@ -1,6 +1,5 @@
 package org.o2.metadata.pipeline.app.service;
 
-import java.util.List;
 
 /**
  * 流程器 租户初始化

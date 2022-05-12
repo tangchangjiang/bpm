@@ -1,14 +1,11 @@
 package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.o2.metadata.console.app.service.*;
 import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * description

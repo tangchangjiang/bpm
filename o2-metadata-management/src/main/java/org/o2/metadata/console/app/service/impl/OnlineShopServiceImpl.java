@@ -27,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static org.o2.metadata.console.infra.entity.OnlineShop.FIELD_PLATFORM_CODE;
-
 /**
  * 网店应用服务默认实现
  * @author yipeng.zhu@hand-china.com 2020-06-03 09:53

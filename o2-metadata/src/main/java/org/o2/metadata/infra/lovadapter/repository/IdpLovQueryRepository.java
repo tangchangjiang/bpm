@@ -1,7 +1,6 @@
 package org.o2.metadata.infra.lovadapter.repository;
 
 
-import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.metadata.api.co.LovValuesCO;
 
 import java.util.List;

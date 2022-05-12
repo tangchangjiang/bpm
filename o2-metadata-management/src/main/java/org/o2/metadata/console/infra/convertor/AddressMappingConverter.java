@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.app.bo.AddressMappingBO;
-import org.o2.metadata.console.app.bo.RegionCacheBO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.Region;
 

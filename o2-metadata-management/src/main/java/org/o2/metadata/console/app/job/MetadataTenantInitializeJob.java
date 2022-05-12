@@ -6,7 +6,6 @@ import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 import org.o2.metadata.console.app.service.MetadataBusinessTenantInitService;
 import org.o2.metadata.console.app.service.MetadataTenantInitService;
-import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 
 /**
  * 元数据多租户初始化Job
@@ -23,7 +22,7 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
 
 
 
-    public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService, PipelineTenantInitService pipelineTenantInitService,
+    public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService,
                                        MetadataBusinessTenantInitService metadataBusinessTenantInitService) {
         this.metadataTenantInitService = metadataTenantInitService;
         this.metadataBusinessTenantInitService = metadataBusinessTenantInitService;
