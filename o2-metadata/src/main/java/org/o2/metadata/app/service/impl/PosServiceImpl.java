@@ -2,7 +2,6 @@ package org.o2.metadata.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.o2.metadata.api.co.PosPickUpInfoCO;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
@@ -35,7 +34,7 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public PosPickUpInfoCO getPosPickUpInfo(String posCode, Long tenantId) {
+    public PosStoreInfoCO getPosPickUpInfo(String posCode, Long tenantId) {
         Pos pos = posRedis.getPosPickUpInfo(posCode, tenantId);
         if (ObjectUtils.isEmpty(pos)) {
             return null;
@@ -53,7 +52,7 @@ public class PosServiceImpl implements PosService {
             pos.setCityName(map.get(pos.getCityCode()));
             pos.setDistrictName(map.get(pos.getDistrictCode()));
         }
-        return PosConverter.doToPickUpInfoCoObject(pos);
+        return PosConverter.doToCoObject(pos);
     }
 
     @Override
