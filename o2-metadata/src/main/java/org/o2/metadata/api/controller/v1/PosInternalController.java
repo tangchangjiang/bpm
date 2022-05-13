@@ -5,7 +5,6 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
-import org.o2.metadata.api.co.PosPickUpInfoCO;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
 import org.o2.metadata.app.service.PosService;
@@ -39,10 +38,10 @@ public class PosInternalController {
     @ApiOperation(value = "获取自提点信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/pickup-info")
-    public ResponseEntity<PosPickUpInfoCO> getPosPickUpInfo(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    public ResponseEntity<PosStoreInfoCO> getPosPickUpInfo(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
                                                             @RequestParam(value = "posCode") String posCode) {
-        PosPickUpInfoCO posPickUpInfo = posService.getPosPickUpInfo(posCode, organizationId);
-        return Results.success(posPickUpInfo);
+        PosStoreInfoCO posStoreInfoCO = posService.getPosPickUpInfo(posCode, organizationId);
+        return Results.success(posStoreInfoCO);
     }
 
     /**
