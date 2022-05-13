@@ -1,6 +1,5 @@
 package org.o2.metadata.app.service;
 
-import org.o2.metadata.api.co.PosPickUpInfoCO;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
 
@@ -20,7 +19,7 @@ public interface PosService {
      * @param tenantId 租户Id
      * @return 自提信息
      */
-    PosPickUpInfoCO getPosPickUpInfo(String posCode, Long tenantId);
+    PosStoreInfoCO getPosPickUpInfo(String posCode, Long tenantId);
 
     /**
      * 条件批量查询门店信息
