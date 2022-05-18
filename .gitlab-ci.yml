@@ -16,7 +16,7 @@ sonar_check:
       -DskipTests=true
   only:
     - sonar
-#    - master
+    - master
 
 maven_package:
   stage: maven_package
