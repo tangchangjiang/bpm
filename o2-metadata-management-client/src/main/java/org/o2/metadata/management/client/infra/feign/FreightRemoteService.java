@@ -1,6 +1,7 @@
 package org.o2.metadata.management.client.infra.feign;
 
 import io.swagger.annotations.ApiParam;
+import org.o2.core.common.O2Service;
 import org.o2.metadata.management.client.domain.dto.FreightDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.FreightServiceRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +20,7 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 @FeignClient(
-        value = "${o2.service.metadata-management.name:o2-metadata-management-36108}",
+        value = O2Service.MetadataManagement.NAME,
         path = "/v1",
         fallback = FreightServiceRemoteServiceImpl.class
 )
