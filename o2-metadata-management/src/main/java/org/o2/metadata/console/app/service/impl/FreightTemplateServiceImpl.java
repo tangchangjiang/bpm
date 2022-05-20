@@ -182,8 +182,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public Map<String, FreightInfoCO> listFreightTemplates(Long tenantId, List<String> templateCodes) {
-        List<FreightInfoDO> freightInfoDOS = freightTemplateDomainRepository.listFreightTemplates(tenantId, templateCodes);
+    public Map<String, FreightInfoCO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
+        List<FreightInfoDO> freightInfoDOS = freightTemplateDomainRepository.listFreightTemplate(tenantId, templateCodes);
         Map<String, FreightInfoCO> resultMap = new HashMap<>();
         for(FreightInfoDO freightInfoDO : freightInfoDOS) {
             FreightInfoCO freightInfoCO = FreightConverter.doToCoObject(freightInfoDO);

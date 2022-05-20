@@ -95,7 +95,7 @@ public class FreightRedisImpl implements FreightRedis {
     }
 
     @Override
-    public List<FreightInfo> listFreightTemplates(Long tenantId, List<String> templateCodes) {
+    public List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightInfo> freightInfos = new ArrayList<>();
         redisCacheClient.executePipelined(new RedisCallback<FreightInfo>() {
             @Override
