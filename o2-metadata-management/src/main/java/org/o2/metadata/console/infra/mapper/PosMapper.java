@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.mapper;
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.PosDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosInfo;
 
@@ -69,11 +70,11 @@ public interface PosMapper extends BaseMapper<Pos> {
 
     /**
      * 根据服务点编码批量查询服务点信息
-     * @param posCodes 服务点code
+     * @param posQueryInnerDTO 服务点DTO
      * @param tenantId 租户Id
      * @return list
      */
     List<Pos> listPosByCode(@Param(value = "tenantId") Long tenantId,
-                            @Param("posCodes") List<String> posCodes);
+                            @Param("innerDTO")PosQueryInnerDTO posQueryInnerDTO);
 
 }

@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
@@ -57,9 +58,9 @@ public interface PosService {
 
     /**
      * 查询服务点名称
-     * @param posCodes 服务点编码
+     * @param posQueryInnerDTO 服务点DTO
      * @param tenantId 租户ID
      * @return  map
      */
-    Map<String, String> listPosName(Long tenantId, List<String> posCodes);
+    Map<String, String> listPosName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO);
 }

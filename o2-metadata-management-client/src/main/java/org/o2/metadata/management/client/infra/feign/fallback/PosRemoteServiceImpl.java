@@ -2,6 +2,7 @@ package org.o2.metadata.management.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.management.client.domain.dto.PosQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.PosRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class PosRemoteServiceImpl implements PosRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> listPoseName(Long organizationId, List<String> posCodes) {
-        log.error("Error listPoseName, params[posCodes = {}, organizationId = {}]", posCodes,organizationId);
+    public ResponseEntity<String> listPoseName(Long organizationId, PosQueryInnerDTO posQueryInnerDTO) {
+        log.error("Error listPoseName, params[posQueryInnerDTO = {}, organizationId = {}]", posQueryInnerDTO,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -9,6 +9,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class PosInternalController extends BaseController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/select-name")
     public ResponseEntity<Map<String, String>> listPoseName(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                            @RequestBody List<String> posCodes) {
-        return Results.success(posService.listPosName(organizationId, posCodes));
+                                                            @RequestBody PosQueryInnerDTO posQueryInnerDTO) {
+        return Results.success(posService.listPosName(organizationId, posQueryInnerDTO));
     }
 }
