@@ -52,4 +52,11 @@ public class PosInternalController extends BaseController {
         return Results.success(map);
     }
 
+    @ApiOperation(value = "查询服务点名称")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/select-name")
+    public ResponseEntity<Map<String, String>> listPoseName(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                            @RequestBody List<String> posCodes) {
+        return Results.success(posService.listPosName(organizationId, posCodes));
+    }
 }

@@ -66,8 +66,7 @@ public class PosRedisImpl implements PosRedis {
 
     private List<Pos> searchPosList(String indexKey, String detailKey) {
 
-        DefaultRedisScript getRedisScript = new DefaultRedisScript<>();
-        List<Pos> posList = new ArrayList<>();
+        DefaultRedisScript getRedisScript = new DefaultRedisScript();
         // 订单key
         getRedisScript.setScriptSource(PosConstants.SEARCH_POS_LIST_LUA);
         getRedisScript.setResultType(List.class);
@@ -76,10 +75,10 @@ public class PosRedisImpl implements PosRedis {
         posKeys.add(detailKey);
         Object object = redisCacheClient.execute(getRedisScript, posKeys);
         if (ObjectUtils.isEmpty(object)) {
-            return posList;
+            return null;
         }
         List<String> posListStr = (List<String>) object;
-
+        List<Pos> posList = new ArrayList<>();
         for (String str : posListStr) {
             posList.add(JsonHelper.stringToObject(str, Pos.class));
         }

@@ -13,6 +13,9 @@ import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  *
@@ -43,5 +46,13 @@ public class FreightInternalController {
     @GetMapping("/default")
     public ResponseEntity<FreightTemplateCO> getDefaultTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId) {
         return Results.success(freightService.getDefaultTemplate(organizationId));
+    }
+
+    @ApiOperation(value = "批量查询模版信息")
+    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/templates")
+    public ResponseEntity<Map<String, FreightInfoCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                          @RequestBody List<String> templateCodes) {
+        return Results.success(freightService.listFreightTemplate(organizationId, templateCodes));
     }
 }
