@@ -7,6 +7,7 @@ import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费模板服务
@@ -127,4 +128,10 @@ public interface FreightTemplateService {
      * @return  默认模版信息
      */
     FreightTemplateCO getDefaultTemplate(Long organizationId);
+    /**
+     * 内部方法 批量获取运费模版
+     * @param  templateCodes  运费模板编码
+     * @return 模版信息
+     */
+    Map<String, FreightInfoCO> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }

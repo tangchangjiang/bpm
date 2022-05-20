@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -250,6 +251,21 @@ public class PosServiceImpl implements PosService {
     @Override
     public List<Pos> selectByCondition(Pos query) {
         return posRepository.listPosByCondition(query);
+    }
+
+    @Override
+    public Map<String, String> listPosName(Long tenantId, List<String> posCodes) {
+        Map<String, String> resultMap = new HashMap<>();
+        List<Pos> posList;
+        if(null == posCodes || posCodes.isEmpty()) {
+            posList = posRepository.select(Pos.FIELD_TENANT_ID, tenantId);
+        } else {
+            posList = posRepository.listPosByCode(tenantId, posCodes);
+        }
+        for(Pos pos : posList){
+            resultMap.put(pos.getPosCode(), pos.getPosName());
+        }
+        return resultMap;
     }
 
     /**

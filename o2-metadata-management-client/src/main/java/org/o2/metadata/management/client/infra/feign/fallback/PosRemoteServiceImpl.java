@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *
  * 服务点
@@ -18,6 +20,12 @@ public class PosRemoteServiceImpl implements PosRemoteService {
     @Override
     public ResponseEntity<String> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long organizationId) {
         log.error("Error listPosAddress, params[posAddressDTO = {}, organizationId = {}]", posAddressQueryInnerDTO,organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listPoseName(Long organizationId, List<String> posCodes) {
+        log.error("Error listPoseName, params[posCodes = {}, organizationId = {}]", posCodes,organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

@@ -143,4 +143,9 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     public List<PosInfo> listPosInfoByCode(List<Long> posIds, List<String> posCodes, String posTypeCode, Long tenantId) {
         return posMapper.listPosInfoByCode(posIds, posCodes, posTypeCode, tenantId);
     }
+
+    @Override
+    public List<Pos> listPosByCode(Long tenantId, List<String> posCodes) {
+        return posMapper.listPosByCode(tenantId, posCodes);
+    }
 }

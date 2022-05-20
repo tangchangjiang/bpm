@@ -30,6 +30,7 @@ import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepositor
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
+import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.o2.product.management.client.O2ProductClient;
 import org.springframework.stereotype.Service;
@@ -178,6 +179,17 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public FreightTemplateCO getDefaultTemplate(Long organizationId) {
         return FreightConverter.poToCoObject(freightTemplateRepository.getDefaultTemplate(organizationId));
+    }
+
+    @Override
+    public Map<String, FreightInfoCO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
+        List<FreightInfoDO> freightInfoDOS = freightTemplateDomainRepository.listFreightTemplate(tenantId, templateCodes);
+        Map<String, FreightInfoCO> resultMap = new HashMap<>();
+        for(FreightInfoDO freightInfoDO : freightInfoDOS) {
+            FreightInfoCO freightInfoCO = FreightConverter.doToCoObject(freightInfoDO);
+            resultMap.put(freightInfoCO.getFreightTemplateCode(), freightInfoCO);
+        }
+        return resultMap;
     }
 
     @Override

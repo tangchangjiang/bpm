@@ -31,4 +31,11 @@ public interface FreightRedis {
      * @param tenantId 租户ID
      */
     void batchUpdateRedis(List<FreightTemplate> templateList, List<FreightTemplateDetail> detailList,Long tenantId);
+    /**
+     * 批量获取运费模版信息
+     * @param templateCodes 模版ID
+     * @param tenantId 租户
+     * @return 运费信息
+     */
+    List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }

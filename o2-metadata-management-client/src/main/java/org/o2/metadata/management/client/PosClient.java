@@ -6,6 +6,7 @@ import org.o2.metadata.management.client.domain.co.PosAddressCO;
 import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.PosRemoteService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +30,11 @@ public class PosClient {
      */
     public Map<String, PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(posRemoteService.listPosAddress(posAddressQueryInnerDTO, tenantId), new TypeReference<Map<String, PosAddressCO>>() {
+        });
+    }
+
+    public Map<String, String> listPoseName(Long tenantId, List<String> posCodes) {
+        return ResponseUtils.getResponse(posRemoteService.listPoseName(tenantId, posCodes), new TypeReference<Map<String, String>>() {
         });
     }
 }

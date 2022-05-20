@@ -246,4 +246,27 @@
         </where>
         order by pos.pos_code
     </select>
+
+    <select id="listPosByCode" resultType="org.o2.metadata.console.infra.entity.Pos">
+        select
+            pos.pos_code,
+            pos.pos_name
+        from o2md_pos pos
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND pos.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="posCodes != null and posCodes.size > 0">
+                AND pos.pos_name in
+                <foreach collection="posCodes" open="(" separator="," close=")" item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

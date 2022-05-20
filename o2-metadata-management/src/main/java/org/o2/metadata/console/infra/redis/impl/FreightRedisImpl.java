@@ -11,6 +11,9 @@ import org.o2.metadata.console.infra.entity.FreightInfo;
 import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.redis.FreightRedis;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
@@ -89,5 +92,31 @@ public class FreightRedisImpl implements FreightRedis {
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA);
         this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
+    }
+
+    @Override
+    public List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes) {
+        List<FreightInfo> freightInfos = new ArrayList<>();
+        redisCacheClient.executePipelined(new RedisCallback<FreightInfo>() {
+            @Override
+            public FreightInfo doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                for(String templateCode : templateCodes){
+                    FreightInfo freightInfo = new FreightInfo();
+                    freightInfo.setFreightTemplateCode(templateCode);
+                    String freightDetailKey = FreightConstants.Redis.getFreightDetailKey(tenantId, templateCode);
+                    List<String> paramCodes = new ArrayList<>(2);
+                    paramCodes.add(FreightConstants.Redis.FREIGHT_HEAD_KEY);
+                    paramCodes.add(FreightConstants.Redis.FREIGHT_DEFAULT_KEY);
+                    List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
+                    String headTemplate =  freightTemplates.get(0);
+                    freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
+                    String cityTemplate = freightTemplates.get(1);
+                    freightInfo.setRegionTemplate(StringUtils.isEmpty(cityTemplate) ? null :JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
+                    freightInfos.add(freightInfo);
+                }
+                return null;
+            }
+        });
+        return freightInfos;
     }
 }
