@@ -7,7 +7,6 @@ import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.PosQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.PosRemoteService;
 
-import java.util.List;
 import java.util.Map;
 
 /**
