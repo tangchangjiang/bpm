@@ -48,7 +48,7 @@ public class FreightInternalController {
         return Results.success(freightService.getDefaultTemplate(organizationId));
     }
 
-    @ApiOperation(value = "批量查询模版信息")
+    @ApiOperation(value = "批量查询运费模版信息")
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @PostMapping("/templates")
     public ResponseEntity<Map<String, FreightInfoCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
