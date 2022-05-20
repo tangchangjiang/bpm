@@ -26,5 +26,5 @@ public interface FreightTemplateDomainRepository {
      * @param tenantId 租户
      * @return 运费信息
      */
-    List<FreightInfoDO> listFreightTemplates(Long tenantId, List<String> templateCodes);
+    List<FreightInfoDO> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }

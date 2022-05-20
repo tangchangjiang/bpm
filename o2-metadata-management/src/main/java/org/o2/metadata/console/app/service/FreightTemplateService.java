@@ -133,5 +133,5 @@ public interface FreightTemplateService {
      * @param  templateCodes  运费模板编码
      * @return 模版信息
      */
-    Map<String, FreightInfoCO> listFreightTemplates(Long tenantId, List<String> templateCodes);
+    Map<String, FreightInfoCO> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }
