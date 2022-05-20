@@ -30,8 +30,8 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
     }
 
     @Override
-    public List<FreightInfoDO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
-        List<FreightInfo> freightInfos = freightRedis.listFreightTemplate(tenantId, templateCodes);
+    public List<FreightInfoDO> listFreightTemplates(Long tenantId, List<String> templateCodes) {
+        List<FreightInfo> freightInfos = freightRedis.listFreightTemplates(tenantId, templateCodes);
         List<FreightInfoDO> freightInfoDOS = new ArrayList<>();
         for(FreightInfo freightInfo : freightInfos){
             FreightInfoDO freightInfoDO = FreightConverter.poToDoObject(freightInfo);

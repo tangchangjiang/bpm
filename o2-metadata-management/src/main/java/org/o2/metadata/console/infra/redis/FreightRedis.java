@@ -37,5 +37,5 @@ public interface FreightRedis {
      * @param tenantId 租户
      * @return 运费信息
      */
-    List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes);
+    List<FreightInfo> listFreightTemplates(Long tenantId, List<String> templateCodes);
 }
