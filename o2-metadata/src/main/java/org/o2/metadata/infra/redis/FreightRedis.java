@@ -2,6 +2,8 @@ package org.o2.metadata.infra.redis;
 
 import org.o2.metadata.infra.entity.FreightInfo;
 
+import java.util.List;
+
 /**
  *
  * 运费模版信息
@@ -17,4 +19,6 @@ public interface FreightRedis {
      * @return 运费信息
      */
     FreightInfo getFreightTemplate(String regionCode, String templateCode, Long tenantId);
+
+    List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }
