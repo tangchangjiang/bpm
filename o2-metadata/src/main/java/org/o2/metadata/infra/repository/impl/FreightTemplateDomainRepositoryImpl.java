@@ -6,6 +6,8 @@ import org.o2.metadata.infra.convertor.FreightConverter;
 import org.o2.metadata.infra.redis.FreightRedis;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *
  * 获取运费模版信息
@@ -23,6 +25,11 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
     @Override
     public FreightInfoDO getFreightTemplate(String regionCode, String templateCode, Long tenantId) {
         return FreightConverter.poToDoObject(freightRedis.getFreightTemplate(regionCode,templateCode,tenantId));
+    }
+
+    @Override
+    public List<FreightInfoDO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
+        return null;
     }
 
 }
