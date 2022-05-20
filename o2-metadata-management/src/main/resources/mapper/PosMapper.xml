@@ -262,7 +262,7 @@
                 </otherwise>
             </choose>
             <if test="innerDTO.posCodes != null and innerDTO.posCodes.size > 0">
-                AND pos.pos_name in
+                AND pos.pos_code in
                 <foreach collection="innerDTO.posCodes" open="(" separator="," close=")" item="item">
                     #{item}
                 </foreach>
