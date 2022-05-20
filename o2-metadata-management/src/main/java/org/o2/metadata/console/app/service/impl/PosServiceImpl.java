@@ -6,6 +6,7 @@ import org.o2.core.exception.O2CommonException;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
@@ -254,14 +255,9 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public Map<String, String> listPosName(Long tenantId, List<String> posCodes) {
+    public Map<String, String> listPosName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO) {
         Map<String, String> resultMap = new HashMap<>();
-        List<Pos> posList;
-        if(null == posCodes || posCodes.isEmpty()) {
-            posList = posRepository.select(Pos.FIELD_TENANT_ID, tenantId);
-        } else {
-            posList = posRepository.listPosByCode(tenantId, posCodes);
-        }
+        List<Pos> posList = posRepository.listPosByCode(tenantId, posQueryInnerDTO);
         for(Pos pos : posList){
             resultMap.put(pos.getPosCode(), pos.getPosName());
         }

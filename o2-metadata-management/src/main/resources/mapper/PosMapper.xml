@@ -261,11 +261,15 @@
                     AND 1 = 0
                 </otherwise>
             </choose>
-            <if test="posCodes != null and posCodes.size > 0">
-                AND pos.pos_name in
-                <foreach collection="posCodes" open="(" separator="," close=")" item="item">
+            <if test="innerDTO.posCodes != null and innerDTO.posCodes.size > 0">
+                AND pos.pos_code in
+                <foreach collection="innerDTO.posCodes" open="(" separator="," close=")" item="item">
                     #{item}
                 </foreach>
+            </if>
+            <if test="innerDTO.posName != null and innerDTO.posName != ''">
+                <bind name="posName" value="'%' + innerDTO.posName + '%'"/>
+                AND pos.pos_name LIKE #{posName}
             </if>
         </where>
     </select>

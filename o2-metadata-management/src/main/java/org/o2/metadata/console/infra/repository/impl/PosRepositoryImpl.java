@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.dto.PosDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.mapper.PosAddressMapper;
@@ -145,7 +146,7 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public List<Pos> listPosByCode(Long tenantId, List<String> posCodes) {
-        return posMapper.listPosByCode(tenantId, posCodes);
+    public List<Pos> listPosByCode(Long tenantId, PosQueryInnerDTO posQueryInnerDTO) {
+        return posMapper.listPosByCode(tenantId, posQueryInnerDTO);
     }
 }

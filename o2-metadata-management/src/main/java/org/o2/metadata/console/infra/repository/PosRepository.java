@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.PosDTO;
+import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosInfo;
 
@@ -77,9 +78,9 @@ public interface PosRepository extends BaseRepository<Pos> {
     /**
      * 根据服务点编码批量查询
      *
-     * @param posCodes  服务点编码
+     * @param posQueryInnerDTO  服务点DTO
      * @param tenantId 租户ID
      * @return 服务点信息
      */
-    List<Pos> listPosByCode(Long tenantId, List<String> posCodes);
+    List<Pos> listPosByCode(Long tenantId, PosQueryInnerDTO posQueryInnerDTO);
 }
