@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.PosAddressCO;
 import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.management.client.domain.dto.PosQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.PosRemoteService;
 
 import java.util.List;
@@ -33,8 +34,8 @@ public class PosClient {
         });
     }
 
-    public Map<String, String> listPoseName(Long tenantId, List<String> posCodes) {
-        return ResponseUtils.getResponse(posRemoteService.listPoseName(tenantId, posCodes), new TypeReference<Map<String, String>>() {
+    public Map<String, String> listPoseName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO) {
+        return ResponseUtils.getResponse(posRemoteService.listPoseName(tenantId, posQueryInnerDTO), new TypeReference<Map<String, String>>() {
         });
     }
 }
