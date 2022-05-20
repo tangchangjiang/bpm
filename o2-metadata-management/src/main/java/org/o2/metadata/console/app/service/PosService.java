@@ -7,6 +7,7 @@ import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 服务点信息应用服务
@@ -53,4 +54,12 @@ public interface PosService {
      * @return 仓库
      */
     List<Pos> selectByCondition(Pos query);
+
+    /**
+     * 查询服务点名称
+     * @param posCodes 服务点编码
+     * @param tenantId 租户ID
+     * @return  map
+     */
+    Map<String, String> listPosName(Long tenantId, List<String> posCodes);
 }

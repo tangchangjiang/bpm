@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *
  * 运费
@@ -26,6 +28,12 @@ public class FreightServiceRemoteServiceImpl implements FreightRemoteService {
     @Override
     public ResponseEntity<String> getDefaultTemplate(Long organizationId) {
         log.error("Error getDefaultTemplate, params[organizationId = {}]", organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listFreightTemplate(List<String> templateCodes, Long organizationId) {
+        log.error("Error listFreightTemplate, params[templateCodes = {}, organizationId = {}]", templateCodes, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

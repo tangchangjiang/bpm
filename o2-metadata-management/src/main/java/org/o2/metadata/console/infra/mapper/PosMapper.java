@@ -67,4 +67,13 @@ public interface PosMapper extends BaseMapper<Pos> {
                                     @Param("posTypeCode") String posTypeCode,
                                     @Param("tenantId") Long tenantId);
 
+    /**
+     * 根据服务点编码批量查询服务点信息
+     * @param posCodes 服务点code
+     * @param tenantId 租户Id
+     * @return list
+     */
+    List<Pos> listPosByCode(@Param(value = "tenantId") Long tenantId,
+                            @Param("posCodes") List<String> posCodes);
+
 }
