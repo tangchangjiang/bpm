@@ -51,7 +51,7 @@ public class FreightInternalController {
     @ApiOperation(value = "批量查询运费模版信息")
     @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
     @PostMapping("/templates")
-    public ResponseEntity<Map<String, FreightInfoCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, FreightTemplateCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                           @RequestBody List<String> templateCodes) {
         return Results.success(freightService.listFreightTemplate(organizationId, templateCodes));
     }
