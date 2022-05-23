@@ -34,6 +34,8 @@ import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
+import org.o2.queue.app.service.ProducerService;
+import org.o2.queue.domain.context.ProducerContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,13 +58,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRedis warehouseRedis;
     private final PosRedis posRedis;
     private final PosRepository posRepository;
+    private final ProducerService producerService;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
                                 WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis,
                                 PosRedis posRedis,
-                                PosRepository posRepository) {
+                                PosRepository posRepository, ProducerService producerService) {
         this.warehouseRepository = warehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
@@ -70,6 +73,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseRedis = warehouseRedis;
         this.posRedis = posRedis;
         this.posRepository = posRepository;
+        this.producerService = producerService;
     }
 
 
@@ -89,7 +93,16 @@ public class WarehouseServiceImpl implements WarehouseService {
         // 更新服务点门店Redis
         List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
         posRedis.updatePodDetail(null, posCodes, tenantId);
+        refreshSourcingCache(tenantId);
         return warehouses;
+    }
+
+    // 更新寻源服务缓存
+    private void refreshSourcingCache(Long tenantId) {
+        final ProducerContext<String> context = new ProducerContext<>();
+        context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2CSMB_SOURCING_CACHE_UPDATE_EVT);
+        context.setData(WarehouseConstants.WarehouseEventManagement.WAREHOUSE_CACHE_CLASS_NAME);
+        producerService.produce(tenantId, context);
     }
 
 
@@ -107,6 +120,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         // 更新 redis
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+        refreshSourcingCache(tenantId);
         // 更新服务点门店Redis
 
         return list;
