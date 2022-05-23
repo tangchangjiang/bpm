@@ -12,6 +12,7 @@ import org.o2.metadata.console.app.service.CacheJobService;
 import org.o2.metadata.console.app.service.ShopTenantInitService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.TenantInitConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.repository.*;
@@ -93,6 +94,11 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         handlePlatform(sourceTenantId, targetTenantId, sourceOnlineShop.getPlatformCode());
         // 3.处理目录
         handleCatalog(sourceTenantId, targetTenantId, sourceOnlineShop.getCatalogCode(), sourceOnlineShop.getCatalogVersionCode());
+        // 3.处理主数据目录
+        if (!TenantInitConstants.InitCatalog.MASTER.equals(sourceOnlineShop.getCatalogCode())) {
+            handleCatalog(sourceTenantId, targetTenantId,TenantInitConstants.InitCatalog.MASTER, TenantInitConstants.InitCatalog.MASTER);
+        }
+        // 4
         // 4.处理服务点
         List<String> warehouseCode = Arrays.asList(bo.getWarehouseCode().split(BaseConstants.Symbol.COMMA));
         handlePos(sourceTenantId, targetTenantId, warehouseCode);
