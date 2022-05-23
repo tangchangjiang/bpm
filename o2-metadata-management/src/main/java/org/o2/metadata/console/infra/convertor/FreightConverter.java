@@ -63,7 +63,7 @@ public class FreightConverter {
      * @param freightTemplateDO 运费模详情
      * @return  vo 运费模版详情
      */
-    private static FreightTemplateCO toFreightTemplateCo(FreightTemplateDO freightTemplateDO) {
+    public static FreightTemplateCO toFreightTemplateCo(FreightTemplateDO freightTemplateDO) {
         if (freightTemplateDO == null) {
             return null;
         }
@@ -108,7 +108,7 @@ public class FreightConverter {
      * @param freightTemplate 运费模版头
      * @return do
      */
-    private static FreightTemplateDO toFreightTemplateDO(FreightTemplate freightTemplate) {
+    public static FreightTemplateDO toFreightTemplateDO(FreightTemplate freightTemplate) {
         if (freightTemplate == null) {
             return null;
         }

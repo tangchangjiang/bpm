@@ -49,8 +49,8 @@ public class FreightClient {
      * @param templateCodes 模板编码
      * @return 运费结果
      */
-    public Map<String, FreightInfoCO> listFreightTemplate(List<String> templateCodes, Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.listFreightTemplate(templateCodes, tenantId), new TypeReference<Map<String, FreightInfoCO>>() {
+    public Map<String, FreightTemplateCO> listFreightTemplate(List<String> templateCodes, Long tenantId) {
+        return ResponseUtils.getResponse(freightRemoteService.listFreightTemplate(templateCodes, tenantId), new TypeReference<Map<String, FreightTemplateCO>>() {
         });
     }
 }

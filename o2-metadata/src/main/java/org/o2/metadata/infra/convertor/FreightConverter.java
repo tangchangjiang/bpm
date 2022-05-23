@@ -104,7 +104,7 @@ public class FreightConverter {
      * @param 
      * @return 
      */
-    private static FreightTemplateDO toFreightTemplateDO(FreightTemplate freightTemplate) {
+    public static FreightTemplateDO toFreightTemplateDO(FreightTemplate freightTemplate) {
         if (freightTemplate == null) {
             return null;
         }
