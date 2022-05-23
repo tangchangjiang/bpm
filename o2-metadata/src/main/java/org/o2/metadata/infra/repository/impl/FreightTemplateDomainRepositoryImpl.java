@@ -1,6 +1,7 @@
 package org.o2.metadata.infra.repository.impl;
 
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
 import org.o2.metadata.infra.convertor.FreightConverter;
 import org.o2.metadata.infra.entity.FreightInfo;
@@ -30,14 +31,14 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
     }
 
     @Override
-    public List<FreightInfoDO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
+    public List<FreightTemplateDO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightInfo> freightInfos = freightRedis.listFreightTemplate(tenantId, templateCodes);
-        List<FreightInfoDO> freightInfoDOS = new ArrayList<>();
+        List<FreightTemplateDO> freightTemplateDOs = new ArrayList<>();
         for(FreightInfo freightInfo : freightInfos){
-            FreightInfoDO freightInfoDO = FreightConverter.poToDoObject(freightInfo);
-            freightInfoDOS.add(freightInfoDO);
+            FreightTemplateDO freightTemplateDO = FreightConverter.toFreightTemplateDO(freightInfo.getHeadTemplate());
+            freightTemplateDOs.add(freightTemplateDO);
         }
-        return freightInfoDOS;
+        return freightTemplateDOs;
     }
 
 }

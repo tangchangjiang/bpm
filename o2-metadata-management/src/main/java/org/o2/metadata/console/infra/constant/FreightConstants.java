@@ -43,7 +43,7 @@ public interface FreightConstants {
         String FREIGHT_HEAD_KEY = "HEAD";
 
         /**
-         * 运费模板明细hash key: o2md:freight:{tenantId}:{freightCode} <br />
+         * 运费模板明细hash key: o2md:freight:{tenantId}:[freightCode] <br />
          * key: HEAD/region <br />
          * value: freight detail json <br />
          */

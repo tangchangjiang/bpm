@@ -1,6 +1,7 @@
 package org.o2.metadata.domain.freight.repository;
 
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
+import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
 
 import java.util.List;
 
@@ -26,5 +27,5 @@ public interface FreightTemplateDomainRepository {
      * @param tenantId 租户
      * @return 运费信息
      */
-    List<FreightInfoDO> listFreightTemplate(Long tenantId, List<String> templateCodes);
+    List<FreightTemplateDO> listFreightTemplate(Long tenantId, List<String> templateCodes);
 }
