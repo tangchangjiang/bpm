@@ -76,4 +76,10 @@ public interface WarehouseConstants {
                 new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
 
     }
+
+    interface WarehouseEventManagement{
+        String O2CSMB_SOURCING_CACHE_UPDATE_EVT = "O2CSMB_SOURCING_CACHE_UPDATE_EVT";
+
+        String WAREHOUSE_CACHE_CLASS_NAME = "warehouseCacheImpl";
+    }
 }
