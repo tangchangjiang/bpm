@@ -67,6 +67,9 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         List<Pos> list = new ArrayList<>(posCodes.size());
         String key = PosConstants.RedisKey.getPosDetailKey(tenantId);
         List<String> posStr = redisCacheClient.<String,String>opsForHash().multiGet(key,posCodes);
+        if (posStr.isEmpty()) {
+            return list;
+        }
         for (String jsonStr : posStr) {
             Pos pos =  JsonHelper.stringToObject(jsonStr,Pos.class);
             list.add(pos);

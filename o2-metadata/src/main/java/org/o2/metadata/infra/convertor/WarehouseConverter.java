@@ -124,14 +124,16 @@ public class WarehouseConverter {
     public static List<WarehouseCO> toWarehouse(List<Pos> poses) {
         List<WarehouseCO> warehouseCOList = new ArrayList<>();
 
-        if (poses == null) {
+        if (poses == null || poses.isEmpty()) {
             return warehouseCOList;
         }
         for (Pos pos : poses) {
-            WarehouseCO warehouse = new WarehouseCO();
-            warehouse.setPosCode(pos.getPosCode());
-            warehouse.setWarehouseCode(pos.getWarehouseCode());
-            warehouseCOList.add(warehouse);
+            if (pos != null){
+                WarehouseCO warehouse = new WarehouseCO();
+                warehouse.setPosCode(pos.getPosCode());
+                warehouse.setWarehouseCode(pos.getWarehouseCode());
+                warehouseCOList.add(warehouse);
+            }
         }
         return warehouseCOList;
     }
