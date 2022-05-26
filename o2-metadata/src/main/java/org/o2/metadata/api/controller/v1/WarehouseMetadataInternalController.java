@@ -72,12 +72,19 @@ public class WarehouseMetadataInternalController {
         Map<String, List<WarehouseCO>> map = Maps.newHashMapWithExpectedSize(posCodes.size());
         List<WarehouseCO> vos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
         if (vos.isEmpty()) {
+            List<WarehouseCO> warehouseCOList = new ArrayList<>();
             for(String posCode : posCodes) {
-                map.put(posCode, null);
+                map.put(posCode, warehouseCOList);
             }
         } else {
-            for (WarehouseCO co : vos) {
-                map.computeIfAbsent(co.getPosCode(),key -> new ArrayList<>()).add(co);
+            for (String posCode : posCodes) {
+                List<WarehouseCO> warehouseCOList = new ArrayList<>();
+                for (WarehouseCO co : vos) {
+                    if (posCode.equals(co.getPosCode())) {
+                        warehouseCOList.add(co);
+                    }
+                }
+                map.put(posCode, warehouseCOList);
             }
         }
         return Results.success(map);

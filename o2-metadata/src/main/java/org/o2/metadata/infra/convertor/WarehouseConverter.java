@@ -128,10 +128,12 @@ public class WarehouseConverter {
             return warehouseCOList;
         }
         for (Pos pos : poses) {
-            WarehouseCO warehouse = new WarehouseCO();
-            warehouse.setPosCode(pos.getPosCode());
-            warehouse.setWarehouseCode(pos.getWarehouseCode());
-            warehouseCOList.add(warehouse);
+            if (pos != null){
+                WarehouseCO warehouse = new WarehouseCO();
+                warehouse.setPosCode(pos.getPosCode());
+                warehouse.setWarehouseCode(pos.getWarehouseCode());
+                warehouseCOList.add(warehouse);
+            }
         }
         return warehouseCOList;
     }
