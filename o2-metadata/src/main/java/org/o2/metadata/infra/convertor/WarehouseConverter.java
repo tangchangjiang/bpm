@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.convertor;
 
-import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.api.co.WarehouseCO;
 import org.o2.metadata.domain.warehouse.domain.WarehouseDO;
 import org.o2.metadata.infra.entity.Pos;
@@ -125,7 +124,7 @@ public class WarehouseConverter {
     public static List<WarehouseCO> toWarehouse(List<Pos> poses) {
         List<WarehouseCO> warehouseCOList = new ArrayList<>();
 
-        if (poses == null || poses.size() == BaseConstants.Digital.ZERO) {
+        if (poses == null || poses.isEmpty()) {
             return warehouseCOList;
         }
         for (Pos pos : poses) {
