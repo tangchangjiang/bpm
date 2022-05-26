@@ -124,7 +124,7 @@ public class WarehouseConverter {
     public static List<WarehouseCO> toWarehouse(List<Pos> poses) {
         List<WarehouseCO> warehouseCOList = new ArrayList<>();
 
-        if (poses == null) {
+        if (poses == null || poses.isEmpty()) {
             return warehouseCOList;
         }
         for (Pos pos : poses) {
