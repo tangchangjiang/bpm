@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.SourcingConfigUpdateBO;
 import org.o2.metadata.console.app.bo.WarehouseLimitBO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.PosConstants;
@@ -39,6 +41,7 @@ import org.o2.queue.domain.context.ProducerContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -99,9 +102,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     // 更新寻源服务缓存
     private void refreshSourcingCache(Long tenantId) {
-        final ProducerContext<String> context = new ProducerContext<>();
-        context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2CSMB_SOURCING_CACHE_UPDATE_EVT);
-        context.setData(WarehouseConstants.WarehouseEventManagement.WAREHOUSE_CACHE_CLASS_NAME);
+        final ProducerContext<SourcingConfigUpdateBO> context = new ProducerContext<>();
+        SourcingConfigUpdateBO data = new SourcingConfigUpdateBO();
+        data.setCacheNames(Arrays.asList(WarehouseConstants.WarehouseEventManagement.WAREHOUSE_CACHE_NAME, WarehouseConstants.WarehouseEventManagement.SHOP_REL_WAREHOUSE_CACHE_NAME));
+        data.setOperationTime(LocalDateTime.now());
+        data.setOperationClassName(this.getClass().getSimpleName());
+        data.setOperator(DetailsHelper.getUserDetails().getUserId());
+        context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2SE_CONFIG_CACHE_UPDATE_EVT);
+        context.setData(data);
         producerService.produce(tenantId, context);
     }
 
