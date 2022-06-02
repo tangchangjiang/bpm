@@ -83,4 +83,6 @@ public class WarehouseCO {
 
     private String pickUpLimitValue;
 
+    private String onlineShopCode;
+
 }

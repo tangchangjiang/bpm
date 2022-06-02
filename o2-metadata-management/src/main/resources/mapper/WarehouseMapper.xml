@@ -177,6 +177,7 @@
         ow.warehouse_code,
         ow.warehouse_type_code,
         ow.warehouse_status_code,
+        os.online_shop_code,
         tl.warehouse_name
         FROM
         o2md_warehouse ow
