@@ -214,6 +214,7 @@ public class WarehouseConverter {
         co.setExpressLimitValue(warehouse.getExpressLimitValue());
         co.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
+        co.setOnlineShopCode(warehouse.getOnlineShopCode());
         return co;
     }
 }

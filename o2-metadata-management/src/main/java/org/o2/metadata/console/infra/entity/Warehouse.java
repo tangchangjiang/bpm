@@ -183,4 +183,7 @@ public class Warehouse extends AuditDomain {
     @Transient
     private List<String> warehouseCodes;
 
+    @Transient
+    private String onlineShopCode;
+
 }
