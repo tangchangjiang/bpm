@@ -194,8 +194,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         Boolean dbFlag = queryInnerDTO.getDbFlag();
         // 查询数据库
         if (null == dbFlag || Boolean.TRUE.equals(dbFlag)) {
-            // 通过网店查询有效的网店
-            if (StringUtils.isNotEmpty(queryInnerDTO.getOnlineShopCode()) && BaseConstants.Flag.YES.equals(queryInnerDTO.getActiveFlag())) {
+            // 查询有效的网店
+            if (BaseConstants.Flag.YES.equals(queryInnerDTO.getActiveFlag())) {
                 return WarehouseConverter.poToCoListObjects(warehouseRepository.listActiveWarehouseByShopCode(queryInnerDTO.getOnlineShopCode(), tenantId));
             }
             return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehouses(queryInnerDTO, tenantId));
