@@ -132,6 +132,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     /**
      * 获取分组key
+     *
      * @param detail 运费详情
      * @return 分组key
      */
@@ -185,7 +186,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     public Map<String, FreightTemplateCO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightTemplateDO> freightInfoTemplateDOs = freightTemplateDomainRepository.listFreightTemplate(tenantId, templateCodes);
         Map<String, FreightTemplateCO> resultMap = new HashMap<>();
-        for(FreightTemplateDO freightTemplateDO : freightInfoTemplateDOs) {
+        for (FreightTemplateDO freightTemplateDO : freightInfoTemplateDOs) {
             FreightTemplateCO freightTemplateCO = FreightConverter.toFreightTemplateCo(freightTemplateDO);
             resultMap.put(freightTemplateCO.getTemplateCode(), freightTemplateCO);
         }
@@ -243,6 +244,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     /**
      * 验证名称唯一性
+     *
      * @param freightTemplateManagement 模板
      */
     private void validNameUnique(FreightTemplateManagementVO freightTemplateManagement) {
@@ -258,10 +260,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         FreightTemplate query = new FreightTemplate();
         query.setTemplateName(freightTemplateManagement.getTemplateName());
         query.setTenantId(freightTemplateManagement.getTenantId());
-       List<FreightTemplate>  list = freightTemplateRepository.select(query);
-       if (!list.isEmpty()) {
-           throw new O2CommonException(null,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE,FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE);
-       }
+        List<FreightTemplate> list = freightTemplateRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null, FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE, FreightConstants.ErrorCode.FREIGHT_NAME_DUPLICATE);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -456,7 +458,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * 验重
      *
      * @param freightTemplates 运费模版
-     * @param isCheckId 是否检测
+     * @param isCheckId        是否检测
      */
     private <T extends FreightTemplate> void checkData(final List<T> freightTemplates, final boolean isCheckId) {
         final Map<String, Object> map = new HashMap<>(freightTemplates.size());
@@ -482,8 +484,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * 设置templateId并保存运费模板明细
      *
      * @param freightTemplateDetailList 运费模版
-     * @param templateId 模版ID
-     * @param isRegion 地区
+     * @param templateId                模版ID
+     * @param isRegion                  地区
      * @return 集合
      */
     private List<FreightTemplateDetail> setTemplateIdAndSave(final List<FreightTemplateDetail> freightTemplateDetailList, final Long templateId, final boolean isRegion) {
@@ -504,14 +506,16 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
      * @param freightTemplate 运费模版
      */
     private void checkUniqueDefault(final FreightTemplate freightTemplate) {
-        Assert.isTrue(uniqueDefaultValidate(freightTemplate.getTemplateId()), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
+        if (!uniqueDefaultValidate(freightTemplate.getTemplateId())) {
+            throw new CommonException(FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_UNIQUE_DEFAULT);
+        }
     }
 
     /**
      * 检查运费模板是否关联了平台产品
      *
      * @param freightTemplateList 运费模版
-     * @param tenantId 租户ID
+     * @param tenantId            租户ID
      */
     private void checkProductRelate(final List<FreightTemplate> freightTemplateList, Long tenantId) {
         List<String> codes = new ArrayList<>();

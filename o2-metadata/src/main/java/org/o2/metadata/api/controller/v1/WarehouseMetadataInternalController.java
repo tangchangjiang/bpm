@@ -30,6 +30,7 @@ public class WarehouseMetadataInternalController {
     public WarehouseMetadataInternalController(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
+
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/list")
@@ -45,6 +46,7 @@ public class WarehouseMetadataInternalController {
         }
         return  Results.success(map);
     }
+
     @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping({"/updateExpressValue"})
