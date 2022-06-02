@@ -137,6 +137,39 @@
         </where>
     </select>
 
+    <select id="listActiveWarehouseByShopCode" resultType="org.o2.metadata.console.infra.entity.Warehouse">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        ow.warehouse_id,
+        ow.warehouse_code,
+        ow.warehouse_type_code,
+        ow.warehouse_status_code,
+        os.online_shop_code,
+        tl.warehouse_name
+        FROM
+        o2md_warehouse ow
+        JOIN o2md_pos pos on ow.pos_id = pos.pos_id
+        JOIN o2md_shop_rel_warehouse osrw ON osrw.warehouse_id = ow.warehouse_id
+        JOIN o2md_online_shop os ON os.online_shop_id = osrw.online_shop_id
+        left join o2md_warehouse_tl tl on tl.warehouse_id = ow.warehouse_id and tl.lang = #{lang} AND tl.tenant_id = #{tenantId}
+        WHERE
+        ow.warehouse_status_code = 'NORMAL'
+        AND ( pos.pos_type_code = 'WAREHOUSE' OR ( pos.pos_type_code = 'STORE' AND ow.expressed_flag = 1 ) )
+        AND osrw.active_flag=1
+        <if test="onlineShopCode != null and onlineShopCode != ''" >
+            AND os.online_shop_code = #{onlineShopCode}
+        </if>
+        <choose>
+            <when test="tenantId != null">
+                AND ow.tenant_id = #{tenantId}
+                AND osrw.tenant_id = #{tenantId}
+                AND os.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+    </select>
     <select id="queryAllWarehouseByTenantId" resultType="org.o2.metadata.console.infra.entity.Warehouse">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
@@ -169,37 +202,6 @@
                 </otherwise>
             </choose>
         </where>
-    </select>
-    <select id="listActiveWarehouseByShopCode" resultType="org.o2.metadata.console.infra.entity.Warehouse">
-        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        SELECT
-        ow.warehouse_id,
-        ow.warehouse_code,
-        ow.warehouse_type_code,
-        ow.warehouse_status_code,
-        os.online_shop_code,
-        tl.warehouse_name
-        FROM
-        o2md_warehouse ow
-        JOIN o2md_pos pos on ow.pos_id = pos.pos_id
-        JOIN o2md_shop_rel_warehouse osrw ON osrw.warehouse_id = ow.warehouse_id
-        JOIN o2md_online_shop os ON os.online_shop_id = osrw.online_shop_id
-        left join o2md_warehouse_tl tl on tl.warehouse_id = ow.warehouse_id and tl.lang = #{lang} AND tl.tenant_id = #{tenantId}
-        WHERE
-        ow.warehouse_status_code = 'NORMAL'
-        AND ( pos.pos_type_code = 'WAREHOUSE' OR ( pos.pos_type_code = 'STORE' AND ow.expressed_flag = 1 ) )
-        AND osrw.active_flag=1
-        AND os.online_shop_code = #{onlineShopCode}
-        <choose>
-            <when test="tenantId != null">
-                AND ow.tenant_id = #{tenantId}
-                AND osrw.tenant_id = #{tenantId}
-                AND os.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
     </select>
     <select id="listWarehouseByCode" resultType="org.o2.metadata.console.app.bo.WarehouseCacheBO">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
