@@ -37,4 +37,8 @@ public class WarehouseQueryInnerDTO {
     private String warehouseName;
 
     private String posCode;
+    /**
+     * 寻源查询标志
+     */
+    private Boolean sourcingFlag;
 }
