@@ -5,8 +5,9 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.*;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -69,8 +70,15 @@ public class WarehouseInternalController extends BaseController {
         if (cos.isEmpty()) {
             return Results.success(map);
         }
-        for (WarehouseCO co : cos) {
-            map.put(co.getWarehouseCode(), co);
+        //寻源查询出多个网店关联仓库，需要特殊处理
+        if(Boolean.TRUE.equals(queryInnerDTO.getSourcingFlag())){
+            for (WarehouseCO co : cos) {
+                map.put(co.getWarehouseCode() + BaseConstants.Symbol.COLON + co.getOnlineShopCode(), co);
+            }
+        }else{
+            for (WarehouseCO co : cos) {
+                map.put(co.getWarehouseCode(), co);
+            }
         }
         return Results.success(map);
     }
