@@ -11,9 +11,10 @@ import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseDTO;
 import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
 import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
+import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopRelWarehouseConverter;
-import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
@@ -22,7 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -39,16 +44,18 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository;
     private final OnlineShopRedis onlineShopRedis;
     private final OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis;
+    private final SourcingCacheUpdateService sourcingCacheService;
 
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                              O2InventoryClient o2InventoryClient,
                                              OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
-                                             OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis) {
+                                             OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis, SourcingCacheUpdateService sourcingCacheService) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.onlineShopRelWarehouseRedis = onlineShopRelWarehouseRedis;
+        this.sourcingCacheService = sourcingCacheService;
     }
 
     @Override
@@ -70,6 +77,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             shopCodeSet.add(warehouse.getOnlineShopCode());
         }
         onlineShopRedis.batchUpdateShopRelWh(onlineShopRelWarehouses, organizationId, OnlineShopConstants.Redis.UPDATE);
+        sourcingCacheService.refreshSourcingCache(organizationId, this.getClass().getSimpleName());
         if (!shopCodeSet.isEmpty()) {
             try {
                 o2InventoryClient.triggerShopStockCalByShopCode(organizationId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_SOURCED);
@@ -107,6 +115,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         }
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
         onlineShopRedis.batchUpdateShopRelWh(relationships, tenantId, OnlineShopConstants.Redis.UPDATE);
+        sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         if (!shopCodeSet.isEmpty()) {
             try {
                 o2InventoryClient.triggerShopStockCalByShopCode(tenantId, shopCodeSet, O2InventoryConstant.invCalCase.SHOP_WH_ACTIVE);
