@@ -10,12 +10,22 @@ import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
+import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
-import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.entity.Carrier;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosAddress;
+import org.o2.metadata.console.infra.entity.PosRelCarrier;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.redis.PosRedis;
-import org.o2.metadata.console.infra.repository.*;
+import org.o2.metadata.console.infra.repository.CarrierRepository;
+import org.o2.metadata.console.infra.repository.PosAddressRepository;
+import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
+import org.o2.metadata.console.infra.repository.PosRepository;
+import org.o2.metadata.console.infra.repository.PostTimeRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -43,6 +53,7 @@ public class PosServiceImpl implements PosService {
     private CarrierRepository carrierRepository;
     private final PosRedis posRedis;
     private final RedisCacheClient redisCacheClient;
+    private final SourcingCacheUpdateService sourcingCacheService;
 
 
     public PosServiceImpl(PosRepository posRepository,
@@ -52,7 +63,7 @@ public class PosServiceImpl implements PosService {
                           PosRelCarrierRepository posRelCarrierRepository,
                           CarrierRepository carrierRepository,
                           PosRedis posRedis,
-                          RedisCacheClient redisCacheClient) {
+                          RedisCacheClient redisCacheClient, SourcingCacheUpdateService sourcingCacheService) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
@@ -61,6 +72,7 @@ public class PosServiceImpl implements PosService {
         this.carrierRepository = carrierRepository;
         this.posRedis = posRedis;
         this.redisCacheClient = redisCacheClient;
+        this.sourcingCacheService = sourcingCacheService;
     }
 
     @Override
@@ -93,6 +105,7 @@ public class PosServiceImpl implements PosService {
         posCodes.add(pos.getPosCode());
         // 同步Redis
         posRedis.syncPosToRedis(posCodes, pos.getTenantId());
+        sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
     }
 
@@ -137,6 +150,7 @@ public class PosServiceImpl implements PosService {
         updateCarryIsDefault(pos);
         // 更新同步服务点Redis
         updatePosRedis(oldAddress, pos);
+        sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
     }
 

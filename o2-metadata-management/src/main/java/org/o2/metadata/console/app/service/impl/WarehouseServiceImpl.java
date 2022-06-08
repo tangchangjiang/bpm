@@ -3,7 +3,6 @@ package org.o2.metadata.console.app.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import io.choerodon.core.exception.CommonException;
-import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +21,8 @@ import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
-import org.o2.metadata.console.app.bo.SourcingConfigUpdateBO;
 import org.o2.metadata.console.app.bo.WarehouseLimitBO;
+import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -36,13 +35,16 @@ import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
-import org.o2.queue.app.service.ProducerService;
-import org.o2.queue.domain.context.ProducerContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -61,14 +63,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRedis warehouseRedis;
     private final PosRedis posRedis;
     private final PosRepository posRepository;
-    private final ProducerService producerService;
+    private final SourcingCacheUpdateService sourcingCacheService;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
                                 WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis,
                                 PosRedis posRedis,
-                                PosRepository posRepository, ProducerService producerService) {
+                                PosRepository posRepository, SourcingCacheUpdateService sourcingCacheService) {
         this.warehouseRepository = warehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
@@ -76,7 +78,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseRedis = warehouseRedis;
         this.posRedis = posRedis;
         this.posRepository = posRepository;
-        this.producerService = producerService;
+        this.sourcingCacheService = sourcingCacheService;
     }
 
 
@@ -96,23 +98,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         // 更新服务点门店Redis
         List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
         posRedis.updatePodDetail(null, posCodes, tenantId);
-        refreshSourcingCache(tenantId);
+        sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         return warehouses;
     }
-
-    // 更新寻源服务缓存
-    private void refreshSourcingCache(Long tenantId) {
-        final ProducerContext<SourcingConfigUpdateBO> context = new ProducerContext<>();
-        SourcingConfigUpdateBO data = new SourcingConfigUpdateBO();
-        data.setCacheNames(Arrays.asList(WarehouseConstants.WarehouseEventManagement.WAREHOUSE_CACHE_NAME, WarehouseConstants.WarehouseEventManagement.SHOP_REL_WAREHOUSE_CACHE_NAME));
-        data.setOperationTime(LocalDateTime.now());
-        data.setOperationClassName(this.getClass().getSimpleName());
-        data.setOperator(DetailsHelper.getUserDetails().getUserId());
-        context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2SE_CONFIG_CACHE_UPDATE_EVT);
-        context.setData(data);
-        producerService.produce(tenantId, context);
-    }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -128,7 +116,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         // 更新 redis
         warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
-        refreshSourcingCache(tenantId);
+        sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         // 更新服务点门店Redis
 
         return list;
