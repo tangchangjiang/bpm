@@ -81,5 +81,6 @@ public interface WarehouseConstants {
         String O2SE_CONFIG_CACHE_UPDATE_EVT = "O2SE_CONFIG_CACHE_UPDATE_EVT";
         String WAREHOUSE_CACHE_NAME = "warehouseCacheImpl";
         String SHOP_REL_WAREHOUSE_CACHE_NAME = "shopRelWarehouseCacheImpl";
+        String NEAR_REGION_CACHE_NAME = "nearRegionCacheImpl";
     }
 }

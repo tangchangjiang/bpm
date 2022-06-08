@@ -12,6 +12,7 @@ import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.app.service.OnlineShopService;
+import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
@@ -25,7 +26,10 @@ import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 网店应用服务默认实现
@@ -39,17 +43,20 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final CatalogVersionRepository catalogVersionRepository;
     private final OnlineShopRedis onlineShopRedis;
     private final LovAdapterService lovAdapterService;
+    private final SourcingCacheUpdateService sourcingCacheService;
+
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
                                  OnlineShopRedis onlineShopRedis,
-                                 final LovAdapterService lovAdapterService) {
+                                 final LovAdapterService lovAdapterService, SourcingCacheUpdateService sourcingCacheService) {
         this.onlineShopRepository = onlineShopRepository;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
+        this.sourcingCacheService = sourcingCacheService;
     }
 
     @Override
@@ -86,6 +93,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         this.onlineShopRepository.insertSelective(onlineShop);
         onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
+        sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }
 
@@ -116,6 +124,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
         onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+        sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }
 
