@@ -18,11 +18,18 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.dto.NeighboringRegionQueryDTO;
 import org.o2.metadata.console.app.service.NeighboringRegionService;
+import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.NeighboringRegion;
 import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -38,11 +45,13 @@ import java.util.List;
 public class NeighboringRegionController extends BaseController {
     private final NeighboringRegionRepository neighboringRegionRepository;
     private final NeighboringRegionService neighboringRegionService;
+    private final SourcingCacheUpdateService sourcingCacheUpdateService;
 
     public NeighboringRegionController(final NeighboringRegionRepository neighboringRegionRepository,
-                                       final NeighboringRegionService neighboringRegionService) {
+                                       final NeighboringRegionService neighboringRegionService, SourcingCacheUpdateService sourcingCacheUpdateService) {
         this.neighboringRegionRepository = neighboringRegionRepository;
         this.neighboringRegionService = neighboringRegionService;
+        this.sourcingCacheUpdateService = sourcingCacheUpdateService;
     }
 
     @ApiOperation(value = "临近省列表")
@@ -62,15 +71,18 @@ public class NeighboringRegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<List<NeighboringRegion>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
-        return Results.success(neighboringRegionService.batchInsert(organizationId, neighboringRegion));
+        List<NeighboringRegion> result = neighboringRegionService.batchInsert(organizationId, neighboringRegion);
+        sourcingCacheUpdateService.refreshSourcingNearRegion(organizationId, this.getClass().getSimpleName());
+        return Results.success(result);
     }
 
     @ApiOperation(value = "批量删除临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<OperateResponse> remove(@RequestBody final List<NeighboringRegion> neighboringRegions) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<NeighboringRegion> neighboringRegions, @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         SecurityTokenHelper.validToken(neighboringRegions);
         neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
+        sourcingCacheUpdateService.refreshSourcingNearRegion(organizationId, this.getClass().getSimpleName());
         return Results.success(OperateResponse.success());
     }
 }
