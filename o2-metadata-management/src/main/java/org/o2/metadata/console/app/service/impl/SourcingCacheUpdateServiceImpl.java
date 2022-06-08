@@ -6,6 +6,7 @@ import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.queue.app.service.ProducerService;
 import org.o2.queue.domain.context.ProducerContext;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.List;
  * @version V1.0
  * @date 2022/6/8 10:52
  */
+@Service
 public class SourcingCacheUpdateServiceImpl implements SourcingCacheUpdateService {
 
     private final ProducerService producerService;
