@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
@@ -24,7 +25,6 @@ import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final CatalogVersionRepository catalogVersionRepository;
     private final OnlineShopRedis onlineShopRedis;
     private final LovAdapterService lovAdapterService;
+    private final TransactionalHelper transactionalHelper;
     private final SourcingCacheUpdateService sourcingCacheService;
 
 
@@ -50,12 +51,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  CatalogRepository catalogRepository,
                                  CatalogVersionRepository catalogVersionRepository,
                                  OnlineShopRedis onlineShopRedis,
-                                 final LovAdapterService lovAdapterService, SourcingCacheUpdateService sourcingCacheService) {
+                                 final LovAdapterService lovAdapterService, TransactionalHelper transactionalHelper, SourcingCacheUpdateService sourcingCacheService) {
         this.onlineShopRepository = onlineShopRepository;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
+        this.transactionalHelper = transactionalHelper;
         this.sourcingCacheService = sourcingCacheService;
     }
 
@@ -80,7 +82,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
@@ -88,17 +89,18 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShop.setCatalogId(catalog.getCatalogId());
         CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
         onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
-        if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
-            onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
-        }
-        this.onlineShopRepository.insertSelective(onlineShop);
-        onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
+        transactionalHelper.transactionOperation(() -> {
+            if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
+                onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
+            }
+            this.onlineShopRepository.insertSelective(onlineShop);
+            onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
+        });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public OnlineShop updateOnlineShop(OnlineShop onlineShop) {
          OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
         // 网店编码变动
@@ -119,11 +121,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
         }
         boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
-        if (flag) {
-            onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
-        }
-        onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-        onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+        transactionalHelper.transactionOperation(() ->{
+            if (flag) {
+                onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
+            }
+            onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
+            onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+        });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }

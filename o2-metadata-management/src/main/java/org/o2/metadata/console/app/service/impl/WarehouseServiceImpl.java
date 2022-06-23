@@ -11,6 +11,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.JsonHelper;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
@@ -36,7 +37,6 @@ import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,13 +64,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final PosRedis posRedis;
     private final PosRepository posRepository;
     private final SourcingCacheUpdateService sourcingCacheService;
+    private final TransactionalHelper transactionalHelper;
 
     public WarehouseServiceImpl(final WarehouseRepository warehouseRepository,
                                 final O2InventoryClient o2InventoryClient,
                                 final RedisCacheClient redisCacheClient,
                                 WarehouseDomainService warehouseDomainService, WarehouseRedis warehouseRedis,
                                 PosRedis posRedis,
-                                PosRepository posRepository, SourcingCacheUpdateService sourcingCacheService) {
+                                PosRepository posRepository, SourcingCacheUpdateService sourcingCacheService, TransactionalHelper transactionalHelper) {
         this.warehouseRepository = warehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.redisCacheClient = redisCacheClient;
@@ -79,11 +80,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.posRedis = posRedis;
         this.posRepository = posRepository;
         this.sourcingCacheService = sourcingCacheService;
+        this.transactionalHelper = transactionalHelper;
     }
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
         // 中台页面 控制了不能批量新建
@@ -93,32 +94,35 @@ public class WarehouseServiceImpl implements WarehouseService {
             checkPosMatchWarehouse(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
         }
-        warehouseRepository.batchInsertSelective(warehouses);
-        warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
-        // 更新服务点门店Redis
-        List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
-        posRedis.updatePodDetail(null, posCodes, tenantId);
+        transactionalHelper.transactionOperation(() -> {
+            warehouseRepository.batchInsertSelective(warehouses);
+            warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+            // 更新服务点门店Redis
+            List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
+            posRedis.updatePodDetail(null, posCodes, tenantId);
+        });
         sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         return warehouses;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
-        // 更新MySQL
-        List<Warehouse> list = warehouseRepository.batchUpdateByPrimaryKey(warehouses);
-        List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
-        for (Warehouse warehouse : warehouses) {
-            // 中台页面 控制了不能批量更新
-            validNameUnique(warehouse);
-            checkPosMatchWarehouse(warehouse);
-            warehouseCodes.add(warehouse.getWarehouseCode());
-        }
-        // 更新 redis
-        warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
-        sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
+        List<Warehouse> list = new ArrayList<>();
+        transactionalHelper.transactionOperation(() -> {
+            // 更新MySQL
+            list.addAll(warehouseRepository.batchUpdateByPrimaryKey(warehouses));
+            List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
+            for (Warehouse warehouse : warehouses) {
+                // 中台页面 控制了不能批量更新
+                validNameUnique(warehouse);
+                checkPosMatchWarehouse(warehouse);
+                warehouseCodes.add(warehouse.getWarehouseCode());
+            }
+            // 更新 redis
+            warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
+        });
         // 更新服务点门店Redis
-
+        sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         return list;
 
     }

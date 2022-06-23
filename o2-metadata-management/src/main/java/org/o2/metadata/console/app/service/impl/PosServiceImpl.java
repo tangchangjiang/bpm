@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
@@ -30,7 +31,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +53,7 @@ public class PosServiceImpl implements PosService {
     private CarrierRepository carrierRepository;
     private final PosRedis posRedis;
     private final RedisCacheClient redisCacheClient;
+    private final TransactionalHelper transactionalHelper;
     private final SourcingCacheUpdateService sourcingCacheService;
 
 
@@ -63,7 +64,7 @@ public class PosServiceImpl implements PosService {
                           PosRelCarrierRepository posRelCarrierRepository,
                           CarrierRepository carrierRepository,
                           PosRedis posRedis,
-                          RedisCacheClient redisCacheClient, SourcingCacheUpdateService sourcingCacheService) {
+                          RedisCacheClient redisCacheClient, TransactionalHelper transactionalHelper, SourcingCacheUpdateService sourcingCacheService) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
@@ -72,84 +73,87 @@ public class PosServiceImpl implements PosService {
         this.carrierRepository = carrierRepository;
         this.posRedis = posRedis;
         this.redisCacheClient = redisCacheClient;
+        this.transactionalHelper = transactionalHelper;
         this.sourcingCacheService = sourcingCacheService;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Pos create(final Pos pos) {
         // 名称校验
         validPosNameUnique(pos);
         validatePosCode(pos);
         PosAddress address = pos.getAddress();
-        if (address != null && address.getRegionCode() != null) {
-            updatePosAddress(address,pos.getTenantId());
-            address.setTenantId(pos.getTenantId());
-            posAddressRepository.insertSelective(address);
-            pos.setAddressId(address.getPosAddressId());
-        }
-        posRepository.insertSelective(pos);
-        if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
-            pos.getPostTimes().forEach(postTime -> {
-                // 过滤无意义数据
-                if (!postTime.initTimeRange()) {
-                    return;
-                }
-                postTime.setPosId(pos.getPosId());
-                postTime.setTenantId(pos.getTenantId());
-                postTimeRepository.insert(postTime);
-            });
-        }
-        updateCarryIsDefault(pos);
-        List<String> posCodes = new ArrayList<>();
-        posCodes.add(pos.getPosCode());
-        // 同步Redis
-        posRedis.syncPosToRedis(posCodes, pos.getTenantId());
+        transactionalHelper.transactionOperation(() -> {
+            if (address != null && address.getRegionCode() != null) {
+                updatePosAddress(address,pos.getTenantId());
+                address.setTenantId(pos.getTenantId());
+                posAddressRepository.insertSelective(address);
+                pos.setAddressId(address.getPosAddressId());
+            }
+            posRepository.insertSelective(pos);
+            if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
+                pos.getPostTimes().forEach(postTime -> {
+                    // 过滤无意义数据
+                    if (!postTime.initTimeRange()) {
+                        return;
+                    }
+                    postTime.setPosId(pos.getPosId());
+                    postTime.setTenantId(pos.getTenantId());
+                    postTimeRepository.insert(postTime);
+                });
+            }
+            updateCarryIsDefault(pos);
+            List<String> posCodes = new ArrayList<>();
+            posCodes.add(pos.getPosCode());
+            // 同步Redis
+            posRedis.syncPosToRedis(posCodes, pos.getTenantId());
+        });
         sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Pos update(final Pos pos) {
         validPosNameUnique(pos);
         validatePosCode(pos);
-        PosAddress oldAddress = null;
-        final PosAddress address;
-        if ((address = pos.getAddress()) != null) {
-            // 查询旧地址信息
-            PosAddressQueryInnerDTO posAddressQueryInnerDTO = new PosAddressQueryInnerDTO();
-            List<String> posCodes = new ArrayList<>();
-            posCodes.add(pos.getPosCode());
-            posAddressQueryInnerDTO.setPosCodes(posCodes);
-            List<PosAddress> oldAddressList = posAddressRepository.listPosAddress(posAddressQueryInnerDTO, pos.getTenantId());
-            if (CollectionUtils.isNotEmpty(oldAddressList)) {
-                oldAddress = oldAddressList.get(0);
-            }
+        transactionalHelper.transactionOperation(() ->{
+            PosAddress oldAddress = null;
+            final PosAddress address;
+            if ((address = pos.getAddress()) != null) {
+                // 查询旧地址信息
+                PosAddressQueryInnerDTO posAddressQueryInnerDTO = new PosAddressQueryInnerDTO();
+                List<String> posCodes = new ArrayList<>();
+                posCodes.add(pos.getPosCode());
+                posAddressQueryInnerDTO.setPosCodes(posCodes);
+                List<PosAddress> oldAddressList = posAddressRepository.listPosAddress(posAddressQueryInnerDTO, pos.getTenantId());
+                if (CollectionUtils.isNotEmpty(oldAddressList)) {
+                    oldAddress = oldAddressList.get(0);
+                }
 
-            updatePosAddress(address,pos.getTenantId());
-            address.setTenantId(pos.getTenantId());
-            posAddressRepository.updateByPrimaryKey(address);
-        }
-        posRepository.updateByPrimaryKey(pos);
-        if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
-            pos.getPostTimes().forEach(postTime -> {
-                // 过滤无意义数据
-                if (!postTime.initTimeRange()) {
-                    return;
-                }
-                postTime.setPosId(pos.getPosId());
-                postTime.setTenantId(pos.getTenantId());
-                if (postTime.getPostTimeId() != null) {
-                    postTimeRepository.updateByPrimaryKey(postTime);
-                } else {
-                    postTimeRepository.insert(postTime);
-                }
-            });
-        }
-        updateCarryIsDefault(pos);
-        // 更新同步服务点Redis
-        updatePosRedis(oldAddress, pos);
+                updatePosAddress(address,pos.getTenantId());
+                address.setTenantId(pos.getTenantId());
+                posAddressRepository.updateByPrimaryKey(address);
+            }
+            posRepository.updateByPrimaryKey(pos);
+            if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
+                pos.getPostTimes().forEach(postTime -> {
+                    // 过滤无意义数据
+                    if (!postTime.initTimeRange()) {
+                        return;
+                    }
+                    postTime.setPosId(pos.getPosId());
+                    postTime.setTenantId(pos.getTenantId());
+                    if (postTime.getPostTimeId() != null) {
+                        postTimeRepository.updateByPrimaryKey(postTime);
+                    } else {
+                        postTimeRepository.insert(postTime);
+                    }
+                });
+            }
+            updateCarryIsDefault(pos);
+            // 更新同步服务点Redis
+            updatePosRedis(oldAddress, pos);
+        });
         sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
     }
