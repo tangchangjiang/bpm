@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
@@ -20,9 +21,9 @@ import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.domain.onlineshop.repository.OnlineShopRelWarehouseDomainRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,21 +46,22 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     private final OnlineShopRedis onlineShopRedis;
     private final OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis;
     private final SourcingCacheUpdateService sourcingCacheService;
+    private final TransactionalHelper transactionalHelper;
 
     public OnlineShopRelWarehouseServiceImpl(OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                              O2InventoryClient o2InventoryClient,
                                              OnlineShopRelWarehouseDomainRepository onlineShopRelWarehouseDomainRepository,
-                                             OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis, SourcingCacheUpdateService sourcingCacheService) {
+                                             OnlineShopRedis onlineShopRedis, OnlineShopRelWarehouseRedis onlineShopRelWarehouseRedis, SourcingCacheUpdateService sourcingCacheService, TransactionalHelper transactionalHelper) {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.o2InventoryClient = o2InventoryClient;
         this.onlineShopRelWarehouseDomainRepository = onlineShopRelWarehouseDomainRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.onlineShopRelWarehouseRedis = onlineShopRelWarehouseRedis;
         this.sourcingCacheService = sourcingCacheService;
+        this.transactionalHelper = transactionalHelper;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchInsertSelective(Long organizationId, final List<OnlineShopRelWarehouse> relationships) {
         // 判断是否重复
         List<OnlineShopRelWarehouse> queryList = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
@@ -70,13 +72,16 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
         for (OnlineShopRelWarehouse relationship : relationships) {
             relationship.setTenantId(organizationId);
         }
-        List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchInsertSelective(relationships);
-        // 关联查询 网店编码和仓库编码
-        List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
-        for (OnlineShopRelWarehouse warehouse : onlineShopRelWarehouses) {
-            shopCodeSet.add(warehouse.getOnlineShopCode());
-        }
-        onlineShopRedis.batchUpdateShopRelWh(onlineShopRelWarehouses, organizationId, OnlineShopConstants.Redis.UPDATE);
+        List<OnlineShopRelWarehouse> list = new ArrayList<>();
+        transactionalHelper.transactionOperation(() -> {
+            list.addAll(onlineShopRelWarehouseRepository.batchInsertSelective(relationships));
+            // 关联查询 网店编码和仓库编码
+            List<OnlineShopRelWarehouse> onlineShopRelWarehouses = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, organizationId);
+            for (OnlineShopRelWarehouse warehouse : onlineShopRelWarehouses) {
+                shopCodeSet.add(warehouse.getOnlineShopCode());
+            }
+            onlineShopRedis.batchUpdateShopRelWh(onlineShopRelWarehouses, organizationId, OnlineShopConstants.Redis.UPDATE);
+        });
         sourcingCacheService.refreshSourcingCache(organizationId, this.getClass().getSimpleName());
         if (!shopCodeSet.isEmpty()) {
             try {
@@ -90,7 +95,6 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public List<OnlineShopRelWarehouse> batchUpdateByPrimaryKey(Long tenantId, final List<OnlineShopRelWarehouse> relationships) {
         List<OnlineShopRelWarehouse> originList = onlineShopRelWarehouseRepository.selectByShopIdAndWareIdAndPosId(relationships, tenantId);
         if (originList.isEmpty()) {
@@ -113,8 +117,11 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
             relationship.setWarehouseCode(origin.getWarehouseCode());
             relationship.setOnlineShopCode(origin.getOnlineShopCode());
         }
-        List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships);
-        onlineShopRedis.batchUpdateShopRelWh(relationships, tenantId, OnlineShopConstants.Redis.UPDATE);
+        List<OnlineShopRelWarehouse> list = new ArrayList<>();
+        transactionalHelper.transactionOperation(() -> {
+            list.addAll(onlineShopRelWarehouseRepository.batchUpdateByPrimaryKey(relationships));
+            onlineShopRedis.batchUpdateShopRelWh(relationships, tenantId, OnlineShopConstants.Redis.UPDATE);
+        });
         sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         if (!shopCodeSet.isEmpty()) {
             try {
