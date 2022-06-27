@@ -4,6 +4,7 @@ import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -48,4 +49,11 @@ public interface OnlineShopService {
      * @return list
      */
     Map<String,List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId);
+
+    /**
+     * 保存网店
+     * @param onlineShopDTO 网店
+     * @return 网店
+     */
+    OnlineShopDTO saveOnlineShop(OnlineShopDTO onlineShopDTO);
 }

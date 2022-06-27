@@ -3,6 +3,7 @@ package org.o2.metadata.management.client.infra.feign;
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.OnlineShopRemoteServiceImpl;
@@ -69,5 +70,15 @@ public interface OnlineShopRemoteService {
     @PostMapping("/{organizationId}/online-shops-internal/onlineShops")
     ResponseEntity<String> listOnlineShops(@RequestBody List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList,
                                            @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
+
+    /**
+     * 新建或修改网店
+     * @param onlineShopDTO 网店
+     * @param organizationId 租户id
+     * @return 网店
+     */
+    @PostMapping("/{organizationId}/online-shops-internal/onlineShop-save")
+    ResponseEntity<String> saveOnlineShop(@RequestBody OnlineShopDTO onlineShopDTO,
+                                          @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
 
 }

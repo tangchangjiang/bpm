@@ -2,6 +2,7 @@ package org.o2.metadata.management.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.management.client.infra.feign.OnlineShopRemoteService;
@@ -40,6 +41,12 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     @Override
     public ResponseEntity<String> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long organizationId) {
         log.error("Error listOnlineShops, params[tenantId = {}, onlineShopCatalogVersionList = {}]",organizationId, onlineShopCatalogVersionList);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> saveOnlineShop(OnlineShopDTO onlineShopDTO, Long organizationId) {
+        log.error("Error onlineShop, params[tenantId = {}, onlineShopDTO = {}]",organizationId, onlineShopDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

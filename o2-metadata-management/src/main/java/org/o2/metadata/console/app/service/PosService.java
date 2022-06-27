@@ -6,6 +6,7 @@ import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.management.client.domain.dto.PosDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -63,4 +64,12 @@ public interface PosService {
      * @return  map
      */
     Map<String, String> listPosName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO);
+
+    /**
+     * 保存服务点
+     *
+     * @param posDTO 服务点
+     * @return 服务点
+     */
+    PosDTO savePos(PosDTO posDTO);
 }

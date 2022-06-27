@@ -24,7 +24,9 @@ import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,6 +199,21 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             map.put(key,list);
         }
         return map;
+    }
+
+    @Override
+    public OnlineShopDTO saveOnlineShop(OnlineShopDTO onlineShopDTO) {
+        OnlineShop onlineShop = OnlineShopConverter.dtoToBoOnlineShop(onlineShopDTO);
+        OnlineShop onlineShopQuery = new OnlineShop();
+        onlineShopQuery.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        onlineShopQuery.setTenantId(onlineShop.getTenantId());
+        OnlineShop onlineShopResult = onlineShopRepository.selectOne(onlineShopQuery);
+        if (ObjectUtils.isEmpty(onlineShopResult)) {
+            this.createOnlineShop(onlineShop);
+        } else {
+            this.updateOnlineShop(onlineShop);
+        }
+        return onlineShopDTO;
     }
 
 }

@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,5 +106,28 @@ public class OnlineShopConverter {
             onlineShopBOList.add(poToBoObject(onlineShop));
         }
         return onlineShopBOList;
+    }
+
+    public static OnlineShop dtoToBoOnlineShop(OnlineShopDTO onlineShopDTO){
+        if (null == onlineShopDTO){
+            return null;
+        }
+        OnlineShop onlineShop = new OnlineShop();
+        onlineShop.setTenantId(onlineShopDTO.getTenantId());
+        onlineShop.setActiveFlag(onlineShopDTO.getActiveFlag());
+        onlineShop.setCatalogCode(onlineShopDTO.getCatalogCode());
+        onlineShop.setCatalogVersionCode(onlineShopDTO.getCatalogVersionCode());
+        onlineShop.setDefaultCurrency(onlineShopDTO.getDefaultCurrency());
+        onlineShop.setEnableSplitFlag(onlineShopDTO.getEnableSplitFlag());
+        onlineShop.setExchangedFlag(onlineShopDTO.getExchangedFlag());
+        onlineShop.setIsDefault(onlineShopDTO.getIsDefault());
+        onlineShop.setOnlineShopCode(onlineShopDTO.getOnlineShopCode());
+        onlineShop.setOnlineShopName(onlineShopDTO.getOnlineShopName());
+        onlineShop.setPickedUpFlag(onlineShopDTO.getPickedUpFlag());
+        onlineShop.setSourcedFlag(onlineShopDTO.getSourcedFlag());
+        onlineShop.setPlatformCode(onlineShopDTO.getPlatformCode());
+        onlineShop.setPlatformShopCode(onlineShopDTO.getPlatformShopCode());
+
+        return onlineShop;
     }
 }
