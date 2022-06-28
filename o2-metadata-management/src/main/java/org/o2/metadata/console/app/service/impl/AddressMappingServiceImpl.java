@@ -349,11 +349,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             }
         }
         // 查询静态资源配置信息
-        StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
-        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION_EXTERNAL);
-        staticResourceConfigDTO.setTenantId(tenantId);
-        final List<StaticResourceConfigCO> staticResourceConfigList = cmsManagementClient.listStaticResourceConfigCO(tenantId, staticResourceConfigDTO);
-        final StaticResourceConfigCO staticResourceConfigCO = staticResourceConfigList.get(0);
+        final StaticResourceConfigCO staticResourceConfigCO = cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_REGION_EXTERNAL);
         String uploadFolder = staticResourceConfigCO.getUploadFolder();
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)

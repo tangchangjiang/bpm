@@ -52,12 +52,8 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         final String lovCode=publicLovVO.getLovCode();
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, lovCode);
 
-        StaticResourceConfigDTO staticResourceConfigDTO=new StaticResourceConfigDTO();
-        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
-        staticResourceConfigDTO.setTenantId(tenantId);
-
-        final List<StaticResourceConfigCO> staticResourceConfigCOList=cmsManagementClient.listStaticResourceConfigCO(tenantId,staticResourceConfigDTO);
-        final StaticResourceConfigCO staticResourceConfigCO=staticResourceConfigCOList.get(0);
+        // 查询静态资源配置信息
+        final StaticResourceConfigCO staticResourceConfigCO=cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
         String uploadFolder=staticResourceConfigCO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl

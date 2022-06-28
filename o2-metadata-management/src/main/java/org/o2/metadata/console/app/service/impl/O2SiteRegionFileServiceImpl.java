@@ -52,12 +52,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         log.info("static params are : {},{}", tenantId, countryCode);
 
         // 查询静态资源配置信息
-        StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
-        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION);
-        staticResourceConfigDTO.setTenantId(tenantId);
-
-        final List<StaticResourceConfigCO> staticResourceConfigList = cmsManagementClient.listStaticResourceConfigCO(tenantId, staticResourceConfigDTO);
-        final StaticResourceConfigCO staticResourceConfigCO = staticResourceConfigList.get(0);
+        final StaticResourceConfigCO staticResourceConfigCO = cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_REGION);
         String uploadFolder = staticResourceConfigCO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
