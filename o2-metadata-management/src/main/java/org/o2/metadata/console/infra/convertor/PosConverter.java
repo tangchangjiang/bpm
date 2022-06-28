@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.convertor;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosAddress;
+import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosAddressDTO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 
@@ -61,7 +62,7 @@ public class PosConverter {
     }
 
     public static Pos dtoToPoObject(PosDTO posDTO) {
-        if (null == posDTO){
+        if (null == posDTO) {
             return null;
         }
         Pos pos = new Pos();
@@ -77,8 +78,8 @@ public class PosConverter {
         return pos;
     }
 
-    public static PosAddress dtoToPoPosAddress(PosAddressDTO posAddressDTO){
-        if (null == posAddressDTO){
+    public static PosAddress dtoToPoPosAddress(PosAddressDTO posAddressDTO) {
+        if (null == posAddressDTO) {
             return null;
         }
         PosAddress posAddress = new PosAddress();
@@ -86,11 +87,27 @@ public class PosConverter {
         posAddress.setCountryCode(posAddressDTO.getCountryCode());
         posAddress.setDistrictCode(posAddressDTO.getDistrictCode());
         posAddress.setLatitude(posAddressDTO.getLatitude());
-        posAddress.setLongitude(posAddress.getLongitude());
+        posAddress.setLongitude(posAddressDTO.getLongitude());
         posAddress.setStreetName(posAddressDTO.getStreetName());
         posAddress.setPhoneNumber(posAddressDTO.getPhoneNumber());
         posAddress.setRegionCode(posAddressDTO.getRegionCode());
         posAddress.setTenantId(posAddressDTO.getTenantId());
         return posAddress;
+    }
+
+    public static PosCO poToCoObject(Pos pos) {
+        if (null == pos) {
+            return null;
+        }
+        PosCO posCO = new PosCO();
+        posCO.setTenantId(pos.getTenantId());
+        posCO.setBusinessTime(pos.getBusinessTime());
+        posCO.setAddressId(pos.getAddressId());
+        posCO.setPosName(pos.getPosName());
+        posCO.setPosCode(pos.getPosCode());
+        posCO.setOpenDate(pos.getOpenDate());
+        posCO.setPosStatusCode(pos.getPosStatusCode());
+        posCO.setPosTypeCode(pos.getPosTypeCode());
+        return posCO;
     }
 }

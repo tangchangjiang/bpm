@@ -24,7 +24,7 @@ public class OnlineShopConverter {
      * @param onlineShop 网店
      * @return  vo
      */
-    private static OnlineShopCO poToCoObject(OnlineShop onlineShop) {
+    public static OnlineShopCO poToCoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
@@ -70,7 +70,7 @@ public class OnlineShopConverter {
      * @param  onlineShop 网店
      * @return bo
      */
-    public static OnlineShopCacheBO poToBoObject(OnlineShop onlineShop){
+    public static OnlineShopCacheBO poToBoObject(OnlineShop onlineShop) {
 
         if (onlineShop == null) {
             return null;
@@ -108,8 +108,13 @@ public class OnlineShopConverter {
         return onlineShopBOList;
     }
 
-    public static OnlineShop dtoToBoOnlineShop(OnlineShopDTO onlineShopDTO){
-        if (null == onlineShopDTO){
+    /**
+     * DTO 转 PO
+     * @param onlineShopDTO DTO
+     * @return PO
+     */
+    public static OnlineShop dtoToBoOnlineShop(OnlineShopDTO onlineShopDTO) {
+        if (null == onlineShopDTO) {
             return null;
         }
         OnlineShop onlineShop = new OnlineShop();

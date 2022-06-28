@@ -55,5 +55,5 @@ public interface OnlineShopService {
      * @param onlineShopDTO 网店
      * @return 网店
      */
-    OnlineShopDTO saveOnlineShop(OnlineShopDTO onlineShopDTO);
+    OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO);
 }

@@ -17,12 +17,8 @@ import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
-import org.o2.metadata.console.infra.entity.Catalog;
-import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
-import org.o2.metadata.console.infra.repository.CatalogRepository;
-import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
@@ -41,22 +37,17 @@ import java.util.Map;
 @Service
 public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRepository onlineShopRepository;
-    private final CatalogRepository catalogRepository;
-    private final CatalogVersionRepository catalogVersionRepository;
     private final OnlineShopRedis onlineShopRedis;
     private final LovAdapterService lovAdapterService;
     private final TransactionalHelper transactionalHelper;
     private final SourcingCacheUpdateService sourcingCacheService;
 
-
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
-                                 CatalogRepository catalogRepository,
-                                 CatalogVersionRepository catalogVersionRepository,
                                  OnlineShopRedis onlineShopRedis,
-                                 final LovAdapterService lovAdapterService, TransactionalHelper transactionalHelper, SourcingCacheUpdateService sourcingCacheService) {
+                                 final LovAdapterService lovAdapterService,
+                                 TransactionalHelper transactionalHelper,
+                                 SourcingCacheUpdateService sourcingCacheService) {
         this.onlineShopRepository = onlineShopRepository;
-        this.catalogRepository = catalogRepository;
-        this.catalogVersionRepository = catalogVersionRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
         this.transactionalHelper = transactionalHelper;
@@ -72,7 +63,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             String currencyCode = onlineShop.getDefaultCurrency();
             currencyCodes.add(currencyCode);
         }
-        if(CollectionUtils.isNotEmpty(currencyCodes)) {
+        if (CollectionUtils.isNotEmpty(currencyCodes)) {
             Map<String, CurrencyBO> map = lovAdapterService.findCurrencyByCodes(condition.getTenantId(), currencyCodes);
             for (OnlineShop onlineShop : onlineShops) {
                 String currencyCode = onlineShop.getDefaultCurrency();
@@ -87,10 +78,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
-        Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
-        onlineShop.setCatalogId(catalog.getCatalogId());
-        CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
-        onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
+
         transactionalHelper.transactionOperation(() -> {
             if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
@@ -106,29 +94,20 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public OnlineShop updateOnlineShop(OnlineShop onlineShop) {
          OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
         // 网店编码变动
-        if (!origin.getOnlineShopCode().equals(onlineShop.getOnlineShopCode())){
+        if (!origin.getOnlineShopCode().equals(onlineShop.getOnlineShopCode())) {
             throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE);
         }
         if (!origin.getOnlineShopName().equals(onlineShop.getOnlineShopName())) {
             validateOnlineShopName(onlineShop);
         }
-        // 目录
-        if (!origin.getCatalogCode().equals(onlineShop.getCatalogCode())) {
-            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(onlineShop.getCatalogCode()).tenantId(onlineShop.getTenantId()).build());
-            onlineShop.setCatalogId(catalog.getCatalogId());
-        }
-        // 目录版本
-        if (!origin.getCatalogVersionCode().equals(onlineShop.getCatalogVersionCode())) {
-            CatalogVersion catalogVersion = catalogVersionRepository.selectOne(CatalogVersion.builder().catalogVersionCode(onlineShop.getCatalogVersionCode()).tenantId(onlineShop.getTenantId()).build());
-            onlineShop.setCatalogVersionId(catalogVersion.getCatalogVersionId());
-        }
+
         boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
-        transactionalHelper.transactionOperation(() ->{
+        transactionalHelper.transactionOperation(() -> {
             if (flag) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
-            onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(),onlineShop.getTenantId());
+            onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
@@ -142,8 +121,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         // 租户id+平台编码+平台网店编码
         Sqls sqls = Sqls.custom();
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
-        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
-        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE,onlineShop.getPlatformShopCode());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE, onlineShop.getPlatformCode());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE, onlineShop.getPlatformShopCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
             throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
@@ -158,7 +137,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         // 租户id+平台编码+网店名称
         Sqls sqls = Sqls.custom();
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
-        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE,onlineShop.getPlatformCode());
+        sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_CODE, onlineShop.getPlatformCode());
         sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
@@ -167,7 +146,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public Map<String,OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+    public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
         List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, tenantId));
         if (voList.isEmpty()) {
@@ -181,39 +160,39 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
     @Override
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
-        Map<String,List<OnlineShopCO>> map = new HashMap<>(16);
-        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList,tenantId));
+        Map<String, List<OnlineShopCO>> map = new HashMap<>(16);
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList, tenantId));
         if (voList.isEmpty()) {
             return map;
         }
         for (OnlineShopCO co : voList) {
             String key = co.getCatalogCode() + "-" + co.getCatalogVersionCode();
-            List<OnlineShopCO> list = map.getOrDefault(key,new ArrayList<>());
+            List<OnlineShopCO> list = map.getOrDefault(key, new ArrayList<>());
             if (list.isEmpty()) {
                 List<OnlineShopCO> onlineShops = new ArrayList<>();
                 onlineShops.add(co);
-                map.put(key,onlineShops);
+                map.put(key, onlineShops);
                 continue;
             }
             list.add(co);
-            map.put(key,list);
+            map.put(key, list);
         }
         return map;
     }
 
     @Override
-    public OnlineShopDTO saveOnlineShop(OnlineShopDTO onlineShopDTO) {
+    public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO) {
         OnlineShop onlineShop = OnlineShopConverter.dtoToBoOnlineShop(onlineShopDTO);
         OnlineShop onlineShopQuery = new OnlineShop();
         onlineShopQuery.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopQuery.setTenantId(onlineShop.getTenantId());
         OnlineShop onlineShopResult = onlineShopRepository.selectOne(onlineShopQuery);
         if (ObjectUtils.isEmpty(onlineShopResult)) {
-            this.createOnlineShop(onlineShop);
+            onlineShopResult = this.createOnlineShop(onlineShop);
         } else {
-            this.updateOnlineShop(onlineShop);
+            onlineShopResult = this.updateOnlineShop(onlineShop);
         }
-        return onlineShopDTO;
+        return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
 
 }

@@ -12,6 +12,7 @@ import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,8 +66,8 @@ public class PosInternalController extends BaseController {
     @ApiOperation(value = "新建或更新服务点")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/save-pos")
-    public ResponseEntity<PosDTO> savePose(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                        @RequestBody PosDTO posDTO) {
+    public ResponseEntity<PosCO> savePose(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                          @RequestBody PosDTO posDTO) {
         return Results.success(posService.savePos(posDTO));
     }
 }

@@ -74,8 +74,8 @@ public class OnlineShopClient {
         });
     }
 
-    public OnlineShopDTO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopDTO>() {
+    public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
         });
     }
 }

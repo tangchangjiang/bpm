@@ -18,6 +18,7 @@ import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.repository.*;
+import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -276,18 +277,18 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public PosDTO savePos(PosDTO posDTO) {
+    public PosCO savePos(PosDTO posDTO) {
         Pos pos = PosConverter.dtoToPoObject(posDTO);
         Pos posQuery = new Pos();
         posQuery.setPosCode(pos.getPosCode());
         posQuery.setTenantId(pos.getTenantId());
         Pos posResult = posRepository.selectOne(posQuery);
         if (ObjectUtils.isEmpty(posResult)) {
-            this.create(pos);
+            posResult = this.create(pos);
         } else {
-            this.update(pos);
+            posResult = this.update(pos);
         }
-        return posDTO;
+        return PosConverter.poToCoObject(posResult);
     }
 
     /**
