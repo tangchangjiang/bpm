@@ -54,7 +54,7 @@ public class OnlineShopInternalController {
         return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
     }
 
-    @ApiOperation(value = "新建或更新网店")
+    @ApiOperation(value = "保存网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/onlineShop-save")
     public ResponseEntity<OnlineShopCO> saveOnlineShop(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,

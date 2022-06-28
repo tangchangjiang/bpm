@@ -187,8 +187,17 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShopQuery.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopQuery.setTenantId(onlineShop.getTenantId());
         OnlineShop onlineShopResult = onlineShopRepository.selectOne(onlineShopQuery);
+
         if (ObjectUtils.isEmpty(onlineShopResult)) {
-            onlineShopResult = this.createOnlineShop(onlineShop);
+            OnlineShop query = new OnlineShop();
+            query.setOnlineShopName(onlineShopDTO.getOnlineShopName());
+            query.setTenantId(onlineShopDTO.getTenantId());
+            OnlineShop result = onlineShopRepository.selectOne(query);
+            if (ObjectUtils.isEmpty(result)) {
+                onlineShopResult = this.createOnlineShop(onlineShop);
+            } else {
+                return OnlineShopConverter.poToCoObject(result);
+            }
         } else {
             onlineShopResult = this.updateOnlineShop(onlineShop);
         }

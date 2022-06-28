@@ -74,6 +74,12 @@ public class OnlineShopClient {
         });
     }
 
+    /**
+     * 保存网店
+     * @param onlineShopDTO 网店
+     * @param tenantId 租户id
+     * @return 网店
+     */
     public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
         });

@@ -284,7 +284,16 @@ public class PosServiceImpl implements PosService {
         posQuery.setTenantId(pos.getTenantId());
         Pos posResult = posRepository.selectOne(posQuery);
         if (ObjectUtils.isEmpty(posResult)) {
-            posResult = this.create(pos);
+            Pos query = new Pos();
+            query.setPosName(pos.getPosName());
+            query.setTenantId(pos.getTenantId());
+            Pos result = posRepository.selectOne(query);
+            if (ObjectUtils.isEmpty(result)) {
+                posResult = this.create(pos);
+            } else {
+                return PosConverter.poToCoObject(result);
+            }
+
         } else {
             posResult = this.update(pos);
         }
