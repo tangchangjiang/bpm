@@ -8,15 +8,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.cms.management.client.O2CmsManagementClient;
+import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
+import org.o2.cms.management.client.domain.dto.StaticResourceConfigDTO;
+import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.co.AddressMappingCO;
-import org.o2.metadata.console.api.dto.*;
+import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.AddressReleaseDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.app.service.AddressMappingService;
-import org.o2.metadata.console.app.service.StaticResourceConfigService;
-import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.AddressConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
@@ -49,20 +55,20 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     private final AddressMappingRepository addressMappingRepository;
     private final PlatformRepository platformRepository;
     private final RegionLovQueryRepository regionLovQueryRepository;
-    private final StaticResourceConfigService staticResourceConfigService;
-    private final StaticResourceInternalService staticResourceInternalService;
+    private final O2CmsManagementClient cmsManagementClient;
 
     public AddressMappingServiceImpl(final AddressMappingMapper addressMappingMapper,
                                      RegionRepository regionRepository,
                                      AddressMappingRepository addressMappingRepository,
-                                     PlatformRepository platformRepository, RegionLovQueryRepository regionLovQueryRepository, StaticResourceConfigService staticResourceConfigService, StaticResourceInternalService staticResourceInternalService) {
+                                     PlatformRepository platformRepository,
+                                     RegionLovQueryRepository regionLovQueryRepository,
+                                     O2CmsManagementClient cmsManagementClient) {
         this.addressMappingMapper = addressMappingMapper;
         this.regionRepository = regionRepository;
         this.addressMappingRepository = addressMappingRepository;
         this.platformRepository = platformRepository;
         this.regionLovQueryRepository = regionLovQueryRepository;
-        this.staticResourceConfigService = staticResourceConfigService;
-        this.staticResourceInternalService = staticResourceInternalService;
+        this.cmsManagementClient = cmsManagementClient;
     }
 
     /**
@@ -330,6 +336,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO) {
+        Long tenantId = addressReleaseDTO.getTenantId();
         //构建地址匹配json数据
         List<AddressMapping> addressMappings = addressMappingRepository.queryAddress(addressReleaseDTO);
         List<Region> regions = regionLovQueryRepository.queryRegion(addressReleaseDTO.getTenantId(), new RegionQueryLovInnerDTO());
@@ -344,10 +351,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         // 查询静态资源配置信息
         StaticResourceConfigDTO staticResourceConfigDTO = new StaticResourceConfigDTO();
         staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_REGION_EXTERNAL);
-        staticResourceConfigDTO.setTenantId(addressReleaseDTO.getTenantId());
-        final List<StaticResourceConfig> staticResourceConfigList = staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
-        final StaticResourceConfig staticResourceConfig = staticResourceConfigList.get(0);
-        String uploadFolder = staticResourceConfig.getUploadFolder();
+        staticResourceConfigDTO.setTenantId(tenantId);
+        final List<StaticResourceConfigCO> staticResourceConfigList = cmsManagementClient.listStaticResourceConfigCO(tenantId, staticResourceConfigDTO);
+        final StaticResourceConfigCO staticResourceConfigCO = staticResourceConfigList.get(0);
+        String uploadFolder = staticResourceConfigCO.getUploadFolder();
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)
                 .orElse(Joiner.on(BaseConstants.Symbol.SLASH).skipNulls()
@@ -369,14 +376,14 @@ public class AddressMappingServiceImpl implements AddressMappingService {
             url = trimDomainPrefix(resourceUrl,fileName);
         }
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
-        saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
-        saveDTO.setDescription(staticResourceConfig.getDescription());
-        saveDTO.setResourceLevel(staticResourceConfig.getResourceLevel());
+        saveDTO.setResourceCode(staticResourceConfigCO.getResourceCode());
+        saveDTO.setDescription(staticResourceConfigCO.getDescription());
+        saveDTO.setResourceLevel(staticResourceConfigCO.getResourceLevel());
         saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
         saveDTO.setResourceHost(host);
         saveDTO.setResourceUrl(url);
         saveDTO.setTenantId(addressReleaseDTO.getTenantId());
-        staticResourceInternalService.saveResource(saveDTO);
+        cmsManagementClient.saveResource(tenantId,Collections.singletonList(saveDTO));
     }
 
 
