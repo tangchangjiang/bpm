@@ -5,6 +5,7 @@ import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.OnlineShopCO;
 import org.o2.metadata.management.client.domain.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.management.client.infra.feign.OnlineShopRemoteService;
@@ -70,6 +71,17 @@ public class OnlineShopClient {
      */
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopCO>>>() {
+        });
+    }
+
+    /**
+     * 保存网店
+     * @param onlineShopDTO 网店
+     * @param tenantId 租户id
+     * @return 网店
+     */
+    public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
         });
     }
 }

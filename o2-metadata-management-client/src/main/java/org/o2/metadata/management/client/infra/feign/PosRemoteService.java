@@ -3,6 +3,7 @@ package org.o2.metadata.management.client.infra.feign;
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
 import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
+import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.o2.metadata.management.client.domain.dto.PosQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.PosRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 /**
  *
@@ -43,4 +42,14 @@ public interface PosRemoteService {
     @PostMapping("/{organizationId}/pos-internal/select-name")
     ResponseEntity<String> listPoseName(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId,
                                         @RequestBody PosQueryInnerDTO posQueryInnerDTO);
+
+    /**
+     * 新建或修改服务点
+     * @param posDTO 服务点
+     * @param organizationId 租户ID
+     * @return string
+     */
+    @PostMapping("/{organizationId}/pos-internal/save-pos")
+    ResponseEntity<String> savePos(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId,
+                                        @RequestBody PosDTO posDTO);
 }
