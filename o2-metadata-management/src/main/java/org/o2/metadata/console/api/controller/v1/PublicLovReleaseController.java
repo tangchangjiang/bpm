@@ -9,6 +9,7 @@ import org.hzero.core.util.Results;
 import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,15 +26,15 @@ public class PublicLovReleaseController extends BaseController {
         this.publicLovService = publicLovService;
     }
 
-    @ApiOperation(value = "")
+    @ApiOperation(value = "公共值集发布")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/release")
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                   @RequestParam String lovCode,
+                                                   @RequestParam(required = false) String lovCode,
                                                    @RequestParam(required = false) String resourceOwner){
         PublicLovVO publicLovVO = new PublicLovVO();
         publicLovVO.setTenantId(organizationId);
-        publicLovVO.setLovCode(lovCode);
+        publicLovVO.setLovCode(lovCode!=null?lovCode:MetadataConstants.PublicLov.PUB_LOV_CODE);
         publicLovService.createPublicLovFile(publicLovVO,resourceOwner);
         return Results.success(OperateResponse.success());
     }

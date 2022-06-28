@@ -18,6 +18,7 @@ import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,11 +92,11 @@ public class RegionController extends BaseController {
     @GetMapping("/release")
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                   @RequestParam String countryCode,
+                                                   @RequestParam(required = false) String countryCode,
                                                    @RequestParam(required = false) String resourceOwner){
         RegionCacheVO regionCacheVO = new RegionCacheVO();
         regionCacheVO.setTenantId(organizationId);
-        regionCacheVO.setCountryCode(countryCode);
+        regionCacheVO.setCountryCode(countryCode!=null?countryCode: O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE);
         siteRegionFileService.createRegionStaticFile(regionCacheVO,resourceOwner);
         return Results.success(OperateResponse.success());
     }
