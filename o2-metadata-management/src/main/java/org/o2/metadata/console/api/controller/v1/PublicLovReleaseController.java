@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class PublicLovReleaseController extends BaseController {
     @ApiOperation(value = "")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/release")
-    public ResponseEntity<Void> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                        @RequestParam String lovCode,
-                                        @RequestParam(required = false) String resourceOwner){
+    public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                   @RequestParam String lovCode,
+                                                   @RequestParam(required = false) String resourceOwner){
         PublicLovVO publicLovVO = new PublicLovVO();
         publicLovVO.setTenantId(organizationId);
         publicLovVO.setLovCode(lovCode);
         publicLovService.createPublicLovFile(publicLovVO,resourceOwner);
-        return Results.success();
+        return Results.success(OperateResponse.success());
     }
 }
