@@ -12,7 +12,9 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
 import org.o2.metadata.console.api.vo.AreaRegionVO;
+import org.o2.metadata.console.api.vo.RegionCacheVO;
 import org.o2.metadata.console.api.vo.RegionVO;
+import org.o2.metadata.console.app.service.O2SiteRegionFileService;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +35,12 @@ import java.util.List;
 public class RegionController extends BaseController {
 
     private final RegionService regionService;
+    private final O2SiteRegionFileService siteRegionFileService;
 
-    public RegionController(RegionService regionService) {
+    public RegionController(RegionService regionService,
+                            O2SiteRegionFileService siteRegionFileService) {
         this.regionService = regionService;
+        this.siteRegionFileService = siteRegionFileService;
     }
 
     @ApiOperation("查询国家下地区定义，使用树状结构返回")
@@ -79,6 +84,19 @@ public class RegionController extends BaseController {
                                                               @RequestParam final String countryCode,
                                                               @RequestParam(required = false) final Integer enabledFlag) {
         return Results.success(regionService.listAreaRegion(countryCode, enabledFlag,organizationId));
+    }
+
+    @ApiOperation("地区静态资源发布")
+    @GetMapping("/release")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    public ResponseEntity<Void> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                        @RequestParam String countryCode,
+                                        @RequestParam(required = false) String resourceOwner){
+        RegionCacheVO regionCacheVO = new RegionCacheVO();
+        regionCacheVO.setTenantId(organizationId);
+        regionCacheVO.setCountryCode(countryCode);
+        siteRegionFileService.createRegionStaticFile(regionCacheVO,resourceOwner);
+        return Results.success();
     }
 
 }
