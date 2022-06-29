@@ -15,22 +15,16 @@ import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
-import org.o2.metadata.console.infra.entity.Carrier;
-import org.o2.metadata.console.infra.entity.Pos;
-import org.o2.metadata.console.infra.entity.PosAddress;
-import org.o2.metadata.console.infra.entity.PosRelCarrier;
-import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.*;
 import org.o2.metadata.console.infra.redis.PosRedis;
-import org.o2.metadata.console.infra.repository.CarrierRepository;
-import org.o2.metadata.console.infra.repository.PosAddressRepository;
-import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
-import org.o2.metadata.console.infra.repository.PosRepository;
-import org.o2.metadata.console.infra.repository.PostTimeRepository;
-import org.o2.metadata.console.infra.repository.RegionRepository;
+import org.o2.metadata.console.infra.repository.*;
+import org.o2.metadata.management.client.domain.co.PosCO;
+import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -280,6 +274,30 @@ public class PosServiceImpl implements PosService {
             resultMap.put(pos.getPosCode(), pos.getPosName());
         }
         return resultMap;
+    }
+
+    @Override
+    public PosCO savePos(PosDTO posDTO) {
+        Pos pos = PosConverter.dtoToPoObject(posDTO);
+        Pos posQuery = new Pos();
+        posQuery.setPosCode(pos.getPosCode());
+        posQuery.setTenantId(pos.getTenantId());
+        Pos posResult = posRepository.selectOne(posQuery);
+        if (ObjectUtils.isEmpty(posResult)) {
+            Pos query = new Pos();
+            query.setPosName(pos.getPosName());
+            query.setTenantId(pos.getTenantId());
+            Pos result = posRepository.selectOne(query);
+            if (ObjectUtils.isEmpty(result)) {
+                posResult = this.create(pos);
+            } else {
+                return PosConverter.poToCoObject(result);
+            }
+
+        } else {
+            posResult = this.update(pos);
+        }
+        return PosConverter.poToCoObject(posResult);
     }
 
     /**

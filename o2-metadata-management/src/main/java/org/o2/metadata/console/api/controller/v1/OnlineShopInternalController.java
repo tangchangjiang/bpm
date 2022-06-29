@@ -12,6 +12,7 @@ import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +52,14 @@ public class OnlineShopInternalController {
     public ResponseEntity<Map<String, List<OnlineShopCO>>> listOnlineShopList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                      @RequestBody List<OnlineShopCatalogVersionDTO> onlineShopDTO) {
         return Results.success(onlineShopService.listOnlineShops(onlineShopDTO, organizationId));
+    }
+
+    @ApiOperation(value = "保存网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/onlineShop-save")
+    public ResponseEntity<OnlineShopCO> saveOnlineShop(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                                   @RequestBody OnlineShopDTO onlineShopDTO) {
+        onlineShopDTO.setTenantId(organizationId);
+        return Results.success(onlineShopService.saveOnlineShop(onlineShopDTO));
     }
 }
