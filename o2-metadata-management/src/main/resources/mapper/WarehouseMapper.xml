@@ -154,6 +154,7 @@
         left join o2md_warehouse_tl tl on tl.warehouse_id = ow.warehouse_id and tl.lang = #{lang} AND tl.tenant_id = #{tenantId}
         WHERE
         ow.warehouse_status_code = 'NORMAL'
+        AND ow.warehouse_code != 'VIRTUAL_POS'
         AND ( pos.pos_type_code = 'WAREHOUSE' OR ( pos.pos_type_code = 'STORE' AND ow.expressed_flag = 1 ) )
         AND osrw.active_flag=1
         <if test="onlineShopCode != null and onlineShopCode != ''" >
