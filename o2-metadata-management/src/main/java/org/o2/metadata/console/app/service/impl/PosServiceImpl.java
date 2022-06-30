@@ -296,8 +296,7 @@ public class PosServiceImpl implements PosService {
 
         } else {
             posResult.setPosName(pos.getPosName());
-            PosAddress posAddress = new PosAddress();
-            posAddress.setPosAddressId(posResult.getAddressId());
+            PosAddress posAddress = posAddressRepository.selectByPrimaryKey(posResult.getAddressId());
             posAddress.setCityCode(pos.getAddress().getCityCode());
             posAddress.setCountryCode(pos.getAddress().getCountryCode());
             posAddress.setDistrictCode(pos.getAddress().getDistrictCode());
