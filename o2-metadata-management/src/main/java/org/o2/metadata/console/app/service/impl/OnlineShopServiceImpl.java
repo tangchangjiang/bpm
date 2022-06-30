@@ -215,6 +215,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                 catalogVersion.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
                 catalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
                 catalogVersion.setActiveFlag(onlineShop.getActiveFlag());
+                catalogVersion.setTenantId(onlineShop.getTenantId());
                 catalogVersionRepository.insert(catalogVersion);
 
                 onlineShopResult = this.createOnlineShop(onlineShop);
