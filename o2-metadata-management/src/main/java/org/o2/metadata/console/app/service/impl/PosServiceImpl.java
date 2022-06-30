@@ -295,8 +295,10 @@ public class PosServiceImpl implements PosService {
             }
 
         } else {
-            pos.setPosId(posResult.getPosId());
-            posResult = this.update(pos);
+            posResult.setPosName(pos.getPosName());
+            posResult.setAddress(pos.getAddress());
+
+            posResult = this.update(posResult);
         }
         return PosConverter.poToCoObject(posResult);
     }
