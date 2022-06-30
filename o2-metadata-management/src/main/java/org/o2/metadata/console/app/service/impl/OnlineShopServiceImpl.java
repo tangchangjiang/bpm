@@ -199,8 +199,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                 return OnlineShopConverter.poToCoObject(result);
             }
         } else {
-            onlineShop.setOnlineShopId(onlineShopResult.getOnlineShopId());
-            onlineShopResult = this.updateOnlineShop(onlineShop);
+            onlineShopResult.setOnlineShopName(onlineShop.getOnlineShopName());
+            onlineShopResult.setPlatformShopCode(onlineShop.getPlatformShopCode());
+            onlineShopResult.setPlatformCode(onlineShop.getPlatformCode());
+            onlineShopResult = this.updateOnlineShop(onlineShopResult);
         }
         return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
