@@ -17,8 +17,12 @@ import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
+import org.o2.metadata.console.infra.entity.Catalog;
+import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
+import org.o2.metadata.console.infra.repository.CatalogRepository;
+import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
@@ -41,17 +45,23 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final LovAdapterService lovAdapterService;
     private final TransactionalHelper transactionalHelper;
     private final SourcingCacheUpdateService sourcingCacheService;
+    private final CatalogRepository catalogRepository;
+    private final CatalogVersionRepository catalogVersionRepository;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
                                  final LovAdapterService lovAdapterService,
                                  TransactionalHelper transactionalHelper,
-                                 SourcingCacheUpdateService sourcingCacheService) {
+                                 SourcingCacheUpdateService sourcingCacheService,
+                                 CatalogRepository catalogRepository,
+                                 CatalogVersionRepository catalogVersionRepository) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
         this.transactionalHelper = transactionalHelper;
         this.sourcingCacheService = sourcingCacheService;
+        this.catalogRepository = catalogRepository;
+        this.catalogVersionRepository = catalogVersionRepository;
     }
 
     @Override
@@ -194,6 +204,19 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             query.setTenantId(onlineShopDTO.getTenantId());
             OnlineShop result = onlineShopRepository.selectOne(query);
             if (ObjectUtils.isEmpty(result)) {
+                // 关联目录
+                Catalog catalogQuery = new Catalog();
+                catalogQuery.setCatalogCode(onlineShop.getCatalogCode());
+                catalogQuery.setTenantId(onlineShop.getTenantId());
+                catalogQuery = catalogRepository.selectOne(catalogQuery);
+                // 创建目录版本
+                CatalogVersion catalogVersion = new CatalogVersion();
+                catalogVersion.setCatalogId(catalogQuery.getCatalogId());
+                catalogVersion.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
+                catalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
+                catalogVersion.setActiveFlag(onlineShop.getActiveFlag());
+                catalogVersionRepository.insert(catalogVersion);
+
                 onlineShopResult = this.createOnlineShop(onlineShop);
             } else {
                 return OnlineShopConverter.poToCoObject(result);
