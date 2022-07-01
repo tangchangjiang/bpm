@@ -125,6 +125,7 @@ public class OnlineShopConverter {
         onlineShop.setDefaultCurrency(onlineShopDTO.getDefaultCurrency());
         onlineShop.setEnableSplitFlag(onlineShopDTO.getEnableSplitFlag());
         onlineShop.setExchangedFlag(onlineShopDTO.getExchangedFlag());
+        onlineShop.setReturnedFlag(onlineShopDTO.getReturnedFlag());
         onlineShop.setIsDefault(onlineShopDTO.getIsDefault());
         onlineShop.setOnlineShopCode(onlineShopDTO.getOnlineShopCode());
         onlineShop.setOnlineShopName(onlineShopDTO.getOnlineShopName());
