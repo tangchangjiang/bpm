@@ -91,6 +91,7 @@ public class PosConverter {
         posAddress.setStreetName(posAddressDTO.getStreetName());
         posAddress.setPhoneNumber(posAddressDTO.getPhoneNumber());
         posAddress.setRegionCode(posAddressDTO.getRegionCode());
+        posAddress.setPostcode(posAddressDTO.getPostcode());
         posAddress.setTenantId(posAddressDTO.getTenantId());
         return posAddress;
     }
