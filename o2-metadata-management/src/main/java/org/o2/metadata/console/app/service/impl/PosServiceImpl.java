@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
@@ -12,6 +13,7 @@ import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
@@ -22,6 +24,7 @@ import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -146,7 +149,7 @@ public class PosServiceImpl implements PosService {
             }
             updateCarryIsDefault(pos);
             // 更新同步服务点Redis
-            updatePosRedis(oldAddress, pos);
+            updatePosToRedis(oldAddress, pos.getPosCode(), pos.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
@@ -333,27 +336,86 @@ public class PosServiceImpl implements PosService {
         }
     }
 
-    private void updatePosRedis(PosAddress oldPosAddress, Pos newPos) {
-        // 删除旧的服务点门店信息
-        if (newPos.getAddress() != null && oldPosAddress != null) {
-            redisCacheClient.executePipelined(new RedisCallback<Object>() {
-
-                @Override
-                public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                    String allStoreKey = PosConstants.RedisKey.getPosAllStoreKey(newPos.getTenantId());
-                    String cityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(newPos.getTenantId(), oldPosAddress.getRegionCode(), oldPosAddress.getCityCode());
-                    String districtStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(newPos.getTenantId(), oldPosAddress.getRegionCode(), oldPosAddress.getCityCode(), oldPosAddress.getDistrictCode());
-                    connection.sRem(allStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
-                    connection.sRem(cityStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
-                    connection.sRem(districtStoreKey.getBytes(), oldPosAddress.getPosCode().getBytes());
-                    return null;
-                }
-            });
-        }
-
-        // 插入新的服务点门店信息
+    /**
+     * 更新门店信息
+     *
+     * @param oldPosAddress 门店旧地址
+     * @param posCode 门店编码
+     * @param tenantId 租户Id
+     */
+    private void updatePosToRedis(PosAddress oldPosAddress, String posCode, Long tenantId) {
         List<String> posCodes = new ArrayList<>();
-        posRedis.syncPosToRedis(posCodes, newPos.getTenantId());
+        posCodes.add(posCode);
+        List<PosInfo> posInfos = posRepository.listPosInfoByCode(null, posCodes, MetadataConstants.PosType.STORE, tenantId);
+        if (CollectionUtils.isEmpty(posInfos)) {
+            return;
+        }
+        PosInfo posInfo = posInfos.get(0);
+        // 设置服务点地址名称
+        setPosAddress(posInfo, tenantId);
+        // 更新服务点门店信息
+        redisCacheClient.executePipelined(new RedisCallback<Object>() {
+
+            @Override
+            public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                StringRedisConnection stringConnection = (StringRedisConnection) connection;
+
+                String oldCityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, oldPosAddress.getRegionCode(), oldPosAddress.getCityCode());
+                String oldDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, oldPosAddress.getRegionCode(), oldPosAddress.getCityCode(), oldPosAddress.getDistrictCode());
+                String newCityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, posInfo.getRegionCode(), posInfo.getCityCode());
+                String newDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, posInfo.getRegionCode(), posInfo.getCityCode(), posInfo.getDistrictCode());
+                String posDetailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
+
+                // 删除旧的门店地址信息
+                stringConnection.sRem(oldCityStoreKey, posCode);
+                stringConnection.sRem(oldDistrictStoreKey, posCode);
+                // 添加新的门店地址信息
+                stringConnection.sAdd(newCityStoreKey, posCode);
+                stringConnection.sAdd(newDistrictStoreKey, posCode);
+                stringConnection.hSet(posDetailKey, posCode, JsonHelper.objectToString(posInfo));
+                return null;
+            }
+        });
+    }
+
+    /**
+     * 设置服务点地址名称
+     *
+     * @param posInfo 服务点
+     * @param tenantId 租户Id
+     */
+    private void setPosAddress(PosInfo posInfo, Long tenantId) {
+        List<String> regionCodes = new ArrayList<>();
+        regionCodes.add(posInfo.getCityCode());
+        regionCodes.add(posInfo.getDistrictCode());
+        regionCodes.add(posInfo.getRegionCode());
+        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
+        dto.setRegionCodes(regionCodes);
+        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
+        Map<String,Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        for (Region region : regionList) {
+            regionMap.put(region.getRegionCode(),region);
+        }
+        //市
+        String cityCode = posInfo.getCityCode();
+        Region city = regionMap.get(cityCode);
+        if (null != city) {
+            posInfo.setCityName(city.getRegionName());
+            posInfo.setCountryName(city.getCountryName());
+            posInfo.setCountryCode(city.getCountryCode());
+        }
+        //区
+        String districtCode = posInfo.getDistrictCode();
+        Region district = regionMap.get(districtCode);
+        if (null != district) {
+            posInfo.setDistrictName(district.getRegionName());
+        }
+        //省
+        String regionCode = posInfo.getRegionCode();
+        Region region = regionMap.get(regionCode);
+        if (null != region) {
+            posInfo.setRegionName(region.getRegionName());
+        }
     }
 
 }
