@@ -32,6 +32,9 @@ public class Pos {
     @ApiModelProperty(value = "国家")
     private String countryCode;
 
+    @ApiModelProperty(value = "国家name")
+    private String countryName;
+
     @ApiModelProperty(value = "省")
     private String regionCode;
 

@@ -99,7 +99,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             warehouseRedis.batchUpdateWarehouse(warehouseCodes, tenantId);
             // 更新服务点门店Redis
             List<String> posCodes = warehouses.stream().map(Warehouse::getPosCode).collect(Collectors.toList());
-            posRedis.updatePodDetail(null, posCodes, tenantId);
+            posRedis.updatePosDetail(null, posCodes, tenantId);
         });
         sourcingCacheService.refreshSourcingCache(tenantId, this.getClass().getSimpleName());
         return warehouses;

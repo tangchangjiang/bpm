@@ -109,7 +109,7 @@ public class WarehouseController extends BaseController {
         List<Long> posIds = new ArrayList<>();
         posIds.addAll(warehouses.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
         posIds.addAll(oldWarehouse.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
-        posRedis.updatePodDetail(posIds, null, organizationId);
+        posRedis.updatePosDetail(posIds, null, organizationId);
         return Results.success(newList);
     }
     /**

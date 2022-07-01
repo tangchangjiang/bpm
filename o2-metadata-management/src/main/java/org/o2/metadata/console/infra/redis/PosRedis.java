@@ -10,7 +10,7 @@ import java.util.List;
 public interface PosRedis {
 
     /**
-     * 同步关联仓库的门店类型服务店至Redis
+     * 根据posCodes同步已关联仓库的服务点（门店类型）至Redis
      *
      * @param posCodes 服务店编码
      * @param tenantId 租户Id
@@ -18,11 +18,11 @@ public interface PosRedis {
     void syncPosToRedis(List<String> posCodes, Long tenantId);
 
     /**
-     * 更新门店信息
+     * 根据posIds或者posCodes更新门店信息
      *
      * @param posIds 服务点id
      * @param posCodes 服务店编码
      * @param tenantId 租户Id
      */
-    void updatePodDetail(List<Long> posIds, List<String> posCodes, Long tenantId);
+    void updatePosDetail(List<Long> posIds, List<String> posCodes, Long tenantId);
 }
