@@ -91,7 +91,11 @@ public class PosConverter {
         posAddress.setStreetName(posAddressDTO.getStreetName());
         posAddress.setPhoneNumber(posAddressDTO.getPhoneNumber());
         posAddress.setRegionCode(posAddressDTO.getRegionCode());
+        posAddress.setPostcode(posAddressDTO.getPostcode());
         posAddress.setTenantId(posAddressDTO.getTenantId());
+        posAddress.setRegionName(posAddressDTO.getRegionName());
+        posAddress.setCityName(posAddressDTO.getCityName());
+        posAddress.setDistrictName(posAddressDTO.getDistrictName());
         return posAddress;
     }
 
@@ -101,13 +105,9 @@ public class PosConverter {
         }
         PosCO posCO = new PosCO();
         posCO.setTenantId(pos.getTenantId());
-        posCO.setBusinessTime(pos.getBusinessTime());
         posCO.setAddressId(pos.getAddressId());
         posCO.setPosName(pos.getPosName());
         posCO.setPosCode(pos.getPosCode());
-        posCO.setOpenDate(pos.getOpenDate());
-        posCO.setPosStatusCode(pos.getPosStatusCode());
-        posCO.setPosTypeCode(pos.getPosTypeCode());
         return posCO;
     }
 }

@@ -298,7 +298,23 @@ public class PosServiceImpl implements PosService {
             }
 
         } else {
-            posResult = this.update(pos);
+            posResult.setPosName(pos.getPosName());
+            PosAddress posAddress = posAddressRepository.selectByPrimaryKey(posResult.getAddressId());
+            posAddress.setCityCode(pos.getAddress().getCityCode());
+            posAddress.setCountryCode(pos.getAddress().getCountryCode());
+            posAddress.setDistrictCode(pos.getAddress().getDistrictCode());
+            posAddress.setLatitude(pos.getAddress().getLatitude());
+            posAddress.setLongitude(pos.getAddress().getLongitude());
+            posAddress.setStreetName(pos.getAddress().getStreetName());
+            posAddress.setPhoneNumber(pos.getAddress().getPhoneNumber());
+            posAddress.setRegionCode(pos.getAddress().getRegionCode());
+            posAddress.setRegionName(pos.getAddress().getRegionName());
+            posAddress.setCityName(pos.getAddress().getCityName());
+            posAddress.setDistrictName(pos.getAddress().getDistrictName());
+            posAddress.setTenantId(pos.getTenantId());
+
+            posResult.setAddress(posAddress);
+            posResult = this.update(posResult);
         }
         return PosConverter.poToCoObject(posResult);
     }

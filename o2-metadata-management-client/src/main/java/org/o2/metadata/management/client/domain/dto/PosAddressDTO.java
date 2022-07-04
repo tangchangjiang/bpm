@@ -44,4 +44,9 @@ public class PosAddressDTO {
     @ApiModelProperty(value = "关联o2md_pos.pos_code 服务点编码")
     private String posCode;
 
+    private String regionName;
+
+    private String cityName;
+
+    private String districtName;
 }
