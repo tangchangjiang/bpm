@@ -308,6 +308,9 @@ public class PosServiceImpl implements PosService {
             posAddress.setStreetName(pos.getAddress().getStreetName());
             posAddress.setPhoneNumber(pos.getAddress().getPhoneNumber());
             posAddress.setRegionCode(pos.getAddress().getRegionCode());
+            posAddress.setRegionName(pos.getAddress().getRegionName());
+            posAddress.setCityName(pos.getAddress().getCityName());
+            posAddress.setDistrictName(pos.getAddress().getDistrictName());
             posAddress.setTenantId(pos.getTenantId());
 
             posResult.setAddress(posAddress);
