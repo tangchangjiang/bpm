@@ -31,7 +31,7 @@ public class PosRemoteServiceImpl implements PosRemoteService {
 
     @Override
     public ResponseEntity<String> savePos(Long organizationId, PosDTO posDTO) {
-        log.error("Error Pos, params[posQueryInnerDTO = {}, organizationId = {}]", posDTO,organizationId);
+        log.error("Error Pos, params[posQueryInnerDTO = {}, organizationId = {}]", posDTO, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
