@@ -49,6 +49,7 @@
         os.tenant_id,
         os.default_currency,
         os.is_default,
+        os.online_shop_type,
         pftl.platform_name
         FROM
         o2md_online_shop os
