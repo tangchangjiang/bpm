@@ -16,6 +16,7 @@ public interface OnlineShopConstants {
         String ERROR_ONLINE_SHOP_CODE_UNIQUE ="o2md.error.online_shop_code.is.not.unique";
         String ERROR_ONLINE_SHOP_NAME_UNIQUE ="o2md.error.online_shop_name.is.not.unique";
         String ERROR_ONLINE_SHOP_CODE_UPDATE ="o2md.error.online_shop_code.is.forbidden.update";
+        String ERROR_ONLINE_SHOP_DATA_VERSION_ERROR ="o2md.error.online_shop_data_version_error";
     }
     interface Language {
         String  ZH_CN ="zh_CN";

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
+import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -20,6 +21,7 @@ import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
@@ -29,10 +31,7 @@ import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 网店应用服务默认实现
@@ -101,8 +100,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         catalogMap.put(OnlineShopConstants.Language.ZH_CN,catalog.getCatalogName());
         catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME,catalogMap);
         catalog.set_tls(catalogLanguage);
-
-
         // 目录版本
         CatalogVersion catalogVersion = new CatalogVersion();
         catalogVersion.setCatalogVersionCode(onlineShop.getOnlineShopCode());
@@ -119,14 +116,40 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShop.setCatalogCode(catalog.getCatalogCode());
         onlineShop.setCatalogVersionCode(catalogVersion.getCatalogVersionCode());
 
+        List<Catalog> resultCatalog = catalogRepository.selectByCondition(Condition.builder(Catalog.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(Catalog.FIELD_TENANT_ID, onlineShop.getTenantId())
+                        .andEqualTo(Catalog.FIELD_CATALOG_CODE, catalog.getCatalogCode()))
+                .build());
+
+        List<CatalogVersion> resultCatalogVersion = catalogVersionRepository.selectByCondition(Condition.builder(CatalogVersion.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(CatalogVersion.FIELD_TENANT_ID, onlineShop.getTenantId())
+                        .andEqualTo(CatalogVersion.FIELD_CATALOG_VERSION_CODE, catalogVersion.getCatalogVersionCode()))
+                .build());
+
+        // 目录不存在和目录版本存在
+        if (CollectionUtils.isEmpty(resultCatalog) && CollectionUtils.isNotEmpty(resultCatalogVersion)) {
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_DATA_VERSION_ERROR, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_DATA_VERSION_ERROR);
+        }
+
         transactionalHelper.transactionOperation(() -> {
             if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             this.onlineShopRepository.insertSelective(onlineShop);
-            this.catalogRepository.insert(catalog);
-            catalogVersion.setCatalogId(catalog.getCatalogId());
-            this.catalogVersionRepository.insert(catalogVersion);
+            // 目录和目录版本都不存在
+            if (CollectionUtils.isEmpty(resultCatalog)&& CollectionUtils.isEmpty(resultCatalogVersion)) {
+                this.catalogRepository.insert(catalog);
+                catalogVersion.setCatalogId(catalog.getCatalogId());
+                this.catalogVersionRepository.insert(catalogVersion);
+            }
+            // 目录存在和目录版本不存在
+            if (CollectionUtils.isNotEmpty(resultCatalog)&& CollectionUtils.isEmpty(resultCatalogVersion)) {
+                catalogVersion.setCatalogId(resultCatalog.get(0).getCatalogId());
+                this.catalogVersionRepository.insert(catalogVersion);
+            }
+
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
