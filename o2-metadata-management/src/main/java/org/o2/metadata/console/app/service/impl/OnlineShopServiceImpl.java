@@ -122,7 +122,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                         .andEqualTo(Catalog.FIELD_CATALOG_CODE, catalog.getCatalogCode()))
                 .build());
 
-        List<CatalogVersion> resultCatalogVersion = catalogVersionRepository.selectByCondition(Condition.builder(Catalog.class)
+        List<CatalogVersion> resultCatalogVersion = catalogVersionRepository.selectByCondition(Condition.builder(CatalogVersion.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(CatalogVersion.FIELD_TENANT_ID, onlineShop.getTenantId())
                         .andEqualTo(CatalogVersion.FIELD_CATALOG_VERSION_CODE, catalogVersion.getCatalogVersionCode()))
