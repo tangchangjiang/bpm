@@ -183,12 +183,12 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
         boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
         transactionalHelper.transactionOperation(() -> {
-            if (flag) {
-                onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
-            }
             onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
             catalogRepository.updateByPrimaryKeySelective(catalogBean);
             catalogVersionRepository.updateByPrimaryKeySelective(queryVersionBean);
+            if (flag) {
+                onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
+            }
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
