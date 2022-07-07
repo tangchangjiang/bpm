@@ -88,12 +88,16 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
+        String code  = onlineShop.getOnlineShopCode();
+        String name = onlineShop.getOnlineShopName();
+        Integer activeFlag = onlineShop.getActiveFlag();
+        Long tenantId = onlineShop.getTenantId();
         // 目录
         Catalog catalog = new Catalog();
-        catalog.setCatalogCode(onlineShop.getPlatformCode());
-        catalog.setCatalogName(onlineShop.getPlatformName());
-        catalog.setActiveFlag(onlineShop.getActiveFlag());
-        catalog.setTenantId(onlineShop.getTenantId());
+        catalog.setCatalogCode(code);
+        catalog.setCatalogName(name);
+        catalog.setActiveFlag(activeFlag);
+        catalog.setTenantId(tenantId);
         Map<String, Map<String, String>>  catalogLanguage = new HashMap<>(2);
         Map<String, String> catalogMap = new HashMap<>(2);
         catalogMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
@@ -102,10 +106,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         catalog.set_tls(catalogLanguage);
         // 目录版本
         CatalogVersion catalogVersion = new CatalogVersion();
-        catalogVersion.setCatalogVersionCode(onlineShop.getOnlineShopCode());
-        catalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
-        catalogVersion.setActiveFlag(onlineShop.getActiveFlag());
-        catalogVersion.setTenantId(onlineShop.getTenantId());
+        catalogVersion.setCatalogVersionCode(code);
+        catalogVersion.setCatalogVersionName(name);
+        catalogVersion.setActiveFlag(activeFlag);
+        catalogVersion.setTenantId(tenantId);
         Map<String, Map<String, String>>  catalogVersionLanguage = new HashMap<>(2);
         Map<String, String> catalogVersionMap = new HashMap<>(2);
         catalogVersionMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
@@ -113,43 +117,17 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME,catalogVersionMap);
         catalog.set_tls(catalogVersionLanguage);
 
-        onlineShop.setCatalogCode(catalog.getCatalogCode());
-        onlineShop.setCatalogVersionCode(catalogVersion.getCatalogVersionCode());
-
-        List<Catalog> resultCatalog = catalogRepository.selectByCondition(Condition.builder(Catalog.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(Catalog.FIELD_TENANT_ID, onlineShop.getTenantId())
-                        .andEqualTo(Catalog.FIELD_CATALOG_CODE, catalog.getCatalogCode()))
-                .build());
-
-        List<CatalogVersion> resultCatalogVersion = catalogVersionRepository.selectByCondition(Condition.builder(CatalogVersion.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(CatalogVersion.FIELD_TENANT_ID, onlineShop.getTenantId())
-                        .andEqualTo(CatalogVersion.FIELD_CATALOG_VERSION_CODE, catalogVersion.getCatalogVersionCode()))
-                .build());
-
-        // 目录不存在和目录版本存在
-        if (CollectionUtils.isEmpty(resultCatalog) && CollectionUtils.isNotEmpty(resultCatalogVersion)) {
-            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_DATA_VERSION_ERROR, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_DATA_VERSION_ERROR);
-        }
+        onlineShop.setCatalogCode(code);
+        onlineShop.setCatalogVersionCode(code);
 
         transactionalHelper.transactionOperation(() -> {
             if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             this.onlineShopRepository.insertSelective(onlineShop);
-            // 目录和目录版本都不存在
-            if (CollectionUtils.isEmpty(resultCatalog)&& CollectionUtils.isEmpty(resultCatalogVersion)) {
-                this.catalogRepository.insert(catalog);
-                catalogVersion.setCatalogId(catalog.getCatalogId());
-                this.catalogVersionRepository.insert(catalogVersion);
-            }
-            // 目录存在和目录版本不存在
-            if (CollectionUtils.isNotEmpty(resultCatalog)&& CollectionUtils.isEmpty(resultCatalogVersion)) {
-                catalogVersion.setCatalogId(resultCatalog.get(0).getCatalogId());
-                this.catalogVersionRepository.insert(catalogVersion);
-            }
-
+            this.catalogRepository.insert(catalog);
+            catalogVersion.setCatalogId(catalog.getCatalogId());
+            this.catalogVersionRepository.insert(catalogVersion);
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
