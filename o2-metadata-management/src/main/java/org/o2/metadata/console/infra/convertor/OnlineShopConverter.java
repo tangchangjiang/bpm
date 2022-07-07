@@ -133,6 +133,7 @@ public class OnlineShopConverter {
         onlineShop.setSourcedFlag(onlineShopDTO.getSourcedFlag());
         onlineShop.setPlatformCode(onlineShopDTO.getPlatformCode());
         onlineShop.setPlatformShopCode(onlineShopDTO.getPlatformShopCode());
+        onlineShop.setOnlineShopType(onlineShopDTO.getOnlineShopType());
 
         return onlineShop;
     }

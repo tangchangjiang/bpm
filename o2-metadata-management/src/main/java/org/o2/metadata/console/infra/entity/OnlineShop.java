@@ -165,6 +165,8 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "默认货币", hidden = true)
     private String defaultCurrency;
 
+    @ApiModelProperty(value = "网店类型")
+    private String onlineShopType;
     //
     // 数据库字段
     // ------------------------------------------------------------------------------

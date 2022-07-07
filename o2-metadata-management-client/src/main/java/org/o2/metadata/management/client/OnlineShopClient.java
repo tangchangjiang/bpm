@@ -2,6 +2,7 @@ package org.o2.metadata.management.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.core.helper.O2ResponseUtils;
 import org.o2.metadata.management.client.domain.co.OnlineShopCO;
 import org.o2.metadata.management.client.domain.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
@@ -81,7 +82,7 @@ public class OnlineShopClient {
      * @return 网店
      */
     public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
+        return O2ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
         });
     }
 }
