@@ -1,7 +1,6 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
-import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -21,12 +20,10 @@ import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
-import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
