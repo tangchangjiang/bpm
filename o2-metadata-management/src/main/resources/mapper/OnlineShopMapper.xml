@@ -108,7 +108,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY os.online_shop_code
+        ORDER BY os.online_shop_id desc
     </select>
 
 
