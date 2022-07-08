@@ -2,6 +2,7 @@ package org.o2.metadata.management.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
+import org.o2.core.helper.O2ResponseUtils;
 import org.o2.metadata.management.client.domain.co.PosAddressCO;
 import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosAddressQueryInnerDTO;
@@ -41,7 +42,7 @@ public class PosClient {
     }
 
     public PosCO savePos(Long tenantId, PosDTO posDTO) {
-        return ResponseUtils.getResponse(posRemoteService.savePos(tenantId, posDTO), new TypeReference<PosCO>() {
+        return O2ResponseUtils.getResponse(posRemoteService.savePos(tenantId, posDTO), new TypeReference<PosCO>() {
         });
     }
 }

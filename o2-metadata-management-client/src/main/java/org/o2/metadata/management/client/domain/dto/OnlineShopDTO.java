@@ -45,4 +45,5 @@ public class OnlineShopDTO {
     @ApiModelProperty(value = "版本目录编码")
     private String catalogVersionCode;
 
+    private String onlineShopType;
 }
