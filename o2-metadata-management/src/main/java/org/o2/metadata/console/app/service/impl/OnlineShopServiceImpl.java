@@ -28,10 +28,7 @@ import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 网店应用服务默认实现
@@ -88,12 +85,46 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
+        String code  = onlineShop.getOnlineShopCode();
+        String name = onlineShop.getOnlineShopName();
+        Integer activeFlag = onlineShop.getActiveFlag();
+        Long tenantId = onlineShop.getTenantId();
+        // 目录
+        Catalog catalog = new Catalog();
+        catalog.setCatalogCode(code);
+        catalog.setCatalogName(name);
+        catalog.setActiveFlag(activeFlag);
+        catalog.setTenantId(tenantId);
+        Map<String, Map<String, String>>  catalogLanguage = new HashMap<>(2);
+        Map<String, String> catalogMap = new HashMap<>(2);
+        catalogMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
+        catalogMap.put(OnlineShopConstants.Language.ZH_CN,catalog.getCatalogName());
+        catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME,catalogMap);
+        catalog.set_tls(catalogLanguage);
+        // 目录版本
+        CatalogVersion catalogVersion = new CatalogVersion();
+        catalogVersion.setCatalogVersionCode(code);
+        catalogVersion.setCatalogVersionName(name);
+        catalogVersion.setActiveFlag(activeFlag);
+        catalogVersion.setTenantId(tenantId);
+        Map<String, Map<String, String>>  catalogVersionLanguage = new HashMap<>(2);
+        Map<String, String> catalogVersionMap = new HashMap<>(2);
+        catalogVersionMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
+        catalogVersionMap.put(OnlineShopConstants.Language.ZH_CN,catalog.getCatalogName());
+        catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME,catalogVersionMap);
+        catalog.set_tls(catalogVersionLanguage);
+
+        onlineShop.setCatalogCode(code);
+        onlineShop.setCatalogVersionCode(code);
 
         transactionalHelper.transactionOperation(() -> {
             if (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
             this.onlineShopRepository.insertSelective(onlineShop);
+            this.catalogRepository.insert(catalog);
+            catalogVersion.setCatalogId(catalog.getCatalogId());
+            this.catalogVersionRepository.insert(catalogVersion);
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
@@ -111,12 +142,28 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             validateOnlineShopName(onlineShop);
         }
 
+        String cataLog = origin.getCatalogCode();
+        Catalog queryCatalog = new Catalog();
+        queryCatalog.setCatalogCode(cataLog);
+        queryCatalog.setTenantId(onlineShop.getTenantId());
+        Catalog catalogBean = catalogRepository.selectOne(queryCatalog);
+        catalogBean.setActiveFlag(onlineShop.getActiveFlag());
+
+        String catalogVersion = origin.getCatalogVersionCode();
+        CatalogVersion queryCatalogVersion = new CatalogVersion();
+        queryCatalogVersion.setCatalogVersionCode(catalogVersion);
+        queryCatalogVersion.setTenantId(onlineShop.getTenantId());
+        CatalogVersion queryVersionBean = catalogVersionRepository.selectOne(queryCatalogVersion);
+        queryVersionBean.setActiveFlag(onlineShop.getActiveFlag());
+
         boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
         transactionalHelper.transactionOperation(() -> {
+            onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
+            catalogRepository.updateByPrimaryKeySelective(catalogBean);
+            catalogVersionRepository.updateByPrimaryKeySelective(queryVersionBean);
             if (flag) {
                 onlineShopRepository.updateDefaultShop(onlineShop.getTenantId());
             }
-            onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());

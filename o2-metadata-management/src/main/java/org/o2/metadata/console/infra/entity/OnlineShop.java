@@ -101,6 +101,7 @@ public class OnlineShop extends AuditDomain {
 
     @LovValue(lovCode = "o2md_platform")
     @ApiModelProperty(value = "平台编码")
+    @NotNull
     private String platformCode;
 
     @ApiModelProperty(value = "网点名称")
@@ -165,22 +166,28 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "默认货币", hidden = true)
     private String defaultCurrency;
 
-    @ApiModelProperty(value = "网店类型")
+    @ApiModelProperty(value = "网店类型编码", hidden = true)
+    @LovValue(value = "O2MD.ONLINE_SHOP_TYPE")
+    @NotNull
     private String onlineShopType;
+
+    @ApiModelProperty(value = "目录编码")
+    private String catalogCode;
+
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-    @ApiModelProperty(value = "目录编码")
-    @NotNull
-    private String catalogCode;
+    @ApiModelProperty(value = "网店类型编码名称")
+    @Transient
+    private String onlineShopTypeMeaning;
 
     @ApiModelProperty(value = "目录名称")
     @Transient
     private String catalogName;
 
     @ApiModelProperty(value = "版本目录编码")
-    @NotNull
     private String catalogVersionCode;
 
     @ApiModelProperty(value = "版本目录名称")
@@ -193,6 +200,7 @@ public class OnlineShop extends AuditDomain {
 
     @Transient
     @ApiModelProperty(value = "平台名称")
+    @NotNull
     private String platformName;
 
     @Transient

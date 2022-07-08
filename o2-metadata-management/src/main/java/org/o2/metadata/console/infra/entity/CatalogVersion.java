@@ -36,7 +36,7 @@ import java.util.List;
 public class CatalogVersion extends AuditDomain {
 
     public static final String FIELD_CATALOG_VERSION_ID = "catalogVersionId";
-    public static final String FIELD_CATALOG_VERSION_CODE = "catalogVersionId";
+    public static final String FIELD_CATALOG_VERSION_CODE = "catalogVersionCode";
     public static final String FIELD_CATALOG_VERSION_NAME = "catalogVersionName";
     public static final String FIELD_CATALOG_VERSION_DESCRIPTION = "catalogVersionDescription";
     public static final String FIELD_CATALOG_ID = "catalogId";
