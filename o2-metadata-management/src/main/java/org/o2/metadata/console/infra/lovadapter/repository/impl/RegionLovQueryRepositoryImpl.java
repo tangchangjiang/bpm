@@ -113,7 +113,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      * @param countryCode 国家编码
      * @return list 地区信息
      */
-    @Cacheable(value = "O2_LOV", key = "'region'+'_'+#countryCode + '_'+ #lang")
+    @Cacheable(value = "O2_LOV", key = "'hzero_region'+'_'+#countryCode + '_'+ #lang")
     public List<Region> queryRegionCache(Long tenantId, String countryCode,String lang ) {
         Map<String,String> queryParam = Maps.newHashMapWithExpectedSize(2);
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
