@@ -8,15 +8,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
+import org.o2.cms.management.client.O2CmsManagementClient;
+import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
+import org.o2.cms.management.client.domain.dto.StaticResourceConfigDTO;
+import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.file.helper.O2FileHelper;
-import org.o2.metadata.console.api.dto.StaticResourceConfigDTO;
-import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
-import org.o2.metadata.console.app.service.StaticResourceConfigService;
-import org.o2.metadata.console.app.service.StaticResourceInternalService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +33,12 @@ import java.util.*;
 public class O2PublicLovServiceImpl implements O2PublicLovService {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
-    private final StaticResourceInternalService staticResourceInternalService;
-    private final StaticResourceConfigService staticResourceConfigService;
+    private final O2CmsManagementClient cmsManagementClient;
 
     public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
-                                  StaticResourceInternalService staticResourceInternalService,
-                                  StaticResourceConfigService staticResourceConfigService) {
+                                  O2CmsManagementClient cmsManagementClient) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
-        this.staticResourceInternalService = staticResourceInternalService;
-        this.staticResourceConfigService=staticResourceConfigService;
+        this.cmsManagementClient = cmsManagementClient;
     }
 
 
@@ -56,13 +52,9 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         final String lovCode=publicLovVO.getLovCode();
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, lovCode);
 
-        StaticResourceConfigDTO staticResourceConfigDTO=new StaticResourceConfigDTO();
-        staticResourceConfigDTO.setResourceCode(MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
-        staticResourceConfigDTO.setTenantId(tenantId);
-
-        final List<StaticResourceConfig> staticResourceConfigList=staticResourceConfigService.listStaticResourceConfig(staticResourceConfigDTO);
-        final StaticResourceConfig staticResourceConfig=staticResourceConfigList.get(0);
-        String uploadFolder=staticResourceConfig.getUploadFolder();
+        // 查询静态资源配置信息
+        final StaticResourceConfigCO staticResourceConfigCO=cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
+        String uploadFolder=staticResourceConfigCO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
         Map<String,String> resourceUrlMap=new HashMap<>(4);
@@ -86,15 +78,13 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
             //1.hzero-boot-file的client上传 拿到OSS的url 2.更新到静态资源表
             resourceUrlMap.put(MetadataConstants.Path.ZH_CN,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.ZH_CN));
             if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                    .equals(staticResourceConfig.getDifferentLangFlag())){
+                    .equals(staticResourceConfigCO.getDifferentLangFlag())){
                 resourceUrlMap.put(MetadataConstants.Path.EN_US,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.EN_US));
             }
 
             //  更新静态文件资源表
-            List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap,resourceOwner,staticResourceConfig);
-            for (StaticResourceSaveDTO saveDTO : saveDTOList) {
-                staticResourceInternalService.saveResource(saveDTO);
-            }
+            List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap,resourceOwner,staticResourceConfigCO);
+            cmsManagementClient.saveResource(tenantId,saveDTOList);
         }
     }
 
@@ -125,10 +115,10 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
     private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
                                                                    Map<String,String> resourceUrlMap,
                                                                    String resourceOwner,
-                                                                   StaticResourceConfig staticResourceConfig) {
+                                                                   StaticResourceConfigCO staticResourceConfigCO) {
         List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
         for(Map.Entry<String,String> entry:resourceUrlMap.entrySet()){
-            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(),resourceOwner,staticResourceConfig));
+            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(),resourceOwner,staticResourceConfigCO));
         }
         return saveDTOList;
     }
@@ -137,21 +127,21 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                                                    String resourceUrl,
                                                    String languageCode,
                                                    String resourceOwner,
-                                                   StaticResourceConfig staticResourceConfig) {
+                                                   StaticResourceConfigCO staticResourceConfigCO) {
         String host=domainPrefix(resourceUrl);
         String url=trimDomainPrefix(resourceUrl);
 
         StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
-        saveDTO.setResourceCode(staticResourceConfig.getResourceCode());
-        saveDTO.setDescription(staticResourceConfig.getDescription());
-        saveDTO.setResourceLevel(staticResourceConfig.getResourceLevel());
+        saveDTO.setResourceCode(staticResourceConfigCO.getResourceCode());
+        saveDTO.setDescription(staticResourceConfigCO.getDescription());
+        saveDTO.setResourceLevel(staticResourceConfigCO.getResourceLevel());
         saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
         if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
                 .equals(saveDTO.getResourceLevel())){
             saveDTO.setResourceOwner(resourceOwner);
         }
         if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                .equals(staticResourceConfig.getDifferentLangFlag())){
+                .equals(staticResourceConfigCO.getDifferentLangFlag())){
             saveDTO.setLang(languageCode);
         }
         saveDTO.setResourceUrl(url);
