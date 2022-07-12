@@ -253,19 +253,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             query.setTenantId(onlineShopDTO.getTenantId());
             OnlineShop result = onlineShopRepository.selectOne(query);
             if (ObjectUtils.isEmpty(result)) {
-                // 关联目录
-                Catalog catalogQuery = new Catalog();
-                catalogQuery.setCatalogCode(onlineShop.getCatalogCode());
-                catalogQuery.setTenantId(onlineShop.getTenantId());
-                catalogQuery = catalogRepository.selectOne(catalogQuery);
-                // 创建目录版本
-                CatalogVersion catalogVersion = new CatalogVersion();
-                catalogVersion.setCatalogId(catalogQuery.getCatalogId());
-                catalogVersion.setCatalogVersionCode(onlineShop.getCatalogVersionCode());
-                catalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
-                catalogVersion.setActiveFlag(onlineShop.getActiveFlag());
-                catalogVersion.setTenantId(onlineShop.getTenantId());
-                catalogVersionRepository.insert(catalogVersion);
 
                 onlineShopResult = this.createOnlineShop(onlineShop);
             } else {
