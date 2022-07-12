@@ -11,6 +11,11 @@ import lombok.Data;
 @Data
 public class CurrencyCO {
     /**
+     * 货币编码
+     */
+    private String code;
+
+    /**
      * 货币名称
      */
     private String name;
