@@ -56,6 +56,7 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
                 String k = entry.getKey();
                 Map<String, Object> v = entry.getValue();
                 final CurrencyBO currencyBO = new CurrencyBO();
+                currencyBO.setCode(k);
                 currencyBO.setName((String) v.get(O2LovConstants.Currency.CURRENCY_NAME));
                 currencyBO.setCountryCode((String)v.get(O2LovConstants.Currency.COUNTRY_CODE));
                 currencyBO.setCountryName((String)v.get(O2LovConstants.Currency.COUNTRY_NAME));
@@ -68,6 +69,7 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
             final Map<String, Object> lov = resultsMap.get(currencyCode);
             if (null != lov) {
                 final CurrencyBO currencyBO = new CurrencyBO();
+                currencyBO.setCode(currencyCode);
                 currencyBO.setName((String) lov.get(O2LovConstants.Currency.CURRENCY_NAME));
                 currencyBO.setCountryCode((String)lov.get(O2LovConstants.Currency.COUNTRY_CODE));
                 currencyBO.setCountryName((String)lov.get(O2LovConstants.Currency.COUNTRY_NAME));
