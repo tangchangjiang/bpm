@@ -27,6 +27,7 @@ import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -177,6 +178,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopCode(OnlineShop onlineShop) {
+        if(null == onlineShop.getOnlineShopCode()){
+            return;
+        }
         // 租户id+平台编码+平台网店编码
         Sqls sqls = Sqls.custom();
         sqls.andEqualTo(OnlineShop.FIELD_TENANT_ID, onlineShop.getTenantId());
