@@ -157,7 +157,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         queryCatalogVersion.setTenantId(onlineShop.getTenantId());
         CatalogVersion queryVersionBean = catalogVersionRepository.selectOne(queryCatalogVersion);
         queryVersionBean.setActiveFlag(onlineShop.getActiveFlag());
-        queryCatalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
+        queryVersionBean.setCatalogVersionName(onlineShop.getOnlineShopName());
 
         boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
         transactionalHelper.transactionOperation(() -> {
