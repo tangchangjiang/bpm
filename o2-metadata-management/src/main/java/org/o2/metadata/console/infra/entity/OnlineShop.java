@@ -116,7 +116,6 @@ public class OnlineShop extends AuditDomain {
     private String onlineShopCode;
 
     @ApiModelProperty(value = "平台店铺 code")
-    @NotNull
     @Size(max = 255)
     private String platformShopCode;
 
