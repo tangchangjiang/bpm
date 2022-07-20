@@ -53,13 +53,13 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      */
     @Override
     public PageCO<Region> queryRegionPage(Long tenantId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
-        List<Region> regionList = queryRegionCondition(tenantId,innerDTO);
-        if (regionList.isEmpty()){
-            return  new PageCO<>();
+        List<Region> regionList = queryRegionCondition(tenantId, innerDTO);
+        if (regionList.isEmpty()) {
+            return new PageCO<>();
         }
-        page = page +1;
-        List<Region> collect = regionList.stream().skip((page - 1) * Long.parseLong(String.valueOf(size))) .limit(size).collect(Collectors.toList());
-        return new PageCO<>(collect,page,size,regionList.size());
+        page = page < 0 ? 0 : page;
+        List<Region> collect = regionList.stream().skip((page) * Long.parseLong(String.valueOf(size))).limit(size).collect(Collectors.toList());
+        return new PageCO<>(collect, page, size, regionList.size());
     }
 
     @Override
