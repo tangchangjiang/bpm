@@ -312,6 +312,7 @@ public class PosServiceImpl implements PosService {
             posAddress.setCityName(pos.getAddress().getCityName());
             posAddress.setDistrictName(pos.getAddress().getDistrictName());
             posAddress.setTenantId(pos.getTenantId());
+            posAddress.setPostcode(pos.getAddress().getPostcode());
 
             posResult.setAddress(posAddress);
             posResult = this.update(posResult);
