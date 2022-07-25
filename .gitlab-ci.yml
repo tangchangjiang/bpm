@@ -2,7 +2,7 @@ image: registry.cn-shanghai.aliyuncs.com/c7n/cibase:0.11.0
 
 stages:
   - sonar
-  - maven_package
+  - maven_deploy
 
 sonar_check:
   stage: sonar
@@ -10,16 +10,21 @@ sonar_check:
     - mvn --batch-mode clean verify sonar:sonar
       -Dsonar.host.url=${O2_SONAR_URL}
       -Dsonar.login=${SONAR_TOKEN}
-      -Dsonar.sorceEncoding=UTF-8
+      -Dsonar.sourceEncoding=UTF-8
+      -Dsonar.gitlab.project_id=${CI_PROJECT_ID}
+      -Dsonar.branch.name=${CI_COMMIT_REF_NAME}
       -Dsonar.projectKey=${SONAR_PROJECT_KEY}
+      -Dsonar.projectVersion=${CI_COMMIT_TAG}
+      -Dsonar.java.binaries=target/classes
       -Dmaven.test.failure.ignore=true
       -DskipTests=true
+  allow_failure: true
   only:
     - sonar
-#    - master
+    - master
 
-maven_package:
-  stage: maven_package
+maven_deploy:
+  stage: maven_deploy
   script:
     - mvn clean -U -Dmaven.test.skip=true -Dspring-boot.repackage.skip=true -Dfile.encoding=UTF-8 deploy
   only:

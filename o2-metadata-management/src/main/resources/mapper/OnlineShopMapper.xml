@@ -90,6 +90,9 @@
             <if test="catalogVersionCode!=null and catalogVersionCode!=''">
                 AND os.catalog_version_code = #{catalogVersionCode}
             </if>
+            <if test="onlineShopType!=null and onlineShopType!=''">
+                AND os.online_shop_type = #{onlineShopType}
+            </if>
             <if test="onlineShopId != null">
                 and os.online_shop_id = #{onlineShopId}
             </if>
