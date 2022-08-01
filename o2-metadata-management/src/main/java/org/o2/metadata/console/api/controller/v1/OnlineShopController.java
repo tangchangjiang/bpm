@@ -76,11 +76,11 @@ public class OnlineShopController extends BaseController {
     @GetMapping("/all")
     public ResponseEntity<List<OnlineShop>> listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop onlineShop) {
         onlineShop.setTenantId(organizationId);
-        return Results.success(onlineShopRepository.select(onlineShop));
+        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)))
     }
 
     @ApiOperation(value = "网店信息明细")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
     public ResponseEntity<OnlineShop> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long shopId) {
