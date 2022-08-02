@@ -2,8 +2,9 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseDTO;
 import org.o2.metadata.console.api.vo.OnlineShopRelWarehouseVO;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
 
@@ -58,4 +59,12 @@ public interface OnlineShopRelWarehouseMapper extends BaseMapper<OnlineShopRelWa
      * @return 查询列表
      */
     List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query);
+
+    /**
+     * 条件查询网店关联仓库
+     *
+     * @param onlineShopRelWarehouseDTO 查询条件
+     * @return 网店关联仓库
+     */
+    List<OnlineShopRelWarehouseVO> listOnlineShopRelWarehouseByCondition(OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO);
 }

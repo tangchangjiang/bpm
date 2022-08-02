@@ -73,4 +73,12 @@ public interface OnlineShopRelWarehouseService {
      * @return 查询列表
      */
     List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query);
+
+    /**
+     * 条件查询网店关联仓库
+     *
+     * @param onlineShopRelWarehouseDTO 查询条件
+     * @return 网店关联仓库
+     */
+    List<OnlineShopRelWarehouseVO> listShopRelWarehouse(OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO);
 }
