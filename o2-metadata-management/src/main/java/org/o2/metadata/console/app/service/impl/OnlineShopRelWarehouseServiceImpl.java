@@ -168,4 +168,9 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
     public List<OnlineShopRelWarehouse> listByCondition(OnlineShopRelWarehouse query) {
         return onlineShopRelWarehouseRepository.listByCondition(query);
     }
+
+    @Override
+    public List<OnlineShopRelWarehouseVO> listShopRelWarehouse(OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO) {
+        return onlineShopRelWarehouseRepository.listOnlineShopRelWarehouseByCondition(onlineShopRelWarehouseDTO);
+    }
 }

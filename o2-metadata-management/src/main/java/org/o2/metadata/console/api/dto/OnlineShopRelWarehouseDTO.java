@@ -25,6 +25,12 @@ public class OnlineShopRelWarehouseDTO {
     private String warehouseName;
 
     /**
+     * 网店名称
+     */
+    @ApiModelProperty(value = "网店名称")
+    private String onlineShopCode;
+
+    /**
      * 租户ID
      */
     @ApiModelProperty(value = "租户ID")
