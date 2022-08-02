@@ -94,8 +94,6 @@
         FROM
         o2md_warehouse w
         left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
-        JOIN o2md_shop_rel_warehouse osrw ON osrw.warehouse_id = w.warehouse_id
-        JOIN o2md_online_shop os ON os.online_shop_id = osrw.online_shop_id
         LEFT JOIN o2md_warehouse_tl wtl ON wtl.warehouse_id = w.warehouse_id AND wtl.lang = #{lang} and wtl.tenant_id = #{tenantId}
         LEFT JOIN o2md_pos_tl ptl ON ptl.pos_id = p.pos_id AND ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
         <where>
@@ -127,9 +125,6 @@
             </if>
             <if test="warehouseTypeCode != null and warehouseTypeCode != ''">
                 AND w.warehouse_type_code = #{warehouseTypeCode}
-            </if>
-            <if test="onlineShopCode != null and onlineShopCode != ''" >
-                AND os.online_shop_code = #{onlineShopCode}
             </if>
             <choose>
                 <when test="tenantId != null">
