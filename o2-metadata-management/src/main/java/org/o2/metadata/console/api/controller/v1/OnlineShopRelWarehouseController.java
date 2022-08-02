@@ -92,4 +92,17 @@ public class OnlineShopRelWarehouseController extends BaseController {
                 () -> onlineShopRelWarehouseService.listShopPosRelsByOption(onlineShopId, onlineShopRelWarehouseDTO));
         return Results.success(list);
     }
+
+    @ApiOperation(value = "通过网店编码查询与指定网店关联的仓库列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @GetMapping("/online-shops/shop-warehouse-relationships")
+    public ResponseEntity<Page<OnlineShopRelWarehouseVO>>  listWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO,
+                                                                @ApiIgnore final PageRequest pageRequest) {
+        onlineShopRelWarehouseDTO.setTenantId(organizationId);
+        final Page<OnlineShopRelWarehouseVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
+                () -> onlineShopRelWarehouseService.listShopRelWarehouse(onlineShopRelWarehouseDTO));
+        return Results.success(list);
+    }
 }
