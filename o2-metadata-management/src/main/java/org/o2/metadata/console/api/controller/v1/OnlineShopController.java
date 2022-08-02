@@ -74,7 +74,7 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all")
-    public ResponseEntity<List<OnlineShop>> listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<OnlineShop>> listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                          final OnlineShop onlineShop, @ApiIgnore PageRequest pageRequest) {
         onlineShop.setTenantId(organizationId);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
