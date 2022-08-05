@@ -178,7 +178,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop 网店
      */
     private void validateOnlineShopCode(OnlineShop onlineShop) {
-        if(null == onlineShop.getOnlineShopCode()){
+        if(null == onlineShop.getPlatformShopCode()){
             return;
         }
         // 租户id+平台编码+平台网店编码
