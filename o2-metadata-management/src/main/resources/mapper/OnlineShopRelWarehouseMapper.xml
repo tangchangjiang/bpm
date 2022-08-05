@@ -200,7 +200,7 @@
         osrw.active_flag,
         osrw.online_shop_rel_warehouse_id,
         os.online_shop_id,
-        os.active_flag as online_shop_active_flag
+        os.active_flag as online_shop_active_flag,
         w.tenant_id
         FROM
         o2md_warehouse w
@@ -220,7 +220,7 @@
                 AND os.online_shop_code = #{onlineShopCode}
             </if>
             <if test="activeFlag != null">
-                AND wosrw.active_flag = #{activeFlag}
+                AND osrw.active_flag = #{activeFlag}
             </if>
             <choose>
                 <when test="tenantId != null">
