@@ -196,6 +196,11 @@
         wtl.warehouse_name,
         w.warehouse_type_code,
         w.warehouse_status_code,
+        w.active_flag as warehouse_active_flag,
+        osrw.active_flag,
+        osrw.online_shop_rel_warehouse_id,
+        os.online_shop_id,
+        os.active_flag as online_shop_active_flag
         w.tenant_id
         FROM
         o2md_warehouse w
@@ -213,6 +218,9 @@
             </if>
             <if test="onlineShopCode != null and onlineShopCode != ''" >
                 AND os.online_shop_code = #{onlineShopCode}
+            </if>
+            <if test="activeFlag != null">
+                AND wosrw.active_flag = #{activeFlag}
             </if>
             <choose>
                 <when test="tenantId != null">

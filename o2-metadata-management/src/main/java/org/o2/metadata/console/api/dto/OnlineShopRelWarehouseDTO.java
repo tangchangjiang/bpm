@@ -35,4 +35,10 @@ public class OnlineShopRelWarehouseDTO {
      */
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    /**
+     * 生效状态
+     */
+    @ApiModelProperty(value = "生效状态")
+    private Integer activeFlag;
 }
