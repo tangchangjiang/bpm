@@ -266,6 +266,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopResult.setOnlineShopName(onlineShop.getOnlineShopName());
             onlineShopResult.setPlatformShopCode(onlineShop.getPlatformShopCode());
             onlineShopResult.setPlatformCode(onlineShop.getPlatformCode());
+            onlineShopResult.setActiveFlag(onlineShop.getActiveFlag());
             onlineShopResult = this.updateOnlineShop(onlineShopResult);
         }
         return OnlineShopConverter.poToCoObject(onlineShopResult);
