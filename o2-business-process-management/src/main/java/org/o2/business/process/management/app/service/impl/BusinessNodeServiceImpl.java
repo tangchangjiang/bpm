@@ -67,6 +67,10 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
         if (businessNode.getBizNodeId() == null) {
             businessNodeRepository.insertSelective(businessNode);
             if (paramExistsFlag) {
+                businessNode.getParamList().forEach(v -> {
+                    v.setTenantId(businessNode.getTenantId());
+                    v.setBeanId(businessNode.getBeanId());
+                });
                 bizNodeParameterRepository.batchInsertSelective(businessNode.getParamList());
             }
         } else {
