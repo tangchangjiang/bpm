@@ -78,18 +78,12 @@ public class BusinessProcessDriver {
         if (pipeline == null) {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_NULL, pipelineCode);
         }
-        if (StringUtils.isBlank(pipeline.getStartBeanId())) {
-            throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_START_ACTION_NULL, pipelineCode);
-        }
 
         final List<BusinessProcessNodeDO> allNodeAction = pipeline.getAllNodeAction();
         for (BusinessProcessNodeDO processNodeDO : allNodeAction) {
             final String currentAction = processNodeDO.getBeanId();
             if (StringUtils.isBlank(currentAction)) {
                 continue;
-            }
-            if (currentAction.equalsIgnoreCase(processNodeDO.getCurBeanId())) {
-                throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_NODE_CLOSED_LOOP, pipelineCode, processNodeDO.getNodeId(), processNodeDO.getCurBeanId(), currentAction);
             }
         }
         return pipeline;
