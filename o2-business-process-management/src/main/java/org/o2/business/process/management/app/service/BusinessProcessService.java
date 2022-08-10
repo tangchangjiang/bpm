@@ -1,4 +1,4 @@
-package org.o2.business.process.management.app;
+package org.o2.business.process.management.app.service;
 
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 

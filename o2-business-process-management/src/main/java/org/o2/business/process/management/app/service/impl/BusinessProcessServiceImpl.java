@@ -2,7 +2,7 @@ package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
 import org.hzero.mybatis.helper.UniqueHelper;
-import org.o2.business.process.management.app.BusinessProcessService;
+import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
