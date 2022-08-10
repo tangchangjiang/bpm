@@ -89,7 +89,7 @@ public class OnlineShopConverter {
         onlineShopCacheBO.setTenantId(onlineShop.getTenantId());
         onlineShopCacheBO.setIsDefault(onlineShop.getIsDefault());
         onlineShopCacheBO.setSourcedFlag(onlineShop.getSourcedFlag());
-        onlineShopCacheBO.setOnlineShopType(onlineShopCacheBO.getOnlineShopType());
+        onlineShopCacheBO.setOnlineShopType(onlineShop.getOnlineShopType());
         return onlineShopCacheBO;
     }
 

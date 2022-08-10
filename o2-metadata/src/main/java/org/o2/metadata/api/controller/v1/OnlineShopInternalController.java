@@ -39,7 +39,7 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "查询多个网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop/list")
-    public ResponseEntity<List<OnlineShopCO>> getOnlineShop(@RequestBody List<String> onlineShopCodes) {
+    public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
         UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
         return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
