@@ -1,4 +1,4 @@
-package org.o2.business.process.management.api;
+package org.o2.business.process.management.api.controller.v1;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.business.process.management.app.BusinessProcessService;
+import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
