@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.business.process.management.config
+org.o2.business.process.management.config.BusinessProcessManagerAutoConfiguration
