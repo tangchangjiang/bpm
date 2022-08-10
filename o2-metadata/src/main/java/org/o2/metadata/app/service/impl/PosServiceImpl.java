@@ -1,6 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
