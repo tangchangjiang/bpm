@@ -62,7 +62,7 @@ public class BusinessProcess extends AuditDomain {
     private String viewJson;
     @ApiModelProperty(value = "业务类型", required = true)
     @NotBlank
-    private String businessType;
+    private String businessTypeCode;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     @Unique(O2BPM_BUSINESS_PROCESS_U1)
@@ -138,12 +138,12 @@ public class BusinessProcess extends AuditDomain {
     /**
      * @return 业务类型
      */
-	public String getBusinessType() {
-		return businessType;
+	public String getBusinessTypeCode() {
+		return businessTypeCode;
 	}
 
-	public void setBusinessType(String businessType) {
-		this.businessType = businessType;
+	public void setBusinessTypeCode(String businessTypeCode) {
+		this.businessTypeCode = businessTypeCode;
 	}
     /**
      * @return 租户ID
