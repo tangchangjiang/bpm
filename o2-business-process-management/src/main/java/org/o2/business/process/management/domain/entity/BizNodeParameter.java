@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.annotation.Unique;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
@@ -24,6 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ModifyAudit
 @Table(name = "o2bpm_biz_node_parameter")
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BizNodeParameter extends AuditDomain {
 
     public static final String FIELD_BIZ_NODE_PARAMETER_ID = "bizNodeParameterId";
