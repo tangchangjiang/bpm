@@ -1,6 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
