@@ -17,6 +17,6 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
 
     @Override
     public void updateNodeStatus(String key, String hashKey, Integer value) {
-        redisCacheClient.opsForHash().put(key, hashKey, value);
+        redisCacheClient.opsForHash().put(key, hashKey, String.valueOf(value));
     }
 }
