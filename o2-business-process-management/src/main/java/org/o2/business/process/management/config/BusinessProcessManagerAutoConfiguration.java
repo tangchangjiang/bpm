@@ -20,20 +20,16 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.business.process.management.infra"
 })
 public class BusinessProcessManagerAutoConfiguration implements InitializingBean {
-    public static final String PIPELINE = "PIPELINE";
-    public static final String PIPELINE_ACTION = "PIPELINE ACTION";
-    public static final String PIPELINE_NODE = "PIPELINE_NODE";
-    public static final String ACTION_PARAMETER = "ACTION PARAMETER";
+    public static final String BUSINESS_PROCESS = "BUSINESS_PROCESS";
+    public static final String BUSINESS_PROCESS_NODE = "BUSINESS_PROCESS_NODE";
 
     public BusinessProcessManagerAutoConfiguration(final Docket docket) {
-        docket.tags(new Tag(PIPELINE, "流水线"))
-                .tags(new Tag(PIPELINE_NODE, "流水线节点"))
-                .tags(new Tag(ACTION_PARAMETER, "行为参数"))
-                .tags(new Tag(PIPELINE_ACTION,"行为"));
+        docket.tags(new Tag(BUSINESS_PROCESS, "业务流程定义"))
+                .tags(new Tag(BUSINESS_PROCESS_NODE,"业务流程节点定义"));
     }
     @Override
     public void afterPropertiesSet() throws Exception {
-        MessageAccessor.addBasenames("classpath:messages/pipeline");
+        MessageAccessor.addBasenames("classpath:messages/bpm");
     }
 
     @Bean
