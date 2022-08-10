@@ -82,6 +82,7 @@ public class BusinessNode extends AuditDomain {
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
     @ApiModelProperty(value = "业务节点参数列表")
     @Transient
     private List<BizNodeParameter> paramList;
