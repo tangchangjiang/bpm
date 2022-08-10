@@ -196,6 +196,9 @@
             <if test="activeFlag!=null ">
                 AND os.active_flag = #{activeFlag}
             </if>
+            <if test="onlineShopType != null and onlineShopType != ''">
+                AND os.online_shop_type = #{onlineShopType}
+            </if>
         </where>
         ORDER BY os.online_shop_code
     </select>
