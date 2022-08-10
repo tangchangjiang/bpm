@@ -54,5 +54,9 @@ public class OnlineShopCO {
 
     @ApiModelProperty(value = "目录版本")
     private String catalogVersionCode;
-
+    /**
+     * 网店类型
+     */
+    @ApiModelProperty(value = "网店类型")
+    private String onlineShopType;
 }

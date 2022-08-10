@@ -161,6 +161,7 @@
         os.platform_shop_code,
         ost.online_shop_name,
         os.active_flag,
+        os.online_shop_type,
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
@@ -196,6 +197,9 @@
             <if test="activeFlag!=null ">
                 AND os.active_flag = #{activeFlag}
             </if>
+            <if test="onlineShopType != null and onlineShopType != ''">
+                AND os.online_shop_type = #{onlineShopType}
+            </if>
         </where>
         ORDER BY os.online_shop_code
     </select>
@@ -214,6 +218,7 @@
         online.platform_shop_code,
         online.picked_up_flag,
         online.returned_flag,
+        online.online_shop_type,
         online.exchanged_flag,
         online.enable_split_flag,
         online.sourced_flag,
@@ -265,6 +270,7 @@
         tl.online_shop_name,
         online.online_shop_code,
         online.catalog_code,
+        online.online_shop_type,
         online.catalog_version_code,
         online.active_flag
         from o2md_online_shop online
