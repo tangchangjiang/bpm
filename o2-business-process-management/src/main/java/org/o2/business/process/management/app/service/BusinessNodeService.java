@@ -1,7 +1,6 @@
 package org.o2.business.process.management.app.service;
 
 import org.o2.business.process.management.domain.entity.BusinessNode;
-import java.util.List;
 
 
 /**
@@ -11,14 +10,14 @@ import java.util.List;
  */
 public interface BusinessNodeService {
 
-    
+
     /**
-     * 批量保存业务流程节点表
-     *
-     * @param businessNodeList 业务流程节点表对象列表
-     * @return 业务流程节点表对象列表
+     * 根据ID查询业务节点与参数
+     * @param bizNodeId 主键
+     * @return 结果
      */
-    List<BusinessNode> batchSave(List<BusinessNode> businessNodeList);
+    BusinessNode detail(Long bizNodeId);
+
 
 
     /**
