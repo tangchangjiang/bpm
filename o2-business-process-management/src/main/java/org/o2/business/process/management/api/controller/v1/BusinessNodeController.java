@@ -1,26 +1,27 @@
 package org.o2.business.process.management.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
-import org.hzero.core.util.Results;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
+import org.hzero.core.util.Results;
+import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessNodeVO;
+import org.o2.business.process.management.app.service.BusinessNodeService;
 import org.o2.business.process.management.config.BusinessProcessManagerAutoConfiguration;
 import org.o2.business.process.management.domain.entity.BusinessNode;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.o2.business.process.management.app.service.BusinessNodeService;
-
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
-import io.swagger.annotations.ApiParam;
-import java.util.List;
 
 /**
  * 业务流程节点表 管理 API
@@ -43,12 +44,13 @@ public class BusinessNodeController extends BaseController {
     @ApiOperation(value = "业务流程节点表维护-分页查询业务流程节点表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<Page<BusinessNode>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            BusinessNode businessNode,
-                                                            @ApiIgnore @SortDefault(value = BusinessNode.FIELD_BIZ_NODE_ID,
+    public ResponseEntity<Page<BusinessNodeVO>> page(@PathVariable(value = "organizationId") Long organizationId,
+                                                     BusinessNodeQueryDTO businessNodeQueryDTO,
+                                                     @ApiIgnore @SortDefault(value = BusinessNode.FIELD_BIZ_NODE_ID,
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        Page<BusinessNode> list = businessNodeRepository.pageAndSort(pageRequest, businessNode);
-        return Results.success(list);
+
+        businessNodeQueryDTO.setTenantId(organizationId);
+        return Results.success(PageHelper.doPageAndSort(pageRequest , () -> businessNodeRepository.listBusinessNode(businessNodeQueryDTO)));
     }
 
     @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表明细")
@@ -56,7 +58,7 @@ public class BusinessNodeController extends BaseController {
     @GetMapping("/{bizNodeId}")
     public ResponseEntity<BusinessNode> detail(@PathVariable(value = "organizationId") Long organizationId,
                                                         @ApiParam(value = "业务流程节点表ID", required = true) @PathVariable Long bizNodeId) {
-        BusinessNode businessNode = businessNodeRepository.selectByPrimaryKey(bizNodeId);
+        BusinessNode businessNode = businessNodeService.detail(bizNodeId);
         return Results.success(businessNode);
     }
 
@@ -65,9 +67,9 @@ public class BusinessNodeController extends BaseController {
     @PostMapping
     public ResponseEntity<BusinessNode> create(@PathVariable(value = "organizationId") Long organizationId,
                                                        @RequestBody BusinessNode businessNode) {
+        businessNode.setTenantId(organizationId);
         validObject(businessNode);
-        businessNodeService.save(businessNode);
-        return Results.success(businessNode);
+        return Results.success(businessNodeService.save(businessNode));
     }
 
     @ApiOperation(value = "业务流程节点表维护-修改业务流程节点表")
@@ -76,28 +78,6 @@ public class BusinessNodeController extends BaseController {
     public ResponseEntity<BusinessNode> update(@PathVariable(value = "organizationId") Long organizationId,
                                                        @RequestBody BusinessNode businessNode) {
         SecurityTokenHelper.validToken(businessNode);
-        businessNodeService.save(businessNode);
-        return Results.success(businessNode);
+        return Results.success(businessNodeService.save(businessNode));
     }
-
-        @ApiOperation(value = "业务流程节点表维护-批量保存业务流程节点表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-saving")
-    public ResponseEntity<List<BusinessNode>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody List<BusinessNode> businessNodeList) {
-        SecurityTokenHelper.validToken(businessNodeList);
-        businessNodeService.batchSave(businessNodeList);
-        return Results.success(businessNodeList);
-    }
-
-    @ApiOperation(value = "业务流程节点表维护-删除业务流程节点表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody BusinessNode businessNode) {
-        SecurityTokenHelper.validToken(businessNode);
-        businessNodeRepository.deleteByPrimaryKey(businessNode);
-        return Results.success();
-    }
-
 }

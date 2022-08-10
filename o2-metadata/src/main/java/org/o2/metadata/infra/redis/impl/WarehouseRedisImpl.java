@@ -1,6 +1,7 @@
 package org.o2.metadata.infra.redis.impl;
 
-import org.apache.commons.collections.MapUtils;
+
+import org.apache.commons.collections4.MapUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.PosConstants;

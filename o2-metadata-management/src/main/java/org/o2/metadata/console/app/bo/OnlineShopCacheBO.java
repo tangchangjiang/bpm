@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- *
  * 网店redis
  *
  * @author yipeng.zhu@hand-china.com 2021-08-06
@@ -40,6 +39,11 @@ public class OnlineShopCacheBO {
      * 目标编码
      */
     private String catalogVersionCode;
+
+    /**
+     * 网店类型
+     */
+    private String onlineShopType;
 
 
     private Integer pickedUpFlag;
