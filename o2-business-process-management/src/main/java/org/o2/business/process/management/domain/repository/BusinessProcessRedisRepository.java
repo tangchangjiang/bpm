@@ -9,9 +9,9 @@ public interface BusinessProcessRedisRepository {
 
     /**
      * 更新业务流程节点的状态
+     * @param key key
      * @param hashKey hashKey
-     * @param field field
      * @param value value
      */
-    void updateNodeStatus(String hashKey, String field, String value);
+    void updateNodeStatus(String key, String hashKey, Integer value);
 }

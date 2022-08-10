@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.o2.business.process.manage.infra.mapper.BusinessNodeMapper">
+<mapper namespace="org.o2.business.process.management.infra.mapper.BusinessNodeMapper">
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap id="BaseResultMap" type="org.o2.business.process.management.domain.entity.BusinessNode">
         <result column="biz_node_id" property="bizNodeId" jdbcType="DECIMAL"/>
@@ -9,8 +9,8 @@
         <result column="node_type" property="nodeType" jdbcType="VARCHAR"/>
         <result column="script" property="script" jdbcType="VARCHAR"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
-        <result column="business_type" property="businessType" jdbcType="VARCHAR"/>
-        <result column="sub_business_type" property="subBusinessType" jdbcType="VARCHAR"/>
+        <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
+        <result column="sub_business_type_code" property="subBusinessTypeCode" jdbcType="VARCHAR"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
@@ -18,6 +18,40 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
+    <select id="listBusinessNode" resultType="org.o2.business.process.management.api.vo.BusinessNodeVO">
+        SELECT
+            bn.biz_node_id,
+            bn.bean_id,
+            bn.description,
+            bn.business_type_code,
+            bn.sub_business_type_code,
+            bn.enabled_flag,
+            bn.tenant_id
+        FROM o2bpm_business_node bn
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND bn.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="beanId != null and beanId != ''">
+                AND bn.bean_id = #{beanId}
+            </if>
+            <if test="description != null and description != ''">
+                <bind name="temp" value="description + '%'"/>
+                AND bn.description like #{temp}
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                AND bn.business_type_code = #{businessTypeCode}
+            </if>
+            <if test="subBusinessTypeCode != null and subBusinessTypeCode != ''">
+                AND bn.sub_business_type_code = #{subBusinessTypeCode}
+            </if>
+        </where>
+    </select>
 
 
 </mapper>
