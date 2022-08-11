@@ -30,7 +30,7 @@ public class BusinessProcess extends AuditDomain {
     public static final String FIELD_ENABLED_FLAG = "enabledFlag";
     public static final String FIELD_PROCESS_JSON = "processJson";
     public static final String FIELD_VIEW_JSON = "viewJson";
-    public static final String FIELD_BUSINESS_TYPE = "businessType";
+    public static final String FIELD_BUSINESS_TYPE_CODE = "businessTypeCode";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String O2BPM_BUSINESS_PROCESS_U1 = "o2bpm_business_process_u1";
 

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author mark.bao@hand-china.com 2018/12/21
  */
-@XmlRootElement(name = "pipelineExecParam")
+@XmlRootElement(name = "businessProcessExecParam")
 public class BusinessProcessExecParam {
 
     @Getter
