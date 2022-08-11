@@ -10,14 +10,20 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessNodeVO;
 import org.o2.business.process.management.app.service.BusinessNodeService;
 import org.o2.business.process.management.config.BusinessProcessManagerAutoConfiguration;
+import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.business.process.management.domain.entity.BusinessNode;
+import org.o2.business.process.management.domain.repository.BizNodeParameterRepository;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +41,12 @@ public class BusinessNodeController extends BaseController {
 
     private final BusinessNodeRepository businessNodeRepository;
     private final BusinessNodeService businessNodeService;
+    private final BizNodeParameterRepository bizNodeParameterRepository;
 
-    public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService) {
+    public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService, BizNodeParameterRepository bizNodeParameterRepository) {
         this.businessNodeRepository = businessNodeRepository;
         this.businessNodeService = businessNodeService;
+        this.bizNodeParameterRepository = bizNodeParameterRepository;
     }
 
     @ApiOperation(value = "业务流程节点表维护-分页查询业务流程节点表列表")
@@ -50,7 +58,17 @@ public class BusinessNodeController extends BaseController {
                                                                      direction = Sort.Direction.DESC) PageRequest pageRequest) {
 
         businessNodeQueryDTO.setTenantId(organizationId);
-        return Results.success(PageHelper.doPageAndSort(pageRequest , () -> businessNodeRepository.listBusinessNode(businessNodeQueryDTO)));
+        Page<BusinessNodeVO> page = PageHelper.doPageAndSort(pageRequest, () -> businessNodeRepository.listBusinessNode(businessNodeQueryDTO));
+
+        // lov查询需要获取节点参数信息
+        if (BaseConstants.Flag.YES.equals(businessNodeQueryDTO.getLovFlag()) && CollectionUtils.isNotEmpty(page.getContent())) {
+            page.getContent().forEach(v -> v.setParamList(bizNodeParameterRepository.selectByCondition(Condition.builder(BizNodeParameter.class)
+                    .andWhere(Sqls.custom().andEqualTo(BizNodeParameter.FIELD_BEAN_ID, v.getBeanId())
+                            .andEqualTo(BizNodeParameter.FIELD_TENANT_ID, organizationId))
+                    .build())));
+        }
+
+        return Results.success(page);
     }
 
     @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表明细")
