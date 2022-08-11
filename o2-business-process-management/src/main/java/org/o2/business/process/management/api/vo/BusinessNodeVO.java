@@ -2,6 +2,9 @@ package org.o2.business.process.management.api.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.o2.business.process.management.domain.entity.BizNodeParameter;
+
+import java.util.List;
 
 /**
  * 业务节点列表查询结果展示
@@ -30,5 +33,11 @@ public class BusinessNodeVO {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+
+    @ApiModelProperty(value = "业务节点参数列表,lovFlag=1时才用数据")
+    private List<BizNodeParameter> paramList;
+
+
 
 }
