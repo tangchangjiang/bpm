@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
@@ -42,6 +43,7 @@ public class BusinessNodeController extends BaseController {
     private final BusinessNodeRepository businessNodeRepository;
     private final BusinessNodeService businessNodeService;
     private final BizNodeParameterRepository bizNodeParameterRepository;
+    public static final String FIELD = "body.paramList";
 
     public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService, BizNodeParameterRepository bizNodeParameterRepository) {
         this.businessNodeRepository = businessNodeRepository;
@@ -51,6 +53,7 @@ public class BusinessNodeController extends BaseController {
 
     @ApiOperation(value = "业务流程节点表维护-分页查询业务流程节点表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
     @GetMapping
     public ResponseEntity<Page<BusinessNodeVO>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                      BusinessNodeQueryDTO businessNodeQueryDTO,
@@ -73,6 +76,7 @@ public class BusinessNodeController extends BaseController {
 
     @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{bizNodeId}")
     public ResponseEntity<BusinessNode> detail(@PathVariable(value = "organizationId") Long organizationId,
                                                         @ApiParam(value = "业务流程节点表ID", required = true) @PathVariable Long bizNodeId) {
@@ -82,6 +86,7 @@ public class BusinessNodeController extends BaseController {
 
     @ApiOperation(value = "业务流程节点表维护-创建业务流程节点表")
     @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @PostMapping
     public ResponseEntity<BusinessNode> create(@PathVariable(value = "organizationId") Long organizationId,
                                                        @RequestBody BusinessNode businessNode) {
@@ -92,6 +97,7 @@ public class BusinessNodeController extends BaseController {
 
     @ApiOperation(value = "业务流程节点表维护-修改业务流程节点表")
     @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @PutMapping
     public ResponseEntity<BusinessNode> update(@PathVariable(value = "organizationId") Long organizationId,
                                                        @RequestBody BusinessNode businessNode) {

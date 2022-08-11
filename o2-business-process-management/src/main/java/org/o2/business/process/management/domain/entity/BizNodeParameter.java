@@ -3,17 +3,20 @@ package org.o2.business.process.management.domain.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import javax.validation.constraints.NotBlank;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
 
 /**
  * 业务节点参数表
@@ -72,9 +75,11 @@ public class BizNodeParameter extends AuditDomain {
     @Unique(O2BPM_BIZ_NODE_PARAMETER_U1)
     private String beanId;
     @ApiModelProperty(value = "参数格式，HSDR.PARAM_FORMAT", required = true)
+    @LovValue(value = BusinessProcessConstants.LovCode.PARAM_FORMAT)
     @NotBlank
     private String paramFormatCode;
     @ApiModelProperty(value = "编辑类型，HSDR.PARAM_EDIT_TYPE", required = true)
+    @LovValue(value = BusinessProcessConstants.LovCode.PARAM_EDIT_TYPE)
     @NotBlank
     private String paramEditTypeCode;
     @ApiModelProperty(value = "是否必须")
@@ -108,8 +113,13 @@ public class BizNodeParameter extends AuditDomain {
     // 非数据库字段
     // ------------------------------------------------------------------------------
     //
-    // getter/setter
-    // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "参数格式含义")
+    @Transient
+    private String paramFormatMeaning;
+    @ApiModelProperty(value = "编辑类型含义")
+    @Transient
+    private String paramEditTypeMeaning;
 
 }
 
