@@ -75,6 +75,7 @@ public class BusinessProcessDriver {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_CODE_NULL);
         }
         final BusinessProcessContext pipeline = getPipelineByRemote(pipelineCode, tenantId);
+        pipeline.setPipelineCode(pipelineCode);
         if (pipeline == null) {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_NULL, pipelineCode);
         }

@@ -16,7 +16,6 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,7 +82,7 @@ public class BusinessProcessController extends BaseController {
         return Results.success(businessProcess);
     }
 
-        @ApiOperation(value = "业务流程定义表维护-批量保存业务流程定义表")
+    @ApiOperation(value = "业务流程定义表维护-批量保存业务流程定义表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-saving")
     public ResponseEntity<List<BusinessProcess>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
@@ -91,16 +90,6 @@ public class BusinessProcessController extends BaseController {
         SecurityTokenHelper.validToken(businessProcessList);
         businessProcessService.batchSave(businessProcessList);
         return Results.success(businessProcessList);
-    }
-
-    @ApiOperation(value = "业务流程定义表维护-删除业务流程定义表")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody BusinessProcess businessProcess) {
-        SecurityTokenHelper.validToken(businessProcess);
-        businessProcessRepository.deleteByPrimaryKey(businessProcess);
-        return Results.success();
     }
 
 }

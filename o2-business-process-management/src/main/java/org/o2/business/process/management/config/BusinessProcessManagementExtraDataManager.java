@@ -26,7 +26,7 @@ public class BusinessProcessManagementExtraDataManager implements ExtraDataManag
         choerodonRouteData.setName(this.environment.getProperty("o2.service.current.name", O2Service.MetadataManagement.CODE));
         choerodonRouteData.setPath(this.environment.getProperty("o2.service.current.path", O2Service.MetadataManagement.PATH));
         choerodonRouteData.setServiceId(this.environment.getProperty("o2.service.current.service-name", O2Service.MetadataManagement.ID));
-        choerodonRouteData.setPackages("org.o2.metadata.pipeline.api");
+        choerodonRouteData.setPackages("org.o2.business.process.management.api");
         extraData.put(ExtraData.ZUUL_ROUTE_DATA, choerodonRouteData);
         return extraData;
     }
