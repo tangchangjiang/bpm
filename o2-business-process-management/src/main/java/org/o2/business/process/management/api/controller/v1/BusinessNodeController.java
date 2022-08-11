@@ -43,6 +43,7 @@ public class BusinessNodeController extends BaseController {
     private final BusinessNodeRepository businessNodeRepository;
     private final BusinessNodeService businessNodeService;
     private final BizNodeParameterRepository bizNodeParameterRepository;
+    public static final String FIELD = "body.paramList";
 
     public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService, BizNodeParameterRepository bizNodeParameterRepository) {
         this.businessNodeRepository = businessNodeRepository;
@@ -52,7 +53,7 @@ public class BusinessNodeController extends BaseController {
 
     @ApiOperation(value = "业务流程节点表维护-分页查询业务流程节点表列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
     @GetMapping
     public ResponseEntity<Page<BusinessNodeVO>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                      BusinessNodeQueryDTO businessNodeQueryDTO,
