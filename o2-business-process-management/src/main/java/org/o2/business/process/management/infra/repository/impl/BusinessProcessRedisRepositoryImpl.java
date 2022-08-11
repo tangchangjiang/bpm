@@ -2,7 +2,7 @@ package org.o2.business.process.management.infra.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
-import org.o2.business.process.management.infra.constant.RedisKeyConstants;
+import org.o2.business.process.management.infra.constant.BusinessProcessRedisConstants;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -28,7 +28,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     @Override
     public String getBusinessProcessConfig(String processCode, Long tenantId) {
         return redisCacheClient.<String, String>opsForHash()
-                .get(RedisKeyConstants.BusinessProcess.getBusinessProcessKey(tenantId), processCode);
+                .get(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), processCode);
     }
 
     @Override
@@ -37,14 +37,20 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     }
 
     @Override
-    public Map<String, Integer> listNodeStatus(List<String> keys, Long tenantId) {
+    public Map<String, String> listNodeStatus(List<String> keys, Long tenantId) {
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(RedisKeyConstants.BusinessNode.UPDATE_REFUND_LUA);
+        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessNode.LIST_PROCESS_NODE_STATUS);
         redisScript.setResultType(String.class);
-        String result = redisCacheClient.execute(redisScript, Collections.singletonList(RedisKeyConstants.BusinessNode.getNodeStatusKey(tenantId)), keys);
-        if (StringUtils.isBlank(result)) {
+        String[] str = keys.toArray(new String[0]);
+        String result = redisCacheClient.execute(redisScript, Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), str);
+        if (StringUtils.isBlank(result) || BusinessProcessRedisConstants.LUA_NULL_MAP.equals(result)) {
             return Collections.emptyMap();
         }
         return JsonHelper.stringToMap(result);
+    }
+
+    @Override
+    public void updateProcessConfig(String fieldKey, String configJson, Long tenantId) {
+        redisCacheClient.opsForHash().put(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), fieldKey, configJson);
     }
 }

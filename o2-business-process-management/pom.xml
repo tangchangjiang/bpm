@@ -7,11 +7,11 @@
         <groupId>org.o2</groupId>
         <artifactId>o2-build-parent</artifactId>
         <version>1.6.0.TEST-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <groupId>org.o2.metadata</groupId>
     <artifactId>o2-business-process-management</artifactId>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

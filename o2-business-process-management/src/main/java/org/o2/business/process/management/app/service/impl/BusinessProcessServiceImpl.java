@@ -1,11 +1,12 @@
 package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
+import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,18 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessProcessServiceImpl implements BusinessProcessService {
                                                                                 
-    @Autowired
-    private BusinessProcessRepository businessProcessRepository;
+    private final BusinessProcessRepository businessProcessRepository;
+
+    private final BusinessProcessRedisRepository businessProcessRedisRepository;
+
+    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessProcessRedisRepository businessProcessRedisRepository) {
+        this.businessProcessRepository = businessProcessRepository;
+        this.businessProcessRedisRepository = businessProcessRedisRepository;
+    }
 
 
-    
     @Override
+    @Deprecated()
     @Transactional(rollbackFor = Exception.class)
     public List<BusinessProcess> batchSave(List<BusinessProcess> businessProcessList) {
         Map<AuditDomain.RecordStatus, List<BusinessProcess>> statusMap = businessProcessList.stream().collect(Collectors.groupingBy(BusinessProcess::get_status));
@@ -62,7 +69,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
         //保存业务流程定义表
-        UniqueHelper.valid(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
+        UniqueHelper.isUnique(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
         if (businessProcess.getBizProcessId() == null) {
             businessProcessRepository.insertSelective(businessProcess);
         } else {
@@ -76,7 +83,9 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                     BusinessProcess.FIELD_TENANT_ID
             );
         }
-
+        if(StringUtils.isNotBlank(businessProcess.getProcessJson())){
+            businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
+        }
         return businessProcess;
     }
 }

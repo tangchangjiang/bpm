@@ -8,7 +8,7 @@ local map = {};
 
 for i, v in ipairs(keys) do
     local temp = redis.call("HGET", detailKey, v);
-    if temp == nil then
+    if temp then
         map[v] = temp;
     end
 end

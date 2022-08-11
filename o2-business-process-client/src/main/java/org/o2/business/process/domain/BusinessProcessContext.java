@@ -2,7 +2,6 @@ package org.o2.business.process.domain;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +17,4 @@ public class BusinessProcessContext {
     private final Integer enabledFlag;
     private String pipelineCode;
     private Long tenantId;
-
-    public BusinessProcessContext(Integer enabledFlag) {
-        this.enabledFlag = enabledFlag;
-        this.allNodeAction = new ArrayList<>();
-    }
 }

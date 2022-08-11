@@ -33,5 +33,14 @@ public interface BusinessProcessRedisRepository {
      * @param tenantId
      * @return
      */
-    Map<String, Integer> listNodeStatus(List<String> keys, Long tenantId);
+    Map<String, String> listNodeStatus(List<String> keys, Long tenantId);
+
+
+    /**
+     * 更新流程配置
+     * @param fieldKey 字段key
+     * @param configJson 对应的值
+     * @param tenantId 租户
+     */
+    void updateProcessConfig(String fieldKey, String configJson, Long tenantId);
 }

@@ -9,7 +9,9 @@ import org.springframework.scripting.support.ResourceScriptSource;
  * @author zhilin.ren@hand-china.com
  * @date 2022/08/10 16:18
  */
-public interface RedisKeyConstants {
+public interface BusinessProcessRedisConstants {
+
+    String LUA_NULL_MAP = "{}";
 
     interface BusinessNode {
         String NODE_STATUS_KEY = "o2bpm:node:{%s}";
@@ -24,8 +26,8 @@ public interface RedisKeyConstants {
             return String.format(NODE_STATUS_KEY,tenantId);
         }
 
-        ResourceScriptSource UPDATE_REFUND_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/list_process_node_status.lua"));
+        ResourceScriptSource LIST_PROCESS_NODE_STATUS =
+                new ResourceScriptSource(new ClassPathResource("script/list_node_status.lua"));
     }
 
     interface BusinessProcess{
