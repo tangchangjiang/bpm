@@ -10,11 +10,13 @@ import javax.validation.constraints.NotBlank;
 import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
 
 import java.util.List;
 
@@ -70,9 +72,11 @@ public class BusinessNode extends AuditDomain {
     @NotNull
     private Integer enabledFlag;
     @ApiModelProperty(value = "业务类型(O2MD.BUSINESS_TYPE)", required = true)
+    @LovValue(value = BusinessProcessConstants.LovCode.BUSINESS_TYPE_CODE)
     @NotBlank
     private String businessTypeCode;
     @ApiModelProperty(value = "二级业务类型(O2MD.SUB_BUSINESS_TYPE)")
+    @LovValue(value = BusinessProcessConstants.LovCode.SUB_BUSINESS_TYPE_CODE)
     private String subBusinessTypeCode;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
@@ -86,5 +90,12 @@ public class BusinessNode extends AuditDomain {
     @ApiModelProperty(value = "业务节点参数列表")
     @Transient
     private List<BizNodeParameter> paramList;
+
+    @Transient
+    @ApiModelProperty(value = "业务类型含义")
+    private String businessTypeMeaning;
+    @Transient
+    @ApiModelProperty(value = "二级业务类型含义")
+    private String subBusinessTypeMeaning;
 }
 
