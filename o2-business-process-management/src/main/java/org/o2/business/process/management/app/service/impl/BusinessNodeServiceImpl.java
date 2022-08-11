@@ -14,7 +14,7 @@ import org.o2.business.process.management.domain.entity.BusinessNode;
 import org.o2.business.process.management.domain.repository.BizNodeParameterRepository;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
-import org.o2.business.process.management.infra.constant.RedisKeyConstants;
+import org.o2.business.process.management.infra.constant.BusinessProcessRedisConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,7 +92,7 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
 
         }
         // 更新redis 业务流程节点状态
-        String nodeStatusKey = RedisKeyConstants.BusinessNode.getNodeStatusKey(businessNode.getTenantId());
+        String nodeStatusKey = BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(businessNode.getTenantId());
         businessProcessRedisRepository.updateNodeStatus(nodeStatusKey, businessNode.getBeanId(), businessNode.getEnabledFlag());
         return businessNode;
     }

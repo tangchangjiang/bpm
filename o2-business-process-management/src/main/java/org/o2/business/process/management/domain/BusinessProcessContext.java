@@ -1,4 +1,4 @@
-package org.o2.business.process.domain;
+package org.o2.business.process.management.domain;
 
 import lombok.Data;
 
@@ -13,8 +13,7 @@ import java.util.List;
 @Data
 public class BusinessProcessContext {
 
-    private final List<BusinessProcessNodeDO> allNodeAction;
-    private final Integer enabledFlag;
-    private String pipelineCode;
+    private List<BusinessProcessNodeDO> allNodeAction;
+    private Integer enabledFlag;
     private Long tenantId;
 }
