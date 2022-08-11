@@ -1,8 +1,10 @@
 package org.o2.business.process.management.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -42,8 +44,8 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
         BusinessNode businessNode = businessNodeRepository.selectByPrimaryKey(bizNodeId);
 
         if (Objects.isNull(businessNode)) {
-            log.warn("BusinessNodeService->detail result is null,bizNodeId:{}",bizNodeId);
-            return null;
+            log.error("BusinessNodeService->detail result is null,bizNodeId:{}",bizNodeId);
+            throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
         }
         // 查询对应节点的参数信息
         List<BizNodeParameter> paramList = bizNodeParameterRepository.selectByCondition(Condition.builder(BizNodeParameter.class)

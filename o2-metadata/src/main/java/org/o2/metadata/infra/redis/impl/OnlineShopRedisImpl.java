@@ -50,6 +50,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
 
     @Override
     public List<OnlineShop> selectShopList(List<String> onlineShopCodes) {
+
         String key = OnlineShopConstants.Redis.getOnlineShopKey(UserHelper.getTenantId());
         List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
         if (CollectionUtils.isEmpty(shopJsonList)) {

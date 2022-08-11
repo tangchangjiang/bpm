@@ -1,11 +1,13 @@
 package org.o2.metadata.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.client.domain.co.OnlineShopCO;
 import org.o2.metadata.client.infra.feign.OnlineShopRemoteService;
 
+import java.util.List;
+
 /**
- *
  * 网店
  *
  * @author yipeng.zhu@hand-china.com 2021-11-15
@@ -19,11 +21,23 @@ public class OnlineShopClient {
 
     /**
      * 查询网店
-     * @date 2021-08-10
-     * @param onlineShopCode  网店编码
+     *
+     * @param onlineShopCode 网店编码
      * @return 网店
+     * @date 2021-08-10
      */
-    public OnlineShopCO getOnlineShop(String onlineShopCode,String tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode,tenantId), OnlineShopCO.class);
+    public OnlineShopCO getOnlineShop(String onlineShopCode, String tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode, tenantId), OnlineShopCO.class);
+    }
+
+    /**
+     * 批量查询网店
+     *
+     * @param onlineShopCodes 网店code
+     * @return List<OnlineShopCO>
+     */
+    public List<OnlineShopCO> queryOnlineShop(List<String> onlineShopCodes) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShop(onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
+        });
     }
 }

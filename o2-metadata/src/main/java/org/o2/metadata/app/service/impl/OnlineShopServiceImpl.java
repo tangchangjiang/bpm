@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- *
  * 网店服务
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -24,12 +23,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public OnlineShopCO getOnlineShop(String onlineShopCode,Long tenantId) {
-        return OnlineShopConverter.poToCoObject(onlineShopRedis.getOnlineShop(onlineShopCode,tenantId));
+    public OnlineShopCO getOnlineShop(String onlineShopCode, Long tenantId) {
+        return OnlineShopConverter.poToCoObject(onlineShopRedis.getOnlineShop(onlineShopCode, tenantId));
     }
 
     @Override
     public List<OnlineShopCO> queryShopList(List<String> onlineShopCodes) {
-        return ListConverter.toList(onlineShopRedis.selectShopList(onlineShopCodes),OnlineShopConverter::poToCoObject);
+        // TODO 添加缓存
+        return ListConverter.toList(onlineShopRedis.selectShopList(onlineShopCodes), OnlineShopConverter::poToCoObject);
     }
 }
