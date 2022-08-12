@@ -64,7 +64,7 @@ public class BusinessProcessDriver {
                 if (StringUtils.isNotBlank(processNodeDO.getScript())) {
                     processExecParam = evaluateGroovy(processExecParam, processNodeDO.getScript());
                 } else if (null != processNodeDO.getEnabledFlag() && processNodeDO.getEnabledFlag() == O2CoreConstants.BooleanFlag.ENABLE) {
-                    BusinessNodeExecutor<T> nodeExecutor = applicationContext.getBean(processBO.getProcessCode(), BusinessNodeExecutor.class);
+                    BusinessNodeExecutor<T> nodeExecutor = applicationContext.getBean(processNodeDO.getBeanId(), BusinessNodeExecutor.class);
                     if (StringUtils.isNotBlank(processNodeDO.getArgs())) {
                         processExecParam.setCurrentParam(JsonHelper.stringToMap(processNodeDO.getArgs()));
                     }
