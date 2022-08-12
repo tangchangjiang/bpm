@@ -16,7 +16,7 @@ public class BusinessProcessExecParam {
 
     private Map<String, String> currentParam;
 
-    private Boolean nodeFlag;
+    private Boolean nextFlag;
 
     private Exception exception;
 }

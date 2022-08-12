@@ -72,7 +72,7 @@ public class BusinessProcessDriver {
                     nodeExecutor.run(processExecParam);
                     nodeExecutor.afterExecution(processExecParam);
 
-                    if (Boolean.FALSE.equals(processExecParam.getNodeFlag())) {
+                    if (Boolean.FALSE.equals(processExecParam.getNextFlag())) {
                         processErrorHandel(processExecParam, processCode, applicationContext);
                         break;
                     }
