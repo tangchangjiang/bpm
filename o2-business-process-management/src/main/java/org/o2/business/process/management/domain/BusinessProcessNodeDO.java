@@ -15,6 +15,8 @@ public class BusinessProcessNodeDO {
     private Long sequenceNum;
     @ApiModelProperty("执行bean的id")
     private String beanId;
+    @ApiModelProperty("节点是否生效")
+    private Integer enabledFlag;
     @ApiModelProperty("流程节点参数")
     private String args;
     @ApiModelProperty("脚本")

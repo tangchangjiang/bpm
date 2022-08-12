@@ -23,10 +23,10 @@ public interface BusinessProcessRemoteService {
      * 获取流程器信息
      *
      * @param organizationId 租户id
-     * @param code           流程器编码
-     * @return 流程器信息
+     * @param processCode  业务流程编码
+     * @return 业务流程配置信息
      */
-    @GetMapping("/{organizationId}/internal/pipeline/{code}")
+    @GetMapping("/{organizationId}/internal/business-process/{processCode}")
     ResponseEntity<String> getPipelineByCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                             @PathVariable(value = "code") @ApiParam(value = "流程器编码", required = true) String code);
+                                             @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode);
 }

@@ -1,5 +1,7 @@
 package org.o2.business.process.management.api.controller.v1;
 
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
@@ -27,7 +29,7 @@ public class BusinessProcessInternalController {
     }
 
     @ApiOperation(value = "获取流程信息")
-//    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{processCode}")
     public ResponseEntity<BusinessProcessContext> getBusinessProcessConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                     @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode) {

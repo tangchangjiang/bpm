@@ -1,5 +1,6 @@
 package org.o2.business.process.management.app.service;
 
+import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 
 import java.util.List;
@@ -8,11 +9,17 @@ import java.util.List;
 /**
  * 业务流程定义表应用服务
  *
- * @author youlong.peng@hand-china.com 2022-08-10 14:23:57
+ * @author youlong.peng@hand-china.com
+ * @date 2022-08-10 14:23:57
  */
 public interface BusinessProcessService {
 
-    
+    /**
+     * 批量查询业务流程
+     * @param queryDTO
+     * @return
+     */
+    List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO);
     /**
      * 批量保存业务流程定义表
      *
