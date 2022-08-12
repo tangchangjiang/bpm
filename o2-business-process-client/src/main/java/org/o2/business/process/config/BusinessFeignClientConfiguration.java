@@ -1,5 +1,6 @@
 package org.o2.business.process.config;
 
+import org.o2.business.process.exception.DefaultProcessErrorHandler;
 import org.o2.business.process.infra.BusinessProcessRemoteService;
 import org.o2.business.process.infra.fallback.BusinessProcessRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,7 +16,14 @@ import org.springframework.context.annotation.Bean;
 public class BusinessFeignClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
-    public BusinessProcessRemoteServiceImpl pipelineRemoteService() {
+    public BusinessProcessRemoteServiceImpl businessProcessRemoteService() {
         return new BusinessProcessRemoteServiceImpl();
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public DefaultProcessErrorHandler processErrorHandler() {
+        return new DefaultProcessErrorHandler();
+    }
+
 }
