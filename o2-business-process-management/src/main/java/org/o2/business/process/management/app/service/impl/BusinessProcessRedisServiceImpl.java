@@ -45,8 +45,7 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
         if(CollectionUtils.isNotEmpty(processContext.getAllNodeAction())){
             List<String> processNodes = processContext.getAllNodeAction().stream().map(BusinessProcessNodeDO::getBeanId).collect(Collectors.toList());
             Map<String, String> map = businessProcessRedisRepository.listNodeStatus(processNodes, tenantId);
-            // 注意自动拆箱 空指针问题
-            processContext.getAllNodeAction().removeIf(node -> !map.containsKey(node.getBeanId()) || !String.valueOf(O2CoreConstants.BooleanFlag.ENABLE).equals(map.get(node.getBeanId())));
+            processContext.getAllNodeAction().removeIf(node -> !String.valueOf(O2CoreConstants.BooleanFlag.ENABLE).equals(map.get(node.getBeanId())));
         }
         processContext.setTenantId(tenantId);
         return processContext;
