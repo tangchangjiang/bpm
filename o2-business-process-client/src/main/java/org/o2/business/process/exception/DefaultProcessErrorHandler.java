@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class DefaultProcessErrorHandler implements ProcessErrorHandler{
+public class DefaultProcessErrorHandler<T extends BusinessProcessExecParam> implements ProcessErrorHandler<T>{
 
     @Override
     public String getProcessCode() {
@@ -20,7 +20,7 @@ public class DefaultProcessErrorHandler implements ProcessErrorHandler{
     }
 
     @Override
-    public <T extends BusinessProcessExecParam> void errorHandle(String processCode ,T processExecParam) {
+    public void errorHandle(String processCode ,T processExecParam) {
        log.error("business process:{} error, error info:{}", processCode, ExceptionUtils.getMessage(processExecParam.getException()));
     }
 }
