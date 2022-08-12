@@ -10,21 +10,21 @@ public interface BusinessProcessConstants {
         /**
          * 一级业务类型
          */
-        String BUSINESS_TYPE_CODE = "O2MD.BUSINESS_TYPE";
+        String BUSINESS_TYPE_CODE = "O2BPM.BUSINESS_TYPE";
 
         /**
          * 二级业务类型
          */
-        String SUB_BUSINESS_TYPE_CODE = "O2MD.SUB_BUSINESS_TYPE";
+        String SUB_BUSINESS_TYPE_CODE = "O2BPM.SUB_BUSINESS_TYPE";
 
         /**
          * 参数格式
          */
-        String PARAM_FORMAT = "HSDR.PARAM_FORMAT";
+        String PARAM_FORMAT = "O2BPM.PARAM_FORMAT";
 
         /**
          * 编辑类型
          */
-        String PARAM_EDIT_TYPE = "HSDR.PARAM_EDIT_TYPE";
+        String PARAM_EDIT_TYPE = "O2BPM.PARAM_EDIT_TYPE";
     }
 }
