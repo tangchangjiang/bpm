@@ -18,11 +18,6 @@ public interface BusinessProcessConstants {
         String PIPELINE_NETWORK_REQUEST_ERROR = "current pipeline[%s] request metadata error";
     }
 
-    interface Redis {
-        String PIPELINE_KEY = "o2md:pipeline:%d:%s";
-        String PIPELINE_NODE_INFO = "info";
-    }
-
     interface CacheParam{
         String CACHE_NAME = "O2MD_USER";
     }
