@@ -81,7 +81,7 @@ public class BusinessProcessDriver {
                 }
                 stopWatch.stop();
             }
-        }catch (RuntimeException e){
+        }catch (Exception e){
             processExecParam.setException(e);
             processErrorHandel(processExecParam, processCode, applicationContext);
         }
