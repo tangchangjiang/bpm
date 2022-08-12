@@ -18,6 +18,7 @@ import org.hzero.core.util.Results;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.business.process.management.api.dto.BatchBusinessNodeQueryDTO;
 import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessNodeVO;
 import org.o2.business.process.management.app.service.BusinessNodeService;
@@ -29,6 +30,8 @@ import org.o2.business.process.management.domain.repository.BusinessNodeReposito
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 /**
  * 业务流程节点表 管理 API
@@ -72,6 +75,29 @@ public class BusinessNodeController extends BaseController {
         }
 
         return Results.success(page);
+    }
+
+    @ApiOperation(value = "业务流程节点表维护-根据beanId查询业务流程节点表列表")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
+    @PostMapping("by-bean-Id")
+    public ResponseEntity<List<BusinessNode>> listByBeanId(@PathVariable(value = "organizationId") Long organizationId,
+                                                     @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO
+                                                     ) {
+
+        validObject(batchBusinessNodeQueryDTO);
+        List<BusinessNode> businessNodes = businessNodeRepository.selectByCondition(Condition.builder(BusinessNode.class)
+                .andWhere(Sqls.custom().andIn(BusinessNode.FIELD_BEAN_ID, batchBusinessNodeQueryDTO.getBeanIdList())
+                        .andEqualTo(BusinessNode.FIELD_TENANT_ID, organizationId))
+                .build());
+        // 获取节点参数信息
+        if ( CollectionUtils.isNotEmpty(businessNodes)) {
+           businessNodes.forEach(v -> v.setParamList(bizNodeParameterRepository.selectByCondition(Condition.builder(BizNodeParameter.class)
+                    .andWhere(Sqls.custom().andEqualTo(BizNodeParameter.FIELD_BEAN_ID, v.getBeanId())
+                            .andEqualTo(BizNodeParameter.FIELD_TENANT_ID, organizationId))
+                    .build())));
+        }
+        return Results.success(businessNodes);
     }
 
     @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表明细")
