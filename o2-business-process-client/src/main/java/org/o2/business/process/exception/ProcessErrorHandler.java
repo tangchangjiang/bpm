@@ -7,7 +7,7 @@ import org.o2.business.process.data.BusinessProcessExecParam;
  * @version V1.0
  * @date 2022/8/12 15:50
  */
-public interface ProcessErrorHandler {
+public interface ProcessErrorHandler<T extends BusinessProcessExecParam> {
 
     String DEFAULT = "default";
 
@@ -23,6 +23,6 @@ public interface ProcessErrorHandler {
      * @param processCode
      * @param processExecParam
      */
-    <T extends BusinessProcessExecParam> void errorHandle(String processCode, T processExecParam);
+    void errorHandle(String processCode, T processExecParam);
 
 }

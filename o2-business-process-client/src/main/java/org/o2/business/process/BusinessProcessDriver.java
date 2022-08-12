@@ -72,7 +72,7 @@ public class BusinessProcessDriver {
                     nodeExecutor.run(processExecParam);
                     nodeExecutor.afterExecution(processExecParam);
 
-                    if (Boolean.FALSE.equals(processExecParam.getNodeFlag())) {
+                    if (Boolean.FALSE.equals(processExecParam.getNextFlag())) {
                         processErrorHandel(processExecParam, processCode, applicationContext);
                         break;
                     }
@@ -81,7 +81,7 @@ public class BusinessProcessDriver {
                 }
                 stopWatch.stop();
             }
-        }catch (RuntimeException e){
+        }catch (Exception e){
             processExecParam.setException(e);
             processErrorHandel(processExecParam, processCode, applicationContext);
         }
@@ -90,10 +90,11 @@ public class BusinessProcessDriver {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static <T extends BusinessProcessExecParam> void processErrorHandel(T processExecParam, String processCode, ApplicationContext applicationContext) {
-        Map<String, ProcessErrorHandler> processErrorHandleMap = applicationContext.getBeansOfType(ProcessErrorHandler.class)
+        Map<String, ProcessErrorHandler<T>> processErrorHandleMap = applicationContext.getBeansOfType(ProcessErrorHandler.class)
                 .values().stream().collect(Collectors.toMap(ProcessErrorHandler::getProcessCode, Function.identity(), (a, b) -> b));
-        ProcessErrorHandler processErrorHandler = processErrorHandleMap.getOrDefault(processCode, processErrorHandleMap.get(ProcessErrorHandler.DEFAULT));
+        ProcessErrorHandler<T> processErrorHandler = processErrorHandleMap.getOrDefault(processCode, processErrorHandleMap.get(ProcessErrorHandler.DEFAULT));
         processErrorHandler.errorHandle(processCode, processExecParam);
     }
 
