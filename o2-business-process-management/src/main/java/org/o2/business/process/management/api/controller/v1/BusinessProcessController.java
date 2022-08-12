@@ -37,7 +37,7 @@ import java.util.List;
  * @date 2022-08-10 14:23:57
  */
 @RestController("businessProcessController.v1")
-@RequestMapping("/v1/{organizationId}/business-processs")
+@RequestMapping("/v1/{organizationId}/business-process")
 public class BusinessProcessController extends BaseController {
 
     @Autowired
@@ -90,7 +90,7 @@ public class BusinessProcessController extends BaseController {
         return Results.success(businessProcess);
     }
 
-    @ApiOperation(value = "业务流程定义表维护-分页查询业务流程定义表列表")
+    @ApiOperation(value = "业务流程定义缓存详情")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/process-config/{processCode}")
     public ResponseEntity<String> getBusinessProcessConfig(@PathVariable(value = "organizationId") Long organizationId, @PathVariable String processCode){
