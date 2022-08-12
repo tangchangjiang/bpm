@@ -11,10 +11,10 @@ import java.util.List;
  * @date 2019-03-22
  */
 @Data
-public class BusinessProcessContext {
+public class BusinessProcessBO {
 
-    private final List<BusinessProcessNodeDO> allNodeAction;
-    private final Integer enabledFlag;
-    private String pipelineCode;
+    private List<BusinessProcessNodeDO> allNodeAction;
+    private Integer enabledFlag;
+    private String processCode;
     private Long tenantId;
 }
