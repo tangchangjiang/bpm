@@ -1,7 +1,6 @@
 package org.o2.business.process.data;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
@@ -12,9 +11,12 @@ import java.util.Map;
  * @author mark.bao@hand-china.com 2018/12/21
  */
 @XmlRootElement(name = "businessProcessExecParam")
+@Data
 public class BusinessProcessExecParam {
 
-    @Getter
-    @Setter
     private Map<String, String> currentParam;
+
+    private Boolean nodeFlag;
+
+    private Exception exception;
 }
