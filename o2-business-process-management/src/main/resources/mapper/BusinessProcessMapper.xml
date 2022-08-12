@@ -9,7 +9,7 @@
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
         <result column="process_json" property="processJson" jdbcType="VARCHAR"/>
         <result column="view_json" property="viewJson" jdbcType="VARCHAR"/>
-        <result column="business_type" property="businessType" jdbcType="VARCHAR"/>
+        <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
         <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>

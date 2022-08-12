@@ -5,11 +5,13 @@ import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -30,7 +32,7 @@ public class BusinessProcess extends AuditDomain {
     public static final String FIELD_ENABLED_FLAG = "enabledFlag";
     public static final String FIELD_PROCESS_JSON = "processJson";
     public static final String FIELD_VIEW_JSON = "viewJson";
-    public static final String FIELD_BUSINESS_TYPE = "businessType";
+    public static final String FIELD_BUSINESS_TYPE_CODE = "businessTypeCode";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String O2BPM_BUSINESS_PROCESS_U1 = "o2bpm_business_process_u1";
 
@@ -61,8 +63,9 @@ public class BusinessProcess extends AuditDomain {
     @ApiModelProperty(value = "画布渲染json")
     private String viewJson;
     @ApiModelProperty(value = "业务类型", required = true)
+	@LovValue(lovCode = "O2BPM.BUSINESS_TYPE")
     @NotBlank
-    private String businessType;
+    private String businessTypeCode;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     @Unique(O2BPM_BUSINESS_PROCESS_U1)
@@ -71,6 +74,10 @@ public class BusinessProcess extends AuditDomain {
 	//
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+	@Transient
+	@ApiModelProperty("业务类型含义")
+	private String businessTypeMeaning;
     //
     // getter/setter
     // ------------------------------------------------------------------------------
@@ -138,12 +145,12 @@ public class BusinessProcess extends AuditDomain {
     /**
      * @return 业务类型
      */
-	public String getBusinessType() {
-		return businessType;
+	public String getBusinessTypeCode() {
+		return businessTypeCode;
 	}
 
-	public void setBusinessType(String businessType) {
-		this.businessType = businessType;
+	public void setBusinessTypeCode(String businessTypeCode) {
+		this.businessTypeCode = businessTypeCode;
 	}
     /**
      * @return 租户ID
@@ -156,5 +163,12 @@ public class BusinessProcess extends AuditDomain {
 		this.tenantId = tenantId;
 	}
 
+	public String getBusinessTypeMeaning() {
+		return businessTypeMeaning;
+	}
+
+	public void setBusinessTypeMeaning(String businessTypeMeaning) {
+		this.businessTypeMeaning = businessTypeMeaning;
+	}
 }
 

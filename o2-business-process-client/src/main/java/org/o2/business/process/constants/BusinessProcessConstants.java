@@ -15,12 +15,8 @@ public interface BusinessProcessConstants {
         String PIPELINE_NODE_OUT_RANGE = "pipeline[%s] node[%s, %s], the next_action[%s] not in current pipeline";
         String PIPELINE_NODE_CLOSED_LOOP = "pipeline[%s] node[%s, %s], the next_action[%s] is owner closed loop";
         String PIPELINE_START_NODE_NOT_MATCH = "current pipeline[%s] start_action[%s] cannot match all nodes of this pipeline";
+        String BUSINESS_PROCESS_ERROR = "current pipeline[%s] runtime exception";
         String PIPELINE_NETWORK_REQUEST_ERROR = "current pipeline[%s] request metadata error";
-    }
-
-    interface Redis {
-        String PIPELINE_KEY = "o2md:pipeline:%d:%s";
-        String PIPELINE_NODE_INFO = "info";
     }
 
     interface CacheParam{

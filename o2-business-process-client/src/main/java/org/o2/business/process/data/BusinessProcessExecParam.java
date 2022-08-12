@@ -1,19 +1,22 @@
 package org.o2.business.process.data;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
 
 /**
  * 流水线节点传输参数
  *
  * @author mark.bao@hand-china.com 2018/12/21
  */
-@XmlRootElement(name = "pipelineExecParam")
+@XmlRootElement(name = "businessProcessExecParam")
+@Data
 public class BusinessProcessExecParam {
 
-    @Getter
-    @Setter
-    private String nextStrategy;
+    private Map<String, String> currentParam;
+
+    private Boolean nextFlag;
+
+    private Exception exception;
 }

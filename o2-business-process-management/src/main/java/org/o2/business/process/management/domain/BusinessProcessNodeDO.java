@@ -1,4 +1,4 @@
-package org.o2.business.process.domain;
+package org.o2.business.process.management.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.Data;
  * 流程器节点VO
  *
  * @author mark.bao@hand-china.com
- * @date 2019-03-22
+ * @date 2022-08-10
  */
 @Data
 public class BusinessProcessNodeDO {

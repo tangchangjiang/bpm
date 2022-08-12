@@ -1,11 +1,15 @@
 package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
+import org.apache.commons.lang3.StringUtils;
+import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
+import org.hzero.mybatis.util.Sqls;
+import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
+import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +26,28 @@ import java.util.stream.Collectors;
 @Service
 public class BusinessProcessServiceImpl implements BusinessProcessService {
                                                                                 
-    @Autowired
-    private BusinessProcessRepository businessProcessRepository;
+    private final BusinessProcessRepository businessProcessRepository;
+
+    private final BusinessProcessRedisRepository businessProcessRedisRepository;
+
+    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessProcessRedisRepository businessProcessRedisRepository) {
+        this.businessProcessRepository = businessProcessRepository;
+        this.businessProcessRedisRepository = businessProcessRedisRepository;
+    }
 
 
-    
     @Override
+    public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
+        return businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
+                .andEqualTo(BusinessProcess.FIELD_TENANT_ID, queryDTO.getTenantId(), false)
+                .andLikeRight(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription())
+                .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode())
+                .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode())
+                .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag())).build());
+    }
+
+    @Override
+    @Deprecated()
     @Transactional(rollbackFor = Exception.class)
     public List<BusinessProcess> batchSave(List<BusinessProcess> businessProcessList) {
         Map<AuditDomain.RecordStatus, List<BusinessProcess>> statusMap = businessProcessList.stream().collect(Collectors.groupingBy(BusinessProcess::get_status));
@@ -62,7 +82,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
         //保存业务流程定义表
-        UniqueHelper.valid(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
+        UniqueHelper.isUnique(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
         if (businessProcess.getBizProcessId() == null) {
             businessProcessRepository.insertSelective(businessProcess);
         } else {
@@ -72,11 +92,13 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                     BusinessProcess.FIELD_ENABLED_FLAG,
                     BusinessProcess.FIELD_PROCESS_JSON,
                     BusinessProcess.FIELD_VIEW_JSON,
-                    BusinessProcess.FIELD_BUSINESS_TYPE,
+                    BusinessProcess.FIELD_BUSINESS_TYPE_CODE,
                     BusinessProcess.FIELD_TENANT_ID
             );
         }
-
+        if(StringUtils.isNotBlank(businessProcess.getProcessJson())){
+            businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
+        }
         return businessProcess;
     }
 }
