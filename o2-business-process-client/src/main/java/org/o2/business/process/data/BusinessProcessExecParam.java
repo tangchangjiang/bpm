@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Map;
 
 /**
  * 流水线节点传输参数
@@ -15,5 +16,5 @@ public class BusinessProcessExecParam {
 
     @Getter
     @Setter
-    private String nextStrategy;
+    private Map<String, String> currentParam;
 }

@@ -14,13 +14,14 @@ import org.o2.business.process.domain.BusinessProcessNodeDO;
 import org.o2.business.process.exception.BusinessProcessRuntimeException;
 import org.o2.business.process.infra.BusinessProcessRemoteService;
 import org.o2.business.process.node.BusinessNodeExecutor;
+import org.o2.core.helper.JsonHelper;
 import org.o2.ehcache.util.CollectionCacheHelper;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,12 +44,26 @@ public class BusinessProcessDriver {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_EXEC_PARAM_NULL, pipelineCode);
         }
         final ApplicationContext applicationContext = ApplicationContextHelper.getContext();
-        for(BusinessProcessNodeDO processNodeDO : pipeline.getAllNodeAction()){
+        StopWatch stopWatch = new StopWatch(pipelineCode);
+        for (BusinessProcessNodeDO processNodeDO : pipeline.getAllNodeAction()) {
+            stopWatch.start(processNodeDO.getBeanId());
             if (StringUtils.isNotBlank(processNodeDO.getScript())) {
                 pipelineExecParam = evaluateGroovy(pipelineExecParam, processNodeDO.getScript());
             } else {
-                applicationContext.getBean(pipeline.getPipelineCode(), BusinessNodeExecutor.class).run(pipelineExecParam);
+                BusinessNodeExecutor<T> nodeExecutor = applicationContext.getBean(pipeline.getPipelineCode(), BusinessNodeExecutor.class);
+                if(StringUtils.isNotBlank(processNodeDO.getArgs())){
+                    pipelineExecParam.setCurrentParam(JsonHelper.stringToMap(processNodeDO.getArgs()));
+                }
+                nodeExecutor.beforeExecution(pipelineExecParam);
+                nodeExecutor.run(pipelineExecParam);
+                nodeExecutor.afterExecution(pipelineExecParam);
+                // 清空当前节点参数
+                pipelineExecParam.setCurrentParam(null);
             }
+            stopWatch.stop();
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("[processConfig]:Business Process :total time millis:{}, time consuming:{}", stopWatch.getTotalTimeMillis(), JsonHelper.objectToString(stopWatch.getTaskInfo()));
         }
     }
 
@@ -75,18 +90,13 @@ public class BusinessProcessDriver {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_CODE_NULL);
         }
         final BusinessProcessContext pipeline = getPipelineByRemote(pipelineCode, tenantId);
-        pipeline.setPipelineCode(pipelineCode);
         if (pipeline == null) {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_NULL, pipelineCode);
         }
-
-        final List<BusinessProcessNodeDO> allNodeAction = pipeline.getAllNodeAction();
-        for (BusinessProcessNodeDO processNodeDO : allNodeAction) {
-            final String currentAction = processNodeDO.getBeanId();
-            if (StringUtils.isBlank(currentAction)) {
-                continue;
-            }
+        if (log.isDebugEnabled()) {
+            log.debug("[processConfig], BusinessProcessContext:{}", JsonHelper.objectToString(pipeline));
         }
+        pipeline.setPipelineCode(pipelineCode);
         return pipeline;
     }
 
