@@ -3,7 +3,6 @@ package org.o2.business.process.management.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
@@ -62,19 +61,8 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
     public BusinessNode save(BusinessNode businessNode) {
         //保存业务流程节点表&参数
         UniqueHelper.isUnique(businessNode,BusinessNode.O2BPM_BUSINESS_NODE_U1);
-        boolean paramExistsFlag = CollectionUtils.isNotEmpty(businessNode.getParamList());
-        if (paramExistsFlag) {
-            businessNode.getParamList().forEach(v -> UniqueHelper.isUnique(v,BizNodeParameter.O2BPM_BIZ_NODE_PARAMETER_U1));
-        }
         if (businessNode.getBizNodeId() == null) {
             businessNodeRepository.insertSelective(businessNode);
-            if (paramExistsFlag) {
-                businessNode.getParamList().forEach(v -> {
-                    v.setTenantId(businessNode.getTenantId());
-                    v.setBeanId(businessNode.getBeanId());
-                });
-                bizNodeParameterRepository.batchInsertSelective(businessNode.getParamList());
-            }
         } else {
             businessNodeRepository.updateOptional(businessNode,
                     BusinessNode.FIELD_BEAN_ID,
@@ -86,10 +74,6 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
                     BusinessNode.FIELD_SUB_BUSINESS_TYPE,
                     BusinessNode.FIELD_TENANT_ID
             );
-            if (paramExistsFlag) {
-                bizNodeParameterRepository.batchUpdateByPrimaryKeySelective(businessNode.getParamList());
-            }
-
         }
         // 更新redis 业务流程节点状态
         String nodeStatusKey = BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(businessNode.getTenantId());

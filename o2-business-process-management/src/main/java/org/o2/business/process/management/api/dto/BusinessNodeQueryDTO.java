@@ -23,8 +23,10 @@ public class BusinessNodeQueryDTO {
     @ApiModelProperty(value = "二级业务类型(O2MD.SUB_BUSINESS_TYPE)")
     private String subBusinessTypeCode;
 
-    @ApiModelProperty(value = "租户ID",hidden = true)
+    @ApiModelProperty(value = "租户ID", hidden = true)
     private Long tenantId;
+    @ApiModelProperty(value = "节点状态是否启用,1:启用0：不启用")
+    private Integer enableFlag;
 
     @ApiModelProperty(value = "来源是否为lov,供流程定义选择流程节点使用,1:lov,0:列表查询")
     private Integer lovFlag;
