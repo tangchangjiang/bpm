@@ -10,6 +10,7 @@ import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +39,17 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     @Override
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
-        return businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
+        List<BusinessProcess> result = businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
                 .andEqualTo(BusinessProcess.FIELD_TENANT_ID, queryDTO.getTenantId(), false)
                 .andLikeRight(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription(), true)
                 .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag(), true)).build());
+        for(BusinessProcess process : result){
+            process.setCreatedOperator(IamUserHelper.getRealName(process.getCreatedBy().toString()));
+            process.setUpdatedOperator(IamUserHelper.getRealName(process.getLastUpdatedBy().toString()));
+        }
+        return result;
     }
 
     @Override
