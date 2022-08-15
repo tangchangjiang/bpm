@@ -40,10 +40,10 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
         return businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
                 .andEqualTo(BusinessProcess.FIELD_TENANT_ID, queryDTO.getTenantId(), false)
-                .andLikeRight(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription())
-                .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode())
-                .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode())
-                .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag())).build());
+                .andLikeRight(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription(), true)
+                .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode(), true)
+                .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode(), true)
+                .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag(), true)).build());
     }
 
     @Override
