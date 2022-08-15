@@ -43,4 +43,20 @@ public interface BusinessProcessRedisRepository {
      * @param tenantId 租户
      */
     void updateProcessConfig(String fieldKey, String configJson, Long tenantId);
+
+
+    /**
+     * 批量更新节点缓存
+     * @param tenantId
+     * @param detailMap
+     */
+    void batchUpdateNodeStatus(Long tenantId, Map<String, String> detailMap);
+
+
+    /**
+     * 批量更新业务流程缓存配置
+     * @param detailMap
+     * @param tenantId
+     */
+    void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap);
 }

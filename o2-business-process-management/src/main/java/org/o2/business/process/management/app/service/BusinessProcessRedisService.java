@@ -1,6 +1,10 @@
 package org.o2.business.process.management.app.service;
 
-import org.o2.business.process.management.domain.BusinessProcessContext;
+import org.o2.business.process.management.domain.BusinessProcessBO;
+import org.o2.business.process.management.domain.entity.BusinessNode;
+import org.o2.business.process.management.domain.entity.BusinessProcess;
+
+import java.util.List;
 
 /**
  * @author tangcj
@@ -15,6 +19,21 @@ public interface BusinessProcessRedisService {
      * @param tenantId 租户id
      * @return
      */
-    BusinessProcessContext getBusinessProcessConfig(String processCode, Long tenantId);
+    BusinessProcessBO getBusinessProcessConfig(String processCode, Long tenantId);
+
+
+    /**
+     * 批量更新节点缓存
+     * @param tenantId
+     * @param businessNodes
+     */
+    void batchUpdateNodeStatus(List<BusinessNode> businessNodes, Long tenantId);
+
+    /**
+     * 批量更新业务流程缓存配置
+     * @param processList
+     * @param tenantId
+     */
+    void batchUpdateProcessConfig(List<BusinessProcess> processList, Long tenantId);
 }
 
