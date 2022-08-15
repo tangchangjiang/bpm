@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2019-03-22
  */
 @Data
-public class BusinessProcessContext {
+public class BusinessProcessBO {
 
     private List<BusinessProcessNodeDO> allNodeAction;
     private Integer enabledFlag;
