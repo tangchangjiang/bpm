@@ -78,6 +78,14 @@ public class BusinessProcess extends AuditDomain {
 	@Transient
 	@ApiModelProperty("业务类型含义")
 	private String businessTypeMeaning;
+
+	@Transient
+	@ApiModelProperty("创建人")
+	private String createdOperator;
+
+	@Transient
+	@ApiModelProperty("更新人")
+	private String updatedOperator;
     //
     // getter/setter
     // ------------------------------------------------------------------------------
@@ -170,5 +178,23 @@ public class BusinessProcess extends AuditDomain {
 	public void setBusinessTypeMeaning(String businessTypeMeaning) {
 		this.businessTypeMeaning = businessTypeMeaning;
 	}
+
+
+	public String getCreatedOperator() {
+		return createdOperator;
+	}
+
+	public void setCreatedOperator(String createdOperator) {
+		this.createdOperator = createdOperator;
+	}
+
+	public String getUpdatedOperator() {
+		return updatedOperator;
+	}
+
+	public void setUpdatedOperator(String updatedOperator) {
+		this.updatedOperator = updatedOperator;
+	}
+
 }
 
