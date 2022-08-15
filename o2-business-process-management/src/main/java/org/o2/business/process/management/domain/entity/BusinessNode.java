@@ -1,23 +1,22 @@
 package org.o2.business.process.management.domain.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import javax.validation.constraints.NotBlank;
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -39,8 +38,8 @@ public class BusinessNode extends AuditDomain {
     public static final String FIELD_NODE_TYPE = "nodeType";
     public static final String FIELD_SCRIPT = "script";
     public static final String FIELD_ENABLED_FLAG = "enabledFlag";
-    public static final String FIELD_BUSINESS_TYPE = "businessType";
-    public static final String FIELD_SUB_BUSINESS_TYPE = "subBusinessType";
+    public static final String FIELD_BUSINESS_TYPE = "businessTypeCode";
+    public static final String FIELD_SUB_BUSINESS_TYPE = "subBusinessTypeCode";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String O2BPM_BUSINESS_NODE_U1 = "o2bpm_business_node_u1";
 
