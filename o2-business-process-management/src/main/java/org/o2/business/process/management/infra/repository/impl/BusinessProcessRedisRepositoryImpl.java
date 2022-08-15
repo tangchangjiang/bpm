@@ -53,4 +53,15 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     public void updateProcessConfig(String fieldKey, String configJson, Long tenantId) {
         redisCacheClient.opsForHash().put(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), fieldKey, configJson);
     }
+
+    @Override
+    public void batchUpdateNodeStatus(Long tenantId, Map<String, String> detailMap) {
+        redisCacheClient.opsForHash().putAll(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId), detailMap);
+    }
+
+
+    @Override
+    public void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap) {
+        redisCacheClient.opsForHash().putAll(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), detailMap);
+    }
 }
