@@ -38,15 +38,18 @@ public class SourcingCacheUpdateServiceImpl implements SourcingCacheUpdateServic
     }
 
     private void refreshSourcingCache(Long tenantId, String className, List<String> cacheNames){
-        final ProducerContext<SourcingConfigUpdateBO> context = new ProducerContext<>();
-        SourcingConfigUpdateBO data = new SourcingConfigUpdateBO();
-        data.setCacheNames(cacheNames);
-        data.setOperationTime(LocalDateTime.now());
-        data.setOperationClassName(className);
-        data.setOperator(DetailsHelper.getUserDetails().getUserId());
-        context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2SE_CONFIG_CACHE_UPDATE_EVT);
-        context.setData(data);
-        producerService.produce(tenantId, context);
+        // 寻源弃用，kafka不支持多pod实时更新
+        if(false){
+            final ProducerContext<SourcingConfigUpdateBO> context = new ProducerContext<>();
+            SourcingConfigUpdateBO data = new SourcingConfigUpdateBO();
+            data.setCacheNames(cacheNames);
+            data.setOperationTime(LocalDateTime.now());
+            data.setOperationClassName(className);
+            data.setOperator(DetailsHelper.getUserDetails().getUserId());
+            context.setQueueCode(WarehouseConstants.WarehouseEventManagement.O2SE_CONFIG_CACHE_UPDATE_EVT);
+            context.setData(data);
+            producerService.produce(tenantId, context);
+        }
     }
 
 
