@@ -5,6 +5,7 @@ package org.o2.metadata.console.app.service;
  * @version V1.0
  * @date 2022/6/8 10:50
  */
+@Deprecated
 public interface SourcingCacheUpdateService {
 
     /**
