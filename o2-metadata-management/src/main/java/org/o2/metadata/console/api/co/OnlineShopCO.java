@@ -61,4 +61,7 @@ public class OnlineShopCO {
     @ApiModelProperty(value = "是否拆分平台订单")
     private Integer enableSplitFlag;
 
+    @ApiModelProperty(value = "户号")
+    private String accountNumber;
+
 }
