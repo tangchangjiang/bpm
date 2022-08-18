@@ -222,7 +222,8 @@
         online.exchanged_flag,
         online.enable_split_flag,
         online.sourced_flag,
-        online.is_default
+        online.is_default,
+        online.account_number
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
         inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id = #{tenantId} and  oc.catalog_id = ocv.catalog_id

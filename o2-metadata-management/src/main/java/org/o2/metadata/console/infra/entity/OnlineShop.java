@@ -173,6 +173,9 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "目录编码")
     private String catalogCode;
 
+    @ApiModelProperty(value = "户号")
+    private String accountNumber;
+
 
     //
     // 数据库字段
