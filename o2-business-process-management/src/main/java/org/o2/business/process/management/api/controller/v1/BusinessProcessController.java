@@ -17,6 +17,7 @@ import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,6 +66,8 @@ public class BusinessProcessController extends BaseController {
     public ResponseEntity<BusinessProcess> detail(@PathVariable(value = "organizationId") Long organizationId,
                                                         @ApiParam(value = "业务流程定义表ID", required = true) @PathVariable Long bizProcessId) {
         BusinessProcess businessProcess = businessProcessRepository.selectByPrimaryKey(bizProcessId);
+        businessProcess.setCreatedOperator(IamUserHelper.getRealName(businessProcess.getCreatedBy().toString()));
+        businessProcess.setUpdatedOperator(IamUserHelper.getRealName(businessProcess.getLastUpdatedBy().toString()));
         return Results.success(businessProcess);
     }
 
