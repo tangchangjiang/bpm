@@ -14,7 +14,7 @@ import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
  * @date 2021/12/18 13:04
  */
 @Slf4j
-@JobHandler(value = "businessProcessTenantInitializeJob")
+@JobHandler(value = "bizTenantInitializeJob")
 public class BusinessProcessTenantInitializeJob extends O2AbstractTenantInitializeJob {
 
     private final ProcessTenantInitService processTenantInitService;
