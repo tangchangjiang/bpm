@@ -316,6 +316,7 @@ public class PosServiceImpl implements PosService {
 
             posResult.setAddress(posAddress);
             posResult.setPosStatusCode(pos.getPosStatusCode());
+            posResult.setBusinessTime(pos.getBusinessTime());
             posResult = this.update(posResult);
         }
         return PosConverter.poToCoObject(posResult);
