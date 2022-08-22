@@ -32,11 +32,11 @@
         </dependency>
         <dependency>
             <groupId>org.o2.metadata</groupId>
-            <artifactId>o2-metadata-pipeline-management</artifactId>
+            <artifactId>o2-metadata-management-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.o2.metadata</groupId>
-            <artifactId>o2-metadata-management-client</artifactId>
+            <artifactId>o2-business-process-management</artifactId>
         </dependency>
         <dependency>
             <groupId>org.o2.cms</groupId>

@@ -20,8 +20,6 @@
         <o2-metadata-management.version>${project.version}</o2-metadata-management.version>
         <o2-metadata-management-client.version>${project.version}</o2-metadata-management-client.version>
         <o2-metadata-client.version>${project.version}</o2-metadata-client.version>
-        <o2-metadata-piplent-management.version>${project.version}</o2-metadata-piplent-management.version>
-        <o2-metadata-piplent-client.version>${project.version}</o2-metadata-piplent-client.version>
         <o2-business-process-client.version>${project.version}</o2-business-process-client.version>
         <o2-business-process-management.version>${project.version}</o2-business-process-management.version>
     </properties>
@@ -32,8 +30,6 @@
         <module>o2-metadata-management</module>
         <module>o2-metadata-client</module>
         <module>o2-metadata-management-client</module>
-        <module>o2-metadata-pipeline-management</module>
-        <module>o2-metadata-pipeline-client</module>
         <module>o2-business-process-management</module>
         <module>o2-business-process-client</module>
     </modules>
@@ -64,16 +60,6 @@
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-metadata-management-client</artifactId>
                 <version>${o2-metadata-management-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.o2.metadata</groupId>
-                <artifactId>o2-metadata-pipeline-management</artifactId>
-                <version>${o2-metadata-piplent-management.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.o2.metadata</groupId>
-                <artifactId>o2-metadata-pipeline-client</artifactId>
-                <version>${o2-metadata-piplent-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.o2.metadata</groupId>
