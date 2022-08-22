@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.business.process.management.app.service.ProcessTenantInitService;
 import org.o2.metadata.console.app.service.*;
-import org.o2.metadata.pipeline.app.service.PipelineTenantInitService;
 import org.springframework.stereotype.Service;
 
 
@@ -27,21 +27,20 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final WarehouseTenantInitService warehouseTenantInitService;
 
-    private final PipelineTenantInitService pipelineTenantInitService;
+    private final ProcessTenantInitService processTenantInitService;
 
 
     public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService,
                                          StaticResourceTenantInitService staticResourceTenantInitService,
                                          MallLangPromptTenantInitService mallLangPromptTenantInitService,
                                          PlatformDefineTenantInitServiceImpl platformDefineTenantInitService,
-                                         WarehouseTenantInitService warehouseTenantInitService,
-                                         PipelineTenantInitService pipelineTenantInitService) {
+                                         WarehouseTenantInitService warehouseTenantInitService, ProcessTenantInitService processTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
         this.staticResourceTenantInitService = staticResourceTenantInitService;
         this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
         this.platformDefineTenantInitService = platformDefineTenantInitService;
         this.warehouseTenantInitService = warehouseTenantInitService;
-        this.pipelineTenantInitService = pipelineTenantInitService;
+        this.processTenantInitService = processTenantInitService;
     }
 
     @Override
@@ -61,8 +60,8 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         // 5. 仓库（虚拟仓）
         warehouseTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
-        // 6. 流程器
-        pipelineTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
+        // 6. 业务流程
+        processTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
     }
 

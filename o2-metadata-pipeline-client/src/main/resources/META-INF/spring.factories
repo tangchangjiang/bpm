@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.pipeline.config.PipelineFeignClientConfiguration
