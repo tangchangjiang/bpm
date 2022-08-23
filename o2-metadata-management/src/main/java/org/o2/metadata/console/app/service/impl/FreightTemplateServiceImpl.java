@@ -293,14 +293,21 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         SecurityTokenHelper.validToken(freightTemplateList);
         checkProductRelate(freightTemplateList, tenantId);
         List<FreightTemplateBO> list = new ArrayList<>(freightTemplateList.size());
+        List<String> detailCodes = new ArrayList<>(4);
         for (final FreightTemplate freightTemplate : freightTemplateList) {
             FreightTemplateBO template = new FreightTemplateBO();
             template.setFreight(convertToFreight(freightTemplate));
             list.add(template);
+            detailCodes.add(freightTemplate.getTemplateCode());
         }
+        FreightTemplateDetail query = new FreightTemplateDetail();
+        query.setTemplateCodes(detailCodes);
+        query.setTenantId(tenantId);
+        List<FreightTemplateDetail> details = freightTemplateDetailRepository.selectByByCondition(query);
         transactionalHelper.transactionOperation(() -> {
             // 清除缓存
             freightTemplateRepository.batchDeleteByPrimaryKey(freightTemplateList);
+            freightTemplateDetailRepository.batchDeleteByPrimaryKey(details);
             freightCacheService.deleteFreight(list);
         });
         return true;
