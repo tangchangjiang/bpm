@@ -81,13 +81,36 @@ public class BusinessNodeController extends BaseController {
         return Results.success(page);
     }
 
+    @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表列表(不分页)")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
+    @GetMapping("list")
+    public ResponseEntity<List<BusinessNodeVO>> list(@PathVariable(value = "organizationId") Long organizationId,
+                                                     BusinessNodeQueryDTO businessNodeQueryDTO) {
+
+        businessNodeQueryDTO.setTenantId(organizationId);
+        List<BusinessNodeVO> businessNodeList = businessNodeRepository.listBusinessNode(businessNodeQueryDTO);
+
+        // lov查询需要获取节点参数信息
+        if (CollectionUtils.isNotEmpty(businessNodeList)) {
+            List<String> beanIdList = businessNodeList.stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
+            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, organizationId);
+            if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
+                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream().collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
+                businessNodeList.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
+            }
+        }
+        return Results.success(businessNodeList);
+    }
+
+
     @ApiOperation(value = "业务流程节点表维护-根据beanId查询业务流程节点表列表&节点参数信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
     @PostMapping("list-by-bean-Id")
     public ResponseEntity<List<BusinessNode>> listByBeanId(@PathVariable(value = "organizationId") Long organizationId,
-                                                     @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO
-                                                     ) {
+                                                           @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO
+    ) {
 
         validObject(batchBusinessNodeQueryDTO);
         List<BusinessNode> businessNodes = businessNodeRepository.selectByCondition(Condition.builder(BusinessNode.class)
