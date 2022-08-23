@@ -305,9 +305,10 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
         query.setTenantId(tenantId);
         List<FreightTemplateDetail> details = freightTemplateDetailRepository.selectByByCondition(query);
         transactionalHelper.transactionOperation(() -> {
-            // 清除缓存
+
             freightTemplateRepository.batchDeleteByPrimaryKey(freightTemplateList);
             freightTemplateDetailRepository.batchDeleteByPrimaryKey(details);
+            // 清除缓存
             freightCacheService.deleteFreight(list);
         });
         return true;
