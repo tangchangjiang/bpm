@@ -112,7 +112,7 @@
         <where>
             <if test="templateCodes != null and templateCodes.size() > 0 ">
                 and freight.template_code IN
-                <foreach collection="templateCodeS" item="code" open="(" separator="," close=")">
+                <foreach collection="templateCodes" item="code" open="(" separator="," close=")">
                     #{code}
                 </foreach>
             </if>
