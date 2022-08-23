@@ -110,7 +110,7 @@
         inner join o2md_freight_template freight  on freight.template_id = detail.template_id and freight.tenant_id = #{tenantId}
 
         <where>
-            <if test="templateCodeS != null and templateCodeS.size() > 0 ">
+            <if test="templateCodes != null and templateCodes.size() > 0 ">
                 and freight.template_code IN
                 <foreach collection="templateCodeS" item="code" open="(" separator="," close=")">
                     #{code}
