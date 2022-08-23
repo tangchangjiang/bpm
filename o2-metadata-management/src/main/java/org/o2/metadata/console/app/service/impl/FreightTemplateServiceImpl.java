@@ -11,6 +11,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.copier.PropertiesCopier;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.dto.FreightDTO;
@@ -54,6 +55,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     private final FreightTemplateDomainRepository freightTemplateDomainRepository;
     private final BaseLovQueryRepository baseLovQueryRepository;
     private final O2ProductClient o2ProductClient;
+    private final TransactionalHelper transactionalHelper;
 
 
     public FreightTemplateServiceImpl(final FreightTemplateRepository freightTemplateRepository,
@@ -62,7 +64,8 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
                                       final FreightCacheService freightCacheService,
                                       final RegionRepository regionRepository,
                                       FreightTemplateDomainRepository freightTemplateDomainRepository,
-                                      BaseLovQueryRepository baseLovQueryRepository, O2ProductClient o2ProductClient) {
+                                      BaseLovQueryRepository baseLovQueryRepository, O2ProductClient o2ProductClient, TransactionalHelper transactionalHelper) {
+        this.transactionalHelper = transactionalHelper;
         this.freightTemplateRepository = freightTemplateRepository;
         this.freightTemplateDetailRepository = freightTemplateDetailRepository;
         this.freightTemplateDetailService = freightTemplateDetailService;
@@ -286,18 +289,20 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Boolean removeTemplateAndDetails(final List<FreightTemplate> freightTemplateList, Long tenantId) {
         SecurityTokenHelper.validToken(freightTemplateList);
         checkProductRelate(freightTemplateList, tenantId);
-
+        List<FreightTemplateBO> list = new ArrayList<>(freightTemplateList.size());
         for (final FreightTemplate freightTemplate : freightTemplateList) {
-            // 清除缓存
-            deleteFreightCache(freightTemplate);
-            freightTemplate.setActiveFlag(0);
-            freightTemplateRepository.updateOptional(freightTemplate, FreightTemplate.FIELD_ACTIVE_FLAG);
+            FreightTemplateBO template = new FreightTemplateBO();
+            template.setFreight(convertToFreight(freightTemplate));
+            list.add(template);
         }
-
+        transactionalHelper.transactionOperation(() -> {
+            // 清除缓存
+            freightTemplateRepository.batchDeleteByPrimaryKey(freightTemplateList);
+            freightCacheService.deleteFreight(list);
+        });
         return true;
     }
 

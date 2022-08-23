@@ -36,6 +36,13 @@ public interface FreightCacheService {
     void deleteFreight(FreightTemplateBO freightTemplate);
 
     /**
+     * 批量清除运费模板redis缓存
+     *
+     * @param freightTemplates  运费模板传输对象(包含运费模板和明细)
+     */
+    void deleteFreight(List<FreightTemplateBO> freightTemplates);
+
+    /**
      * 清除运费模板明细redis缓存
      *
      * @param freightDetailList 运费模板明细列表
