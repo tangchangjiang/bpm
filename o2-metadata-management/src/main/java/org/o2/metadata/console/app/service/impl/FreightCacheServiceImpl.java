@@ -79,6 +79,18 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final String freightKey = getFreightInforCacheKey( tenantId,freightCode);
         this.redisCacheClient.delete(freightKey);
     }
+    @Override
+    public void deleteFreight(final List<FreightTemplateBO> freightTemplates) {
+        List<String> keys  = new ArrayList<>(freightTemplates.size());
+        for (FreightTemplateBO freightTemplate : freightTemplates) {
+            final FreightBO freight = freightTemplate.getFreight();
+            final long tenantId = freight.getTenantId();
+            final String freightCode = freight.getTemplateCode();
+            final String freightKey = getFreightInforCacheKey( tenantId,freightCode);
+            keys.add(freightKey);
+        }
+        this.redisCacheClient.delete(keys);
+    }
 
     @Override
     public void deleteFreightDetails(final List<FreightDetailBO> freightDetailList) {
