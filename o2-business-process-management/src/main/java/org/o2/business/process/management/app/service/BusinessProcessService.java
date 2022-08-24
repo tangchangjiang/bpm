@@ -1,6 +1,8 @@
 package org.o2.business.process.management.app.service;
 
+import org.o2.business.process.management.api.dto.BusinessExportDTO;
 import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessExportVO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 
 import java.util.List;
@@ -36,4 +38,11 @@ public interface BusinessProcessService {
      * @return 业务流程定义表对象
      */
     BusinessProcess save(BusinessProcess businessProcess);
+
+    /**
+     * 导出接口查询
+     * @param businessExportDTO
+     * @return
+     */
+    List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO);
 }

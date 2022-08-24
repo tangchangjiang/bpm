@@ -18,5 +18,30 @@
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
 
+    <select id="listBusinessForExport" resultType="org.o2.business.process.management.api.vo.BusinessExportVO">
+        select process_code,
+        description,
+        enabled_flag,
+        process_json,
+        view_json,
+        business_type_code
+        from o2bpm_business_process
+        <where>
+            <if test="processCodes != null and processCodes.size > 0">
+                and process_code in
+                <foreach collection="processCodes" open="(" close=")" separator="," item="code">
+                    #{code, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1=0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 
 </mapper>

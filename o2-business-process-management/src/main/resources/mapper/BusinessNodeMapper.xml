@@ -18,6 +18,11 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
+
+    <resultMap id="NodeExportResult" type="org.o2.business.process.management.api.vo.BusinessNodeExportVO" extends="BaseResultMap" >
+        <collection property="nodeParamExportList" resultMap="org.o2.business.process.management.infra.mapper.BizNodeParameterMapper.BaseResultMap" columnPrefix="np_" />
+    </resultMap>
+
     <select id="listBusinessNode" resultType="org.o2.business.process.management.api.vo.BusinessNodeVO">
         SELECT
             bn.biz_node_id,
@@ -56,5 +61,48 @@
         </where>
     </select>
 
+    <select id="listNodeForExport" resultMap="NodeExportResult">
+        select
+            bn.bean_id,
+            bn.description,
+            bn.node_type,
+            bn.script,
+            bn.enabled_flag,
+            bn.business_type_code,
+            bn.sub_business_type_code,
+            np.biz_node_parameter_id np_biz_node_parameter_id,
+            np.param_code np_param_code,
+            np.param_name np_param_name,
+            np.bean_id np_bean_id,
+            np.param_format_code np_param_format_code,
+            np.param_edit_type_code np_param_edit_type_code,
+            np.notnull_flag np_notnull_flag,
+            np.business_model np_business_model,
+            np.value_filed_from np_value_filed_from,
+            np.value_filed_to np_value_filed_to,
+            np.show_flag np_show_flag,
+            np.enabled_flag np_enabled_flag,
+            np.default_value np_default_value,
+            np.default_meaning np_default_meaning,
+            np.parent_field np_parent_field,
+            np.default_value_type np_default_value_type
+        from o2bpm_business_node bn left join o2bpm_biz_node_parameter np on bn.bean_id = np.bean_id and bn.tenant_id = np.tenant_id
+        <where>
+            <if test="beanIds != null and beanIds.size > 0">
+                and bn.bean_id in
+                <foreach collection="beanIds" open="(" close=")" separator="," item="beanId">
+                    #{beanId, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        <choose>
+            <when test="tenantId != null">
+                AND bn.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        </where>
+    </select>
 
 </mapper>

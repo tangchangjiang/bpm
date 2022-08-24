@@ -1,10 +1,13 @@
 package org.o2.business.process.management.infra.mapper;
 
+import io.choerodon.mybatis.common.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessNodeExportVO;
 import org.o2.business.process.management.api.vo.BusinessNodeVO;
 import org.o2.business.process.management.domain.entity.BusinessNode;
-import io.choerodon.mybatis.common.BaseMapper;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,4 +24,13 @@ public interface BusinessNodeMapper extends BaseMapper<BusinessNode> {
      * @return 结果
      */
     List<BusinessNodeVO> listBusinessNode(BusinessNodeQueryDTO businessNodeQueryDTO);
+
+
+    /**
+     * 查询业务节点与节点参数信息
+     * @param beanIds
+     * @param tenantId
+     * @return
+     */
+    List<BusinessNodeExportVO> listNodeForExport(@Param("beanIds") Collection<String> beanIds, @Param("tenantId") Long tenantId);
 }
