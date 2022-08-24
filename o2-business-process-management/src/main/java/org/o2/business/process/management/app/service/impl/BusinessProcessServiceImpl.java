@@ -1,21 +1,34 @@
 package org.o2.business.process.management.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.domain.AuditDomain;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.business.process.management.api.dto.BusinessExportDTO;
 import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessExportVO;
+import org.o2.business.process.management.api.vo.BusinessNodeExportVO;
 import org.o2.business.process.management.app.service.BusinessProcessService;
+import org.o2.business.process.management.domain.BusinessProcessBO;
+import org.o2.business.process.management.domain.BusinessProcessNodeDO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
+import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
+import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
+import org.o2.core.O2CoreConstants;
+import org.o2.core.helper.JsonHelper;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,10 +42,13 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                                                                                 
     private final BusinessProcessRepository businessProcessRepository;
 
+    private final BusinessNodeRepository businessNodeRepository;
+
     private final BusinessProcessRedisRepository businessProcessRedisRepository;
 
-    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessProcessRedisRepository businessProcessRedisRepository) {
+    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository, BusinessProcessRedisRepository businessProcessRedisRepository) {
         this.businessProcessRepository = businessProcessRepository;
+        this.businessNodeRepository = businessNodeRepository;
         this.businessProcessRedisRepository = businessProcessRedisRepository;
     }
 
@@ -87,6 +103,12 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
+        boolean enableFlag = businessProcess.getEnabledFlag() != null
+                && businessProcess.getEnabledFlag() == O2CoreConstants.BooleanFlag.NOT_ENABLE
+                && StringUtils.isBlank(businessProcess.getProcessJson());
+        if(enableFlag){
+            throw new CommonException(BusinessProcessConstants.ErrorCode.BUSINESS_PROCESS_NODE_NOT_EMPTY);
+        }
         //保存业务流程定义表
         UniqueHelper.isUnique(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
         if (businessProcess.getBizProcessId() == null) {
@@ -106,5 +128,23 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
             businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
         }
         return businessProcess;
+    }
+
+    @Override
+    public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
+        List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
+        businessExportList.forEach(e -> e.setBusinessProcessBO(JsonHelper.stringToObject(e.getProcessJson(), BusinessProcessBO.class)));
+        Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBusinessProcessBO().getAllNodeAction().stream()).map(BusinessProcessNodeDO::getBeanId).collect(Collectors.toSet());
+        Map<String, BusinessNodeExportVO> nodeExportMap = businessNodeRepository.listNodeForExport(beanIds, businessExportDTO.getTenantId())
+                .stream().collect(Collectors.toMap(BusinessNodeExportVO::getBeanId, Function.identity()));
+        businessExportList.forEach(e -> {
+            List<BusinessNodeExportVO> businessNodeExportList = new ArrayList<>();
+            e.getBusinessProcessBO().getAllNodeAction().forEach(node -> {
+                businessNodeExportList.add(nodeExportMap.get(node.getBeanId()));
+            });
+            e.setNodeExportList(businessNodeExportList);
+//            e.setNodeParamExportList(businessNodeExportList.stream().flatMap(n -> n.getNodeParamExportList().stream()).collect(Collectors.toList()));
+        });
+        return businessExportList;
     }
 }

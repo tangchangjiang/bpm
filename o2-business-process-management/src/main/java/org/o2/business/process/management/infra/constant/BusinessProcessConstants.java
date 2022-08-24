@@ -5,6 +5,14 @@ package org.o2.business.process.management.infra.constant;
  */
 public interface BusinessProcessConstants {
 
+    interface ErrorCode{
+        /**
+         * 业务流程节点不能为空
+         */
+        String BUSINESS_PROCESS_NODE_NOT_EMPTY = "o2bpm.process_node_can_not_be_null";
+    }
+
+
     interface LovCode {
 
         /**

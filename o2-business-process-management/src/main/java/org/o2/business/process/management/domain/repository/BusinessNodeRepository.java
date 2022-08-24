@@ -2,9 +2,11 @@ package org.o2.business.process.management.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessNodeExportVO;
 import org.o2.business.process.management.api.vo.BusinessNodeVO;
 import org.o2.business.process.management.domain.entity.BusinessNode;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,4 +23,13 @@ public interface BusinessNodeRepository extends BaseRepository<BusinessNode> {
      * @return 结果
      */
     List<BusinessNodeVO> listBusinessNode(BusinessNodeQueryDTO businessNodeQueryDTO);
+
+
+    /**
+     * 查询业务节点与节点参数信息
+     * @param beanIds
+     * @param tenantId
+     * @return
+     */
+    List<BusinessNodeExportVO> listNodeForExport(Collection<String> beanIds, Long tenantId);
 }

@@ -11,8 +11,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.hzero.export.annotation.ExcelExport;
+import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.business.process.management.api.dto.BusinessExportDTO;
 import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
+import org.o2.business.process.management.api.vo.BusinessExportVO;
 import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -108,6 +113,29 @@ public class BusinessProcessController extends BaseController {
         SecurityTokenHelper.validToken(businessProcessList);
         businessProcessService.batchSave(businessProcessList);
         return Results.success(businessProcessList);
+    }
+
+
+    /**
+     * 订单导出
+     * @param organizationId 租户ID
+     * @param businessExportDTO 查询条件
+     * @param pageRequest 分页参数
+     * @param exportParam 导入参数
+     * @param response 响应
+     * @return 结果
+     */
+    @ApiOperation(value = "订单导出")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping ("/export")
+    @ExcelExport(value = BusinessExportVO.class, fillType = "multi-sheet")
+    public ResponseEntity<Page<BusinessExportVO>> export(@ApiParam(value = "租户ID", required = true)
+                                                      @PathVariable(value = "organizationId") Long organizationId,
+                                                      BusinessExportDTO businessExportDTO, @ApiIgnore PageRequest pageRequest,
+                                                      ExportParam exportParam, HttpServletResponse response) {
+        businessExportDTO.setTenantId(organizationId);
+        Page<BusinessExportVO> page = PageHelper.doPage(pageRequest, () -> businessProcessService.businessExport(businessExportDTO));
+        return Results.success(page);
     }
 
 }

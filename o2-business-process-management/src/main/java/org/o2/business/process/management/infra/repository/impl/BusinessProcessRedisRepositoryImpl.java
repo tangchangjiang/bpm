@@ -39,7 +39,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     @Override
     public Map<String, String> listNodeStatus(List<String> keys, Long tenantId) {
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessNode.LIST_PROCESS_NODE_STATUS);
+        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.LIST_PROCESS_NODE_STATUS);
         redisScript.setResultType(String.class);
         String[] str = keys.toArray(new String[0]);
         String result = redisCacheClient.execute(redisScript, Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), str);
