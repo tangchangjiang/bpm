@@ -5,7 +5,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.business.process.management.app.service.BusinessProcessRedisService;
 import org.o2.business.process.management.app.service.ProcessTenantInitService;
 import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.business.process.management.domain.entity.BusinessNode;
@@ -13,10 +12,16 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BizNodeParameterRepository;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
+import org.o2.business.process.management.infra.constant.BusinessProcessRedisConstants;
+import org.o2.core.helper.JsonHelper;
+import org.o2.data.redis.client.RedisCacheClient;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author tangcj
@@ -30,13 +35,14 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
     private final BusinessProcessRepository businessProcessRepository;
     private final BusinessNodeRepository businessNodeRepository;
     private final BizNodeParameterRepository bizNodeParameterRepository;
-    private final BusinessProcessRedisService businessProcessRedisService;
+    private final RedisCacheClient redisCacheClient;
 
-    public ProcessTenantInitServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository, BizNodeParameterRepository bizNodeParameterRepository, BusinessProcessRedisService businessProcessRedisService) {
+    public ProcessTenantInitServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository,
+                                        BizNodeParameterRepository bizNodeParameterRepository, RedisCacheClient redisCacheClient) {
         this.businessProcessRepository = businessProcessRepository;
         this.businessNodeRepository = businessNodeRepository;
         this.bizNodeParameterRepository = bizNodeParameterRepository;
-        this.businessProcessRedisService = businessProcessRedisService;
+        this.redisCacheClient = redisCacheClient;
     }
 
     @Override
@@ -84,6 +90,16 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
         businessNodeRepository.batchInsert(platformNodes);
         bizNodeParameterRepository.batchInsert(platformParameters);
         // 同步redis数据
-        businessProcessRedisService.batchUpdateProcessConfig(platformProcessList, targetTenantId);
+        List<String> keys = new ArrayList<>();
+        keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(targetTenantId));
+        keys.add(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(targetTenantId));
+
+        String[] params = new String[2];
+        params[0] = JsonHelper.objectToString(platformProcessList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode, BusinessProcess::getProcessJson)));
+        params[1] = JsonHelper.objectToString(platformNodes.stream().collect(Collectors.toMap(BusinessNode::getBeanId, a -> String.valueOf(a.getEnabledFlag()))));
+
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_UPDATE_LUA);
+        redisCacheClient.execute(redisScript, keys, params);
     }
 }

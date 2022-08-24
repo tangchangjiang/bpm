@@ -13,6 +13,14 @@ public interface BusinessProcessRedisConstants {
 
     String LUA_NULL_MAP = "{}";
 
+    interface BusinessProcessLua{
+        ResourceScriptSource LIST_PROCESS_NODE_STATUS =
+                new ResourceScriptSource(new ClassPathResource("script/list_node_status.lua"));
+
+        ResourceScriptSource BUSINESS_PROCESS_UPDATE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/business_process_update.lua"));
+    }
+
     interface BusinessNode {
         String NODE_STATUS_KEY = "o2bpm:node:{%s}";
 
@@ -26,8 +34,6 @@ public interface BusinessProcessRedisConstants {
             return String.format(NODE_STATUS_KEY,tenantId);
         }
 
-        ResourceScriptSource LIST_PROCESS_NODE_STATUS =
-                new ResourceScriptSource(new ClassPathResource("script/list_node_status.lua"));
     }
 
     interface BusinessProcess{
