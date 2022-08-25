@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 网店
  *
@@ -64,4 +66,8 @@ public class OnlineShopCO {
 
     @ApiModelProperty(value = "户号")
     private String accountNumber;
+
+    @ApiModelProperty(value = "网店类型编码", hidden = true)
+    @NotNull
+    private String onlineShopType;
 }
