@@ -47,6 +47,7 @@ public class OnlineShopConverter {
         co.setExchangedFlag(onlineShop.getExchangedFlag());
         co.setEnableSplitFlag(onlineShop.getEnableSplitFlag());
         co.setAccountNumber(onlineShop.getAccountNumber());
+        co.setOnlineShopType(onlineShop.getOnlineShopType());
         return co;
     }
 

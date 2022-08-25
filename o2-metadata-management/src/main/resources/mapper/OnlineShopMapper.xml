@@ -223,6 +223,7 @@
         online.enable_split_flag,
         online.sourced_flag,
         online.is_default,
+        online.online_shop_type,
         online.account_number
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
