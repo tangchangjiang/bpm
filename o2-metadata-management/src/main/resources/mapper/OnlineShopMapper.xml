@@ -243,9 +243,9 @@
                 </otherwise>
             </choose>
             <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0">
-                and online.online_shop_code in
-                <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
-                    #{code}
+                and
+                <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="or" close=")">
+                    online.online_shop_code LIKE CONCAT(#{code},'%')
                 </foreach>
             </if>
             <if test="onlineShopDTO.platformShopCodes != null and onlineShopDTO.platformShopCodes.size > 0">
