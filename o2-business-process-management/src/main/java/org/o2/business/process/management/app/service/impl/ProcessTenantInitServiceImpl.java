@@ -83,9 +83,18 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
         businessProcessRepository.delete(businessProcess);
         businessNodeRepository.delete(businessNode);
         bizNodeParameterRepository.delete(bizNodeParameter);
-        platformProcessList.forEach(p -> p.setTenantId(targetTenantId));
-        platformNodes.forEach(n -> n.setTenantId(targetTenantId));
-        platformParameters.forEach(p -> p.setTenantId(targetTenantId));
+        platformProcessList.forEach(p -> {
+            p.setBizProcessId(null);
+            p.setTenantId(targetTenantId);
+        });
+        platformNodes.forEach(n ->{
+            n.setTenantId(targetTenantId);
+            n.setBizNodeId(null);
+        });
+        platformParameters.forEach(p ->{
+            p.setTenantId(targetTenantId);
+            p.setBizNodeParameterId(null);
+        });
         businessProcessRepository.batchInsert(platformProcessList);
         businessNodeRepository.batchInsert(platformNodes);
         bizNodeParameterRepository.batchInsert(platformParameters);
