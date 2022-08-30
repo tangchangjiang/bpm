@@ -41,6 +41,7 @@ public class SqlLovQueryRepositoryImpl implements SqlLovQueryRepository {
     public Map<String,RoleCO> fetchRoleInner(Long tenantId, Collection<String> roleCodes) {
         Map<String, String> queryLovValueMap = new HashMap<>(4);
         queryLovValueMap.put(O2LovConstants.RoleLov.ROLE_SQL_PARAM, StringUtils.join(roleCodes, BaseConstants.Symbol.COMMA));
+        queryLovValueMap.put(O2LovConstants.RoleLov.ROLE_SQL_PARAM_TENANT_ID,String.valueOf(tenantId));
         Map<String,RoleCO> coMap = new HashMap<>(roleCodes.size());
         try {
             List<Map<String, Object>> result =  hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.RoleLov.ROLE_SQL_LOV, queryLovValueMap);
