@@ -34,7 +34,7 @@ public class SystemParameterClient {
     /**
      * 批量从redis查询系统参数
      * @param  paramCodes 参数编码
-     * @return list
+     * @return list key:参数编码 value:系统参数
      */
     public Map<String, SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId) {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), new TypeReference<Map<String, SystemParameterCO>>() {

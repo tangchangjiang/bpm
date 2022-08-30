@@ -3,6 +3,7 @@ package org.o2.metadata.app.service;
 
 import org.o2.metadata.api.co.CurrencyCO;
 import org.o2.metadata.api.co.LovValuesCO;
+import org.o2.metadata.api.co.RoleCO;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.app.bo.UomBO;
 import org.o2.metadata.infra.entity.Region;
@@ -61,4 +62,12 @@ public interface LovAdapterService {
      * @return  list
      */
     List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
+
+    /**
+     * 通过编码查询角色(批量)
+     * @param organizationId 租户ID
+     * @param roleCodes 角色编码
+     * @return 角色
+     */
+    Map<String, RoleCO> findRoleByCodes(Long organizationId, List<String> roleCodes);
 }

@@ -16,7 +16,7 @@ import java.util.Map;
  **/
 public class UomLovClient {
 
-    private LovAdapterRemoteService lovAdapterRemoteService;
+    private final LovAdapterRemoteService lovAdapterRemoteService;
 
     public UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- *
  * 值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -30,8 +29,8 @@ public interface LovAdapterRemoteService {
      * 查询值集中指定值的 描述信息（meaning）
      *
      * @param organizationId 租户id
-     * @param lovCode  值集code
-     * @param lovValue 值集value
+     * @param lovCode        值集code
+     * @param lovValue       值集value
      * @return String
      */
     @GetMapping("/{organizationId}/lov-internal/query-lov-value-meaning")
@@ -41,8 +40,9 @@ public interface LovAdapterRemoteService {
 
     /**
      * 通过值集编码查询值集信息
+     *
      * @param organizationId 租户ID
-     * @param lovCodes 编码集合
+     * @param lovCodes       编码集合
      * @return LovValuesCO
      */
     @GetMapping("/{organizationId}/lov-internal/query-lov")
@@ -51,8 +51,9 @@ public interface LovAdapterRemoteService {
 
     /**
      * 通过编码查询货币(批量)
+     *
      * @param organizationId 租户ID
-     * @param currencyCodes 货币编码
+     * @param currencyCodes  货币编码
      * @return 返回信息MAP
      */
     @GetMapping("/{organizationId}/lov-internal/currency-by-codes")
@@ -62,7 +63,8 @@ public interface LovAdapterRemoteService {
 
     /**
      * 查询地区值集
-     * @param innerDTO 查询条件
+     *
+     * @param innerDTO       查询条件
      * @param organizationId 租户ID
      * @return 值集集合
      */
@@ -72,11 +74,25 @@ public interface LovAdapterRemoteService {
 
     /**
      * 通过编码查询单位(批量)
+     *
      * @param organizationId 租户ID
-     * @param uomCodes 单位编码
+     * @param uomCodes       单位编码
      * @return 单位信息MAP
      */
     @GetMapping("/{organizationId}/lov-internal/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
+
+    /**
+     * 通过编码查询角色
+     *
+     * @param organizationId 租户ID
+     * @param roleCodes      角色编码
+     * @return 角色
+     */
+    @GetMapping("/{organizationId}/lov-internal/role-by-codes")
+    ResponseEntity<String> findRoleByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            @RequestParam(value = "roleCodes", required = false) List<String> roleCodes);
+
+
 }
