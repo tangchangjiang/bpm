@@ -16,7 +16,7 @@ import java.util.Map;
  **/
 public class CurrencyLovClient {
 
-    private LovAdapterRemoteService lovAdapterRemoteService;
+    private final LovAdapterRemoteService lovAdapterRemoteService;
 
     public CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
@@ -25,7 +25,7 @@ public class CurrencyLovClient {
      * 通过编码查询货币(批量)
      * @param tenantId 租户ID
      * @param currencyCodes 货币编码
-     * @return 返回信息MAP
+     * @return 返回信息MAP key:货币编码 value:货币
      */
     public Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.findCurrencyByCodes(tenantId, currencyCodes), new TypeReference<Map<String, CurrencyCO>>() {

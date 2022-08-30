@@ -35,7 +35,7 @@ public class FreightClient {
     /**
      * 批量获取运费模板
      * @param freightList 运费参数
-     * @return 运费结果
+     * @return 运费结果 key:运费模板编码 value：运费
      */
     public Map<String, FreightInfoCO> listFreightTemplates(List<FreightDTO> freightList, Long tenantId) {
         return ResponseUtils.getResponse(freightRemoteService.listFreightTemplates(freightList, tenantId), new TypeReference<Map<String, FreightInfoCO>>() {

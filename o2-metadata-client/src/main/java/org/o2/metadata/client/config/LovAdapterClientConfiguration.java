@@ -1,9 +1,6 @@
 package org.o2.metadata.client.config;
 
-import org.o2.metadata.client.CurrencyLovClient;
-import org.o2.metadata.client.IDPLovClient;
-import org.o2.metadata.client.RegionLovClient;
-import org.o2.metadata.client.UomLovClient;
+import org.o2.metadata.client.*;
 import org.o2.metadata.client.infra.feign.LovAdapterRemoteService;
 import org.o2.metadata.client.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -52,5 +49,10 @@ public class LovAdapterClientConfiguration {
     @ConditionalOnMissingBean
     public IDPLovClient idpLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new IDPLovClient(lovAdapterRemoteService);
+    }
+    @Bean
+    @ConditionalOnMissingBean
+    public RoleClient RoleClient(LovAdapterRemoteService lovAdapterRemoteService) {
+        return new RoleClient(lovAdapterRemoteService);
     }
 }
