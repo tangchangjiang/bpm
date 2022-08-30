@@ -120,6 +120,7 @@ public interface O2LovConstants {
     interface RoleLov{
         String ROLE_SQL_LOV = "O2MD.IAM_ROLE";
         String ROLE_SQL_PARAM ="roleCodes";
+        String ROLE_SQL_PARAM_TENANT_ID ="tenantId";
     }
 }
 

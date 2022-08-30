@@ -21,7 +21,7 @@ public class RoleClient {
     }
 
     /**
-     * 通过编码查询单位(批量)
+     * 通过编码查询角色(批量)
      * @param tenantId 租户ID
      * @param roleCods 角色编码
      * @return  key:角色编码 value：角色
