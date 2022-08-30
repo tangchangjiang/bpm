@@ -257,6 +257,9 @@
             <if test="onlineShopDTO.platformCode != null">
                 and online.platform_code = #{onlineShopDTO.platformCode}
             </if>
+            <if test="onlineShopDTO.onlineShopType != null">
+                and online.online_shop_type = #{onlineShopDTO.onlineShopType}
+            </if>
             <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size() > 0">
                 and
                 <foreach item="name" index="index" collection="onlineShopDTO.onlineShopNames" open="(" separator="or" close=")">
