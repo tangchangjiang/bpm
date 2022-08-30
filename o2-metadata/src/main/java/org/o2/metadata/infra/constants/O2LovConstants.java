@@ -116,5 +116,10 @@ public interface O2LovConstants {
         String REGION = "region";
         String CODE = "O2MD.REGION";
     }
+
+    interface RoleLov{
+        String ROLE_SQL_LOV = "O2MD.IAM_ROLE";
+        String ROLE_SQL_PARAM ="roleCodes";
+    }
 }
 

@@ -50,5 +50,11 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> findRoleByCodes(Long organizationId, List<String> roleCodes) {
+        log.error("Error findRoleByCodes, params[organizationId = {}, roleCodes = {}]", organizationId,roleCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 
 }
