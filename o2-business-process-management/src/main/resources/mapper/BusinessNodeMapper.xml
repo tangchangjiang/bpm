@@ -56,7 +56,7 @@
                 AND bn.sub_business_type_code = #{subBusinessTypeCode}
             </if>
             <if test="enabledFlag != null">
-                AND bn.enabled_flag = #{enableFlag}
+                AND bn.enabled_flag = #{enabledFlag}
             </if>
         </where>
     </select>
