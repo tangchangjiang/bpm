@@ -6,6 +6,7 @@
         <result column="biz_node_id" property="bizNodeId" jdbcType="DECIMAL"/>
         <result column="bean_id" property="beanId" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="node_name" property="nodeName" jdbcType="VARCHAR"/>
         <result column="node_type" property="nodeType" jdbcType="VARCHAR"/>
         <result column="script" property="script" jdbcType="VARCHAR"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
@@ -28,6 +29,7 @@
             bn.biz_node_id,
             bn.bean_id,
             bn.description,
+            bn.node_name,
             bn.business_type_code,
             bn.sub_business_type_code,
             bn.enabled_flag,
@@ -45,9 +47,9 @@
             <if test="beanId != null and beanId != ''">
                 AND bn.bean_id = #{beanId}
             </if>
-            <if test="description != null and description != ''">
-                <bind name="temp" value="description + '%'"/>
-                AND bn.description like #{temp}
+            <if test="nodeName != null and nodeName != ''">
+                <bind name="temp" value="'%' + nodeName + '%'"/>
+                AND bn.nodeName like #{temp}
             </if>
             <if test="businessTypeCode != null and businessTypeCode != ''">
                 AND bn.business_type_code = #{businessTypeCode}
