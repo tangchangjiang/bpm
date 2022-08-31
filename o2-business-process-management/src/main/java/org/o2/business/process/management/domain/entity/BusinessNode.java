@@ -35,6 +35,7 @@ public class BusinessNode extends AuditDomain {
     public static final String FIELD_BIZ_NODE_ID = "bizNodeId";
     public static final String FIELD_BEAN_ID = "beanId";
     public static final String FIELD_DESCRIPTION = "description";
+    public static final String FIELD_NODE_NAME = "nodeName";
     public static final String FIELD_NODE_TYPE = "nodeType";
     public static final String FIELD_SCRIPT = "script";
     public static final String FIELD_ENABLED_FLAG = "enabledFlag";
@@ -60,6 +61,8 @@ public class BusinessNode extends AuditDomain {
     @NotBlank
     @Unique(O2BPM_BUSINESS_NODE_U1)
     private String beanId;
+    @ApiModelProperty(value = "业务节点名称")
+    private String nodeName;
     @ApiModelProperty(value = "业务节点描述")
     private String description;
     @ApiModelProperty(value = "节点类型", required = true)
