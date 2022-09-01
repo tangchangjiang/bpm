@@ -19,6 +19,8 @@ import org.o2.business.process.node.BusinessNodeExecutor;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.helper.JsonHelper;
 import org.o2.ehcache.util.CollectionCacheHelper;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StopWatch;
 
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class BusinessProcessDriver {
+
+    private final static Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
 
     public static <T extends BusinessProcessExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
         final BusinessProcessBO pipeline = getPipelineDetail(tenantId, pipelineCode);
@@ -141,9 +145,15 @@ public class BusinessProcessDriver {
     private static BusinessProcessBO getPipelineByRemote(String processCode, Long tenantId){
         Map<String, BusinessProcessBO> result;
         try {
+            BusinessProcessRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(BusinessProcessRemoteService.class);
+            final long currentLastModifiedTime = ResponseUtils.getResponse(pipelineRemoteService.getProcessLastModifiedTime(tenantId, processCode), Long.class);
+            // 清空缓存
+            if (!PROCESS_LAST_UPDATE_TIME.containsKey(processCode) || currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)) {
+                updateMemoryCacheTime(processCode, tenantId, currentLastModifiedTime);
+            }
+
             result = CollectionCacheHelper.getCache(BusinessProcessConstants.CacheParam.CACHE_NAME, tenantId.toString(),
                     Collections.singletonList(processCode), pipelines -> {
-                        BusinessProcessRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(BusinessProcessRemoteService.class);
                         BusinessProcessBO pipeline = ResponseUtils.getResponse(pipelineRemoteService.getPipelineByCode(tenantId, processCode), BusinessProcessBO.class);
                         Map<String, BusinessProcessBO> pipelineMap = new HashMap<>(1);
                         pipelineMap.put(processCode, pipeline);
@@ -151,8 +161,23 @@ public class BusinessProcessDriver {
                     });
         }catch (Exception e){
             log.error("metadata->PipelineDriver->getPipelineByRemote error:{}", e.getMessage());
-            throw new CommonException(BusinessProcessConstants.ErrorMessage.PIPELINE_NETWORK_REQUEST_ERROR, processCode);
+            CommonException commonException = new CommonException(BusinessProcessConstants.ErrorMessage.PIPELINE_NETWORK_REQUEST_ERROR, processCode);
+            commonException.setStackTrace(e.getStackTrace());
+            throw commonException;
         }
         return result.getOrDefault(processCode, null);
+    }
+
+    private static void updateMemoryCacheTime(String processCode, Long tenantId, long currentLastModifiedTime) {
+        synchronized (PROCESS_LAST_UPDATE_TIME){
+            if(currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)){
+                PROCESS_LAST_UPDATE_TIME.put(processCode, currentLastModifiedTime);
+                CacheManager cacheManager = ApplicationContextHelper.getContext().getBean(CacheManager.class);
+                final Cache cache = cacheManager.getCache(String.format(BusinessProcessConstants.CacheParam.PROCESS_CACHE_KEY, tenantId, processCode));
+                if (null != cache) {
+                    cache.clear();
+                }
+            }
+        }
     }
 }

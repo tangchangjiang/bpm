@@ -21,5 +21,7 @@ public interface BusinessProcessConstants {
 
     interface CacheParam{
         String CACHE_NAME = "O2MD_USER";
+        String PROCESS_CACHE_KEY = "%d_%s";
     }
+
 }
