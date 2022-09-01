@@ -19,6 +19,9 @@ public class BusinessNodeExportVO {
     @ApiModelProperty(value = "业务流程节点bean", required = true)
     @ExcelColumn(zh = "业务流程节点bean", en = "beanId")
     private String beanId;
+    @ApiModelProperty(value = "业务节点名称")
+    @ExcelColumn(zh = "业务节点名称", en = "nodeName")
+    private String nodeName;
     @ApiModelProperty(value = "业务节点描述")
     @ExcelColumn(zh = "业务节点描述", en = "description")
     private String description;

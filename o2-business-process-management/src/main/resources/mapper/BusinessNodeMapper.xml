@@ -69,6 +69,7 @@
             bn.description,
             bn.node_type,
             bn.script,
+            bn.node_name,
             bn.enabled_flag,
             bn.business_type_code,
             bn.sub_business_type_code,
