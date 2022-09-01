@@ -35,5 +35,14 @@ public interface BusinessProcessRedisService {
      * @param tenantId
      */
     void batchUpdateProcessConfig(List<BusinessProcess> processList, Long tenantId);
+
+
+    /**
+     * 查询流程最后更新时间
+     * @param processCode
+     * @param tenantId
+     * @return
+     */
+    Long getProcessLastUpdateTime(String processCode, Long tenantId);
 }
 

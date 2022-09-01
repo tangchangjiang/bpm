@@ -8,6 +8,7 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,18 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
 
     @Override
     public void updateProcessConfig(String fieldKey, String configJson, Long tenantId) {
-        redisCacheClient.opsForHash().put(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), fieldKey, configJson);
+        List<String> keys = new ArrayList<>();
+        keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId));
+        keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId));
+
+        String[] params = new String[3];
+        params[0] = fieldKey;
+        params[1] = configJson;
+        params[2] = String.valueOf(System.currentTimeMillis());
+
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_UPDATE_LUA);
+        redisCacheClient.execute(redisScript, keys, params);
     }
 
     @Override
@@ -63,5 +75,10 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     @Override
     public void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap) {
         redisCacheClient.opsForHash().putAll(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), detailMap);
+    }
+
+    @Override
+    public String getProcessLastUpdateTime(String processCode, Long tenantId) {
+        return redisCacheClient.<String, String>opsForHash().get(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId), processCode);
     }
 }

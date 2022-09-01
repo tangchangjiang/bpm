@@ -65,4 +65,11 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
         businessProcessRedisRepository.batchUpdateProcessConfig(tenantId, detailMap);
     }
 
+    @Override
+    public Long getProcessLastUpdateTime(String processCode, Long tenantId) {
+        String lastModifiedTimeValue = businessProcessRedisRepository.getProcessLastUpdateTime(processCode, tenantId);
+        return StringUtils.isEmpty(lastModifiedTimeValue) ? System.currentTimeMillis() : Long.parseLong(lastModifiedTimeValue);
+    }
+
+
 }

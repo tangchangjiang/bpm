@@ -35,4 +35,12 @@ public class BusinessProcessInternalController {
                                                                       @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode) {
         return Results.success(businessProcessRedisService.getBusinessProcessConfig(processCode, organizationId));
     }
+
+    @ApiOperation(value = "获取流程信息最后更新时间")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/last-update-time/{processCode}")
+    public ResponseEntity<Long> getProcessLastUpdateTime(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                         @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode){
+        return Results.success(businessProcessRedisService.getProcessLastUpdateTime(processCode, organizationId));
+    }
 }
