@@ -66,6 +66,7 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
         } else {
             businessNodeRepository.updateOptional(businessNode,
                     BusinessNode.FIELD_BEAN_ID,
+                    BusinessNode.FIELD_NODE_NAME,
                     BusinessNode.FIELD_DESCRIPTION,
                     BusinessNode.FIELD_NODE_TYPE,
                     BusinessNode.FIELD_SCRIPT,
