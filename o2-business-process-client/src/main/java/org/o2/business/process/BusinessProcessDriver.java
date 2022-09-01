@@ -170,7 +170,7 @@ public class BusinessProcessDriver {
 
     private static void updateMemoryCacheTime(String processCode, Long tenantId, long currentLastModifiedTime) {
         synchronized (PROCESS_LAST_UPDATE_TIME){
-            if(currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)){
+            if(!PROCESS_LAST_UPDATE_TIME.containsKey(processCode) || currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)){
                 PROCESS_LAST_UPDATE_TIME.put(processCode, currentLastModifiedTime);
                 CacheManager cacheManager = ApplicationContextHelper.getContext().getBean(CacheManager.class);
                 final Cache cache = cacheManager.getCache(String.format(BusinessProcessConstants.CacheParam.PROCESS_CACHE_KEY, tenantId, processCode));
