@@ -2,6 +2,7 @@ package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.domain.AuditDomain;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -57,7 +59,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
         List<BusinessProcess> result = businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
                 .andEqualTo(BusinessProcess.FIELD_TENANT_ID, queryDTO.getTenantId(), false)
-                .andLikeRight(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription(), true)
+                .andLike(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription(), true)
                 .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag(), true)).build());
@@ -103,9 +105,11 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
+        BusinessProcessBO businessProcessBO = Optional.ofNullable(businessProcess.getProcessJson())
+                .map(a -> JsonHelper.stringToObject(a, BusinessProcessBO.class)).orElse(new BusinessProcessBO());
         boolean enableFlag = businessProcess.getEnabledFlag() != null
-                && businessProcess.getEnabledFlag() == O2CoreConstants.BooleanFlag.NOT_ENABLE
-                && StringUtils.isBlank(businessProcess.getProcessJson());
+                && businessProcess.getEnabledFlag() != O2CoreConstants.BooleanFlag.NOT_ENABLE
+                && CollectionUtils.isEmpty(businessProcessBO.getAllNodeAction());
         if(enableFlag){
             throw new CommonException(BusinessProcessConstants.ErrorCode.BUSINESS_PROCESS_NODE_NOT_EMPTY);
         }

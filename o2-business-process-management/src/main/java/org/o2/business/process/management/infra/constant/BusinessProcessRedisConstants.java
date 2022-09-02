@@ -17,8 +17,11 @@ public interface BusinessProcessRedisConstants {
         ResourceScriptSource LIST_PROCESS_NODE_STATUS =
                 new ResourceScriptSource(new ClassPathResource("script/list_node_status.lua"));
 
-        ResourceScriptSource BUSINESS_PROCESS_UPDATE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/business_process_update.lua"));
+        ResourceScriptSource BUSINESS_PROCESS_TENANT_INITIALIZE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/business_process_tenant_init.lua"));
+
+        ResourceScriptSource BUSINESS_PROCESS_CONFIG_UPDATE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/process_config_update.lua"));
     }
 
     interface BusinessNode {
@@ -39,6 +42,7 @@ public interface BusinessProcessRedisConstants {
     interface BusinessProcess{
         String BUSINESS_PROCESS_KEY = "o2bpm:process:{%d}";
 
+        String PROCESS_LAST_MODIFIED_TIME_KEY = "o2bpm:process:{%d}:last_modified_time";
 
         /**
          * 获取业务流程redisKey
@@ -49,6 +53,15 @@ public interface BusinessProcessRedisConstants {
             return String.format(BUSINESS_PROCESS_KEY, tenantId);
         }
 
+
+        /**
+         * 获取业务最后更新时间key
+         * @param tenantId
+         * @return
+         */
+        static String getProcessLastModifiedTimeKey(Long tenantId) {
+            return String.format(PROCESS_LAST_MODIFIED_TIME_KEY, tenantId);
+        }
     }
 
 }

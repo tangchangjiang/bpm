@@ -20,4 +20,10 @@ public class BusinessProcessRemoteServiceImpl implements BusinessProcessRemoteSe
         log.error("Error getPipelineByCode, params[organizationId = {}, code = {}]", organizationId, code);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> getProcessLastModifiedTime(Long organizationId, String processCode) {
+        log.error("Error getProcessLastModifiedTime, params[organizationId = {}, code = {}]", organizationId, processCode);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

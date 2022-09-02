@@ -59,4 +59,13 @@ public interface BusinessProcessRedisRepository {
      * @param tenantId
      */
     void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap);
+
+
+    /**
+     * 查询流程最后更新时间
+     * @param processCode
+     * @param tenantId
+     * @return
+     */
+    String getProcessLastUpdateTime(String processCode, Long tenantId);
 }
