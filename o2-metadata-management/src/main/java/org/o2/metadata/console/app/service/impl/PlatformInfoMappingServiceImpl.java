@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.exception.CommonException;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,19 +11,17 @@ import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
+import org.o2.metadata.console.app.service.PlatformInfoMappingService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
-import io.choerodon.mybatis.domain.AuditDomain;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.o2.metadata.console.app.service.PlatformInfoMappingService;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -72,7 +71,8 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
         Condition condition = Condition.builder(PlatformInfoMapping.class).andWhere(Sqls.custom()
                 .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, platformInfoMapping.getPlatformCode())
                 .andEqualTo(PlatformInfoMapping.FIELD_INF_TYPE_CODE, platformInfoMapping.getInfTypeCode())
-                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode()))
+                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode())
+                .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, platformInfoMapping.getTenantId()))
                 .build();
         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectByCondition(condition);
         //保存平台信息匹配表
