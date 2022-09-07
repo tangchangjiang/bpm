@@ -1,7 +1,6 @@
 package org.o2.business.process.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.o2.business.process.data.BusinessProcessExecParam;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class DefaultProcessErrorHandler<T extends BusinessProcessExecParam> impl
     }
 
     @Override
-    public void errorHandle(String processCode ,T processExecParam) {
-       log.error("business process:{} error, error info:{}", processCode, ExceptionUtils.getMessage(processExecParam.getException()));
+    public void errorHandle(String processCode, T processExecParam) {
+        log.error("business process:{} error, error info:{}", processCode, getErrorMessage(processExecParam));
     }
 }
