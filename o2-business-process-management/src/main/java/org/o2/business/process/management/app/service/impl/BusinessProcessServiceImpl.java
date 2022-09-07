@@ -147,7 +147,6 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                 businessNodeExportList.add(nodeExportMap.get(node.getBeanId()));
             });
             e.setNodeExportList(businessNodeExportList);
-//            e.setNodeParamExportList(businessNodeExportList.stream().flatMap(n -> n.getNodeParamExportList().stream()).collect(Collectors.toList()));
         });
         return businessExportList;
     }
