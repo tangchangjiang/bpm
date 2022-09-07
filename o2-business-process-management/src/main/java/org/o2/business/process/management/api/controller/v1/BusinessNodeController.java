@@ -28,7 +28,13 @@ import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.business.process.management.domain.entity.BusinessNode;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -73,7 +79,9 @@ public class BusinessNodeController extends BaseController {
             List<String> beanIdList = page.getContent().stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
             List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, organizationId);
             if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream().collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
+                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
+                        .sorted(BizNodeParameter.defaultComparator())
+                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
                 page.getContent().forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
             }
         }
@@ -96,7 +104,9 @@ public class BusinessNodeController extends BaseController {
             List<String> beanIdList = businessNodeList.stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
             List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, organizationId);
             if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream().collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
+                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
+                        .sorted(BizNodeParameter.defaultComparator())
+                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
                 businessNodeList.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
             }
         }
@@ -121,7 +131,9 @@ public class BusinessNodeController extends BaseController {
         if (CollectionUtils.isNotEmpty(businessNodes)) {
             List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(), organizationId);
             if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream().collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
+                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
+                        .sorted(BizNodeParameter.defaultComparator())
+                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
                 businessNodes.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
             }
 

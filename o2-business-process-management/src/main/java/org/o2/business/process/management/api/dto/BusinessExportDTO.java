@@ -14,6 +14,12 @@ public class BusinessExportDTO {
 
     private List<String> processCodes;
 
+    private String description;
+
+    private String businessTypeCode;
+
+    private Integer enabledFlag;
+
     private Long tenantId;
 
 }

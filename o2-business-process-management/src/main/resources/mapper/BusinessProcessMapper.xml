@@ -33,6 +33,16 @@
                     #{code, jdbcType=VARCHAR}
                 </foreach>
             </if>
+            <if test="description != null and description != ''">
+                <bind name="descriptionLike" value="'%' + description + '%'"/>
+                AND description LIKE #{descriptionLike}
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                and business_type_code = #{businessTypeCode}
+            </if>
+            <if test="enabledFlag != null">
+                and enabled_flag = #{enabledFlag}
+            </if>
             <choose>
                 <when test="tenantId != null">
                     AND tenant_id = #{tenantId}
