@@ -40,6 +40,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BusinessProcessDriver {
 
+    private BusinessProcessDriver(){
+        // 禁止构造该类
+    }
+
     private final static Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
 
     public static <T extends BusinessProcessExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
@@ -170,7 +174,9 @@ public class BusinessProcessDriver {
 
     private static void updateMemoryCacheTime(String processCode, Long tenantId, long currentLastModifiedTime) {
         synchronized (PROCESS_LAST_UPDATE_TIME){
-            if(!PROCESS_LAST_UPDATE_TIME.containsKey(processCode) || currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)){
+            // 当存在缓存更新时间且 缓存更新时间小于当前更新时间时
+            if(PROCESS_LAST_UPDATE_TIME.computeIfAbsent(processCode, a -> currentLastModifiedTime).compareTo(currentLastModifiedTime) < 0){
+                // 更新缓存更新时间并清空缓存
                 PROCESS_LAST_UPDATE_TIME.put(processCode, currentLastModifiedTime);
                 CacheManager cacheManager = ApplicationContextHelper.getContext().getBean(CacheManager.class);
                 final Cache cache = cacheManager.getCache(String.format(BusinessProcessConstants.CacheParam.PROCESS_CACHE_KEY, tenantId, processCode));
