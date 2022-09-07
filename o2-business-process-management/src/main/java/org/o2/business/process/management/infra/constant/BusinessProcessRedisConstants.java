@@ -22,6 +22,9 @@ public interface BusinessProcessRedisConstants {
 
         ResourceScriptSource BUSINESS_PROCESS_CONFIG_UPDATE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/process_config_update.lua"));
+
+        ResourceScriptSource BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA =
+                new ResourceScriptSource(new ClassPathResource("script/process_config_batch_update.lua"));
     }
 
     interface BusinessNode {
