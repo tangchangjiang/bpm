@@ -74,7 +74,17 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
 
     @Override
     public void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap) {
-        redisCacheClient.opsForHash().putAll(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId), detailMap);
+        List<String> keys = new ArrayList<>();
+        keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId));
+        keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId));
+
+        String[] params = new String[2];
+        params[0] = JsonHelper.mapToString(detailMap);
+        params[1] = String.valueOf(System.currentTimeMillis());
+
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA);
+        redisCacheClient.execute(redisScript, keys, params);
     }
 
     @Override
