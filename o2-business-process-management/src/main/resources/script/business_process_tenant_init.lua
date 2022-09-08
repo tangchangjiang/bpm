@@ -9,12 +9,12 @@ local processMap = cjson.decode(ARGV[1]);
 local nodeMap = cjson.decode(ARGV[2]);
 local updateTime = ARGV[3];
 
-for processKey, processValue in ipairs(processMap) do
+for processKey, processValue in pairs(processMap) do
     redis.call("HSET", processDetailKey, processKey, processValue);
     redis.call("hset", processTimeKey, processKey, updateTime);
 end
 
-for nodeKey, nodeValue in ipairs(nodeMap) do
+for nodeKey, nodeValue in pairs(nodeMap) do
     redis.call("HSET", nodeDetailKey, nodeKey, nodeValue);
 end
 

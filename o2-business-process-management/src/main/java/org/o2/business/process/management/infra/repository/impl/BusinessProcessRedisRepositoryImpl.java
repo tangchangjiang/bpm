@@ -78,7 +78,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId));
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId));
 
-        String[] params = new String[3];
+        String[] params = new String[2];
         params[0] = JsonHelper.mapToString(detailMap);
         params[1] = String.valueOf(System.currentTimeMillis());
 
