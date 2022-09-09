@@ -120,7 +120,7 @@ public class BusinessProcessDriver {
         GroovyObject clazzObj = null;
         try {
             clazzObj = (GroovyObject) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NullPointerException e) {
             log.error(e.getMessage());
         }
         assert clazzObj != null;
