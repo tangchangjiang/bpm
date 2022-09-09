@@ -42,8 +42,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.LIST_PROCESS_NODE_STATUS);
         redisScript.setResultType(String.class);
-        String[] str = keys.toArray(new String[0]);
-        String result = redisCacheClient.execute(redisScript, Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), str);
+        String result = redisCacheClient.execute(redisScript, Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), keys.toArray());
         if (StringUtils.isBlank(result) || BusinessProcessRedisConstants.LUA_NULL_MAP.equals(result)) {
             return Collections.emptyMap();
         }
@@ -56,14 +55,14 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId));
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId));
 
-        String[] params = new String[3];
-        params[0] = fieldKey;
-        params[1] = configJson;
-        params[2] = String.valueOf(System.currentTimeMillis());
+        List<String> params = new ArrayList<>();
+        params.add(fieldKey);
+        params.add(configJson);
+        params.add(String.valueOf(System.currentTimeMillis()));
 
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_UPDATE_LUA);
-        redisCacheClient.execute(redisScript, keys, params);
+        redisCacheClient.execute(redisScript, keys, params.toArray());
     }
 
     @Override
@@ -78,13 +77,13 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getBusinessProcessKey(tenantId));
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(tenantId));
 
-        String[] params = new String[2];
-        params[0] = JsonHelper.mapToString(detailMap);
-        params[1] = String.valueOf(System.currentTimeMillis());
+        List<String> params = new ArrayList<>();
+        params.add(JsonHelper.mapToString(detailMap));
+        params.add(String.valueOf(System.currentTimeMillis()));
 
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA);
-        redisCacheClient.execute(redisScript, keys, params);
+        redisCacheClient.execute(redisScript, keys, params.toArray());
     }
 
     @Override
