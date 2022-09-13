@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  **/
 @Component
 public class OnlineShopRedisImpl implements OnlineShopRedis {
-    private OnlineShopRepository onlineShopRepository;
-    private RedisCacheClient redisCacheClient;
+    private final OnlineShopRepository onlineShopRepository;
+    private final RedisCacheClient redisCacheClient;
 
     public OnlineShopRedisImpl(OnlineShopRepository onlineShopRepository,
                                RedisCacheClient redisCacheClient) {
