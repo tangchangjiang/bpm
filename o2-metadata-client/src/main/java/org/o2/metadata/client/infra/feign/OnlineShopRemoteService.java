@@ -40,4 +40,12 @@ public interface OnlineShopRemoteService {
      */
     @PostMapping("/onlineShop-internal/online-shop/list")
     ResponseEntity<String> queryOnlineShop(@RequestBody List<String> onlineShopCodes);
+
+    /**
+     * 批量查询网店-根据网店类型
+     * @param onlineShopType 网店类型
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/onlineShop-internal/online-shop/list-by-type")
+    ResponseEntity<String> queryOnlineShopByType(@RequestParam String onlineShopType);
 }

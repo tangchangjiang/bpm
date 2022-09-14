@@ -40,4 +40,15 @@ public class OnlineShopClient {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShop(onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
         });
     }
+
+    /**
+     * 批量查询网店-根据网店类型
+     *
+     * @param onlineShopType 网店类型
+     * @return List<OnlineShopCO>
+     */
+    public List<OnlineShopCO> queryOnlineShopByType(String onlineShopType) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopByType(onlineShopType), new TypeReference<List<OnlineShopCO>>() {
+        });
+    }
 }
