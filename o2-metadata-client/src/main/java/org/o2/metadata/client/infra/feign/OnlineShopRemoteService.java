@@ -47,5 +47,5 @@ public interface OnlineShopRemoteService {
      * @return ResponseEntity<String>
      */
     @GetMapping("/onlineShop-internal/online-shop/list-by-type")
-    ResponseEntity<String> queryOnlineShopByType(@RequestParam String onlineShopType);
+    ResponseEntity<String> queryOnlineShopByType(@RequestParam String tenantId, @RequestParam String onlineShopType);
 }
