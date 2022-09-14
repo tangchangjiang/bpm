@@ -29,8 +29,10 @@ public interface OnlineShopService {
 
     /**
      * 批量查询网店-根据网店类型
+     *
+     * @param tenantId 租户ID
      * @param onlineShopType 网店类型
      * @return List<OnlineShopCO>
      */
-    List<OnlineShopCO> queryShopListByType(String onlineShopType);
+    List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType);
 }
