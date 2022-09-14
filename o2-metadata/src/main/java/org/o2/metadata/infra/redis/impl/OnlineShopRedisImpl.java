@@ -2,6 +2,7 @@ package org.o2.metadata.infra.redis.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.UserHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -60,6 +61,24 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for (String shopJson : shopJsonList) {
             shopList.add(JsonHelper.stringToObject(shopJson, OnlineShop.class));
         }
+        return shopList;
+    }
+
+    @Override
+    public List<OnlineShop> selectShopListByType(String onlineShopType) {
+        String onlineShopKey = OnlineShopConstants.Redis.getOnlineShopKey(UserHelper.getTenantId());
+        Map<String,String> shopJsonMap = redisCacheClient.<String, String>opsForHash().entries(onlineShopKey);
+        if(MapUtils.isEmpty(shopJsonMap)){
+            return Collections.emptyList();
+        }
+
+        List<OnlineShop> shopList = new ArrayList<>();
+        shopJsonMap.forEach((onlineShopCode, shopJson)->{
+            OnlineShop onlineShop = JsonHelper.stringToObject(shopJson, OnlineShop.class);
+            if(onlineShopType.equals(onlineShop.getOnlineShopType())){
+                shopList.add(onlineShop);
+            }
+        });
         return shopList;
     }
 }

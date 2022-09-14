@@ -27,4 +27,11 @@ public interface OnlineShopRedis {
      * @return List<OnlineShop>
      */
     List<OnlineShop> selectShopList(List<String> onlineShopCodes);
+
+    /**
+     * 批量查询网店-根据网店类型
+     * @param onlineShopType 网店类型
+     * @return List<OnlineShop>
+     */
+    List<OnlineShop> selectShopListByType(String onlineShopType);
 }
