@@ -47,9 +47,8 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "查询多个网店-根据网店类型")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/online-shop/list-by-type")
-    public ResponseEntity<List<OnlineShopCO>> queryOnlineShopByType(@RequestParam String onlineShopType){
-        UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
-        return Results.success(onlineShopService.queryShopListByType(UserHelper.getTenantId(), onlineShopType));
+    public ResponseEntity<List<OnlineShopCO>> queryOnlineShopByType(@RequestParam String tenantId, @RequestParam String onlineShopType){
+        return Results.success(onlineShopService.queryShopListByType(Long.valueOf(tenantId), onlineShopType));
     }
 
 }

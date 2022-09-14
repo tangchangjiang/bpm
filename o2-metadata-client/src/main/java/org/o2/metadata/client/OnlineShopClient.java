@@ -47,8 +47,8 @@ public class OnlineShopClient {
      * @param onlineShopType 网店类型
      * @return List<OnlineShopCO>
      */
-    public List<OnlineShopCO> queryOnlineShopByType(String onlineShopType) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopByType(onlineShopType), new TypeReference<List<OnlineShopCO>>() {
+    public List<OnlineShopCO> queryOnlineShopByType(String tenantId, String onlineShopType) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopByType(tenantId, onlineShopType), new TypeReference<List<OnlineShopCO>>() {
         });
     }
 }
