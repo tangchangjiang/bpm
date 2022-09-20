@@ -32,4 +32,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         // TODO 添加缓存
         return ListConverter.toList(onlineShopRedis.selectShopList(onlineShopCodes), OnlineShopConverter::poToCoObject);
     }
+
+    @Override
+    public List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType) {
+        return ListConverter.toList(onlineShopRedis.selectShopListByType(tenantId, onlineShopType), OnlineShopConverter::poToCoObject);
+    }
 }
