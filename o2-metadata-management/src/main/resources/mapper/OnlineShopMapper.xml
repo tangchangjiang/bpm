@@ -80,6 +80,15 @@
             <if test="activeFlag != null">
                 AND os.active_flag = #{activeFlag}
             </if>
+            <if test="exchangedFlag != null">
+                AND os.exchanged_flag = #{exchangedFlag}
+            </if>
+            <if test="pickedUpFlag != null">
+                AND os.picked_up_flag = #{pickedUpFlag}
+            </if>
+            <if test="returnedFlag != null">
+                AND os.returned_flag = #{returnedFlag}
+            </if>
             <if test="platformShopCode != null">
                 <bind name="platformShopCodeLike" value="'%'+platformShopCode+'%'"/>
                 AND os.platform_shop_code LIKE #{platformShopCodeLike}
