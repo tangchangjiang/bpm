@@ -76,4 +76,7 @@ public class PosAddressCO {
 
     @ApiModelProperty(value = "服务点名称")
     private String posName;
+
+    @ApiModelProperty(value = "营业时间")
+    private String businessTime;
 }

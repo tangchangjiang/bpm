@@ -103,6 +103,7 @@ public class PosAddressConverter {
         co.setRegion(posAddress.getRegionName());
         co.setPosCode(posAddress.getPosCode());
         co.setPosName(posAddress.getPosName());
+        co.setBusinessTime(posAddress.getBusinessTime());
         return co;
     }
 

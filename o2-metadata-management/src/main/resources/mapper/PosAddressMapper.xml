@@ -58,6 +58,7 @@
         address.street_name,
         address.phone_number,
         pos.pos_code,
+        pos.business_time,
         address.contact,
         address.mobile_phone,
         address.longitude,
