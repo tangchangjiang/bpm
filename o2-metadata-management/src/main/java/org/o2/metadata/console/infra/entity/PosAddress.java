@@ -124,5 +124,6 @@ public class PosAddress extends AuditDomain {
     private String posName;
 
     @ApiModelProperty(value = "营业时间")
+    @Transient
     private String businessTime;
 }
