@@ -25,13 +25,13 @@
     </properties>
 
     <modules>
-        <module>o2-metadata</module>
-        <module>o2-metadata-domain</module>
-        <module>o2-metadata-management</module>
-        <module>o2-metadata-client</module>
-        <module>o2-metadata-management-client</module>
-        <module>o2-business-process-management</module>
-        <module>o2-business-process-client</module>
+        <module>metadata/o2-metadata</module>
+        <module>metadata/o2-metadata-domain</module>
+        <module>metadata/o2-metadata-management</module>
+        <module>metadata/o2-metadata-client</module>
+        <module>metadata/o2-metadata-management-client</module>
+        <module>bpm/o2-business-process-management</module>
+        <module>bpm/o2-business-process-client</module>
     </modules>
 
     <dependencyManagement>
