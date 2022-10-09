@@ -22,6 +22,8 @@
         <o2-metadata-client.version>${project.version}</o2-metadata-client.version>
         <o2-business-process-client.version>${project.version}</o2-business-process-client.version>
         <o2-business-process-management.version>${project.version}</o2-business-process-management.version>
+        <o2-rule-engine-management.version>${project.version}</o2-rule-engine-management.version>
+        <o2-rule-engine-client.version>${project.version}</o2-rule-engine-client.version>
     </properties>
 
     <modules>
@@ -32,6 +34,8 @@
         <module>metadata/o2-metadata-management-client</module>
         <module>bpm/o2-business-process-management</module>
         <module>bpm/o2-business-process-client</module>
+        <module>rule-engine/o2-rule-engine-management</module>
+        <module>rule-engine/o2-rule-engine-client</module>
     </modules>
 
     <dependencyManagement>
@@ -70,6 +74,16 @@
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-business-process-management</artifactId>
                 <version>${o2-business-process-management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-rule-engine-management</artifactId>
+                <version>${o2-rule-engine-management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-rule-engine-client</artifactId>
+                <version>${o2-rule-engine-client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
