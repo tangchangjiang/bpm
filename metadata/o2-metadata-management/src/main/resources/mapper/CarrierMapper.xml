@@ -14,6 +14,10 @@
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="delivery_region_type_code" property="deliveryRegionTypeCode" jdbcType="VARCHAR" />
+        <result column="priority" property="priority" jdbcType="DECIMAL" />
+        <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
+        <result column="volume_conversion" property="volumeConversion" jdbcType="DECIMAL" />
     </resultMap>
 
     <select id="listCarrier" resultType="org.o2.metadata.console.infra.entity.Carrier">
@@ -25,6 +29,10 @@
         c.carrier_type_code,
         c.OBJECT_VERSION_NUMBER,
         c.active_flag,
+        c.delivery_region_type_code,
+        c.priority,
+        c.template_code,
+        c.volume_conversion,
         c.tenant_id
         FROM
         o2md_carrier c
