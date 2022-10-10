@@ -17,7 +17,12 @@ import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.springframework.util.Assert;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -86,6 +91,24 @@ public class Carrier extends AuditDomain {
     @NotNull
     @Column(name = "active_flag")
     private Integer activeFlag;
+
+    @ApiModelProperty(value = "送达范围类型,值集:O2MD.CARRIER_DELIVERY_REGION_TYPE")
+    @NotBlank
+    @LovValue(lovCode = "O2MD.CARRIER_DELIVERY_REGION_TYPE")
+    private String deliveryRegionTypeCode;
+
+    @ApiModelProperty(value = "优先级")
+    @NotNull
+    private Long priority;
+
+    @ApiModelProperty(value = "关联运费模板，关联表o2md_freigth_template")
+    @NotBlank
+    private String templateCode;
+
+    @ApiModelProperty(value = "重泡比")
+    @NotNull
+    private Long volumeConversion;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -94,11 +117,15 @@ public class Carrier extends AuditDomain {
     @Transient
     private String carrierTypeMeaning;
 
+    @ApiModelProperty(value = "送达范围类型含义")
+    @Transient
+    private String deliveryRegionTypeMeaning;
+
     @ApiModelProperty(value = "组织ID")
     @MultiLanguageField
     private Long tenantId;
 
     @ApiModelProperty(value = "承运商编码")
     @Transient
-    private  List<String> carrierCodes;
+    private List<String> carrierCodes;
 }
