@@ -33,7 +33,13 @@ public interface CarrierConstants {
         String O2MD_ERROR_PLATFORM_CODE_DUPLICATE = "o2md.error.platform.code.duplicate";
         String ERROR_CARRIER_NAME_DUPLICATE = "o2md.error.carrier_name.duplicate";
         String ERROR_CARRIER_CODE_DUPLICATE = "o2md.error.carrier_code.duplicate";
-        String ERROR_CARRIER_CODE_NOT_UPDATE= "o2md.error.carrier_code.forbidden.update";
+        String ERROR_CARRIER_CODE_NOT_UPDATE = "o2md.error.carrier_code.forbidden.update";
+
+        String ERROR_EXISTS_REGION_DATA = "o2md.error.carrier.exists_region_data";
+
+        String ERROR_EXISTS_CITY_DATA = "o2md.error.carrier.exists_city_data";
+
+        String ERROR_EXISTS_DISTRICT_DATA = "o2md.error.carrier.exists_district_data";
     }
 
     interface Redis {
