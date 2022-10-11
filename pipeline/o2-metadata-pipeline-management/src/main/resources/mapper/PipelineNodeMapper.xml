@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.pipeline.infra.mapper.PipelineNodeMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.pipeline.domain.entity.PipelineNode">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="cur_action" property="curAction" jdbcType="DECIMAL"/>
+        <result column="strategy_type" property="strategyType" jdbcType="VARCHAR"/>
+        <result column="next_action" property="nextAction" jdbcType="DECIMAL"/>
+        <result column="pipeline_id" property="pipelineId" jdbcType="DECIMAL"/>
+        <result column="cur_description" property="curDescription" jdbcType="VARCHAR"/>
+        <result column="next_description" property="nextDescription" jdbcType="VARCHAR"/>
+        <result column="cur_bean_id" property="curBeanId" jdbcType="VARCHAR"/>
+        <result column="next_bean_id" property="nextBeanId" jdbcType="VARCHAR"/>
+        <result column="cur_script" property="curScript" jdbcType="VARCHAR"/>
+        <result column="next_script" property="nextScript" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="listPipelineNode" resultType="org.o2.metadata.pipeline.domain.entity.PipelineNode">
+        SELECT
+        p.id,
+        p.cur_action,
+        p.strategy_type,
+        p.next_action,
+        (select pan.description from
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_description,
+        p.pipeline_id,
+        (select pa.description from
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_description,
+        (select pan.bean_id from
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_bean_id,
+        (select pa.bean_id from
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_bean_id,
+        (select pan.script from
+        o2md_pipeline_action pan where p.next_action = pan.id and pan.tenant_id = #{tenantId}) as next_script,
+        (select pa.script from
+        o2md_pipeline_action pa where p.cur_action = pa.id and pa.tenant_id = #{tenantId}) as cur_script,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE
+        FROM
+        o2md_pipeline_node p
+        <where>
+            p.tenant_id = #{tenantId}
+            <if test="pipelineId != null">
+                and p.pipeline_id = #{pipelineId}
+            </if>
+        </where>
+        order by CREATION_DATE
+    </select>
+
+</mapper>

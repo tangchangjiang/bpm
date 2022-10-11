@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.pipeline.infra.mapper.PipelineActionMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.metadata.pipeline.domain.entity.PipelineAction">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="service_code" property="serviceCode" jdbcType="VARCHAR"/>
+        <result column="label" property="label" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="action_type" property="actionType" jdbcType="VARCHAR"/>
+        <result column="bean_id" property="beanId" jdbcType="VARCHAR"/>
+        <result column="script" property="script" jdbcType="VARCHAR"/>
+        <result column="display_type_code" property="displayTypeCode" jdbcType="VARCHAR"/>
+        <result column="status_flag" property="statusFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ResultMapWithParameters" type="org.o2.metadata.pipeline.domain.entity.PipelineAction" extends="BaseResultMap">
+        <collection property="parameters" javaType="ArrayList"
+                    ofType="org.o2.metadata.pipeline.domain.entity.ActionParameter"
+                    notNullColumn="parameter_name">
+            <result column="parameter_code" property="parameterCode" jdbcType="DECIMAL"/>
+            <result column="parameter_name" property="parameterName" jdbcType="DECIMAL"/>
+            <result column="data_type_code" property="dataTypeCode" jdbcType="DECIMAL"/>
+        </collection>
+    </resultMap>
+
+    <select id="listPipelineAction" resultMap="BaseResultMap">
+        SELECT o2epa.id,
+               o2epa.code,
+               o2epa.service_code,
+               o2epa.description,
+               o2epa.action_type,
+               o2epa.bean_id,
+               o2epa.script,
+               o2epa.tenant_id,
+               o2epa.object_version_number,
+               o2epa.creation_date,
+               o2epa.created_by,
+               o2epa.last_updated_by,
+               o2epa.last_update_date,
+               o2epa.label,
+               o2epa.display_type_code,
+               o2epa.status_flag
+        FROM o2md_pipeline_action o2epa
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND o2epa.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="code != null and code !='' ">
+                <bind name="codeLike" value="'%'+code+'%'"/>
+                AND o2epa.code like #{codeLike}
+            </if>
+            <if test="actionType != null and actionType !='' ">
+                AND o2epa.action_type = #{actionType}
+            </if>
+            <if test="description != null and description !='' ">
+                <bind name="descriptionLike" value="'%'+description+'%'"/>
+                AND o2epa.description like #{descriptionLike}
+            </if>
+            <if test="statusFlag != null">
+                AND o2epa.status_flag = #{statusFlag}
+            </if>
+            <if test="serviceCode != null and serviceCode !='' ">
+                <bind name="serviceCodeLike" value="'%'+serviceCode+'%'"/>
+                AND o2epa.service_code like #{serviceCodeLike}
+            </if>
+        </where>
+    </select>
+
+    <select id="allWithParameters" resultMap="ResultMapWithParameters">
+        SELECT
+        o2epa.id,
+        o2epa.code,
+        o2epa.service_code,
+        o2epa.label,
+        o2epa.description,
+        o2epa.action_type,
+        o2epa.bean_id,
+        o2epa.script,
+        o2epa.tenant_id,
+        o2epa.object_version_number,
+        o2eap.parameter_code,
+        o2eap.parameter_name,
+        o2eap.data_type_code
+        FROM o2md_pipeline_action o2epa
+        LEFT JOIN o2md_action_parameter o2eap ON o2epa.id = o2eap.action_id and o2eap.tenant_id = #{tenantId}
+        <where>
+            AND o2epa.tenant_id = #{tenantId}
+            <if test="code != null and code !='' ">
+                AND o2epa.code = #{code}
+            </if>
+            <if test="label != null and label !='' ">
+                AND o2epa.label = #{label}
+            </if>
+            <if test="serviceCode != null and serviceCode !='' ">
+                AND o2epa.service_code = #{serviceCode}
+            </if>
+            <if test="beanId != null and beanId !='' ">
+                AND o2epa.bean_id = #{beanId}
+            </if>
+        </where>
+    </select>
+
+</mapper>
