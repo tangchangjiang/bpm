@@ -7,6 +7,7 @@ import org.o2.business.process.management.api.vo.interactive.NotationEdge;
 import org.o2.business.process.management.api.vo.interactive.NotationNode;
 import org.o2.business.process.management.api.vo.interactive.ProcessModel;
 import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
+import org.o2.process.domain.engine.BpmnModel;
 import org.o2.process.domain.engine.definition.BaseElement;
 
 import java.util.ArrayList;
@@ -24,17 +25,21 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
  */
 public class ViewJsonConvert {
 
-    private ViewJsonConvert(){
+    private final static ObjectMapper OBJECT_MAPPER;
 
+    private ViewJsonConvert(){
+    }
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public static List<BaseElement> viewJsonConvert(String viewJson) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         ProcessModel processModel = null;
         try {
-            processModel = objectMapper.readValue(viewJson, ProcessModel.class);
+            processModel = OBJECT_MAPPER.readValue(viewJson, ProcessModel.class);
         } catch (JsonProcessingException e) {
             throw new CommonException(e);
         }
@@ -60,6 +65,16 @@ public class ViewJsonConvert {
             result.add(BaseFlowFactory.dealEdge(source, target, edge));
         }
         result.addAll(elementMap.values());
+        return result;
+    }
+
+    public static String bpmnToJson(BpmnModel bpmnModel) {
+        String result;
+        try{
+            result = OBJECT_MAPPER.writeValueAsString(bpmnModel);
+        }catch (JsonProcessingException e) {
+            throw new CommonException(e);
+        }
         return result;
     }
 }

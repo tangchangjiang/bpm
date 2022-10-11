@@ -138,7 +138,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
         // 合法性校验
         BpmnModelValidator.validate(bpmnModel);
-        businessProcess.setProcessJson(JsonHelper.objectToString(bpmnModel));
+        businessProcess.setProcessJson(ViewJsonConvert.bpmnToJson(bpmnModel));
     }
 
     @Override
