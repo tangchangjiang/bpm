@@ -40,6 +40,8 @@ public interface CarrierConstants {
         String ERROR_EXISTS_CITY_DATA = "o2md.error.carrier.exists_city_data";
 
         String ERROR_EXISTS_DISTRICT_DATA = "o2md.error.carrier.exists_district_data";
+
+        String ERROR_EXISTS_PRIORITY_DATA = "o2md.error.carrier.exists_priority_data";
     }
 
     interface Redis {
