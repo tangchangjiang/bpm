@@ -1,15 +1,16 @@
 package org.o2.metadata.console.app.service.impl;
 
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
+import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.convertor.CarrierConverter;
@@ -25,7 +26,11 @@ import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 承运商应用服务默认实现
@@ -61,6 +66,16 @@ public class CarrierServiceImpl implements CarrierService {
         List<Carrier> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(carrierList)) {
             for (Carrier carrier : carrierList) {
+                // 校验优先级不可重复
+                int result = carrierRepository.selectCountByCondition(Condition.builder(Carrier.class)
+                        .andWhere(Sqls.custom().andEqualTo(Carrier.FIELD_PRIORITY, carrier.getPriority())
+                                .andEqualTo(Carrier.FIELD_TENANT_ID, organizationId)
+                                .andNotEqualTo(Carrier.FIELD_CARRIER_ID, carrier.getCarrierId(), true))
+                        .build());
+                if (result > 0) {
+                    // 存在，不允许新建
+                    throw new CommonException(CarrierConstants.ErrorCode.ERROR_EXISTS_CITY_DATA);
+                }
                 carrier.setTenantId(organizationId);
                 // 新增
                 if (null == carrier.getCarrierId()) {
