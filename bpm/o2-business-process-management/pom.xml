@@ -59,5 +59,9 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-user</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-business-process-domain</artifactId>
+        </dependency>
     </dependencies>
 </project>
