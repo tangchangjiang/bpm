@@ -31,7 +31,7 @@ public class BusinessProcessManagerAutoConfiguration implements InitializingBean
     }
     @Override
     public void afterPropertiesSet() throws Exception {
-        MessageAccessor.addBasenames("classpath:messages/bpm");
+        MessageAccessor.addBasenames("classpath:messages/bpm-management");
     }
 
     @Bean
