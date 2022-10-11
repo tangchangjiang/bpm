@@ -74,7 +74,7 @@ public class CarrierServiceImpl implements CarrierService {
                         .build());
                 if (result > 0) {
                     // 存在，不允许新建
-                    throw new CommonException(CarrierConstants.ErrorCode.ERROR_EXISTS_CITY_DATA);
+                    throw new CommonException(CarrierConstants.ErrorCode.ERROR_EXISTS_PRIORITY_DATA);
                 }
                 carrier.setTenantId(organizationId);
                 // 新增
