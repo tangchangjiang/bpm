@@ -20,6 +20,8 @@
         <o2-metadata-management.version>${project.version}</o2-metadata-management.version>
         <o2-metadata-management-client.version>${project.version}</o2-metadata-management-client.version>
         <o2-metadata-client.version>${project.version}</o2-metadata-client.version>
+        <o2-metadata-pipeline-client.version>${project.version}</o2-metadata-pipeline-client.version>
+        <o2-metadata-pipeline-management.version>${project.version}</o2-metadata-pipeline-management.version>
         <o2-business-process-client.version>${project.version}</o2-business-process-client.version>
         <o2-business-process-management.version>${project.version}</o2-business-process-management.version>
         <o2-rule-engine-management.version>${project.version}</o2-rule-engine-management.version>
@@ -35,6 +37,8 @@
         <module>metadata/o2-metadata-management-client</module>
         <module>bpm/o2-business-process-management</module>
         <module>bpm/o2-business-process-client</module>
+        <module>pipeline/o2-metadata-pipeline-client</module>
+        <module>pipeline/o2-metadata-pipeline-management</module>
         <module>bpm/o2-business-process-domain</module>
         <module>rule-engine/o2-rule-engine-management</module>
         <module>rule-engine/o2-rule-engine-client</module>
@@ -81,6 +85,16 @@
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-business-process-domain</artifactId>
                 <version>${o2-business-process-domain.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-pipeline-client</artifactId>
+                <version>${o2-metadata-pipeline-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-pipeline-management</artifactId>
+                <version>${o2-metadata-pipeline-management.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.o2.metadata</groupId>

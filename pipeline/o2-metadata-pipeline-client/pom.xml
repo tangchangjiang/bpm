@@ -12,63 +12,35 @@
     </parent>
 
     <groupId>org.o2.metadata</groupId>
-    <artifactId>o2-rule-engine-client</artifactId>
+    <artifactId>o2-metadata-pipeline-client</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <maven.attach.source>true</maven.attach.source>
-    </properties>
 
     <dependencies>
-        <!-- o2 -->
         <dependency>
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-feign-client</artifactId>
+            <artifactId>o2-starter-ehcache</artifactId>
         </dependency>
-
-        <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-feign-replay</artifactId>
         </dependency>
-
-        <!--spring-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-data-redis</artifactId>
         </dependency>
-        <!-- other -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <attach>${maven.attach.source}</attach>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.metadata.pipeline.infra.mapper.PipelineMapper">
+    <resultMap id="BaseResultMap" type="org.o2.metadata.pipeline.domain.entity.Pipeline">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="start_action" property="startAction" jdbcType="DECIMAL"/>
+        <result column="end_action" property="endAction" jdbcType="DECIMAL"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="start_description" property="startDescription" jdbcType="VARCHAR"/>
+        <result column="end_description" property="endDescription" jdbcType="VARCHAR"/>
+        <result column="start_bean_id" property="startBeanId" jdbcType="VARCHAR"/>
+        <result column="end_bean_id" property="endBeanId" jdbcType="VARCHAR"/>
+        <result column="start_script" property="startScript" jdbcType="VARCHAR"/>
+        <result column="end_script" property="endScript" jdbcType="VARCHAR"/>
+        <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="listPipeline" resultMap="BaseResultMap">
+        SELECT
+        p.id,
+        p.code,
+        p.start_action,
+        pa.description as start_description,
+        p.end_action,
+        pan.description as end_description,
+        pa.bean_id as start_bean_id,
+        pan.bean_id as end_bean_id,
+        pa.script as start_script,
+        pan.script as end_script,
+        p.description,
+        p.active_flag,
+        p.OBJECT_VERSION_NUMBER,
+        p.CREATION_DATE,
+        p.CREATED_BY,
+        p.LAST_UPDATED_BY,
+        p.LAST_UPDATE_DATE,
+        p.tenant_id
+        FROM
+        o2md_pipeline p
+        left join  o2md_pipeline_action pa on p.start_action = pa.id and pa.tenant_id = #{tenantId}
+        left join  o2md_pipeline_action pan on p.end_action = pan.id and pan.tenant_id = #{tenantId}
+        <where>
+            p.tenant_id = #{tenantId}
+            <if test="id != null">
+                and p.id = #{id}
+            </if>
+            <if test="code != null and code != ''">
+                <bind name="codeLike" value="'%' + code + '%'"/>
+                and p.code like #{codeLike}
+            </if>
+            <if test="startDescription != null and startDescription != ''">
+                <bind name="startActionLike" value="'%' + startDescription + '%'"/>
+                and pa.description like #{startActionLike}
+            </if>
+            <if test="endDescription != null and endDescription != ''">
+                <bind name="endActionLike" value="'%' + endDescription + '%'"/>
+                and pan.description like #{endActionLike}
+            </if>
+        </where>
+        ORDER BY CREATION_DATE
+    </select>
+
+</mapper>
