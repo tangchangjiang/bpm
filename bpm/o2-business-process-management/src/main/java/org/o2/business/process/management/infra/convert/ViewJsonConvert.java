@@ -2,6 +2,7 @@ package org.o2.business.process.management.infra.convert;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.choerodon.core.convertor.ApplicationContextHelper;
 import io.choerodon.core.exception.CommonException;
 import org.o2.business.process.management.api.vo.interactive.NotationEdge;
 import org.o2.business.process.management.api.vo.interactive.NotationNode;
@@ -16,8 +17,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-
 /**
  * @author tangcj
  * @version V1.0
@@ -25,21 +24,20 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
  */
 public class ViewJsonConvert {
 
-    private final static ObjectMapper OBJECT_MAPPER;
+    private static volatile ObjectMapper objectMapper;
 
     private ViewJsonConvert(){
     }
 
     static {
-        OBJECT_MAPPER = new ObjectMapper();
-        OBJECT_MAPPER.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper = ApplicationContextHelper.getContext().getBean(ObjectMapper.class);
     }
 
     public static List<BaseElement> viewJsonConvert(String viewJson) {
 
         ProcessModel processModel = null;
         try {
-            processModel = OBJECT_MAPPER.readValue(viewJson, ProcessModel.class);
+            processModel = objectMapper.readValue(viewJson, ProcessModel.class);
         } catch (JsonProcessingException e) {
             throw new CommonException(e);
         }
@@ -71,7 +69,7 @@ public class ViewJsonConvert {
     public static String bpmnToJson(BpmnModel bpmnModel) {
         String result;
         try{
-            result = OBJECT_MAPPER.writeValueAsString(bpmnModel);
+            result = objectMapper.writeValueAsString(bpmnModel);
         }catch (JsonProcessingException e) {
             throw new CommonException(e);
         }
