@@ -226,7 +226,6 @@ public class CarrierServiceImpl implements CarrierService {
 
         // 1. 数据初始化
         CarrierLogisticsCostCO carrierLogisticsCost = new CarrierLogisticsCostCO();
-        carrierLogisticsCost.setLogisticsCost(BigDecimal.ZERO);
 
         // 查询运费模板信息
         CarrierFreightDTO carrierFreightDTO = new CarrierFreightDTO();
@@ -261,7 +260,7 @@ public class CarrierServiceImpl implements CarrierService {
                     result = volumeCost;
                 }
                 // 更新结果
-                if (result.compareTo(carrierLogisticsCost.getLogisticsCost()) > 0) {
+                if (ObjectUtils.isEmpty(carrierLogisticsCost.getLogisticsCost()) || result.compareTo(carrierLogisticsCost.getLogisticsCost()) < 0) {
                     carrierLogisticsCost.setCarrierCode(carrierCode);
                     carrierLogisticsCost.setLogisticsCost(result);
                 }
