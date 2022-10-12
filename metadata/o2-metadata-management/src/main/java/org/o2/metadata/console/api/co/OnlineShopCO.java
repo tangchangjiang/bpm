@@ -74,5 +74,5 @@ public class OnlineShopCO {
     /**
      * 网店业务类型
      */
-    private String businessType;
+    private String businessTypeCode;
 }

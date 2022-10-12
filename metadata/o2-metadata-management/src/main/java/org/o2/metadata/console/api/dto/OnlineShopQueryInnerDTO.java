@@ -39,5 +39,5 @@ public class OnlineShopQueryInnerDTO {
     /**
      * 业务类型
      */
-    private String businessType;
+    private String businessTypeCode;
 }

@@ -179,7 +179,7 @@ public class OnlineShop extends AuditDomain {
 
     @ApiModelProperty(value = "网店业务类型，值集O2MD.BUSINESS_TYPE")
     @NotBlank
-    private String businessType;
+    private String businessTypeCode;
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
