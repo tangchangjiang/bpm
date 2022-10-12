@@ -46,4 +46,9 @@ public class OnlineShopDTO {
     private String catalogVersionCode;
 
     private String onlineShopType;
+
+    /**
+     * 网店业务类型
+     */
+    private String businessType;
 }
