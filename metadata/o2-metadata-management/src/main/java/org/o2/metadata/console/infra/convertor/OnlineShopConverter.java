@@ -48,7 +48,7 @@ public class OnlineShopConverter {
         co.setEnableSplitFlag(onlineShop.getEnableSplitFlag());
         co.setAccountNumber(onlineShop.getAccountNumber());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
-        co.setBusinessType(onlineShop.getBusinessType());
+        co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
         return co;
     }
 
@@ -93,7 +93,7 @@ public class OnlineShopConverter {
         onlineShopCacheBO.setIsDefault(onlineShop.getIsDefault());
         onlineShopCacheBO.setSourcedFlag(onlineShop.getSourcedFlag());
         onlineShopCacheBO.setOnlineShopType(onlineShop.getOnlineShopType());
-        onlineShopCacheBO.setBusinessType(onlineShop.getBusinessType());
+        onlineShopCacheBO.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
         return onlineShopCacheBO;
     }
 
@@ -139,7 +139,7 @@ public class OnlineShopConverter {
         onlineShop.setPlatformCode(onlineShopDTO.getPlatformCode());
         onlineShop.setPlatformShopCode(onlineShopDTO.getPlatformShopCode());
         onlineShop.setOnlineShopType(onlineShopDTO.getOnlineShopType());
-        onlineShop.setBusinessType(onlineShopDTO.getBusinessType());
+        onlineShop.setBusinessTypeCode(onlineShopDTO.getBusinessTypeCode());
 
         return onlineShop;
     }

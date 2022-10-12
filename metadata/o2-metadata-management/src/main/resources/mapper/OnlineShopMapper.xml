@@ -15,7 +15,7 @@
         <result column="default_currency" property="defaultCurrency" jdbcType="VARCHAR"/>
         <result column="active_flag" property="activeFlag" jdbcType="DECIMAL"/>
         <result column="enable_split_flag" property="enableSplitFlag" jdbcType="DECIMAL"/>
-        <result column="business_type" property="businessType" jdbcType="VARCHAR"/>
+        <result column="business_type_code" property="businessTypeCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -51,7 +51,7 @@
         os.default_currency,
         os.is_default,
         os.online_shop_type,
-        os.business_type,
+        os.business_type_code,
         pftl.platform_name
         FROM
         o2md_online_shop os
@@ -81,6 +81,9 @@
             </if>
             <if test="activeFlag != null">
                 AND os.active_flag = #{activeFlag}
+            </if>
+            <if test="businessTypeCode != null">
+                AND os.business_type_code = #{businessTypeCode}
             </if>
             <if test="exchangedFlag != null">
                 AND os.exchanged_flag = #{exchangedFlag}
@@ -173,7 +176,7 @@
         ost.online_shop_name,
         os.active_flag,
         os.online_shop_type,
-        os.business_type,
+        os.business_type_code,
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
@@ -236,7 +239,7 @@
         online.sourced_flag,
         online.is_default,
         online.online_shop_type,
-        online.business_type,
+        online.business_type_code,
         online.account_number
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
@@ -271,7 +274,7 @@
                 and online.platform_code = #{onlineShopDTO.platformCode}
             </if>
             <if test="onlineShopDTO.platformCode != null">
-                and online.business_type = #{onlineShopDTO.businessType}
+                and online.business_type_code = #{onlineShopDTO.businessTypeCode}
             </if>
             <if test="onlineShopDTO.onlineShopType != null">
                 and online.online_shop_type = #{onlineShopDTO.onlineShopType}
@@ -293,7 +296,7 @@
         online.catalog_code,
         online.online_shop_type,
         online.catalog_version_code,
-        online.business_type,
+        online.business_type_code,
         online.active_flag
         from o2md_online_shop online
         left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id  and tl.tenant_id = #{tenantId} AND tl.lang =#{lang}
