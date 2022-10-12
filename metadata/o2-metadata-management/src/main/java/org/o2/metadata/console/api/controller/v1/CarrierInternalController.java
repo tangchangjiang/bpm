@@ -4,14 +4,21 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.metadata.console.api.co.CarrierCO;
+import org.o2.metadata.console.api.co.CarrierLogisticsCostCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
+import org.o2.metadata.console.api.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
@@ -22,7 +29,7 @@ import java.util.Map;
  */
 @RestController("carrierInternalController.v1")
 @RequestMapping("/v1/{organizationId}/carrier-internal")
-public class CarrierInternalController{
+public class CarrierInternalController extends BaseController {
     private final CarrierService carrierService;
 
     public CarrierInternalController(CarrierService carrierService) {
@@ -31,24 +38,35 @@ public class CarrierInternalController{
 
 
     @ApiOperation(value = "承运商")
-    @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, CarrierCO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
-        return Results.success(carrierService.listCarriers(carrierQueryInnerDTO,organizationId));
+        return Results.success(carrierService.listCarriers(carrierQueryInnerDTO, organizationId));
     }
 
     @ApiOperation(value = "承运商匹配")
     @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
     @PostMapping("/mapping")
     public ResponseEntity<Map<String, CarrierMappingCO>> listCarrierMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierMappingQueryInnerDTO queryInnerDTO) {
-        return Results.success(carrierService.listCarrierMappings(queryInnerDTO,organizationId));
+        return Results.success(carrierService.listCarrierMappings(queryInnerDTO, organizationId));
     }
 
     @ApiOperation(value = "导入承运商列表")
-    @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/import-list")
     public ResponseEntity<Map<String, CarrierCO>> importList(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
         return Results.success(carrierService.importListCarriers(organizationId));
+    }
+
+    @ApiOperation(value = "承运商物流成本计算")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/calculate-logistics-cost")
+    public ResponseEntity<CarrierLogisticsCostCO> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                         @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+        carrierLogisticsCostDTO.setTenantId(organizationId);
+        validObject(carrierLogisticsCostDTO);
+        return Results.success(carrierService.calculateLogisticsCost(carrierLogisticsCostDTO));
+
     }
 
 
