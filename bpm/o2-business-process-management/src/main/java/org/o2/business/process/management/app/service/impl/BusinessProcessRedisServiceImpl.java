@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-
 /**
  * @author tangcj
  * @version V1.0
@@ -30,10 +28,9 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
 
     private final ObjectMapper objectMapper;
 
-    public BusinessProcessRedisServiceImpl(BusinessProcessRedisRepository businessProcessRedisRepository) {
+    public BusinessProcessRedisServiceImpl(BusinessProcessRedisRepository businessProcessRedisRepository, ObjectMapper objectMapper) {
         this.businessProcessRedisRepository = businessProcessRedisRepository;
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.objectMapper = objectMapper;
     }
 
     @Override
