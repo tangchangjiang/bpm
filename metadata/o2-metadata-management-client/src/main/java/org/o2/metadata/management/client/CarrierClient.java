@@ -3,7 +3,9 @@ package org.o2.metadata.management.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.CarrierCO;
+import org.o2.metadata.management.client.domain.co.CarrierLogisticsCostCO;
 import org.o2.metadata.management.client.domain.co.CarrierMappingCO;
+import org.o2.metadata.management.client.domain.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.CarrierRemoteService;
@@ -50,11 +52,24 @@ public class CarrierClient {
 
     /**
      * 租户id查询所有承运商数据
-     * @param tenantId   租户ID
+     *
+     * @param tenantId 租户ID
      * @return map key:carrierName
      */
     public Map<String, CarrierCO> importList(Long tenantId) {
         return ResponseUtils.getResponse(carrierRemoteService.importList(tenantId), new TypeReference<Map<String, CarrierCO>>() {
+        });
+    }
+
+
+    /**
+     * 承运商物流成本计算
+     *
+     * @param carrierLogisticsCostDTO 参数
+     * @return 计算结果
+     */
+    public CarrierLogisticsCostCO calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO), new TypeReference<CarrierLogisticsCostCO>() {
         });
     }
 

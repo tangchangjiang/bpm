@@ -1,16 +1,24 @@
 package org.o2.metadata.console.app.service.impl;
 
 import io.choerodon.core.exception.CommonException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.CarrierCO;
+import org.o2.metadata.console.api.co.CarrierLogisticsCostCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
+import org.o2.metadata.console.api.dto.CarrierFreightDTO;
+import org.o2.metadata.console.api.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
+import org.o2.metadata.console.app.bo.CarrierLogisticsCostBO;
+import org.o2.metadata.console.app.bo.CarrierLogisticsCostDetailBO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.convertor.CarrierConverter;
@@ -26,11 +34,16 @@ import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 承运商应用服务默认实现
@@ -38,6 +51,7 @@ import java.util.Objects;
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Service
+@Slf4j
 public class CarrierServiceImpl implements CarrierService {
     private final CarrierRepository carrierRepository;
     private final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository;
@@ -200,10 +214,101 @@ public class CarrierServiceImpl implements CarrierService {
             carrierVO.setCarrierCode(carri.getCarrierCode());
             carrierVO.setCarrierName(carri.getCarrierName());
             carrierVO.setActiveFlag(carri.getActiveFlag());
-            if(Objects.nonNull(carri.getCarrierName()) && !carri.getCarrierName().trim().equals("")) {
+            if (Objects.nonNull(carri.getCarrierName()) && !carri.getCarrierName().trim().equals("")) {
                 map.put(carri.getCarrierName(), carrierVO);
             }
         }
         return map;
+    }
+
+    @Override
+    public CarrierLogisticsCostCO calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+
+        // 1. 数据初始化
+        CarrierLogisticsCostCO carrierLogisticsCost = new CarrierLogisticsCostCO();
+        carrierLogisticsCost.setLogisticsCost(BigDecimal.ZERO);
+
+        // 查询运费模板信息
+        CarrierFreightDTO carrierFreightDTO = new CarrierFreightDTO();
+        carrierFreightDTO.setCarrierCodeList(carrierLogisticsCostDTO.getAlternateCarrierList());
+        carrierFreightDTO.setTenantId(carrierLogisticsCostDTO.getTenantId());
+        List<CarrierLogisticsCostBO> carrierLogisticsCostBOList = carrierRepository.listCarrierLogisticsCost(carrierFreightDTO);
+        if (log.isDebugEnabled()) {
+            log.debug("[calculateLogisticsCost] carrierLogisticsCostBOList:{}", JsonHelper.collectionToString(carrierLogisticsCostBOList));
+        }
+
+        Map<String, CarrierLogisticsCostBO> logisticsCostMap = carrierLogisticsCostBOList.stream()
+                .collect(Collectors.toMap(CarrierLogisticsCostBO::getCarrierCode, Function.identity()));
+
+        // 循环计算
+        for (String carrierCode : carrierLogisticsCostDTO.getAlternateCarrierList()) {
+            CarrierLogisticsCostBO carrierLogisticsCostBO = logisticsCostMap.get(carrierCode);
+            if (ObjectUtils.isNotEmpty(carrierLogisticsCostBO)) {
+                // 数据处理
+                preProcess(carrierLogisticsCostBO, carrierLogisticsCostDTO.getAddress().getCityCode());
+                // 扩展点(目前产品不支持单位转换,仅支持以重量计价且单位默认为千克与立方厘米。此处是预留的扩展点,
+                // 后续如有其它的方式,可扩展改方法进行单位转换（转换为标准的千克与立方厘米）)
+                unitConvert(carrierLogisticsCostBO, carrierLogisticsCostDTO);
+                // 重量维度计算
+                BigDecimal weightCost = weightCostCalculate(carrierLogisticsCostBO, carrierLogisticsCostDTO.getSkuTotalWeight());
+                // 重炮比维度计算
+                BigDecimal volumeCost = volumeCostCalculate(carrierLogisticsCostBO, carrierLogisticsCostDTO);
+                // 比较选出较大的物流成本
+                BigDecimal result;
+                if (weightCost.compareTo(volumeCost) > 0) {
+                    result = weightCost;
+                } else {
+                    result = volumeCost;
+                }
+                // 更新结果
+                if (result.compareTo(carrierLogisticsCost.getLogisticsCost()) > 0) {
+                    carrierLogisticsCost.setCarrierCode(carrierCode);
+                    carrierLogisticsCost.setLogisticsCost(result);
+                }
+            }
+
+        }
+        return carrierLogisticsCost;
+    }
+
+    protected void preProcess(CarrierLogisticsCostBO carrierLogisticsCostBO, String regionCode) {
+        Optional<CarrierLogisticsCostDetailBO> costDetailOptional = carrierLogisticsCostBO.getCarrierLogisticsCostDetailList()
+                .stream().filter(v -> StringUtils.equals(regionCode, v.getRegionCode())).findFirst();
+        if (costDetailOptional.isPresent()) {
+            // 存在特殊区域
+            carrierLogisticsCostBO.setCarrierLogisticsCostDetailBO(costDetailOptional.get());
+        } else {
+            // 不存在特殊区域
+            costDetailOptional = carrierLogisticsCostBO.getCarrierLogisticsCostDetailList()
+                    .stream().filter(v -> StringUtils.isBlank(v.getRegionCode())).findFirst();
+            costDetailOptional.ifPresent(carrierLogisticsCostBO::setCarrierLogisticsCostDetailBO);
+        }
+    }
+
+    protected void unitConvert(CarrierLogisticsCostBO carrierLogisticsCostBO, CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+        // 产品运费模板单位默认为千克与立方厘米,项目上若非以上单位需要进行重写改方法
+    }
+
+    protected BigDecimal weightCostCalculate(CarrierLogisticsCostBO carrierLogisticsCostBO, BigDecimal weight) {
+
+        BigDecimal cost;
+        CarrierLogisticsCostDetailBO carrierLogisticsCostDetailBO = carrierLogisticsCostBO.getCarrierLogisticsCostDetailBO();
+
+        if (weight.compareTo(carrierLogisticsCostDetailBO.getFirstPieceWeight()) > 0) {
+            // 大于首重
+            BigDecimal nextCost = weight.subtract(carrierLogisticsCostDetailBO.getFirstPieceWeight()).divide(carrierLogisticsCostDetailBO.getNextPieceWeight(), 2, RoundingMode.UP)
+                    .multiply(carrierLogisticsCostDetailBO.getNextPrice()).setScale(2, RoundingMode.UP);
+            cost = carrierLogisticsCostDetailBO.getFirstPrice().add(nextCost);
+        } else {
+            // 小于等于首重
+            cost = carrierLogisticsCostDetailBO.getFirstPrice();
+        }
+        return cost;
+    }
+
+    protected BigDecimal volumeCostCalculate(CarrierLogisticsCostBO carrierLogisticsCostBO, CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+        BigDecimal weight = carrierLogisticsCostDTO.getSkuTotalVolume().divide(BigDecimal.valueOf(carrierLogisticsCostBO.getVolumeConversion()), 2, RoundingMode.UP);
+        return weightCostCalculate(carrierLogisticsCostBO, weight);
+
     }
 }

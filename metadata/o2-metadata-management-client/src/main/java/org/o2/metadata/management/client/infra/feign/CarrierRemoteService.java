@@ -2,6 +2,7 @@ package org.o2.metadata.management.client.infra.feign;
 
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.CarrierRemoteServiceImpl;
@@ -41,14 +42,29 @@ public interface CarrierRemoteService {
      */
     @PostMapping("/{organizationId}/carrier-internal/mapping")
     ResponseEntity<String> listCarrierMappings(@RequestBody CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO,
-                                              @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+                                               @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
 
     /**
      * 查询对应租户所有承运商数据
+     *
      * @param organizationId 租户ID
      * @return map
      */
     @PostMapping("/{organizationId}/carrier-internal/import-list")
     ResponseEntity<String> importList(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 计算承运商物流成本
+     *
+     * @param organizationId          租户id
+     * @param carrierLogisticsCostDTO 参数
+     * @return 成本结果
+     */
+
+    @PostMapping("/{organizationId}/carrier-internal/calculate-logistics-cost")
+    ResponseEntity<String> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO);
+
+
 }
