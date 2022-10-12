@@ -28,7 +28,7 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
 
         action.afterExecution(runtimeContext.getBusinessParam());
 
-        if(!runtimeContext.getBusinessParam().getNextFlag()){
+        if(Boolean.FALSE.equals(runtimeContext.getBusinessParam().getNextFlag())){
             if(runtimeContext.getBusinessParam().getException() != null){
                 throw new CommonException(runtimeContext.getBusinessParam().getException());
             }
