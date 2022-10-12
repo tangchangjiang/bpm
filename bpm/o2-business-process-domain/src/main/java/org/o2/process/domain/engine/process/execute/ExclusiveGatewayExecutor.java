@@ -61,7 +61,7 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
 
         ConditionalFlow hitElement = conditionalFlows.stream()
                 .sorted(Comparator.comparing(ConditionalFlow::getPriority))
-                .filter(condition -> processCondition(condition, runtimeContext.getBusinessParam()))
+                .filter(condition -> processCondition(condition, runtimeContext.getBusinessParam(), runtimeContext.getTenantId()))
                 .findFirst().orElse(null);
 
         if(null != hitElement){
@@ -77,9 +77,9 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
         throw new CommonException(ProcessEngineConstants.ErrorCode.GET_OUTGOING_FAILED);
     }
 
-    protected boolean processCondition(ConditionalFlow conditionalFlow, T businessParam) {
+    protected boolean processCondition(ConditionalFlow conditionalFlow, T businessParam, Long tenantId) {
         //todo 获得结果
-        boolean hitFlag = calculatorProvider.calculate(ProcessEngineConstants.ExpressType.QL_EXPRESS, conditionalFlow.getRuleKey(), businessParam.getCurrentParam());
+        boolean hitFlag = calculatorProvider.calculate(ProcessEngineConstants.ExpressType.QL_EXPRESS, conditionalFlow.getRuleKey(), businessParam.getCurrentParam(), tenantId);
 
         if(hitFlag){
             afterHit(conditionalFlow, businessParam);

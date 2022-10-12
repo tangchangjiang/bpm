@@ -26,11 +26,11 @@ public class CalculatorProvider {
    }
 
 
-   public boolean calculate(String expressType, String expression, Map<String, Object> dataMap){
+   public boolean calculate(String expressType, String expression, Map<String, Object> dataMap, Long tenantId){
        ExpressionCalculator expressionCalculator = calculatorMap.get(expressType);
        if(null == expressionCalculator){
            throw new CommonException(ProcessEngineConstants.ErrorCode.UNSUPPORTED_EXPRESS_TYPE);
        }
-       return expressionCalculator.calculate(expression, dataMap);
+       return expressionCalculator.calculate(expression, dataMap, tenantId);
    }
 }

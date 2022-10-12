@@ -22,4 +22,7 @@ public class ProcessRuntimeContext<T extends BusinessProcessExecParam> {
     private Map<String, BaseElement> elementMap;
 
     private BaseElement currentElement;
+
+    private Long tenantId;
+
 }

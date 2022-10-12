@@ -20,6 +20,10 @@
             <artifactId>o2-starter-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-rule-engine-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-ehcache</artifactId>
         </dependency>
@@ -33,6 +37,4 @@
             <artifactId>groovy-all</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

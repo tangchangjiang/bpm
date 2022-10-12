@@ -47,6 +47,7 @@ public class ProcessExecutor<T extends BusinessProcessExecParam> implements Proc
         runtimeContext.setBpmnModel(bpmnModel);
         runtimeContext.setElementMap(elementMap);
         runtimeContext.setBusinessParam(businessParam);
+        runtimeContext.setTenantId(bpmnModel.getTenantId());
         initCurrentFlowElement(runtimeContext);
     }
 
