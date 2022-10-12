@@ -10,6 +10,7 @@ import org.o2.metadata.management.client.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.CarrierRemoteService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,8 +69,8 @@ public class CarrierClient {
      * @param carrierLogisticsCostDTO 参数
      * @return 计算结果
      */
-    public CarrierLogisticsCostCO calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO), new TypeReference<CarrierLogisticsCostCO>() {
+    public List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO), new TypeReference<List<CarrierLogisticsCostCO>>() {
         });
     }
 

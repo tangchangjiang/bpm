@@ -65,6 +65,6 @@ public interface CarrierService {
      * @param carrierLogisticsCostDTO 参数
      * @return 计算结果
      */
-    CarrierLogisticsCostCO calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO);
+    List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO);
 
 }
