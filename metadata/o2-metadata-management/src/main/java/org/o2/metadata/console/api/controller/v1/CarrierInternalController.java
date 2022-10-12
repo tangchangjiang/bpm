@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,8 +62,8 @@ public class CarrierInternalController extends BaseController {
     @ApiOperation(value = "承运商物流成本计算")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/calculate-logistics-cost")
-    public ResponseEntity<CarrierLogisticsCostCO> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                         @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+    public ResponseEntity<List<CarrierLogisticsCostCO>> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                               @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
         carrierLogisticsCostDTO.setTenantId(organizationId);
         validObject(carrierLogisticsCostDTO);
         return Results.success(carrierService.calculateLogisticsCost(carrierLogisticsCostDTO));

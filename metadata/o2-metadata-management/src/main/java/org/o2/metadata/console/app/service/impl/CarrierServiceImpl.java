@@ -222,11 +222,10 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
-    public CarrierLogisticsCostCO calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+    public List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
 
         // 1. 数据初始化
-        CarrierLogisticsCostCO carrierLogisticsCost = new CarrierLogisticsCostCO();
-
+        List<CarrierLogisticsCostCO> carrierLogisticsCostList = new ArrayList<>();
         // 查询运费模板信息
         CarrierFreightDTO carrierFreightDTO = new CarrierFreightDTO();
         carrierFreightDTO.setCarrierCodeList(carrierLogisticsCostDTO.getAlternateCarrierList());
@@ -260,14 +259,14 @@ public class CarrierServiceImpl implements CarrierService {
                     result = volumeCost;
                 }
                 // 更新结果
-                if (ObjectUtils.isEmpty(carrierLogisticsCost.getLogisticsCost()) || result.compareTo(carrierLogisticsCost.getLogisticsCost()) < 0) {
-                    carrierLogisticsCost.setCarrierCode(carrierCode);
-                    carrierLogisticsCost.setLogisticsCost(result);
-                }
+                CarrierLogisticsCostCO carrierLogisticsCost = new CarrierLogisticsCostCO();
+                carrierLogisticsCost.setCarrierCode(carrierCode);
+                carrierLogisticsCost.setLogisticsCost(result);
+                carrierLogisticsCostList.add(carrierLogisticsCost);
             }
 
         }
-        return carrierLogisticsCost;
+        return carrierLogisticsCostList;
     }
 
     protected void preProcess(CarrierLogisticsCostBO carrierLogisticsCostBO, String regionCode) {
