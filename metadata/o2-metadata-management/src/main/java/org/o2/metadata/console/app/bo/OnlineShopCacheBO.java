@@ -55,4 +55,9 @@ public class OnlineShopCacheBO {
     private Integer sourcedFlag;
     @ApiModelProperty(value = "是否有效")
     private Integer activeFlag;
+
+    /**
+     * 网店业务类型
+     */
+    private String businessType;
 }
