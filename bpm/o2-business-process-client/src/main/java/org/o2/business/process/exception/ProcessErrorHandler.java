@@ -1,13 +1,14 @@
 package org.o2.business.process.exception;
 
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.business.process.data.BusinessProcessExecParam;
+import org.o2.process.domain.engine.BusinessProcessExecParam;
 
 /**
  * @author tangcj
  * @version V1.0
- * @date 2022/8/12 15:50
+ * @date 2022/10/10 15:49
  */
 public interface ProcessErrorHandler<T extends BusinessProcessExecParam> {
 

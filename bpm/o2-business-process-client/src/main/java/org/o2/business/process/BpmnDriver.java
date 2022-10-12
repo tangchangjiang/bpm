@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.business.process.constants.BusinessProcessConstants;
 import org.o2.business.process.exception.BusinessProcessRuntimeException;
-import org.o2.business.process.exception.ProcessErrorAction;
 import org.o2.business.process.exception.ProcessErrorHandler;
 import org.o2.business.process.infra.BusinessProcessRemoteService;
 import org.o2.core.O2CoreConstants;
@@ -79,10 +78,10 @@ public class BpmnDriver {
             "rawtypes"
     })
     private static <T extends BusinessProcessExecParam> void processErrorHandel(T processExecParam, String processCode, ApplicationContext applicationContext) {
-        Map<String, ProcessErrorAction> processErrorActionMap = applicationContext.getBeansOfType(ProcessErrorAction.class)
-                .values().stream().collect(Collectors.toMap(ProcessErrorAction::getProcessCode, Function.identity(), (a, b) -> b));
-        ProcessErrorAction<T> processErrorAction = processErrorActionMap.getOrDefault(processCode, processErrorActionMap.get(ProcessErrorHandler.DEFAULT));
-        processErrorAction.errorHandle(processCode, processExecParam);
+        Map<String, ProcessErrorHandler> processErrorActionMap = applicationContext.getBeansOfType(ProcessErrorHandler.class)
+                .values().stream().collect(Collectors.toMap(ProcessErrorHandler::getProcessCode, Function.identity(), (a, b) -> b));
+        ProcessErrorHandler<T> processErrorHandler = processErrorActionMap.getOrDefault(processCode, processErrorActionMap.get(ProcessErrorHandler.DEFAULT));
+        processErrorHandler.errorHandle(processCode, processExecParam);
     }
 
     public static BpmnModel getPipelineDetail(final Long tenantId, final String processCode) {
