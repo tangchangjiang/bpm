@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface ExpressionCalculator {
 
-    boolean calculate(String expression, Map<String, Object> dataMap);
+    boolean calculate(String expression, Map<String, Object> dataMap, Long tenantId);
 
     String getExpressType();
 }
