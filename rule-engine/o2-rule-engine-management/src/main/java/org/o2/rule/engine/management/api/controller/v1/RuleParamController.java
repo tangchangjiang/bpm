@@ -63,6 +63,7 @@ public class RuleParamController extends BaseController {
     @PostMapping
     public ResponseEntity<RuleParam> create(@PathVariable(value = "organizationId") Long organizationId,
                                             @RequestBody RuleParam ruleParam) {
+        ruleParam.setTenantId(organizationId);
         validObject(ruleParam);
         ruleParamService.save(ruleParam);
         return Results.success(ruleParam);

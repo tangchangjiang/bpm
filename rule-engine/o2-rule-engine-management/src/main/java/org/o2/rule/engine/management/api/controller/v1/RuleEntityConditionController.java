@@ -63,6 +63,7 @@ public class RuleEntityConditionController extends BaseController {
     @PostMapping
     public ResponseEntity<RuleEntityCondition> create(@PathVariable(value = "organizationId") Long organizationId,
                                                       @RequestBody RuleEntityCondition ruleEntityCondition) {
+        ruleEntityCondition.setTenantId(organizationId);
         validObject(ruleEntityCondition);
         ruleEntityConditionService.save(ruleEntityCondition);
         return Results.success(ruleEntityCondition);

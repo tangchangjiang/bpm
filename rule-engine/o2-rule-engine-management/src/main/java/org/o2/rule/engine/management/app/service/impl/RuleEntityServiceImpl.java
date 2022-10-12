@@ -65,11 +65,9 @@ public class RuleEntityServiceImpl implements RuleEntityService {
             ruleEntityRepository.insertSelective(ruleEntity);
         } else {
             ruleEntityRepository.updateOptional(ruleEntity,
-                    RuleEntity.FIELD_RULE_ENTITY_CODE,
                     RuleEntity.FIELD_RULE_ENTITY_NAME,
                     RuleEntity.FIELD_RULE_ENTITY_ALIAS,
-                    RuleEntity.FIELD_DESCRIPTION,
-                    RuleEntity.FIELD_TENANT_ID
+                    RuleEntity.FIELD_DESCRIPTION
             );
         }
 

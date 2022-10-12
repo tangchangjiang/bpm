@@ -12,7 +12,7 @@
         <result column="order_seq" property="orderSeq" jdbcType="DECIMAL"/>
         <result column="param_format_code" property="paramFormatCode" jdbcType="VARCHAR"/>
         <result column="param_edit_type_code" property="paramEditTypeCode" jdbcType="VARCHAR"/>
-        <result column="multiFlag" property="multiflag" jdbcType="DECIMAL"/>
+        <result column="multi_flag" property="multiFlag" jdbcType="DECIMAL"/>
         <result column="not_null_flag" property="notNullFlag" jdbcType="DECIMAL"/>
         <result column="business_model" property="businessModel" jdbcType="VARCHAR"/>
         <result column="value_filed_from" property="valueFiledFrom" jdbcType="VARCHAR"/>
