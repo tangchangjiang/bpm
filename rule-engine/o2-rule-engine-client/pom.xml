@@ -15,6 +15,9 @@
     <artifactId>o2-rule-engine-client</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <maven.attach.source>true</maven.attach.source>
+    </properties>
 
     <dependencies>
         <!-- o2 -->
@@ -22,6 +25,17 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-feign-client</artifactId>
+        </dependency>
+
+        <!-- hzero -->
+        <dependency>
+            <groupId>org.hzero.starter</groupId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
+        </dependency>
+
         <!--spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -36,5 +50,25 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <attach>${maven.attach.source}</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
