@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.rule.engine.management.infra.mapper.O2reRuleEntityMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.rule.engine.management.domain.entity.RuleEntity">
+        <result column="rule_entity_id" property="ruleEntityId" jdbcType="DECIMAL"/>
+        <result column="rule_entity_code" property="ruleEntityCode" jdbcType="VARCHAR"/>
+        <result column="rule_entity_name" property="ruleEntityName" jdbcType="VARCHAR"/>
+        <result column="rule_entity_alias" property="ruleEntityAlias" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+    </resultMap>
+
+
+</mapper>
