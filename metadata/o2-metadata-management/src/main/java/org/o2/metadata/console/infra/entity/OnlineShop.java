@@ -15,6 +15,7 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -176,7 +177,10 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "户号")
     private String accountNumber;
 
-
+    @ApiModelProperty(value = "网店业务类型，值集O2MD.BUSINESS_TYPE")
+    @LovValue(value = "O2MD.ONLINE_SHOP_BUSINESS_TYPE")
+    @NotBlank
+    private String businessTypeCode;
     //
     // 数据库字段
     // ------------------------------------------------------------------------------

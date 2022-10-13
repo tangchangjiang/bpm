@@ -2,6 +2,7 @@ package org.o2.rule.engine.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.rule.engine.client.app.exception.RuleExecuteException;
+import org.o2.rule.engine.client.app.service.RuleEngineService;
 import org.o2.rule.engine.client.domain.RuleConditionResult;
 import org.o2.rule.engine.client.domain.RuleObject;
 
@@ -14,10 +15,19 @@ import org.o2.rule.engine.client.domain.RuleObject;
 @Slf4j
 public class RuleEngineClientImpl implements RuleEngineClient {
 
+    private final RuleEngineService ruleEngineService;
+
+    /**
+     * 构造器
+     * @param ruleEngineService ruleEngineService
+     */
+    public RuleEngineClientImpl(final RuleEngineService ruleEngineService) {
+        this.ruleEngineService = ruleEngineService;
+    }
+    
     @Override
     public RuleConditionResult fireRuleCondition(Long tenantId, String ruleConditionCode, RuleObject fact) throws RuleExecuteException {
-        //todo 默认全部校验构通过
-        return new RuleConditionResult(true);
+        return ruleEngineService.fireRuleCondition(tenantId, ruleConditionCode, fact);
     }
 
 }
