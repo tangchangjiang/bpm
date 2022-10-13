@@ -3,8 +3,8 @@ package org.o2.metadata.infra.lovadapter.repository.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.core.helper.JsonHelper;
-import org.o2.ehcache.util.CollectionCacheHelper;
 import org.o2.metadata.api.co.RoleCO;
 import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.O2LovConstants;
@@ -12,7 +12,11 @@ import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.SqlLovQueryRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description

@@ -3,8 +3,8 @@ package org.o2.metadata.console.app.service.impl;
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.core.exception.O2CommonException;
-import org.o2.ehcache.util.CollectionCacheHelper;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.app.service.PlatformService;
@@ -16,7 +16,6 @@ import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
 import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,14 +2,17 @@ package org.o2.metadata.infra.lovadapter.repository.impl;
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.AopProxy;
-import org.o2.ehcache.util.CollectionCacheHelper;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
