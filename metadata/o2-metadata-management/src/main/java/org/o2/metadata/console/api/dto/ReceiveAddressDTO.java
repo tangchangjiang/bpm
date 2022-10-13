@@ -28,4 +28,16 @@ public class ReceiveAddressDTO {
     @ApiModelProperty(value = "区编码")
     @NotBlank
     private String districtCode;
+
+
+    public ReceiveAddressDTO copy() {
+        ReceiveAddressDTO tempAddress = new ReceiveAddressDTO();
+        tempAddress.setCountryCode(this.getCountryCode());
+        tempAddress.setRegionCode(this.getRegionCode());
+        tempAddress.setCityCode(this.getCityCode());
+        tempAddress.setDistrictCode(this.getDistrictCode());
+        return tempAddress;
+    }
+
+
 }

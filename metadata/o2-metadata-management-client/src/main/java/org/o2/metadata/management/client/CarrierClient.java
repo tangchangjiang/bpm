@@ -3,8 +3,10 @@ package org.o2.metadata.management.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.CarrierCO;
+import org.o2.metadata.management.client.domain.co.CarrierDeliveryRangeCO;
 import org.o2.metadata.management.client.domain.co.CarrierLogisticsCostCO;
 import org.o2.metadata.management.client.domain.co.CarrierMappingCO;
+import org.o2.metadata.management.client.domain.dto.CarrierDeliveryRangeDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierQueryInnerDTO;
@@ -72,6 +74,18 @@ public class CarrierClient {
     public List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO, Long tenantId) {
         return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO), new TypeReference<List<CarrierLogisticsCostCO>>() {
         });
+    }
+
+    /**
+     * 查询收货地址是否在承运商的送达范围内
+     *
+     * @param carrierDeliveryRangeDTO 参数
+     * @return 结果
+     */
+    public List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO, Long tenantId) {
+        return ResponseUtils.getResponse(carrierRemoteService.checkDeliveryRange(tenantId, carrierDeliveryRangeDTO), new TypeReference<List<CarrierDeliveryRangeCO>>() {
+        });
+
     }
 
 }

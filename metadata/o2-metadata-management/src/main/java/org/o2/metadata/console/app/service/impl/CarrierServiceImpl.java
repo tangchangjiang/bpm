@@ -5,28 +5,34 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.CarrierCO;
+import org.o2.metadata.console.api.co.CarrierDeliveryRangeCO;
 import org.o2.metadata.console.api.co.CarrierLogisticsCostCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
+import org.o2.metadata.console.api.dto.CarrierDeliveryRangeDTO;
 import org.o2.metadata.console.api.dto.CarrierFreightDTO;
 import org.o2.metadata.console.api.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
+import org.o2.metadata.console.api.dto.ReceiveAddressDTO;
 import org.o2.metadata.console.app.bo.CarrierLogisticsCostBO;
 import org.o2.metadata.console.app.bo.CarrierLogisticsCostDetailBO;
 import org.o2.metadata.console.app.service.CarrierService;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.convertor.CarrierConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
+import org.o2.metadata.console.infra.entity.CarrierCantDelivery;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.entity.CarrierMapping;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
 import org.o2.metadata.console.infra.redis.CarrierRedis;
+import org.o2.metadata.console.infra.repository.CarrierCantDeliveryRepository;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.o2.metadata.console.infra.repository.CarrierMappingRepository;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
@@ -59,16 +65,20 @@ public class CarrierServiceImpl implements CarrierService {
     private final CarrierRedis carrierRedis;
     private final CarrierMappingRepository carrierMappingRepository;
 
+    private final CarrierCantDeliveryRepository carrierCantDeliveryRepository;
+
 
     public CarrierServiceImpl(final CarrierRepository carrierRepository,
                               final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
                               final PosRelCarrierRepository posRelCarrierRepository,
-                              CarrierRedis carrierRedis, CarrierMappingRepository carrierMappingRepository) {
+                              CarrierRedis carrierRedis, CarrierMappingRepository carrierMappingRepository,
+                              CarrierCantDeliveryRepository carrierCantDeliveryRepository) {
         this.carrierRepository = carrierRepository;
         this.carrierDeliveryRangeRepository = carrierDeliveryRangeRepository;
         this.posRelCarrierRepository = posRelCarrierRepository;
         this.carrierRedis = carrierRedis;
         this.carrierMappingRepository = carrierMappingRepository;
+        this.carrierCantDeliveryRepository = carrierCantDeliveryRepository;
     }
 
     @Override
@@ -268,6 +278,79 @@ public class CarrierServiceImpl implements CarrierService {
         }
         return carrierLogisticsCostList;
     }
+
+
+    @Override
+    public List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO) {
+        List<CarrierDeliveryRangeCO> carrierDeliveryRangeList = new ArrayList<>();
+        // 判断可送达范围
+        List<Carrier> carriers = carrierRepository.selectByCondition(Condition.builder(Carrier.class)
+                .andWhere(Sqls.custom().andIn(Carrier.FIELD_CARRIER_CODE, carrierDeliveryRangeDTO.getAlternateCarrierList())
+                        .andEqualTo(Carrier.FIELD_TENANT_ID, carrierDeliveryRangeDTO.getTenantId())).build());
+
+        for (Carrier carrier : carriers) {
+            CarrierDeliveryRangeCO carrierDeliveryRange = new CarrierDeliveryRangeCO();
+            carrierDeliveryRange.setCarrierCode(carrier.getCarrierCode());
+            if (CarrierConstants.CarrierDeliveryRegionType.NATIONWIDE.equals(carrier.getDeliveryRegionTypeCode())) {
+                carrierDeliveryRange.setDeliveryFlag(BaseConstants.Flag.YES);
+                carrierDeliveryRangeList.add(carrierDeliveryRange);
+            } else if (CarrierConstants.CarrierDeliveryRegionType.CUSTOM_REGION.equals(carrier.getDeliveryRegionTypeCode())) {
+                // 自定义地区判断
+                // 注意此处地址必须进行深拷贝，后续会变更地址，但不能影响其它承运商的判断
+                ReceiveAddressDTO tempAddress = carrierDeliveryRangeDTO.getAddress().copy();
+                // 递归调用
+                carrierDeliveryRange.setDeliveryFlag(customCheckDeliveryFlag(tempAddress, carrier, BaseConstants.Digital.TWO));
+                carrierDeliveryRangeList.add(carrierDeliveryRange);
+            }
+        }
+        return carrierDeliveryRangeList;
+    }
+
+    /**
+     * 判断承运商是否可送达（递归）
+     *
+     * @param tempAddress 收货地址
+     * @param carrier     承运商信息
+     * @param count       递归辅助标志,(2:省市区，1:省市，0:省，-1: 不存在不可送达范围,承运商可送达
+     * @return 结果
+     */
+    protected int customCheckDeliveryFlag(ReceiveAddressDTO tempAddress, Carrier carrier, int count) {
+
+        if (count < 0) {
+            return 1;
+        }
+        if (checkAddressRange(tempAddress, carrier) == 0) {
+            return 0;
+        }
+        if (BaseConstants.Digital.TWO == count) {
+            tempAddress.setDistrictCode(null);
+        } else if (BaseConstants.Digital.ONE == count) {
+            tempAddress.setCityCode(null);
+        }
+        return customCheckDeliveryFlag(tempAddress, carrier, --count);
+    }
+
+
+    protected int checkAddressRange(ReceiveAddressDTO tempAddress, Carrier carrier) {
+
+        int result = carrierCantDeliveryRepository.selectCountByCondition(Condition.builder(CarrierCantDelivery.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(CarrierCantDelivery.FIELD_CARRIER_CODE, carrier.getCarrierCode())
+                        .andEqualTo(CarrierCantDelivery.FIELD_TENANT_ID, carrier.getTenantId())
+                        .andEqualTo(CarrierCantDelivery.FIELD_COUNTRY_CODE, tempAddress.getCountryCode())
+                        .andEqualTo(CarrierCantDelivery.FIELD_REGION_CODE, tempAddress.getRegionCode())
+                        .andEqualTo(CarrierCantDelivery.FIELD_CITY_CODE, tempAddress.getCityCode())
+                        .andEqualTo(CarrierCantDelivery.FIELD_DISTRICT_CODE, tempAddress.getDistrictCode()))
+                .build());
+
+        if (result > 0) {
+            // 不可送
+            return 0;
+        }
+        // 可送
+        return 1;
+    }
+
 
     protected void preProcess(CarrierLogisticsCostBO carrierLogisticsCostBO, String regionCode) {
         Optional<CarrierLogisticsCostDetailBO> costDetailOptional = carrierLogisticsCostBO.getCarrierLogisticsCostDetailList()
