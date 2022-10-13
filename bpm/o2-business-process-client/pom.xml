@@ -19,8 +19,8 @@
             <artifactId>o2-starter-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-ehcache</artifactId>
+            <groupId>org.o2.cache</groupId>
+            <artifactId>o2-cache-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hzero.starter</groupId>
