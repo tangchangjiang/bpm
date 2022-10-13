@@ -2,6 +2,7 @@ package org.o2.metadata.management.client.infra.feign;
 
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.dto.CarrierDeliveryRangeDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.CarrierQueryInnerDTO;
@@ -65,6 +66,11 @@ public interface CarrierRemoteService {
     @PostMapping("/{organizationId}/carrier-internal/calculate-logistics-cost")
     ResponseEntity<String> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO);
+
+
+    @PostMapping("/{organizationId}/carrier-internal/check-delivery-range")
+    ResponseEntity<String> checkDeliveryRange(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                              @RequestBody CarrierDeliveryRangeDTO carrierDeliveryRangeDTO);
 
 
 }

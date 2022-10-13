@@ -27,6 +27,18 @@ public interface CarrierConstants {
         String LOV_CODE = "O2MD.CARRIER_TYPE";
     }
 
+
+    interface CarrierDeliveryRegionType {
+        /**
+         * 全国
+         */
+        String NATIONWIDE = "NATIONWIDE";
+        /**
+         * 自定义
+         */
+        String CUSTOM_REGION = "CUSTOM_REGION";
+    }
+
     interface ErrorCode {
         String O2MD_ERROR_CARRIER_EXISTS = "o2md.error.carrier.exists";
         String O2MD_ERROR_PLATFORM_NOT_EXISTS = "o2md.error.platform.not.exist";
