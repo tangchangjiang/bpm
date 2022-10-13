@@ -9,7 +9,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.O2CoreConstants;
-import org.o2.ehcache.util.CollectionCacheHelper;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.metadata.pipeline.constants.PipelineConfConstants;
 import org.o2.metadata.pipeline.data.PipelineExecParam;
 import org.o2.metadata.pipeline.exception.PipelineRuntimeException;
