@@ -70,4 +70,9 @@ public class OnlineShopCO {
     @ApiModelProperty(value = "网店类型编码", hidden = true)
     @NotNull
     private String onlineShopType;
+
+    /**
+     * 网店业务类型
+     */
+    private String businessTypeCode;
 }
