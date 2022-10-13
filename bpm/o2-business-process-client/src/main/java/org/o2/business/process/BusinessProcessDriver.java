@@ -18,7 +18,7 @@ import org.o2.business.process.infra.BusinessProcessRemoteService;
 import org.o2.business.process.node.BusinessNodeExecutor;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.helper.JsonHelper;
-import org.o2.ehcache.util.CollectionCacheHelper;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationContext;
