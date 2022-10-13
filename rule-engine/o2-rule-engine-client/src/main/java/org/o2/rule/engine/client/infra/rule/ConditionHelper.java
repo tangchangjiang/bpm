@@ -22,6 +22,16 @@ public class ConditionHelper {
 
     }
 
+    static {
+        try {
+            EXPRESS_RUNNER.addOperator("anyIn", new OperatorAnyIn("anyIn"));
+            EXPRESS_RUNNER.addOperator("allIn", new OperatorAllIn("allIn"));
+            EXPRESS_RUNNER.addOperator("notIn", new OperatorNotIn("notIn"));
+        } catch (Exception e) {
+            log.error("EXPRESS_RUNNER addOperator error", e);
+        }
+    }
+
     /**
      * 判断是够满足条件
      *

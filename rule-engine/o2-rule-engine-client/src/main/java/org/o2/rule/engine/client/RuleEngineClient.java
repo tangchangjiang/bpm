@@ -21,7 +21,8 @@ public interface RuleEngineClient {
      * @return 规则条件结果
      * @throws RuleExecuteException 规则执行异常
      */
-    RuleConditionResult fireRuleCondition(Long tenantId, String ruleConditionCode, RuleObject fact) throws RuleExecuteException;
-
+    RuleConditionResult fireRuleCondition(Long tenantId,
+                                          String ruleConditionCode,
+                                          RuleObject fact) throws RuleExecuteException;
 
 }

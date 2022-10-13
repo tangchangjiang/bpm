@@ -28,6 +28,10 @@ public class RuleClientConstants {
          * Rule Execute Exception
          */
         public static final String RULE_EXECUTE_EXCEPTION = "o2re.client.execute_exception";
+        /**
+         * Rule Param Error
+         */
+        public static final String RULE_PARAM_ERROR = "o2.rule.param_error";
 
         private ErrorMessage() {
 
