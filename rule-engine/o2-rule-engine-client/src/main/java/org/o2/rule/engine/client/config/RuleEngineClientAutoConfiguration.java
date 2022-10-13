@@ -59,7 +59,7 @@ public class RuleEngineClientAutoConfiguration implements InitializingBean {
      */
     @Bean
     @ConditionalOnMissingBean
-    public RuleEngineService ruleEngineService(final RuleRepository ruleRepository,
+    public RuleEngineService o2RuleEngineService(final RuleRepository ruleRepository,
                                                final RuleObjectService ruleObjectService) {
         return new RuleEngineServiceImpl(ruleRepository, ruleObjectService);
     }
@@ -72,7 +72,7 @@ public class RuleEngineClientAutoConfiguration implements InitializingBean {
      */
     @Bean
     @ConditionalOnMissingBean
-    public RuleEngineClient ruleEngineClient(final RuleEngineService ruleEngineService) {
+    public RuleEngineClient o2RuleEngineClient(final RuleEngineService ruleEngineService) {
         return new RuleEngineClientImpl(ruleEngineService);
     }
 
