@@ -21,6 +21,8 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
     protected void doExecute(ProcessRuntimeContext<T> runtimeContext) {
         ServiceTask serviceTask = (ServiceTask) runtimeContext.getCurrentElement();
         ServiceAction<T> action = ApplicationContextHelper.getContext().getBean(serviceTask.getBeanId(), ServiceAction.class);
+        // 设置当前参数
+        runtimeContext.getBusinessParam().setCurrentParam(serviceTask.getArgs());
 
         action.beforeExecution(runtimeContext.getBusinessParam());
 
