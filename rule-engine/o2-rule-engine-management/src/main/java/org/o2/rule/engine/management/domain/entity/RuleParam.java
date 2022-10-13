@@ -2,10 +2,13 @@ package org.o2.rule.engine.management.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.annotation.Unique;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -18,10 +21,12 @@ import io.choerodon.mybatis.domain.AuditDomain;
  *
  * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("规则参数")
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2re_rule_param")
+@Data
 public class RuleParam extends AuditDomain {
 
     public static final String FIELD_RULE_PARAM_ID = "ruleParamId";
@@ -52,7 +57,6 @@ public class RuleParam extends AuditDomain {
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("主键")
     @Id
@@ -101,9 +105,9 @@ public class RuleParam extends AuditDomain {
     private Integer enableFlag;
     @ApiModelProperty(value = "LOV Meaning值")
     private String defaultMeaning;
-    @ApiModelProperty(value = "校验Bean，用\",\"分割")
+    @ApiModelProperty(value = "校验Bean，用,分割")
     private String validators;
-    @ApiModelProperty(value = "过滤Bean，用\",\"分割")
+    @ApiModelProperty(value = "过滤Bean，用,分割")
     private String filters;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
@@ -112,218 +116,8 @@ public class RuleParam extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-    //
-    // getter/setter
-    // ------------------------------------------------------------------------------
 
-    /**
-     * @return 主键
-     */
-    public Long getRuleParamId() {
-        return ruleParamId;
-    }
-
-    public void setRuleParamId(Long ruleParamId) {
-        this.ruleParamId = ruleParamId;
-    }
-
-    /**
-     * @return 参数关联实体id
-     */
-    public Long getParamRelEntityId() {
-        return paramRelEntityId;
-    }
-
-    public void setParamRelEntityId(Long paramRelEntityId) {
-        this.paramRelEntityId = paramRelEntityId;
-    }
-
-    /**
-     * @return 参数关联实体类型，COND/ACTION
-     */
-    public String getParamRelEntityType() {
-        return paramRelEntityType;
-    }
-
-    public void setParamRelEntityType(String paramRelEntityType) {
-        this.paramRelEntityType = paramRelEntityType;
-    }
-
-    /**
-     * @return 参数编码
-     */
-    public String getParamCode() {
-        return paramCode;
-    }
-
-    public void setParamCode(String paramCode) {
-        this.paramCode = paramCode;
-    }
-
-    /**
-     * @return 参数名称
-     */
-    public String getParamName() {
-        return paramName;
-    }
-
-    public void setParamName(String paramName) {
-        this.paramName = paramName;
-    }
-
-    /**
-     * @return 参数别名
-     */
-    public String getParamAlias() {
-        return paramAlias;
-    }
-
-    public void setParamAlias(String paramAlias) {
-        this.paramAlias = paramAlias;
-    }
-
-    /**
-     * @return 参数顺序
-     */
-    public Long getOrderSeq() {
-        return orderSeq;
-    }
-
-    public void setOrderSeq(Long orderSeq) {
-        this.orderSeq = orderSeq;
-    }
-
-    /**
-     * @return 参数格式类型编码
-     */
-    public String getParamFormatCode() {
-        return paramFormatCode;
-    }
-
-    public void setParamFormatCode(String paramFormatCode) {
-        this.paramFormatCode = paramFormatCode;
-    }
-
-    /**
-     * @return 参数编辑类型编码
-     */
-    public String getParamEditTypeCode() {
-        return paramEditTypeCode;
-    }
-
-    public void setParamEditTypeCode(String paramEditTypeCode) {
-        this.paramEditTypeCode = paramEditTypeCode;
-    }
-
-    /**
-     * @return 多值Flag标记，默认单值
-     */
-    public Integer getMultiflag() {
-        return multiflag;
-    }
-
-    public void setMultiflag(Integer multiflag) {
-        this.multiflag = multiflag;
-    }
-
-    /**
-     * @return 必输标记，默认必输
-     */
-    public Integer getNotNullFlag() {
-        return notNullFlag;
-    }
-
-    public void setNotNullFlag(Integer notNullFlag) {
-        this.notNullFlag = notNullFlag;
-    }
-
-    /**
-     * @return 业务模型
-     */
-    public String getBusinessModel() {
-        return businessModel;
-    }
-
-    public void setBusinessModel(String businessModel) {
-        this.businessModel = businessModel;
-    }
-
-    /**
-     * @return 值从
-     */
-    public String getValueFiledFrom() {
-        return valueFiledFrom;
-    }
-
-    public void setValueFiledFrom(String valueFiledFrom) {
-        this.valueFiledFrom = valueFiledFrom;
-    }
-
-    /**
-     * @return 值至
-     */
-    public String getValueFiledTo() {
-        return valueFiledTo;
-    }
-
-    public void setValueFiledTo(String valueFiledTo) {
-        this.valueFiledTo = valueFiledTo;
-    }
-
-    /**
-     * @return 是否启用
-     */
-    public Integer getEnableFlag() {
-        return enableFlag;
-    }
-
-    public void setEnableFlag(Integer enableFlag) {
-        this.enableFlag = enableFlag;
-    }
-
-    /**
-     * @return LOV Meaning值
-     */
-    public String getDefaultMeaning() {
-        return defaultMeaning;
-    }
-
-    public void setDefaultMeaning(String defaultMeaning) {
-        this.defaultMeaning = defaultMeaning;
-    }
-
-    /**
-     * @return 校验Bean，用\",\"分割
-     */
-    public String getValidators() {
-        return validators;
-    }
-
-    public void setValidators(String validators) {
-        this.validators = validators;
-    }
-
-    /**
-     * @return 过滤Bean，用\",\"分割
-     */
-    public String getFilters() {
-        return filters;
-    }
-
-    public void setFilters(String filters) {
-        this.filters = filters;
-    }
-
-    /**
-     * @return 租户ID
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
+    @Transient
+    private RuleCondParamValue paramValue;
 }
 
