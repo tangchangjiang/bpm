@@ -273,7 +273,7 @@
             <if test="onlineShopDTO.platformCode != null">
                 and online.platform_code = #{onlineShopDTO.platformCode}
             </if>
-            <if test="onlineShopDTO.platformCode != null">
+            <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''" >
                 and online.business_type_code = #{onlineShopDTO.businessTypeCode}
             </if>
             <if test="onlineShopDTO.onlineShopType != null">
