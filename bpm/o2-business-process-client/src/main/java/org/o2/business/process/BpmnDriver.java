@@ -11,7 +11,7 @@ import org.o2.business.process.exception.ProcessErrorHandler;
 import org.o2.business.process.infra.BusinessProcessRemoteService;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.helper.JsonHelper;
-import org.o2.ehcache.util.CollectionCacheHelper;
+import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.process.domain.engine.BpmnModel;
 import org.o2.process.domain.engine.BusinessProcessExecParam;
 import org.o2.process.domain.engine.ProcessEngine;
