@@ -178,6 +178,7 @@ public class OnlineShop extends AuditDomain {
     private String accountNumber;
 
     @ApiModelProperty(value = "网店业务类型，值集O2MD.BUSINESS_TYPE")
+    @LovValue(value = "O2MD.ONLINE_SHOP_BUSINESS_TYPE")
     @NotBlank
     private String businessTypeCode;
     //
