@@ -1,16 +1,16 @@
-package org.o2.rule.engine.client;
+package org.o2.rule.engine.client.app.service;
 
 import org.o2.rule.engine.client.app.exception.RuleExecuteException;
 import org.o2.rule.engine.client.domain.RuleConditionResult;
 import org.o2.rule.engine.client.domain.RuleObject;
 
 /**
- * 规则引擎客户端, 外部使用的唯一入口
+ * 规则引擎Service
  *
  * @author wei.cai@hand-china.com
- * @date 2022/10/11
+ * @date 2022/10/12
  */
-public interface RuleEngineClient {
+public interface RuleEngineService {
 
     /**
      * 执行规则条件
@@ -22,6 +22,5 @@ public interface RuleEngineClient {
      * @throws RuleExecuteException 规则执行异常
      */
     RuleConditionResult fireRuleCondition(Long tenantId, String ruleConditionCode, RuleObject fact) throws RuleExecuteException;
-
 
 }
