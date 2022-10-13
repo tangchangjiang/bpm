@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration
+org.o2.rule.engine.client.config.RuleEngineClientAutoConfiguration

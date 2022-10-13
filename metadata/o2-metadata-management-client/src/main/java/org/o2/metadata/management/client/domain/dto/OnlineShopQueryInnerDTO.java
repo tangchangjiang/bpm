@@ -32,4 +32,9 @@ public class OnlineShopQueryInnerDTO {
     @ApiModelProperty(value = "网店类型")
     private String onlineShopType;
 
+    /**
+     * 网店业务类型
+     */
+    private String businessTypeCode;
+
 }
