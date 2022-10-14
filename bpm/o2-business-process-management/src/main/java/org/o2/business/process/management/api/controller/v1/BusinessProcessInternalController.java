@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.business.process.management.app.service.BusinessProcessRedisService;
-import org.o2.business.process.management.domain.BusinessProcessBO;
+import org.o2.process.domain.engine.BpmnModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +31,8 @@ public class BusinessProcessInternalController {
     @ApiOperation(value = "获取流程信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{processCode}")
-    public ResponseEntity<BusinessProcessBO> getBusinessProcessConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                      @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode) {
+    public ResponseEntity<BpmnModel> getBusinessProcessConfig(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                              @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode) {
         return Results.success(businessProcessRedisService.getBusinessProcessConfig(processCode, organizationId));
     }
 

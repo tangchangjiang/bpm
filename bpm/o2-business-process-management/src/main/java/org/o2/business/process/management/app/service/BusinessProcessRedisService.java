@@ -1,8 +1,8 @@
 package org.o2.business.process.management.app.service;
 
-import org.o2.business.process.management.domain.BusinessProcessBO;
 import org.o2.business.process.management.domain.entity.BusinessNode;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
+import org.o2.process.domain.engine.BpmnModel;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface BusinessProcessRedisService {
      * @param tenantId 租户id
      * @return
      */
-    BusinessProcessBO getBusinessProcessConfig(String processCode, Long tenantId);
+    BpmnModel getBusinessProcessConfig(String processCode, Long tenantId);
 
 
     /**

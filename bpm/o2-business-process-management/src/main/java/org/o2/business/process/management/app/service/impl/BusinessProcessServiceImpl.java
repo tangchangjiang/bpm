@@ -1,9 +1,6 @@
 package org.o2.business.process.management.app.service.impl;
 
-import io.choerodon.core.exception.CommonException;
 import io.choerodon.mybatis.domain.AuditDomain;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -18,9 +15,11 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
-import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
-import org.o2.core.O2CoreConstants;
+import org.o2.business.process.management.infra.convert.ViewJsonConvert;
 import org.o2.core.helper.JsonHelper;
+import org.o2.process.domain.engine.BpmnModel;
+import org.o2.process.domain.engine.definition.BaseElement;
+import org.o2.process.domain.engine.process.preruntime.validator.BpmnModelValidator;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -105,16 +103,12 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
-        BusinessProcessBO businessProcessBO = Optional.ofNullable(businessProcess.getProcessJson())
-                .map(a -> JsonHelper.stringToObject(a, BusinessProcessBO.class)).orElse(new BusinessProcessBO());
-        boolean enableFlag = businessProcess.getEnabledFlag() != null
-                && businessProcess.getEnabledFlag() != O2CoreConstants.BooleanFlag.NOT_ENABLE
-                && CollectionUtils.isEmpty(businessProcessBO.getAllNodeAction());
-        if(enableFlag){
-            throw new CommonException(BusinessProcessConstants.ErrorCode.BUSINESS_PROCESS_NODE_NOT_EMPTY);
-        }
+
+        // 通过viewJson转换成processJson
+        buildProcessJson(businessProcess);
+
         //保存业务流程定义表
-        UniqueHelper.isUnique(businessProcess,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
+        UniqueHelper.isUnique(businessProcess, BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
         if (businessProcess.getBizProcessId() == null) {
             businessProcessRepository.insertSelective(businessProcess);
         } else {
@@ -128,10 +122,23 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                     BusinessProcess.FIELD_TENANT_ID
             );
         }
-        if(StringUtils.isNotBlank(businessProcess.getProcessJson())){
-            businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
-        }
+        // 加载到缓存中
+        businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
         return businessProcess;
+    }
+
+    protected void buildProcessJson(BusinessProcess businessProcess) {
+        List<BaseElement> baseElements = ViewJsonConvert.viewJsonConvert(businessProcess.getViewJson());
+        BpmnModel bpmnModel = new BpmnModel();
+        bpmnModel.setFlowElements(baseElements);
+        bpmnModel.setProcessCode(businessProcess.getProcessCode());
+        bpmnModel.setEnabledFlag(businessProcess.getEnabledFlag());
+        bpmnModel.setProcessName(businessProcess.getDescription());
+        bpmnModel.setTenantId(businessProcess.getTenantId());
+
+        // 合法性校验
+        BpmnModelValidator.validate(bpmnModel);
+        businessProcess.setProcessJson(ViewJsonConvert.bpmnToJson(bpmnModel));
     }
 
     @Override
@@ -143,9 +150,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                 .stream().collect(Collectors.toMap(BusinessNodeExportVO::getBeanId, Function.identity()));
         businessExportList.forEach(e -> {
             List<BusinessNodeExportVO> businessNodeExportList = new ArrayList<>();
-            e.getBusinessProcessBO().getAllNodeAction().forEach(node -> {
-                businessNodeExportList.add(nodeExportMap.get(node.getBeanId()));
-            });
+            e.getBusinessProcessBO().getAllNodeAction().forEach(node -> businessNodeExportList.add(nodeExportMap.get(node.getBeanId())));
             e.setNodeExportList(businessNodeExportList);
         });
         return businessExportList;
