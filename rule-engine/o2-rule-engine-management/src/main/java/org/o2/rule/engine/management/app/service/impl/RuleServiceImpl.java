@@ -1,82 +1,64 @@
 package org.o2.rule.engine.management.app.service.impl;
 
-import org.hzero.mybatis.helper.UniqueHelper;
+import org.o2.code.builder.app.service.CodeBuildService;
+import org.o2.core.helper.TransactionalHelper;
+import org.o2.core.helper.UserHelper;
 import org.o2.rule.engine.management.app.service.RuleService;
+import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.domain.entity.Rule;
+import org.o2.rule.engine.management.domain.entity.RuleCondRelEntity;
+import org.o2.rule.engine.management.domain.repository.RuleCondRelEntityRepository;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
+import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * 规则应用服务默认实现
  *
- * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
+ * @author xiang.zhao@hand-china.com 2022-10-10
  */
 @Service
 public class RuleServiceImpl implements RuleService {
                                                                                                 
     private final RuleRepository ruleRepository;
+    private final CodeBuildService codeBuildService;
+    private final TransactionalHelper transactionalHelper;
+    private final RuleCondRelEntityRepository ruleCondRelEntityRepository;
 
-    public RuleServiceImpl(RuleRepository ruleRepository) {
+    public RuleServiceImpl(final RuleRepository ruleRepository,
+                           final CodeBuildService codeBuildService,
+                           final TransactionalHelper transactionalHelper,
+                           final RuleCondRelEntityRepository ruleCondRelEntityRepository) {
         this.ruleRepository = ruleRepository;
+        this.codeBuildService = codeBuildService;
+        this.transactionalHelper = transactionalHelper;
+        this.ruleCondRelEntityRepository = ruleCondRelEntityRepository;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<Rule> batchSave(List<Rule> ruleList) {
-        Map<AuditDomain.RecordStatus, List<Rule>> statusMap = ruleList.stream().collect(Collectors.groupingBy(Rule::get_status));
-        // 删除
-        if (statusMap.containsKey(AuditDomain.RecordStatus.delete)) {
-            List<Rule> deleteList = statusMap.get(AuditDomain.RecordStatus.delete);
-            ruleRepository.batchDeleteByPrimaryKey(deleteList);
-        }
-        // 更新
-        if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
-            List<Rule> updateList = statusMap.get(AuditDomain.RecordStatus.update);
-            updateList.forEach(item -> {
-                // TODO: 唯一性校验
-                UniqueHelper.valid(item, Rule.O2RE_RULE_U1);
-                ruleRepository.updateByPrimaryKeySelective(item);
-            });
-        }
-        // 新增
-        if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
-            List<Rule> createList = statusMap.get(AuditDomain.RecordStatus.create);
-            createList.forEach(item -> {
-                // TODO: 唯一性校验
-                UniqueHelper.valid(item, Rule.O2RE_RULE_U1);
-                ruleRepository.insertSelective(item);
-            });
-        }
-        return ruleList;
-    }
+    public Rule createRule(final Long organizationId, final Rule rule) {
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Rule save(Rule rule) {
-        //保存规则
-        UniqueHelper.valid(rule, Rule.O2RE_RULE_U1);
-        if (rule.getRuleId() == null) {
+        rule.validRule();
+
+        final RuleConditionDTO conditionDTO = rule.getConditionDTO();
+
+        final String ruleCode = codeBuildService.makePrimaryKey(organizationId, UserHelper.getUserId(), RuleEngineConstants.GenerateTypeCode.RULE_ENGINE_CODE);
+        // 构建ruleJson和conditionExpression
+        rule.setRuleCode(ruleCode);
+        rule.buildRule();
+
+        final RuleCondRelEntity ruleCondRelEntity = new RuleCondRelEntity();
+        ruleCondRelEntity.setRuleEntityCondId(conditionDTO.getRuleEntityConditionId());
+        ruleCondRelEntity.setRuleCode(ruleCode);
+        ruleCondRelEntity.setTenantId(organizationId);
+
+        transactionalHelper.transactionOperation(() -> {
             ruleRepository.insertSelective(rule);
-        } else {
-            ruleRepository.updateOptional(rule,
-                    Rule.FIELD_RULE_CODE,
-                    Rule.FIELD_RULE_NAME,
-                    Rule.FIELD_ENTITY_CODE,
-                    Rule.FIELD_RULE_DESCRIPTION,
-                    Rule.FIELD_RULE_JSON,
-                    Rule.FIELD_ENABLE_FLAG,
-                    Rule.FIELD_START_TIME,
-                    Rule.FIELD_END_TIME,
-                    Rule.FIELD_TENANT_ID
-            );
-        }
+            ruleCondRelEntity.setRuleId(rule.getRuleId());
 
+            ruleCondRelEntityRepository.insertSelective(ruleCondRelEntity);
+        });
+        //保存规则
         return rule;
     }
 }
