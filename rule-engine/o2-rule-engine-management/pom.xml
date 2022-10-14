@@ -22,6 +22,11 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-code-builder</artifactId>
+        </dependency>
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>

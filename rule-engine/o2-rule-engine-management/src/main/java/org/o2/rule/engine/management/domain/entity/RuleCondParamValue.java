@@ -2,6 +2,8 @@ package org.o2.rule.engine.management.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,10 +19,12 @@ import io.choerodon.mybatis.domain.AuditDomain;
  *
  * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("规则条件参数值")
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2re_cond_param_value")
+@Data
 public class RuleCondParamValue extends AuditDomain {
 
     public static final String FIELD_COND_PARAM_VALUE_ID = "condParamValueId";
@@ -36,7 +40,6 @@ public class RuleCondParamValue extends AuditDomain {
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("主键")
     @Id
@@ -58,64 +61,6 @@ public class RuleCondParamValue extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-    //
-    // getter/setter
-    // ------------------------------------------------------------------------------
-
-    /**
-     * @return 主键
-     */
-    public Long getCondParamValueId() {
-        return condParamValueId;
-    }
-
-    public void setCondParamValueId(Long condParamValueId) {
-        this.condParamValueId = condParamValueId;
-    }
-
-    /**
-     * @return 参数ID
-     */
-    public Long getParamId() {
-        return paramId;
-    }
-
-    public void setParamId(Long paramId) {
-        this.paramId = paramId;
-    }
-
-    /**
-     * @return 规则条件ID
-     */
-    public Long getRuleConditionId() {
-        return ruleConditionId;
-    }
-
-    public void setRuleConditionId(Long ruleConditionId) {
-        this.ruleConditionId = ruleConditionId;
-    }
-
-    /**
-     * @return 规则参数值
-     */
-    public String getParamValue() {
-        return paramValue;
-    }
-
-    public void setParamValue(String paramValue) {
-        this.paramValue = paramValue;
-    }
-
-    /**
-     * @return 租户ID
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
 
 }
 
