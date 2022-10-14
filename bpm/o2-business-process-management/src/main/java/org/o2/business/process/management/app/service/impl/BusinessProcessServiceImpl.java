@@ -104,8 +104,10 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
 
-        // 通过viewJson转换成processJson
-        buildProcessJson(businessProcess);
+        if(businessProcess.getBizProcessId() != null){
+            // 通过viewJson转换成processJson
+            buildProcessJson(businessProcess);
+        }
 
         //保存业务流程定义表
         UniqueHelper.isUnique(businessProcess, BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
