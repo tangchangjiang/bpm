@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.rule.engine.management.infra.mapper.O2reRuleParamMapper">
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.rule.engine.management.domain.entity.RuleParam">
+        <result column="rule_param_id" property="ruleParamId" jdbcType="DECIMAL"/>
+        <result column="param_rel_entity_id" property="paramRelEntityId" jdbcType="DECIMAL"/>
+        <result column="param_rel_entity_type" property="paramRelEntityType" jdbcType="VARCHAR"/>
+        <result column="param_code" property="paramCode" jdbcType="VARCHAR"/>
+        <result column="param_name" property="paramName" jdbcType="VARCHAR"/>
+        <result column="param_alias" property="paramAlias" jdbcType="VARCHAR"/>
+        <result column="order_seq" property="orderSeq" jdbcType="DECIMAL"/>
+        <result column="param_format_code" property="paramFormatCode" jdbcType="VARCHAR"/>
+        <result column="param_edit_type_code" property="paramEditTypeCode" jdbcType="VARCHAR"/>
+        <result column="multiFlag" property="multiflag" jdbcType="DECIMAL"/>
+        <result column="not_null_flag" property="notNullFlag" jdbcType="DECIMAL"/>
+        <result column="business_model" property="businessModel" jdbcType="VARCHAR"/>
+        <result column="value_filed_from" property="valueFiledFrom" jdbcType="VARCHAR"/>
+        <result column="value_filed_to" property="valueFiledTo" jdbcType="VARCHAR"/>
+        <result column="enable_flag" property="enableFlag" jdbcType="DECIMAL"/>
+        <result column="default_meaning" property="defaultMeaning" jdbcType="VARCHAR"/>
+        <result column="validators" property="validators" jdbcType="VARCHAR"/>
+        <result column="filters" property="filters" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+    </resultMap>
+
+
+</mapper>
