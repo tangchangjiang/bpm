@@ -38,7 +38,7 @@ public class RuleParam extends AuditDomain {
     public static final String FIELD_ORDER_SEQ = "orderSeq";
     public static final String FIELD_PARAM_FORMAT_CODE = "paramFormatCode";
     public static final String FIELD_PARAM_EDIT_TYPE_CODE = "paramEditTypeCode";
-    public static final String FIELD_MULTIFLAG = "multiflag";
+    public static final String FIELD_MULTI_FLAG = "multiFlag";
     public static final String FIELD_NOT_NULL_FLAG = "notNullFlag";
     public static final String FIELD_BUSINESS_MODEL = "businessModel";
     public static final String FIELD_VALUE_FILED_FROM = "valueFiledFrom";
@@ -90,7 +90,7 @@ public class RuleParam extends AuditDomain {
     private String paramEditTypeCode;
     @ApiModelProperty(value = "多值Flag标记，默认单值", required = true)
     @NotNull
-    private Integer multiflag;
+    private Integer multiFlag;
     @ApiModelProperty(value = "必输标记，默认必输", required = true)
     @NotNull
     private Integer notNullFlag;
