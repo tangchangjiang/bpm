@@ -2,6 +2,8 @@ package org.o2.rule.engine.management.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,12 +17,14 @@ import io.choerodon.mybatis.domain.AuditDomain;
 /**
  * 规则关联条件
  *
- * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
+ * @author xiang.zhao@hand-china.com 2022-10-10
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("规则关联条件")
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2re_rule_cond_rel_entity")
+@Data
 public class RuleCondRelEntity extends AuditDomain {
 
     public static final String FIELD_RULE_COND_REL_ENTITY_ID = "ruleCondRelEntityId";
@@ -36,7 +40,6 @@ public class RuleCondRelEntity extends AuditDomain {
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("主键")
     @Id
@@ -57,64 +60,5 @@ public class RuleCondRelEntity extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-    //
-    // getter/setter
-    // ------------------------------------------------------------------------------
-
-    /**
-     * @return 主键
-     */
-    public Long getRuleCondRelEntityId() {
-        return ruleCondRelEntityId;
-    }
-
-    public void setRuleCondRelEntityId(Long ruleCondRelEntityId) {
-        this.ruleCondRelEntityId = ruleCondRelEntityId;
-    }
-
-    /**
-     * @return 规则ID
-     */
-    public Long getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(Long ruleId) {
-        this.ruleId = ruleId;
-    }
-
-    /**
-     * @return 规则编码
-     */
-    public String getRuleCode() {
-        return ruleCode;
-    }
-
-    public void setRuleCode(String ruleCode) {
-        this.ruleCode = ruleCode;
-    }
-
-    /**
-     * @return 规则实体条件ID
-     */
-    public Long getRuleEntityCondId() {
-        return ruleEntityCondId;
-    }
-
-    public void setRuleEntityCondId(Long ruleEntityCondId) {
-        this.ruleEntityCondId = ruleEntityCondId;
-    }
-
-    /**
-     * @return 租户ID
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
 }
 
