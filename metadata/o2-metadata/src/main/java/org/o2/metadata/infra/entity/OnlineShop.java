@@ -56,6 +56,9 @@ public class OnlineShop {
     @ApiModelProperty(value = "网店类型")
     private String onlineShopType;
 
-
+    /**
+     * 业务类型
+     */
+    private String businessTypeCode;
 
 }

@@ -37,6 +37,7 @@ public class OnlineShopConverter {
         co.setReturnedFlag(onlineShop.getReturnedFlag());
         co.setSourcedFlag(onlineShop.getSourcedFlag());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
+        co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
         return co;
     }
 
