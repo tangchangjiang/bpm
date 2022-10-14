@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.o2.rule.engine.management.infra.mapper.O2reRuleEntityConditionMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="org.o2.rule.engine.management.domain.entity.RuleEntityCondition">
+        <result column="rule_entity_condition_id" property="ruleEntityConditionId" jdbcType="DECIMAL"/>
+        <result column="rule_entity_id" property="ruleEntityId" jdbcType="DECIMAL"/>
+        <result column="condition_code" property="conditionCode" jdbcType="VARCHAR"/>
+        <result column="condition_name" property="conditionName" jdbcType="VARCHAR"/>
+        <result column="condition_code_alias" property="conditionCodeAlias" jdbcType="VARCHAR"/>
+        <result column="component_code" property="componentCode" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="enable_flag" property="enableFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="DATE"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="DATE"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT
+        rec.rule_entity_condition_id,
+        rec.rule_entity_id,
+        rec.condition_code,
+        rec.condition_name,
+        rec.enable_flag,
+        rec.description,
+        rec.condition_code_alias,
+        rec.component_code,
+        rec.tenant_id
+        FROM
+        o2re_rule_entity_condition rec
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    and rec.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="ruleEntityConditionId != null">
+                and rec.rule_entity_condition_id = #{ruleEntityConditionId}
+            </if>
+            <if test="conditionCode != null and conditionCode != ''">
+                <bind name="conditionCodeLike" value="'%' + conditionCode + '%'"/>
+                and rec.condition_code like #{conditionCodeLike}
+            </if>
+            <if test="conditionName != null and conditionName != ''">
+                <bind name="conditionNameLike" value="'%' + conditionName + '%'"/>
+                and rec.condition_name like #{conditionNameLike}
+            </if>
+            <if test="conditionCodeAlias != null and conditionCodeAlias != ''">
+                <bind name="conditionCodeAliasLike" value="'%' + conditionCodeAlias + '%'"/>
+                and rec.condition_code_alias like #{conditionCodeAliasLike}
+            </if>
+            <if test="componentCode != null and componentCode != ''">
+                and rec.component_code = #{componentCode}
+            </if>
+            <if test="enableFlag != null and enableFlag != ''">
+                and rec.enable_flag = #{enableFlag}
+            </if>
+        </where>
+    </select>
+
+</mapper>
