@@ -44,6 +44,7 @@ public class RuleController extends BaseController {
                                            Rule rule,
                                            @ApiIgnore @SortDefault(value = Rule.FIELD_RULE_ID,
                                                    direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        rule.setTenantId(organizationId);
         Page<Rule> list = ruleRepository.pageAndSort(pageRequest, rule);
         return Results.success(list);
     }
@@ -53,8 +54,7 @@ public class RuleController extends BaseController {
     @GetMapping("/{ruleId}")
     public ResponseEntity<Rule> detail(@PathVariable(value = "organizationId") Long organizationId,
                                        @ApiParam(value = "规则ID", required = true) @PathVariable Long ruleId) {
-        Rule rule = ruleRepository.selectByPrimaryKey(ruleId);
-        return Results.success(rule);
+        return Results.success(ruleService.detail(organizationId, ruleId));
     }
 
     @ApiOperation(value = "规则维护-创建规则")
@@ -73,7 +73,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> update(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         SecurityTokenHelper.validToken(rule);
-        ruleService.createRule(organizationId, rule);
+        ruleService.updateRule(organizationId, rule);
         return Results.success(rule);
     }
 

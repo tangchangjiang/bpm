@@ -19,13 +19,17 @@ import io.choerodon.core.convertor.ApplicationContextHelper;
  */
 @Data
 public class RuleMiniConditionDTO {
+    @ApiModelProperty("条件id")
+    private Long conditionId;
     @ApiModelProperty("条件标准编码")
-    private String code;
+    private String conditionCode;
     @ApiModelProperty("最小条件名称")
-    private String name;
-    @ApiModelProperty("最小条件名称")
+    private String conditionName;
+    @ApiModelProperty("是否启用")
+    private Integer enableFlag;
+    @ApiModelProperty("组件类型")
     private String componentCode;
-    @ApiModelProperty("参数VOS")
+    @ApiModelProperty("组件参数")
     private List<RuleMiniConditionParameterDTO> params;
 
     /**
@@ -43,7 +47,7 @@ public class RuleMiniConditionDTO {
      * @return 返回值
      */
     public String condition(Rule rule) {
-        return RuleConditionTranslatorHelper.translate(rule, this.code, this.params);
+        return RuleConditionTranslatorHelper.translate(rule, this.conditionCode, this.params);
     }
 
     /**
@@ -60,5 +64,14 @@ public class RuleMiniConditionDTO {
                 validator.validate(param);
             }
         }
+    }
+
+    /**
+     * 校验规则参数合法性
+     *
+     */
+    public void convert() {
+        List<Long> parameterIds = params.stream().map(RuleMiniConditionParameterDTO::getParameterId).collect(Collectors.toList());
+
     }
 }

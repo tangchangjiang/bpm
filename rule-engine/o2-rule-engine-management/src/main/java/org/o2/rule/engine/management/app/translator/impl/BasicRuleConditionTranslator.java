@@ -32,8 +32,8 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
         final String operator = valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR).getParameterValue();
         final String value = valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParameterValue();
         final String compileValue;
-        if (STRING.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParameterType())
-                || LIST.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParameterType())) {
+        if (STRING.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParamEditTypeCode())
+                || LIST.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParamEditTypeCode())) {
             compileValue = "\"" + value + "\"";
         } else {
             compileValue = value;
@@ -41,6 +41,5 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
 
         return parameterCode + " " + operator + " " + compileValue;
     }
-
 
 }

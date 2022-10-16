@@ -20,7 +20,7 @@ public class BigDecimalValidatorImpl implements RuleParamValidator {
     @Override
     public void validate(RuleMiniConditionParameterDTO parameter) {
         boolean result = false;
-        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParameterType()) && StringUtils.isNotBlank(parameter.getParameterValue())) {
+        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParameterValue())) {
             try {
                 BigDecimal value = BigDecimalParser.parse(parameter.getParameterValue());
                 result = true;
