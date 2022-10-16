@@ -44,6 +44,7 @@ public class RuleController extends BaseController {
                                            Rule rule,
                                            @ApiIgnore @SortDefault(value = Rule.FIELD_RULE_ID,
                                                    direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        rule.setTenantId(organizationId);
         Page<Rule> list = ruleRepository.pageAndSort(pageRequest, rule);
         return Results.success(list);
     }
