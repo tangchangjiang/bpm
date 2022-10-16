@@ -28,4 +28,13 @@ public interface RuleService {
      * @return 规则对象
      */
     Rule createRule(Long organizationId, Rule rule);
+
+    /**
+     * 更新规则
+     *
+     * @param organizationId 租户id
+     * @param rule 规则对象
+     * @return 规则对象
+     */
+    Rule updateRule(Long organizationId, Rule rule);
 }

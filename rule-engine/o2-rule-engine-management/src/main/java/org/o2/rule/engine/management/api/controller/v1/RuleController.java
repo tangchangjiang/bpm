@@ -73,7 +73,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> update(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         SecurityTokenHelper.validToken(rule);
-        ruleService.createRule(organizationId, rule);
+        ruleService.updateRule(organizationId, rule);
         return Results.success(rule);
     }
 

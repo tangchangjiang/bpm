@@ -142,6 +142,12 @@ public class RuleServiceImpl implements RuleService {
         return rule;
     }
 
+    @Override
+    public Rule updateRule(Long organizationId, Rule rule) {
+
+        return rule;
+    }
+
     /**
      * 转化规则Json
      *
@@ -151,9 +157,6 @@ public class RuleServiceImpl implements RuleService {
         if (StringUtils.isNotBlank(rule.getRuleJson())) {
             final RuleConditionDTO ruleCondition = JsonHelper.stringToObject(rule.getRuleJson(), RuleConditionDTO.class);
 
-            if (CollectionUtils.isNotEmpty(ruleCondition.getChildren())) {
-
-            }
             rule.setConditionDTO(ruleCondition);
         }
     }
