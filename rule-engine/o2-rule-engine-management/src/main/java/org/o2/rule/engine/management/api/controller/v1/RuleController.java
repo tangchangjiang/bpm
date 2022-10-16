@@ -53,8 +53,7 @@ public class RuleController extends BaseController {
     @GetMapping("/{ruleId}")
     public ResponseEntity<Rule> detail(@PathVariable(value = "organizationId") Long organizationId,
                                        @ApiParam(value = "规则ID", required = true) @PathVariable Long ruleId) {
-        Rule rule = ruleRepository.selectByPrimaryKey(ruleId);
-        return Results.success(rule);
+        return Results.success(ruleService.detail(organizationId, ruleId));
     }
 
     @ApiOperation(value = "规则维护-创建规则")

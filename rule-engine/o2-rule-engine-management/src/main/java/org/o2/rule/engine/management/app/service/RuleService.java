@@ -12,6 +12,15 @@ public interface RuleService {
 
 
     /**
+     * 查询规则明细
+     *
+     * @param organizationId 租户id
+     * @param ruleId 规则id
+     * @return 规则对象
+     */
+    Rule detail(Long organizationId, Long ruleId);
+
+    /**
      * 创建规则
      *
      * @param organizationId 租户id

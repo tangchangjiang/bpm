@@ -119,5 +119,8 @@ public class RuleParam extends AuditDomain {
 
     @Transient
     private RuleCondParamValue paramValue;
+
+    @Transient
+    private String paramFilters;
 }
 
