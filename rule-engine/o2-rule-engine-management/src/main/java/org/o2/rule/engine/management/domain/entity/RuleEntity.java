@@ -2,6 +2,8 @@ package org.o2.rule.engine.management.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.annotation.Unique;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,10 +20,12 @@ import io.choerodon.mybatis.domain.AuditDomain;
  *
  * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("规则实体")
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2re_rule_entity")
+@Data
 public class RuleEntity extends AuditDomain {
 
     public static final String FIELD_RULE_ENTITY_ID = "ruleEntityId";
@@ -41,12 +45,12 @@ public class RuleEntity extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("主建")
     @Id
     @GeneratedValue
     private Long ruleEntityId;
     @ApiModelProperty(value = "规则实体编码，编码规则生成", required = true)
+    @NotBlank
     @Unique(O2RE_RULE_ENTITY_U1)
     private String ruleEntityCode;
     @ApiModelProperty(value = "规则实体名称", required = true)
@@ -63,85 +67,8 @@ public class RuleEntity extends AuditDomain {
     @ApiModelProperty(value = "是否启用", required = true)
     private Integer enableFlag;
 
-//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-    //
-    // getter/setter
-    // ------------------------------------------------------------------------------
-
-    /**
-     * @return 主建
-     */
-    public Long getRuleEntityId() {
-        return ruleEntityId;
-    }
-
-    public void setRuleEntityId(Long ruleEntityId) {
-        this.ruleEntityId = ruleEntityId;
-    }
-
-    /**
-     * @return 规则实体编码，编码规则生成
-     */
-    public String getRuleEntityCode() {
-        return ruleEntityCode;
-    }
-
-    public void setRuleEntityCode(String ruleEntityCode) {
-        this.ruleEntityCode = ruleEntityCode;
-    }
-
-    /**
-     * @return 规则实体名称
-     */
-    public String getRuleEntityName() {
-        return ruleEntityName;
-    }
-
-    public void setRuleEntityName(String ruleEntityName) {
-        this.ruleEntityName = ruleEntityName;
-    }
-
-    /**
-     * @return 规则实体别名
-     */
-    public String getRuleEntityAlias() {
-        return ruleEntityAlias;
-    }
-
-    public void setRuleEntityAlias(String ruleEntityAlias) {
-        this.ruleEntityAlias = ruleEntityAlias;
-    }
-
-    /**
-     * @return 描述
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return 租户id
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public Integer getEnableFlag() {
-        return enableFlag;
-    }
-
-    public void setEnableFlag(Integer enableFlag) {
-        this.enableFlag = enableFlag;
-    }
 }
 

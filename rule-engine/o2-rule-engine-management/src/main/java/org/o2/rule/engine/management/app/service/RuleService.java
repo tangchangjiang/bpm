@@ -1,6 +1,7 @@
 package org.o2.rule.engine.management.app.service;
 
 import org.o2.rule.engine.management.domain.entity.Rule;
+import org.o2.rule.engine.management.domain.vo.RuleVO;
 
 
 /**
@@ -19,6 +20,15 @@ public interface RuleService {
      * @return 规则对象
      */
     Rule detail(Long organizationId, Long ruleId);
+
+    /**
+     * 查询规则明细
+     *
+     * @param organizationId 租户id
+     * @param ruleCode 规则编码
+     * @return 规则对象
+     */
+    RuleVO detailByCode(Long organizationId, String ruleCode);
 
     /**
      * 创建规则

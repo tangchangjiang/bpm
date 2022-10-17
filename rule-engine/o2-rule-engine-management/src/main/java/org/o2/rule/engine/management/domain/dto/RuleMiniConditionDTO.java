@@ -23,6 +23,8 @@ public class RuleMiniConditionDTO {
     private Long conditionId;
     @ApiModelProperty("条件标准编码")
     private String conditionCode;
+    @ApiModelProperty(value = "规则实体条件编码别名")
+    private String conditionCodeAlias;
     @ApiModelProperty("最小条件名称")
     private String conditionName;
     @ApiModelProperty("是否启用")
