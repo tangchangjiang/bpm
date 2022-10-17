@@ -90,7 +90,7 @@ public class RuleParam extends AuditDomain {
     private String paramEditTypeCode;
     @ApiModelProperty(value = "多值Flag标记，默认单值", required = true)
     @NotNull
-    private Integer multiflag;
+    private Integer multiFlag;
     @ApiModelProperty(value = "必输标记，默认必输", required = true)
     @NotNull
     private Integer notNullFlag;
