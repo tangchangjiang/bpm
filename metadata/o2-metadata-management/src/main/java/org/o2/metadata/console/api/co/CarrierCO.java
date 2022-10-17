@@ -34,4 +34,7 @@ public class CarrierCO {
 
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "优先级")
+    private Long priority;
 }
