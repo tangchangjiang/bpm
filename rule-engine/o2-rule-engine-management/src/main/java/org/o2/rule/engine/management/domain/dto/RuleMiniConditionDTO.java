@@ -8,9 +8,6 @@ import org.o2.rule.engine.management.app.validator.RuleParamValidator;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.util.RuleConditionTranslatorHelper;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.choerodon.core.convertor.ApplicationContextHelper;
 
@@ -33,14 +30,6 @@ public class RuleMiniConditionDTO {
     private String componentCode;
     @ApiModelProperty("组件参数")
     private List<RuleMiniConditionParameterDTO> params;
-
-    /**
-     * 转成MAP
-     * @return map
-     */
-    public Map<String, RuleMiniConditionParameterDTO> convertToMap() {
-        return params.stream().collect(Collectors.toMap(RuleMiniConditionParameterDTO::getParameterCode, Function.identity()));
-    }
 
     /**
      * 构建条件值
@@ -66,14 +55,5 @@ public class RuleMiniConditionDTO {
                 validator.validate(param);
             }
         }
-    }
-
-    /**
-     * 校验规则参数合法性
-     *
-     */
-    public void convert() {
-        List<Long> parameterIds = params.stream().map(RuleMiniConditionParameterDTO::getParameterId).collect(Collectors.toList());
-
     }
 }

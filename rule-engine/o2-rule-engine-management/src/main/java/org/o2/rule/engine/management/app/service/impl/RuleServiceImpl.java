@@ -65,20 +65,24 @@ public class RuleServiceImpl implements RuleService {
 
     @Override
     public Rule detail(Long organizationId, Long ruleId) {
-        final Rule rule = ruleRepository.selectByPrimaryKey(ruleId);
+        final Rule rule = ruleRepository.getRuleById(organizationId, ruleId);
         if (Objects.isNull(rule)) {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
         this.convertRuleCondition(rule);
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
+
         final List<String> conditionCodes = new ArrayList<>();
         final List<String> paramCodes = new ArrayList<>();
         conditionDTO.allCondCodeParamCode(conditionCodes, paramCodes);
+
         final List<RuleEntityCondition> ruleEntityConditions = ruleEntityConditionRepository.selectByCondition(Condition.builder(RuleEntityCondition.class).andWhere(Sqls.custom()
                 .andEqualTo(RuleEntityCondition.FIELD_TENANT_ID, organizationId)
+                .andEqualTo(RuleEntityCondition.FIELD_RULE_ENTITY_ID, rule.getRuleEntityId())
                 .andIn(RuleEntityCondition.FIELD_CONDITION_CODE, conditionCodes)).build());
         final List<RuleParam> ruleParams = ruleParamRepository.selectByCondition(Condition.builder(RuleParam.class).andWhere(Sqls.custom()
                 .andEqualTo(RuleParam.FIELD_TENANT_ID, organizationId)
+                .andEqualTo(RuleParam.FIELD_PARAM_REL_ENTITY_ID, rule.getRuleEntityId())
                 .andIn(RuleParam.FIELD_PARAM_CODE, paramCodes)).build());
 
         if (CollectionUtils.isNotEmpty(ruleParams)) {
@@ -171,6 +175,42 @@ public class RuleServiceImpl implements RuleService {
     public Rule updateRule(Long organizationId, Rule rule) {
 
         return rule;
+    }
+
+    @Override
+    public void enable(Long tenantId, List<Long> ruleIds) {
+        if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
+            return;
+        }
+        final List<Rule> rules = ruleRepository.selectByIds(StringUtils.join(ruleIds, BaseConstants.Symbol.COMMA));
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+        rules.forEach(rule -> {
+            rule.setEnableFlag(BaseConstants.Flag.YES);
+        });
+        transactionalHelper.transactionOperation(() -> {
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_ENABLE_FLAG);
+            ruleRepository.loadToCache(tenantId, rules);
+        });
+    }
+
+    @Override
+    public void disable(Long tenantId, List<Long> ruleIds) {
+        if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
+            return;
+        }
+        final List<Rule> rules = ruleRepository.selectByIds(StringUtils.join(ruleIds, BaseConstants.Symbol.COMMA));
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+        rules.forEach(rule -> {
+            rule.setEnableFlag(BaseConstants.Flag.NO);
+        });
+        transactionalHelper.transactionOperation(() -> {
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_ENABLE_FLAG);
+            ruleRepository.removeCache(tenantId, rules);
+        });
     }
 
     /**

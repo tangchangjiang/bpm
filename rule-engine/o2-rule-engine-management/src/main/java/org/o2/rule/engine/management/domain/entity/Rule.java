@@ -110,6 +110,10 @@ public class Rule extends AuditDomain {
     // ------------------------------------------------------------------------------
 
     @Transient
+    @ApiModelProperty(value = "规则实体id")
+    private Long ruleEntityId;
+
+    @Transient
     @ApiModelProperty(value = "规则实体别名")
     private String ruleEntityAlias;
 
