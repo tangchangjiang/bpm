@@ -25,6 +25,10 @@ public class RuleClientConstants {
          */
         public static final String RULE_CONDITION_IS_NULL = "o2re.client.condition_is_null";
         /**
+         * Rule Entity Is Null
+         */
+        public static final String RULE_ENTITY_IS_NULL = "o2re.client.entity_is_null";
+        /**
          * Rule Execute Exception
          */
         public static final String RULE_EXECUTE_EXCEPTION = "o2re.client.execute_exception";
@@ -37,6 +41,36 @@ public class RuleClientConstants {
 
         }
 
+    }
+
+    /**
+     * 请求端点
+     */
+    public static final class Endpoint {
+        /**
+         * 获取规则详情
+         * /v1/{organizationId}/o2re-rules/{ruleCode}
+         */
+        public static final String GET_RULE_INFO = "http://%s/v1/%d/o2re-rules/%s";
+
+        private Endpoint() {
+
+        }
+    }
+
+    /**
+     * 缓存名称
+     */
+    public static final class CacheName {
+
+        /**
+         * 规则信息缓存
+         */
+        public static final String O2RE_RULE = "O2RE_RULE";
+
+        private CacheName() {
+
+        }
     }
 
 }

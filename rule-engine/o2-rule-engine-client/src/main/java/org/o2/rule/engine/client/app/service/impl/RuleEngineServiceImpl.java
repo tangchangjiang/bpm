@@ -47,7 +47,12 @@ public class RuleEngineServiceImpl implements RuleEngineService {
             throw new RuleExecuteException(RuleClientConstants.ErrorMessage.RULE_CONDITION_IS_NULL, ruleConditionCode);
         }
 
-        final RuleExecuteContext<String, Object> context = ruleObjectService.generateContext(tenantId, fact);
+        if (StringUtils.isAllBlank(rule.getEntityCode(), rule.getEntityAlias())) {
+            log.warn("dirty data, rule condition code:[{}], entityCode and entityAlias all blank.", ruleConditionCode);
+            return new RuleConditionResult(false);
+        }
+
+        final RuleExecuteContext<String, Object> context = ruleObjectService.generateContext(tenantId, rule, fact);
 
         try {
             final boolean result = ConditionHelper.matchCondition(rule.getRuleCondition().getConditionExpression(), context);
