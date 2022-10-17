@@ -119,11 +119,11 @@ public class RuleConditionDTO {
     }
 
     /**
-     * 校验规则参数合法性
+     * 转化规则条件
      * @param conditions 条件集合
      * @param params 条件参数集合
      */
-    public void convert(List<RuleEntityCondition> conditions, List<RuleParam> params) {
+    public void convertCondition(List<RuleEntityCondition> conditions, List<RuleParam> params) {
         if (CollectionUtils.isEmpty(conditions) || CollectionUtils.isEmpty(params)) {
             return;
         }
@@ -151,7 +151,7 @@ public class RuleConditionDTO {
     }
 
     /**
-     * 校验规则参数合法性
+     * 转化规则参数
      * @param param 参数
      * @param paramDTO 参数dto
      */
@@ -159,7 +159,7 @@ public class RuleConditionDTO {
         paramDTO.setParameterId(param.getRuleParamId());
         paramDTO.setEnableFlag(param.getEnableFlag());
         paramDTO.setBusinessModel(param.getBusinessModel());
-        paramDTO.setMultiFlag(param.getMultiflag());
+        paramDTO.setMultiFlag(param.getMultiFlag());
         paramDTO.setParameterCode(param.getParamCode());
         paramDTO.setNotNullFlag(param.getNotNullFlag());
         paramDTO.setParamEditTypeCode(param.getParamEditTypeCode());

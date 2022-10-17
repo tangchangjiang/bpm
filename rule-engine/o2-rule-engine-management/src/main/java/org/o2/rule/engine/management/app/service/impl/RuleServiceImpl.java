@@ -94,7 +94,7 @@ public class RuleServiceImpl implements RuleService {
                 }
             }
         }
-        conditionDTO.convert(ruleEntityConditions, ruleParams);
+        conditionDTO.convertCondition(ruleEntityConditions, ruleParams);
 
         return rule;
     }
