@@ -44,7 +44,7 @@ public class RuleEngineClientAutoConfiguration implements InitializingBean {
      */
     @Bean
     @ConditionalOnMissingBean
-    public O2RuleRemoteService o2RuleRemoteServiceFallback() {
+    public O2RuleRemoteServiceImpl o2RuleRemoteServiceFallback() {
         return new O2RuleRemoteServiceImpl();
     }
 
