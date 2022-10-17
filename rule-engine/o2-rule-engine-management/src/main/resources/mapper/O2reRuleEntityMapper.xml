@@ -25,7 +25,8 @@
         re.rule_entity_alias,
         re.description,
         re.enable_flag,
-        re.tenant_id
+        re.tenant_id,
+        re.object_version_number
         FROM
         o2re_rule_entity re
         <where>

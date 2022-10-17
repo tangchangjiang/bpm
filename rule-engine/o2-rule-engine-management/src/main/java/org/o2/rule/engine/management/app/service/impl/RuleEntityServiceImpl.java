@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.app.service.impl;
 
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.code.builder.app.service.CodeBuildService;
 import org.o2.core.exception.O2CommonException;
@@ -8,6 +9,7 @@ import org.o2.rule.engine.management.app.service.RuleEntityService;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
 import org.o2.rule.engine.management.domain.repository.RuleEntityRepository;
 import org.o2.rule.engine.management.infra.constant.RuleEntityConstants;
+import org.o2.rule.engine.management.infra.converts.RuleEntityConverts;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -28,7 +30,8 @@ public class RuleEntityServiceImpl implements RuleEntityService {
     private final RuleEntityRepository ruleEntityRepository;
     private final CodeBuildService codeBuildService;
 
-    public RuleEntityServiceImpl(RuleEntityRepository ruleEntityRepository, CodeBuildService codeBuildService) {
+    public RuleEntityServiceImpl(RuleEntityRepository ruleEntityRepository,
+                                 CodeBuildService codeBuildService) {
         this.ruleEntityRepository = ruleEntityRepository;
         this.codeBuildService = codeBuildService;
     }
@@ -78,6 +81,9 @@ public class RuleEntityServiceImpl implements RuleEntityService {
                     RuleEntity.FIELD_RULE_ENTITY_ALIAS,
                     RuleEntity.FIELD_DESCRIPTION
             );
+        }
+        if (BaseConstants.Flag.YES.equals(ruleEntity.getEnableFlag())) {
+            ruleEntityRepository.saveRedis(ruleEntity.getTenantId(), RuleEntityConverts.toRuleEntityBO(ruleEntity));
         }
 
         return ruleEntity;

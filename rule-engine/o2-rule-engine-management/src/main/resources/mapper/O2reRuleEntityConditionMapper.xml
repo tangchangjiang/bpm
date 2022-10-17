@@ -29,7 +29,8 @@
         rec.description,
         rec.condition_code_alias,
         rec.component_code,
-        rec.tenant_id
+        rec.tenant_id,
+        rec.object_version_number
         FROM
         o2re_rule_entity_condition rec
         <where>
@@ -62,6 +63,33 @@
             <if test="enableFlag != null and enableFlag != ''">
                 and rec.enable_flag = #{enableFlag}
             </if>
+        </where>
+    </select>
+    <select id="selectListByRuleEntityCode"
+            resultType="org.o2.rule.engine.management.domain.entity.RuleEntityCondition">
+        SELECT
+            rec.rule_entity_condition_id,
+            rec.rule_entity_id,
+            rec.condition_code,
+            rec.condition_name,
+            rec.enable_flag,
+            rec.description,
+            rec.condition_code_alias,
+            rec.component_code,
+            rec.tenant_id,
+            rec.object_version_number
+        FROM
+            o2re_rule_entity_condition rec
+        <where>
+        <choose>
+            <when test="tenantId != null and ruleEntityId != null" >
+                and rec.tenant_id = #{tenantId}
+                and rec.rule_entity_id = #{ruleEntityId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
         </where>
     </select>
 

@@ -25,4 +25,9 @@ public class RuleEntityConditionRepositoryImpl extends BaseRepositoryImpl<RuleEn
     public List<RuleEntityCondition> selectList(RuleEntityCondition ruleEntityCondition) {
         return o2reRuleEntityConditionMapper.selectList(ruleEntityCondition);
     }
+
+    @Override
+    public List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, Long ruleEntityId, RuleEntityCondition ruleEntityCondition) {
+        return o2reRuleEntityConditionMapper.selectListByRuleEntityCode(tenantId, ruleEntityId, ruleEntityCondition);
+    }
 }

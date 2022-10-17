@@ -18,4 +18,14 @@ public interface RuleEntityConditionRepository extends BaseRepository<RuleEntity
      * @return 规则实体条件列表
      */
     List<RuleEntityCondition> selectList(RuleEntityCondition ruleEntityCondition);
+
+    /**
+     * 通过规则实体查询规则实体条件列表
+     *
+     * @param tenantId 租户id
+     * @param ruleEntityId 规则实体id
+     * @param ruleEntityCondition 规则实体
+     * @return 规则实体条件列表
+     */
+    List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, Long ruleEntityId, RuleEntityCondition ruleEntityCondition);
 }
