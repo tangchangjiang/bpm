@@ -8,10 +8,7 @@ import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -137,14 +134,16 @@ public class RuleConditionDTO {
             for (RuleMiniConditionDTO ruleMiniConditionDTO : this.getNode()) {
                 final RuleEntityCondition entityCondition = conditionMap.get(ruleMiniConditionDTO.getConditionCode());
                 if (entityCondition != null) {
-                    entityCondition.setConditionName(entityCondition.getConditionName());
-                    entityCondition.setEnableFlag(entityCondition.getEnableFlag());
+                    ruleMiniConditionDTO.setConditionName(entityCondition.getConditionName());
+                    ruleMiniConditionDTO.setEnableFlag(entityCondition.getEnableFlag());
+                    ruleMiniConditionDTO.setConditionCodeAlias(entityCondition.getConditionCodeAlias());
                 }
                 if (CollectionUtils.isNotEmpty(ruleMiniConditionDTO.getParams())) {
                     for (RuleMiniConditionParameterDTO paramDTO : ruleMiniConditionDTO.getParams()) {
                         RuleParam param = paramMap.get(paramDTO.getParameterCode());
                         convertParam(param, paramDTO);
                     }
+                    ruleMiniConditionDTO.getParams().sort(Comparator.comparing(RuleMiniConditionParameterDTO::getPriority));
                 }
             }
         }
