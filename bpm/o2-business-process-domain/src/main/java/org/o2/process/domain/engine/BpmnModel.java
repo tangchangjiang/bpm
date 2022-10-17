@@ -1,5 +1,6 @@
 package org.o2.process.domain.engine;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.process.domain.engine.definition.BaseElement;
@@ -27,9 +28,8 @@ public class BpmnModel {
 
     private String processName;
 
-
-    public List<BaseElement> getAllNodes(){
-
+    @JsonIgnore
+    public List<BaseElement> getAllNodes() {
         if(CollectionUtils.isEmpty(flowElements)){
             return Collections.emptyList();
         }
