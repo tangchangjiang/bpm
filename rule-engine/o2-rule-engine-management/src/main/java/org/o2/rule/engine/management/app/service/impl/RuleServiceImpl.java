@@ -22,6 +22,7 @@ import org.o2.rule.engine.management.domain.repository.RuleCondRelEntityReposito
 import org.o2.rule.engine.management.domain.repository.RuleEntityConditionRepository;
 import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
+import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -97,6 +98,11 @@ public class RuleServiceImpl implements RuleService {
         conditionDTO.convertCondition(ruleEntityConditions, ruleParams);
 
         return rule;
+    }
+
+    @Override
+    public RuleVO detailByCode(Long organizationId, String ruleCode) {
+        return null;
     }
 
     @Override
