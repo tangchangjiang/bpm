@@ -89,6 +89,9 @@
     <select id="batchSelect" resultType="org.o2.metadata.console.infra.entity.Carrier">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT c.carrier_code,
+               c.carrier_type_code,
+               c.active_flag,
+               c.priority,
                tl.carrier_name
         FROM o2md_carrier c
                      left join o2md_carrier_tl tl
@@ -113,6 +116,9 @@
             <foreach collection="carrierDTO.carrierNames" item="name" open="(" separator="," close=")">
                 #{name}
             </foreach>
+        </if>
+        <if test="carrierDTO.activeFlag != null">
+            and c.active_flag = #{carrierDTO.activeFlag}
         </if>
     </select>
     <select id="listCarrierLogisticsCost" resultMap="carrierLogisticsCostMap">
