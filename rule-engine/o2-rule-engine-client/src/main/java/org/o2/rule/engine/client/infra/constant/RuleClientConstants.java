@@ -44,21 +44,6 @@ public class RuleClientConstants {
     }
 
     /**
-     * 请求端点
-     */
-    public static final class Endpoint {
-        /**
-         * 获取规则详情
-         * /v1/{organizationId}/o2re-rules/{ruleCode}
-         */
-        public static final String GET_RULE_INFO = "http://%s/v1/%d/o2re-rules/%s";
-
-        private Endpoint() {
-
-        }
-    }
-
-    /**
      * 缓存名称
      */
     public static final class CacheName {

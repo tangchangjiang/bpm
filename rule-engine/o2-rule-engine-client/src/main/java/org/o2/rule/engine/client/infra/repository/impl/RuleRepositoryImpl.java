@@ -3,17 +3,18 @@ package org.o2.rule.engine.client.infra.repository.impl;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.cache.util.CollectionCacheHelper;
-import org.o2.core.common.O2Service;
 import org.o2.core.helper.O2ResponseUtils;
 import org.o2.rule.engine.client.domain.entity.Rule;
 import org.o2.rule.engine.client.domain.repository.RuleRepository;
 import org.o2.rule.engine.client.domain.vo.RuleVO;
 import org.o2.rule.engine.client.infra.constant.RuleClientConstants;
 import org.o2.rule.engine.client.infra.convertor.RuleConvertor;
+import org.o2.rule.engine.client.infra.feign.O2RuleRemoteService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * 规则仓库实现类
@@ -24,16 +25,15 @@ import java.util.*;
 @Slf4j
 public class RuleRepositoryImpl implements RuleRepository {
     private static final String CACHE_FORMAT = "RULE_INFO_CACHE:%d:%s";
-    private final String ruleEngineName = O2Service.getRealName(O2Service.RuleEngineManagement.NAME);
-    private final RestTemplate restTemplate;
+    private final O2RuleRemoteService o2RuleRemoteService;
 
     /**
      * 构造器
      *
-     * @param restTemplate 客户端
+     * @param o2RuleRemoteService 客户端
      */
-    public RuleRepositoryImpl(final RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public RuleRepositoryImpl(final O2RuleRemoteService o2RuleRemoteService) {
+        this.o2RuleRemoteService = o2RuleRemoteService;
     }
 
     @Override
@@ -70,25 +70,14 @@ public class RuleRepositoryImpl implements RuleRepository {
 
         for (String code : codes) {
             try {
-                final ResponseEntity<String> forEntity = restTemplate.getForEntity(getUrl(tenantId, code), String.class);
-                final RuleVO ruleVO = O2ResponseUtils.getResponse(forEntity, RuleVO.class);
+                final ResponseEntity<String> ruleByCode = o2RuleRemoteService.findRuleByCode(tenantId, code);
+                final RuleVO ruleVO = O2ResponseUtils.getResponse(ruleByCode, RuleVO.class);
                 map.put(code, ruleVO);
             } catch (Exception e) {
                 log.error("Get For Object Error.", e);
             }
         }
         return map;
-    }
-
-    /**
-     * 通过编码获取URL
-     *
-     * @param tenantId 租户ID
-     * @param code     编码
-     * @return 返回URL
-     */
-    protected String getUrl(Long tenantId, String code) {
-        return String.format(RuleClientConstants.Endpoint.GET_RULE_INFO, ruleEngineName, tenantId, code);
     }
 
 }
