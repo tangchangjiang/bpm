@@ -5,12 +5,14 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.core.response.OperateResponse;
 import org.o2.rule.engine.management.app.service.RuleService;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+import java.util.List;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
@@ -85,6 +87,26 @@ public class RuleController extends BaseController {
         SecurityTokenHelper.validToken(rule);
         ruleRepository.deleteByPrimaryKey(rule);
         return Results.success();
+    }
+
+    @ApiOperation(value = "启用规则")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PutMapping("/enable")
+    public ResponseEntity<OperateResponse> enable(@PathVariable Long organizationId, @RequestBody List<Rule> rules) {
+        SecurityTokenHelper.validToken(rules, false);
+        rules.forEach(r -> r.setTenantId(organizationId));
+
+        return Results.success(OperateResponse.success());
+    }
+
+    @ApiOperation(value = "禁用规则")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @PutMapping("/disable")
+    public ResponseEntity<OperateResponse> disable(@PathVariable Long organizationId, @RequestBody List<Rule> rules) {
+        SecurityTokenHelper.validToken(rules, false);
+        rules.forEach(r -> r.setTenantId(organizationId));
+
+        return Results.success(OperateResponse.success());
     }
 
 }
