@@ -187,10 +187,13 @@ public class CarrierServiceImpl implements CarrierService {
             return map;
         }
         for (Carrier carrier : carriers) {
-            CarrierCO carrierVO = new CarrierCO();
-            carrierVO.setCarrierCode(carrier.getCarrierCode());
-            carrierVO.setCarrierName(carrier.getCarrierName());
-            map.put(carrier.getCarrierCode(), carrierVO);
+            CarrierCO carrierCO = new CarrierCO();
+            carrierCO.setCarrierCode(carrier.getCarrierCode());
+            carrierCO.setCarrierName(carrier.getCarrierName());
+            carrierCO.setActiveFlag(carrier.getActiveFlag());
+            carrierCO.setPriority(carrier.getPriority());
+            carrierCO.setCarrierTypeCode(carrier.getCarrierTypeCode());
+            map.put(carrier.getCarrierCode(), carrierCO);
         }
         return map;
     }
