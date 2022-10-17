@@ -2,6 +2,7 @@ package org.o2.rule.engine.management.app.filter.impl;
 
 import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
+import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ public class BaseStoreFilterChain implements FilterHandlerService {
 
     @Override
     public String getHandle() {
-        return null;
+        return RuleEngineConstants.FilterCode.BASE_SORE;
     }
 
     @Override
