@@ -1,6 +1,8 @@
 package org.o2.rule.engine.management.infra.constants;
 
 /**
+ * 规则引擎常量
+ *
  * @author xiang.zhao@hand-chian.com 2022/10/12
  */
 public class RuleEngineConstants {
@@ -32,28 +34,12 @@ public class RuleEngineConstants {
          * 基础类型
          */
         public static final String BASIC = "BASIC";
-        /**
-         * 首单类型
-         */
-        public static final String FIRST_ORDER = "FIRST-ORDER";
-        /**
-         * spu数量
-         */
-        public static final String SPU_QTY_LIMIT = "SPU-QTY-LIMIT";
-        /**
-         * spu价格
-         */
-        public static final String SPU_PRICE_LIMIT = "SPU-PRICE-LIMIT";
     }
 
     /**
      * 基本参数值
      */
     public static class BasicParameter {
-        /**
-         * 规则参数编码
-         */
-        public static final String PARAMETER_PARAMETER_CODE = "parameterCode";
         /**
          * 规则参数操作符
          */

@@ -2,7 +2,7 @@ package org.o2.rule.engine.management.app.service;
 
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
-
+import java.util.List;
 
 /**
  * 规则应用服务
@@ -47,4 +47,18 @@ public interface RuleService {
      * @return 规则对象
      */
     Rule updateRule(Long organizationId, Rule rule);
+
+    /**
+     * 启用规则
+     * @param tenantId 租户ID
+     * @param ruleIds 规则id
+     */
+    void enable(Long tenantId, List<Long> ruleIds);
+
+    /**
+     * 禁用规则场景
+     * @param tenantId 租户ID
+     * @param ruleIds 规则Id
+     */
+    void disable(Long tenantId, List<Long> ruleIds);
 }

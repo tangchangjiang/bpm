@@ -65,8 +65,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> create(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         validObject(rule);
-        ruleService.createRule(organizationId, rule);
-        return Results.success(rule);
+        return Results.success(ruleService.createRule(organizationId, rule));
     }
 
     @ApiOperation(value = "规则维护-修改规则")
@@ -75,8 +74,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> update(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         SecurityTokenHelper.validToken(rule);
-        ruleService.updateRule(organizationId, rule);
-        return Results.success(rule);
+        return Results.success(ruleService.updateRule(organizationId, rule));
     }
 
     @ApiOperation(value = "规则维护-删除规则")
@@ -92,20 +90,16 @@ public class RuleController extends BaseController {
     @ApiOperation(value = "启用规则")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/enable")
-    public ResponseEntity<OperateResponse> enable(@PathVariable Long organizationId, @RequestBody List<Rule> rules) {
-        SecurityTokenHelper.validToken(rules, false);
-        rules.forEach(r -> r.setTenantId(organizationId));
-
+    public ResponseEntity<OperateResponse> enable(@PathVariable Long organizationId, @RequestBody List<Long> ruleIds) {
+        ruleService.enable(organizationId, ruleIds);
         return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "禁用规则")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/disable")
-    public ResponseEntity<OperateResponse> disable(@PathVariable Long organizationId, @RequestBody List<Rule> rules) {
-        SecurityTokenHelper.validToken(rules, false);
-        rules.forEach(r -> r.setTenantId(organizationId));
-
+    public ResponseEntity<OperateResponse> disable(@PathVariable Long organizationId, @RequestBody List<Long> ruleIds) {
+        ruleService.disable(organizationId, ruleIds);
         return Results.success(OperateResponse.success());
     }
 
