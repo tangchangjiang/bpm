@@ -1,15 +1,15 @@
 package org.o2.business.process.management.app.service.impl;
 
-import org.apache.commons.collections4.CollectionUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.choerodon.core.exception.CommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.business.process.management.app.service.BusinessProcessRedisService;
-import org.o2.business.process.management.domain.BusinessProcessBO;
-import org.o2.business.process.management.domain.BusinessProcessNodeDO;
 import org.o2.business.process.management.domain.entity.BusinessNode;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.core.O2CoreConstants;
-import org.o2.core.helper.JsonHelper;
+import org.o2.process.domain.engine.BpmnModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +26,15 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
 
     private final BusinessProcessRedisRepository businessProcessRedisRepository;
 
-    public BusinessProcessRedisServiceImpl(BusinessProcessRedisRepository businessProcessRedisRepository) {
+    private final ObjectMapper objectMapper;
+
+    public BusinessProcessRedisServiceImpl(BusinessProcessRedisRepository businessProcessRedisRepository, ObjectMapper objectMapper) {
         this.businessProcessRedisRepository = businessProcessRedisRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    public BusinessProcessBO getBusinessProcessConfig(String processCode, Long tenantId) {
+    public BpmnModel getBusinessProcessConfig(String processCode, Long tenantId) {
         String processConfigStr = businessProcessRedisRepository.getBusinessProcessConfig(processCode, tenantId);
         // 0租户兜底逻辑
         if(StringUtils.isBlank(processConfigStr)){
@@ -43,13 +46,12 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
             }
         }
 
-        BusinessProcessBO processContext = JsonHelper.stringToObject(processConfigStr, BusinessProcessBO.class);
-        if(CollectionUtils.isNotEmpty(processContext.getAllNodeAction())){
-            List<String> processNodes = processContext.getAllNodeAction().stream().map(BusinessProcessNodeDO::getBeanId).collect(Collectors.toList());
-            Map<String, String> map = businessProcessRedisRepository.listNodeStatus(processNodes, tenantId);
-            processContext.getAllNodeAction().removeIf(node -> !String.valueOf(O2CoreConstants.BooleanFlag.ENABLE).equals(map.get(node.getBeanId())));
+        BpmnModel processContext;
+        try {
+            processContext = objectMapper.readValue(processConfigStr, BpmnModel.class);
+        } catch (JsonProcessingException e) {
+            throw new CommonException(e);
         }
-        processContext.setTenantId(tenantId);
         return processContext;
     }
 

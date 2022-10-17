@@ -1,13 +1,14 @@
-package org.o2.business.process.node;
+package org.o2.process.domain.engine.runtime;
 
-import org.o2.business.process.data.BusinessProcessExecParam;
+
+import org.o2.process.domain.engine.BusinessProcessExecParam;
 
 /**
  * 流水线节点执行器
  *
  * @author mark.bao@hand-china.com 2018/12/21
  */
-public interface BusinessNodeExecutor<T extends BusinessProcessExecParam> {
+public interface ServiceAction<T extends BusinessProcessExecParam> {
 
 
     /**

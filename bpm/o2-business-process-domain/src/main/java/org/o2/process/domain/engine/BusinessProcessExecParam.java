@@ -1,4 +1,4 @@
-package org.o2.business.process.data;
+package org.o2.process.domain.engine;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,7 +20,9 @@ public class BusinessProcessExecParam {
     @JsonIgnore
     @JSONField(serialize = false)
     private Boolean nextFlag;
+
     @JsonIgnore
     @JSONField(serialize = false)
     private Exception exception;
+
 }

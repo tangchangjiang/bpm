@@ -10,6 +10,12 @@ public interface BusinessProcessConstants {
          * 业务流程节点不能为空
          */
         String BUSINESS_PROCESS_NODE_NOT_EMPTY = "o2bpm.process_node_can_not_be_null";
+
+        String UNSUPPORTED_DRAWING_TYPE = "o2bpm.unsupported_drawing_type";
+
+        String NO_CORRESPONDING_NODE_FOUND = "o2bpm.no_corresponding_node_found";
+
+
     }
 
 
@@ -34,5 +40,13 @@ public interface BusinessProcessConstants {
          * 编辑类型
          */
         String PARAM_EDIT_TYPE = "O2BPM.PARAM_EDIT_TYPE";
+    }
+
+    interface CellType{
+        String FLOW_EDGE = "flow-edge";
+        String BRANCH_NODE = "branch-node";
+        String END_NODE = "end-node";
+        String FLOW_NODE = "flow-node";
+        String START_NODE = "start-node";
     }
 }
