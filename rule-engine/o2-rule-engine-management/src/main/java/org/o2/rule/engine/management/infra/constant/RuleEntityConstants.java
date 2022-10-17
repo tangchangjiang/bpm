@@ -16,4 +16,11 @@ public class RuleEntityConstants {
 
         private ErrorCode(){}
     }
+
+    public static class RedisKey {
+
+        public static final String RULE_ENTITY = "o2re:rule_entity:{%d}";
+
+        private RedisKey(){}
+    }
 }
