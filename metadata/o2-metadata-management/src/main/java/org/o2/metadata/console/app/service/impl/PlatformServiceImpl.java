@@ -17,7 +17,6 @@ import org.o2.metadata.console.infra.repository.PlatformInfoMappingRepository;
 import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

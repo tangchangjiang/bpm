@@ -12,7 +12,11 @@ import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.SqlLovQueryRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description

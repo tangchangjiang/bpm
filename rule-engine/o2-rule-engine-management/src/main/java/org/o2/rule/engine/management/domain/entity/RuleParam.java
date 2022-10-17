@@ -82,19 +82,9 @@ public class RuleParam extends AuditDomain {
     @ApiModelProperty(value = "参数顺序", required = true)
     @NotNull
     private Long orderSeq;
-    /**
-     * BIG_DECIMAL
-     * INTEGER
-     * TEXT
-     */
     @ApiModelProperty(value = "参数格式类型编码", required = true)
     @NotBlank
     private String paramFormatCode;
-    /**
-     * INPUT
-     * COMBOBOX
-     * LOV
-     */
     @ApiModelProperty(value = "参数编辑类型编码", required = true)
     @NotBlank
     private String paramEditTypeCode;
@@ -129,5 +119,8 @@ public class RuleParam extends AuditDomain {
 
     @Transient
     private RuleCondParamValue paramValue;
+
+    @Transient
+    private String paramFilters;
 }
 
