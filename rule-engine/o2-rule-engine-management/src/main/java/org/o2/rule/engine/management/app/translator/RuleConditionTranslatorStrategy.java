@@ -14,11 +14,12 @@ public interface RuleConditionTranslatorStrategy {
     /**
      * 通过编码进行翻译
      * @param rule 规则
+     * @param conditionCodeAlias 条件别名
      * @param code 编码
      * @param parameters 参数值
      * @return 返回值
      */
-    String translate(Rule rule, String code, List<RuleMiniConditionParameterDTO> parameters);
+    String translate(Rule rule, String code, String conditionCodeAlias, List<RuleMiniConditionParameterDTO> parameters);
 
 
 }

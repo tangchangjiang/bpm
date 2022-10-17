@@ -32,10 +32,11 @@ public interface RuleConditionTranslator {
     /**
      * 翻译
      * @param rule 规则
+     * @param conditionCode 条件编码有别名取别名，没有取code
      * @param parameters 参数
      * @return 矫健
      */
-    default String translator(final Rule rule, final List<RuleMiniConditionParameterDTO> parameters) {
+    default String translator(final Rule rule, final String conditionCode, final List<RuleMiniConditionParameterDTO> parameters) {
         return translator(parameters);
     }
 
