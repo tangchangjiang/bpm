@@ -143,19 +143,28 @@ public class RuleConditionDTO {
                 if (CollectionUtils.isNotEmpty(ruleMiniConditionDTO.getParams())) {
                     for (RuleMiniConditionParameterDTO paramDTO : ruleMiniConditionDTO.getParams()) {
                         RuleParam param = paramMap.get(paramDTO.getParameterCode());
-                        paramDTO.setParameterId(param.getRuleParamId());
-                        paramDTO.setEnableFlag(param.getEnableFlag());
-                        paramDTO.setBusinessModel(param.getBusinessModel());
-                        paramDTO.setMultiFlag(param.getMultiflag());
-                        paramDTO.setParameterCode(param.getParamCode());
-                        paramDTO.setNotNullFlag(param.getNotNullFlag());
-                        paramDTO.setParamEditTypeCode(param.getParamEditTypeCode());
-                        paramDTO.setValueFiledFrom(param.getValueFiledFrom());
-                        paramDTO.setValueFiledTo(param.getValueFiledTo());
-                        paramDTO.setParamFilters(param.getParamFilters());
+                        convertParam(param, paramDTO);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 校验规则参数合法性
+     * @param param 参数
+     * @param paramDTO 参数dto
+     */
+    public void convertParam(RuleParam param, RuleMiniConditionParameterDTO paramDTO) {
+        paramDTO.setParameterId(param.getRuleParamId());
+        paramDTO.setEnableFlag(param.getEnableFlag());
+        paramDTO.setBusinessModel(param.getBusinessModel());
+        paramDTO.setMultiFlag(param.getMultiflag());
+        paramDTO.setParameterCode(param.getParamCode());
+        paramDTO.setNotNullFlag(param.getNotNullFlag());
+        paramDTO.setParamEditTypeCode(param.getParamEditTypeCode());
+        paramDTO.setValueFiledFrom(param.getValueFiledFrom());
+        paramDTO.setValueFiledTo(param.getValueFiledTo());
+        paramDTO.setParamFilters(param.getParamFilters());
     }
 }
