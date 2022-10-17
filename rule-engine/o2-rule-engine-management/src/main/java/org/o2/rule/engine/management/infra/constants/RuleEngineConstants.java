@@ -103,4 +103,11 @@ public class RuleEngineConstants {
         public static final String BIG_DECIMAL = "BIG_DECIMAL";
         public static final String INTEGER = "INTEGER";
     }
+
+    /**
+     * 条件过滤编码
+     */
+    public static class FilterCode {
+        public static final String BASE_SORE = "BASE_SORE";
+    }
 }
