@@ -8,6 +8,7 @@ package org.o2.rule.engine.management.infra.constant;
  */
 public class RuleEntityConstants {
     public static final String RULE_ENTITY_RULE_CODE = "O2MD.RULE_ENTITY_CODE";
+    public static final String COND = "COND";
 
     private RuleEntityConstants(){}
 
