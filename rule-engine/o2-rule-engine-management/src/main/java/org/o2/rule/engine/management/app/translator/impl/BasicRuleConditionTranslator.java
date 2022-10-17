@@ -1,12 +1,13 @@
 package org.o2.rule.engine.management.app.translator.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.o2.rule.engine.management.app.translator.RuleConditionTranslator;
 import org.o2.rule.engine.management.domain.dto.RuleMiniConditionParameterDTO;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 基本规则条件转换类
@@ -25,21 +26,24 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
     }
 
     @Override
-    public String translator(Rule rule, List<RuleMiniConditionParameterDTO> parameters) {
-        final Map<String, RuleMiniConditionParameterDTO> valueMap = convertToMap(parameters);
+    public String translator(Rule rule, String conditionCode, List<RuleMiniConditionParameterDTO> parameters) {
+        parameters.sort(Comparator.comparing(RuleMiniConditionParameterDTO::getPriority));
 
-        final String parameterCode = valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_PARAMETER_CODE).getParameterValue();
-        final String operator = valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR).getParameterValue();
-        final String value = valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParameterValue();
-        final String compileValue;
-        if (STRING.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParamEditTypeCode())
-                || LIST.equalsIgnoreCase(valueMap.get(RuleEngineConstants.BasicParameter.PARAMETER_VALUE).getParamEditTypeCode())) {
-            compileValue = "\"" + value + "\"";
-        } else {
-            compileValue = value;
+        final StringBuilder sb = new StringBuilder();
+        // 有实体别名取实体别名，没有则取实体code，条件编码同理
+        sb.append(StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode())).append(conditionCode);
+        for (RuleMiniConditionParameterDTO parameter : parameters) {
+
+            final String compileValue;
+            if (STRING.equalsIgnoreCase(parameter.getParamEditTypeCode())
+                    || LIST.equalsIgnoreCase(parameter.getParamEditTypeCode())) {
+                compileValue = "\"" + parameter.getParameterValue() + "\"";
+            } else {
+                compileValue = parameter.getParameterValue();
+            }
+            sb.append(compileValue).append(" ");
         }
-
-        return parameterCode + " " + operator + " " + compileValue;
+        return sb.toString().trim();
     }
 
 }
