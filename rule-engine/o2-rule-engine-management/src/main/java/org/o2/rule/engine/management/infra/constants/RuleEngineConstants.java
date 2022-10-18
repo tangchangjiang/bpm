@@ -6,6 +6,35 @@ package org.o2.rule.engine.management.infra.constants;
  * @author xiang.zhao@hand-chian.com 2022/10/12
  */
 public class RuleEngineConstants {
+    /**
+     * 规则状态
+     */
+    public static class RuleStatus {
+        /**
+         * 启用
+         */
+        public static final String ENABLE = "ENABLE";
+        /**
+         * 未启用
+         */
+        public static final String DISABLE = "DISABLE";
+        /**
+         * 已失效
+         */
+        public static final String INVALID = "INVALID";
+        /**
+         * 修改待发布
+         */
+        public static final String MODIFIED = "MODIFIED";
+        /**
+         * 新建
+         */
+        public static final String NEW = "NEW";
+        /**
+         * 值集编码
+         */
+        public static final String CODE = "O2MKT.RULE_STATUS";
+    }
 
     /**
      * 操作符
@@ -79,7 +108,7 @@ public class RuleEngineConstants {
      * 关联Entity类型
      */
     public static class GenerateTypeCode {
-        public static final String RULE_ENGINE_CODE = "RULE_ENGINE_CODE";
+        public static final String RULE_CODE = "O2MD.RULE_CODE";
     }
 
     /**

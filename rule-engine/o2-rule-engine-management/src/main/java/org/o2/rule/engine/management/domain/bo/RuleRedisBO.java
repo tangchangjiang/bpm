@@ -13,6 +13,8 @@ public class RuleRedisBO {
     private Long ruleId;
     @ApiModelProperty(value = "规则编码")
     private String ruleCode;
+    @ApiModelProperty(value = "规则状态")
+    private String ruleStatus;
     @ApiModelProperty(value = "规则名称")
     private String ruleName;
     @ApiModelProperty(value = "实体编码")
@@ -27,8 +29,6 @@ public class RuleRedisBO {
     private String ruleJson;
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
-    @ApiModelProperty(value = "是否启用，默认启用")
-    private Integer enableFlag;
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
     @ApiModelProperty(value = "结束时间")

@@ -75,13 +75,12 @@ public class RuleRepositoryImpl extends BaseRepositoryImpl<Rule> implements Rule
         final String ruleKey = RuleEngineRedisConstants.RedisKey.getRuleKey(tenantId);
         final String ruleEntityUpdateTimeKeyKey = RuleEngineRedisConstants.RedisKey.getRuleEntityUpdateTimeKey(tenantId);
 
-        final List<String> ruleCodes = rules.stream().map(Rule::getRuleCode).collect(Collectors.toList());
         final Map<String, String> entityMap = Maps.newHashMapWithExpectedSize(entityCodes.size());
         for (String entityCode : entityCodes) {
             entityMap.put(entityCode, String.valueOf(currentTimeMillis));
         }
 
-        redisCacheClient.opsForHash().delete(ruleKey, ruleCodes);
+        redisCacheClient.opsForHash().delete(ruleKey, rules.stream().map(Rule::getRuleCode).toArray());
         redisCacheClient.opsForHash().putAll(ruleEntityUpdateTimeKeyKey, entityMap);
     }
 

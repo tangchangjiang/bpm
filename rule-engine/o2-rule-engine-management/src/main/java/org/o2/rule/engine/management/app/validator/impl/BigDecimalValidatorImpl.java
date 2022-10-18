@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import io.choerodon.core.exception.CommonException;
 
 /**
+ * 数字类型参数校验
+ *
  * @author xiang.zhao@hand-chian.com 2022/10/13
  */
 @Slf4j

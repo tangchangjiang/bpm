@@ -34,11 +34,11 @@ public class Rule extends AuditDomain {
 
     public static final String FIELD_RULE_ID = "ruleId";
     public static final String FIELD_RULE_CODE = "ruleCode";
+    public static final String FIELD_RULE_STATUS = "ruleStatus";
     public static final String FIELD_RULE_NAME = "ruleName";
     public static final String FIELD_ENTITY_CODE = "entityCode";
     public static final String FIELD_RULE_DESCRIPTION = "ruleDescription";
     public static final String FIELD_RULE_JSON = "ruleJson";
-    public static final String FIELD_ENABLE_FLAG = "enableFlag";
     public static final String FIELD_START_TIME = "startTime";
     public static final String FIELD_END_TIME = "endTime";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -93,9 +93,9 @@ public class Rule extends AuditDomain {
     private String ruleJson;
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
-    @ApiModelProperty(value = "是否启用，默认启用", required = true)
-    @NotNull
-    private Integer enableFlag;
+    @ApiModelProperty(value = "规则状态", required = true)
+    @NotBlank
+    private String ruleStatus;
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
     @ApiModelProperty(value = "结束时间")
