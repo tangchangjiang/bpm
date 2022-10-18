@@ -7,10 +7,7 @@ import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -104,6 +101,22 @@ public class RuleConditionDTO {
                 child.allConditionCode(conditionCodes);
             }
         }
+    }
+
+    /**
+     * 校验规则参数合法性
+     */
+    public List<Long> allConditionId() {
+        final List<Long> conditionIds = new ArrayList<>();
+        if (node != null) {
+            conditionIds.add(node.getConditionId());
+        }
+        if (CollectionUtils.isNotEmpty(this.getChildren())) {
+            for (RuleConditionDTO child : this.getChildren()) {
+                child.allConditionId();
+            }
+        }
+        return conditionIds;
     }
 
     /**

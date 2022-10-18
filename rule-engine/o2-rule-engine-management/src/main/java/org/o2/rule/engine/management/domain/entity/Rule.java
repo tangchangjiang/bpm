@@ -79,14 +79,14 @@ public class Rule extends AuditDomain {
     @Id
     @GeneratedValue
     private Long ruleId;
-    @ApiModelProperty(value = "规则编码", required = true)
+    @ApiModelProperty(value = "规则编码")
     @NotBlank
     @Unique(O2RE_RULE_U1)
     private String ruleCode;
-    @ApiModelProperty(value = "规则名称", required = true)
+    @ApiModelProperty(value = "规则名称")
     @NotBlank
     private String ruleName;
-    @ApiModelProperty(value = "实体编码", required = true)
+    @ApiModelProperty(value = "实体编码")
     @NotBlank
     private String entityCode;
     @ApiModelProperty(value = "规则描述")
@@ -95,7 +95,7 @@ public class Rule extends AuditDomain {
     private String ruleJson;
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
-    @ApiModelProperty(value = "规则状态", required = true)
+    @ApiModelProperty(value = "规则状态")
     @LovValue(lovCode = RuleEngineConstants.RuleStatus.CODE)
     @NotBlank
     private String ruleStatus;
@@ -103,7 +103,7 @@ public class Rule extends AuditDomain {
     private Date startTime;
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
-    @ApiModelProperty(value = "租户ID", required = true)
+    @ApiModelProperty(value = "租户ID")
     @NotNull
     @Unique(O2RE_RULE_U1)
     private Long tenantId;
@@ -111,6 +111,10 @@ public class Rule extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "状态含义")
+    @Transient
+    private String ruleStatusMeaning;
 
     @Transient
     @ApiModelProperty(value = "规则实体id")

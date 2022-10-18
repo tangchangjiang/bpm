@@ -73,7 +73,7 @@ public class RuleParamServiceImpl implements RuleParamService {
                     RuleParam.FIELD_ORDER_SEQ,
                     RuleParam.FIELD_PARAM_FORMAT_CODE,
                     RuleParam.FIELD_PARAM_EDIT_TYPE_CODE,
-                    RuleParam.FIELD_MULTIFLAG,
+                    RuleParam.FIELD_MULTI_FLAG,
                     RuleParam.FIELD_NOT_NULL_FLAG,
                     RuleParam.FIELD_BUSINESS_MODEL,
                     RuleParam.FIELD_VALUE_FILED_FROM,

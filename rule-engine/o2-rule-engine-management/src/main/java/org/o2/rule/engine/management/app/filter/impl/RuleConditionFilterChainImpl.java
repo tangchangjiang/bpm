@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.app.filter.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
  * @author xiang.zhao@hand-chian.com 2022/10/17
  */
 @Service
+@Slf4j
 @ConditionalOnBean(value = {FilterHandlerService.class})
 public class RuleConditionFilterChainImpl implements RuleConditionFilterChain {
     private final List<FilterHandlerService> filterHandlerServices;

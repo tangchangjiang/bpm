@@ -123,6 +123,13 @@ public class RuleEngineConstants {
      * 条件过滤编码
      */
     public static class FilterCode {
-        public static final String BASE_SORE = "BASE_SORE";
+        public static final String BASE_STORE = "BASE_STORE";
+    }
+
+    /**
+     * 错误编码
+     */
+    public static class ErrorCode {
+        public static final String PARAM_VALID_ERROR = "o2rule.error.param_valid_error";
     }
 }

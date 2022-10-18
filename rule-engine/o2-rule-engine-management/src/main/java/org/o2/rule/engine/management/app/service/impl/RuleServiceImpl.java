@@ -9,6 +9,7 @@ import org.o2.code.builder.app.service.CodeBuildService;
 import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.core.helper.UserHelper;
+import org.o2.delay.queue.service.DelayQueueService;
 import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
@@ -41,7 +42,7 @@ public class RuleServiceImpl implements RuleService {
 
     private final RuleRepository ruleRepository;
     private final CodeBuildService codeBuildService;
-//    private final DelayQueueService delayQueueService;
+    private final DelayQueueService delayQueueService;
     private final TransactionalHelper transactionalHelper;
     private final RuleParamRepository ruleParamRepository;
     private final RuleConditionFilterChain ruleConditionFilterChain;
@@ -50,6 +51,7 @@ public class RuleServiceImpl implements RuleService {
 
     public RuleServiceImpl(final RuleRepository ruleRepository,
                            final CodeBuildService codeBuildService,
+                           final DelayQueueService delayQueueService,
                            final TransactionalHelper transactionalHelper,
                            final RuleParamRepository ruleParamRepository,
                            final RuleConditionFilterChain ruleConditionFilterChain,
@@ -57,6 +59,7 @@ public class RuleServiceImpl implements RuleService {
                            final RuleEntityConditionRepository ruleEntityConditionRepository) {
         this.ruleRepository = ruleRepository;
         this.codeBuildService = codeBuildService;
+        this.delayQueueService = delayQueueService;
         this.transactionalHelper = transactionalHelper;
         this.ruleParamRepository = ruleParamRepository;
         this.ruleConditionFilterChain = ruleConditionFilterChain;
@@ -137,18 +140,14 @@ public class RuleServiceImpl implements RuleService {
         rule.setRuleCode(ruleCode);
         rule.buildRule();
 
-        final List<String> conditionCodes = new ArrayList<>();
-        conditionDTO.allConditionCode(conditionCodes);
-        final List<RuleEntityCondition> ruleEntityConditions = ruleEntityConditionRepository.selectByCondition(Condition.builder(RuleEntityCondition.class).andWhere(Sqls.custom()
-                .andEqualTo(RuleEntityCondition.FIELD_TENANT_ID, organizationId)
-                .andIn(RuleEntityCondition.FIELD_CONDITION_CODE, conditionCodes)).build());
+        final List<Long> conditionIds = conditionDTO.allConditionId();
 
-        final List<RuleCondRelEntity> ruleCondRelEntities = new ArrayList<>(ruleEntityConditions.size());
+        final List<RuleCondRelEntity> ruleCondRelEntities = new ArrayList<>(conditionIds.size());
 
-        if (CollectionUtils.isNotEmpty(ruleEntityConditions)) {
-            for (RuleEntityCondition ruleEntityCondition : ruleEntityConditions) {
+        if (CollectionUtils.isNotEmpty(conditionIds)) {
+            for (Long conditionId : conditionIds) {
                 final RuleCondRelEntity ruleCondRelEntity = new RuleCondRelEntity();
-                ruleCondRelEntity.setRuleEntityCondId(ruleEntityCondition.getRuleEntityConditionId());
+                ruleCondRelEntity.setRuleEntityCondId(conditionId);
                 ruleCondRelEntity.setRuleCode(ruleCode);
                 ruleCondRelEntity.setTenantId(organizationId);
                 ruleCondRelEntities.add(ruleCondRelEntity);
@@ -227,6 +226,6 @@ public class RuleServiceImpl implements RuleService {
     public void addExpireEvent(Long tenantId, Rule rule) {
         String id = String.format(RuleEngineRedisConstants.RedisKey.SCENE_ID, tenantId, rule.getRuleCode());
         long timeMillis = rule.getEndTime().getTime() - System.currentTimeMillis();
-//        delayQueueService.saveDelayMessage(id, id, timeMillis, RuleEngineRedisConstants.RedisKey.SCENE_EXPIRE);
+        delayQueueService.saveDelayMessage(id, id, timeMillis, RuleEngineRedisConstants.RedisKey.SCENE_EXPIRE);
     }
 }
