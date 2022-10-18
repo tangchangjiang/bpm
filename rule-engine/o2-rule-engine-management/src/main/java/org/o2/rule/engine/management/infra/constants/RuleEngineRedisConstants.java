@@ -13,6 +13,15 @@ public class RuleEngineRedisConstants {
      */
     public static class RedisKey {
         /**
+         * 场景过期id
+         */
+        public static final String SCENE_ID = "%s:%s";
+        /**
+         * 场景 延时队列过期topic
+         */
+        public static final String SCENE_EXPIRE = "ruleSceneExpire";
+
+        /**
          * 规则key Hash
          * key=ruleCode; value=rule
          */

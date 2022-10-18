@@ -9,6 +9,7 @@ import org.o2.code.builder.app.service.CodeBuildService;
 import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.core.helper.UserHelper;
+import org.o2.delay.queue.service.DelayQueueService;
 import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
@@ -25,6 +26,7 @@ import org.o2.rule.engine.management.domain.repository.RuleRepository;
 import org.o2.rule.engine.management.domain.vo.RuleConditionVO;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
+import org.o2.rule.engine.management.infra.constants.RuleEngineRedisConstants;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -37,9 +39,10 @@ import io.choerodon.core.exception.CommonException;
  */
 @Service
 public class RuleServiceImpl implements RuleService {
-                                                                                                
+
     private final RuleRepository ruleRepository;
     private final CodeBuildService codeBuildService;
+    private final DelayQueueService delayQueueService;
     private final TransactionalHelper transactionalHelper;
     private final RuleParamRepository ruleParamRepository;
     private final RuleConditionFilterChain ruleConditionFilterChain;
@@ -48,6 +51,7 @@ public class RuleServiceImpl implements RuleService {
 
     public RuleServiceImpl(final RuleRepository ruleRepository,
                            final CodeBuildService codeBuildService,
+                           final DelayQueueService delayQueueService,
                            final TransactionalHelper transactionalHelper,
                            final RuleParamRepository ruleParamRepository,
                            final RuleConditionFilterChain ruleConditionFilterChain,
@@ -55,6 +59,7 @@ public class RuleServiceImpl implements RuleService {
                            final RuleEntityConditionRepository ruleEntityConditionRepository) {
         this.ruleRepository = ruleRepository;
         this.codeBuildService = codeBuildService;
+        this.delayQueueService = delayQueueService;
         this.transactionalHelper = transactionalHelper;
         this.ruleParamRepository = ruleParamRepository;
         this.ruleConditionFilterChain = ruleConditionFilterChain;
@@ -130,7 +135,7 @@ public class RuleServiceImpl implements RuleService {
 
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
-        final String ruleCode = codeBuildService.makePrimaryKey(organizationId, UserHelper.getUserId(), RuleEngineConstants.GenerateTypeCode.RULE_ENGINE_CODE);
+        final String ruleCode = codeBuildService.makePrimaryKey(organizationId, UserHelper.getUserId(), RuleEngineConstants.GenerateTypeCode.RULE_CODE);
         // 构建ruleJson和conditionExpression
         rule.setRuleCode(ruleCode);
         rule.buildRule();
@@ -161,6 +166,7 @@ public class RuleServiceImpl implements RuleService {
                 });
             }
             ruleCondRelEntityRepository.batchInsert(ruleCondRelEntities);
+            this.addExpireEvent(organizationId, rule);
         });
         //保存规则
         return rule;
@@ -182,10 +188,10 @@ public class RuleServiceImpl implements RuleService {
             return;
         }
         rules.forEach(rule -> {
-            rule.setEnableFlag(BaseConstants.Flag.YES);
+            rule.setRuleStatus(RuleEngineConstants.RuleStatus.ENABLE);
         });
         transactionalHelper.transactionOperation(() -> {
-            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_ENABLE_FLAG);
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
             ruleRepository.loadToCache(tenantId, rules);
         });
     }
@@ -200,10 +206,10 @@ public class RuleServiceImpl implements RuleService {
             return;
         }
         rules.forEach(rule -> {
-            rule.setEnableFlag(BaseConstants.Flag.NO);
+            rule.setRuleStatus(RuleEngineConstants.RuleStatus.DISABLE);
         });
         transactionalHelper.transactionOperation(() -> {
-            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_ENABLE_FLAG);
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
             ruleRepository.removeCache(tenantId, rules);
         });
     }
@@ -219,5 +225,11 @@ public class RuleServiceImpl implements RuleService {
 
             rule.setConditionDTO(ruleCondition);
         }
+    }
+
+    public void addExpireEvent(Long tenantId, Rule rule) {
+        String id = String.format(RuleEngineRedisConstants.RedisKey.SCENE_ID, tenantId, rule.getRuleCode());
+        long timeMillis = rule.getEndTime().getTime() - System.currentTimeMillis();
+        delayQueueService.saveDelayMessage(id, id, timeMillis, RuleEngineRedisConstants.RedisKey.SCENE_EXPIRE);
     }
 }
