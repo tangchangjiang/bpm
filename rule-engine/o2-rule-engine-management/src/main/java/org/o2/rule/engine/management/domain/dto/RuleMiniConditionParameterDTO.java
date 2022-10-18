@@ -40,8 +40,6 @@ public class RuleMiniConditionParameterDTO {
     private String businessModel;
     @ApiModelProperty("参数值含义")
     private String parameterMeaning;
-    @ApiModelProperty("LOV编码")
-    private String lovCode;
     @ApiModelProperty("校验Bean")
     private String validators;
     @ApiModelProperty("参数Filter")

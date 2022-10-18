@@ -13,7 +13,7 @@ public class BaseStoreFilterChain implements FilterHandlerService {
 
     @Override
     public String getHandle() {
-        return RuleEngineConstants.FilterCode.BASE_SORE;
+        return RuleEngineConstants.FilterCode.BASE_STORE;
     }
 
     @Override

@@ -9,7 +9,7 @@
         <result column="entity_code" property="entityCode" jdbcType="VARCHAR"/>
         <result column="rule_description" property="ruleDescription" jdbcType="VARCHAR"/>
         <result column="rule_json" property="ruleJson" jdbcType="VARCHAR"/>
-        <result column="enable_flag" property="enableFlag" jdbcType="DECIMAL"/>
+        <result column="rule_status" property="ruleStatus" jdbcType="VARCHAR"/>
         <result column="start_time" property="startTime" jdbcType="DATE"/>
         <result column="end_time" property="endTime" jdbcType="DATE"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
@@ -24,6 +24,7 @@
         SELECT
         r.rule_id,
         r.rule_code,
+        r.rule_status,
         r.rule_name,
         r.entity_code,
         re.rule_entity_id,
@@ -56,6 +57,7 @@
         SELECT
         r.rule_id,
         r.rule_code,
+        r.rule_status,
         r.rule_name,
         r.condition_expression,
         r.entity_code,
