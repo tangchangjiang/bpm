@@ -4,9 +4,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.annotation.Unique;
 import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
+import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -94,6 +96,7 @@ public class Rule extends AuditDomain {
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
     @ApiModelProperty(value = "规则状态", required = true)
+    @LovValue(lovCode = RuleEngineConstants.RuleStatus.CODE)
     @NotBlank
     private String ruleStatus;
     @ApiModelProperty(value = "开始时间")
