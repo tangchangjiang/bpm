@@ -3,7 +3,6 @@ package org.o2.rule.engine.management.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author xiang.zhao@hand-chian.com 2022/10/17
@@ -35,5 +34,5 @@ public class RuleVO {
     private String ruleEntityAlias;
 
     @ApiModelProperty(value = "规则条件")
-    private List<RuleConditionVO> conditions;
+    private RuleConditionVO condition;
 }

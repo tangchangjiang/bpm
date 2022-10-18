@@ -27,7 +27,6 @@ import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import io.choerodon.core.exception.CommonException;
 
@@ -107,25 +106,21 @@ public class RuleServiceImpl implements RuleService {
     public RuleVO detailByCode(Long organizationId, String ruleCode) {
 
         final RuleVO rule = ruleRepository.getRuleByCode(organizationId, ruleCode);
-        final List<RuleCondRelEntity> ruleCondRelEntities = ruleCondRelEntityRepository.selectByCondition(Condition.builder(RuleCondRelEntity.class).andWhere(Sqls.custom()
-                .andEqualTo(RuleCondRelEntity.FIELD_TENANT_ID, organizationId)
-                .andEqualTo(RuleCondRelEntity.FIELD_RULE_CODE, rule.getRuleCode())).build());
-        if (CollectionUtils.isEmpty(ruleCondRelEntities)) {
-            return rule;
-        }
-        final Set<Long> conditionIds = ruleCondRelEntities.stream().map(RuleCondRelEntity::getRuleEntityCondId).collect(Collectors.toSet());
-        final List<RuleEntityCondition> ruleEntityConditions = ruleEntityConditionRepository.selectByIds(StringUtils.join(conditionIds, ","));
-        if (CollectionUtils.isNotEmpty(ruleEntityConditions)) {
-            final List<RuleConditionVO> conditionVOS = new ArrayList<>(ruleEntityConditions.size());
-            for (RuleEntityCondition ruleEntityCondition : ruleEntityConditions) {
-                RuleConditionVO conditionVO = new RuleConditionVO();
-                conditionVO.setConditionCode(ruleEntityCondition.getConditionCode());
-                conditionVO.setConditionCodeAlias(ruleEntityCondition.getConditionCodeAlias());
-                conditionVOS.add(conditionVO);
-            }
-            rule.setConditions(conditionVOS);
-        }
+
+        RuleConditionVO conditionVO = new RuleConditionVO();
+        conditionVO.setConditionExpression(rule.getConditionExpression());
+        rule.setCondition(conditionVO);
+
         return rule;
+    }
+
+    @Override
+    public Map<String, Date> getEntityUpdateTime(Long organizationId, String ruleCode) {
+        if (StringUtils.isBlank(ruleCode) || organizationId == null) {
+            return Collections.emptyMap();
+        }
+
+        return ruleRepository.getEntitiesUpdateTime(organizationId, Arrays.asList(ruleCode.split(BaseConstants.Symbol.COMMA)));
     }
 
     @Override

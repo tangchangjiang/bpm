@@ -3,7 +3,9 @@ package org.o2.rule.engine.management.domain.repository;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 规则资源库
@@ -45,4 +47,13 @@ public interface RuleRepository extends BaseRepository<Rule> {
      * @param rules 规则
      */
     void removeCache(Long tenantId, List<Rule> rules);
+
+    /**
+     * 查询实体更新时间
+     *
+     * @param tenantId    租户id
+     * @param entityCodes 实体规范
+     * @return {@link Map}<{@link String}, {@link Date}>
+     */
+    Map<String, Date> getEntitiesUpdateTime(Long tenantId, List<String> entityCodes);
 }

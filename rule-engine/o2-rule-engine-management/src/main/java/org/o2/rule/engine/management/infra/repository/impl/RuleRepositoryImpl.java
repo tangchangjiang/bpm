@@ -1,7 +1,9 @@
 package org.o2.rule.engine.management.infra.repository.impl;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.core.helper.DateUtil;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.rule.engine.management.domain.bo.RuleRedisBO;
@@ -12,6 +14,8 @@ import org.o2.rule.engine.management.infra.constants.RuleEngineRedisConstants;
 import org.o2.rule.engine.management.infra.convert.RuleConverter;
 import org.o2.rule.engine.management.infra.mapper.O2reRuleMapper;
 import org.springframework.stereotype.Component;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
  * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
  */
 @Component
+@Slf4j
 public class RuleRepositoryImpl extends BaseRepositoryImpl<Rule> implements RuleRepository {
     private final O2reRuleMapper o2reRuleMapper;
     private final RedisCacheClient redisCacheClient;
@@ -78,5 +83,23 @@ public class RuleRepositoryImpl extends BaseRepositoryImpl<Rule> implements Rule
 
         redisCacheClient.opsForHash().delete(ruleKey, ruleCodes);
         redisCacheClient.opsForHash().putAll(ruleEntityUpdateTimeKeyKey, entityMap);
+    }
+
+    @Override
+    public Map<String, Date> getEntitiesUpdateTime(Long tenantId, List<String> entityCodes) {
+        final Map<String, Date> result = Maps.newHashMapWithExpectedSize(entityCodes.size());
+        final String ruleEntityUpdateTimeKeyKey = RuleEngineRedisConstants.RedisKey.getRuleEntityUpdateTimeKey(tenantId);
+
+        final List<String> timeMills = redisCacheClient.<String, String>opsForHash().multiGet(ruleEntityUpdateTimeKeyKey, entityCodes);
+        int i = 0;
+        for (String entityCode : entityCodes) {
+            try {
+                result.put(entityCode, DateUtil.parseToDate(timeMills.get(i)));
+            } catch (ParseException e) {
+                log.warn("date parse exception : ", e);
+            }
+            i++;
+        }
+        return result;
     }
 }

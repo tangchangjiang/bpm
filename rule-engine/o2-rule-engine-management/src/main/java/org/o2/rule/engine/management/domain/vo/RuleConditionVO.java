@@ -9,8 +9,6 @@ import lombok.Data;
 @Data
 public class RuleConditionVO {
 
-    @ApiModelProperty(value = "规则实体条件编码别名")
-    private String conditionCodeAlias;
-    @ApiModelProperty(value = "规则实体条件编码")
-    private String conditionCode;
+    @ApiModelProperty(value = "规则实体条件表达式")
+    private String conditionExpression;
 }
