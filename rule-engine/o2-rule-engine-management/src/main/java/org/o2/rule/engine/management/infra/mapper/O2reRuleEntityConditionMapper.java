@@ -23,9 +23,8 @@ public interface O2reRuleEntityConditionMapper extends BaseMapper<RuleEntityCond
      * 通过规则实体查询规则实体条件列表
      *
      * @param tenantId 租户id
-     * @param ruleEntityId 规则实体id
-     * @param ruleEntityCondition 规则实体
+     * @param ruleEntityCode  规则实体编码
      * @return 规则实体条件列表
      */
-    List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, Long ruleEntityId, RuleEntityCondition ruleEntityCondition);
+    List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, String ruleEntityCode);
 }
