@@ -45,6 +45,9 @@
             <if test="ruleEntityConditionId != null">
                 and rec.rule_entity_condition_id = #{ruleEntityConditionId}
             </if>
+            <if test="ruleEntityId != null">
+                and rec.rule_entity_id = #{ruleEntityId}
+            </if>
             <if test="conditionCode != null and conditionCode != ''">
                 <bind name="conditionCodeLike" value="'%' + conditionCode + '%'"/>
                 and rec.condition_code like #{conditionCodeLike}
