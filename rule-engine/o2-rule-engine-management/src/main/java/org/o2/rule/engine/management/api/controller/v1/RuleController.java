@@ -68,6 +68,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> create(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         validObject(rule);
+        rule.setTenantId(organizationId);
         return Results.success(ruleService.createRule(organizationId, rule));
     }
 
@@ -77,6 +78,7 @@ public class RuleController extends BaseController {
     public ResponseEntity<Rule> update(@PathVariable(value = "organizationId") Long organizationId,
                                        @RequestBody Rule rule) {
         SecurityTokenHelper.validToken(rule);
+        rule.setTenantId(organizationId);
         return Results.success(ruleService.updateRule(organizationId, rule));
     }
 

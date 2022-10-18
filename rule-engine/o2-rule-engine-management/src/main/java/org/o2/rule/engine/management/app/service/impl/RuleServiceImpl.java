@@ -160,8 +160,8 @@ public class RuleServiceImpl implements RuleService {
                 ruleCondRelEntities.forEach(relEntity -> {
                     relEntity.setRuleId(rule.getRuleId());
                 });
+                ruleCondRelEntityRepository.batchInsert(ruleCondRelEntities);
             }
-            ruleCondRelEntityRepository.batchInsert(ruleCondRelEntities);
             this.addExpireEvent(organizationId, rule);
         });
         //保存规则
@@ -170,7 +170,39 @@ public class RuleServiceImpl implements RuleService {
 
     @Override
     public Rule updateRule(Long organizationId, Rule rule) {
+        if (!RuleEngineConstants.RuleStatus.NEW.equals(rule.getRuleStatus())) {
+            rule.setRuleStatus(RuleEngineConstants.RuleStatus.MODIFIED);
+        }
 
+        rule.buildRule();
+
+        final RuleConditionDTO conditionDTO = rule.getConditionDTO();
+        final List<Long> conditionIds = conditionDTO.allConditionId();
+
+        final List<RuleCondRelEntity> ruleCondRelEntities = new ArrayList<>(conditionIds.size());
+        final List<RuleCondRelEntity> existRelEntities = ruleCondRelEntityRepository.selectByCondition(Condition.builder(RuleCondRelEntity.class).andWhere(Sqls.custom()
+                .andEqualTo(RuleCondRelEntity.FIELD_RULE_ID, rule.getRuleId())).build());
+
+        if (CollectionUtils.isNotEmpty(conditionIds)) {
+            for (Long conditionId : conditionIds) {
+                final RuleCondRelEntity ruleCondRelEntity = new RuleCondRelEntity();
+                ruleCondRelEntity.setRuleEntityCondId(conditionId);
+                ruleCondRelEntity.setRuleCode(rule.getRuleCode());
+                ruleCondRelEntity.setRuleId(rule.getRuleId());
+                ruleCondRelEntity.setTenantId(organizationId);
+                ruleCondRelEntities.add(ruleCondRelEntity);
+            }
+        }
+
+        transactionalHelper.transactionOperation(() -> {
+            ruleRepository.updateByPrimaryKey(rule);
+            if (CollectionUtils.isNotEmpty(ruleCondRelEntities)) {
+                ruleCondRelEntityRepository.batchInsert(ruleCondRelEntities);
+            }
+            if (CollectionUtils.isNotEmpty(existRelEntities)) {
+                ruleCondRelEntityRepository.batchDelete(ruleCondRelEntities);
+            }
+        });
         return rule;
     }
 
