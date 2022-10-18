@@ -1,7 +1,6 @@
 package org.o2.rule.engine.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
-import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.rule.engine.management.app.service.RuleEntityService;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
@@ -72,9 +71,8 @@ public class RuleEntityServiceImpl implements RuleEntityService {
                     RuleEntity.FIELD_DESCRIPTION
             );
         }
-        if (BaseConstants.Flag.YES.equals(ruleEntity.getEnableFlag())) {
-            ruleEntityRepository.saveRedis(ruleEntity.getTenantId(), RuleEntityConverts.toRuleEntityBO(ruleEntity));
-        }
+
+        ruleEntityRepository.saveRedis(ruleEntity.getTenantId(), RuleEntityConverts.toRuleEntityBO(ruleEntity));
 
         return ruleEntity;
     }
