@@ -80,11 +80,12 @@
             rec.object_version_number
         FROM
             o2re_rule_entity_condition rec
+            join o2re_rule_entity re on rec.rule_entity_id = re.rule_entity_id and rec.tenant_id = re.tenant_id
         <where>
         <choose>
-            <when test="tenantId != null and ruleEntityId != null" >
+            <when test="tenantId != null and ruleEntityCode != null" >
                 and rec.tenant_id = #{tenantId}
-                and rec.rule_entity_id = #{ruleEntityId}
+                and re.rule_entity_code = #{ruleEntityCode}
             </when>
             <otherwise>
                 AND 1 = 0
