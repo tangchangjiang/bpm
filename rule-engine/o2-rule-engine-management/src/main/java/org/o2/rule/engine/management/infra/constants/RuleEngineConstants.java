@@ -33,7 +33,7 @@ public class RuleEngineConstants {
         /**
          * 值集编码
          */
-        public static final String CODE = "O2MKT.RULE_STATUS";
+        public static final String CODE = "O2RE.RULE_STATUS";
     }
 
     /**
@@ -108,7 +108,7 @@ public class RuleEngineConstants {
      * 关联Entity类型
      */
     public static class GenerateTypeCode {
-        public static final String RULE_CODE = "O2MD.RULE_CODE";
+        public static final String RULE_CODE = "O2RE.RULE_CODE";
     }
 
     /**

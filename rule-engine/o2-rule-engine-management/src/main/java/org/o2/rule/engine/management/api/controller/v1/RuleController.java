@@ -2,6 +2,8 @@ package org.o2.rule.engine.management.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
@@ -41,6 +43,7 @@ public class RuleController extends BaseController {
 
     @ApiOperation(value = "规则维护-分页查询规则列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<Page<Rule>> page(@PathVariable(value = "organizationId") Long organizationId,
                                            Rule rule,

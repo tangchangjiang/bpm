@@ -25,11 +25,11 @@ public class RuleEngineRedisConstants {
          * 规则key Hash
          * key=ruleCode; value=rule
          */
-        public static final String RULE_KEY = "o2md:rule:{%d}:info";
+        public static final String RULE_KEY = "o2re:rule:{%d}:info";
         /**
          * 规则实体最后更新时间
          */
-        public static final String RULE_ENTITY_UPDATE_TIME_KEY = "o2md:rule:{%d}:entity:update-time";
+        public static final String RULE_ENTITY_UPDATE_TIME_KEY = "o2re:rule:{%d}:entity:update-time";
 
         public static String getRuleKey(Long tenantId) {
             return String.format(RULE_KEY, tenantId);
