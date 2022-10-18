@@ -24,7 +24,8 @@ public interface RuleEntityConditionRepository extends BaseRepository<RuleEntity
      *
      * @param tenantId 租户id
      * @param ruleEntityCode 规则实体id
+     * @param ruleEntityCondition 查询条件
      * @return 规则实体条件列表
      */
-    List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, String ruleEntityCode);
+    List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, String ruleEntityCode, RuleEntityCondition ruleEntityCondition);
 }
