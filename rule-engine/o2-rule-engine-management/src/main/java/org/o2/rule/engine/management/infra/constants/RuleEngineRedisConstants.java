@@ -20,7 +20,7 @@ public class RuleEngineRedisConstants {
         /**
          * 规则实体最后更新时间
          */
-        public static final String RULE_ENTITY_UPDATE_TIME_KEY = "o2md:rule:{%d}:entity";
+        public static final String RULE_ENTITY_UPDATE_TIME_KEY = "o2md:rule:{%d}:entity:update-time";
 
         public static String getRuleKey(Long tenantId) {
             return String.format(RULE_KEY, tenantId);
