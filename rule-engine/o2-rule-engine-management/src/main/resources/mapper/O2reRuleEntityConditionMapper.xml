@@ -19,6 +19,33 @@
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
 
+    <resultMap id="RuleConditionWithParams" type="org.o2.rule.engine.management.domain.entity.RuleEntityCondition"
+               extends="BaseResultMap">
+        <collection property="ruleParams" javaType="ArrayList"
+                    ofType="org.o2.rule.engine.management.domain.entity.RuleParam" notNullColumn="param_code">
+            <result column="rule_param_id" property="ruleParamId" jdbcType="DECIMAL"/>
+            <result column="param_rel_entity_id" property="paramRelEntityId" jdbcType="DECIMAL"/>
+            <result column="param_rel_entity_type" property="paramRelEntityType" jdbcType="VARCHAR"/>
+            <result column="param_code" property="paramCode" jdbcType="VARCHAR"/>
+            <result column="param_name" property="paramName" jdbcType="VARCHAR"/>
+            <result column="param_alias" property="paramAlias" jdbcType="VARCHAR"/>
+            <result column="order_seq" property="orderSeq" jdbcType="DECIMAL"/>
+            <result column="param_format_code" property="paramFormatCode" jdbcType="VARCHAR"/>
+            <result column="param_edit_type_code" property="paramEditTypeCode" jdbcType="VARCHAR"/>
+            <result column="multi_flag" property="multiFlag" jdbcType="DECIMAL"/>
+            <result column="not_null_flag" property="notNullFlag" jdbcType="DECIMAL"/>
+            <result column="business_model" property="businessModel" jdbcType="VARCHAR"/>
+            <result column="value_filed_from" property="valueFiledFrom" jdbcType="VARCHAR"/>
+            <result column="value_filed_to" property="valueFiledTo" jdbcType="VARCHAR"/>
+            <result column="enable_flag" property="enableFlag" jdbcType="DECIMAL"/>
+            <result column="default_meaning" property="defaultMeaning" jdbcType="VARCHAR"/>
+            <result column="validators" property="validators" jdbcType="VARCHAR"/>
+            <result column="filters" property="filters" jdbcType="VARCHAR"/>
+            <result column="entry_tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+            <result column="entry_object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        </collection>
+    </resultMap>
+
     <select id="selectList" resultMap="BaseResultMap">
         SELECT
         rec.rule_entity_condition_id,
@@ -69,31 +96,57 @@
         </where>
     </select>
     <select id="selectListByRuleEntityCode"
-            resultType="org.o2.rule.engine.management.domain.entity.RuleEntityCondition">
+            resultMap="RuleConditionWithParams">
         SELECT
-            rec.rule_entity_condition_id,
-            rec.rule_entity_id,
-            rec.condition_code,
-            rec.condition_name,
-            rec.enable_flag,
-            rec.description,
-            rec.condition_code_alias,
-            rec.component_code,
-            rec.tenant_id,
-            rec.object_version_number
+        rec.rule_entity_condition_id,
+        rec.rule_entity_id,
+        rec.condition_code,
+        rec.condition_name,
+        rec.enable_flag,
+        rec.description,
+        rec.condition_code_alias,
+        rec.component_code,
+        rec.tenant_id,
+        rec.object_version_number,
+        rrp.rule_param_id,
+        rrp.paramRelEntityId,
+        rrp.param_rel_entity_type,
+        rrp.param_code,
+        rrp.param_name,
+        rrp.param_alias,
+        rrp.order_seq,
+        rrp.param_format_code,
+        rrp.param_edit_type_code,
+        rrp.not_null_flag,
+        rrp.multiFlag,
+        rrp.business_model,
+        rrp.value_filed_from,
+        rrp.value_filed_to,
+        rrp.enable_flag,
+        rrp.default_meaning,
+        rrp.validators,
+        rrp.filters,
+        rrp.tenant_id as entry_tenant_id,
+        rrp.object_version_number as entry_object_version_number,
+        rrp.multi_flag
         FROM
-            o2re_rule_entity_condition rec
-            join o2re_rule_entity re on rec.rule_entity_id = re.rule_entity_id and rec.tenant_id = re.tenant_id
+        o2re_rule_entity_condition rec
+        join o2re_rule_entity re on rec.rule_entity_id = re.rule_entity_id and rec.tenant_id = re.tenant_id
+        left join o2re_rule_param rrp on rrp.param_rel_entity_id = rec.rule_entity_condition_id and rec.tenant_id =
+        re.tenant_id and rrp.enable_flag = 1
         <where>
-        <choose>
-            <when test="tenantId != null and ruleEntityCode != null" >
-                and rec.tenant_id = #{tenantId}
-                and re.rule_entity_code = #{ruleEntityCode}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
+            <choose>
+                <when test="tenantId != null and ruleEntityCode != null">
+                    and rec.tenant_id = #{tenantId}
+                    and re.rule_entity_code = #{ruleEntityCode}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="ruleEntityCondition.enableFlag != null">
+                and rec.enable_flag = #{ruleEntityCondition.enableFlag}
+            </if>
         </where>
     </select>
 

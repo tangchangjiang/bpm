@@ -55,8 +55,9 @@ public class RuleEntityConditionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/list/{ruleEntityCode}")
     public ResponseEntity<List<RuleEntityCondition>> list(@PathVariable(value = "organizationId") Long organizationId,
-                                                          @PathVariable(value = "ruleEntityCode") String ruleEntityCode) {
-        return Results.success(ruleEntityConditionRepository.selectListByRuleEntityCode(organizationId, ruleEntityCode));
+                                                          @PathVariable(value = "ruleEntityCode") String ruleEntityCode,
+                                                          RuleEntityCondition ruleEntityCondition) {
+        return Results.success(ruleEntityConditionRepository.selectListByRuleEntityCode(organizationId, ruleEntityCode, ruleEntityCondition));
     }
 
     @ApiOperation(value = "规则实体条件维护-查询规则实体条件明细")
