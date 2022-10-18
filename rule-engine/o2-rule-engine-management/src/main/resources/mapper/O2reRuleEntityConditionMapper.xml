@@ -109,7 +109,7 @@
         rec.tenant_id,
         rec.object_version_number,
         rrp.rule_param_id,
-        rrp.paramRelEntityId,
+        rrp.param_rel_entity_id,
         rrp.param_rel_entity_type,
         rrp.param_code,
         rrp.param_name,
