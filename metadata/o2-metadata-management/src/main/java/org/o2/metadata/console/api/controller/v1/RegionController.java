@@ -93,11 +93,12 @@ public class RegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(required = false) String countryCode,
-                                                   @RequestParam(required = false) String resourceOwner){
+                                                   @RequestParam(required = false) String resourceOwner,
+                                                   @RequestParam(required = false) String businessTypeCode){
         RegionCacheVO regionCacheVO = new RegionCacheVO();
         regionCacheVO.setTenantId(organizationId);
         regionCacheVO.setCountryCode(countryCode!=null?countryCode: O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE);
-        siteRegionFileService.createRegionStaticFile(regionCacheVO,resourceOwner);
+        siteRegionFileService.createRegionStaticFile(regionCacheVO, resourceOwner, businessTypeCode);
         return Results.success(OperateResponse.success());
     }
 

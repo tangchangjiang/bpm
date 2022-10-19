@@ -5,6 +5,7 @@ import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
 import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
+import org.o2.core.O2CoreConstants;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -33,6 +34,7 @@ public class O2PublicLovRefreshJob implements IJobHandler {
         final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
         final String lovCode = map.get(MetadataConstants.RefreshJobConstants.LOV_CODE);
         final String idpLovOwner=map.get(MetadataConstants.RefreshJobConstants.IDP_LOV_OWNER);
+        final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (!StringUtils.hasText(tenantId)) {
             tool.error("Parameter [tenantId] can't be null.Please check job configuration.");
@@ -41,7 +43,7 @@ public class O2PublicLovRefreshJob implements IJobHandler {
         final PublicLovVO vo = new PublicLovVO();
         vo.setTenantId(Long.parseLong(tenantId));
         vo.setLovCode(lovCode);
-        o2PublicLovService.createPublicLovFile(vo,idpLovOwner);
+        o2PublicLovService.createPublicLovFile(vo, idpLovOwner, businessTypeCode);
 
         return ReturnT.SUCCESS;
     }
