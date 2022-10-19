@@ -1,6 +1,7 @@
 package org.o2.rule.engine.management.app.translator.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.o2.rule.engine.management.app.translator.RuleConditionTranslator;
 import org.o2.rule.engine.management.domain.dto.RuleMiniConditionParameterDTO;
 import org.o2.rule.engine.management.domain.entity.Rule;
@@ -31,7 +32,7 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
 
         final StringBuilder sb = new StringBuilder();
         // 有实体别名取实体别名，没有则取实体code，条件编码同理
-        sb.append(StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode())).append(conditionCode);
+        sb.append(StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode())).append(BaseConstants.Symbol.POINT).append(conditionCode);
         for (RuleMiniConditionParameterDTO parameter : parameters) {
 
             final String compileValue;
@@ -41,7 +42,7 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
             } else {
                 compileValue = parameter.getParamValue();
             }
-            sb.append(compileValue).append(" ");
+            sb.append(BaseConstants.Symbol.SPACE).append(compileValue);
         }
         return sb.toString().trim();
     }
