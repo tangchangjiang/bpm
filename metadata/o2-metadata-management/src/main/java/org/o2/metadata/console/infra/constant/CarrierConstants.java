@@ -36,7 +36,7 @@ public interface CarrierConstants {
         /**
          * 自定义
          */
-        String CUSTOM_REGION = "CUSTOM_REGION";
+        String CUSTOM_RANGE = "CUSTOM_RANGE";
     }
 
     interface ErrorCode {
