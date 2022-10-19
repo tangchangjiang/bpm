@@ -37,12 +37,7 @@ public class RuleConditionDTO {
      */
     public String build(Rule rule, AndOr rel) {
         log.info("relation {}, node {}", JsonHelper.objectToString(relation), JsonHelper.objectToString(node));
-        final StringJoiner sj;
-        if (rel == null) {
-            sj = new StringJoiner(this.relation.getValue(), "(", ")");
-        } else {
-            sj = new StringJoiner(rel.getValue(), "(", ")");
-        }
+        final StringJoiner sj = new StringJoiner(rel == null ? this.getRelation().getValue() : rel.getValue(), "(", ")");
         //IF All Empty, Return False
         if (node == null && CollectionUtils.isEmpty(this.getChildren())) {
             return Boolean.FALSE.toString();
@@ -60,11 +55,7 @@ public class RuleConditionDTO {
         }
         if (CollectionUtils.isNotEmpty(this.getChildren())) {
             for (RuleConditionDTO child : this.getChildren()) {
-                if (child.getRelation() == null) {
-                    sj.add(child.build(rule, this.relation));
-                } else {
-                    sj.add(child.build(rule, null));
-                }
+                sj.add(child.build(rule, child.getRelation() == null ? this.relation : child.getRelation()));
             }
         }
         return sj.toString();
