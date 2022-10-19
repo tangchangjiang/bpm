@@ -18,7 +18,7 @@ public class BaseStoreFilterChain implements FilterHandlerService {
 
     @Override
     public String filter(FilterHandlerContext filterHandlerContext) {
-        return filterHandlerContext.getOnlineShopCode();
+        return "";
     }
 
     @Override
