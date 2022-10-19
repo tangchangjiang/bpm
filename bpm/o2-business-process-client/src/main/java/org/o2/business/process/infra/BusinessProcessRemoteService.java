@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author miao.chen01@hand-china.com 2021-07-23
  */
 @FeignClient(
-        value = O2Service.MetadataManagement.NAME,
+        value = O2Service.BusinessProcessManagement.NAME,
         path = "/v1",
         fallback = BusinessProcessRemoteServiceImpl.class
 )
@@ -27,8 +27,8 @@ public interface BusinessProcessRemoteService {
      * @return 业务流程配置信息
      */
     @GetMapping("/{organizationId}/internal/business-process/{processCode}")
-    ResponseEntity<String> getPipelineByCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                             @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode);
+    ResponseEntity<String> getProcessConfigByCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode);
 
 
 

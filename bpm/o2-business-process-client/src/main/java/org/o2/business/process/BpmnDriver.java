@@ -113,7 +113,7 @@ public class BpmnDriver {
 
             result = CollectionCacheHelper.getCache(BusinessProcessConstants.CacheParam.CACHE_NAME, tenantId.toString(),
                     Collections.singletonList(processCode), pipelines -> {
-                        BpmnModel bpmnModel = ResponseUtils.getResponse(pipelineRemoteService.getPipelineByCode(tenantId, processCode), BpmnModel.class);
+                        BpmnModel bpmnModel = ResponseUtils.getResponse(pipelineRemoteService.getProcessConfigByCode(tenantId, processCode), BpmnModel.class);
                         Map<String, BpmnModel> modelMap = new HashMap<>(1);
                         modelMap.put(processCode, bpmnModel);
                         // 存入内存之前先进行合法校验
