@@ -8,9 +8,6 @@ import org.o2.rule.engine.management.app.validator.RuleParamValidator;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.util.RuleConditionTranslatorHelper;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.choerodon.core.convertor.ApplicationContextHelper;
 
@@ -35,21 +32,13 @@ public class RuleMiniConditionDTO {
     private List<RuleMiniConditionParameterDTO> params;
 
     /**
-     * 转成MAP
-     * @return map
-     */
-    public Map<String, RuleMiniConditionParameterDTO> convertToMap() {
-        return params.stream().collect(Collectors.toMap(RuleMiniConditionParameterDTO::getParameterCode, Function.identity()));
-    }
-
-    /**
      * 构建条件值
      *
      * @param rule 规则
      * @return 返回值
      */
     public String condition(Rule rule) {
-        return RuleConditionTranslatorHelper.translate(rule, StringUtils.defaultString(this.conditionCodeAlias, this.conditionCode), this.conditionCode, this.params);
+        return RuleConditionTranslatorHelper.translate(rule, this.componentCode, StringUtils.defaultString(this.conditionCodeAlias, this.conditionCode), this.params);
     }
 
     /**
@@ -66,14 +55,5 @@ public class RuleMiniConditionDTO {
                 validator.validate(param);
             }
         }
-    }
-
-    /**
-     * 校验规则参数合法性
-     *
-     */
-    public void convert() {
-        List<Long> parameterIds = params.stream().map(RuleMiniConditionParameterDTO::getParameterId).collect(Collectors.toList());
-
     }
 }

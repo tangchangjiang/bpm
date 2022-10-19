@@ -12,9 +12,12 @@
     </parent>
 
     <groupId>org.o2.metadata</groupId>
-    <artifactId>o2-rule-engine-management</artifactId>
+    <artifactId>o2-rule-engine-management-client</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <maven.attach.source>true</maven.attach.source>
+    </properties>
 
     <dependencies>
         <!-- o2 -->
@@ -22,24 +25,17 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-feign-client</artifactId>
+        </dependency>
 
-        <dependency>
-            <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-code-builder</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.o2.starter</groupId>
-            <artifactId>o2-starter-delay-queue</artifactId>
-        </dependency>
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>
-            <artifactId>hzero-starter-mybatis-mapper</artifactId>
+            <artifactId>hzero-starter-feign-replay</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hzero.boot</groupId>
-            <artifactId>hzero-boot-platform</artifactId>
-        </dependency>
+
         <!--spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
