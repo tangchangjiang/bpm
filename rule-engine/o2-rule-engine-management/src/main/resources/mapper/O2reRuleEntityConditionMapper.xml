@@ -90,7 +90,7 @@
             <if test="componentCode != null and componentCode != ''">
                 and rec.component_code = #{componentCode}
             </if>
-            <if test="enableFlag != null and enableFlag != ''">
+            <if test="enableFlag != null">
                 and rec.enable_flag = #{enableFlag}
             </if>
         </where>
@@ -118,7 +118,7 @@
         rrp.param_format_code,
         rrp.param_edit_type_code,
         rrp.not_null_flag,
-        rrp.multiFlag,
+        rrp.multi_flag,
         rrp.business_model,
         rrp.value_filed_from,
         rrp.value_filed_to,
@@ -127,8 +127,7 @@
         rrp.validators,
         rrp.filters,
         rrp.tenant_id as entry_tenant_id,
-        rrp.object_version_number as entry_object_version_number,
-        rrp.multi_flag
+        rrp.object_version_number as entry_object_version_number
         FROM
         o2re_rule_entity_condition rec
         join o2re_rule_entity re on rec.rule_entity_id = re.rule_entity_id and rec.tenant_id = re.tenant_id
