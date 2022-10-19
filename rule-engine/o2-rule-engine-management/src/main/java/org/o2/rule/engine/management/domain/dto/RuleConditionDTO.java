@@ -2,7 +2,9 @@ package org.o2.rule.engine.management.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  * @author xiang.zhao@hand-chian.com 2022/10/13
  */
 @Data
+@Slf4j
 public class RuleConditionDTO {
     @ApiModelProperty("子条件集合")
     private List<RuleConditionDTO> children;
@@ -30,6 +33,7 @@ public class RuleConditionDTO {
      * @return 字符串
      */
     public String build(Rule rule) {
+        log.info("relation {}, node {}", JsonHelper.objectToString(relation), JsonHelper.objectToString(node));
         final StringJoiner sj = new StringJoiner(this.relation.getValue(), "(", ")");
         //IF All Empty, Return False
         if (node == null && CollectionUtils.isEmpty(this.getChildren())) {
