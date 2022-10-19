@@ -31,11 +31,12 @@ public class PublicLovReleaseController extends BaseController {
     @GetMapping("/release")
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(required = false) String lovCode,
-                                                   @RequestParam(required = false) String resourceOwner){
+                                                   @RequestParam(required = false) String resourceOwner,
+                                                   @RequestParam(required = false) String businessTypeCode){
         PublicLovVO publicLovVO = new PublicLovVO();
         publicLovVO.setTenantId(organizationId);
         publicLovVO.setLovCode(lovCode!=null?lovCode:MetadataConstants.PublicLov.PUB_LOV_CODE);
-        publicLovService.createPublicLovFile(publicLovVO,resourceOwner);
+        publicLovService.createPublicLovFile(publicLovVO, resourceOwner, businessTypeCode);
         return Results.success(OperateResponse.success());
     }
 }

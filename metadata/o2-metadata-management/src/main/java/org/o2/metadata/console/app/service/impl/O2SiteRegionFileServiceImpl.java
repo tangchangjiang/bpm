@@ -6,9 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.cms.management.client.O2CmsManagementClient;
-import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
-import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
@@ -18,6 +15,10 @@ import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.RegionRepository;
+import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
+import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
+import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
+import org.o2.metadata.domain.staticresource.service.StaticResourceBusinessService;
 import org.springframework.stereotype.Service;
 
 
@@ -35,24 +36,22 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
 
     private final RegionRepository regionRepository;
-    private final O2CmsManagementClient cmsManagementClient;
 
-
-    public O2SiteRegionFileServiceImpl(RegionRepository regionRepository,
-                                       O2CmsManagementClient cmsManagementClient) {
+    public O2SiteRegionFileServiceImpl(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
-        this.cmsManagementClient = cmsManagementClient;
     }
 
     @Override
-    public void createRegionStaticFile(final RegionCacheVO regionCacheVO, final String resourceOwner) {
+    public void createRegionStaticFile(final RegionCacheVO regionCacheVO, final String resourceOwner, final String businessTypeCode) {
         final Long tenantId = regionCacheVO.getTenantId();
         final String countryCode = regionCacheVO.getCountryCode();
         log.info("static params are : {},{}", tenantId, countryCode);
 
+        // 根据业务类型+目标class获取处理方法
+        StaticResourceBusinessService staticResourceBusinessService = BusinessTypeStrategyDispatcher.getService(businessTypeCode, StaticResourceBusinessService.class);
         // 查询静态资源配置信息
-        final StaticResourceConfigCO staticResourceConfigCO = cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_REGION);
-        String uploadFolder = staticResourceConfigCO.getUploadFolder();
+        final StaticResourceConfigDO staticResourceConfigDO = staticResourceBusinessService.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_REGION);
+        String uploadFolder = staticResourceConfigDO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
         Map<String, String> resourceUrlMap = new HashMap<>(4);
@@ -71,7 +70,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId, countryCode));
 
-        if (staticResourceConfigCO.getDifferentLangFlag()
+        if (staticResourceConfigDO.getDifferentLangFlag()
                 .equals(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG)) {
             dto.setLang(MetadataConstants.Path.EN_US);
             final List<Region> enList = regionRepository.listRegionLov(dto, tenantId);
@@ -79,8 +78,8 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         }
 
         //  更新静态文件资源表
-        List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap, resourceOwner, staticResourceConfigCO);
-        cmsManagementClient.saveResource(tenantId,saveDTOList);
+        List<StaticResourceSaveDO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap, resourceOwner, staticResourceConfigDO);
+        staticResourceBusinessService.saveStaticResource(tenantId,saveDTOList);
     }
 
     /**
@@ -107,42 +106,42 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                 directory, fileName, MetadataConstants.O2SiteRegionFile.JSON_TYPE, jsonString.getBytes());
     }
 
-    private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
+    private List<StaticResourceSaveDO> buildStaticResourceSaveDTO(Long tenantId,
                                                                    Map<String, String> resourceUrlMap,
                                                                    String resourceOwner,
-                                                                   StaticResourceConfigCO staticResourceConfigCO) {
-        List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
+                                                                   StaticResourceConfigDO staticResourceConfigDO) {
+        List<StaticResourceSaveDO> staticResourceSaveDOList = new ArrayList<>();
         for (Map.Entry<String, String> entry : resourceUrlMap.entrySet()) {
-            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(), resourceOwner, staticResourceConfigCO));
+            staticResourceSaveDOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(), resourceOwner, staticResourceConfigDO));
         }
-        return saveDTOList;
+        return staticResourceSaveDOList;
     }
 
-    private StaticResourceSaveDTO fillCommonFields(Long tenantId,
-                                                   String resourceUrl,
-                                                   String languageCode,
-                                                   String resourceOwner,
-                                                   StaticResourceConfigCO staticResourceConfigCO) {
+    private StaticResourceSaveDO fillCommonFields(Long tenantId,
+                                                  String resourceUrl,
+                                                  String languageCode,
+                                                  String resourceOwner,
+                                                  StaticResourceConfigDO staticResourceConfigDO) {
         String host = domainPrefix(resourceUrl);
         String url = trimDomainPrefix(resourceUrl);
 
-        StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
-        saveDTO.setResourceCode(staticResourceConfigCO.getResourceCode());
-        saveDTO.setDescription(staticResourceConfigCO.getDescription());
-        saveDTO.setResourceLevel(staticResourceConfigCO.getResourceLevel());
-        saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
+        StaticResourceSaveDO staticResourceSaveDO = new StaticResourceSaveDO();
+        staticResourceSaveDO.setResourceCode(staticResourceConfigDO.getResourceCode());
+        staticResourceSaveDO.setDescription(staticResourceConfigDO.getDescription());
+        staticResourceSaveDO.setResourceLevel(staticResourceConfigDO.getResourceLevel());
+        staticResourceSaveDO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
         if (!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
-                .equals(saveDTO.getResourceLevel())) {
-            saveDTO.setResourceOwner(resourceOwner);
+                .equals(staticResourceSaveDO.getResourceLevel())) {
+            staticResourceSaveDO.setResourceOwner(resourceOwner);
         }
-        saveDTO.setResourceHost(host);
-        saveDTO.setResourceUrl(url);
+        staticResourceSaveDO.setResourceHost(host);
+        staticResourceSaveDO.setResourceUrl(url);
         if (MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                .equals(staticResourceConfigCO.getDifferentLangFlag())) {
-            saveDTO.setLang(languageCode);
+                .equals(staticResourceConfigDO.getDifferentLangFlag())) {
+            staticResourceSaveDO.setLang(languageCode);
         }
-        saveDTO.setTenantId(tenantId);
-        return saveDTO;
+        staticResourceSaveDO.setTenantId(tenantId);
+        return staticResourceSaveDO;
     }
 
     private static String trimDomainPrefix(String resourceUrl) {

@@ -14,8 +14,7 @@ public interface O2PublicLovService {
      *
      * @param publicLovVO
      * @param resourceOwner 资源所属
-     * @return OSS url
      * @date 2021-08-20
      */
-    void createPublicLovFile(final PublicLovVO publicLovVO, String resourceOwner);
+    void createPublicLovFile(final PublicLovVO publicLovVO, String resourceOwner, String businessTypeCode);
 }
