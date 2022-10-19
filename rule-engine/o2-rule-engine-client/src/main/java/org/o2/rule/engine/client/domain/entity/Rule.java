@@ -15,6 +15,14 @@ public class Rule {
      */
     private String ruleCode;
     /**
+     * 规则实体编码
+     */
+    private String entityCode;
+    /**
+     * 规则实体别名
+     */
+    private String entityAlias;
+    /**
      * 规则条件
      */
     private RuleCondition ruleCondition;

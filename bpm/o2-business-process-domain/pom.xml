@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.o2</groupId>
+        <artifactId>o2-build-parent</artifactId>
+        <version>1.6.1.TEST-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.o2.metadata</groupId>
+    <artifactId>o2-business-process-domain</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.metadata</groupId>
+            <artifactId>o2-rule-engine-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.cache</groupId>
+            <artifactId>o2-cache-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
+    </dependencies>
+</project>

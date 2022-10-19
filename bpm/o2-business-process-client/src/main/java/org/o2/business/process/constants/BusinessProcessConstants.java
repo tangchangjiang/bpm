@@ -9,7 +9,7 @@ public interface BusinessProcessConstants {
 
     interface ErrorMessage {
         String PIPELINE_CODE_NULL = "current pipeline code is NULL";
-        String PIPELINE_NULL = "current pipeline[%s] is NULL";
+        String BUSINESS_PROCESS_NULL = "current pipeline[%s] is NULL";
         String PIPELINE_EXEC_PARAM_NULL = "current pipeline[%s] parameters is NULL";
         String PIPELINE_START_ACTION_NULL = "current pipeline[%s] start_action is NULL";
         String PIPELINE_NODE_OUT_RANGE = "pipeline[%s] node[%s, %s], the next_action[%s] not in current pipeline";

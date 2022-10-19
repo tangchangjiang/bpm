@@ -25,4 +25,7 @@ public class CarrierQueryInnerDTO {
     @ApiModelProperty(value = "承运商名称")
     private List<String> carrierNames;
 
+    @ApiModelProperty(value = "是否有效")
+    private Integer activeFlag;
+
 }
