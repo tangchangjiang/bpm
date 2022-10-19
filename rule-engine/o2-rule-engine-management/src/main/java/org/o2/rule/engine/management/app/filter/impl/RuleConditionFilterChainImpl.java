@@ -48,7 +48,7 @@ public class RuleConditionFilterChainImpl implements RuleConditionFilterChain {
 
     @Override
     public List<FilterHandlerService> getAllHandlers() {
-        return null;
+        return filterHandlerServices;
     }
 
     @Override

@@ -15,7 +15,7 @@ public class RuleConverter {
     }
 
     /**
-     * 转换复述,薄熙来
+     * 转换RedisBO
      *
      * @param rules 规则
      * @return {@link List}<{@link RuleRedisBO}>
@@ -33,7 +33,6 @@ public class RuleConverter {
             redisBO.setRuleEntityAlias(rule.getRuleEntityAlias());
             redisBO.setStartTime(rule.getStartTime());
             redisBO.setEndTime(rule.getEndTime());
-            redisBO.setRuleJson(rule.getRuleJson());
             redisBO.setConditionExpression(rule.getConditionExpression());
             redisBO.setRuleDescription(rule.getRuleDescription());
             redisBO.setTenantId(rule.getTenantId());
