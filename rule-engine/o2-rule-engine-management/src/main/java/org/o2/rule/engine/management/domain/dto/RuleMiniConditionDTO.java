@@ -38,7 +38,7 @@ public class RuleMiniConditionDTO {
      * @return 返回值
      */
     public String condition(Rule rule) {
-        return RuleConditionTranslatorHelper.translate(rule, StringUtils.defaultString(this.conditionCodeAlias, this.conditionCode), this.conditionCode, this.params);
+        return RuleConditionTranslatorHelper.translate(rule, this.componentCode, StringUtils.defaultString(this.conditionCodeAlias, this.conditionCode), this.params);
     }
 
     /**
