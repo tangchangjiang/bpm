@@ -37,9 +37,9 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
             final String compileValue;
             if (STRING.equalsIgnoreCase(parameter.getParamEditTypeCode())
                     || LIST.equalsIgnoreCase(parameter.getParamEditTypeCode())) {
-                compileValue = "\"" + parameter.getParameterValue() + "\"";
+                compileValue = "\"" + parameter.getParamValue() + "\"";
             } else {
-                compileValue = parameter.getParameterValue();
+                compileValue = parameter.getParamValue();
             }
             sb.append(compileValue).append(" ");
         }

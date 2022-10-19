@@ -22,12 +22,12 @@ public class BigDecimalValidatorImpl implements RuleParamValidator {
     @Override
     public void validate(RuleMiniConditionParameterDTO parameter) {
         boolean result = false;
-        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParameterValue())) {
+        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParamValue())) {
             try {
-                BigDecimal value = BigDecimalParser.parse(parameter.getParameterValue());
+                BigDecimal value = BigDecimalParser.parse(parameter.getParamValue());
                 result = true;
             } catch (NumberFormatException e) {
-                log.error("parameter value {} parameter type {}: ", parameter.getParameterValue(), parameter.getParamFormatCode());
+                log.error("parameter value {} parameter type {}: ", parameter.getParamValue(), parameter.getParamFormatCode());
             }
         }
         if (result) {
