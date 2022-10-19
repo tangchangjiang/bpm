@@ -54,7 +54,7 @@ public class Rule extends AuditDomain {
      */
     public void buildRule() {
         if (null != this.getConditionDTO()) {
-            final String qlExpress = this.getConditionDTO().build(this);
+            final String qlExpress = this.getConditionDTO().build(this, null);
             final String rule = JsonHelper.objectToString(this.getConditionDTO());
             this.setRuleJson(rule);
             this.setConditionExpression(qlExpress);

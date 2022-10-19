@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @Slf4j
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RuleConditionDTO {
     @ApiModelProperty("子条件集合")
     private List<RuleConditionDTO> children;
@@ -30,11 +32,17 @@ public class RuleConditionDTO {
      * 构建条件字符串
      *
      * @param rule 规则
+     * @param rel 关系
      * @return 字符串
      */
-    public String build(Rule rule) {
+    public String build(Rule rule, AndOr rel) {
         log.info("relation {}, node {}", JsonHelper.objectToString(relation), JsonHelper.objectToString(node));
-        final StringJoiner sj = new StringJoiner(this.relation.getValue(), "(", ")");
+        final StringJoiner sj;
+        if (rel == null) {
+            sj = new StringJoiner(this.relation.getValue(), "(", ")");
+        } else {
+            sj = new StringJoiner(rel.getValue(), "(", ")");
+        }
         //IF All Empty, Return False
         if (node == null && CollectionUtils.isEmpty(this.getChildren())) {
             return Boolean.FALSE.toString();
@@ -53,9 +61,10 @@ public class RuleConditionDTO {
         if (CollectionUtils.isNotEmpty(this.getChildren())) {
             for (RuleConditionDTO child : this.getChildren()) {
                 if (child.getRelation() == null) {
-                    child.setRelation(this.relation);
+                    sj.add(child.build(rule, this.relation));
+                } else {
+                    sj.add(child.build(rule, null));
                 }
-                sj.add(child.build(rule));
             }
         }
         return sj.toString();

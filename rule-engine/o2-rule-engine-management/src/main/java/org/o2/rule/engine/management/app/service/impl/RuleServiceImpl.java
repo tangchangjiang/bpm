@@ -15,14 +15,8 @@ import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
 import org.o2.rule.engine.management.app.service.RuleService;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
-import org.o2.rule.engine.management.domain.entity.Rule;
-import org.o2.rule.engine.management.domain.entity.RuleCondRelEntity;
-import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
-import org.o2.rule.engine.management.domain.entity.RuleParam;
-import org.o2.rule.engine.management.domain.repository.RuleCondRelEntityRepository;
-import org.o2.rule.engine.management.domain.repository.RuleEntityConditionRepository;
-import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
-import org.o2.rule.engine.management.domain.repository.RuleRepository;
+import org.o2.rule.engine.management.domain.entity.*;
+import org.o2.rule.engine.management.domain.repository.*;
 import org.o2.rule.engine.management.domain.vo.RuleConditionVO;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
@@ -45,6 +39,7 @@ public class RuleServiceImpl implements RuleService {
     private final DelayQueueService delayQueueService;
     private final TransactionalHelper transactionalHelper;
     private final RuleParamRepository ruleParamRepository;
+    private final RuleEntityRepository ruleEntityRepository;
     private final RuleConditionFilterChain ruleConditionFilterChain;
     private final RuleCondRelEntityRepository ruleCondRelEntityRepository;
     private final RuleEntityConditionRepository ruleEntityConditionRepository;
@@ -54,7 +49,7 @@ public class RuleServiceImpl implements RuleService {
                            final DelayQueueService delayQueueService,
                            final TransactionalHelper transactionalHelper,
                            final RuleParamRepository ruleParamRepository,
-                           final RuleConditionFilterChain ruleConditionFilterChain,
+                           RuleEntityRepository ruleEntityRepository, final RuleConditionFilterChain ruleConditionFilterChain,
                            final RuleCondRelEntityRepository ruleCondRelEntityRepository,
                            final RuleEntityConditionRepository ruleEntityConditionRepository) {
         this.ruleRepository = ruleRepository;
@@ -62,6 +57,7 @@ public class RuleServiceImpl implements RuleService {
         this.delayQueueService = delayQueueService;
         this.transactionalHelper = transactionalHelper;
         this.ruleParamRepository = ruleParamRepository;
+        this.ruleEntityRepository = ruleEntityRepository;
         this.ruleConditionFilterChain = ruleConditionFilterChain;
         this.ruleCondRelEntityRepository = ruleCondRelEntityRepository;
         this.ruleEntityConditionRepository = ruleEntityConditionRepository;
@@ -133,11 +129,18 @@ public class RuleServiceImpl implements RuleService {
 
         rule.validRule();
 
+        final RuleEntity query = new RuleEntity();
+        query.setTenantId(organizationId);
+        query.setRuleEntityCode(rule.getEntityCode());
+        final RuleEntity ruleEntity = ruleEntityRepository.selectOne(query);
+
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
         final String ruleCode = codeBuildService.makePrimaryKey(organizationId, UserHelper.getUserId(), RuleEngineConstants.GenerateTypeCode.RULE_CODE);
         // 构建ruleJson和conditionExpression
         rule.setRuleCode(ruleCode);
+        rule.setRuleEntityAlias(ruleEntity.getRuleEntityAlias());
+
         rule.buildRule();
 
         final List<Long> conditionIds = conditionDTO.allConditionId();
@@ -256,6 +259,9 @@ public class RuleServiceImpl implements RuleService {
     }
 
     public void addExpireEvent(Long tenantId, Rule rule) {
+        if (null == rule.getEndTime()) {
+            return;
+        }
         String id = String.format(RuleEngineRedisConstants.RedisKey.SCENE_ID, tenantId, rule.getRuleCode());
         long timeMillis = rule.getEndTime().getTime() - System.currentTimeMillis();
         delayQueueService.saveDelayMessage(id, id, timeMillis, RuleEngineRedisConstants.RedisKey.SCENE_EXPIRE);
