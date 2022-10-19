@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class BusinessProcessRemoteServiceImpl implements BusinessProcessRemoteService {
 
     @Override
-    public ResponseEntity<String> getPipelineByCode(Long organizationId, String code) {
+    public ResponseEntity<String> getProcessConfigByCode(Long organizationId, String code) {
         log.error("Error getPipelineByCode, params[organizationId = {}, code = {}]", organizationId, code);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
