@@ -65,8 +65,6 @@ public class RuleParamServiceImpl implements RuleParamService {
             ruleParamRepository.insertSelective(ruleParam);
         } else {
             ruleParamRepository.updateOptional(ruleParam,
-                    RuleParam.FIELD_PARAM_REL_ENTITY_TYPE,
-                    RuleParam.FIELD_PARAM_CODE,
                     RuleParam.FIELD_PARAM_NAME,
                     RuleParam.FIELD_PARAM_ALIAS,
                     RuleParam.FIELD_ORDER_SEQ,

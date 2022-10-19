@@ -215,6 +215,9 @@
             <if test="onlineShopType != null and onlineShopType != ''">
                 AND os.online_shop_type = #{onlineShopType}
             </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''" >
+                and os.business_type_code = #{businessTypeCode}
+            </if>
         </where>
         ORDER BY os.online_shop_code
     </select>
