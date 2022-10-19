@@ -90,7 +90,7 @@
             <if test="componentCode != null and componentCode != ''">
                 and rec.component_code = #{componentCode}
             </if>
-            <if test="enableFlag != null and enableFlag != ''">
+            <if test="enableFlag != null">
                 and rec.enable_flag = #{enableFlag}
             </if>
         </where>
