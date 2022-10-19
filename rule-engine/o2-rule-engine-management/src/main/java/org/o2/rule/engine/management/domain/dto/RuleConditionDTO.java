@@ -48,6 +48,9 @@ public class RuleConditionDTO {
         }
         if (CollectionUtils.isNotEmpty(this.getChildren())) {
             for (RuleConditionDTO child : this.getChildren()) {
+                if (child.getRelation() == null) {
+                    child.setRelation(this.relation);
+                }
                 sj.add(child.build(rule));
             }
         }
