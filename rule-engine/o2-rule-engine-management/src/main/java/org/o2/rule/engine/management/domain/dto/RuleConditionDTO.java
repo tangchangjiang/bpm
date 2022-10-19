@@ -37,7 +37,7 @@ public class RuleConditionDTO {
         }
         if (node != null) {
             final List<RuleMiniConditionParameterDTO> params = node.getParams();
-            final List<String> paramCodes = params.stream().map(RuleMiniConditionParameterDTO::getParameterCode).collect(Collectors.toList());
+            final List<String> paramCodes = params.stream().map(RuleMiniConditionParameterDTO::getParamCode).collect(Collectors.toList());
             //如果为基本组件且值为空,则不进行条件编译
             boolean skip = RuleEngineConstants.ComponentCode.BASIC.equals(node.getConditionCode()) &&
                     (!paramCodes.contains(RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR) || !paramCodes.contains(RuleEngineConstants.BasicParameter.PARAMETER_VALUE));
@@ -81,7 +81,7 @@ public class RuleConditionDTO {
         if (node != null) {
             conditionCodes.add(node.getConditionCode());
             paramCodes.addAll(node.getParams().stream()
-                    .map(RuleMiniConditionParameterDTO::getParameterCode)
+                    .map(RuleMiniConditionParameterDTO::getParamCode)
                     .collect(Collectors.toList()));
         }
         if (CollectionUtils.isNotEmpty(this.getChildren())) {
@@ -146,7 +146,7 @@ public class RuleConditionDTO {
             }
             if (CollectionUtils.isNotEmpty(node.getParams())) {
                 for (RuleMiniConditionParameterDTO paramDTO : node.getParams()) {
-                    RuleParam param = paramMap.get(paramDTO.getParameterCode());
+                    RuleParam param = paramMap.get(paramDTO.getParamCode());
                     convertParam(param, paramDTO);
                 }
                 node.getParams().sort(Comparator.comparing(RuleMiniConditionParameterDTO::getPriority));
@@ -160,11 +160,11 @@ public class RuleConditionDTO {
      * @param paramDTO 参数dto
      */
     public void convertParam(RuleParam param, RuleMiniConditionParameterDTO paramDTO) {
-        paramDTO.setParameterId(param.getRuleParamId());
+        paramDTO.setRuleParamId(param.getRuleParamId());
         paramDTO.setEnableFlag(param.getEnableFlag());
         paramDTO.setBusinessModel(param.getBusinessModel());
         paramDTO.setMultiFlag(param.getMultiFlag());
-        paramDTO.setParameterCode(param.getParamCode());
+        paramDTO.setParamCode(param.getParamCode());
         paramDTO.setNotNullFlag(param.getNotNullFlag());
         paramDTO.setParamEditTypeCode(param.getParamEditTypeCode());
         paramDTO.setValueFiledFrom(param.getValueFiledFrom());

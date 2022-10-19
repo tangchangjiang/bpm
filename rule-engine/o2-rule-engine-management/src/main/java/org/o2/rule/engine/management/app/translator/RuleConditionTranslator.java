@@ -46,7 +46,7 @@ public interface RuleConditionTranslator {
      * @return map
      */
     default Map<String, RuleMiniConditionParameterDTO> convertToMap(final List<RuleMiniConditionParameterDTO> parameters) {
-        return parameters.stream().collect(Collectors.toMap(RuleMiniConditionParameterDTO::getParameterCode, Function.identity()));
+        return parameters.stream().collect(Collectors.toMap(RuleMiniConditionParameterDTO::getParamCode, Function.identity()));
     }
 
 }

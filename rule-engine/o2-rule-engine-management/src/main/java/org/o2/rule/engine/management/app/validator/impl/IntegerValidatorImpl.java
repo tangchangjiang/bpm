@@ -20,12 +20,12 @@ public class IntegerValidatorImpl implements RuleParamValidator {
     @Override
     public void validate(RuleMiniConditionParameterDTO parameter) {
         boolean result = false;
-        if (RuleEngineConstants.ParameterType.INTEGER.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParameterValue())) {
+        if (RuleEngineConstants.ParameterType.INTEGER.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParamValue())) {
             try {
-                Integer value = Integer.valueOf(parameter.getParameterValue());
+                Integer value = Integer.valueOf(parameter.getParamValue());
                 result = true;
             } catch (NumberFormatException e) {
-                log.error("parameter value {} parameter type {}: ", parameter.getParameterValue(), parameter.getParamFormatCode());
+                log.error("parameter value {} parameter type {}: ", parameter.getParamValue(), parameter.getParamFormatCode());
             }
         }
         if (result) {

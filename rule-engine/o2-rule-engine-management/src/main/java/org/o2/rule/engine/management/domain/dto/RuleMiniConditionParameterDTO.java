@@ -15,10 +15,12 @@ import lombok.Data;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class RuleMiniConditionParameterDTO {
     @ApiModelProperty("参数编码")
-    private String parameterCode;
+    private String paramCode;
+    @ApiModelProperty("参数编码")
+    private String paramName;
     @ApiModelProperty("参数ID")
-    private Long parameterId;
-    @ApiModelProperty("参数ID")
+    private Long ruleParamId;
+    @ApiModelProperty("优先级")
     private Long priority;
     @ApiModelProperty("数据类型")
     private String paramFormatCode;
@@ -31,7 +33,7 @@ public class RuleMiniConditionParameterDTO {
     @ApiModelProperty("是否必输")
     private Integer notNullFlag;
     @ApiModelProperty("参数值")
-    private String parameterValue;
+    private String paramValue;
     @ApiModelProperty(value = "值从")
     private String valueFiledFrom;
     @ApiModelProperty(value = "值至")
@@ -39,7 +41,7 @@ public class RuleMiniConditionParameterDTO {
     @ApiModelProperty("业务模型")
     private String businessModel;
     @ApiModelProperty("参数值含义")
-    private String parameterMeaning;
+    private String defaultMeaning;
     @ApiModelProperty("校验Bean")
     private String validators;
     @ApiModelProperty("参数Filter")
