@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.hzero.mybatis.annotation.Unique;
 import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
@@ -80,7 +79,6 @@ public class Rule extends AuditDomain {
     @GeneratedValue
     private Long ruleId;
     @ApiModelProperty(value = "规则编码")
-    @Unique(O2RE_RULE_U1)
     private String ruleCode;
     @ApiModelProperty(value = "规则名称")
     @NotBlank
@@ -103,8 +101,6 @@ public class Rule extends AuditDomain {
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
     @ApiModelProperty(value = "租户ID")
-    @NotNull
-    @Unique(O2RE_RULE_U1)
     private Long tenantId;
 
     //
