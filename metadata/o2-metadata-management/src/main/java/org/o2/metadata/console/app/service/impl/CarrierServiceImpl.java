@@ -297,7 +297,7 @@ public class CarrierServiceImpl implements CarrierService {
             if (CarrierConstants.CarrierDeliveryRegionType.NATIONWIDE.equals(carrier.getDeliveryRegionTypeCode())) {
                 carrierDeliveryRange.setDeliveryFlag(BaseConstants.Flag.YES);
                 carrierDeliveryRangeList.add(carrierDeliveryRange);
-            } else if (CarrierConstants.CarrierDeliveryRegionType.CUSTOM_REGION.equals(carrier.getDeliveryRegionTypeCode())) {
+            } else if (CarrierConstants.CarrierDeliveryRegionType.CUSTOM_RANGE.equals(carrier.getDeliveryRegionTypeCode())) {
                 // 自定义地区判断
                 // 注意此处地址必须进行深拷贝，后续会变更地址，但不能影响其它承运商的判断
                 ReceiveAddressDTO tempAddress = carrierDeliveryRangeDTO.getAddress().copy();
