@@ -29,13 +29,14 @@ public class BusinessProcessManagerAutoConfiguration implements InitializingBean
                 .tags(new Tag(BUSINESS_PROCESS_NODE, "业务流程节点定义"))
                 .tags(new Tag(BUSINESS_PROCESS_NODE_PARAMETER, "业务流程节点参数定义"));
     }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         MessageAccessor.addBasenames("classpath:messages/bpm-management");
     }
 
     @Bean
-    public BusinessProcessManagementExtraDataManager pipelineManagementExtraDataManager(final Environment environment){
+    public BusinessProcessManagementExtraDataManager businessProcessManagementExtraDataManager(final Environment environment) {
         return new BusinessProcessManagementExtraDataManager(environment);
     }
 }
