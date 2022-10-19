@@ -15,7 +15,12 @@ import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
+import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
+import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
+import org.o2.metadata.domain.staticresource.service.StaticResourceBusinessService;
 import org.springframework.stereotype.Service;
 
 
@@ -32,17 +37,13 @@ import java.util.*;
 public class O2PublicLovServiceImpl implements O2PublicLovService {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
-    private final O2CmsManagementClient cmsManagementClient;
 
-    public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
-                                  O2CmsManagementClient cmsManagementClient) {
+    public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
-        this.cmsManagementClient = cmsManagementClient;
     }
 
-
     @Override
-    public void createPublicLovFile(PublicLovVO publicLovVO, String resourceOwner) {
+    public void createPublicLovFile(PublicLovVO publicLovVO, String resourceOwner, String businessTypeCode) {
         final Long tenantId = publicLovVO.getTenantId();
         if (StringUtils.isBlank(publicLovVO.getLovCode())) {
             // 设置PUB_LOV默认值集编码
@@ -51,9 +52,11 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         final String lovCode=publicLovVO.getLovCode();
         log.info("O2MD.PUBLIC_LOV:static params are : {},{}", tenantId, lovCode);
 
+        // 根据业务类型+目标class获取处理方法
+        StaticResourceBusinessService staticResourceBusinessService = BusinessTypeStrategyDispatcher.getService(businessTypeCode, StaticResourceBusinessService.class);
         // 查询静态资源配置信息
-        final StaticResourceConfigCO staticResourceConfigCO=cmsManagementClient.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
-        String uploadFolder=staticResourceConfigCO.getUploadFolder();
+        final StaticResourceConfigDO staticResourceConfigDO = staticResourceBusinessService.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_IDP_LOV);
+        String uploadFolder=staticResourceConfigDO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
         Map<String,String> resourceUrlMap=new HashMap<>(4);
@@ -77,13 +80,13 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
             //1.hzero-boot-file的client上传 拿到OSS的url 2.更新到静态资源表
             resourceUrlMap.put(MetadataConstants.Path.ZH_CN,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.ZH_CN));
             if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                    .equals(staticResourceConfigCO.getDifferentLangFlag())){
+                    .equals(staticResourceConfigDO.getDifferentLangFlag())){
                 resourceUrlMap.put(MetadataConstants.Path.EN_US,this.staticFile(data, uploadFolder,tenantId, MetadataConstants.Path.EN_US));
             }
 
             //  更新静态文件资源表
-            List<StaticResourceSaveDTO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap,resourceOwner,staticResourceConfigCO);
-            cmsManagementClient.saveResource(tenantId,saveDTOList);
+            List<StaticResourceSaveDO> staticResourceSaveDOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap,resourceOwner,staticResourceConfigDO);
+            staticResourceBusinessService.saveStaticResource(tenantId,staticResourceSaveDOList);
         }
     }
 
@@ -111,42 +114,42 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                 directory, fileName, MetadataConstants.PublicLov.JSON_TYPE, jsonString.getBytes());
     }
 
-    private List<StaticResourceSaveDTO> buildStaticResourceSaveDTO(Long tenantId,
+    private List<StaticResourceSaveDO> buildStaticResourceSaveDTO(Long tenantId,
                                                                    Map<String,String> resourceUrlMap,
                                                                    String resourceOwner,
-                                                                   StaticResourceConfigCO staticResourceConfigCO) {
-        List<StaticResourceSaveDTO> saveDTOList = new ArrayList<>();
+                                                                  StaticResourceConfigDO staticResourceConfigDO) {
+        List<StaticResourceSaveDO> staticResourceSaveDOList = new ArrayList<>();
         for(Map.Entry<String,String> entry:resourceUrlMap.entrySet()){
-            saveDTOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(),resourceOwner,staticResourceConfigCO));
+            staticResourceSaveDOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(),resourceOwner,staticResourceConfigDO));
         }
-        return saveDTOList;
+        return staticResourceSaveDOList;
     }
 
-    private StaticResourceSaveDTO fillCommonFields(Long tenantId,
+    private StaticResourceSaveDO fillCommonFields(Long tenantId,
                                                    String resourceUrl,
                                                    String languageCode,
                                                    String resourceOwner,
-                                                   StaticResourceConfigCO staticResourceConfigCO) {
+                                                   StaticResourceConfigDO staticResourceConfigDO) {
         String host=domainPrefix(resourceUrl);
         String url=trimDomainPrefix(resourceUrl);
 
-        StaticResourceSaveDTO saveDTO = new StaticResourceSaveDTO();
-        saveDTO.setResourceCode(staticResourceConfigCO.getResourceCode());
-        saveDTO.setDescription(staticResourceConfigCO.getDescription());
-        saveDTO.setResourceLevel(staticResourceConfigCO.getResourceLevel());
-        saveDTO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
+        StaticResourceSaveDO staticResourceSaveDO = new StaticResourceSaveDO();
+        staticResourceSaveDO.setResourceCode(staticResourceConfigDO.getResourceCode());
+        staticResourceSaveDO.setDescription(staticResourceConfigDO.getDescription());
+        staticResourceSaveDO.setResourceLevel(staticResourceConfigDO.getResourceLevel());
+        staticResourceSaveDO.setEnableFlag(MetadataConstants.StaticResourceConstants.ENABLE_FLAG);
         if(!MetadataConstants.StaticResourceConstants.LEVEL_PUBLIC
-                .equals(saveDTO.getResourceLevel())){
-            saveDTO.setResourceOwner(resourceOwner);
+                .equals(staticResourceSaveDO.getResourceLevel())){
+            staticResourceSaveDO.setResourceOwner(resourceOwner);
         }
         if(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                .equals(staticResourceConfigCO.getDifferentLangFlag())){
-            saveDTO.setLang(languageCode);
+                .equals(staticResourceConfigDO.getDifferentLangFlag())){
+            staticResourceSaveDO.setLang(languageCode);
         }
-        saveDTO.setResourceUrl(url);
-        saveDTO.setResourceHost(host);
-        saveDTO.setTenantId(tenantId);
-        return saveDTO;
+        staticResourceSaveDO.setResourceUrl(url);
+        staticResourceSaveDO.setResourceHost(host);
+        staticResourceSaveDO.setTenantId(tenantId);
+        return staticResourceSaveDO;
     }
 
     private static String trimDomainPrefix(String resourceUrl) {

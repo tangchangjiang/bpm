@@ -42,6 +42,25 @@ public interface MetadataConstants {
 
         String O2MD_RESOURCE_OWNER_IS_NULL="o2md.resource_owner.should.is.not.null";
 
+        /**
+         * 静态资源配置查询失败
+         */
+        String QUERY_STATIC_RESOURCE_CONFIG_FAIL = "o2md.query_static_resource_config_fail";
+
+        /**
+         * 静态资源保存失败
+         */
+        String SAVE_STATIC_RESOURCE_FAIL = "o2md.save_static_resource_fail";
+
+        /**
+         * 初始化策略加载错误
+         */
+        String BUSINESS_STRATEGY_INIT_WRONG = "o2md.error.strategy.init.wrong";
+
+        /**
+         * 没有符合的策略处理实现类
+         */
+        String BUSINESS_SERVICE_STRATEGY_FAILED = "o2md.error.service_handle_failed";
     }
     interface  MappingCacheName {
         String METADATA_CACHE_NAME = "O2_METADATA";
@@ -381,6 +400,8 @@ public interface MetadataConstants {
         String IDP_LOV_OWNER="idpLovOwner";
 
         String REGION_OWNER="regionOwner";
+
+        String BUSINESS_TYPE_CODE = "businessTypeCode";
     }
 
 }
