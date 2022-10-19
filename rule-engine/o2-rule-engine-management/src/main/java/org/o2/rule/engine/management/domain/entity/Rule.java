@@ -80,7 +80,6 @@ public class Rule extends AuditDomain {
     @GeneratedValue
     private Long ruleId;
     @ApiModelProperty(value = "规则编码")
-    @NotBlank
     @Unique(O2RE_RULE_U1)
     private String ruleCode;
     @ApiModelProperty(value = "规则名称")
