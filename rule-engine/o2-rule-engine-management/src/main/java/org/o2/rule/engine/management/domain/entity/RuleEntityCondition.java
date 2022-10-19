@@ -8,12 +8,15 @@ import org.hzero.mybatis.annotation.Unique;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
+
+import java.util.List;
 
 /**
  * 规则实体条件
@@ -80,5 +83,8 @@ public class RuleEntityCondition extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @Transient
+    private List<RuleParam> ruleParams;
 }
 

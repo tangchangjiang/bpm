@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
@@ -45,7 +46,8 @@ public class RuleEntityController extends BaseController {
                                                  RuleEntity ruleEntity,
                                                  @ApiIgnore @SortDefault(value = RuleEntity.FIELD_RULE_ENTITY_ID,
                                                          direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        Page<RuleEntity> list = ruleEntityRepository.pageAndSort(pageRequest, ruleEntity);
+        ruleEntity.setTenantId(organizationId);
+        Page<RuleEntity> list = PageHelper.doPageAndSort(pageRequest, () -> ruleEntityRepository.selectList(ruleEntity));
         return Results.success(list);
     }
 
@@ -63,6 +65,7 @@ public class RuleEntityController extends BaseController {
     @PostMapping
     public ResponseEntity<RuleEntity> create(@PathVariable(value = "organizationId") Long organizationId,
                                              @RequestBody RuleEntity ruleEntity) {
+        ruleEntity.setTenantId(organizationId);
         validObject(ruleEntity);
         ruleEntityService.save(ruleEntity);
         return Results.success(ruleEntity);

@@ -65,14 +65,11 @@ public class RuleEntityConditionServiceImpl implements RuleEntityConditionServic
             ruleEntityConditionRepository.insertSelective(ruleEntityCondition);
         } else {
             ruleEntityConditionRepository.updateOptional(ruleEntityCondition,
-                    RuleEntityCondition.FIELD_RULE_ENTITY_ID,
-                    RuleEntityCondition.FIELD_CONDITION_CODE,
                     RuleEntityCondition.FIELD_CONDITION_NAME,
                     RuleEntityCondition.FIELD_ENABLE_FLAG,
                     RuleEntityCondition.FIELD_DESCRIPTION,
                     RuleEntityCondition.FIELD_CONDITION_CODE_ALIAS,
-                    RuleEntityCondition.FIELD_COMPONENT_CODE,
-                    RuleEntityCondition.FIELD_TENANT_ID
+                    RuleEntityCondition.FIELD_COMPONENT_CODE
             );
         }
 

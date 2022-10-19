@@ -1,16 +1,17 @@
 package org.o2.rule.engine.management.app.service.impl;
 
+import io.choerodon.mybatis.domain.AuditDomain;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.o2.rule.engine.management.app.service.RuleEntityService;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
 import org.o2.rule.engine.management.domain.repository.RuleEntityRepository;
+import org.o2.rule.engine.management.infra.converts.RuleEntityConverts;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * 规则实体应用服务默认实现
@@ -65,13 +66,13 @@ public class RuleEntityServiceImpl implements RuleEntityService {
             ruleEntityRepository.insertSelective(ruleEntity);
         } else {
             ruleEntityRepository.updateOptional(ruleEntity,
-                    RuleEntity.FIELD_RULE_ENTITY_CODE,
                     RuleEntity.FIELD_RULE_ENTITY_NAME,
                     RuleEntity.FIELD_RULE_ENTITY_ALIAS,
-                    RuleEntity.FIELD_DESCRIPTION,
-                    RuleEntity.FIELD_TENANT_ID
+                    RuleEntity.FIELD_DESCRIPTION
             );
         }
+
+        ruleEntityRepository.saveRedis(ruleEntity.getTenantId(), RuleEntityConverts.toRuleEntityBO(ruleEntity));
 
         return ruleEntity;
     }

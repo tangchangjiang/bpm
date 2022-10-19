@@ -8,6 +8,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.rule.engine.management.app.service.RuleParamService;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
+import org.o2.rule.engine.management.infra.constant.RuleEntityConstants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -63,6 +64,7 @@ public class RuleParamController extends BaseController {
     @PostMapping
     public ResponseEntity<RuleParam> create(@PathVariable(value = "organizationId") Long organizationId,
                                             @RequestBody RuleParam ruleParam) {
+        ruleParam.setTenantId(organizationId);
         validObject(ruleParam);
         ruleParamService.save(ruleParam);
         return Results.success(ruleParam);

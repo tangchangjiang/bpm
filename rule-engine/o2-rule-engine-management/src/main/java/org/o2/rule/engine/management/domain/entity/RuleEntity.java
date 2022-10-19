@@ -33,6 +33,7 @@ public class RuleEntity extends AuditDomain {
     public static final String FIELD_RULE_ENTITY_NAME = "ruleEntityName";
     public static final String FIELD_RULE_ENTITY_ALIAS = "ruleEntityAlias";
     public static final String FIELD_DESCRIPTION = "description";
+    public static final String FIELD_ENABLE_FLAG = "enableFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String O2RE_RULE_ENTITY_U1 = "o2re_rule_entity_u1";
 
@@ -63,6 +64,8 @@ public class RuleEntity extends AuditDomain {
     @NotNull
     @Unique(O2RE_RULE_ENTITY_U1)
     private Long tenantId;
+    @ApiModelProperty(value = "是否启用", required = true)
+    private Integer enableFlag;
 
     //
     // 非数据库字段
