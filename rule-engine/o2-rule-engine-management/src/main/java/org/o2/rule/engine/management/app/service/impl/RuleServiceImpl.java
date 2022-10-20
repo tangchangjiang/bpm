@@ -65,8 +65,8 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public Rule detail(Long organizationId, Long ruleId) {
-        final Rule rule = ruleRepository.getRuleById(organizationId, ruleId);
+    public Rule detail(Long organizationId, Long ruleId, String ruleCode) {
+        final Rule rule = ruleRepository.getRuleDetail(organizationId, ruleId, ruleCode);
         if (Objects.isNull(rule)) {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
@@ -129,6 +129,7 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public Rule createRule(final Long organizationId, final Rule rule) {
 
+        rule.init();
         rule.validRule();
 
         final RuleEntity query = new RuleEntity();
