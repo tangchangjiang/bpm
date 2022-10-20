@@ -36,9 +36,10 @@ public interface RuleRepository extends BaseRepository<Rule> {
      *
      * @param tenantId 租户id
      * @param ruleId 规则id
+     * @param ruleCode 规则编码
      * @return {@link Rule}
      */
-    Rule getRuleById(Long tenantId, Long ruleId);
+    Rule getRuleDetail(Long tenantId, Long ruleId, String ruleCode);
 
     /**
      * 根据编码查询规则

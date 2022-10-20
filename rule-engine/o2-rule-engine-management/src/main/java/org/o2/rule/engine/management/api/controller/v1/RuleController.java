@@ -83,7 +83,15 @@ public class RuleController extends BaseController {
     @GetMapping("/{ruleId}")
     public ResponseEntity<Rule> detail(@PathVariable(value = "organizationId") Long organizationId,
                                        @ApiParam(value = "规则ID", required = true) @PathVariable Long ruleId) {
-        return Results.success(ruleService.detail(organizationId, ruleId));
+        return Results.success(ruleService.detail(organizationId, ruleId, null));
+    }
+
+    @ApiOperation(value = "规则维护-查询规则明细")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/rule-detail")
+    public ResponseEntity<Rule> detailByCode(@PathVariable(value = "organizationId") Long organizationId,
+                                       @ApiParam(value = "规则编码", required = true) @RequestParam String ruleCode) {
+        return Results.success(ruleService.detail(organizationId, null, ruleCode));
     }
 
     @ApiOperation(value = "规则维护-创建规则")

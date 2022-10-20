@@ -21,7 +21,7 @@ public interface RuleService {
      * @param ruleId 规则id
      * @return 规则对象
      */
-    Rule detail(Long organizationId, Long ruleId);
+    Rule detail(Long organizationId, Long ruleId, String ruleCode);
 
     /**
      * 查询规则明细
