@@ -79,7 +79,7 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
 
     protected boolean processCondition(ConditionalFlow conditionalFlow, T businessParam, Long tenantId) {
         //todo 获得结果
-        boolean hitFlag = calculatorProvider.calculate(ProcessEngineConstants.ExpressType.QL_EXPRESS, conditionalFlow.getRuleKey(), businessParam.getCurrentParam(), tenantId);
+        boolean hitFlag = calculatorProvider.calculate(ProcessEngineConstants.ExpressType.QL_EXPRESS, conditionalFlow.getRuleCode(), businessParam.getCurrentParam(), tenantId);
 
         if(hitFlag){
             afterHit(conditionalFlow, businessParam);

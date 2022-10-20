@@ -75,4 +75,14 @@ public class ViewJsonConvert {
         }
         return result;
     }
+
+    public static BpmnModel processJsonConvert(String processJson){
+        BpmnModel result;
+        try{
+            result = objectMapper.readValue(processJson, BpmnModel.class);
+        }catch (JsonProcessingException e) {
+            throw new CommonException(e);
+        }
+        return result;
+    }
 }

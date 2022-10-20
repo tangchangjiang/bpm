@@ -54,9 +54,8 @@ public class BaseFlowFactory {
         conditionalFlow.setId(edge.getId());
         conditionalFlow.setIncoming(Collections.singletonList(edge.getSource().getCell()));
         conditionalFlow.setOutgoing(Collections.singletonList(edge.getTarget().getCell()));
-        conditionalFlow.setRuleKey(edge.getData().getKey());
-        // todo 优先级
-        conditionalFlow.setPriority(1);
+        conditionalFlow.setRuleCode(edge.getData().getRuleCode());
+        conditionalFlow.setPriority(edge.getData().getPriority());
         return conditionalFlow;
     }
 }

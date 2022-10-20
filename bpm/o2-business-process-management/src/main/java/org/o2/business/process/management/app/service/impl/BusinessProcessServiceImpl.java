@@ -9,15 +9,13 @@ import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessExportVO;
 import org.o2.business.process.management.api.vo.BusinessNodeExportVO;
 import org.o2.business.process.management.app.service.BusinessProcessService;
-import org.o2.business.process.management.domain.BusinessProcessBO;
-import org.o2.business.process.management.domain.BusinessProcessNodeDO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessNodeRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.o2.business.process.management.infra.convert.ViewJsonConvert;
-import org.o2.core.helper.JsonHelper;
 import org.o2.process.domain.engine.BpmnModel;
+import org.o2.process.domain.engine.definition.Activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
 import org.o2.process.domain.engine.process.preruntime.validator.BpmnModelValidator;
 import org.o2.user.helper.IamUserHelper;
@@ -146,13 +144,14 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
         List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
-        businessExportList.forEach(e -> e.setBusinessProcessBO(JsonHelper.stringToObject(e.getProcessJson(), BusinessProcessBO.class)));
-        Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBusinessProcessBO().getAllNodeAction().stream()).map(BusinessProcessNodeDO::getBeanId).collect(Collectors.toSet());
+        businessExportList.forEach(e -> e.setBpmnModel(ViewJsonConvert.processJsonConvert(e.getProcessJson())));
+        Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBpmnModel().getServiceTask().stream())
+                .map(ServiceTask::getBeanId).collect(Collectors.toSet());
         Map<String, BusinessNodeExportVO> nodeExportMap = businessNodeRepository.listNodeForExport(beanIds, businessExportDTO.getTenantId())
                 .stream().collect(Collectors.toMap(BusinessNodeExportVO::getBeanId, Function.identity()));
         businessExportList.forEach(e -> {
             List<BusinessNodeExportVO> businessNodeExportList = new ArrayList<>();
-            e.getBusinessProcessBO().getAllNodeAction().forEach(node -> businessNodeExportList.add(nodeExportMap.get(node.getBeanId())));
+            e.getBpmnModel().getServiceTask().forEach(node -> businessNodeExportList.add(nodeExportMap.get(node.getBeanId())));
             e.setNodeExportList(businessNodeExportList);
         });
         return businessExportList;
