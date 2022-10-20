@@ -25,8 +25,8 @@ public class RuleEngineManagementClient {
      * @param ruleIds        规则id
      * @return 返回信息
      */
-    public OperateResponse enable(Long organizationId, List<Long> ruleIds) {
-        return ResponseUtils.getResponse(o2RuleManagementRemoteService.enable(organizationId, ruleIds), OperateResponse.class);
+    public OperateResponse useRule(Long organizationId, List<Long> ruleIds) {
+        return ResponseUtils.getResponse(o2RuleManagementRemoteService.useRule(organizationId, ruleIds), OperateResponse.class);
     }
 
     /**

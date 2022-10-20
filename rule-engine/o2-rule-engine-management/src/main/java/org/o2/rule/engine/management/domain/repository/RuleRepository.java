@@ -15,6 +15,14 @@ import java.util.Map;
 public interface RuleRepository extends BaseRepository<Rule> {
 
     /**
+     * 查询规则列表
+     *
+     * @param rule 规则查询参数
+     * @return {@link Rule}
+     */
+    List<Rule> ruleList(Rule rule);
+
+    /**
      * 根据id查询规则
      *
      * @param tenantId 租户id
