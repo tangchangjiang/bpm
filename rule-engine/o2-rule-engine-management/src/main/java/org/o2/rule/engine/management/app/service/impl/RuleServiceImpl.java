@@ -21,6 +21,7 @@ import org.o2.rule.engine.management.domain.vo.RuleConditionVO;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.o2.rule.engine.management.infra.constants.RuleEngineRedisConstants;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -69,6 +70,7 @@ public class RuleServiceImpl implements RuleService {
         if (Objects.isNull(rule)) {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
+        rule.setUpdateUserName(IamUserHelper.getRealName(rule.getLastUpdatedBy().toString()));
         this.convertRuleCondition(rule);
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
@@ -210,7 +212,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void enable(Long tenantId, List<Long> ruleIds) {
+    public void enable(Long tenantId, List<Long> ruleIds, Integer usedFlag) {
         if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
             return;
         }
@@ -220,9 +222,12 @@ public class RuleServiceImpl implements RuleService {
         }
         rules.forEach(rule -> {
             rule.setRuleStatus(RuleEngineConstants.RuleStatus.ENABLE);
+            if (usedFlag != null) {
+                rule.setUsedFlag(usedFlag);
+            }
         });
         transactionalHelper.transactionOperation(() -> {
-            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS, Rule.FIELD_USED_FLAG);
             ruleRepository.loadToCache(tenantId, rules);
         });
     }
