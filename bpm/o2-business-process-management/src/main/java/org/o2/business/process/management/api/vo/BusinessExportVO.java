@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hzero.export.annotation.ExcelColumn;
 import org.hzero.export.annotation.ExcelSheet;
 import org.o2.business.process.management.domain.BusinessProcessBO;
+import org.o2.process.domain.engine.BpmnModel;
 
 import java.util.List;
 
@@ -40,4 +41,6 @@ public class BusinessExportVO {
     List<BusinessNodeExportVO> nodeExportList;
 
     private BusinessProcessBO businessProcessBO;
+
+    private BpmnModel bpmnModel;
 }
