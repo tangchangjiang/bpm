@@ -8,6 +8,7 @@
         <result column="rule_name" property="ruleName" jdbcType="VARCHAR"/>
         <result column="entity_code" property="entityCode" jdbcType="VARCHAR"/>
         <result column="rule_description" property="ruleDescription" jdbcType="VARCHAR"/>
+        <result column="condition_expression" property="conditionExpression" jdbcType="VARCHAR"/>
         <result column="rule_json" property="ruleJson" jdbcType="VARCHAR"/>
         <result column="rule_status" property="ruleStatus" jdbcType="VARCHAR"/>
         <result column="used_flag" property="usedFlag" jdbcType="DECIMAL"/>
@@ -27,6 +28,8 @@
         r.rule_code,
         r.rule_status,
         r.used_flag,
+        r.rule_description,
+        r.condition_expression,
         r.rule_name,
         r.entity_code,
         re.rule_entity_id,
@@ -71,12 +74,50 @@
         </where>
     </select>
 
+    <select id="findRuleByIds" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+        SELECT
+        r.rule_id,
+        r.rule_code,
+        r.rule_status,
+        r.used_flag,
+        r.rule_description,
+        r.condition_expression,
+        r.rule_name,
+        r.entity_code,
+        re.rule_entity_id,
+        re.rule_entity_alias,
+        r.start_time,
+        r.end_time,
+        r.tenant_id,
+        r.last_update_date,
+        r.object_version_number
+        FROM
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND r.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(ruleIds)">
+                and r.rule_id IN
+                <foreach collection="ruleIds" separator="," open="(" close=")" item="ruleId">
+                    #{ruleId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <select id="getRuleById" resultType="org.o2.rule.engine.management.domain.entity.Rule">
         SELECT
         r.rule_id,
         r.rule_code,
         r.rule_status,
         r.used_flag,
+        r.condition_expression,
         r.rule_name,
         r.entity_code,
         re.rule_entity_id,

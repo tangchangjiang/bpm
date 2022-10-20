@@ -15,6 +15,8 @@ public class RuleRedisBO {
     private String ruleCode;
     @ApiModelProperty(value = "规则状态")
     private String ruleStatus;
+    @ApiModelProperty(value = "使用标记")
+    private Integer usedFlag;
     @ApiModelProperty(value = "规则名称")
     private String ruleName;
     @ApiModelProperty(value = "实体编码")
@@ -25,8 +27,6 @@ public class RuleRedisBO {
     private String ruleEntityAlias;
     @ApiModelProperty(value = "规则描述")
     private String ruleDescription;
-    @ApiModelProperty(value = "规则JSON")
-    private String ruleJson;
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
     @ApiModelProperty(value = "开始时间")
