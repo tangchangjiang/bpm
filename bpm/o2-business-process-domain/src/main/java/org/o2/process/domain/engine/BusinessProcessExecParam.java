@@ -3,6 +3,8 @@ package org.o2.process.domain.engine;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.o2.process.domain.engine.process.calculator.ProcessObject;
+import org.o2.rule.engine.client.domain.RuleObject;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
  */
 @XmlRootElement(name = "businessProcessExecParam")
 @Data
-public class BusinessProcessExecParam {
+public class BusinessProcessExecParam implements ProcessObject {
 
     private Map<String, Object> currentParam;
     @JsonIgnore
@@ -25,4 +27,8 @@ public class BusinessProcessExecParam {
     @JSONField(serialize = false)
     private Exception exception;
 
+    @Override
+    public RuleObject getRuleObject() {
+        return null;
+    }
 }
