@@ -4,6 +4,7 @@ import io.choerodon.core.oauth.CustomUserDetails;
 import io.choerodon.core.oauth.DetailsHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.imported.app.service.BatchImportHandler;
 import org.hzero.boot.imported.app.service.IBatchImportService;
 import org.hzero.boot.imported.infra.validator.annotation.ImportService;
@@ -68,7 +69,7 @@ public class BusinessProcessImportServiceImpl extends BatchImportHandler impleme
             businessProcessRepository.batchUpdateByPrimaryKey(updateList);
 
             importList.addAll(updateList);
-            businessProcessRedisService.batchUpdateProcessConfig(importList, tenantId);
+            businessProcessRedisService.batchUpdateProcessConfig(importList.stream().filter(i -> StringUtils.isNotBlank(i.getProcessJson())).collect(Collectors.toList()), tenantId);
         }
         return true;
     }

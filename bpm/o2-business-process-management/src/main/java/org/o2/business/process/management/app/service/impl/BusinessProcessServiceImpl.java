@@ -1,6 +1,7 @@
 package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -144,7 +145,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
         List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
-        businessExportList.forEach(e -> e.setBpmnModel(ViewJsonConvert.processJsonConvert(e.getProcessJson())));
+        businessExportList.forEach(e -> e.setBpmnModel(StringUtils.isBlank(e.getProcessJson()) ? new BpmnModel() : ViewJsonConvert.processJsonConvert(e.getProcessJson())));
         Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBpmnModel().getServiceTask().stream())
                 .map(ServiceTask::getBeanId).collect(Collectors.toSet());
         Map<String, BusinessNodeExportVO> nodeExportMap = businessNodeRepository.listNodeForExport(beanIds, businessExportDTO.getTenantId())
