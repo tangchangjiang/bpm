@@ -53,6 +53,8 @@ public class BusinessProcess extends AuditDomain {
     @NotBlank
     @Unique(O2BPM_BUSINESS_PROCESS_U1)
     private String processCode;
+    @ApiModelProperty("实体编码")
+    private String entityCode;
     @ApiModelProperty(value = "业务流程描述")
     private String description;
     @ApiModelProperty(value = "1-启用/0-禁用", required = true)
@@ -196,5 +198,12 @@ public class BusinessProcess extends AuditDomain {
 		this.updatedOperator = updatedOperator;
 	}
 
+	public String getEntityCode() {
+		return entityCode;
+	}
+
+	public void setEntityCode(String entityCode) {
+		this.entityCode = entityCode;
+	}
 }
 
