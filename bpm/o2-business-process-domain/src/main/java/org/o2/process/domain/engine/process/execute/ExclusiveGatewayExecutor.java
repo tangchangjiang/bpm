@@ -39,6 +39,7 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
     protected void doExecute(ProcessRuntimeContext<T> runtimeContext) {
         BaseElement nextNode = calculateOutgoing((BaseGateway) runtimeContext.getCurrentElement(), runtimeContext);
         runtimeContext.setCurrentElement(nextNode);
+        super.doExecute(runtimeContext);
     }
 
     protected BaseElement calculateOutgoing(BaseGateway baseGateway, ProcessRuntimeContext<T> runtimeContext) {
