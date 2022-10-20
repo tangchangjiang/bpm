@@ -36,8 +36,8 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
         for (RuleMiniConditionParameterDTO parameter : parameters) {
 
             final String compileValue;
-            if (TEXT.equalsIgnoreCase(parameter.getParamFormatCode())
-                    || LIST.equalsIgnoreCase(parameter.getParamFormatCode())) {
+            if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode()) &&
+                    (TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
                 compileValue = "\"" + parameter.getParamValue() + "\"";
             } else {
                 compileValue = parameter.getParamValue();

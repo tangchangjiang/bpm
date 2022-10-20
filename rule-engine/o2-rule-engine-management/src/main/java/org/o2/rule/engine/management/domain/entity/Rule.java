@@ -71,6 +71,19 @@ public class Rule extends AuditDomain {
         }
     }
 
+    /**
+     * 校验规则参数合法性
+     */
+    public void init() {
+        this.ruleId = null;
+        this.ruleCode = null;
+        this.setObjectVersionNumber(null);
+        this.setCreatedBy(null);
+        this.setLastUpdatedBy(null);
+        this.setCreationDate(null);
+        this.setLastUpdateDate(null);
+    }
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------

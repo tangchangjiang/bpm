@@ -35,9 +35,12 @@ public interface O2reRuleMapper extends BaseMapper<Rule> {
      *
      * @param tenantId 租户id
      * @param ruleId 规则id
+     * @param ruleCode 规则编码
      * @return {@link Rule}
      */
-    Rule getRuleById(@Param("tenantId") Long tenantId, @Param("ruleId") Long ruleId);
+    Rule getRuleDetail(@Param("tenantId") Long tenantId,
+                       @Param("ruleId") Long ruleId,
+                       @Param("ruleCode") String ruleCode);
 
     /**
      * 根据编码查询规则
