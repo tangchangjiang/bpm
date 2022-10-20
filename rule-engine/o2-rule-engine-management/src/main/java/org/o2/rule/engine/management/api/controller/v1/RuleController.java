@@ -88,9 +88,9 @@ public class RuleController extends BaseController {
 
     @ApiOperation(value = "规则维护-查询规则明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{ruleCode}")
+    @GetMapping("/rule-detail")
     public ResponseEntity<Rule> detailByCode(@PathVariable(value = "organizationId") Long organizationId,
-                                       @ApiParam(value = "规则ID", required = true) @PathVariable String ruleCode) {
+                                       @ApiParam(value = "规则ID", required = true) @RequestParam String ruleCode) {
         return Results.success(ruleService.detail(organizationId, null, ruleCode));
     }
 
