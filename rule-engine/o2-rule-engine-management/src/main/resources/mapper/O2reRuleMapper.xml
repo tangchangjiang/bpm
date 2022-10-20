@@ -36,6 +36,8 @@
         r.start_time,
         r.end_time,
         r.tenant_id,
+        r.created_by,
+        r.last_updated_by,
         r.last_update_date,
         r.object_version_number
         FROM
@@ -83,6 +85,8 @@
         r.start_time,
         r.end_time,
         r.tenant_id,
+        r.created_by,
+        r.last_updated_by,
         r.last_update_date,
         r.object_version_number
         FROM
