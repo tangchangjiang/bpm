@@ -1,6 +1,7 @@
 package org.o2.rule.engine.management.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
+import org.o2.rule.engine.management.domain.bo.RuleRedisBO;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import java.util.Date;
@@ -21,6 +22,15 @@ public interface RuleRepository extends BaseRepository<Rule> {
      * @return {@link Rule}
      */
     List<Rule> ruleList(Rule rule);
+
+    /**
+     * 查询规则列表
+     *
+     * @param tenantId 租户id
+     * @param ruleIds 规则id集合
+     * @return {@link Rule}
+     */
+    List<RuleRedisBO> ruleList(Long tenantId, List<Long> ruleIds);
 
     /**
      * 根据id查询规则
