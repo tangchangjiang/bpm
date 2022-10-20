@@ -44,6 +44,11 @@ public class RuleRepositoryImpl extends BaseRepositoryImpl<Rule> implements Rule
     }
 
     @Override
+    public List<Rule> findRuleByIds(Long tenantId, List<Long> ruleIds) {
+        return o2reRuleMapper.findRuleByIds(tenantId, ruleIds);
+    }
+
+    @Override
     public Rule getRuleById(Long tenantId, Long ruleId) {
         return o2reRuleMapper.getRuleById(tenantId, ruleId);
     }

@@ -23,6 +23,15 @@ public interface RuleRepository extends BaseRepository<Rule> {
     List<Rule> ruleList(Rule rule);
 
     /**
+     * 查询规则列表
+     *
+     * @param tenantId 租户id
+     * @param ruleIds 规则id集合
+     * @return {@link Rule}
+     */
+    List<Rule> findRuleByIds(Long tenantId, List<Long> ruleIds);
+
+    /**
      * 根据id查询规则
      *
      * @param tenantId 租户id
