@@ -145,7 +145,7 @@
                 and r.rule_id = #{ruleId}
             </if>
             <if test="ruleCode != null and ruleCode != '' ">
-                and r.rule_code like #{ruleCode}
+                and r.rule_code = #{ruleCode}
             </if>
         </where>
     </select>
