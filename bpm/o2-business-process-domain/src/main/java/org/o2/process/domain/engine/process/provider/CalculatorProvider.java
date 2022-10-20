@@ -4,6 +4,7 @@ import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.process.domain.engine.process.calculator.ExpressionCalculator;
 import org.o2.process.domain.infra.ProcessEngineConstants;
+import org.o2.rule.engine.client.domain.RuleObject;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,11 +23,11 @@ public class CalculatorProvider {
     public Map<String, ExpressionCalculator> calculatorMap = new HashMap<>();
 
    public CalculatorProvider(List<ExpressionCalculator> expressionCalculatorList){
-       expressionCalculatorList.forEach(calculator -> calculatorMap.put(calculator.getExpressType(), calculator));
+//       expressionCalculatorList.forEach(calculator -> calculatorMap.put(calculator.getExpressType(), calculator));
    }
 
 
-   public boolean calculate(String expressType, String expression, Map<String, Object> dataMap, Long tenantId){
+   public boolean calculate(String expressType, String expression, RuleObject dataMap, Long tenantId){
        ExpressionCalculator expressionCalculator = calculatorMap.get(expressType);
        if(null == expressionCalculator){
            throw new CommonException(ProcessEngineConstants.ErrorCode.UNSUPPORTED_EXPRESS_TYPE);

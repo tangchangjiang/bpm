@@ -19,7 +19,7 @@ import java.util.Map;
 @Data
 public class ConditionalFlow extends BaseFlow {
 
-    private String ruleKey;
+    private String ruleCode;
 
     private Integer priority;
 
@@ -31,12 +31,12 @@ public class ConditionalFlow extends BaseFlow {
     @Override
     public void validate(Map<String, BaseElement> elementMap) {
         super.validate(elementMap);
-        // todo 条件表达式合法性校验
-        if(StringUtils.isBlank(ruleKey)){
+        if(StringUtils.isBlank(ruleCode)){
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_CONDITION);
         }
     }
 
+    @Override
     protected void checkTerminal(Map<String, BaseElement> elementMap){
         checkElement(elementMap, getIncoming(), Collections.singletonList(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY), ProcessEngineConstants.ErrorCode.CONDITIONAL_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE);
         super.checkTerminal(elementMap);

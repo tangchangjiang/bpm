@@ -7,7 +7,7 @@ import org.o2.process.domain.engine.BusinessProcessExecParam;
 import org.o2.process.domain.engine.definition.BaseElement;
 import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
 import org.o2.process.domain.engine.definition.gateway.BaseGateway;
-import org.o2.process.domain.engine.process.provider.CalculatorProvider;
+import org.o2.process.domain.engine.process.calculator.RuleExpressCalculator;
 import org.o2.process.domain.engine.runtime.ProcessRuntimeContext;
 import org.o2.process.domain.infra.ProcessEngineConstants;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ import java.util.List;
 @Service
 public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extends BaseNodeExecutor<T> {
 
-    private final CalculatorProvider calculatorProvider;
+    private final RuleExpressCalculator ruleExpressCalculator;
 
-    public ExclusiveGatewayExecutor(CalculatorProvider calculatorProvider) {
-        this.calculatorProvider = calculatorProvider;
+    public ExclusiveGatewayExecutor(RuleExpressCalculator ruleExpressCalculator) {
+        this.ruleExpressCalculator = ruleExpressCalculator;
     }
 
     @Override
@@ -78,8 +78,8 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
     }
 
     protected boolean processCondition(ConditionalFlow conditionalFlow, T businessParam, Long tenantId) {
-        //todo 获得结果
-        boolean hitFlag = calculatorProvider.calculate(ProcessEngineConstants.ExpressType.QL_EXPRESS, conditionalFlow.getRuleKey(), businessParam.getCurrentParam(), tenantId);
+
+        boolean hitFlag = ruleExpressCalculator.calculate(conditionalFlow.getRuleCode(), businessParam.getRuleObject(), tenantId);
 
         if(hitFlag){
             afterHit(conditionalFlow, businessParam);

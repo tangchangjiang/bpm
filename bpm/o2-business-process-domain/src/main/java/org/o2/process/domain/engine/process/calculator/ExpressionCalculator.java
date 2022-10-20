@@ -1,10 +1,8 @@
 package org.o2.process.domain.engine.process.calculator;
 
-import java.util.Map;
+import org.o2.rule.engine.client.domain.RuleObject;
 
 public interface ExpressionCalculator {
 
-    boolean calculate(String expression, Map<String, Object> dataMap, Long tenantId);
-
-    String getExpressType();
+    boolean calculate(String expression, RuleObject ruleObject, Long tenantId);
 }

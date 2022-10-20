@@ -23,14 +23,24 @@ public class NotationEdge extends Cell {
     @Data
     public class Condition{
 
-        private String key;
+        private String ruleCode;
 
-        public String getKey() {
-            return key;
+        private Integer priority;
+
+        public String getRuleCode() {
+            return ruleCode;
         }
 
-        public void setKey(String key) {
-            this.key = key;
+        public void setRuleCode(String ruleCode) {
+            this.ruleCode = ruleCode;
+        }
+
+        public Integer getPriority() {
+            return priority;
+        }
+
+        public void setPriority(Integer priority) {
+            this.priority = priority;
         }
     }
 }
