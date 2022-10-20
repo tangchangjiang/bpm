@@ -125,6 +125,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
         }
         // 加载到缓存中
         businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
+        // todo 规则发布
         return businessProcess;
     }
 

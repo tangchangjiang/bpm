@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="org.o2.business.process.management.domain.entity.BusinessProcess">
         <result column="biz_process_id" property="bizProcessId" jdbcType="DECIMAL"/>
         <result column="process_code" property="processCode" jdbcType="VARCHAR"/>
+        <result column="entity_code" property="entityCode" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
         <result column="process_json" property="processJson" jdbcType="VARCHAR"/>
@@ -20,6 +21,7 @@
 
     <select id="listBusinessForExport" resultType="org.o2.business.process.management.api.vo.BusinessExportVO">
         select process_code,
+        entity_code,
         description,
         enabled_flag,
         process_json,
