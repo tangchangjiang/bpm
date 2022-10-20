@@ -3,7 +3,6 @@ package org.o2.rule.engine.management.infra.mapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
-
 import java.util.List;
 
 import io.choerodon.mybatis.common.BaseMapper;
@@ -21,6 +20,15 @@ public interface O2reRuleMapper extends BaseMapper<Rule> {
      * @return {@link Rule}
      */
     List<Rule> ruleList(Rule rule);
+
+    /**
+     * 查询规则列表
+     *
+     * @param tenantId 租户id
+     * @param ruleIds 规则id集合
+     * @return {@link Rule}
+     */
+    List<Rule> findRuleByIds(@Param("tenantId") Long tenantId, @Param("ruleIds") List<Long> ruleIds);
 
     /**
      * 根据id查询规则

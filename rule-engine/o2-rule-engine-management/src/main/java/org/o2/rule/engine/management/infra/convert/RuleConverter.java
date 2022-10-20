@@ -25,6 +25,7 @@ public class RuleConverter {
         for (Rule rule : rules) {
             final RuleRedisBO redisBO = new RuleRedisBO();
             redisBO.setRuleId(rule.getRuleId());
+            redisBO.setUsedFlag(rule.getUsedFlag());
             redisBO.setRuleCode(rule.getRuleCode());
             redisBO.setRuleName(rule.getRuleName());
             redisBO.setRuleStatus(rule.getRuleStatus());

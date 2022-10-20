@@ -216,7 +216,7 @@ public class RuleServiceImpl implements RuleService {
         if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
             return;
         }
-        final List<Rule> rules = ruleRepository.selectByIds(StringUtils.join(ruleIds, BaseConstants.Symbol.COMMA));
+        final List<Rule> rules = ruleRepository.findRuleByIds(tenantId, ruleIds);
         if (CollectionUtils.isEmpty(rules)) {
             return;
         }
