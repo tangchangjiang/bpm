@@ -49,9 +49,11 @@
                c.priority,
                c.template_code,
                c.volume_conversion,
+               ft.template_name,
                c.tenant_id
         FROM o2md_carrier c
                      left join o2md_carrier_tl ct
+                     left join o2md_freight_template ft on ft.template_code = ct.template_code and ft.tenant_id= ct.tenant_id
                 on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = #{tenantId}
                 where 1 = 1
         <choose>
