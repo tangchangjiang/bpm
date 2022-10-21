@@ -74,7 +74,7 @@
         </where>
     </select>
 
-    <select id="findRuleByIds" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+    <select id="findRuleList" resultType="org.o2.rule.engine.management.domain.entity.Rule">
         SELECT
         r.rule_id,
         r.rule_code,
@@ -106,6 +106,12 @@
                 and r.rule_id IN
                 <foreach collection="ruleIds" separator="," open="(" close=")" item="ruleId">
                     #{ruleId}
+                </foreach>
+            </if>
+            <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(ruleCodes)">
+                and r.rule_code IN
+                <foreach collection="ruleCodes" separator="," open="(" close=")" item="ruleCode">
+                    #{ruleCode}
                 </foreach>
             </if>
         </where>

@@ -63,9 +63,15 @@ public interface RuleService {
      * 启用规则
      * @param tenantId 租户ID
      * @param ruleIds 规则id
-     * @param usedFlag 使用标记
      */
-    void enable(Long tenantId, List<Long> ruleIds, Integer usedFlag);
+    void enable(Long tenantId, List<Long> ruleIds);
+
+    /**
+     * 启用规则
+     * @param tenantId 租户ID
+     * @param ruleCodes 规则编码
+     */
+    void useRule(Long tenantId, List<String> ruleCodes);
 
     /**
      * 禁用规则场景
