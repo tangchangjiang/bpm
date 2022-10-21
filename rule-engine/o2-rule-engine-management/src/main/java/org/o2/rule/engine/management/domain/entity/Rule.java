@@ -36,6 +36,7 @@ public class Rule extends AuditDomain {
     public static final String FIELD_RULE_ID = "ruleId";
     public static final String FIELD_RULE_CODE = "ruleCode";
     public static final String FIELD_RULE_STATUS = "ruleStatus";
+    public static final String FIELD_USED_FLAG = "usedFlag";
     public static final String FIELD_RULE_NAME = "ruleName";
     public static final String FIELD_ENTITY_CODE = "entityCode";
     public static final String FIELD_RULE_DESCRIPTION = "ruleDescription";
@@ -70,6 +71,19 @@ public class Rule extends AuditDomain {
         }
     }
 
+    /**
+     * 校验规则参数合法性
+     */
+    public void init() {
+        this.ruleId = null;
+        this.ruleCode = null;
+        this.setObjectVersionNumber(null);
+        this.setCreatedBy(null);
+        this.setLastUpdatedBy(null);
+        this.setCreationDate(null);
+        this.setLastUpdateDate(null);
+    }
+
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -96,6 +110,8 @@ public class Rule extends AuditDomain {
     @LovValue(lovCode = RuleEngineConstants.RuleStatus.CODE)
     @NotBlank
     private String ruleStatus;
+    @ApiModelProperty(value = "是否使用标记，默认单值0")
+    private Integer usedFlag;
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
     @ApiModelProperty(value = "结束时间")
@@ -116,8 +132,20 @@ public class Rule extends AuditDomain {
     private Long ruleEntityId;
 
     @Transient
+    @ApiModelProperty(value = "规则实体名")
+    private String ruleEntityName;
+
+    @Transient
     @ApiModelProperty(value = "规则实体别名")
     private String ruleEntityAlias;
+
+    @Transient
+    @ApiModelProperty(value = "规则创建人名称")
+    private String createUserName;
+
+    @Transient
+    @ApiModelProperty(value = "规则修改人名称")
+    private String updateUserName;
 
     @Transient
     @NotNull

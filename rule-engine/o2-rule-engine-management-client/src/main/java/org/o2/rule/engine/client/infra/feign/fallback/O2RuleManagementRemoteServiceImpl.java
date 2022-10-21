@@ -17,8 +17,8 @@ import java.util.List;
 public class O2RuleManagementRemoteServiceImpl implements O2RuleManagementRemoteService {
 
     @Override
-    public ResponseEntity<String> enable(Long organizationId, List<Long> ruleIds) {
-        log.error("Enable Rules Error, organizationId:[{}], ruleIds:[{}]", organizationId, JsonHelper.objectToString(ruleIds));
+    public ResponseEntity<String> useRule(Long organizationId, List<String> ruleCodes) {
+        log.error("Use Rules Error, organizationId:[{}], ruleIds:[{}]", organizationId, ruleCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

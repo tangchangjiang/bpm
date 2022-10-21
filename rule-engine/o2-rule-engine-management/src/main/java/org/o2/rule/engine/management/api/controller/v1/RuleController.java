@@ -2,6 +2,8 @@ package org.o2.rule.engine.management.api.controller.v1;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
@@ -11,13 +13,17 @@ import org.o2.core.response.OperateResponse;
 import org.o2.rule.engine.management.app.service.RuleService;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.mybatis.pagehelper.domain.Sort;
@@ -50,8 +56,26 @@ public class RuleController extends BaseController {
                                            @ApiIgnore @SortDefault(value = Rule.FIELD_RULE_ID,
                                                    direction = Sort.Direction.DESC) PageRequest pageRequest) {
         rule.setTenantId(organizationId);
-        Page<Rule> list = ruleRepository.pageAndSort(pageRequest, rule);
-        return Results.success(list);
+        final Page<Rule> rulePage = PageHelper.doPage(pageRequest, () -> {
+            final List<Rule> rules = ruleRepository.ruleList(rule);
+            if (CollectionUtils.isNotEmpty(rules)) {
+                final List<String> createUserIds = rules.stream().map(r -> String.valueOf(r.getCreatedBy())).collect(Collectors.toList());
+                final Map<Long, String> realNameMap = IamUserHelper.getRealNameMap(createUserIds);
+                if (MapUtils.isEmpty(realNameMap)) {
+                    return rules;
+                }
+                final Map<Long, List<Rule>> ruleMap = rules.stream().collect(Collectors.groupingBy(Rule::getCreatedBy));
+                for (Map.Entry<Long, List<Rule>> entry : ruleMap.entrySet()) {
+                    final String userName = realNameMap.get(entry.getKey());
+                    entry.getValue().forEach(r -> {
+                        r.setCreateUserName(userName);
+                    });
+                }
+            }
+            return rules;
+        });
+
+        return Results.success(rulePage);
     }
 
     @ApiOperation(value = "规则维护-查询规则明细")
@@ -59,7 +83,15 @@ public class RuleController extends BaseController {
     @GetMapping("/{ruleId}")
     public ResponseEntity<Rule> detail(@PathVariable(value = "organizationId") Long organizationId,
                                        @ApiParam(value = "规则ID", required = true) @PathVariable Long ruleId) {
-        return Results.success(ruleService.detail(organizationId, ruleId));
+        return Results.success(ruleService.detail(organizationId, ruleId, null));
+    }
+
+    @ApiOperation(value = "规则维护-查询规则明细")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/rule-detail")
+    public ResponseEntity<Rule> detailByCode(@PathVariable(value = "organizationId") Long organizationId,
+                                       @ApiParam(value = "规则编码", required = true) @RequestParam String ruleCode) {
+        return Results.success(ruleService.detail(organizationId, null, ruleCode));
     }
 
     @ApiOperation(value = "规则维护-创建规则")

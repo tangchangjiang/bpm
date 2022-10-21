@@ -23,14 +23,14 @@ import java.util.List;
 public interface O2RuleManagementRemoteService {
 
     /**
-     * 批量启用规则
+     * 批量使用规则
      *
      * @param organizationId 租户ID
-     * @param ruleIds        规则id
+     * @param ruleCodes      规则编码
      * @return 返回信息
      */
-    @PutMapping("/{organizationId}/o2re-rules/enable")
-    ResponseEntity<String> enable(@PathVariable Long organizationId, @RequestBody List<Long> ruleIds);
+    @PutMapping("/{organizationId}/o2re-rules-internal/use-rule")
+    ResponseEntity<String> useRule(@PathVariable Long organizationId, @RequestBody List<String> ruleCodes);
 
     /**
      * 批量禁用规则
@@ -39,7 +39,7 @@ public interface O2RuleManagementRemoteService {
      * @param ruleIds        规则id
      * @return 返回信息
      */
-    @PutMapping("/{organizationId}/o2re-rules/disable")
+    @PutMapping("/{organizationId}/o2re-rules-internal/disable-rule")
     ResponseEntity<String> disable(@PathVariable Long organizationId, @RequestBody List<Long> ruleIds);
 
 }

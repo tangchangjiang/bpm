@@ -14,6 +14,7 @@ import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
 import org.o2.rule.engine.management.app.service.RuleService;
+import org.o2.rule.engine.management.domain.bo.RuleQueryBO;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.domain.entity.*;
 import org.o2.rule.engine.management.domain.repository.*;
@@ -21,6 +22,7 @@ import org.o2.rule.engine.management.domain.vo.RuleConditionVO;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.o2.rule.engine.management.infra.constants.RuleEngineRedisConstants;
+import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -64,11 +66,12 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public Rule detail(Long organizationId, Long ruleId) {
-        final Rule rule = ruleRepository.getRuleById(organizationId, ruleId);
+    public Rule detail(Long organizationId, Long ruleId, String ruleCode) {
+        final Rule rule = ruleRepository.getRuleDetail(organizationId, ruleId, ruleCode);
         if (Objects.isNull(rule)) {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
+        rule.setUpdateUserName(IamUserHelper.getRealName(rule.getLastUpdatedBy().toString()));
         this.convertRuleCondition(rule);
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
@@ -127,6 +130,7 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public Rule createRule(final Long organizationId, final Rule rule) {
 
+        rule.init();
         rule.validRule();
 
         final RuleEntity query = new RuleEntity();
@@ -214,15 +218,39 @@ public class RuleServiceImpl implements RuleService {
         if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
             return;
         }
-        final List<Rule> rules = ruleRepository.selectByIds(StringUtils.join(ruleIds, BaseConstants.Symbol.COMMA));
+        final RuleQueryBO query = new RuleQueryBO(tenantId, ruleIds);
+        final List<Rule> rules = ruleRepository.findRuleList(query);
         if (CollectionUtils.isEmpty(rules)) {
             return;
         }
+        this.enableRules(rules, tenantId, BaseConstants.Flag.NO);
+    }
+
+    @Override
+    public void useRule(Long tenantId, List<String> ruleCodes) {
+        if (tenantId == null || CollectionUtils.isEmpty(ruleCodes)) {
+            return;
+        }
+        final RuleQueryBO query = new RuleQueryBO(tenantId);
+        query.setRuleCodes(ruleCodes);
+
+        final List<Rule> rules = ruleRepository.findRuleList(query);
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+
+        this.enableRules(rules, tenantId, BaseConstants.Flag.YES);
+    }
+
+    private void enableRules(List<Rule> rules, Long tenantId, Integer usedFlag) {
         rules.forEach(rule -> {
             rule.setRuleStatus(RuleEngineConstants.RuleStatus.ENABLE);
+            if (usedFlag != null) {
+                rule.setUsedFlag(usedFlag);
+            }
         });
         transactionalHelper.transactionOperation(() -> {
-            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
+            ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS, Rule.FIELD_USED_FLAG);
             ruleRepository.loadToCache(tenantId, rules);
         });
     }

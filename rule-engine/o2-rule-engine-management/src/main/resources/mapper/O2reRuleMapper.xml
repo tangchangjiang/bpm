@@ -8,8 +8,10 @@
         <result column="rule_name" property="ruleName" jdbcType="VARCHAR"/>
         <result column="entity_code" property="entityCode" jdbcType="VARCHAR"/>
         <result column="rule_description" property="ruleDescription" jdbcType="VARCHAR"/>
+        <result column="condition_expression" property="conditionExpression" jdbcType="VARCHAR"/>
         <result column="rule_json" property="ruleJson" jdbcType="VARCHAR"/>
         <result column="rule_status" property="ruleStatus" jdbcType="VARCHAR"/>
+        <result column="used_flag" property="usedFlag" jdbcType="DECIMAL"/>
         <result column="start_time" property="startTime" jdbcType="DATE"/>
         <result column="end_time" property="endTime" jdbcType="DATE"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
@@ -20,17 +22,70 @@
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
 
-    <select id="getRuleById" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+    <select id="ruleList" resultType="org.o2.rule.engine.management.domain.entity.Rule">
         SELECT
         r.rule_id,
         r.rule_code,
         r.rule_status,
+        r.used_flag,
+        r.rule_description,
+        r.condition_expression,
         r.rule_name,
         r.entity_code,
         re.rule_entity_id,
         re.rule_entity_alias,
+        re.rule_entity_name,
         r.rule_json,
-        r.enable_flag,
+        r.start_time,
+        r.end_time,
+        r.tenant_id,
+        r.created_by,
+        r.last_updated_by,
+        r.last_update_date,
+        r.object_version_number
+        FROM
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND r.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="ruleCode != null and ruleCode != '' ">
+                <bind name="ruleCodeLike" value="'%'+ruleCode+'%'"/>
+                and r.rule_code like #{ruleCodeLike}
+            </if>
+            <if test="ruleName != null and ruleName != '' ">
+                <bind name="ruleNameLike" value="'%'+ruleName+'%'"/>
+                and r.rule_name like #{ruleNameLike}
+            </if>
+            <if test="ruleStatus != null and ruleStatus != ''">
+                and r.rule_status = #{ruleStatus}
+            </if>
+            <if test="ruleId != null ">
+                and r.rule_id = #{ruleId}
+            </if>
+            <if test="entityCode != null and entityCode != '' ">
+                and r.entity_code = #{entityCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="findRuleList" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+        SELECT
+        r.rule_id,
+        r.rule_code,
+        r.rule_status,
+        r.used_flag,
+        r.rule_description,
+        r.condition_expression,
+        r.rule_name,
+        r.entity_code,
+        re.rule_entity_id,
+        re.rule_entity_alias,
         r.start_time,
         r.end_time,
         r.tenant_id,
@@ -47,8 +102,56 @@
                     AND 1 = 0
                 </otherwise>
             </choose>
+            <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(ruleIds)">
+                and r.rule_id IN
+                <foreach collection="ruleIds" separator="," open="(" close=")" item="ruleId">
+                    #{ruleId}
+                </foreach>
+            </if>
+            <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(ruleCodes)">
+                and r.rule_code IN
+                <foreach collection="ruleCodes" separator="," open="(" close=")" item="ruleCode">
+                    #{ruleCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getRuleDetail" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+        SELECT
+        r.rule_id,
+        r.rule_code,
+        r.rule_status,
+        r.used_flag,
+        r.condition_expression,
+        r.rule_name,
+        r.entity_code,
+        re.rule_entity_id,
+        re.rule_entity_alias,
+        r.rule_json,
+        r.start_time,
+        r.end_time,
+        r.tenant_id,
+        r.created_by,
+        r.last_updated_by,
+        r.last_update_date,
+        r.object_version_number
+        FROM
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND r.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
             <if test="ruleId != null ">
                 and r.rule_id = #{ruleId}
+            </if>
+            <if test="ruleCode != null and ruleCode != '' ">
+                and r.rule_code = #{ruleCode}
             </if>
         </where>
     </select>
@@ -58,12 +161,12 @@
         r.rule_id,
         r.rule_code,
         r.rule_status,
+        r.used_flag,
         r.rule_name,
         r.condition_expression,
         r.entity_code,
         re.rule_entity_alias,
         r.rule_json,
-        r.enable_flag,
         r.start_time,
         r.end_time,
         r.tenant_id,

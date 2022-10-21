@@ -18,8 +18,8 @@ import java.util.List;
 @Service("basicRuleConditionTranslator")
 public class BasicRuleConditionTranslator implements RuleConditionTranslator {
 
-    private static final String STRING = "string";
-    private static final String LIST = "list";
+    private static final String TEXT = "TEXT";
+    private static final String LIST = "LIST";
 
     @Override
     public String conditionCode() {
@@ -36,8 +36,8 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
         for (RuleMiniConditionParameterDTO parameter : parameters) {
 
             final String compileValue;
-            if (STRING.equalsIgnoreCase(parameter.getParamEditTypeCode())
-                    || LIST.equalsIgnoreCase(parameter.getParamEditTypeCode())) {
+            if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode()) &&
+                    (TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
                 compileValue = "\"" + parameter.getParamValue() + "\"";
             } else {
                 compileValue = parameter.getParamValue();

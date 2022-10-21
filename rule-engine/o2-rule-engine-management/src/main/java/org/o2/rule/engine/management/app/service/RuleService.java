@@ -21,7 +21,7 @@ public interface RuleService {
      * @param ruleId 规则id
      * @return 规则对象
      */
-    Rule detail(Long organizationId, Long ruleId);
+    Rule detail(Long organizationId, Long ruleId, String ruleCode);
 
     /**
      * 查询规则明细
@@ -65,6 +65,13 @@ public interface RuleService {
      * @param ruleIds 规则id
      */
     void enable(Long tenantId, List<Long> ruleIds);
+
+    /**
+     * 启用规则
+     * @param tenantId 租户ID
+     * @param ruleCodes 规则编码
+     */
+    void useRule(Long tenantId, List<String> ruleCodes);
 
     /**
      * 禁用规则场景
