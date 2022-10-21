@@ -20,6 +20,9 @@ public class BusinessExportVO {
     @ApiModelProperty(value = "业务流程编码", required = true)
     @ExcelColumn(zh = "业务流程编码", en = "processCode")
     private String processCode;
+    @ApiModelProperty("规则实体")
+    @ExcelColumn(zh = "规则实体", en = "entityCode")
+    private String entityCode;
     @ApiModelProperty(value = "业务流程描述")
     @ExcelColumn(zh = "业务流程描述", en = "description")
     private String description;

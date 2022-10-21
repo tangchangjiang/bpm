@@ -34,6 +34,10 @@ public class ConditionalFlow extends BaseFlow {
         if(StringUtils.isBlank(ruleCode)){
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_CONDITION);
         }
+
+        if(null == priority){
+            throwElementValidatorException(ProcessEngineConstants.ErrorCode.CONDITION_FLOW_LACK_PRIORITY);
+        }
     }
 
     @Override

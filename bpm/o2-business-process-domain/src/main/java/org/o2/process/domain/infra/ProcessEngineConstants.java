@@ -31,6 +31,8 @@ public interface ProcessEngineConstants {
 
         String ELEMENT_LACK_CONDITION = "Element lack condition";
 
+        String CONDITION_FLOW_LACK_PRIORITY = "condition flow lack priority";
+
         String ELEMENT_ILLEGAL_VERIFICATION_PARAMETERS = "The element verification parameter is invalid";
 
         String MODEL_UNKNOWN_ELEMENT_KEY = "Unknown element key";
