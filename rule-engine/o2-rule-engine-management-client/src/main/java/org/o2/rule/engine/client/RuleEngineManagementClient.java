@@ -19,14 +19,14 @@ public class RuleEngineManagementClient {
     }
 
     /**
-     * 批量启用规则
+     * 批量使用规则
      *
      * @param organizationId 租户ID
-     * @param ruleIds        规则id
+     * @param ruleCodes      规则编码
      * @return 返回信息
      */
-    public OperateResponse useRule(Long organizationId, List<Long> ruleIds) {
-        return ResponseUtils.getResponse(o2RuleManagementRemoteService.useRule(organizationId, ruleIds), OperateResponse.class);
+    public OperateResponse useRule(Long organizationId, List<String> ruleCodes) {
+        return ResponseUtils.getResponse(o2RuleManagementRemoteService.useRule(organizationId, ruleCodes), OperateResponse.class);
     }
 
     /**

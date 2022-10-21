@@ -14,6 +14,7 @@ import org.o2.rule.engine.management.app.filter.FilterHandlerContext;
 import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
 import org.o2.rule.engine.management.app.service.RuleService;
+import org.o2.rule.engine.management.domain.bo.RuleQueryBO;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.domain.entity.*;
 import org.o2.rule.engine.management.domain.repository.*;
@@ -213,14 +214,35 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void enable(Long tenantId, List<Long> ruleIds, Integer usedFlag) {
+    public void enable(Long tenantId, List<Long> ruleIds) {
         if (tenantId == null || CollectionUtils.isEmpty(ruleIds)) {
             return;
         }
-        final List<Rule> rules = ruleRepository.findRuleByIds(tenantId, ruleIds);
+        final RuleQueryBO query = new RuleQueryBO(tenantId, ruleIds);
+        final List<Rule> rules = ruleRepository.findRuleList(query);
         if (CollectionUtils.isEmpty(rules)) {
             return;
         }
+        this.enableRules(rules, tenantId, BaseConstants.Flag.NO);
+    }
+
+    @Override
+    public void useRule(Long tenantId, List<String> ruleCodes) {
+        if (tenantId == null || CollectionUtils.isEmpty(ruleCodes)) {
+            return;
+        }
+        final RuleQueryBO query = new RuleQueryBO(tenantId);
+        query.setRuleCodes(ruleCodes);
+
+        final List<Rule> rules = ruleRepository.findRuleList(query);
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+
+        this.enableRules(rules, tenantId, BaseConstants.Flag.YES);
+    }
+
+    private void enableRules(List<Rule> rules, Long tenantId, Integer usedFlag) {
         rules.forEach(rule -> {
             rule.setRuleStatus(RuleEngineConstants.RuleStatus.ENABLE);
             if (usedFlag != null) {

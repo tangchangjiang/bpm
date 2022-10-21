@@ -128,7 +128,7 @@ public class RuleController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/enable")
     public ResponseEntity<OperateResponse> enable(@PathVariable Long organizationId, @RequestBody List<Long> ruleIds) {
-        ruleService.enable(organizationId, ruleIds, BaseConstants.Flag.NO);
+        ruleService.enable(organizationId, ruleIds);
         return Results.success(OperateResponse.success());
     }
 
