@@ -8,9 +8,6 @@ import org.o2.rule.engine.management.app.validator.RuleParamValidator;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.util.RuleConditionTranslatorHelper;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.choerodon.core.convertor.ApplicationContextHelper;
 
@@ -19,22 +16,20 @@ import io.choerodon.core.convertor.ApplicationContextHelper;
  */
 @Data
 public class RuleMiniConditionDTO {
+    @ApiModelProperty("条件id")
+    private Long conditionId;
     @ApiModelProperty("条件标准编码")
-    private String code;
+    private String conditionCode;
+    @ApiModelProperty(value = "规则实体条件编码别名")
+    private String conditionCodeAlias;
     @ApiModelProperty("最小条件名称")
-    private String name;
-    @ApiModelProperty("最小条件名称")
+    private String conditionName;
+    @ApiModelProperty("是否启用")
+    private Integer enableFlag;
+    @ApiModelProperty("组件类型")
     private String componentCode;
-    @ApiModelProperty("参数VOS")
+    @ApiModelProperty("组件参数")
     private List<RuleMiniConditionParameterDTO> params;
-
-    /**
-     * 转成MAP
-     * @return map
-     */
-    public Map<String, RuleMiniConditionParameterDTO> convertToMap() {
-        return params.stream().collect(Collectors.toMap(RuleMiniConditionParameterDTO::getParameterCode, Function.identity()));
-    }
 
     /**
      * 构建条件值
@@ -43,7 +38,7 @@ public class RuleMiniConditionDTO {
      * @return 返回值
      */
     public String condition(Rule rule) {
-        return RuleConditionTranslatorHelper.translate(rule, this.code, this.params);
+        return RuleConditionTranslatorHelper.translate(rule, this.componentCode, StringUtils.defaultString(this.conditionCodeAlias, this.conditionCode), this.params);
     }
 
     /**

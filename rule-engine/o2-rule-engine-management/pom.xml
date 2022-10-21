@@ -27,10 +27,18 @@
             <groupId>org.o2.starter</groupId>
             <artifactId>o2-starter-code-builder</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-delay-queue</artifactId>
+        </dependency>
         <!-- hzero -->
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-mybatis-mapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hzero.boot</groupId>
+            <artifactId>hzero-boot-platform</artifactId>
         </dependency>
         <!--spring-->
         <dependency>

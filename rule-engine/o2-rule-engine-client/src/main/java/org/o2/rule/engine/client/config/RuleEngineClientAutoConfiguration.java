@@ -1,5 +1,6 @@
 package org.o2.rule.engine.client.config;
 
+import org.hzero.core.HZeroAutoConfiguration;
 import org.hzero.core.message.MessageAccessor;
 import org.o2.rule.engine.client.RuleEngineClient;
 import org.o2.rule.engine.client.RuleEngineClientImpl;
@@ -8,9 +9,13 @@ import org.o2.rule.engine.client.app.service.RuleObjectService;
 import org.o2.rule.engine.client.app.service.impl.RuleEngineServiceImpl;
 import org.o2.rule.engine.client.app.service.impl.RuleObjectServiceImpl;
 import org.o2.rule.engine.client.domain.repository.RuleRepository;
+import org.o2.rule.engine.client.infra.feign.O2RuleRemoteService;
+import org.o2.rule.engine.client.infra.feign.fallback.O2RuleRemoteServiceImpl;
 import org.o2.rule.engine.client.infra.repository.impl.RuleRepositoryImpl;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +26,10 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/10/09
  */
 @Configuration
+@AutoConfigureAfter(HZeroAutoConfiguration.class)
+@EnableFeignClients(
+        basePackageClasses = {O2RuleRemoteService.class}
+)
 public class RuleEngineClientAutoConfiguration implements InitializingBean {
 
     @Override
@@ -29,14 +38,26 @@ public class RuleEngineClientAutoConfiguration implements InitializingBean {
     }
 
     /**
+     * 远程调用Service
+     *
+     * @return 返回信息
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public O2RuleRemoteServiceImpl o2RuleRemoteServiceFallback() {
+        return new O2RuleRemoteServiceImpl();
+    }
+
+    /**
      * 规则仓库
      *
+     * @param o2RuleRemoteService 远程调用
      * @return 规则仓库
      */
     @Bean
     @ConditionalOnMissingBean
-    public RuleRepository ruleRepository() {
-        return new RuleRepositoryImpl();
+    public RuleRepository ruleRepository(O2RuleRemoteService o2RuleRemoteService) {
+        return new RuleRepositoryImpl(o2RuleRemoteService);
     }
 
     /**
@@ -60,7 +81,7 @@ public class RuleEngineClientAutoConfiguration implements InitializingBean {
     @Bean
     @ConditionalOnMissingBean
     public RuleEngineService o2RuleEngineService(final RuleRepository ruleRepository,
-                                               final RuleObjectService ruleObjectService) {
+                                                 final RuleObjectService ruleObjectService) {
         return new RuleEngineServiceImpl(ruleRepository, ruleObjectService);
     }
 

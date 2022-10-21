@@ -49,10 +49,10 @@ public class RuleConditionTranslatorStrategyImpl implements RuleConditionTransla
     }
 
     @Override
-    public String translate(Rule rule, String code, List<RuleMiniConditionParameterDTO> parameters) {
-        if (!ruleConditionTranslatorsMap.containsKey(code)) {
-            throw new CommonException("there is no condition code: " + code);
+    public String translate(Rule rule, String componentCode, String conditionCode, List<RuleMiniConditionParameterDTO> parameters) {
+        if (!ruleConditionTranslatorsMap.containsKey(componentCode)) {
+            throw new CommonException("there is no condition code: " + componentCode);
         }
-        return ruleConditionTranslatorsMap.get(code).translator(rule, parameters);
+        return ruleConditionTranslatorsMap.get(componentCode).translator(rule, conditionCode, parameters);
     }
 }

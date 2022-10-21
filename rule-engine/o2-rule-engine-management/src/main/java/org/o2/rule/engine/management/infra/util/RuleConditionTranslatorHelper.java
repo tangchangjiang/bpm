@@ -20,8 +20,8 @@ public class RuleConditionTranslatorHelper {
 
     }
 
-    public static String translate(final Rule rule, final String code, final List<RuleMiniConditionParameterDTO> parameters) {
-        return STRATEGY.translate(rule, code, parameters);
+    public static String translate(final Rule rule, final String componentCode, final String conditionCode, final List<RuleMiniConditionParameterDTO> parameters) {
+        return STRATEGY.translate(rule, componentCode, conditionCode, parameters);
     }
 
 }

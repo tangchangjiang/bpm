@@ -187,10 +187,13 @@ public class CarrierServiceImpl implements CarrierService {
             return map;
         }
         for (Carrier carrier : carriers) {
-            CarrierCO carrierVO = new CarrierCO();
-            carrierVO.setCarrierCode(carrier.getCarrierCode());
-            carrierVO.setCarrierName(carrier.getCarrierName());
-            map.put(carrier.getCarrierCode(), carrierVO);
+            CarrierCO carrierCO = new CarrierCO();
+            carrierCO.setCarrierCode(carrier.getCarrierCode());
+            carrierCO.setCarrierName(carrier.getCarrierName());
+            carrierCO.setActiveFlag(carrier.getActiveFlag());
+            carrierCO.setPriority(carrier.getPriority());
+            carrierCO.setCarrierTypeCode(carrier.getCarrierTypeCode());
+            map.put(carrier.getCarrierCode(), carrierCO);
         }
         return map;
     }
@@ -294,7 +297,7 @@ public class CarrierServiceImpl implements CarrierService {
             if (CarrierConstants.CarrierDeliveryRegionType.NATIONWIDE.equals(carrier.getDeliveryRegionTypeCode())) {
                 carrierDeliveryRange.setDeliveryFlag(BaseConstants.Flag.YES);
                 carrierDeliveryRangeList.add(carrierDeliveryRange);
-            } else if (CarrierConstants.CarrierDeliveryRegionType.CUSTOM_REGION.equals(carrier.getDeliveryRegionTypeCode())) {
+            } else if (CarrierConstants.CarrierDeliveryRegionType.CUSTOM_RANGE.equals(carrier.getDeliveryRegionTypeCode())) {
                 // 自定义地区判断
                 // 注意此处地址必须进行深拷贝，后续会变更地址，但不能影响其它承运商的判断
                 ReceiveAddressDTO tempAddress = carrierDeliveryRangeDTO.getAddress().copy();

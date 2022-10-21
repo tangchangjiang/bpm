@@ -2,10 +2,13 @@ package org.o2.rule.engine.management.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hzero.mybatis.annotation.Unique;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -13,15 +16,19 @@ import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 
+import java.util.List;
+
 /**
  * 规则实体条件
  *
  * @author xiang.zhao@hand-china.com 2022-10-10 17:46:13
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("规则实体条件")
 @VersionAudit
 @ModifyAudit
 @Table(name = "o2re_rule_entity_condition")
+@Data
 public class RuleEntityCondition extends AuditDomain {
 
     public static final String FIELD_RULE_ENTITY_CONDITION_ID = "ruleEntityConditionId";
@@ -42,7 +49,6 @@ public class RuleEntityCondition extends AuditDomain {
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("主键")
     @Id
@@ -77,108 +83,8 @@ public class RuleEntityCondition extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-    //
-    // getter/setter
-    // ------------------------------------------------------------------------------
 
-    /**
-     * @return 主键
-     */
-    public Long getRuleEntityConditionId() {
-        return ruleEntityConditionId;
-    }
-
-    public void setRuleEntityConditionId(Long ruleEntityConditionId) {
-        this.ruleEntityConditionId = ruleEntityConditionId;
-    }
-
-    /**
-     * @return 规则实体主键，rule_entity.rule_entity_id
-     */
-    public Long getRuleEntityId() {
-        return ruleEntityId;
-    }
-
-    public void setRuleEntityId(Long ruleEntityId) {
-        this.ruleEntityId = ruleEntityId;
-    }
-
-    /**
-     * @return 规则实体条件编码
-     */
-    public String getConditionCode() {
-        return conditionCode;
-    }
-
-    public void setConditionCode(String conditionCode) {
-        this.conditionCode = conditionCode;
-    }
-
-    /**
-     * @return 规则实体条件名称
-     */
-    public String getConditionName() {
-        return conditionName;
-    }
-
-    public void setConditionName(String conditionName) {
-        this.conditionName = conditionName;
-    }
-
-    /**
-     * @return 规则实体条件是否启用，默认启用
-     */
-    public Integer getEnableFlag() {
-        return enableFlag;
-    }
-
-    public void setEnableFlag(Integer enableFlag) {
-        this.enableFlag = enableFlag;
-    }
-
-    /**
-     * @return 规则实体条件描述
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return 规则实体条件编码别名
-     */
-    public String getConditionCodeAlias() {
-        return conditionCodeAlias;
-    }
-
-    public void setConditionCodeAlias(String conditionCodeAlias) {
-        this.conditionCodeAlias = conditionCodeAlias;
-    }
-
-    /**
-     * @return 规则实体条件组件，默认BASIC
-     */
-    public String getComponentCode() {
-        return componentCode;
-    }
-
-    public void setComponentCode(String componentCode) {
-        this.componentCode = componentCode;
-    }
-
-    /**
-     * @return 租户ID
-     */
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
-
+    @Transient
+    private List<RuleParam> ruleParams;
 }
 

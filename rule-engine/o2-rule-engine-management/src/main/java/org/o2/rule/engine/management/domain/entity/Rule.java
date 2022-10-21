@@ -4,9 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hzero.mybatis.annotation.Unique;
+import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
+import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -34,11 +35,11 @@ public class Rule extends AuditDomain {
 
     public static final String FIELD_RULE_ID = "ruleId";
     public static final String FIELD_RULE_CODE = "ruleCode";
+    public static final String FIELD_RULE_STATUS = "ruleStatus";
     public static final String FIELD_RULE_NAME = "ruleName";
     public static final String FIELD_ENTITY_CODE = "entityCode";
     public static final String FIELD_RULE_DESCRIPTION = "ruleDescription";
     public static final String FIELD_RULE_JSON = "ruleJson";
-    public static final String FIELD_ENABLE_FLAG = "enableFlag";
     public static final String FIELD_START_TIME = "startTime";
     public static final String FIELD_END_TIME = "endTime";
     public static final String FIELD_TENANT_ID = "tenantId";
@@ -53,7 +54,7 @@ public class Rule extends AuditDomain {
      */
     public void buildRule() {
         if (null != this.getConditionDTO()) {
-            final String qlExpress = this.getConditionDTO().build(this);
+            final String qlExpress = this.getConditionDTO().build(this, null);
             final String rule = JsonHelper.objectToString(this.getConditionDTO());
             this.setRuleJson(rule);
             this.setConditionExpression(qlExpress);
@@ -77,14 +78,12 @@ public class Rule extends AuditDomain {
     @Id
     @GeneratedValue
     private Long ruleId;
-    @ApiModelProperty(value = "规则编码", required = true)
-    @NotBlank
-    @Unique(O2RE_RULE_U1)
+    @ApiModelProperty(value = "规则编码")
     private String ruleCode;
-    @ApiModelProperty(value = "规则名称", required = true)
+    @ApiModelProperty(value = "规则名称")
     @NotBlank
     private String ruleName;
-    @ApiModelProperty(value = "实体编码", required = true)
+    @ApiModelProperty(value = "实体编码")
     @NotBlank
     private String entityCode;
     @ApiModelProperty(value = "规则描述")
@@ -93,21 +92,32 @@ public class Rule extends AuditDomain {
     private String ruleJson;
     @ApiModelProperty(value = "规则条件表达式")
     private String conditionExpression;
-    @ApiModelProperty(value = "是否启用，默认启用", required = true)
-    @NotNull
-    private Integer enableFlag;
+    @ApiModelProperty(value = "规则状态")
+    @LovValue(lovCode = RuleEngineConstants.RuleStatus.CODE)
+    @NotBlank
+    private String ruleStatus;
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
-    @ApiModelProperty(value = "租户ID", required = true)
-    @NotNull
-    @Unique(O2RE_RULE_U1)
+    @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty(value = "状态含义")
+    @Transient
+    private String ruleStatusMeaning;
+
+    @Transient
+    @ApiModelProperty(value = "规则实体id")
+    private Long ruleEntityId;
+
+    @Transient
+    @ApiModelProperty(value = "规则实体别名")
+    private String ruleEntityAlias;
 
     @Transient
     @NotNull

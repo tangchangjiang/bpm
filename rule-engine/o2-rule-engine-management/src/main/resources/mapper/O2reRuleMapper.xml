@@ -9,7 +9,7 @@
         <result column="entity_code" property="entityCode" jdbcType="VARCHAR"/>
         <result column="rule_description" property="ruleDescription" jdbcType="VARCHAR"/>
         <result column="rule_json" property="ruleJson" jdbcType="VARCHAR"/>
-        <result column="enable_flag" property="enableFlag" jdbcType="DECIMAL"/>
+        <result column="rule_status" property="ruleStatus" jdbcType="VARCHAR"/>
         <result column="start_time" property="startTime" jdbcType="DATE"/>
         <result column="end_time" property="endTime" jdbcType="DATE"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
@@ -20,5 +20,69 @@
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
     </resultMap>
 
+    <select id="getRuleById" resultType="org.o2.rule.engine.management.domain.entity.Rule">
+        SELECT
+        r.rule_id,
+        r.rule_code,
+        r.rule_status,
+        r.rule_name,
+        r.entity_code,
+        re.rule_entity_id,
+        re.rule_entity_alias,
+        r.rule_json,
+        r.enable_flag,
+        r.start_time,
+        r.end_time,
+        r.tenant_id,
+        r.last_update_date,
+        r.object_version_number
+        FROM
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND r.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="ruleId != null ">
+                and r.rule_id = #{ruleId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getRuleByCode" resultType="org.o2.rule.engine.management.domain.vo.RuleVO">
+        SELECT
+        r.rule_id,
+        r.rule_code,
+        r.rule_status,
+        r.rule_name,
+        r.condition_expression,
+        r.entity_code,
+        re.rule_entity_alias,
+        r.rule_json,
+        r.enable_flag,
+        r.start_time,
+        r.end_time,
+        r.tenant_id,
+        r.last_update_date,
+        r.object_version_number
+        FROM
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        where 1 = 1
+        <choose>
+            <when test="tenantId != null">
+                AND r.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        <if test="ruleCode != null and ruleCode != '' ">
+            and r.rule_code = #{ruleCode}
+        </if>
+    </select>
 
 </mapper>

@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 
-
 /**
  * 承运商
  *
@@ -35,4 +34,8 @@ public class CarrierCO {
 
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;
+
+    @ApiModelProperty(value = "优先级")
+    private Long priority;
+
 }

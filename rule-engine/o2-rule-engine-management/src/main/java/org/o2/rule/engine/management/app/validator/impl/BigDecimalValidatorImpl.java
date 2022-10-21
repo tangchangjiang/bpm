@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import io.choerodon.core.exception.CommonException;
 
 /**
+ * 数字类型参数校验
+ *
  * @author xiang.zhao@hand-chian.com 2022/10/13
  */
 @Slf4j
@@ -20,12 +22,12 @@ public class BigDecimalValidatorImpl implements RuleParamValidator {
     @Override
     public void validate(RuleMiniConditionParameterDTO parameter) {
         boolean result = false;
-        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParameterType()) && StringUtils.isNotBlank(parameter.getParameterValue())) {
+        if (RuleEngineConstants.ParameterType.BIG_DECIMAL.equals(parameter.getParamFormatCode()) && StringUtils.isNotBlank(parameter.getParamValue())) {
             try {
-                BigDecimal value = BigDecimalParser.parse(parameter.getParameterValue());
+                BigDecimal value = BigDecimalParser.parse(parameter.getParamValue());
                 result = true;
             } catch (NumberFormatException e) {
-                log.warn("value {} type error: ", parameter.getParameterValue());
+                log.error("parameter value {} parameter type {}: ", parameter.getParamValue(), parameter.getParamFormatCode());
             }
         }
         if (result) {

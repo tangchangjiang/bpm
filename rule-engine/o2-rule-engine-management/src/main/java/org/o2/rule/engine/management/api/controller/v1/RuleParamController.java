@@ -1,5 +1,12 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
@@ -9,16 +16,17 @@ import org.o2.rule.engine.management.app.service.RuleParamService;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import java.util.List;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
+import java.util.List;
 
 /**
  * 规则参数 管理 API
@@ -43,9 +51,10 @@ public class RuleParamController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<RuleParam>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                 RuleParam ruleParam,
-                                                @ApiIgnore @SortDefault(value = RuleParam.FIELD_RULE_PARAM_ID,
-                                                        direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        Page<RuleParam> list = ruleParamRepository.pageAndSort(pageRequest, ruleParam);
+                                                @ApiIgnore @SortDefault(value = RuleParam.FIELD_ORDER_SEQ,
+                                                        direction = Sort.Direction.ASC) PageRequest pageRequest) {
+        ruleParam.setTenantId(organizationId);
+        Page<RuleParam> list = PageHelper.doPage(pageRequest, () -> ruleParamRepository.selectList(ruleParam));
         return Results.success(list);
     }
 
@@ -63,6 +72,7 @@ public class RuleParamController extends BaseController {
     @PostMapping
     public ResponseEntity<RuleParam> create(@PathVariable(value = "organizationId") Long organizationId,
                                             @RequestBody RuleParam ruleParam) {
+        ruleParam.setTenantId(organizationId);
         validObject(ruleParam);
         ruleParamService.save(ruleParam);
         return Results.success(ruleParam);

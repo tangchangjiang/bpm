@@ -39,7 +39,7 @@ public class RuleEngineManagerAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean
-    public RuleEngineManagementExtraDataManager pipelineManagementExtraDataManager(final Environment environment) {
+    public RuleEngineManagementExtraDataManager ruleEngineManagementExtraDataManager(final Environment environment) {
         return new RuleEngineManagementExtraDataManager(environment);
     }
 }
