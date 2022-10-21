@@ -129,4 +129,8 @@ public class Carrier extends AuditDomain {
     @ApiModelProperty(value = "承运商编码")
     @Transient
     private List<String> carrierCodes;
+
+    @ApiModelProperty(value = "模板名称")
+    @Transient
+    private String templateName;
 }
