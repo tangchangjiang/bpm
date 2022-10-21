@@ -44,7 +44,7 @@
         r.last_update_date,
         r.object_version_number
         FROM
-        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code and r.tenant_id = re.tenant_id
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -92,7 +92,7 @@
         r.last_update_date,
         r.object_version_number
         FROM
-        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code and r.tenant_id = re.tenant_id
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -137,7 +137,7 @@
         r.last_update_date,
         r.object_version_number
         FROM
-        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code and r.tenant_id = re.tenant_id
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -173,7 +173,7 @@
         r.last_update_date,
         r.object_version_number
         FROM
-        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code
+        o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code and r.tenant_id = re.tenant_id
         where 1 = 1
         <choose>
             <when test="tenantId != null">
