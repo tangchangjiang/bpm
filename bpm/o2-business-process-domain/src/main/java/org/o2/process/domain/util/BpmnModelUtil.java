@@ -45,7 +45,7 @@ public class BpmnModelUtil {
         List<String> outgoingKeyList = currentElement.getOutgoing();
         String nextElementKey = outgoingKeyList.stream().findFirst().orElseThrow(() -> new CommonException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_OUTGOING));
         BaseElement nextFlowElement = elementMap.get(nextElementKey);
-        while (ProcessEngineConstants.FlowElementType.SEQUENCE_FLOW.equals(nextFlowElement.getType())) {
+        while (ProcessEngineConstants.FlowElementType.FLOW.contains(nextFlowElement.getType())) {
             nextFlowElement = getUniqueNextNode(nextFlowElement, elementMap);
         }
         return nextFlowElement;

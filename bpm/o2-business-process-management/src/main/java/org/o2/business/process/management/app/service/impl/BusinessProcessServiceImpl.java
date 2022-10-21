@@ -1,6 +1,8 @@
 package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -17,12 +19,16 @@ import org.o2.business.process.management.infra.convert.ViewJsonConvert;
 import org.o2.process.domain.engine.BpmnModel;
 import org.o2.process.domain.engine.definition.Activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
+import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
 import org.o2.process.domain.engine.process.preruntime.validator.BpmnModelValidator;
+import org.o2.process.domain.infra.ProcessEngineConstants;
+import org.o2.rule.engine.client.RuleEngineManagementClient;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,10 +50,13 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     private final BusinessProcessRedisRepository businessProcessRedisRepository;
 
-    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository, BusinessProcessRedisRepository businessProcessRedisRepository) {
+    private final RuleEngineManagementClient ruleEngineManagementClient;
+
+    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository, BusinessProcessRedisRepository businessProcessRedisRepository, RuleEngineManagementClient ruleEngineManagementClient) {
         this.businessProcessRepository = businessProcessRepository;
         this.businessNodeRepository = businessNodeRepository;
         this.businessProcessRedisRepository = businessProcessRedisRepository;
+        this.ruleEngineManagementClient = ruleEngineManagementClient;
     }
 
 
@@ -102,9 +111,11 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Transactional(rollbackFor = Exception.class)
     public BusinessProcess save(BusinessProcess businessProcess) {
 
+        Set<String> ruleCodes = new HashSet<>();
+
         if(businessProcess.getBizProcessId() != null){
             // 通过viewJson转换成processJson
-            buildProcessJson(businessProcess);
+            buildProcessJson(businessProcess, ruleCodes);
         }
 
         //保存业务流程定义表
@@ -124,10 +135,14 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
         }
         // 加载到缓存中
         businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
+        // 发布规则
+        if (CollectionUtils.isNotEmpty(ruleCodes)){
+            ruleEngineManagementClient.useRule(businessProcess.getTenantId(), new ArrayList<>(ruleCodes));
+        }
         return businessProcess;
     }
 
-    protected void buildProcessJson(BusinessProcess businessProcess) {
+    protected void buildProcessJson(BusinessProcess businessProcess, Set<String> ruleCodes) {
         List<BaseElement> baseElements = ViewJsonConvert.viewJsonConvert(businessProcess.getViewJson());
         BpmnModel bpmnModel = new BpmnModel();
         bpmnModel.setFlowElements(baseElements);
@@ -138,13 +153,17 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
         // 合法性校验
         BpmnModelValidator.validate(bpmnModel);
+
+        bpmnModel.getFlowElements().stream().filter(f -> ProcessEngineConstants.FlowElementType.CONDITIONAL_FLOW.equals(f.getType()))
+                .map(ConditionalFlow.class::cast).forEach(c -> ruleCodes.add(c.getRuleCode()));
+
         businessProcess.setProcessJson(ViewJsonConvert.bpmnToJson(bpmnModel));
     }
 
     @Override
     public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
         List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
-        businessExportList.forEach(e -> e.setBpmnModel(ViewJsonConvert.processJsonConvert(e.getProcessJson())));
+        businessExportList.forEach(e -> e.setBpmnModel(StringUtils.isBlank(e.getProcessJson()) ? new BpmnModel() : ViewJsonConvert.processJsonConvert(e.getProcessJson())));
         Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBpmnModel().getServiceTask().stream())
                 .map(ServiceTask::getBeanId).collect(Collectors.toSet());
         Map<String, BusinessNodeExportVO> nodeExportMap = businessNodeRepository.listNodeForExport(beanIds, businessExportDTO.getTenantId())

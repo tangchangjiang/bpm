@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.export.annotation.ExcelColumn;
 import org.hzero.export.annotation.ExcelSheet;
-import org.o2.business.process.management.domain.BusinessProcessBO;
 import org.o2.process.domain.engine.BpmnModel;
 
 import java.util.List;
@@ -21,6 +20,9 @@ public class BusinessExportVO {
     @ApiModelProperty(value = "业务流程编码", required = true)
     @ExcelColumn(zh = "业务流程编码", en = "processCode")
     private String processCode;
+    @ApiModelProperty("规则实体")
+    @ExcelColumn(zh = "规则实体", en = "entityCode")
+    private String entityCode;
     @ApiModelProperty(value = "业务流程描述")
     @ExcelColumn(zh = "业务流程描述", en = "description")
     private String description;
@@ -39,8 +41,6 @@ public class BusinessExportVO {
 
     @ExcelColumn(zh = "业务流程节点", en = "nodeExportList", child = true)
     List<BusinessNodeExportVO> nodeExportList;
-
-    private BusinessProcessBO businessProcessBO;
 
     private BpmnModel bpmnModel;
 }

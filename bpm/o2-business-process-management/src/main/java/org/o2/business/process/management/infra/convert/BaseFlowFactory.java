@@ -1,5 +1,6 @@
 package org.o2.business.process.management.infra.convert;
 
+import org.apache.commons.lang3.StringUtils;
 import org.o2.business.process.management.api.vo.interactive.NotationEdge;
 import org.o2.process.domain.engine.definition.BaseElement;
 import org.o2.process.domain.engine.definition.BaseFlow;
@@ -25,7 +26,7 @@ public class BaseFlowFactory {
         source.getOutgoing().add(edge.getId());
         target.getIncoming().add(edge.getId());
         if(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY.equals(source.getType())){
-            if(null == edge.getData()){
+            if(null == edge.getData() || StringUtils.isBlank(edge.getData().getRuleCode())){
                 return buildDefaultFlow(edge);
             }
             return buildConditionalFlow(edge);
