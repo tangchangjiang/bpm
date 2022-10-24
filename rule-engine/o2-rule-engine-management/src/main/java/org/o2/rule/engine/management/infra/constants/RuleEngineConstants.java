@@ -110,6 +110,10 @@ public class RuleEngineConstants {
          */
         public static final String PARAMETER_OPERATOR = "operator";
         /**
+         * 规则参数操作符
+         */
+        public static final String PARAMETER_C_OPERATOR = "collectionOperator";
+        /**
          * 规则参数值
          */
         public static final String PARAMETER_VALUE = "value";
