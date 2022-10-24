@@ -58,4 +58,46 @@ public class RuleClientConstants {
         }
     }
 
+    /**
+     * 集合比较操作符
+     *
+     */
+    public static class CollectionOperator {
+        /**
+         * 任意
+         */
+        public static final String ANY = "any";
+        /**
+         * 全部
+         */
+        public static final String ALL = "all";
+    }
+
+    /**
+     * 比较操作符
+     *
+     */
+    public static class Operator {
+        /**
+         * 大于
+         */
+        public static final String GREATER = ">";
+        /**
+         * 小于
+         */
+        public static final String LESS = "<";
+        /**
+         * 等于
+         */
+        public static final String EQUAL = "==";
+        /**
+         * 大于等于
+         */
+        public static final String GREATER_OR_EQUAL = ">=";
+        /**
+         * 小于等于
+         */
+        public static final String LESS_OR_EQUAL = "<=";
+    }
+
 }
