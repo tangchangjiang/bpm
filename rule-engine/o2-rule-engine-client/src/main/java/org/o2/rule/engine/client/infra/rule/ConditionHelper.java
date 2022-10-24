@@ -27,6 +27,8 @@ public class ConditionHelper {
             EXPRESS_RUNNER.addOperator("anyIn", new OperatorAnyIn("anyIn"));
             EXPRESS_RUNNER.addOperator("allIn", new OperatorAllIn("allIn"));
             EXPRESS_RUNNER.addOperator("notIn", new OperatorNotIn("notIn"));
+            EXPRESS_RUNNER.addOperator("listGet", new OperatorListGet("listGet"));
+            EXPRESS_RUNNER.addOperator("anyGreater", new OperatorAnyGreater("anyGreater"));
         } catch (Exception e) {
             log.error("EXPRESS_RUNNER addOperator error", e);
         }
