@@ -3,6 +3,7 @@ package org.o2.rule.engine.management.app.translator.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.rule.engine.management.app.translator.RuleConditionTranslator;
+import org.o2.rule.engine.management.domain.dto.CollectionOperator;
 import org.o2.rule.engine.management.domain.dto.RuleMiniConditionParameterDTO;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
@@ -50,28 +51,7 @@ public class CollectionRuleConditionTranslator implements RuleConditionTranslato
                 }
                 sb.append(BaseConstants.Symbol.SPACE).append(compileValue);
             } else if (RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR.equals(parameter.getParamCode())) {
-                String operate;
-                switch (parameter.getParamValue()) {
-                    case RuleEngineConstants.Operator.GREATER:
-                        operate = RuleEngineConstants.Operator.GREATER_CODE;
-                        break;
-                    case RuleEngineConstants.Operator.GREATER_OR_EQUAL:
-                        operate = RuleEngineConstants.Operator.GREATER_OR_EQUAL_CODE;
-                        break;
-                    case RuleEngineConstants.Operator.LESS:
-                        operate = RuleEngineConstants.Operator.LESS_OR_EQUAL;
-                        break;
-                    case RuleEngineConstants.Operator.LESS_OR_EQUAL:
-                        operate = RuleEngineConstants.Operator.LESS_OR_EQUAL_CODE;
-                        break;
-                    case RuleEngineConstants.Operator.EQUAL:
-                        operate = RuleEngineConstants.Operator.EQUAL_CODE;
-                        break;
-                    default:
-                        operate = parameter.getParamValue();
-                        break;
-                }
-                sb.append(operate);
+                sb.append(CollectionOperator.translatorOperator(parameter.getParamCode()));
             } else {
                 sb.append(BaseConstants.Symbol.SPACE).append(parameter.getParamValue());
             }
