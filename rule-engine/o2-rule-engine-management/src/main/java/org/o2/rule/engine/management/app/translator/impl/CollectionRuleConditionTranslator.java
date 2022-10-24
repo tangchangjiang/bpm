@@ -56,7 +56,7 @@ public class CollectionRuleConditionTranslator implements RuleConditionTranslato
                         operate = RuleEngineConstants.Operator.GREATER_CODE;
                         break;
                     case RuleEngineConstants.Operator.GREATER_OR_EQUAL:
-                        operate = RuleEngineConstants.Operator.GREATER_OR_EQUAL;
+                        operate = RuleEngineConstants.Operator.GREATER_OR_EQUAL_CODE;
                         break;
                     case RuleEngineConstants.Operator.LESS:
                         operate = RuleEngineConstants.Operator.LESS_OR_EQUAL;
