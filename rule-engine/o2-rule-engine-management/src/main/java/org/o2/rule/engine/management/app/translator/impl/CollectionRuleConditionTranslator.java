@@ -55,7 +55,7 @@ public class CollectionRuleConditionTranslator implements RuleConditionTranslato
                 conditionCode,
                 paramProperty.getParamValue(),
                 paramCollectionOperator.getParamValue(),
-                CollectionOperator.translatorOperator(paramOperator.getParamCode()),
+                CollectionOperator.translatorOperator(paramOperator.getParamValue()),
                 value);
         return expression;
     }
