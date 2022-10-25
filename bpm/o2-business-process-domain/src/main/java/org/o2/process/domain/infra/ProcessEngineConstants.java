@@ -43,7 +43,7 @@ public interface ProcessEngineConstants {
 
         String GATEWAY_OUTGOING_MUST_BE_GATEWAY_FLOW = "Gateway outgoing mast be defaultFlow or conditionalFlow";
 
-        String GATEWAY_OUTGOING_DEFAULT_FLOW_CANNOT_BE_GREATER_THAN_ONE = "Gateway outgoing defaultFlow cannot be greater than 1";
+        String GATEWAY_OUTGOING_DEFAULT_FLOW_MASTER_BE_ONE = "Gateway outgoing master be one of defaultFlow";
 
         String SEQUENCE_FLOW_INCOMING_CANNOT_BE_GATEWAY_TYPE = "Sequence flow incoming cannot be type of gateway";
 
