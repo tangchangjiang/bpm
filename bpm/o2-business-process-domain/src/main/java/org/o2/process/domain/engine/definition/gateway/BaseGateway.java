@@ -48,8 +48,8 @@ public abstract class BaseGateway extends BaseNode {
                 defaultFlowQuantity++;
             }
         }
-        if(defaultFlowQuantity > 1){
-            throwElementValidatorException(ProcessEngineConstants.ErrorCode.GATEWAY_OUTGOING_DEFAULT_FLOW_CANNOT_BE_GREATER_THAN_ONE);
+        if(defaultFlowQuantity != 1){
+            throwElementValidatorException(ProcessEngineConstants.ErrorCode.GATEWAY_OUTGOING_DEFAULT_FLOW_MASTER_BE_ONE);
         }
     }
 }
