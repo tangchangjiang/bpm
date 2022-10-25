@@ -16,7 +16,6 @@ import org.o2.rule.engine.management.app.service.RuleParamService;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 /**
  * 规则参数 管理 API
@@ -83,29 +80,9 @@ public class RuleParamController extends BaseController {
     @PutMapping
     public ResponseEntity<RuleParam> update(@PathVariable(value = "organizationId") Long organizationId,
                                             @RequestBody RuleParam ruleParam) {
+        ruleParam.setTenantId(organizationId);
         SecurityTokenHelper.validToken(ruleParam);
         ruleParamService.save(ruleParam);
         return Results.success(ruleParam);
     }
-
-    @ApiOperation(value = "规则参数维护-批量保存规则参数")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-saving")
-    public ResponseEntity<List<RuleParam>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                     @RequestBody List<RuleParam> ruleParamList) {
-        SecurityTokenHelper.validToken(ruleParamList);
-        ruleParamService.batchSave(ruleParamList);
-        return Results.success(ruleParamList);
-    }
-
-    @ApiOperation(value = "规则参数维护-删除规则参数")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody RuleParam ruleParam) {
-        SecurityTokenHelper.validToken(ruleParam);
-        ruleParamRepository.deleteByPrimaryKey(ruleParam);
-        return Results.success();
-    }
-
 }

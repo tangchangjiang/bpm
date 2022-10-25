@@ -1,6 +1,12 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
@@ -10,16 +16,14 @@ import org.o2.rule.engine.management.app.service.RuleEntityService;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
 import org.o2.rule.engine.management.domain.repository.RuleEntityRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import java.util.List;
-
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 规则实体 管理 API
@@ -76,29 +80,9 @@ public class RuleEntityController extends BaseController {
     @PutMapping
     public ResponseEntity<RuleEntity> update(@PathVariable(value = "organizationId") Long organizationId,
                                              @RequestBody RuleEntity ruleEntity) {
+        ruleEntity.setTenantId(organizationId);
         SecurityTokenHelper.validToken(ruleEntity);
         ruleEntityService.save(ruleEntity);
         return Results.success(ruleEntity);
     }
-
-    @ApiOperation(value = "规则实体维护-批量保存规则实体")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-saving")
-    public ResponseEntity<List<RuleEntity>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                      @RequestBody List<RuleEntity> ruleEntityList) {
-        SecurityTokenHelper.validToken(ruleEntityList);
-        ruleEntityService.batchSave(ruleEntityList);
-        return Results.success(ruleEntityList);
-    }
-
-    @ApiOperation(value = "规则实体维护-删除规则实体")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody RuleEntity ruleEntity) {
-        SecurityTokenHelper.validToken(ruleEntity);
-        ruleEntityRepository.deleteByPrimaryKey(ruleEntity);
-        return Results.success();
-    }
-
 }
