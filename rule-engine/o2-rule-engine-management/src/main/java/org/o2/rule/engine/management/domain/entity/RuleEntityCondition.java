@@ -40,6 +40,7 @@ public class RuleEntityCondition extends AuditDomain {
     public static final String FIELD_CONDITION_CODE_ALIAS = "conditionCodeAlias";
     public static final String FIELD_COMPONENT_CODE = "componentCode";
     public static final String FIELD_TENANT_ID = "tenantId";
+    public static final String FIELD_ORDER_SEQ = "orderSeq";
     public static final String O2RE_RULE_ENTITY_CONDITION_U1 = "o2re_rule_entity_condition_u1";
 
     //
@@ -80,6 +81,8 @@ public class RuleEntityCondition extends AuditDomain {
     @Unique(O2RE_RULE_ENTITY_CONDITION_U1)
     private Long tenantId;
 
+    @ApiModelProperty(value = "规则实体条件排序")
+    private Long orderSeq;
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
