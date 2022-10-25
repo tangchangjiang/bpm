@@ -24,7 +24,7 @@ public class CollectionRuleConditionTranslator implements RuleConditionTranslato
     private static final String TEXT = "TEXT";
     private static final String LIST = "LIST";
     private static final String BIG_DECIMAL = "BIGDECIMAL";
-    private static final String EXPRESSING_FORMAT = "(%s.%s listGet %s) %s%s %s";
+    private static final String EXPRESSING_FORMAT = "(%s.%s listGet '%s') %s%s %s";
 
     @Override
     public String conditionCode() {
