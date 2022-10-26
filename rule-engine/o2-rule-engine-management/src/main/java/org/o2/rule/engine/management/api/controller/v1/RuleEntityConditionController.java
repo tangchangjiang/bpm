@@ -1,6 +1,12 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
@@ -10,16 +16,16 @@ import org.o2.rule.engine.management.app.service.RuleEntityConditionService;
 import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
 import org.o2.rule.engine.management.domain.repository.RuleEntityConditionRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-import java.util.List;
 
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
+import java.util.List;
 
 /**
  * 规则实体条件 管理 API
@@ -44,10 +50,10 @@ public class RuleEntityConditionController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<RuleEntityCondition>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                           RuleEntityCondition ruleEntityCondition,
-                                                          @ApiIgnore @SortDefault(value = RuleEntityCondition.FIELD_RULE_ENTITY_CONDITION_ID,
-                                                                  direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                          @ApiIgnore @SortDefault(value = RuleEntityCondition.FIELD_ORDER_SEQ,
+                                                                  direction = Sort.Direction.ASC) PageRequest pageRequest) {
         ruleEntityCondition.setTenantId(organizationId);
-        Page<RuleEntityCondition> list = PageHelper.doPageAndSort(pageRequest, () -> ruleEntityConditionRepository.selectList(ruleEntityCondition));
+        Page<RuleEntityCondition> list = PageHelper.doPage(pageRequest, () -> ruleEntityConditionRepository.selectList(ruleEntityCondition));
         return Results.success(list);
     }
 
@@ -85,29 +91,9 @@ public class RuleEntityConditionController extends BaseController {
     @PutMapping
     public ResponseEntity<RuleEntityCondition> update(@PathVariable(value = "organizationId") Long organizationId,
                                                       @RequestBody RuleEntityCondition ruleEntityCondition) {
+        ruleEntityCondition.setTenantId(organizationId);
         SecurityTokenHelper.validToken(ruleEntityCondition);
         ruleEntityConditionService.save(ruleEntityCondition);
         return Results.success(ruleEntityCondition);
     }
-
-    @ApiOperation(value = "规则实体条件维护-批量保存规则实体条件")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/batch-saving")
-    public ResponseEntity<List<RuleEntityCondition>> batchSave(@PathVariable(value = "organizationId") Long organizationId,
-                                                               @RequestBody List<RuleEntityCondition> ruleEntityConditionList) {
-        SecurityTokenHelper.validToken(ruleEntityConditionList);
-        ruleEntityConditionService.batchSave(ruleEntityConditionList);
-        return Results.success(ruleEntityConditionList);
-    }
-
-    @ApiOperation(value = "规则实体条件维护-删除规则实体条件")
-    @Permission(level = ResourceLevel.ORGANIZATION)
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody RuleEntityCondition ruleEntityCondition) {
-        SecurityTokenHelper.validToken(ruleEntityCondition);
-        ruleEntityConditionRepository.deleteByPrimaryKey(ruleEntityCondition);
-        return Results.success();
-    }
-
 }

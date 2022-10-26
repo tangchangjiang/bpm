@@ -29,7 +29,7 @@
             <result column="param_code" property="paramCode" jdbcType="VARCHAR"/>
             <result column="param_name" property="paramName" jdbcType="VARCHAR"/>
             <result column="param_alias" property="paramAlias" jdbcType="VARCHAR"/>
-            <result column="order_seq" property="orderSeq" jdbcType="DECIMAL"/>
+            <result column="entry_order_seq" property="orderSeq" jdbcType="DECIMAL"/>
             <result column="param_format_code" property="paramFormatCode" jdbcType="VARCHAR"/>
             <result column="param_edit_type_code" property="paramEditTypeCode" jdbcType="VARCHAR"/>
             <result column="multi_flag" property="multiFlag" jdbcType="DECIMAL"/>
@@ -53,6 +53,7 @@
         rec.condition_code,
         rec.condition_name,
         rec.enable_flag,
+        rec.order_seq,
         rec.description,
         rec.condition_code_alias,
         rec.component_code,
@@ -94,6 +95,10 @@
                 and rec.enable_flag = #{enableFlag}
             </if>
         </where>
+        ORDER BY
+        IF
+        ( ISNULL( rec.order_seq ), 1, 0 ),
+        rec.order_seq
     </select>
     <select id="selectListByRuleEntityCode"
             resultMap="RuleConditionWithParams">
@@ -103,6 +108,7 @@
         rec.condition_code,
         rec.condition_name,
         rec.enable_flag,
+        rec.order_seq,
         rec.description,
         rec.condition_code_alias,
         rec.component_code,
@@ -114,7 +120,7 @@
         rrp.param_code,
         rrp.param_name,
         rrp.param_alias,
-        rrp.order_seq,
+        rrp.order_seq as entry_order_seq,
         rrp.param_format_code,
         rrp.param_edit_type_code,
         rrp.not_null_flag,
@@ -147,6 +153,10 @@
                 and rec.enable_flag = #{ruleEntityCondition.enableFlag}
             </if>
         </where>
+        ORDER BY
+        IF
+        ( ISNULL( rec.order_seq ), 1, 0 ),
+        rec.order_seq
     </select>
 
 </mapper>

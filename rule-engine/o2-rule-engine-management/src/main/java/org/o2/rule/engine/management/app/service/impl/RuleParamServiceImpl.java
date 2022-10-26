@@ -6,11 +6,6 @@ import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.domain.repository.RuleParamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * 规则参数应用服务默认实现
@@ -19,41 +14,11 @@ import io.choerodon.mybatis.domain.AuditDomain;
  */
 @Service
 public class RuleParamServiceImpl implements RuleParamService {
-                                                                                                                                                                        
+
     private final RuleParamRepository ruleParamRepository;
 
     public RuleParamServiceImpl(RuleParamRepository ruleParamRepository) {
         this.ruleParamRepository = ruleParamRepository;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public List<RuleParam> batchSave(List<RuleParam> ruleParamList) {
-        Map<AuditDomain.RecordStatus, List<RuleParam>> statusMap = ruleParamList.stream().collect(Collectors.groupingBy(RuleParam::get_status));
-        // 删除
-        if (statusMap.containsKey(AuditDomain.RecordStatus.delete)) {
-            List<RuleParam> deleteList = statusMap.get(AuditDomain.RecordStatus.delete);
-            ruleParamRepository.batchDeleteByPrimaryKey(deleteList);
-        }
-        // 更新
-        if (statusMap.containsKey(AuditDomain.RecordStatus.update)) {
-            List<RuleParam> updateList = statusMap.get(AuditDomain.RecordStatus.update);
-            updateList.forEach(item -> {
-                // TODO: 唯一性校验
-                UniqueHelper.valid(item, RuleParam.O2RE_RULE_PARAM_U1);
-                ruleParamRepository.updateByPrimaryKeySelective(item);
-            });
-        }
-        // 新增
-        if (statusMap.containsKey(AuditDomain.RecordStatus.create)) {
-            List<RuleParam> createList = statusMap.get(AuditDomain.RecordStatus.create);
-            createList.forEach(item -> {
-                // TODO: 唯一性校验
-                UniqueHelper.valid(item, RuleParam.O2RE_RULE_PARAM_U1);
-                ruleParamRepository.insertSelective(item);
-            });
-        }
-        return ruleParamList;
     }
 
     @Override
