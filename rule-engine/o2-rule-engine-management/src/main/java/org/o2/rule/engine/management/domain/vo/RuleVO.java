@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
  * @author xiang.zhao@hand-chian.com 2022/10/17
  */
 @Data
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class RuleVO {
     @ApiModelProperty("主键")
     private Long ruleId;

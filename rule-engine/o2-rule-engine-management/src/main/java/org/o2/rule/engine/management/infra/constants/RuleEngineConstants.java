@@ -40,7 +40,7 @@ public class RuleEngineConstants {
      * 操作符
      *
      */
-    public static class Operator {
+    public static class CollectionOperator {
         /**
          * 全部包含
          */
@@ -56,6 +56,38 @@ public class RuleEngineConstants {
     }
 
     /**
+     * 比较操作符
+     *
+     */
+    public static class Operator {
+        /**
+         * 大于
+         */
+        public static final String GREATER = ">";
+        public static final String GREATER_CODE = "Greater";
+        /**
+         * 小于
+         */
+        public static final String LESS = "<";
+        public static final String LESS_CODE = "Less";
+        /**
+         * 等于
+         */
+        public static final String EQUAL = "==";
+        public static final String EQUAL_CODE = "Equal";
+        /**
+         * 大于等于
+         */
+        public static final String GREATER_OR_EQUAL = ">=";
+        public static final String GREATER_OR_EQUAL_CODE = "GreaterOrEqual";
+        /**
+         * 小于等于
+         */
+        public static final String LESS_OR_EQUAL = "<=";
+        public static final String LESS_OR_EQUAL_CODE = "LessOrEqual";
+    }
+
+    /**
      * Condition组件编码
      */
     public static class ComponentCode {
@@ -63,6 +95,10 @@ public class RuleEngineConstants {
          * 基础类型
          */
         public static final String BASIC = "BASIC";
+        /**
+         * 集合类型
+         */
+        public static final String COLLECTION = "COLLECTION";
     }
 
     /**
@@ -74,9 +110,17 @@ public class RuleEngineConstants {
          */
         public static final String PARAMETER_OPERATOR = "operator";
         /**
+         * 规则参数操作符
+         */
+        public static final String PARAMETER_C_OPERATOR = "collectionOperator";
+        /**
          * 规则参数值
          */
         public static final String PARAMETER_VALUE = "value";
+        /**
+         * 规则参数属性
+         */
+        public static final String PARAMETER_PROPERTY = "property";
     }
 
     /**

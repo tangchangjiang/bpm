@@ -15,13 +15,14 @@ import org.o2.rule.engine.management.app.filter.FilterHandlerService;
 import org.o2.rule.engine.management.app.filter.RuleConditionFilterChain;
 import org.o2.rule.engine.management.app.service.RuleService;
 import org.o2.rule.engine.management.domain.bo.RuleQueryBO;
+import org.o2.rule.engine.management.domain.bo.RuleRedisBO;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.domain.entity.*;
 import org.o2.rule.engine.management.domain.repository.*;
-import org.o2.rule.engine.management.domain.vo.RuleConditionVO;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.o2.rule.engine.management.infra.constants.RuleEngineRedisConstants;
+import org.o2.rule.engine.management.infra.convert.RuleConverter;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -109,13 +110,13 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public RuleVO detailByCode(Long organizationId, String ruleCode) {
 
-        final RuleVO rule = ruleRepository.getRuleByCode(organizationId, ruleCode);
+        final RuleRedisBO redisRule = ruleRepository.getCacheRuleByCode(organizationId, ruleCode);
 
-        RuleConditionVO conditionVO = new RuleConditionVO();
-        conditionVO.setConditionExpression(rule.getConditionExpression());
-        rule.setCondition(conditionVO);
+        if (redisRule == null) {
+            return null;
+        }
 
-        return rule;
+        return RuleConverter.convertRedisBo2Vo(redisRule);
     }
 
     @Override

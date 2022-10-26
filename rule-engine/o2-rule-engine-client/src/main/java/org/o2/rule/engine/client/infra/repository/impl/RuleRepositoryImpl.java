@@ -2,6 +2,7 @@ package org.o2.rule.engine.client.infra.repository.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.hzero.core.base.BaseConstants;
 import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.core.helper.O2ResponseUtils;
 import org.o2.rule.engine.client.domain.entity.Rule;
@@ -38,7 +39,10 @@ public class RuleRepositoryImpl implements RuleRepository {
 
     @Override
     public Rule findRuleByCode(Long tenantId, String code) {
-        final RuleVO ruleVO = findRuleByCodes(tenantId, Collections.singleton(code)).get(code);
+        RuleVO ruleVO = findRuleByCodes(tenantId, Collections.singleton(code)).get(code);
+        if (ruleVO == null) {
+            ruleVO = findRuleByCodes(BaseConstants.DEFAULT_TENANT_ID, Collections.singleton(code)).get(code);
+        }
         return RuleConvertor.convertToRule(ruleVO);
     }
 

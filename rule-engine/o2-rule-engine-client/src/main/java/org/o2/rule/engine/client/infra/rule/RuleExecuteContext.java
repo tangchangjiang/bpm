@@ -3,7 +3,6 @@ package org.o2.rule.engine.client.infra.rule;
 import com.ql.util.express.DefaultContext;
 import org.o2.rule.engine.client.app.exception.RuleRuntimeException;
 import org.o2.rule.engine.client.infra.constant.RuleClientConstants;
-
 import java.util.Objects;
 
 /**
