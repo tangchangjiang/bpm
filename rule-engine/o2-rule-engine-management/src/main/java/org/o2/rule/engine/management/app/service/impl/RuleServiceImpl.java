@@ -80,6 +80,10 @@ public class RuleServiceImpl implements RuleService {
         final List<String> paramCodes = new ArrayList<>();
         conditionDTO.allCondCodeParamCode(conditionCodes, paramCodes);
 
+        if (CollectionUtils.isEmpty(conditionCodes) || CollectionUtils.isEmpty(paramCodes)) {
+            return rule;
+        }
+
         final List<RuleEntityCondition> ruleEntityConditions = ruleEntityConditionRepository.selectByCondition(Condition.builder(RuleEntityCondition.class).andWhere(Sqls.custom()
                 .andEqualTo(RuleEntityCondition.FIELD_TENANT_ID, organizationId)
                 .andEqualTo(RuleEntityCondition.FIELD_RULE_ENTITY_ID, rule.getRuleEntityId())

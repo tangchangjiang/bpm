@@ -2,8 +2,10 @@ package org.o2.rule.engine.management.app.translator.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.app.translator.RuleConditionTranslator;
 import org.o2.rule.engine.management.domain.dto.RuleMiniConditionParameterDTO;
+import org.o2.rule.engine.management.domain.dto.RuleParamLovValueDTO;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
 
     private static final String TEXT = "TEXT";
     private static final String LIST = "LIST";
+    private static final String LOV = "LOV";
 
     @Override
     public String conditionCode() {
@@ -34,12 +37,20 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
         // 有实体别名取实体别名，没有则取实体code，条件编码同理
         sb.append(StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode())).append(BaseConstants.Symbol.POINT).append(conditionCode);
         for (RuleMiniConditionParameterDTO parameter : parameters) {
-
+            if (StringUtils.isBlank(parameter.getParamValue())) {
+                return sb.toString();
+            }
             final String compileValue;
-            if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode()) &&
-                    (TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
-                compileValue = "\"" + parameter.getParamValue() + "\"";
-            } else {
+            if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode())) {
+                if ((TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
+                    compileValue = "\"" + parameter.getParamValue() + "\"";
+                } else if (LOV.equals(parameter.getParamEditTypeCode())) {
+                    List<RuleParamLovValueDTO> paramLovValues = JsonHelper.stringToArray(parameter.getParamValue(), RuleParamLovValueDTO.class);
+                    compileValue = "\"" + StringUtils.join(paramLovValues.stream().map(RuleParamLovValueDTO::getCode), BaseConstants.Symbol.COMMA) + "\"";
+                } else {
+                    compileValue = parameter.getParamValue();
+                }
+            }  else {
                 compileValue = parameter.getParamValue();
             }
             sb.append(BaseConstants.Symbol.SPACE).append(compileValue);
