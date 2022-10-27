@@ -6,7 +6,6 @@ import org.o2.metadata.console.app.service.*;
 import org.springframework.stereotype.Service;
 
 
-
 /**
  * description
  *
@@ -19,10 +18,6 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
     private final SysParamTenantInitService sysParamTenantInitService;
 
-    private final StaticResourceTenantInitService staticResourceTenantInitService;
-
-    private final MallLangPromptTenantInitService mallLangPromptTenantInitService;
-
     private final PlatformDefineTenantInitServiceImpl platformDefineTenantInitService;
 
     private final WarehouseTenantInitService warehouseTenantInitService;
@@ -31,13 +26,9 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
 
 
     public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService,
-                                         StaticResourceTenantInitService staticResourceTenantInitService,
-                                         MallLangPromptTenantInitService mallLangPromptTenantInitService,
                                          PlatformDefineTenantInitServiceImpl platformDefineTenantInitService,
                                          WarehouseTenantInitService warehouseTenantInitService, ProcessTenantInitService processTenantInitService) {
         this.sysParamTenantInitService = sysParamTenantInitService;
-        this.staticResourceTenantInitService = staticResourceTenantInitService;
-        this.mallLangPromptTenantInitService = mallLangPromptTenantInitService;
         this.platformDefineTenantInitService = platformDefineTenantInitService;
         this.warehouseTenantInitService = warehouseTenantInitService;
         this.processTenantInitService = processTenantInitService;
@@ -48,19 +39,13 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
         // 1. 系统参数
         sysParamTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
-        // 2. 静态资源配置
-        staticResourceTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
-
-        // 3. 多语言文件管理
-        mallLangPromptTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
-
-        // 4. 平台
+        // 2. 平台
         platformDefineTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
-        // 5. 仓库（虚拟仓）
+        // 3. 仓库（虚拟仓）
         warehouseTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
-        // 6. 业务流程
+        // 4. 业务流程
         processTenantInitService.tenantInitialize(sourceTenantId, targetTenantId);
 
     }

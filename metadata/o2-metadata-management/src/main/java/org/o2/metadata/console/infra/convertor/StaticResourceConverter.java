@@ -1,16 +1,12 @@
 package org.o2.metadata.console.infra.convertor;
 
 import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
-import org.o2.metadata.console.api.dto.StaticResourceSaveDTO;
-import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.entity.StaticResource;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 静态资源转换器
@@ -22,29 +18,6 @@ public class StaticResourceConverter {
 
     private StaticResourceConverter() {
 
-    }
-
-    /**
-     * staticResourceSaveDTO -> staticResource
-     *
-     * @param staticResourceSaveDTO staticResourceSaveDTO
-     * @return staticResource
-     */
-    public static StaticResource toStaticResource(StaticResourceSaveDTO staticResourceSaveDTO) {
-        if (staticResourceSaveDTO == null) {
-            return null;
-        }
-        StaticResource staticResource = new StaticResource();
-        staticResource.setResourceCode(staticResourceSaveDTO.getResourceCode());
-        staticResource.setResourceUrl(staticResourceSaveDTO.getResourceUrl());
-        staticResource.setResourceHost(staticResourceSaveDTO.getResourceHost());
-        staticResource.setResourceLevel(staticResourceSaveDTO.getResourceLevel());
-        staticResource.setResourceOwner(staticResourceSaveDTO.getResourceOwner());
-        staticResource.setEnableFlag(Optional.ofNullable(staticResourceSaveDTO.getEnableFlag()).orElse(MetadataConstants.StaticResourceConstants.ENABLE_FLAG));
-        staticResource.setDescription(staticResourceSaveDTO.getDescription());
-        staticResource.setTenantId(staticResourceSaveDTO.getTenantId());
-        staticResource.setLang(staticResourceSaveDTO.getLang());
-        return staticResource;
     }
 
     public static org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO toB2CStaticResourceSaveDTO(StaticResourceSaveDO staticResourceSaveDO){

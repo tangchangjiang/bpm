@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
         basePackageClasses = {
                 SysParameterRemoteService.class,
                 WarehouseRemoteService.class,
-                StaticResourceRemoteService.class,
                 FreightRemoteService.class,
                 CatalogVersionRemoteService.class,
                 CarrierRemoteService.class,
@@ -43,12 +42,6 @@ public class MetadataManagementClientConfiguration {
     @ConditionalOnMissingBean
     public FreightServiceRemoteServiceImpl freightServiceRemoteServiceFallback() {
         return new FreightServiceRemoteServiceImpl();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public StaticResourceRemoteServiceImpl staticResourceRemoteServiceFallback() {
-        return new StaticResourceRemoteServiceImpl();
     }
 
     @Bean
@@ -131,11 +124,6 @@ public class MetadataManagementClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public PlatformClient platformClient(PlatformRemoteService platformRemoteService) { return new PlatformClient( platformRemoteService);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public StaticResourceClient staticResourceClient(StaticResourceRemoteService staticResourceRemoteService) { return new StaticResourceClient( staticResourceRemoteService);
     }
 
 }
