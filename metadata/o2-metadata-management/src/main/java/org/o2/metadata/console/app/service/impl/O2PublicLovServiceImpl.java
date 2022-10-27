@@ -8,21 +8,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
-import org.o2.cms.management.client.O2CmsManagementClient;
-import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
-import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.vo.PublicLovVO;
 import org.o2.metadata.console.app.service.O2PublicLovService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
-import org.o2.metadata.console.infra.entity.StaticResourceConfig;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
 import org.o2.metadata.domain.staticresource.service.StaticResourceBusinessService;
 import org.springframework.stereotype.Service;
-
 
 import java.util.*;
 
