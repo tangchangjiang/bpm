@@ -347,39 +347,6 @@ public interface MetadataConstants {
 
     }
 
-    /**
-     * 静态资源文件来源系统编码
-     */
-    interface StaticResourceSourceModuleCode {
-        String METADATA = "METADATA";
-        String PCM = "PRODUCT";
-        String CMS = "CMS";
-    }
-
-
-    interface MallLangPromptConstants {
-
-        String LOV_CODE = "O2CMS.APPROVE_STATUS";
-
-        String UNAPPROVED = "UNAPPROVED";
-
-        String APPROVED = "APPROVED";
-
-        String MALL_LANG_LOCK_KEY = "o2md:mallLang:lock:{%d}:%s:%s";
-
-        String NAME = "mallLang";
-
-        String DESCRIPTION = "o2md.mallLang.static_file_description";
-
-        String LANG_LOV_CODE = "O2MD.LANGUAGE";
-
-        String RESOURCE_CODE = "O2MD_MALL_LANG_PROMPT";
-
-        int IMAGE_INTERCEPTION_MARK = 3;
-
-        String PCM_LANG_PROMPT = "O2PCM_LANG_PROMPT";
-    }
-
     interface StaticResourceConstants{
         Integer ENABLE_FLAG=1;
 
