@@ -49,7 +49,7 @@
             </if>
             <if test="nodeName != null and nodeName != ''">
                 <bind name="temp" value="'%' + nodeName + '%'"/>
-                AND bn.nodeName like #{temp}
+                AND bn.node_Name like #{temp}
             </if>
             <if test="businessTypeCode != null and businessTypeCode != ''">
                 AND bn.business_type_code = #{businessTypeCode}

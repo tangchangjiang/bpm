@@ -9,61 +9,61 @@ import com.google.common.collect.ImmutableList;
  */
 public interface ProcessEngineConstants {
 
-    interface ErrorCode{
+    interface ErrorCode {
 
-        String INVALID_ELEMENT_TYPE = "invalid element type";
+        String INVALID_ELEMENT_TYPE = "o2bpm.error_invalid_element_type";
 
-        String MODEL_EMPTY = "Empty model";
+        String MODEL_EMPTY = "o2bpm.error_empty_model";
 
-        String ELEMENT_KEY_NOT_UNIQUE = "Element id not unique";
+        String ELEMENT_KEY_NOT_UNIQUE = "o2bpm.error_element_id_not_unique";
         /**
          * 元素缺乏来源
          */
-        String ELEMENT_LACK_INCOMING = "Element lack incoming";
+        String ELEMENT_LACK_INCOMING = "o2bpm.error_element_lack_incoming";
         /**
          * 元素缺乏目标
          */
-        String ELEMENT_LACK_OUTGOING = "Element lack outgoing";
+        String ELEMENT_LACK_OUTGOING = "o2bpm.error_element_lack_outgoing";
 
-        String ELEMENT_TOO_MUCH_OUTGOING = "Too many outgoing";
+        String ELEMENT_TOO_MUCH_OUTGOING = "o2bpm.error_too_many_outgoing";
 
-        String ELEMENT_TOO_MUCH_INCOMING = "Too many incoming";
+        String ELEMENT_TOO_MUCH_INCOMING = "o2bpm.error_too_many_incoming";
 
-        String ELEMENT_LACK_CONDITION = "Element lack condition";
+        String ELEMENT_LACK_CONDITION = "o2bpm.error_element_lack_condition";
 
-        String CONDITION_FLOW_LACK_PRIORITY = "condition flow lack priority";
+        String CONDITION_FLOW_LACK_PRIORITY = "o2bpm.error_condition_flow_lack_priority";
 
-        String ELEMENT_ILLEGAL_VERIFICATION_PARAMETERS = "The element verification parameter is invalid";
+        String ELEMENT_ILLEGAL_VERIFICATION_PARAMETERS = "o2bpm.error_element_verification_parameter_invalid";
 
-        String MODEL_UNKNOWN_ELEMENT_KEY = "Unknown element key";
+        String MODEL_UNKNOWN_ELEMENT_KEY = "o2bpm.error_unknown_element_key";
 
-        String NODE_INCOMING_MUST_BE_FLOW_TYPE = "Node incoming mast be type of flow";
+        String NODE_INCOMING_MUST_BE_FLOW_TYPE = "o2bpm.error_node_incoming_mast_be_flow";
 
-        String NODE_OUTGOING_MUST_BE_SEQUENCE_FLOW = "Node outgoing mast be sequenceFlow";
+        String NODE_OUTGOING_MUST_BE_SEQUENCE_FLOW = "o2bpm.error_node_outgoing_mast_be_sequenceFlow";
 
-        String GATEWAY_OUTGOING_MUST_BE_GATEWAY_FLOW = "Gateway outgoing mast be defaultFlow or conditionalFlow";
+        String GATEWAY_OUTGOING_MUST_BE_GATEWAY_FLOW = "o2bpm.error_gateway_outgoing_mast_be_defaultFlow_or_conditionalFlow";
 
-        String GATEWAY_OUTGOING_DEFAULT_FLOW_MASTER_BE_ONE = "Gateway outgoing master be one of defaultFlow";
+        String GATEWAY_OUTGOING_DEFAULT_FLOW_MASTER_BE_ONE = "o2bpm.error_gateway_outgoing_master_be_one_of_defaultFlow";
 
-        String SEQUENCE_FLOW_INCOMING_CANNOT_BE_GATEWAY_TYPE = "Sequence flow incoming cannot be type of gateway";
+        String SEQUENCE_FLOW_INCOMING_CANNOT_BE_GATEWAY_TYPE = "o2bpm.error_sequence_flow_incoming_cannot_be_type_of_gateway";
 
-        String CONDITIONAL_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE = "Conditional Flow incoming mast be type of gateway";
+        String CONDITIONAL_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE = "o2bpm.error_conditional_Flow_incoming_mast_be_type_of_gateway";
 
-        String DEFAULT_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE = "Default Flow incoming mast be type of gateway";
+        String DEFAULT_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE = "o2bpm.error_default_Flow_incoming_mast_be_type_of_gateway";
 
-        String FLOW_OUTGOING_MUST_BE_NODE_TYPE = "Flow outgoing mast be type of node";
+        String FLOW_OUTGOING_MUST_BE_NODE_TYPE = "o2bpm.error_flow_outgoing_mast_be_type_of_node";
 
-        String START_NODE_INVALID = "Zero or more than one start node";
+        String START_NODE_INVALID = "o2bpm.error_zero_or_more_than_one_start_node";
 
-        String END_NODE_INVALID = "No end node";
+        String END_NODE_INVALID = "o2bpm.error_no_end_node";
 
-        String UNSUPPORTED_ELEMENT_TYPE = "Unsupported element type";
+        String UNSUPPORTED_ELEMENT_TYPE = "o2bpm.error_unsupported_element_type";
 
-        String UNSUPPORTED_EXPRESS_TYPE = "Unsupported express type";
+        String UNSUPPORTED_EXPRESS_TYPE = "o2bpm.error_unsupported_express_type";
 
-        String GET_OUTGOING_FAILED = "Get outgoing failed";
+        String GET_OUTGOING_FAILED = "o2bpm.error_get_outgoing_failed";
 
-        String BUSINESS_PROCESS_INTERRUPTED = "business process interrupted";
+        String BUSINESS_PROCESS_INTERRUPTED = "o2bpm.error_business_process_interrupted";
 
     }
 
