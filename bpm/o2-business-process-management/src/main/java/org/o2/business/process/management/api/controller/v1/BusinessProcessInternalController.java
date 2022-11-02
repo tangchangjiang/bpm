@@ -51,7 +51,7 @@ public class BusinessProcessInternalController {
 
     @ApiOperation(value = "获取流程节点模板参数定义")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/{beanId}")
+    @GetMapping("/param_definition/{beanId}")
     public ResponseEntity<BizNodeParameter> getParamDefinition(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                @PathVariable(value = "beanId") @ApiParam(value = "业务流程编码", required = true) String beanId,
                                                                @ApiParam(value = "业务流程编码", required = true) String paramCode){
