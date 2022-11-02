@@ -11,6 +11,7 @@ import org.o2.rule.engine.management.infra.mapper.O2reRuleEntityMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 规则实体 资源库实现
@@ -38,5 +39,11 @@ public class RuleEntityRepositoryImpl extends BaseRepositoryImpl<RuleEntity> imp
     public void saveRedis(Long tenantId, RuleEntityBO ruleEntity) {
         String key = String.format(RuleEntityConstants.RedisKey.RULE_ENTITY, tenantId);
         redisCacheClient.opsForHash().put(key, ruleEntity.getRuleEntityCode(), JsonHelper.objectToString(ruleEntity));
+    }
+
+    @Override
+    public void batchSaveRedis(Long tenantId, Map<String, String> ruleEntityMap) {
+        String key = String.format(RuleEntityConstants.RedisKey.RULE_ENTITY, tenantId);
+        redisCacheClient.opsForHash().putAll(key, ruleEntityMap);
     }
 }

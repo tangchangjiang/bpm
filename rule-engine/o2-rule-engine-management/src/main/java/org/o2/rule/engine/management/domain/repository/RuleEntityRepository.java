@@ -5,6 +5,7 @@ import org.o2.rule.engine.management.domain.bo.RuleEntityBO;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 规则实体资源库
@@ -26,4 +27,12 @@ public interface RuleEntityRepository extends BaseRepository<RuleEntity> {
      * @param ruleEntity 规则实体
      */
     void saveRedis(Long tenantId, RuleEntityBO ruleEntity);
+
+    /**
+     * 批量保存redis
+     *
+     * @param tenantId 租户id
+     * @param ruleEntityMap 规则实体
+     */
+    void batchSaveRedis(Long tenantId, Map<String, String> ruleEntityMap);
 }
