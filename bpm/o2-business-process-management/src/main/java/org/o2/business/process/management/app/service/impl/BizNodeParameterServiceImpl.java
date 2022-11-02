@@ -85,4 +85,13 @@ public class BizNodeParameterServiceImpl implements BizNodeParameterService {
                         .andEqualTo(BizNodeParameter.FIELD_TENANT_ID, tenantId))
                 .build());
     }
+
+    @Override
+    public BizNodeParameter getParamDefinition(String beanId, String paramCode, Long organizationId) {
+        BizNodeParameter query = new BizNodeParameter();
+        query.setTenantId(organizationId);
+        query.setBeanId(beanId);
+        query.setParamCode(paramCode);
+        return bizNodeParameterRepository.selectOne(query);
+    }
 }

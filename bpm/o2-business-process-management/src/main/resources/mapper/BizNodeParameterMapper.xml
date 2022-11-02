@@ -14,6 +14,7 @@
         <result column="value_filed_from" property="valueFiledFrom" jdbcType="VARCHAR"/>
         <result column="value_filed_to" property="valueFiledTo" jdbcType="VARCHAR"/>
         <result column="show_flag" property="showFlag" jdbcType="DECIMAL"/>
+        <result column="multi_flag" property="multiFlag" jdbcType="DECIMAL"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
         <result column="default_value" property="defaultValue" jdbcType="VARCHAR"/>
         <result column="default_meaning" property="defaultMeaning" jdbcType="VARCHAR"/>

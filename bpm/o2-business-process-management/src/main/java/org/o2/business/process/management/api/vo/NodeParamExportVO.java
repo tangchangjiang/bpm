@@ -61,4 +61,7 @@ public class NodeParamExportVO {
     @ApiModelProperty(value = "默认值类型")
     @ExcelColumn(zh = "默认值类型", en = "defaultValueType")
     private String defaultValueType;
+    @ApiModelProperty(value = "多值标记")
+    @ExcelColumn(zh = "多值标记", en = "multiFlag")
+    private String multiFlag;
 }

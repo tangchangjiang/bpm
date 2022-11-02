@@ -39,4 +39,14 @@ public interface BizNodeParameterService {
      * @return 参数列表
      */
     List<BizNodeParameter> getBizNodeParameterList(List<String> beanIdList, Long tenantId);
+
+
+    /**
+     * 根据beanId, paramCode 查询参数定义
+     * @param beanId
+     * @param paramCode
+     * @param organizationId
+     * @return
+     */
+    BizNodeParameter getParamDefinition(String beanId, String paramCode, Long organizationId);
 }

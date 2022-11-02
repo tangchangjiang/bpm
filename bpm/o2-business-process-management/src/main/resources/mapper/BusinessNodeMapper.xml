@@ -84,6 +84,7 @@
             np.value_filed_from np_value_filed_from,
             np.value_filed_to np_value_filed_to,
             np.show_flag np_show_flag,
+            np.multi_flag np_multi_flag,
             np.enabled_flag np_enabled_flag,
             np.default_value np_default_value,
             np.default_meaning np_default_meaning,

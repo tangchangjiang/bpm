@@ -65,6 +65,8 @@ public interface ProcessEngineConstants {
 
         String BUSINESS_PROCESS_INTERRUPTED = "o2bpm.error_business_process_interrupted";
 
+        String DUPLICATE_PRIORITY = "o2bpm.error_business_process_duplicate_priority";
+
     }
 
     interface FlowElementType{
