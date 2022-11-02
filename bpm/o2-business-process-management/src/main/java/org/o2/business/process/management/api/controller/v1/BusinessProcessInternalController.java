@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,7 +55,7 @@ public class BusinessProcessInternalController {
     @GetMapping("/param_definition/{beanId}")
     public ResponseEntity<BizNodeParameter> getParamDefinition(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                @PathVariable(value = "beanId") @ApiParam(value = "业务流程编码", required = true) String beanId,
-                                                               @ApiParam(value = "业务流程编码", required = true) String paramCode){
+                                                               @ApiParam(value = "业务流程编码", required = true) @RequestParam String paramCode){
         return Results.success(bizNodeParameterService.getParamDefinition(beanId, paramCode, organizationId));
     }
 }
