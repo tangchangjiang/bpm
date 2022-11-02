@@ -5,7 +5,9 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
+import org.o2.business.process.management.app.service.BizNodeParameterService;
 import org.o2.business.process.management.app.service.BusinessProcessRedisService;
+import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.process.domain.engine.BpmnModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,11 @@ public class BusinessProcessInternalController {
 
     private final BusinessProcessRedisService businessProcessRedisService;
 
-    public BusinessProcessInternalController(BusinessProcessRedisService businessProcessRedisService) {
+    private final BizNodeParameterService bizNodeParameterService;
+
+    public BusinessProcessInternalController(BusinessProcessRedisService businessProcessRedisService, BizNodeParameterService bizNodeParameterService) {
         this.businessProcessRedisService = businessProcessRedisService;
+        this.bizNodeParameterService = bizNodeParameterService;
     }
 
     @ApiOperation(value = "获取流程信息")
@@ -42,5 +47,14 @@ public class BusinessProcessInternalController {
     public ResponseEntity<Long> getProcessLastUpdateTime(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                          @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode){
         return Results.success(businessProcessRedisService.getProcessLastUpdateTime(processCode, organizationId));
+    }
+
+    @ApiOperation(value = "获取流程节点模板参数定义")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/{beanId}")
+    public ResponseEntity<BizNodeParameter> getParamDefinition(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @PathVariable(value = "beanId") @ApiParam(value = "业务流程编码", required = true) String beanId,
+                                                               @ApiParam(value = "业务流程编码", required = true) String paramCode){
+        return Results.success(bizNodeParameterService.getParamDefinition(beanId, paramCode, organizationId));
     }
 }
