@@ -72,8 +72,11 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
                 .andWhere(Sqls.custom().andEqualTo(Rule.FIELD_TENANT_ID, tenantId)
                         .andIn(Rule.FIELD_RULE_CODE, ruleCodeList, true)
                         .andEqualTo(Rule.FIELD_RULE_STATUS, RuleEngineConstants.RuleStatus.ENABLE)).build());
-        log.info("rule entity : {}", ruleEntities);
-        log.info("rule : {}", ruleList);
+
+        if(log.isDebugEnabled()){
+            log.debug("rule entity : {}", ruleEntities);
+            log.debug("rule : {}", ruleList);
+        }
 
         if (CollectionUtils.isNotEmpty(ruleEntities)) {
             Map<String, String> ruleEntityMap = new HashMap<>(ruleEntities.size());
