@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author tangcj
@@ -36,6 +37,7 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
         return ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY;
     }
 
+    @Override
     protected void doExecute(ProcessRuntimeContext<T> runtimeContext) {
         BaseElement nextNode = calculateOutgoing((BaseGateway) runtimeContext.getCurrentElement(), runtimeContext);
         runtimeContext.setCurrentElement(nextNode);
@@ -60,10 +62,18 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
             }
         }
 
-        ConditionalFlow hitElement = conditionalFlows.stream()
+        ConditionalFlow hitElement = null;
+
+        List<ConditionalFlow> sortFlows = conditionalFlows.stream()
                 .sorted(Comparator.comparing(ConditionalFlow::getPriority))
-                .filter(condition -> processCondition(condition, runtimeContext.getBusinessParam(), runtimeContext.getTenantId()))
-                .findFirst().orElse(null);
+                .collect(Collectors.toList());
+
+        for (ConditionalFlow condition : sortFlows){
+            if(processCondition(condition, runtimeContext.getBusinessParam(), runtimeContext.getTenantId())){
+                hitElement = condition;
+                break;
+            }
+        }
 
         if(null != hitElement){
             return hitElement;
