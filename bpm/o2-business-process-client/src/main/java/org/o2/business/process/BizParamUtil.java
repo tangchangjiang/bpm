@@ -90,18 +90,13 @@ public class BizParamUtil {
                     result = paramValue;
                     break;
                 case BusinessProcessConstants.BizParam.COMBO_BOX:
-                    if(BaseConstants.Flag.YES.equals(parameterDO.getMultiFlag())) {
-                        String temp = (String) paramValue;
-                        result = Arrays.stream(temp.split(BaseConstants.Symbol.COMMA)).collect(Collectors.toList());
-                        break;
-                    }
                 case BusinessProcessConstants.BizParam.LOV:
+                case BusinessProcessConstants.BizParam.INPUT:
                     if(BaseConstants.Flag.YES.equals(parameterDO.getMultiFlag())) {
                         String temp = (String) paramValue;
                         result = Arrays.stream(temp.split(BaseConstants.Symbol.COMMA)).collect(Collectors.toList());
                         break;
                     }
-                case BusinessProcessConstants.BizParam.INPUT:
                     result = paramValue;
                     break;
                 default:
