@@ -13,6 +13,7 @@ import org.o2.process.domain.engine.definition.flow.SequenceFlow;
 import org.o2.process.domain.engine.definition.gateway.ExclusiveGateway;
 import org.o2.process.domain.infra.ProcessEngineConstants;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,15 @@ public class BpmnModelUtil {
     public static final Map<String, Class<? extends BaseElement>> CLASS_MAP;
 
     static{
-        CLASS_MAP = new HashMap<>();
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.START_EVENT, StartEvent.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.END_EVENT, EndEvent.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY, ExclusiveGateway.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.SERVICE_TASK, ServiceTask.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.SEQUENCE_FLOW, SequenceFlow.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.CONDITIONAL_FLOW, ConditionalFlow.class);
-        CLASS_MAP.put(ProcessEngineConstants.FlowElementType.DEFAULT_FLOW, DefaultFlow.class);
+        HashMap<String, Class<? extends BaseElement>> map = new HashMap<>();
+        map.put(ProcessEngineConstants.FlowElementType.START_EVENT, StartEvent.class);
+        map.put(ProcessEngineConstants.FlowElementType.END_EVENT, EndEvent.class);
+        map.put(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY, ExclusiveGateway.class);
+        map.put(ProcessEngineConstants.FlowElementType.SERVICE_TASK, ServiceTask.class);
+        map.put(ProcessEngineConstants.FlowElementType.SEQUENCE_FLOW, SequenceFlow.class);
+        map.put(ProcessEngineConstants.FlowElementType.CONDITIONAL_FLOW, ConditionalFlow.class);
+        map.put(ProcessEngineConstants.FlowElementType.DEFAULT_FLOW, DefaultFlow.class);
+        CLASS_MAP = Collections.unmodifiableMap(map);
     }
 
     private BpmnModelUtil(){

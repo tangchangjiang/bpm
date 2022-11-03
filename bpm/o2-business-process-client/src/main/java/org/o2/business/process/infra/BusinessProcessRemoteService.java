@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 流程器远程服务
@@ -42,4 +43,11 @@ public interface BusinessProcessRemoteService {
     @GetMapping("/{organizationId}/internal/business-process/last-update-time/{processCode}")
     ResponseEntity<String> getProcessLastModifiedTime(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                              @PathVariable(value = "processCode") @ApiParam(value = "业务流程编码", required = true) String processCode);
+
+
+    @GetMapping("/{organizationId}/internal/business-process/param_definition/{beanId}")
+    ResponseEntity<String> getParamDefinition(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      @PathVariable(value = "beanId") @ApiParam(value = "业务流程编码", required = true) String beanId,
+                                              @ApiParam(value = "参数编码", required = true) @RequestParam String paramCode);
+
 }
