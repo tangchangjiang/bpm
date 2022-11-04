@@ -57,6 +57,10 @@ public interface ProcessEngineConstants {
 
         String END_NODE_INVALID = "o2bpm.error_no_end_node";
 
+        String END_NODE_CANNOT_HAVE_OUTGOING = "o2bpm.error_end_node_cannot_have_target_element";
+
+        String START_NODE_CANNOT_HAVE_INCOMING = "o2bpm.error_start_node_cannot_have_source_element";
+
         String UNSUPPORTED_ELEMENT_TYPE = "o2bpm.error_unsupported_element_type";
 
         String UNSUPPORTED_EXPRESS_TYPE = "o2bpm.error_unsupported_express_type";
