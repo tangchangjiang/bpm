@@ -20,7 +20,7 @@ public class StartEvent extends BaseEvent {
     @Override
     protected void checkIncoming(Map<String, BaseElement> elementMap) {
         if(CollectionUtils.isNotEmpty(getIncoming())){
-            throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_OUTGOING);
+            throwElementValidatorException(ProcessEngineConstants.ErrorCode.START_NODE_CANNOT_HAVE_INCOMING);
         }
     }
 
