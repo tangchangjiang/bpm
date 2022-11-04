@@ -25,7 +25,7 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
 
         if(BaseConstants.Flag.YES.equals(serviceTask.getEnabledFlag())){
 
-            ServiceAction<T> action = ApplicationContextHelper.getContext().getBean(serviceTask.getBeanId(), ServiceAction.class);
+            ServiceAction<T> action = getServiceAction(serviceTask.getBeanId());
             // 设置当前参数
             runtimeContext.getBusinessParam().setCurrentParam(serviceTask.getArgs());
 
@@ -44,6 +44,11 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
         }
 
         super.doExecute(runtimeContext);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected ServiceAction<T> getServiceAction(String beanId){
+        return ApplicationContextHelper.getContext().getBean(beanId, ServiceAction.class);
     }
 
     @Override

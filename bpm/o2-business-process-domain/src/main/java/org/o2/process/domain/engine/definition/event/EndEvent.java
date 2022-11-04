@@ -20,7 +20,7 @@ public class EndEvent extends BaseEvent {
     @Override
     public void checkOutgoing(Map<String, BaseElement> elementMap) {
         if(CollectionUtils.isNotEmpty(getOutgoing())){
-            throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_OUTGOING);
+            throwElementValidatorException(ProcessEngineConstants.ErrorCode.END_NODE_CANNOT_HAVE_OUTGOING);
         }
     }
 
