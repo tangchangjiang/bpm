@@ -16,4 +16,5 @@ public class RegionQueryDTO {
     private Integer enabledFlag;
     private Long organizationId;
     private Integer levelNumber;
+    private String regionName;
 }
