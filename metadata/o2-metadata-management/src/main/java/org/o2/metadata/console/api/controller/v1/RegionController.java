@@ -1,6 +1,9 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.domain.PageInfo;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,10 +23,16 @@ import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 地区层级定义管理
@@ -94,12 +103,53 @@ public class RegionController extends BaseController {
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(required = false) String countryCode,
                                                    @RequestParam(required = false) String resourceOwner,
-                                                   @RequestParam(required = false) String businessTypeCode){
+                                                   @RequestParam(required = false) String businessTypeCode) {
         RegionCacheVO regionCacheVO = new RegionCacheVO();
         regionCacheVO.setTenantId(organizationId);
-        regionCacheVO.setCountryCode(countryCode!=null?countryCode: O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE);
+        regionCacheVO.setCountryCode(countryCode != null ? countryCode : O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE);
         siteRegionFileService.createRegionStaticFile(regionCacheVO, resourceOwner, businessTypeCode);
         return Results.success(OperateResponse.success());
+    }
+
+    @ApiOperation("根据地区级别分别获取省市区数据(前后无关联关系)")
+    @GetMapping("/query-by-level")
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    ResponseEntity<List<RegionVO>> queryByLevel(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                RegionQueryDTO queryDTO, @ApiIgnore final PageRequest pageRequest) {
+
+        List<RegionVO> resultList = regionService.listChildren(queryDTO, organizationId);
+        if (StringUtils.isNotBlank(queryDTO.getRegionName())) {
+            List<RegionVO> filterList = resultList.stream()
+                    .filter(regionVO -> regionVO.getRegionName().contains(queryDTO.getRegionName())).collect(Collectors.toList());
+            return Results.success(getPage(filterList, pageRequest));
+        } else {
+            return Results.success(getPage(resultList, pageRequest));
+        }
+    }
+
+
+    protected Page<RegionVO> getPage(List<RegionVO> regionVOList, PageRequest pageRequest) {
+        if (pageRequest.getPage() >= 0 && pageRequest.getSize() > 0) {
+            PageInfo page = new PageInfo(pageRequest.getPage(), pageRequest.getSize(), true);
+
+            // 数据总数
+            int total = regionVOList.size();
+            // 开始位置(包含)
+            int startIndex = page.getPage() * page.getSize();
+            // 结束位置(不包含)
+            int endIndex = Math.min(startIndex + page.getSize(), total);
+            // 结果数据
+            List<RegionVO> resultList = Collections.emptyList();
+            if (startIndex < endIndex) {
+                // 进行分页
+                resultList = regionVOList.subList(startIndex, endIndex);
+            }
+            return new Page<>(resultList, page, total);
+        }
+        // 数据总数
+        int total = regionVOList.size();
+        return new Page<>(regionVOList, new PageInfo(0, total == 0 ? 1 : total), total);
     }
 
 }
