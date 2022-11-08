@@ -115,7 +115,7 @@ public class RegionController extends BaseController {
     @GetMapping("/query-by-level")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
-    public ResponseEntity<List<RegionVO>> queryAreaByLevel(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Page<RegionVO>> queryAreaByLevel(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                            RegionQueryDTO queryDTO, @ApiIgnore final PageRequest pageRequest) {
 
         List<RegionVO> resultList = regionService.listChildren(queryDTO, organizationId);
