@@ -114,7 +114,7 @@ public class RegionController extends BaseController {
     @ApiOperation("根据地区级别分别获取省市区数据(前后无关联关系)")
     @GetMapping("/query-by-level")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(permissionPublic = true)
+    @Permission(level = ResourceLevel.ORGANIZATION)
     ResponseEntity<List<RegionVO>> queryAreaByLevel(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                     RegionQueryDTO queryDTO, @ApiIgnore final PageRequest pageRequest) {
 
