@@ -28,8 +28,20 @@ public class IamUserClient {
      * @param queryInner 查询条件
      * @return list
      */
+    @Deprecated
     public List<IamUserCO> listIamUser(Long tenantId, IamUserQueryInnerDTO queryInner) {
         return ResponseUtils.getResponse(iamUserRemoteService.listIamUser(tenantId, queryInner), new TypeReference<List<IamUserCO>>() {
+        });
+    }
+
+    /**
+     * 查询用户信息
+     * @param tenantId 租户ID
+     * @param queryInner 查询条件
+     * @return list
+     */
+    public List<IamUserCO> listIamUserInfos(Long tenantId, IamUserQueryInnerDTO queryInner) {
+        return ResponseUtils.getResponse(iamUserRemoteService.listIamUserInfos(tenantId, queryInner), new TypeReference<List<IamUserCO>>() {
         });
     }
 }

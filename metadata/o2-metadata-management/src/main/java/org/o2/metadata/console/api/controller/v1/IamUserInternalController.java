@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
@@ -9,8 +8,9 @@ import org.o2.metadata.console.api.dto.IamUserQueryInnerDTO;
 import org.o2.metadata.console.app.service.IamUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import io.choerodon.swagger.annotation.Permission;
 
 /**
  *
@@ -30,9 +30,18 @@ public class IamUserInternalController {
     @ApiOperation(value = "用户信息")
     @Permission(permissionWithin = true)
     @GetMapping("/info")
+    @Deprecated
     public ResponseEntity<List<IamUserCO>> listIamUser(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody IamUserQueryInnerDTO queryInner) {
         queryInner.setTenantId(organizationId);
         return Results.success(iamUserService.listIamUser(queryInner));
+    }
+
+    @ApiOperation(value = "用户信息")
+    @Permission(permissionWithin = true)
+    @GetMapping("/info-list")
+    public ResponseEntity<List<IamUserCO>> listIamUserInfos(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody IamUserQueryInnerDTO queryInner) {
+        queryInner.setTenantId(organizationId);
+        return Results.success(iamUserService.listIamUserInfo(queryInner));
     }
 
 }
