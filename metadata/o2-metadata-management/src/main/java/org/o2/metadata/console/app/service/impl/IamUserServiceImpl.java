@@ -40,7 +40,22 @@ public class IamUserServiceImpl implements IamUserService {
         queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIdList(), BaseConstants.Symbol.COMMA));
         queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
         queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
-        List<Map<String, Object>> result = hzeroLovQueryRepository.queryLovValueMeaning(queryInner.getTenantId(), O2LovConstants.IamUserLov.IAM_USER_LOV_CODE,queryLovValueMap);
+
+        return this.getUserInfo(queryLovValueMap, queryInner.getTenantId());
+    }
+
+    @Override
+    public List<IamUserCO> listIamUserInfo(IamUserQueryInnerDTO queryInner) {
+        Map<String, String> queryLovValueMap = new HashMap<>(4);
+        queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIds(), BaseConstants.Symbol.COMMA));
+        queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
+        queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
+
+        return this.getUserInfo(queryLovValueMap, queryInner.getTenantId());
+    }
+
+    private List<IamUserCO> getUserInfo(Map<String, String> queryLovValueMap, Long tenantId) {
+        List<Map<String, Object>> result = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.IamUserLov.IAM_USER_LOV_CODE, queryLovValueMap);
         List<IamUserCO> list = null;
         try {
             list = this.objectMapper.readValue(JsonHelper.objectToString(result), new TypeReference<List<IamUserCO>>() {

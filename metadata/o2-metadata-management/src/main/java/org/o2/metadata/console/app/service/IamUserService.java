@@ -20,4 +20,12 @@ public interface IamUserService {
      * @return  list
      */
     List<IamUserCO> listIamUser(IamUserQueryInnerDTO queryInner);
+
+
+    /**
+     * 批量查询用户信息
+     * @param queryInner 查询条件
+     * @return  list
+     */
+    List<IamUserCO> listIamUserInfo(IamUserQueryInnerDTO queryInner);
 }

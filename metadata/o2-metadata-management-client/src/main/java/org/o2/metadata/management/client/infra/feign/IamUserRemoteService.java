@@ -29,6 +29,17 @@ public interface IamUserRemoteService {
      * @return str
      */
     @GetMapping("/{organizationId}/iam-user-internal/info")
+    @Deprecated
     ResponseEntity<String> listIamUser(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                        IamUserQueryInnerDTO queryInner);
+
+    /**
+     * 查询用户信息
+     * @param organizationId 租户ID
+     * @param queryInner 查询条件
+     * @return str
+     */
+    @GetMapping("/{organizationId}/iam-user-internal/info-list")
+    ResponseEntity<String> listIamUserInfos(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            IamUserQueryInnerDTO queryInner);
 }
