@@ -15,7 +15,12 @@ public class IamUserQueryInnerDTO {
     /**
      * 用户ID
      */
+    @Deprecated
     private List<Long> idList;
+    /**
+     * 用户ID
+     */
+    private List<String> ids;
 
     /**
      * 租户ID
