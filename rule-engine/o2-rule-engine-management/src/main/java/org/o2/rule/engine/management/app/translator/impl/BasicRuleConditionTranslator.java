@@ -11,6 +11,7 @@ import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
 import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 基本规则条件转换类
@@ -44,7 +45,7 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
             if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode())) {
                 if (LOV.equals(parameter.getParamEditTypeCode())) {
                     List<RuleParamLovValueDTO> paramLovValues = JsonHelper.stringToArray(parameter.getParamValue(), RuleParamLovValueDTO.class);
-                    compileValue = "\"" + StringUtils.join(paramLovValues.stream().map(RuleParamLovValueDTO::getCode), BaseConstants.Symbol.COMMA) + "\"";
+                    compileValue = "\"" + StringUtils.join(paramLovValues.stream().map(RuleParamLovValueDTO::getCode).collect(Collectors.toList()), BaseConstants.Symbol.COMMA) + "\"";
                 } else {
                     if ((TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
                         compileValue = "\"" + parameter.getParamValue() + "\"";
