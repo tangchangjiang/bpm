@@ -42,13 +42,15 @@ public class BasicRuleConditionTranslator implements RuleConditionTranslator {
             }
             final String compileValue;
             if (RuleEngineConstants.BasicParameter.PARAMETER_VALUE.equals(parameter.getParamCode())) {
-                if ((TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
-                    compileValue = "\"" + parameter.getParamValue() + "\"";
-                } else if (LOV.equals(parameter.getParamEditTypeCode())) {
+                if (LOV.equals(parameter.getParamEditTypeCode())) {
                     List<RuleParamLovValueDTO> paramLovValues = JsonHelper.stringToArray(parameter.getParamValue(), RuleParamLovValueDTO.class);
                     compileValue = "\"" + StringUtils.join(paramLovValues.stream().map(RuleParamLovValueDTO::getCode), BaseConstants.Symbol.COMMA) + "\"";
                 } else {
-                    compileValue = parameter.getParamValue();
+                    if ((TEXT.equalsIgnoreCase(parameter.getParamFormatCode()) || LIST.equalsIgnoreCase(parameter.getParamFormatCode()))) {
+                        compileValue = "\"" + parameter.getParamValue() + "\"";
+                    } else {
+                        compileValue = parameter.getParamValue();
+                    }
                 }
             }  else {
                 compileValue = parameter.getParamValue();
