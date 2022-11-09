@@ -15,7 +15,14 @@ public interface BusinessProcessConstants {
 
         String NO_CORRESPONDING_NODE_FOUND = "o2bpm.no_corresponding_node_found";
 
+    }
 
+    interface ErrorMessage{
+        String PARAM_CODE_NOT_EXISTS = "current beanId:%s, paramCode:%s not exists paramCodes:%s";
+
+        String BEAN_NETWORK_REQUEST_ERROR = "current beanId[%s] request metadata error";
+
+        String PARAM_PARSING_ERROR = "current beanId:%s, paramCode:%s, paramValue:%s";
     }
 
 
@@ -48,5 +55,41 @@ public interface BusinessProcessConstants {
         String END_NODE = "end-node";
         String FLOW_NODE = "flow-node";
         String START_NODE = "start-node";
+    }
+
+    interface CacheParam{
+        String CACHE_NAME = "O2MD_USER";
+        String PROCESS_CACHE_KEY = "%d_%s";
+        String NODE_PARAM_DEFINITION_CACHE = "biz_param_definition_%d_%s";
+    }
+
+    interface BizParam{
+        /**
+         * 日期选择框
+         */
+        String DATE_PICKER = "DATEPICKER";
+
+        /**
+         * 日期时间选择框
+         */
+        String DATE_TIME_PICKER = "DATETIMEPICKER";
+        /**
+         * 数字框
+         */
+        String INPUT_NUMBER = "INPUTNUMBER";
+        /**
+         * 值集视图
+         */
+        String LOV = "LOV";
+        /**
+         * 下拉框
+         */
+        String COMBO_BOX = "COMBOBOX";
+
+        /**
+         * 文本
+         */
+        String INPUT = "INPUT";
+
     }
 }

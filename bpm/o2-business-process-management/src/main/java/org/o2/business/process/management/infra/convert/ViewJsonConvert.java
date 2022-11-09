@@ -33,7 +33,7 @@ public class ViewJsonConvert {
         objectMapper = ApplicationContextHelper.getContext().getBean(ObjectMapper.class);
     }
 
-    public static List<BaseElement> viewJsonConvert(String viewJson) {
+    public static List<BaseElement> viewJsonConvert(String viewJson, Long tenantId) {
 
         ProcessModel processModel = null;
         try {
@@ -50,7 +50,7 @@ public class ViewJsonConvert {
                 .map(cell -> (NotationNode) cell).collect(Collectors.toList());
 
         List<BaseElement> baseElements = new ArrayList<>();
-        notationNodes.forEach(node -> baseElements.add(BaseNodeFactory.createBaseNode(node)));
+        notationNodes.forEach(node -> baseElements.add(BaseNodeFactory.createBaseNode(node, tenantId)));
 
         List<BaseElement> result = new ArrayList<>();
         Map<String, BaseElement> elementMap = baseElements.stream().collect(Collectors.toMap(BaseElement::getId, Function.identity()));
