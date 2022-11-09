@@ -98,7 +98,9 @@ public class BaseNodeFactory {
             Map<String, BizNodeParameter> paramDefinitionMap = getBizNodeParameterDefinition(serviceTask, tenantId, argMap);
             for(Map.Entry<String, Object> entry : argMap.entrySet()){
                 BizNodeParameter bizNodeParameter = paramDefinitionMap.get(entry.getKey());
-                argMap.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
+                if(null != bizNodeParameter){
+                    argMap.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
+                }
             }
         }
     }
