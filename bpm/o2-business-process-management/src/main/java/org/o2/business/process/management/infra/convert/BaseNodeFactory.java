@@ -13,7 +13,6 @@ import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.business.process.management.domain.repository.BizNodeParameterRepository;
 import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
 import org.o2.cache.util.CollectionCacheHelper;
-import org.o2.core.helper.DateUtil;
 import org.o2.core.helper.JsonHelper;
 import org.o2.process.domain.engine.definition.Activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseNode;
@@ -22,7 +21,7 @@ import org.o2.process.domain.engine.definition.event.StartEvent;
 import org.o2.process.domain.engine.definition.gateway.ExclusiveGateway;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -68,10 +67,9 @@ public class BaseNodeFactory {
         serviceTask.setId(node.getId());
         serviceTask.setEnabledFlag(node.getData().getEnabledFlag());
         serviceTask.setBeanId(node.getData().getBeanId());
-        serviceTask.setArgs(node.getData().getArgs());
         serviceTask.setIncoming(new ArrayList<>());
         serviceTask.setOutgoing(new ArrayList<>());
-        dealArgs(serviceTask, tenantId);
+        dealArgs(serviceTask, node.getData().getArgs(), tenantId);
         return serviceTask;
     }
 
@@ -92,15 +90,16 @@ public class BaseNodeFactory {
     }
 
     // 可扩展，节点拿到参数的类型可在这里处理好
-    public static void dealArgs(ServiceTask serviceTask, Long tenantId){
-        Map<String, Object> argMap = serviceTask.getArgs();
-        if(MapUtils.isNotEmpty(argMap)) {
-            Map<String, BizNodeParameter> paramDefinitionMap = getBizNodeParameterDefinition(serviceTask, tenantId, argMap);
-            for(Map.Entry<String, Object> entry : argMap.entrySet()){
-                BizNodeParameter bizNodeParameter = paramDefinitionMap.get(entry.getKey());
-                if(null != bizNodeParameter){
-                    argMap.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
-                }
+    public static void dealArgs(ServiceTask serviceTask, Map<String, Object> argMap, Long tenantId){
+        if(MapUtils.isEmpty(argMap)) {
+            serviceTask.setArgs(new HashMap<>());
+            return;
+        }
+        Map<String, BizNodeParameter> paramDefinitionMap = getBizNodeParameterDefinition(serviceTask, tenantId, argMap);
+        for(Map.Entry<String, Object> entry : argMap.entrySet()){
+            BizNodeParameter bizNodeParameter = paramDefinitionMap.get(entry.getKey());
+            if(null != bizNodeParameter){
+                argMap.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
             }
         }
     }
@@ -129,35 +128,26 @@ public class BaseNodeFactory {
         return paramDefinitionMap;
     }
 
-    protected static Object parseArgs(BizNodeParameter bizNodeParameter, Object paramValue){
-        Object result = null;
+    protected static String parseArgs(BizNodeParameter bizNodeParameter, Object paramValue){
+        String result = null;
         try{
             switch (bizNodeParameter.getParamEditTypeCode()) {
                 case BusinessProcessConstants.BizParam.DATE_PICKER:
-                    result = DateUtil.parseToDate((String) paramValue);
-                    break;
                 case BusinessProcessConstants.BizParam.DATE_TIME_PICKER:
-                    result = DateUtil.parseToDateTime((String) paramValue);
-                    break;
-                case BusinessProcessConstants.BizParam.INPUT_NUMBER:
-                    result = paramValue;
-                    break;
                 case BusinessProcessConstants.BizParam.COMBO_BOX:
                 case BusinessProcessConstants.BizParam.INPUT:
-                    if(BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
-                        String temp = (String) paramValue;
-                        result = Arrays.stream(temp.split(BaseConstants.Symbol.COMMA)).collect(Collectors.toList());
-                        break;
-                    }
-                    result = paramValue;
+                    result = (String) paramValue;
                     break;
                 case BusinessProcessConstants.BizParam.LOV:
                     List<LovViewDO> lovViewList = JsonHelper.stringToArray((String) paramValue, LovViewDO.class);
                     if(BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
-                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.toList());
+                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining());
                         break;
                     }
                     result = lovViewList.stream().map(LovViewDO::getCode).findFirst().orElse("");
+                    break;
+                case BusinessProcessConstants.BizParam.INPUT_NUMBER:
+                    result = String.valueOf(paramValue);
                     break;
                 default:
             }

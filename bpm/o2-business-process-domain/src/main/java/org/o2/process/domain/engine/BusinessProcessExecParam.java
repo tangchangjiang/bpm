@@ -18,7 +18,7 @@ import java.util.Map;
 @Data
 public class BusinessProcessExecParam implements ProcessObject {
 
-    private Map<String, Object> currentParam;
+    private Map<String, String> currentParam;
     @JsonIgnore
     @JSONField(serialize = false)
     private Boolean nextFlag;
