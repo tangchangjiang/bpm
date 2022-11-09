@@ -124,11 +124,7 @@ public class BaseNodeFactory {
             processException.setStackTrace(e.getStackTrace());
             throw processException;
         }
-        if (!paramDefinitionMap.keySet().containsAll(argMap.keySet())) {
-            List<String> unExists = new ArrayList<>(argMap.keySet());
-            unExists.removeAll(paramDefinitionMap.keySet());
-            throw new CommonException(String.format(BusinessProcessConstants.ErrorMessage.PARAM_CODE_NOT_EXISTS, serviceTask.getBeanId(), serviceTask.getBeanId(), JsonHelper.collectionToString(unExists)));
-        } return paramDefinitionMap;
+        return paramDefinitionMap;
     }
 
     protected static Object parseArgs(BizNodeParameter bizNodeParameter, Object paramValue){
