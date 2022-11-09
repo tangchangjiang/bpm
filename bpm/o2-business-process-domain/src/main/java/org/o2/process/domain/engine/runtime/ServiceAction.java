@@ -44,6 +44,12 @@ public interface ServiceAction<T extends BusinessProcessExecParam> {
 
     }
 
+    /**
+     * 节点参数转换
+     * @param paramCode 参数编码
+     * @param dataObject 流程上下文
+     * @return
+     */
     default List<String> paramParsingList(String paramCode, T dataObject){
         return Arrays.stream(dataObject.getCurrentParam().get(paramCode).split(BaseConstants.Symbol.COMMA)).collect(Collectors.toList());
     }
@@ -54,6 +60,10 @@ public interface ServiceAction<T extends BusinessProcessExecParam> {
 
     default Date paramParsingDate(String paramCode, T dataObject) throws ParseException {
         return DateUtil.parseToDateTime(dataObject.getCurrentParam().get(paramCode));
+    }
+
+    default Integer paramParsingInteger(String paramCode, T dataObject){
+        return Integer.valueOf(dataObject.getCurrentParam().get(paramCode));
     }
 
     default Long paramParsingLong(String paramCode, T dataObject){
