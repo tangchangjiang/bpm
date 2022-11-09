@@ -19,7 +19,7 @@ public class ServiceTask extends BaseTask {
 
     private Integer enabledFlag;
 
-    private Map<String, Object> args;
+    private Map<String, String> args;
 
     @Override
     public String getType() {
