@@ -144,7 +144,7 @@ public class BaseNodeFactory {
                 case BusinessProcessConstants.BizParam.LOV:
                     List<LovViewDO> lovViewList = JsonHelper.stringToArray((String) paramValue, LovViewDO.class);
                     if(BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
-                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining());
+                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining(BaseConstants.Symbol.COMMA));
                         break;
                     }
                     result = lovViewList.stream().map(LovViewDO::getCode).findFirst().orElse("");
