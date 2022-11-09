@@ -1,6 +1,7 @@
 package org.o2.business.process.management.app.service.impl;
 
 import io.choerodon.mybatis.domain.AuditDomain;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.domian.Condition;
@@ -16,6 +17,7 @@ import org.o2.business.process.management.domain.repository.BusinessNodeReposito
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.o2.business.process.management.infra.convert.ViewJsonConvert;
+import org.o2.core.helper.JsonHelper;
 import org.o2.process.domain.engine.BpmnModel;
 import org.o2.process.domain.engine.definition.Activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
  * @date 2022-08-10 14:23:57
  */
 @Service
+@Slf4j
 public class BusinessProcessServiceImpl implements BusinessProcessService {
                                                                                 
     private final BusinessProcessRepository businessProcessRepository;
@@ -52,7 +55,9 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     private final RuleEngineManagementClient ruleEngineManagementClient;
 
-    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository, BusinessProcessRedisRepository businessProcessRedisRepository, RuleEngineManagementClient ruleEngineManagementClient) {
+
+    public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository,
+                                      BusinessProcessRedisRepository businessProcessRedisRepository, RuleEngineManagementClient ruleEngineManagementClient) {
         this.businessProcessRepository = businessProcessRepository;
         this.businessNodeRepository = businessNodeRepository;
         this.businessProcessRedisRepository = businessProcessRedisRepository;
@@ -133,17 +138,23 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                     BusinessProcess.FIELD_TENANT_ID
             );
         }
+
         // 加载到缓存中
         businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
         // 发布规则
         if (CollectionUtils.isNotEmpty(ruleCodes)){
-            ruleEngineManagementClient.useRule(businessProcess.getTenantId(), new ArrayList<>(ruleCodes));
+            try{
+                // todo 事务不能保持一致,因此只能让规则不要影响流程数据的一致性
+                ruleEngineManagementClient.useRule(businessProcess.getTenantId(), new ArrayList<>(ruleCodes));
+            }catch (Exception e){
+                log.error("update useRule error: processCode:{}, ruleCodes:{}", businessProcess.getProcessCode(), JsonHelper.collectionToString(ruleCodes));
+            }
         }
         return businessProcess;
     }
 
     protected void buildProcessJson(BusinessProcess businessProcess, Set<String> ruleCodes) {
-        List<BaseElement> baseElements = ViewJsonConvert.viewJsonConvert(businessProcess.getViewJson());
+        List<BaseElement> baseElements = ViewJsonConvert.viewJsonConvert(businessProcess.getViewJson(), businessProcess.getTenantId());
         BpmnModel bpmnModel = new BpmnModel();
         bpmnModel.setFlowElements(baseElements);
         bpmnModel.setProcessCode(businessProcess.getProcessCode());
