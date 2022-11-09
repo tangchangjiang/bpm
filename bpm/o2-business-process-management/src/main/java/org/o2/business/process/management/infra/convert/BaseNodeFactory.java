@@ -1,5 +1,6 @@
 package org.o2.business.process.management.infra.convert;
 
+import com.google.common.collect.Maps;
 import io.choerodon.core.convertor.ApplicationContextHelper;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
@@ -95,13 +96,15 @@ public class BaseNodeFactory {
             serviceTask.setArgs(new HashMap<>());
             return;
         }
+        Map<String, String> result = Maps.newHashMapWithExpectedSize(argMap.size());
         Map<String, BizNodeParameter> paramDefinitionMap = getBizNodeParameterDefinition(serviceTask, tenantId, argMap);
         for(Map.Entry<String, Object> entry : argMap.entrySet()){
             BizNodeParameter bizNodeParameter = paramDefinitionMap.get(entry.getKey());
             if(null != bizNodeParameter){
-                argMap.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
+                result.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
             }
         }
+        serviceTask.setArgs(result);
     }
 
     protected static Map<String, BizNodeParameter> getBizNodeParameterDefinition(ServiceTask serviceTask, Long tenantId, Map<String, Object> argMap) {
@@ -141,7 +144,7 @@ public class BaseNodeFactory {
                 case BusinessProcessConstants.BizParam.LOV:
                     List<LovViewDO> lovViewList = JsonHelper.stringToArray((String) paramValue, LovViewDO.class);
                     if(BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
-                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining());
+                        result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining(BaseConstants.Symbol.COMMA));
                         break;
                     }
                     result = lovViewList.stream().map(LovViewDO::getCode).findFirst().orElse("");
