@@ -189,9 +189,11 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     public Map<String, FreightTemplateCO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightTemplateDO> freightInfoTemplateDOs = freightTemplateDomainRepository.listFreightTemplate(tenantId, templateCodes);
         Map<String, FreightTemplateCO> resultMap = new HashMap<>();
-        for (FreightTemplateDO freightTemplateDO : freightInfoTemplateDOs) {
-            FreightTemplateCO freightTemplateCO = FreightConverter.toFreightTemplateCo(freightTemplateDO);
-            resultMap.put(freightTemplateCO.getTemplateCode(), freightTemplateCO);
+        if (CollectionUtils.isNotEmpty(freightInfoTemplateDOs)) {
+            for (FreightTemplateDO freightTemplateDO : freightInfoTemplateDOs) {
+                FreightTemplateCO freightTemplateCO = FreightConverter.toFreightTemplateCo(freightTemplateDO);
+                resultMap.put(freightTemplateCO.getTemplateCode(), freightTemplateCO);
+            }
         }
         return resultMap;
     }
