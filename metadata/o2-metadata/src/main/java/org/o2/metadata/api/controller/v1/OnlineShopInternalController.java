@@ -40,6 +40,7 @@ public class OnlineShopInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop/list")
     public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
+        UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
         return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
 
