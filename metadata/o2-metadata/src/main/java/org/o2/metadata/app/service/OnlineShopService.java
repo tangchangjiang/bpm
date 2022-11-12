@@ -35,4 +35,12 @@ public interface OnlineShopService {
      * @return List<OnlineShopCO>
      */
     List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType);
+
+    /**
+     * 批量查询网店
+     * @param tenantId
+     * @param onlineShopCodes
+     * @return
+     */
+    List<OnlineShopCO> batchQueryOnlineShop(Long tenantId, List<String> onlineShopCodes);
 }

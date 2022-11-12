@@ -37,4 +37,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType) {
         return ListConverter.toList(onlineShopRedis.selectShopListByType(tenantId, onlineShopType), OnlineShopConverter::poToCoObject);
     }
+
+    @Override
+    public List<OnlineShopCO> batchQueryOnlineShop(Long tenantId, List<String> onlineShopCodes) {
+        return ListConverter.toList(onlineShopRedis.batchQueryShopList(tenantId, onlineShopCodes), OnlineShopConverter::poToCoObject);
+    }
+
 }

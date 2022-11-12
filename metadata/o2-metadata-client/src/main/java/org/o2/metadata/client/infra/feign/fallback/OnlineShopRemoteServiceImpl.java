@@ -37,4 +37,10 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
         log.error("Error queryOnlineShopByType, params[tenantId= {}, onlineShopType = {}]", tenantId, onlineShopType);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> batchQueryOnlineShop(String tenantId, List<String> onlineShopCodes) {
+        log.error("Error batchQueryOnlineShop, params[tenantId= {}, onlineShopCodes = {}]", tenantId, JsonHelper.objectToString(onlineShopCodes));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }
