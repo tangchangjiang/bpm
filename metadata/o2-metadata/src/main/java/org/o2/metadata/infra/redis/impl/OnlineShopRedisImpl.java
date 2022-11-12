@@ -83,4 +83,18 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         });
         return shopList;
     }
+
+    @Override
+    public List<OnlineShop> batchQueryShopList(Long tenantId, List<String> onlineShopCodes) {
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+        List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
+        if (CollectionUtils.isEmpty(shopJsonList)) {
+            return Collections.emptyList();
+        }
+        List<OnlineShop> shopList = new ArrayList<>();
+        for (String shopJson : shopJsonList) {
+            shopList.add(JsonHelper.stringToObject(shopJson, OnlineShop.class));
+        }
+        return shopList;
+    }
 }

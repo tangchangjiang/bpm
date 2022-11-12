@@ -51,4 +51,16 @@ public class OnlineShopClient {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopByType(tenantId, onlineShopType), new TypeReference<List<OnlineShopCO>>() {
         });
     }
+
+    /**
+     * 批量查询网店-传租户ID
+     * @param tenantId
+     * @param onlineShopCodes
+     * @return
+     */
+    public List<OnlineShopCO> batchQueryOnlineShop(String tenantId, List<String> onlineShopCodes) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.batchQueryOnlineShop(tenantId, onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
+        });
+    }
+
 }

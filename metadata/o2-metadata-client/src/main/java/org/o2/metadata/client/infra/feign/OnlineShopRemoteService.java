@@ -48,4 +48,13 @@ public interface OnlineShopRemoteService {
      */
     @GetMapping("/onlineShop-internal/online-shop/list-by-type")
     ResponseEntity<String> queryOnlineShopByType(@RequestParam String tenantId, @RequestParam String onlineShopType);
+
+    /**
+     * 批量获取网店
+     * @param tenantId
+     * @param onlineShopCodes
+     * @return
+     */
+    @GetMapping("/onlineShop-internal/online-shop/batch-list")
+    ResponseEntity<String> batchQueryOnlineShop(@RequestParam String tenantId, @RequestParam List<String> onlineShopCodes);
 }

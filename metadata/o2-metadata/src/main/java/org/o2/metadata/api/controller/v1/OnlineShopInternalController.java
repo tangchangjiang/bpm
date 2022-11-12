@@ -51,4 +51,12 @@ public class OnlineShopInternalController {
         return Results.success(onlineShopService.queryShopListByType(Long.valueOf(tenantId), onlineShopType));
     }
 
+    @ApiOperation(value = "查询多个网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/online-shop/batch-list")
+    public ResponseEntity<List<OnlineShopCO>> batchQueryOnlineShop(@RequestParam String tenantId, @RequestParam List<String> onlineShopCodes) {
+        return Results.success(onlineShopService.batchQueryOnlineShop(Long.valueOf(tenantId), onlineShopCodes));
+    }
+
+
 }
