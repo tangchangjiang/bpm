@@ -2,16 +2,21 @@ package org.o2.metadata.infra.redis.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.core.base.AopProxy;
+import org.o2.cache.util.CacheHelper;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.SystemParameterConstants;
 import org.o2.metadata.infra.entity.SystemParamValue;
 import org.o2.metadata.infra.entity.SystemParameter;
 import org.o2.metadata.infra.redis.SystemParameterRedis;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -29,7 +34,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
 
     @Override
     public SystemParameter getSystemParameter(String paramCode, Long tenantId) {
-        return self().querySystemParameter(paramCode,tenantId);
+        return this.querySystemParameter(paramCode,tenantId);
 
     }
     @Override
@@ -39,7 +44,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
             return doList;
         }
         for (String str : paramCodeList) {
-            SystemParameter systemParameter = self().querySystemParameter(str,tenantId);
+            SystemParameter systemParameter = this.querySystemParameter(str,tenantId);
             doList.add(systemParameter);
         }
         return doList;
@@ -66,8 +71,17 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
         return setList;
     }
 
-    @Cacheable(value = "O2MD_METADATA", key = "'systemParameter'+'_'+#tenantId+'_'+#paramCode")
     public SystemParameter querySystemParameter(String paramCode, Long tenantId){
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2MD_METADATA,
+                MetadataCacheConstants.CacheKey.getSysParamByCodePrefix(tenantId, paramCode),
+                paramCode, tenantId,
+                this::getSystemParameterByCode,
+                false
+        );
+    }
+
+    protected SystemParameter getSystemParameterByCode(String paramCode, Long tenantId) {
         SystemParameter systemParameter = new SystemParameter();
         systemParameter.setParamCode(paramCode);
         //hash类型

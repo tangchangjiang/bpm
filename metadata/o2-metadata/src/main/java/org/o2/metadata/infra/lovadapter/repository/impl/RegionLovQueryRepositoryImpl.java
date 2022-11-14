@@ -7,16 +7,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.AopProxy;
+import org.o2.cache.util.CacheHelper;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.entity.Region;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.RegionLovQueryRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,18 +45,34 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
     }
 
     /**
-     * 查询地区值集
+     * 查询地区值集缓存
      * @param tenantId 租户ID
      * @param countryCode 国家编码
      * @return list 地区信息
      */
-    @Cacheable(value = "O2_LOV", key = "'region'+'_'+#countryCode + '_'+ #lang")
-    public List<Region> queryRegionCache(Long tenantId, String countryCode,String lang ) {
+    public List<Region> queryRegionCache(Long tenantId, String countryCode,String lang) {
         Map<String,String> queryParam = Maps.newHashMapWithExpectedSize(2);
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
         queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE,O2LovConstants.RegionLov.DEFAULT_DATA);
         queryParam.put(O2LovConstants.RegionLov.LANG,lang);
 
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2_LOV,
+                MetadataCacheConstants.CacheKey.getRegionPrefix(countryCode, lang),
+                tenantId, queryParam,
+                this::getRegionByCountryCodeAndLang,
+                false
+        );
+    }
+
+    /**
+     * 根据城市编码和语言查询地区值集
+     *
+     * @param tenantId   租户Id
+     * @param queryParam 查询参数
+     * @return 地区值集
+     */
+    protected List<Region> getRegionByCountryCodeAndLang(Long tenantId, Map<String, String> queryParam) {
         List<Map<String, Object>> maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.AddressType.CODE, queryParam);
 
         List<Region> list = null;
@@ -66,7 +84,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         }
         return list;
     }
-
 
     /**
      * 条件查询地址
@@ -82,7 +99,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
-        List<Region> regionList = self().queryRegionCache(tenantId,countryCode,lang);
+        List<Region> regionList = this.queryRegionCache(tenantId,countryCode,lang);
         String regionName = queryLov.getRegionName();
         // 地区名称
         if (StringUtils.isNotEmpty(regionName)) {

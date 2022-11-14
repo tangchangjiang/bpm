@@ -1,12 +1,13 @@
 package org.o2.metadata.app.service.impl;
 
 
-import org.o2.metadata.api.dto.FreightDTO;
+import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.api.co.FreightInfoCO;
+import org.o2.metadata.api.dto.FreightDTO;
 import org.o2.metadata.app.service.FreightService;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
+import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.convertor.FreightConverter;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,9 +28,12 @@ public class FreightServiceImpl implements FreightService {
     }
 
     @Override
-    @Cacheable(value = "O2MD_METADATA", key = "'freight'+'_'+#freight")
     public FreightInfoCO getFreightTemplate(FreightDTO freight) {
-      return FreightConverter.doToCoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(),freight.getTemplateCode(),freight.getTenantId()));
+        return CacheHelper.getCache(MetadataCacheConstants.CacheName.O2MD_METADATA,
+                param -> MetadataCacheConstants.CacheKey.getFreightPrefix(freight.toString()),
+                freight,
+                param -> FreightConverter.doToCoObject(freightTemplateDomainRepository.getFreightTemplate(freight.getRegionCode(), freight.getTemplateCode(), freight.getTenantId())),
+                false);
     }
 
     @Override

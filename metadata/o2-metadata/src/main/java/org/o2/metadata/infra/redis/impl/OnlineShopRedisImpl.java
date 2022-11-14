@@ -3,13 +3,14 @@ package org.o2.metadata.infra.redis.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.o2.cache.util.CacheHelper;
 import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.UserHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
 import org.o2.metadata.infra.entity.OnlineShop;
 import org.o2.metadata.infra.redis.OnlineShopRedis;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -66,8 +67,23 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    @Cacheable(value = "O2MD_METADATA", key = "'onlineShop'+'_'+#tenantId+'_'+#onlineShopType")
     public List<OnlineShop> selectShopListByType(Long tenantId, String onlineShopType) {
+        return CacheHelper.getCache(MetadataCacheConstants.CacheName.O2MD_METADATA,
+                MetadataCacheConstants.CacheKey.getOnlineShopPrefix(tenantId, onlineShopType),
+                tenantId, onlineShopType,
+                this::getOnlineShopByType,
+                false);
+
+    }
+
+    /**
+     * 通过类型查询网店
+     *
+     * @param tenantId       租户Id
+     * @param onlineShopType 网店类型
+     * @return 网店
+     */
+    protected List<OnlineShop> getOnlineShopByType(Long tenantId, String onlineShopType) {
         String onlineShopKey = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         Map<String,String> shopJsonMap = redisCacheClient.<String, String>opsForHash().entries(onlineShopKey);
         if(MapUtils.isEmpty(shopJsonMap)){
