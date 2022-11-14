@@ -1,6 +1,5 @@
 package org.o2.metadata.app.service.impl;
 
-
 import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.api.co.FreightInfoCO;
 import org.o2.metadata.api.dto.FreightDTO;
@@ -38,7 +37,7 @@ public class FreightServiceImpl implements FreightService {
 
     @Override
     public Map<String, FreightInfoCO> listFreightTemplates(List<FreightDTO> freightList) {
-        Map<String,FreightInfoCO> resultMap = new HashMap<>(freightList.size());
+        Map<String, FreightInfoCO> resultMap = new HashMap<>(freightList.size());
         for (FreightDTO e : freightList) {
             FreightInfoCO co = getFreightTemplate(e);
             resultMap.put(co.getFreightTemplateCode(), co);

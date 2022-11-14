@@ -85,15 +85,15 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
      */
     protected List<OnlineShop> getOnlineShopByType(Long tenantId, String onlineShopType) {
         String onlineShopKey = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        Map<String,String> shopJsonMap = redisCacheClient.<String, String>opsForHash().entries(onlineShopKey);
-        if(MapUtils.isEmpty(shopJsonMap)){
+        Map<String, String> shopJsonMap = redisCacheClient.<String, String>opsForHash().entries(onlineShopKey);
+        if (MapUtils.isEmpty(shopJsonMap)) {
             return Collections.emptyList();
         }
 
         List<OnlineShop> shopList = new ArrayList<>();
-        shopJsonMap.forEach((onlineShopCode, shopJson)->{
+        shopJsonMap.forEach((onlineShopCode, shopJson) -> {
             OnlineShop onlineShop = JsonHelper.stringToObject(shopJson, OnlineShop.class);
-            if(onlineShopType.equals(onlineShop.getOnlineShopType())){
+            if (onlineShopType.equals(onlineShop.getOnlineShopType())) {
                 shopList.add(onlineShop);
             }
         });

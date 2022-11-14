@@ -41,7 +41,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
 
     @Override
     public List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
-       return  queryRegionCondition(tenantId,innerDTO);
+       return  queryRegionCondition(tenantId, innerDTO);
     }
 
     /**
@@ -50,11 +50,11 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      * @param countryCode 国家编码
      * @return list 地区信息
      */
-    public List<Region> queryRegionCache(Long tenantId, String countryCode,String lang) {
-        Map<String,String> queryParam = Maps.newHashMapWithExpectedSize(2);
+    public List<Region> queryRegionCache(Long tenantId, String countryCode, String lang) {
+        Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(2);
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
-        queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE,O2LovConstants.RegionLov.DEFAULT_DATA);
-        queryParam.put(O2LovConstants.RegionLov.LANG,lang);
+        queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE, O2LovConstants.RegionLov.DEFAULT_DATA);
+        queryParam.put(O2LovConstants.RegionLov.LANG, lang);
 
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
@@ -90,7 +90,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      * @param queryLov 查询条件
      * @return  地区
      */
-    private List<Region> queryRegionCondition(Long tenantId,RegionQueryLovInnerDTO queryLov){
+    private List<Region> queryRegionCondition(Long tenantId, RegionQueryLovInnerDTO queryLov) {
         String countryCode = queryLov.getCountryCode();
         if (StringUtils.isEmpty(countryCode)) {
             countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
@@ -99,7 +99,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
-        List<Region> regionList = this.queryRegionCache(tenantId,countryCode,lang);
+        List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
         String regionName = queryLov.getRegionName();
         // 地区名称
         if (StringUtils.isNotEmpty(regionName)) {
@@ -117,7 +117,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         }
         // 不包含地区的编码
         List<String> notInRegionCodes = queryLov.getNotInRegionCodes();
-        if (CollectionUtils.isNotEmpty(notInRegionCodes)){
+        if (CollectionUtils.isNotEmpty(notInRegionCodes)) {
             regionList = regionList.stream().filter(region ->  !notInRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
         }
         // 级别

@@ -34,9 +34,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
 
     @Override
     public SystemParameter getSystemParameter(String paramCode, Long tenantId) {
-        return this.querySystemParameter(paramCode,tenantId);
+        return this.querySystemParameter(paramCode, tenantId);
 
     }
+
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
         List<SystemParameter> doList = new ArrayList<>();
@@ -44,25 +45,26 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
             return doList;
         }
         for (String str : paramCodeList) {
-            SystemParameter systemParameter = this.querySystemParameter(str,tenantId);
+            SystemParameter systemParameter = this.querySystemParameter(str, tenantId);
             doList.add(systemParameter);
         }
         return doList;
     }
+
     /**
      * 获取map类型的参数值
      * @param  tenantId 租户ID
      * @param  paramCode 参数编码
      * @return  set
      */
-    private Set<SystemParamValue> listSystemParamValue(Long tenantId,String paramCode) {
-        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId,paramCode);
-        Map<String,String> valueMap = redisCacheClient.<String,String>opsForHash().entries(mapKey);
+    private Set<SystemParamValue> listSystemParamValue(Long tenantId, String paramCode) {
+        String mapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, paramCode);
+        Map<String, String> valueMap = redisCacheClient.<String, String>opsForHash().entries(mapKey);
         Set<SystemParamValue> setList = new HashSet<>(4);
         if (valueMap.isEmpty()) {
             return setList;
         }
-        valueMap.forEach((k,v)->{
+        valueMap.forEach((k, v) -> {
             SystemParamValue value = new SystemParamValue();
             value.setParamKey(k);
             value.setParamValue(v);
@@ -71,7 +73,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
         return setList;
     }
 
-    public SystemParameter querySystemParameter(String paramCode, Long tenantId){
+    public SystemParameter querySystemParameter(String paramCode, Long tenantId) {
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2MD_METADATA,
                 MetadataCacheConstants.CacheKey.getSysParamByCodePrefix(tenantId, paramCode),
@@ -86,14 +88,14 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
         systemParameter.setParamCode(paramCode);
         //hash类型
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
-        String object = redisCacheClient.<String,String>opsForHash().get(key, paramCode);
+        String object = redisCacheClient.<String, String>opsForHash().get(key, paramCode);
         if (object != null) {
             systemParameter.setDefaultValue(object);
             return systemParameter;
         }
         //set类型 不重复
         String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
-        object = redisCacheClient.<String,String>opsForHash().get(keySet, paramCode);
+        object = redisCacheClient.<String, String>opsForHash().get(keySet, paramCode);
         if (null != object) {
             Set<SystemParamValue>  set = new HashSet<>(16);
             List<SystemParamValue>  list = JsonHelper.stringToArray(object, SystemParamValue.class);
@@ -102,7 +104,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
             return systemParameter;
         }
         //map类型
-        systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId,paramCode));
+        systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId, paramCode));
         return systemParameter;
     }
 }

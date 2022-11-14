@@ -18,20 +18,19 @@ import java.util.Map;
  **/
 @Repository
 @Slf4j
-@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
 
     private final LovAdapter lovAdapter;
+
     public HzeroLovQueryRepositoryImpl(LovAdapter lovAdapter) {
         this.lovAdapter = lovAdapter;
     }
-
 
     @Override
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
         return lovAdapter.queryLovValue(lovCode, tenantId);
     }
-
 
     @Override
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,

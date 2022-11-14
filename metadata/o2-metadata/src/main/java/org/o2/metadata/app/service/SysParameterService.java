@@ -1,6 +1,5 @@
 package org.o2.metadata.app.service;
 
-
 import org.o2.metadata.api.co.SystemParameterCO;
 
 import java.util.List;
