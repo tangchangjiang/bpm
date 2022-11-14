@@ -17,7 +17,8 @@ import org.o2.metadata.infra.entity.FreightTemplateDetail;
  * @author yipeng.zhu@hand-china.com 2021-07-19
  **/
 public class FreightConverter {
-    private FreightConverter(){}
+    private FreightConverter() { }
+
     /**
      * 
      * @param 
@@ -33,6 +34,7 @@ public class FreightConverter {
         freightInfoDO.setRegionTemplate(toFreightTemplateDetailDO(freightInfo.getRegionTemplate()));
         return freightInfoDO;
     }
+
     /**
      *
      * @date 2021-07-20
@@ -50,6 +52,7 @@ public class FreightConverter {
         co.setRegionTemplate(toFreightTemplateDetailVO(freightInfoDO.getRegionTemplate()));
         return co;
     }
+
     /**
      *
      * @date 2021-07-20
@@ -73,6 +76,7 @@ public class FreightConverter {
         co.setValuationUomMeaning(freightTemplateDO.getValuationUomMeaning());
         return co;
     }
+
     /**
      *
      * @date 2021-07-20
@@ -98,6 +102,7 @@ public class FreightConverter {
         co.setTransportTypeMeaning(freightTemplateDetailDO.getTransportTypeMeaning());
         return co;
     }
+
     /**
      *
      * @date 2021-07-20
@@ -121,6 +126,7 @@ public class FreightConverter {
         freightTemplateDO.setValuationUomMeaning(freightTemplate.getValuationUomMeaning());
         return freightTemplateDO;
     }
+
     /**
      *
      * @date 2021-07-20

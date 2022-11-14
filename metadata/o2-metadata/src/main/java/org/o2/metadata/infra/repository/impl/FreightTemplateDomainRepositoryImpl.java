@@ -27,14 +27,14 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
 
     @Override
     public FreightInfoDO getFreightTemplate(String regionCode, String templateCode, Long tenantId) {
-        return FreightConverter.poToDoObject(freightRedis.getFreightTemplate(regionCode,templateCode,tenantId));
+        return FreightConverter.poToDoObject(freightRedis.getFreightTemplate(regionCode, templateCode, tenantId));
     }
 
     @Override
     public List<FreightTemplateDO> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightInfo> freightInfos = freightRedis.listFreightTemplate(tenantId, templateCodes);
         List<FreightTemplateDO> freightTemplateDOs = new ArrayList<>();
-        for(FreightInfo freightInfo : freightInfos){
+        for (FreightInfo freightInfo : freightInfos) {
             FreightTemplateDO freightTemplateDO = FreightConverter.toFreightTemplateDO(freightInfo.getHeadTemplate());
             freightTemplateDOs.add(freightTemplateDO);
         }

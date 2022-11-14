@@ -2,15 +2,15 @@ package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-
+import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
+import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
@@ -165,10 +165,15 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
      * @param lovCode 值集编码
      * @return list
      */
-    @Cacheable(value = "O2_LOV", key = "'baselov'+'_'+#lovCode")
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
-                                                          String lovCode) {
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode) {
         final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode, queryParams);
+
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2_LOV,
+                MetadataCacheConstants.KeyPrefix.getBaseLovPrefix(lovCode),
+                tenantId, lovCode,
+                (tenantParam, lovCodeParam) -> hzeroLovQueryRepository.queryLovValueMeaning(tenantParam,lovCodeParam, queryParams),
+                false
+        );
     }
 }

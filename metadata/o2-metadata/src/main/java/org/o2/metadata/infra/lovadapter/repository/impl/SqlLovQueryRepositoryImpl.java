@@ -31,28 +31,30 @@ public class SqlLovQueryRepositoryImpl implements SqlLovQueryRepository {
     public SqlLovQueryRepositoryImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
+
     @Override
     public Map<String, RoleCO> findRoleByCodes(Long organizationId, List<String> roleCodes) {
         final String keyPrefix = MetadataCacheConstants.CacheKey.getFetchRolePrefix(organizationId);
         return CollectionCacheHelper.getCache(MetadataCacheConstants.CacheName.ACROSS, keyPrefix, roleCodes, code -> fetchRoleInner(organizationId, code));
     }
+
     /**
      * 查询角色
      * @param tenantId 租户ID
      * @param roleCodes      角色
      * @return 角色信息
      */
-    public Map<String,RoleCO> fetchRoleInner(Long tenantId, Collection<String> roleCodes) {
+    public Map<String, RoleCO> fetchRoleInner(Long tenantId, Collection<String> roleCodes) {
         Map<String, String> queryLovValueMap = new HashMap<>(4);
         queryLovValueMap.put(O2LovConstants.RoleLov.ROLE_SQL_PARAM, StringUtils.join(roleCodes, BaseConstants.Symbol.COMMA));
-        queryLovValueMap.put(O2LovConstants.RoleLov.ROLE_SQL_PARAM_TENANT_ID,String.valueOf(tenantId));
-        Map<String,RoleCO> coMap = new HashMap<>(roleCodes.size());
+        queryLovValueMap.put(O2LovConstants.RoleLov.ROLE_SQL_PARAM_TENANT_ID, String.valueOf(tenantId));
+        Map<String, RoleCO> coMap = new HashMap<>(roleCodes.size());
         try {
             List<Map<String, Object>> result =  hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.RoleLov.ROLE_SQL_LOV, queryLovValueMap);
             for (Map<String, Object> objectMap : result) {
                 String str = JsonHelper.mapToString(objectMap);
-                RoleCO co = JsonHelper.stringToObject(str,RoleCO.class);
-                coMap.put(co.getRoleCode(),co);
+                RoleCO co = JsonHelper.stringToObject(str, RoleCO.class);
+                coMap.put(co.getRoleCode(), co);
             }
             return coMap;
         } catch (Exception e) {

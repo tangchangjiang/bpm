@@ -2,14 +2,14 @@ package org.o2.metadata.infra.lovadapter.repository.impl;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.api.co.CurrencyCO;
-
 import org.o2.metadata.app.bo.UomBO;
+import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Repository("baseLovQueryServiceImpl")
 @Slf4j
-@EnableAspectJAutoProxy( proxyTargetClass = true , exposeProxy = true )
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
@@ -46,7 +46,7 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
 
         final Map<String, Map<String, Object>> resultsMap = Maps.newHashMapWithExpectedSize(maps.size());
         for (Map<String, Object> lov : maps) {
-            resultsMap.put((String)lov.get(O2LovConstants.Currency.CURRENCY_CODE), lov);
+            resultsMap.put((String) lov.get(O2LovConstants.Currency.CURRENCY_CODE), lov);
         }
 
         // 货币编码为空
@@ -57,9 +57,9 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
                 final CurrencyCO co = new CurrencyCO();
                 co.setCode(k);
                 co.setName((String) v.get(O2LovConstants.Currency.CURRENCY_NAME));
-                co.setCountryCode((String)v.get(O2LovConstants.Currency.COUNTRY_CODE));
-                co.setCountryName((String)v.get(O2LovConstants.Currency.COUNTRY_NAME));
-                co.setCurrencySymbol((String)v.get(O2LovConstants.Currency.CURRENCY_SYMBOL));
+                co.setCountryCode((String) v.get(O2LovConstants.Currency.COUNTRY_CODE));
+                co.setCountryName((String) v.get(O2LovConstants.Currency.COUNTRY_NAME));
+                co.setCurrencySymbol((String) v.get(O2LovConstants.Currency.CURRENCY_SYMBOL));
                 currencyMap.put(k, co);
             }
             return currencyMap;
@@ -70,16 +70,15 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
                 final CurrencyCO currencyCo = new CurrencyCO();
                 currencyCo.setCode(currencyCode);
                 currencyCo.setName((String) lov.get(O2LovConstants.Currency.CURRENCY_NAME));
-                currencyCo.setCountryCode((String)lov.get(O2LovConstants.Currency.COUNTRY_CODE));
-                currencyCo.setCountryName((String)lov.get(O2LovConstants.Currency.COUNTRY_NAME));
-                currencyCo.setCurrencySymbol((String)lov.get(O2LovConstants.Currency.CURRENCY_SYMBOL));
+                currencyCo.setCountryCode((String) lov.get(O2LovConstants.Currency.COUNTRY_CODE));
+                currencyCo.setCountryName((String) lov.get(O2LovConstants.Currency.COUNTRY_NAME));
+                currencyCo.setCurrencySymbol((String) lov.get(O2LovConstants.Currency.CURRENCY_SYMBOL));
                 currencyMap.put(currencyCode, currencyCo);
             }
         }
 
         return currencyMap;
     }
-
 
     @Override
     public Map<String, UomBO> findUomByCodes(Long tenantId, List<String> uomCodes) {
@@ -94,7 +93,7 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
 
         final Map<String, Map<String, Object>> resultsMap = Maps.newHashMapWithExpectedSize(maps.size());
         for (Map<String, Object> lov : maps) {
-            resultsMap.put((String)lov.get(O2LovConstants.Uom.UOM_CODE), lov);
+            resultsMap.put((String) lov.get(O2LovConstants.Uom.UOM_CODE), lov);
         }
         // 单位编码为空
         if (null == uomCodes || uomCodes.isEmpty()) {
@@ -119,17 +118,21 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         return uomMap;
     }
 
-
-
     /**
      * 缓存基本单位值集
      * @param lovCode 值集编码
      * @return list
      */
-    @Cacheable(value = "O2_LOV", key = "'baselov'+'_'+#lovCode")
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
                                                           String lovCode) {
         final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-        return hzeroLovQueryRepository.queryLovValueMeaning(tenantId,lovCode, queryParams);
+
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2_LOV,
+                MetadataCacheConstants.CacheKey.getBaseLovPrefix(lovCode),
+                tenantId, lovCode,
+                (tenantParam, lovCodeParam) -> hzeroLovQueryRepository.queryLovValueMeaning(tenantId, lovCode, queryParams),
+                false
+        );
     }
 }

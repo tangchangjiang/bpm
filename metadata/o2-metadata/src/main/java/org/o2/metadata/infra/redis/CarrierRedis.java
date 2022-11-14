@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.redis;
 
-
 import org.o2.metadata.infra.entity.Carrier;
 
 import java.util.List;

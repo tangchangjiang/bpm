@@ -53,7 +53,6 @@ public class CustomLovServiceImpl implements CustomLovService {
         }
     }
 
-
     /**
      * 查询值集值
      * @param lovCode 值集编码

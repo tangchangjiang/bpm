@@ -1,6 +1,5 @@
 package org.o2.metadata.api.co;
 
-
 import lombok.Data;
 
 /**

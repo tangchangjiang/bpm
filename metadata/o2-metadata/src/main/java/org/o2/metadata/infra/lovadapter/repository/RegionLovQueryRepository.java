@@ -1,7 +1,5 @@
 package org.o2.metadata.infra.lovadapter.repository;
 
-
-
 import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.infra.entity.Region;
 

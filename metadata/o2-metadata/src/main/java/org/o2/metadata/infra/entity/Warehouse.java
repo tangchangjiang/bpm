@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -19,7 +19,6 @@ public class Warehouse  {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
-
 
     @ApiModelProperty(value = "服务点id，关联到 o2md_pos.pos_id")
     @NotNull

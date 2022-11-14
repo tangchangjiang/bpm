@@ -2,9 +2,10 @@ package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.AopProxy;
+import org.o2.cache.util.CacheHelper;
+import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.IdpLovQueryRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,21 +18,27 @@ import java.util.List;
  **/
 @Repository
 public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProxy<IdpLovQueryRepositoryImpl> {
-    private HzeroLovQueryRepository hzeroLovQueryRepository;
+
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
 
     public IdpLovQueryRepositoryImpl(HzeroLovQueryRepository hzeroLovQueryRepository) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
     }
 
     @Override
-    @Cacheable(value = "O2_LOV", key = "'idp'+'_'+#tenantId+'_'+#lovCode")
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
-        return hzeroLovQueryRepository.queryLovValue(tenantId,lovCode);
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2_LOV,
+                MetadataCacheConstants.KeyPrefix.getIdpPrefix(tenantId, lovCode),
+                tenantId, lovCode,
+                hzeroLovQueryRepository::queryLovValue,
+                false
+        );
     }
 
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        List<LovValueDTO> list = self().queryLovValue(tenantId,lovCode);
+        List<LovValueDTO> list = this.queryLovValue(tenantId,lovCode);
         if (!list.isEmpty()) {
             for (LovValueDTO dto : list) {
                 if (dto.getValue().equals(lovValue)){

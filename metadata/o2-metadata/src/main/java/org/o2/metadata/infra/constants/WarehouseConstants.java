@@ -17,7 +17,7 @@ public interface WarehouseConstants {
         String EXPRESS_LIMIT_COLLECTION = "o2md:warehouse:express:{%d}:limit";
         String PICK_UP_LIMIT_COLLECTION = "o2md:warehouse:pick_up:{%d}:limit";
         String POS_CODE = "posCode";
-        String WAREHOUSE_STATUS_CODE= "warehouseStatusCode";
+        String WAREHOUSE_STATUS_CODE = "warehouseStatusCode";
         String WAREHOUSE_TYPE_CODE = "warehouseTypeCode";
         String PICKUP_FLAG = "pickedUpFlag";
         String EXPRESSED_FLAG = "expressedFlag";
@@ -25,7 +25,7 @@ public interface WarehouseConstants {
         String ACTIVE_DATE_FROM = "activedDateFrom";
         String ACTIVE_DATE_TO = "activedDateTo";
         String INV_ORGANIZATION_CODE = "invOrganizationCode";
-        String EXPRESS_LIMIT_QUANTITY= "express_limit_quantity";
+        String EXPRESS_LIMIT_QUANTITY = "express_limit_quantity";
         String EXPRESS_LIMIT_VALUE = "express_limit_value";
         String PICK_UP_LIMIT_QUANTITY = "pick_up_limit_quantity";
         String PICK_UP_LIMIT_VALUE = "pick_up_limit_value";

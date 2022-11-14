@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.redis;
 
-
 import org.o2.metadata.infra.entity.Pos;
 import org.o2.metadata.infra.entity.Warehouse;
 import org.o2.metadata.infra.entity.WarehouseLimit;

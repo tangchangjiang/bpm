@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.lovadapter.repository;
 
-
 import org.o2.metadata.api.co.LovValuesCO;
 
 import java.util.List;

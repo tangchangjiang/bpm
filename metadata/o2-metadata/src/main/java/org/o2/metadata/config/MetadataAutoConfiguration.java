@@ -29,7 +29,7 @@ public class MetadataAutoConfiguration {
     }
 
     @Bean
-    public MetadataExtraDataManager metadataExtraDataManager(final Environment environment){
+    public MetadataExtraDataManager metadataExtraDataManager(final Environment environment) {
         return new MetadataExtraDataManager(environment);
     }
 

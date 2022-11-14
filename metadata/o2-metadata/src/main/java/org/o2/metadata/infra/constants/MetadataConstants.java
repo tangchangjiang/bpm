@@ -1,7 +1,5 @@
 package org.o2.metadata.infra.constants;
 
-
-
 /**
  * 元数据常量
  *
@@ -11,7 +9,5 @@ public interface MetadataConstants {
     interface ErrorCode {
         String BASIC_DATA_LOV_PERMISSION_NOT_PASS = "error.basic_data.lov.permission.notPass";
     }
-
-
 
 }

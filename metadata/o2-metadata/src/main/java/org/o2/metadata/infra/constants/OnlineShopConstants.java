@@ -20,7 +20,7 @@ public interface OnlineShopConstants {
          * @return key
          */
         static String getOnlineShopKey(Long tenantId) {
-            return String.format(ONLINE_SHOP_KEY,tenantId);
+            return String.format(ONLINE_SHOP_KEY, tenantId);
         }
     }
 }

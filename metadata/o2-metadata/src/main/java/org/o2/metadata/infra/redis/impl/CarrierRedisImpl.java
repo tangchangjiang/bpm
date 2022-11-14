@@ -29,7 +29,7 @@ public class CarrierRedisImpl implements CarrierRedis {
     @Override
     public List<Carrier> listCarriers(Long tenantId) {
       String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-      Map<String,String> map = redisCacheClient.<String,String>opsForHash().entries(key);
+      Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
       List<Carrier> carriers = new ArrayList<>();
       if (map.isEmpty()) {
           return carriers;
