@@ -15,7 +15,8 @@ import java.util.List;
  **/
 public class CarrierConverter {
 
-    private CarrierConverter(){}
+    private CarrierConverter() { }
+
     /**
      * po->do
      * @date 2021-08-05
@@ -54,6 +55,7 @@ public class CarrierConverter {
         co.setCarrierTypeCode(carrier.getCarrierTypeCode());
         return co;
     }
+
     /**
      * PO 转 DO
      * @param carrierList 系统参数集合

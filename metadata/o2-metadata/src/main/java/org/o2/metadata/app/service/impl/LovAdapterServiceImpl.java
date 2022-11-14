@@ -41,7 +41,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         this.sqlLovQueryRepository = sqlLovQueryRepository;
     }
 
-
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
         return idpLovQueryRepository.queryLovValueMeaning(tenantId, lovCode, lovValue);

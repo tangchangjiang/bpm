@@ -55,7 +55,7 @@ public class PosInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/store-list")
     public ResponseEntity<List<PosStoreInfoCO>> getStoreInfoList(@RequestBody StoreQueryDTO storeQueryDTO,
-                                                                 @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId){
+                                                                 @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId) {
         List<PosStoreInfoCO> storeInfoList = posService.getStoreInfoList(storeQueryDTO, organizationId);
         return Results.success(storeInfoList);
     }

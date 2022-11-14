@@ -3,7 +3,6 @@ package org.o2.metadata.infra.lovadapter.repository.impl;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.AopProxy;
 import org.o2.cache.util.CollectionCacheHelper;
-import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.infra.constants.O2LovConstants;
 import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -28,13 +27,13 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
 
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        List<LovValuesCO> result =  queryIdpLov(tenantId,Collections.singletonList(lovCode));
-        if (result.isEmpty()){
+        List<LovValuesCO> result =  queryIdpLov(tenantId, Collections.singletonList(lovCode));
+        if (result.isEmpty()) {
             return "";
         }
         List<LovValueDTO> valueList = result.get(0).getLovValueList();
             for (LovValueDTO dto : valueList) {
-                if (dto.getValue().equals(lovValue)){
+                if (dto.getValue().equals(lovValue)) {
                     return dto.getMeaning();
                 }
 

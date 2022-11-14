@@ -38,7 +38,7 @@ public class WarehouseMetadataInternalController {
                                                                    @RequestParam List<String> warehouseCodes) {
         Map<String, WarehouseCO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
         List<WarehouseCO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
-        if (vos.isEmpty()){
+        if (vos.isEmpty()) {
             return Results.success(map);
         }
         for (WarehouseCO warehouseVO : vos) {
@@ -75,7 +75,7 @@ public class WarehouseMetadataInternalController {
         List<WarehouseCO> vos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
         if (vos.isEmpty()) {
             List<WarehouseCO> warehouseCOList = new ArrayList<>();
-            for(String posCode : posCodes) {
+            for (String posCode : posCodes) {
                 map.put(posCode, warehouseCOList);
             }
         } else {

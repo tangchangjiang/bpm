@@ -58,7 +58,7 @@ public class FreightRedisImpl implements FreightRedis {
     public List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightInfo> freightInfos = new ArrayList<>();
         redisCacheClient.executePipelined((RedisCallback<FreightInfo>) redisConnection -> {
-            for(String templateCode : templateCodes){
+            for (String templateCode : templateCodes) {
                 FreightInfo freightInfo = new FreightInfo();
                 freightInfo.setFreightTemplateCode(templateCode);
                 String freightDetailKey = FreightConstants.RedisKey.getFreightDetailKey(tenantId, templateCode);

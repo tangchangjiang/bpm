@@ -26,14 +26,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.warehouseDomainRepository = warehouseDomainRepository;
         this.warehouseRedis = warehouseRedis;
     }
+
     @Override
     public List<WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return WarehouseConverter.doToCoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId));
+        return WarehouseConverter.doToCoListObjects(warehouseDomainRepository.listWarehouses(warehouseCodes, tenantId));
     }
 
     @Override
     public void updateExpressValue(String warehouseCode, String increment, Long tenantId) {
-        warehouseDomainRepository.updateExpressValue(warehouseCode,increment,tenantId);
+        warehouseDomainRepository.updateExpressValue(warehouseCode, increment, tenantId);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
-        return WarehouseConverter.toWarehouse(warehouseRedis.listWarehousesByPosCode(posCodes,tenantId));
+        return WarehouseConverter.toWarehouse(warehouseRedis.listWarehousesByPosCode(posCodes, tenantId));
     }
 
 }

@@ -1,6 +1,5 @@
 package org.o2.metadata.app.service.impl;
 
-
 import org.o2.metadata.api.co.SystemParameterCO;
 import org.o2.metadata.app.service.SysParameterService;
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
@@ -26,7 +25,7 @@ public class SysParameterServiceImpl implements SysParameterService {
 
     @Override
     public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
-        SystemParameterDO systemParameterDO =systemParameterDomainService.getSystemParameter(paramCode,tenantId);
+        SystemParameterDO systemParameterDO = systemParameterDomainService.getSystemParameter(paramCode, tenantId);
         return SysParameterConverter.doToCoObject(systemParameterDO);
     }
 

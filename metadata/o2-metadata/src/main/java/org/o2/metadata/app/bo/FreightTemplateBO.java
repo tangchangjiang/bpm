@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 @ApiModel("运费模板")
-public class FreightTemplateBO{
+public class FreightTemplateBO {
 
     @ApiModelProperty("表ID，主键")
     private Long templateId;

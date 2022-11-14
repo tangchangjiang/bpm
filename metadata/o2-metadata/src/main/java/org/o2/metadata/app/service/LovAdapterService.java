@@ -1,6 +1,5 @@
 package org.o2.metadata.app.service;
 
-
 import org.o2.metadata.api.co.CurrencyCO;
 import org.o2.metadata.api.co.LovValuesCO;
 import org.o2.metadata.api.co.RoleCO;
@@ -36,7 +35,7 @@ public interface LovAdapterService {
      * @param lovCodes  值集code
      * @return co
      */
-    List<LovValuesCO>queryIdpLov(Long tenantId, List<String> lovCodes);
+    List<LovValuesCO> queryIdpLov(Long tenantId, List<String> lovCodes);
 
 
     /**

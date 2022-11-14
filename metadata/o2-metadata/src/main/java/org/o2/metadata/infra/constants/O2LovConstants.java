@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.constants;
 
-
 /**
  * 组件枚举、使用全局变量
  *
@@ -31,6 +30,7 @@ public interface O2LovConstants {
         String DEFAULT_DATA = "region";
 
     }
+
     /**
      * 独立值集
      */
@@ -38,7 +38,7 @@ public interface O2LovConstants {
         /**
          * 缓存名
          */
-        String cacheName ="O2_LOV";
+        String cacheName = "O2_LOV";
         /**
          * 缓存值 key 前缀
          */
@@ -117,10 +117,10 @@ public interface O2LovConstants {
         String CODE = "O2MD.REGION";
     }
 
-    interface RoleLov{
+    interface RoleLov {
         String ROLE_SQL_LOV = "O2MD.IAM_ROLE";
-        String ROLE_SQL_PARAM ="roleCodes";
-        String ROLE_SQL_PARAM_TENANT_ID ="tenantId";
+        String ROLE_SQL_PARAM = "roleCodes";
+        String ROLE_SQL_PARAM_TENANT_ID = "tenantId";
     }
 }
 

@@ -4,7 +4,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.o2.metadata.api.co.PosStoreInfoCO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
-import org.o2.metadata.app.service.LovAdapterService;
 import org.o2.metadata.app.service.PosService;
 import org.o2.metadata.infra.convertor.PosConverter;
 import org.o2.metadata.infra.entity.Pos;
@@ -21,12 +20,9 @@ import java.util.List;
 public class PosServiceImpl implements PosService {
 
     private final PosRedis posRedis;
-    private final LovAdapterService lovAdapterService;
 
-    public PosServiceImpl(PosRedis posRedis,
-                          LovAdapterService lovAdapterService) {
+    public PosServiceImpl(PosRedis posRedis) {
         this.posRedis = posRedis;
-        this.lovAdapterService = lovAdapterService;
     }
 
     @Override

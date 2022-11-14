@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.redis.impl;
 
-
 import org.apache.commons.collections4.MapUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -36,9 +35,9 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     public List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId) {
         List<Warehouse> list = new ArrayList<>(warehouseCodes.size());
         String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
-        List<String> warehouseStr = redisCacheClient.<String,String>opsForHash().multiGet(key,warehouseCodes);
+        List<String> warehouseStr = redisCacheClient.<String, String>opsForHash().multiGet(key, warehouseCodes);
         for (String jsonStr : warehouseStr) {
-            Warehouse warehouse =  JsonHelper.stringToObject(jsonStr,Warehouse.class);
+            Warehouse warehouse =  JsonHelper.stringToObject(jsonStr, Warehouse.class);
             list.add(warehouse);
         }
         return list;
@@ -56,7 +55,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         if (MapUtils.isEmpty(warehouseMap)) {
             return limitMap;
         }
-        for(Map.Entry<String, String> entry : warehouseMap.entrySet()) {
+        for (Map.Entry<String, String> entry : warehouseMap.entrySet()) {
             WarehouseLimit warehouseLimit = JsonHelper.stringToObject(entry.getValue(), WarehouseLimit.class);
             limitMap.put(entry.getKey(), warehouseLimit);
         }
@@ -67,12 +66,12 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     public List<Pos> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
         List<Pos> list = new ArrayList<>(posCodes.size());
         String key = PosConstants.RedisKey.getPosDetailKey(tenantId);
-        List<String> posStr = redisCacheClient.<String,String>opsForHash().multiGet(key,posCodes);
+        List<String> posStr = redisCacheClient.<String, String>opsForHash().multiGet(key, posCodes);
         if (posStr.isEmpty()) {
             return list;
         }
         for (String jsonStr : posStr) {
-            Pos pos =  JsonHelper.stringToObject(jsonStr,Pos.class);
+            Pos pos =  JsonHelper.stringToObject(jsonStr, Pos.class);
             list.add(pos);
         }
         return list;

@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.redis;
 
-
 import org.o2.metadata.infra.entity.OnlineShop;
 
 import java.util.List;

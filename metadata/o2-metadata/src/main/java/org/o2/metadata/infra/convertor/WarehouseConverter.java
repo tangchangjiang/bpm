@@ -15,8 +15,9 @@ import java.util.List;
  * @author yipeng.zhu@hand-china.com 2021-07-13
  **/
 public class WarehouseConverter {
-    private WarehouseConverter(){
+    private WarehouseConverter() {
     }
+
     /**
      * po 转 do
      * @param warehouse po
@@ -85,6 +86,7 @@ public class WarehouseConverter {
         co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         return co;
     }
+
     /**
      * PO 转 DO
      * @param warehouses 仓库
@@ -100,6 +102,7 @@ public class WarehouseConverter {
         }
         return warehouseDOList;
     }
+
     /**
      * DO 转 VO
      * @param warehouses 仓库
@@ -128,7 +131,7 @@ public class WarehouseConverter {
             return warehouseCOList;
         }
         for (Pos pos : poses) {
-            if (pos != null){
+            if (pos != null) {
                 WarehouseCO warehouse = new WarehouseCO();
                 warehouse.setPosCode(pos.getPosCode());
                 warehouse.setWarehouseCode(pos.getWarehouseCode());
