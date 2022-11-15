@@ -9,7 +9,10 @@ import org.o2.metadata.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.infra.lovadapter.repository.IdpLovQueryRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -43,7 +46,7 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
 
     @Override
     public List<LovValuesCO> queryIdpLov(Long tenantId, List<String> lovCodes) {
-        Collection<LovValuesCO> result = CollectionCacheHelper.getCache2Collection(O2LovConstants.IdpLov.cacheName, O2LovConstants.IdpLov.keyPrefix + tenantId, lovCodes, codes -> queryLovList(tenantId, codes), LovValuesCO::getLovCode);
+        Collection<LovValuesCO> result = CollectionCacheHelper.getCache2Collection(O2LovConstants.IdpLov.CACHE_NAME, O2LovConstants.IdpLov.KEY_PREFIX + tenantId, lovCodes, codes -> queryLovList(tenantId, codes), LovValuesCO::getLovCode);
         return new ArrayList<>(result);
     }
 

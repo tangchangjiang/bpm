@@ -38,11 +38,11 @@ public interface O2LovConstants {
         /**
          * 缓存名
          */
-        String cacheName = "O2_LOV";
+        String CACHE_NAME = "O2_LOV";
         /**
          * 缓存值 key 前缀
          */
-        String keyPrefix = "idp_";
+        String KEY_PREFIX = "idp_";
     }
 
     /**

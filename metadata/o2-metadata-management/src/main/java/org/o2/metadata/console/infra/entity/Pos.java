@@ -15,11 +15,15 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
-import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -51,18 +55,6 @@ public class Pos extends AuditDomain {
     public static final String FIELD_BUSINESS_TIME = "businessTime";
     public static final String FIELD_NOTICE = "notice";
     public static final String FIELD_TENANT_ID = "tenantId";
-
-
-
-    public List<PosRelCarrier> posRelCarrier (PosRelCarrierRepository posRelCarrierRepository, Integer defaultFlag) {
-        Condition condition =   Condition.builder(PosRelCarrier.class)
-                .andWhere(Sqls.custom()
-                        .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())
-                        .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, this.getTenantId())
-                        .andEqualTo(PosRelCarrier.FIELD_IS_DEFAULT, defaultFlag)
-                ).build();
-        return posRelCarrierRepository.selectByCondition(condition);
-    }
 
     //
     // 数据库字段
@@ -116,7 +108,6 @@ public class Pos extends AuditDomain {
     @Size(max = 255)
     private String businessTime;
 
-
     @Transient
     @ApiModelProperty(value = "门店自提接单量")
     private Long pickUpLimitQuantity;
@@ -165,7 +156,6 @@ public class Pos extends AuditDomain {
     @MultiLanguageField
     private Long tenantId;
 
-
     @ApiModelProperty("省id")
     @Transient
     private String regionCode;
@@ -199,5 +189,15 @@ public class Pos extends AuditDomain {
     @ApiModelProperty(value = "服务点编码", hidden = true)
     @Transient
     private List<String> posCodes;
+
+    public List<PosRelCarrier> posRelCarrier(PosRelCarrierRepository posRelCarrierRepository, Integer defaultFlag) {
+        Condition condition =   Condition.builder(PosRelCarrier.class)
+                .andWhere(Sqls.custom()
+                        .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())
+                        .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, this.getTenantId())
+                        .andEqualTo(PosRelCarrier.FIELD_IS_DEFAULT, defaultFlag)
+                ).build();
+        return posRelCarrierRepository.selectByCondition(condition);
+    }
 
 }

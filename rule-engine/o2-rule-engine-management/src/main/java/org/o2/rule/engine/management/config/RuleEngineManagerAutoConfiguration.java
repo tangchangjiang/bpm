@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**

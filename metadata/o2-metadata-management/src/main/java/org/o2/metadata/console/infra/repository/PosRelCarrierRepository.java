@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.repository;
 
-
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.infra.entity.PosRelCarrier;
 
@@ -38,5 +37,5 @@ public interface PosRelCarrierRepository extends BaseRepository<PosRelCarrier> {
       @param tenantId 租户ID
      * @return 更新条数
      */
-    int updateIsDefault(Long relId, Long posId, final Integer defaultFlag,Long tenantId );
+    int updateIsDefault(Long relId, Long posId, Integer defaultFlag, Long tenantId);
 }

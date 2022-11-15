@@ -45,29 +45,6 @@ public class PosRelCarrier extends AuditDomain {
     public static final String FIELD_TENANT_ID = "tenantId";
 
     //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    public boolean exist(final PosRelCarrierRepository posRelCarrierRepository) {
-        final Sqls sqls = Sqls.custom();
-        if (this.getPosRelCarrierId() != null) {
-            sqls.andNotEqualTo(PosRelCarrier.FIELD_POS_REL_CARRIER_ID, this.getPosRelCarrierId());
-        }
-        return posRelCarrierRepository.selectCountByCondition(Condition.builder(PosRelCarrier.class)
-                .andWhere(sqls.andEqualTo(PosRelCarrier.FIELD_CARRIER_ID, this.getCarrierId())
-                        .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())).build()) > 0;
-    }
-
-    public void baseValidate() {
-        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
-        Assert.notNull(this.carrierId, "承运商ID不能为空");
-        Assert.notNull(this.posId, "服务点ID不能为空");
-        Assert.notNull(this.activeFlag, "状态不能为空");
-        Assert.notNull(this.priority, "优先级不能为空");
-        Assert.notNull(this.defaultFlag, "默认值不能为空");
-    }
-
-    //
     // 数据库字段
     // ------------------------------------------------------------------------------
 
@@ -112,7 +89,6 @@ public class PosRelCarrier extends AuditDomain {
     @Transient
     private String posCode;
 
-
     @ApiModelProperty(value = "承运商编码")
     @Transient
     private List<String> carrierCodes;
@@ -122,6 +98,27 @@ public class PosRelCarrier extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
+    //
+    // 业务方法(按public protected private顺序排列)
+    // ------------------------------------------------------------------------------
 
+    public boolean exist(final PosRelCarrierRepository posRelCarrierRepository) {
+        final Sqls sqls = Sqls.custom();
+        if (this.getPosRelCarrierId() != null) {
+            sqls.andNotEqualTo(PosRelCarrier.FIELD_POS_REL_CARRIER_ID, this.getPosRelCarrierId());
+        }
+        return posRelCarrierRepository.selectCountByCondition(Condition.builder(PosRelCarrier.class)
+                .andWhere(sqls.andEqualTo(PosRelCarrier.FIELD_CARRIER_ID, this.getCarrierId())
+                        .andEqualTo(PosRelCarrier.FIELD_POS_ID, this.getPosId())).build()) > 0;
+    }
+
+    public void baseValidate() {
+        Preconditions.checkArgument(null != this.tenantId, MetadataConstants.ErrorCode.BASIC_DATA_TENANT_ID_IS_NULL);
+        Assert.notNull(this.carrierId, "承运商ID不能为空");
+        Assert.notNull(this.posId, "服务点ID不能为空");
+        Assert.notNull(this.activeFlag, "状态不能为空");
+        Assert.notNull(this.priority, "优先级不能为空");
+        Assert.notNull(this.defaultFlag, "默认值不能为空");
+    }
 
 }

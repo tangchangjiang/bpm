@@ -62,12 +62,12 @@ class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements
 
     @Override
     public List<OnlineShop> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
-        return onlineShopMapper.listOnlineShops(onlineShopQueryInnerDTO,tenantId);
+        return onlineShopMapper.listOnlineShops(onlineShopQueryInnerDTO, tenantId);
     }
 
     @Override
     public List<OnlineShop> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersions, Long tenantId) {
-        return onlineShopMapper.listOnlineShopByCatalogCodes(onlineShopCatalogVersions,tenantId);
+        return onlineShopMapper.listOnlineShopByCatalogCodes(onlineShopCatalogVersions, tenantId);
     }
 
 }

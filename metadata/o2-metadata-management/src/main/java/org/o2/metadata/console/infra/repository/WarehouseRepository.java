@@ -3,14 +3,17 @@ package org.o2.metadata.console.infra.repository;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
-import org.o2.metadata.console.api.dto.*;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelPosDTO;
 import org.o2.metadata.console.api.vo.WarehouseRelPosVO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
-
 
 /**
  * 仓库信息资源库
@@ -106,7 +109,7 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @param tenantId 租户id
      * @return 仓库
      */
-    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(Long tenantId);
 
 
     /**

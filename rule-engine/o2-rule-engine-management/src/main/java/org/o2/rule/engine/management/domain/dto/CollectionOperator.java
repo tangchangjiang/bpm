@@ -9,23 +9,6 @@ import java.util.Map;
  */
 public class CollectionOperator {
 
-    private String code;
-    private String value;
-
-    public CollectionOperator() {
-    }
-
-    public CollectionOperator(String code, String value) {
-        this.code = code;
-        this.value = value;
-    }
-
-    public static final CollectionOperator GREATER = new CollectionOperator(RuleEngineConstants.Operator.GREATER, RuleEngineConstants.Operator.GREATER_CODE);
-    public static final CollectionOperator GREATER_OR_EQUAL = new CollectionOperator(RuleEngineConstants.Operator.GREATER_OR_EQUAL, RuleEngineConstants.Operator.GREATER_OR_EQUAL_CODE);
-    public static final CollectionOperator LESS = new CollectionOperator(RuleEngineConstants.Operator.LESS, RuleEngineConstants.Operator.LESS_CODE);
-    public static final CollectionOperator LESS_OR_EQUAL = new CollectionOperator(RuleEngineConstants.Operator.LESS_OR_EQUAL, RuleEngineConstants.Operator.LESS_OR_EQUAL_CODE);
-    public static final CollectionOperator EQUAL = new CollectionOperator(RuleEngineConstants.Operator.EQUAL, RuleEngineConstants.Operator.EQUAL_CODE);
-
     public static final Map<String, String> MAP = Maps.newHashMapWithExpectedSize(5);
 
     static {

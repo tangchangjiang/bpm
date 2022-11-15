@@ -18,7 +18,7 @@ public enum AndOr {
 
     private final String value;
 
-    private AndOr(String value) {
+    AndOr(String value) {
         this.value = value;
     }
 

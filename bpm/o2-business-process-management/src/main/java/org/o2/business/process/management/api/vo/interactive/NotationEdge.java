@@ -21,7 +21,7 @@ public class NotationEdge extends Cell {
     private Condition data;
 
     @Data
-    public class Condition{
+    public static class Condition {
 
         private String ruleCode;
 

@@ -37,11 +37,9 @@ public class BizNodeParameterDO {
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
 
-
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("表ID,主键")
     private Long bizNodeParameterId;
@@ -80,7 +78,7 @@ public class BizNodeParameterDO {
     @ApiModelProperty(value = "租户ID", required = true)
     private Long tenantId;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
     //
