@@ -30,12 +30,14 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @param onlineShopId  网店 id
      * @param warehouseCode 仓库编码
      * @param warehouseName 仓库名称
+     * @param warehouseStatusCode 仓库状态
      * @param tenantId      租户ID
      * @return 仓库列表
      */
     List<Warehouse> listUnbindWarehouseList(@Param(value = "onlineShopId") Long onlineShopId,
                                             @Param(value = "warehouseCode") String warehouseCode,
                                             @Param(value = "warehouseName") String warehouseName,
+                                            @Param(value = "warehouseStatusCode")  String warehouseStatusCode,
                                             @Param(value = "tenantId") Long tenantId);
 
     /**
