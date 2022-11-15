@@ -42,8 +42,8 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
     }
 
     @Override
-    public List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId) {
-        return warehouseMapper.listUnbindWarehouseList(shopId, warehouseCode, warehouseName, tenantId);
+    public List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName,String warehouseStatusCode, Long tenantId) {
+        return warehouseMapper.listUnbindWarehouseList(shopId, warehouseCode, warehouseName,  warehouseStatusCode,tenantId);
     }
 
     @Override

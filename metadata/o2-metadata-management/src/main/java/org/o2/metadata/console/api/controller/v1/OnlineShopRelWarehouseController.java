@@ -72,13 +72,14 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/unbind-warehouse")
-    public ResponseEntity<Page<Warehouse>> queryUnbindWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                 @PathVariable("onlineShopId") final Long onlineShopId,
-                                                                 @RequestParam(required = false) final String warehouseCode,
-                                                                 @RequestParam(required = false) final String warehouseName,
-                                                                 @ApiIgnore final PageRequest pageRequest) {
+    public ResponseEntity<Page<Warehouse>>  queryUnbindWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                           @PathVariable("onlineShopId") final Long onlineShopId,
+                                           @RequestParam(required = false) final String warehouseCode,
+                                           @RequestParam(required = false) final String warehouseName,
+                                           @RequestParam(required = false) final String warehouseStatusCode,
+                                           @ApiIgnore final PageRequest pageRequest) {
         final Page<Warehouse> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> warehouseRepository.listUnbindWarehouseList(onlineShopId, warehouseCode, warehouseName, organizationId));
+                () -> warehouseRepository.listUnbindWarehouseList(onlineShopId, warehouseCode, warehouseName,warehouseStatusCode,organizationId));
         return Results.success(posList);
     }
 

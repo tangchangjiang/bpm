@@ -61,6 +61,9 @@
         <if test="_databaseId == 'oracle'">
             and w.actived_date_to <![CDATA[>]]> sysdate
         </if>
+        <if test="warehouseStatusCode != null and warehouseStatusCode != ''">
+            AND w.warehouse_status_code = #{warehouseStatusCode}
+        </if>
         order by w.warehouse_code asc
     </select>
 
@@ -122,6 +125,9 @@
             </if>
             <if test="warehouseStatusCode != null and warehouseStatusCode != ''">
                 AND w.warehouse_status_code = #{warehouseStatusCode}
+            </if>
+            <if test="warehouseTypeCode != null and warehouseTypeCode != ''">
+                AND w.warehouse_type_code = #{warehouseTypeCode}
             </if>
             <if test="warehouseTypeCode != null and warehouseTypeCode != ''">
                 AND w.warehouse_type_code = #{warehouseTypeCode}
@@ -514,6 +520,9 @@
             <if test="warehouseName!= null and warehouseName!= ''">
                 <bind name="warehouseNameLike" value="warehouseName+ '%'"/>
                 and ow.warehouse_name like #{warehouseNameLike}
+            </if>
+            <if test="warehouseStatusCode != null and warehouseStatusCode != ''">
+                and ow.warehouse_status_code = #{warehouseStatusCode}
             </if>
             <choose>
                 <when test="tenantId != null">
