@@ -126,9 +126,9 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         final Map<String, UomTypeBO> uomTypeCodeMap = Maps.newHashMapWithExpectedSize(2);
         List<Map<String, Object>> maps;
         try {
-            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
-            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.UomType.CODE);
+            maps = queryLovValueMeaning(tenantId, O2LovConstants.UomType.CODE);
         } catch (Exception e) {
+            log.error("findUomTypeByCodes occurs an exception, so it will return the empty map. errorMsg:{}", e.getMessage(), e);
             maps = Collections.emptyList();
         }
 
