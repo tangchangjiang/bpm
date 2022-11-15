@@ -57,7 +57,7 @@ public class FreightTemplateDetail extends AuditDomain {
     @GeneratedValue
     private Long templateDetailId;
     @LovValue(lovCode = FreightConstants.FreightType.LOV_TRANSPORT_TYPE)
-    @ApiModelProperty(value = "运送方式，关联值集O2MD.TRANSPORT_TYPE",required = true)
+    @ApiModelProperty(value = "运送方式，关联值集O2MD.TRANSPORT_TYPE", required = true)
     @NotNull
     private String transportTypeCode;
     @ApiModelProperty(value = "目的地")
@@ -75,7 +75,7 @@ public class FreightTemplateDetail extends AuditDomain {
     private Integer defaultFlag;
     @ApiModelProperty(value = "关联运费模板ID")
     private Long templateId;
-    @ApiModelProperty(value = "租户ID",required = true)
+    @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     private Long tenantId;
 
@@ -99,7 +99,6 @@ public class FreightTemplateDetail extends AuditDomain {
     private String templateCode;
     @Transient
     private List<String> templateCodes;
-
 
     @ApiModelProperty("目的地描述集合")
     @Transient
@@ -135,7 +134,9 @@ public class FreightTemplateDetail extends AuditDomain {
     }
 
     public boolean exist(final FreightTemplateDetailRepository freightTemplateDetailRepository, final boolean isRegion) {
-        if (!isRegion) { return false;}
+        if (!isRegion) {
+            return false;
+        }
         final Sqls sqls = Sqls.custom();
         sqls.andEqualTo(FreightTemplateDetail.FIELD_TEMPLATE_ID, this.getTemplateId());
             sqls.andEqualTo(FreightTemplateDetail.FIELD_REGION_CODE, this.getRegionCode());
@@ -148,8 +149,6 @@ public class FreightTemplateDetail extends AuditDomain {
         return freightTemplateDetailRepository.selectCountByCondition(
                     Condition.builder(FreightTemplateDetail.class).andWhere(sqls).build()) > 0;
 
-
     }
-
 
 }

@@ -39,7 +39,7 @@ public class BpmnDriver {
         // 禁止构造该类
     }
 
-    private final static Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
+    private static final Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
 
     public static <T extends BusinessProcessExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
         final BpmnModel bpmnModel = getPipelineDetail(tenantId, pipelineCode);

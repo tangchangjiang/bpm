@@ -7,6 +7,10 @@ package org.o2.metadata.infra.constants;
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
 public interface FreightConstants {
+
+    /**
+     * Redis key
+     */
     interface RedisKey {
 
         /**
