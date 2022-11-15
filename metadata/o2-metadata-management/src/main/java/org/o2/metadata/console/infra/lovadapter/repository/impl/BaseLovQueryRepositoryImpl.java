@@ -10,7 +10,6 @@ import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Repository;
 
@@ -39,9 +38,9 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         final Map<String, CurrencyBO> currencyMap = Maps.newHashMapWithExpectedSize(2);
         List<Map<String, Object>> maps;
         try {
-            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
-            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.Currency.CODE);
+            maps = queryLovValueMeaning(tenantId, O2LovConstants.Currency.CODE);
         } catch (Exception e) {
+            log.error("findCurrencyByCodes occurs an exception, so it will return the empty map. errorMsg:{}", e.getMessage(), e);
             maps = Collections.emptyList();
         }
 
@@ -88,9 +87,9 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
         final Map<String, UomBO> uomMap = Maps.newHashMapWithExpectedSize(2);
         List<Map<String, Object>> maps;
         try {
-            BaseLovQueryRepositoryImpl currentProxy = (BaseLovQueryRepositoryImpl) AopContext.currentProxy();
-            maps = currentProxy.queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE);
+            maps = queryLovValueMeaning(tenantId, O2LovConstants.Uom.CODE);
         } catch (Exception e) {
+            log.error("findUomByCodes occurs an exception, so it will return the empty map. errorMsg:{}", e.getMessage(), e);
             maps = Collections.emptyList();
         }
 
