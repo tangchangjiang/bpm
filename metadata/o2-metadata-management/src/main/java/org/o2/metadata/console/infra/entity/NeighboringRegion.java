@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hzero.boot.platform.lov.annotation.LovValue;
-import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
+import org.o2.metadata.console.infra.repository.NeighboringRegionRepository;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,29 +38,6 @@ public class NeighboringRegion extends AuditDomain {
     public static final String FIELD_TARGET_REGION_CODE = "targetRegionCode";
     public static final String FIELD_COUNTRY_CODE = "countryCode";
 
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    public boolean exist(final NeighboringRegionRepository regionRepository,
-                         final NeighboringRegion neighboringRegion) {
-        return regionRepository.selectCount(neighboringRegion) > 0;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {return true;}
-        if (o == null || getClass() != o.getClass()) {return false;}
-        final NeighboringRegion that = (NeighboringRegion) o;
-        return posTypeCode.equals(that.posTypeCode) &&
-                sourceRegionCode.equals(that.sourceRegionCode) &&
-                targetRegionCode.equals(that.targetRegionCode);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(posTypeCode, sourceRegionCode, targetRegionCode);
-    }
     //
     // 数据库字段
     // ------------------------------------------------------------------------------
@@ -118,4 +95,32 @@ public class NeighboringRegion extends AuditDomain {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
+
+    //
+    // 业务方法(按public protected private顺序排列)
+    // ------------------------------------------------------------------------------
+
+    public boolean exist(final NeighboringRegionRepository regionRepository,
+                         final NeighboringRegion neighboringRegion) {
+        return regionRepository.selectCount(neighboringRegion) > 0;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final NeighboringRegion that = (NeighboringRegion) o;
+        return posTypeCode.equals(that.posTypeCode) &&
+                sourceRegionCode.equals(that.sourceRegionCode) &&
+                targetRegionCode.equals(that.targetRegionCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(posTypeCode, sourceRegionCode, targetRegionCode);
+    }
 }

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BizParamUtil {
 
-    public final static Map<String, Class<?>> PARAM_CLASS_MAP;
+    public static final Map<String, Class<?>> PARAM_CLASS_MAP;
 
     static {
         Map<String, Class<?>> map = new HashMap<>();

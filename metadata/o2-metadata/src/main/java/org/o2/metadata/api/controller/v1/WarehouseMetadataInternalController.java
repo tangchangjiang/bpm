@@ -12,7 +12,12 @@ import org.o2.metadata.app.service.WarehouseService;
 import org.o2.metadata.config.MetadataAutoConfiguration;
 import org.o2.metadata.infra.entity.WarehouseLimit;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,8 @@ public class WarehouseMetadataInternalController {
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/list")
-    public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, WarehouseCO>> listWarehouses(@PathVariable(value = "organizationId")
+                                                                       @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                    @RequestParam List<String> warehouseCodes) {
         Map<String, WarehouseCO> map = Maps.newHashMapWithExpectedSize(warehouseCodes.size());
         List<WarehouseCO> vos = warehouseService.listWarehouses(warehouseCodes, organizationId);
@@ -69,8 +75,9 @@ public class WarehouseMetadataInternalController {
     @ApiOperation(value = "查询仓库")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list-pos")
-    public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                   @RequestParam("posCodes") List<String> posCodes) {
+    public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId")
+                                                                                      @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                  @RequestParam("posCodes") List<String> posCodes) {
         Map<String, List<WarehouseCO>> map = Maps.newHashMapWithExpectedSize(posCodes.size());
         List<WarehouseCO> vos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
         if (vos.isEmpty()) {

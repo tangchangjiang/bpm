@@ -17,6 +17,9 @@ public interface MetadataCacheConstants {
         String O2_LOV = "O2_LOV";
     }
 
+    /**
+     * CacheKey
+     */
     interface CacheKey {
         String FETCH_USER_ROLE_BY_CODE = "fetchRoleInner_%s";
 

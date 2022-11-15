@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 网店
@@ -37,15 +36,14 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     public OnlineShop getOnlineShop(String onlineShopCode, Long tenantId) {
         String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
-        Set<String> keys = map.keySet();
-        if (keys.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             return new OnlineShop();
         }
-        for (String onlineShopCodekey : keys) {
-            if (onlineShopCode.equals(onlineShopCodekey)) {
-                String onlineShopValue = map.get(onlineShopCodekey);
-                log.info("getOnlineShop onlineShopValue:{}", onlineShopValue);
-                return JsonHelper.stringToObject(onlineShopValue, OnlineShop.class);
+        for (Map.Entry<String, String> onlineShopEntry : map.entrySet()) {
+            String onlineShopCodeKey = onlineShopEntry.getKey();
+            if (onlineShopCode.equals(onlineShopCodeKey)) {
+                log.info("getOnlineShop onlineShopValue:{}", onlineShopEntry.getValue());
+                return JsonHelper.stringToObject(onlineShopEntry.getValue(), OnlineShop.class);
             }
         }
         return new OnlineShop();

@@ -10,7 +10,10 @@ import org.o2.rule.engine.management.domain.entity.RuleEntity;
  * @since 2022/10/17 15:01
  */
 public class RuleEntityConverts {
-    public static RuleEntityBO toRuleEntityBO(RuleEntity ruleEntity){
+
+    private RuleEntityConverts() { }
+
+    public static RuleEntityBO toRuleEntityBO(RuleEntity ruleEntity) {
 
         if (ruleEntity == null) {
             return null;
@@ -23,6 +26,4 @@ public class RuleEntityConverts {
 
         return ruleEntityBO;
     }
-
-    private RuleEntityConverts(){}
 }

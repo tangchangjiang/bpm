@@ -135,7 +135,7 @@ public class PostTime extends AuditDomain {
     /**
      * 时间范围
      */
-    private class TimeRange {
+    private static class TimeRange {
         final LocalTime startTime;
         final LocalTime endTime;
 

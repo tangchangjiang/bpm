@@ -14,7 +14,11 @@ import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,53 +47,6 @@ public class OnlineShop extends AuditDomain {
     public static final String FIELD_SOURCED = "sourcedFlag";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
     public static final String FIELD_TENANT_ID = "tenantId";
-
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    public boolean exist(final OnlineShopRepository shopRepository) {
-        if (this.onlineShopId != null) {
-            return shopRepository.existsWithPrimaryKey(this);
-        }
-        final OnlineShop onlineShopWithCode = new OnlineShop();
-        onlineShopWithCode.setOnlineShopCode(this.onlineShopCode);
-        onlineShopWithCode.setTenantId(this.tenantId);
-        List<OnlineShop> onlineShopsWithCode =  shopRepository.existenceDecide(onlineShopWithCode);
-        if (!onlineShopsWithCode.isEmpty()) {
-            return true;
-        }
-        final OnlineShop onlineShop = new OnlineShop();
-        onlineShop.setCatalogVersionCode(this.catalogVersionCode);
-        onlineShop.setTenantId(this.tenantId);
-        List<OnlineShop> onlineShops =  shopRepository.existenceDecide(onlineShop);
-        return !onlineShops.isEmpty();
-    }
-
-
-    /**
-     * 按默认值初始化
-     */
-    public void initDefaultProperties() {
-        if (this.getSourcedFlag() == null) {
-            this.setSourcedFlag(0);
-        }
-        if (this.getActiveFlag() == null) {
-            this.setActiveFlag(0);
-        }
-        if (this.getExchangedFlag() == null) {
-            this.setExchangedFlag(0);
-        }
-        if (this.getReturnedFlag() == null) {
-            this.setReturnedFlag(0);
-        }
-        if (this.getPickedUpFlag() == null) {
-            this.setPickedUpFlag(0);
-        }
-        if (this.getEnableSplitFlag() == null) {
-            this.setEnableSplitFlag(0);
-        }
-    }
 
     //
     // 数据库字段
@@ -223,5 +180,51 @@ public class OnlineShop extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "版本目录主键")
     private Long catalogVersionId;
+
+    //
+    // 业务方法(按public protected private顺序排列)
+    // ------------------------------------------------------------------------------
+
+    public boolean exist(final OnlineShopRepository shopRepository) {
+        if (this.onlineShopId != null) {
+            return shopRepository.existsWithPrimaryKey(this);
+        }
+        final OnlineShop onlineShopWithCode = new OnlineShop();
+        onlineShopWithCode.setOnlineShopCode(this.onlineShopCode);
+        onlineShopWithCode.setTenantId(this.tenantId);
+        List<OnlineShop> onlineShopsWithCode =  shopRepository.existenceDecide(onlineShopWithCode);
+        if (!onlineShopsWithCode.isEmpty()) {
+            return true;
+        }
+        final OnlineShop onlineShop = new OnlineShop();
+        onlineShop.setCatalogVersionCode(this.catalogVersionCode);
+        onlineShop.setTenantId(this.tenantId);
+        List<OnlineShop> onlineShops =  shopRepository.existenceDecide(onlineShop);
+        return !onlineShops.isEmpty();
+    }
+
+    /**
+     * 按默认值初始化
+     */
+    public void initDefaultProperties() {
+        if (this.getSourcedFlag() == null) {
+            this.setSourcedFlag(0);
+        }
+        if (this.getActiveFlag() == null) {
+            this.setActiveFlag(0);
+        }
+        if (this.getExchangedFlag() == null) {
+            this.setExchangedFlag(0);
+        }
+        if (this.getReturnedFlag() == null) {
+            this.setReturnedFlag(0);
+        }
+        if (this.getPickedUpFlag() == null) {
+            this.setPickedUpFlag(0);
+        }
+        if (this.getEnableSplitFlag() == null) {
+            this.setEnableSplitFlag(0);
+        }
+    }
 
 }
