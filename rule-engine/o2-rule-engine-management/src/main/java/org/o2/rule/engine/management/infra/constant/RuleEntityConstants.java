@@ -10,18 +10,21 @@ public class RuleEntityConstants {
     public static final String RULE_ENTITY_RULE_CODE = "O2MD.RULE_ENTITY_CODE";
     public static final String COND = "COND";
 
-    private RuleEntityConstants(){}
+    private RuleEntityConstants() {
+    }
 
     public static class ErrorCode {
         public static final String RULE_CODE_ERROR = "o2md.rule.entity.error.code_error";
 
-        private ErrorCode(){}
+        private ErrorCode() {
+        }
     }
 
     public static class RedisKey {
 
         public static final String RULE_ENTITY = "o2re:rule_entity:{%d}";
 
-        private RedisKey(){}
+        private RedisKey() {
+        }
     }
 }

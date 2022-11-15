@@ -24,7 +24,6 @@ import java.util.List;
 )
 public interface LovAdapterRemoteService {
 
-
     /**
      * 查询值集中指定值的 描述信息（meaning）
      *
@@ -60,7 +59,6 @@ public interface LovAdapterRemoteService {
     ResponseEntity<String> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 
-
     /**
      * 查询地区值集
      *
@@ -92,7 +90,6 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov-internal/role-by-codes")
     ResponseEntity<String> findRoleByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                            @RequestParam(value = "roleCodes", required = false) List<String> roleCodes);
-
+                                           @RequestParam(value = "roleCodes", required = false) List<String> roleCodes);
 
 }

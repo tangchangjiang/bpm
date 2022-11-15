@@ -18,7 +18,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +66,6 @@ public class Warehouse extends AuditDomain {
     @Id
     @GeneratedValue
     private Long warehouseId;
-
 
     @ApiModelProperty(value = "服务点id，关联到 o2md_pos.pos_id")
     @NotNull
@@ -140,7 +143,6 @@ public class Warehouse extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
-
 
     @Transient
     private String posCode;

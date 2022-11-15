@@ -20,7 +20,6 @@ public class WarehouseVO {
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
 
-
     @ApiModelProperty(value = "服务点id，关联到 o2md_pos.pos_id")
     private Long posId;
 
@@ -65,7 +64,6 @@ public class WarehouseVO {
 
     @ApiModelProperty(value = "生效状态")
     private Integer activeFlag;
-
 
     private String posCode;
 

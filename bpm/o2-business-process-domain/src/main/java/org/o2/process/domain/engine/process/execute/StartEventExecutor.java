@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @date 2022/9/30 16:53
  */
 @Service
-public class StartEventExecutor<T extends BusinessProcessExecParam> extends BaseNodeExecutor<T>{
+public class StartEventExecutor<T extends BusinessProcessExecParam> extends BaseNodeExecutor<T> {
 
     @Override
     public String getType() {

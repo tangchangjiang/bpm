@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-
 /**
  * 承运商
  *
@@ -15,7 +14,6 @@ import lombok.Data;
 @ApiModel("承运商匹配")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarrierMappingQueryInnerDTO {
-
 
     @ApiModelProperty("平台编码")
     private String platformCode;

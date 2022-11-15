@@ -12,7 +12,8 @@ import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.repository.FreightTemplateDetailRepository;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
-import org.springframework.stereotype.Service;import org.springframework.util.Assert;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,13 +55,13 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     public void batchDelete(List<FreightTemplateDetail> regionFreightDetailDisplayLis) {
 
         //需要前端显示的格式转成后端数据库需要的格式： 前端把地区合并了！！！
-        FreightTemplateManagementVO freightTemplateManagementVO =  new FreightTemplateManagementVO();
-        final List<FreightTemplateDetail> regionDetailListInput ;
+        FreightTemplateManagementVO freightTemplateManagementVO = new FreightTemplateManagementVO();
+        final List<FreightTemplateDetail> regionDetailListInput;
         //  默认运费模板不需要处理； 地区运费模板要转化一下
-        if (regionFreightDetailDisplayLis.get(0).getDefaultFlag() ==1 ){
-            regionDetailListInput =regionFreightDetailDisplayLis;
-        }else{
-            regionDetailListInput =   freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
+        if (regionFreightDetailDisplayLis.get(0).getDefaultFlag() == 1) {
+            regionDetailListInput = regionFreightDetailDisplayLis;
+        } else {
+            regionDetailListInput = freightTemplateManagementVO.exchangeRegionDetailDisplay2DBlist(regionFreightDetailDisplayLis);
         }
         freightTemplateManagementVO.setRegionFreightTemplateDetails(regionDetailListInput);
 
@@ -71,7 +72,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
 
     @Override
     public List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId) {
-       return freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
+        return freightTemplateDetailRepository.queryDefaultFreightTemplateDetail(templateId);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         if (details.isEmpty()) {
             return details;
         }
-        Map<String,Region>  map = getRegionMap(details);
+        Map<String, Region> map = getRegionMap(details);
         for (FreightTemplateDetail detail : details) {
             Region region = map.get(detail.getRegionCode());
             detail.setRegionName(region.getRegionName());
@@ -114,12 +115,13 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
             }
 
             // list验重
-            String key =  String.valueOf(freightTemplateDetail.getRegionCode()+"") + String.valueOf(freightTemplateDetail.getTemplateId());
+            String key = String.valueOf(freightTemplateDetail.getRegionCode() + "") + String.valueOf(freightTemplateDetail.getTemplateId());
             Assert.isTrue(map.get(key) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
             map.put(key, i);
 
             // 数据库验重
-            Assert.isTrue(!freightTemplateDetail.exist(freightTemplateDetailRepository, isRegion), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
+            Assert.isTrue(!freightTemplateDetail.exist(freightTemplateDetailRepository, isRegion),
+                    FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE);
         }
     }
 
@@ -144,10 +146,11 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
     }
 
     /**
-     *  地区分组
-     * @date 2021-08-07
+     * 地区分组
+     *
      * @param freightTemplateDetails 运费模版详情
-     * @return  map
+     * @return map
+     * @date 2021-08-07
      */
     private Map<String, Region> getRegionMap(List<FreightTemplateDetail> freightTemplateDetails) {
         List<String> regionCodes = new ArrayList<>();

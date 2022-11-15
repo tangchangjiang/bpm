@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 临近省
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -17,6 +16,7 @@ public class NeighboringRegionConverter {
     private NeighboringRegionConverter() {
 
     }
+
     private static NeighboringRegion dtoToPoObject(NeighboringRegionQueryDTO neighboringRegionDTO) {
 
         if (neighboringRegionDTO == null) {
@@ -40,7 +40,7 @@ public class NeighboringRegionConverter {
     }
 
     public static List<NeighboringRegion> dtoToPoListObjects(List<NeighboringRegionQueryDTO> list) {
-        List<NeighboringRegion> neighboringRegions= new ArrayList<>();
+        List<NeighboringRegion> neighboringRegions = new ArrayList<>();
         if (list.isEmpty()) {
             return neighboringRegions;
         }
@@ -51,7 +51,7 @@ public class NeighboringRegionConverter {
     }
 
     public static List<NeighboringRegionCO> poToCoListObjects(List<NeighboringRegion> list) {
-        List<NeighboringRegionCO> neighboringRegions= new ArrayList<>();
+        List<NeighboringRegionCO> neighboringRegions = new ArrayList<>();
         if (list.isEmpty()) {
             return neighboringRegions;
         }
@@ -60,10 +60,12 @@ public class NeighboringRegionConverter {
         }
         return neighboringRegions;
     }
+
     /**
-     *po-co
+     * po-co
+     *
      * @param neighboringRegion 临近省
-     * @return  lsit
+     * @return lsit
      */
     private static NeighboringRegionCO poToCoObject(NeighboringRegion neighboringRegion) {
 

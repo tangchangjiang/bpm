@@ -7,7 +7,6 @@ import lombok.Data;
 
 import java.util.List;
 
-
 /**
  * 承运商
  *
@@ -17,7 +16,6 @@ import java.util.List;
 @ApiModel("承运商")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarrierQueryInnerDTO {
-
 
     @ApiModelProperty(value = "承运商编码")
     private List<String> carrierCodes;

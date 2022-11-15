@@ -23,6 +23,6 @@ public class WarehouseDomainServiceImpl implements WarehouseDomainService {
 
     @Override
     public List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
-        return warehouseDomainRepository.listWarehouses(warehouseCodes,tenantId);
+        return warehouseDomainRepository.listWarehouses(warehouseCodes, tenantId);
     }
 }

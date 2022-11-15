@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- *
  * 承运商
+ *
  * @author yipeng.zhu@hand-china.com 2021-08-01
  **/
 @FeignClient(
@@ -26,8 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CarrierRemoteService {
     /**
      * 批量查询承运商
+     *
      * @param carrierQueryInnerDTO 承运商
-     * @param organizationId 租户ID
+     * @param organizationId       租户ID
      * @return map
      */
     @PostMapping("/{organizationId}/carrier-internal/list")
@@ -38,13 +39,12 @@ public interface CarrierRemoteService {
      * 批量查询承运商匹配规则
      *
      * @param carrierMappingQueryInnerDTO 承运商
-     * @param organizationId   租户ID
+     * @param organizationId              租户ID
      * @return map key:carrierCode
      */
     @PostMapping("/{organizationId}/carrier-internal/mapping")
     ResponseEntity<String> listCarrierMappings(@RequestBody CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO,
                                                @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
-
 
     /**
      * 查询对应租户所有承运商数据
@@ -67,10 +67,8 @@ public interface CarrierRemoteService {
     ResponseEntity<String> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO);
 
-
     @PostMapping("/{organizationId}/carrier-internal/check-delivery-range")
     ResponseEntity<String> checkDeliveryRange(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestBody CarrierDeliveryRangeDTO carrierDeliveryRangeDTO);
-
 
 }

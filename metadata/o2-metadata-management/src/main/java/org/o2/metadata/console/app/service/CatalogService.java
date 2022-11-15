@@ -15,20 +15,24 @@ public interface CatalogService {
 
     /**
      * 版本Excel导出
+     *
      * @param exportParam 版本主键字符拼接
-     * @param tenantId 租户ID
+     * @param tenantId    租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
-    List<CatalogVO> export(final  ExportParam exportParam, final Long tenantId );
+    List<CatalogVO> export(ExportParam exportParam, Long tenantId);
+
     /**
      * 修改目录版本
+     *
      * @param catalog 目录
      */
-    void update(final Catalog catalog);
+    void update(Catalog catalog);
 
     /**
      * 插入目录版本
+     *
      * @param catalog 目录
      */
     void insertSelective(Catalog catalog);

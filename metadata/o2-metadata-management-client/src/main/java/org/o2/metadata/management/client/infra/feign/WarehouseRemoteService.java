@@ -7,7 +7,11 @@ import org.o2.metadata.management.client.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.WarehouseRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -43,7 +47,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/saveExpressQuantity"})
-    ResponseEntity<String> saveExpressQuantity(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> saveExpressQuantity(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                @RequestParam(value = "warehouseCode") String warehouseCode,
                                                @RequestParam(value = "expressQuantity") String expressQuantity);
 
@@ -56,7 +60,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/savePickUpQuantity"})
-    ResponseEntity<String> savePickUpQuantity(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> savePickUpQuantity(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestParam(value = "warehouseCode") String warehouseCode,
                                               @RequestParam(value = "pickUpQuantity") String pickUpQuantity);
 
@@ -69,7 +73,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/updateExpressValue"})
-    ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestParam(value = "warehouseCode") String warehouseCode,
                                               @RequestParam(value = "increment") String increment);
 
@@ -82,7 +86,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/updatePickUpValue"})
-    ResponseEntity<String> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> updatePickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                              @RequestParam(value = "warehouseCode") String warehouseCode,
                                              @RequestParam(value = "increment") String increment);
 
@@ -94,7 +98,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/getExpressLimit"})
-    ResponseEntity<String> getExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> getExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -105,7 +109,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/getPickUpLimit"})
-    ResponseEntity<String> getPickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> getPickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -116,7 +120,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/getExpressValue"})
-    ResponseEntity<String> getExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> getExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -127,7 +131,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/getPickUpValue"})
-    ResponseEntity<String> getPickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> getPickUpValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -138,7 +142,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/warehouseCacheKey"})
-    ResponseEntity<String> warehouseCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> warehouseCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                              @RequestParam(value = "warehouseCode") String warehouseCode);
 
 
@@ -150,7 +154,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/warehouseLimitCacheKey"})
-    ResponseEntity<String> warehouseLimitCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> warehouseLimitCacheKey(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestParam(value = "limit") String limit);
 
     /**
@@ -161,7 +165,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/isWarehouseExpressLimit"})
-    ResponseEntity<String> isWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> isWarehouseExpressLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -172,7 +176,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/isWarehousePickUpLimit"})
-    ResponseEntity<String> isWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> isWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestParam(value = "warehouseCode") String warehouseCode);
 
     /**
@@ -182,7 +186,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/expressLimitWarehouseCollection"})
-    ResponseEntity<String> expressLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+    ResponseEntity<String> expressLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 获取自提接单量到达上限的仓库
@@ -191,7 +195,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @GetMapping({"/{organizationId}/warehouse-internal/pickUpLimitWarehouseCollection"})
-    ResponseEntity<String> pickUpLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+    ResponseEntity<String> pickUpLimitWarehouseCollection(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 
 
     /**
@@ -201,7 +205,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/allDeliveryWarehouse"})
-    ResponseEntity<String> listAllDeliveryWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+    ResponseEntity<String> listAllDeliveryWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 重置仓库自提接单量限制值
@@ -211,7 +215,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/resetWarehousePickUpLimit"})
-    ResponseEntity<String> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> resetWarehousePickUpLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                      @RequestParam(value = "warehouseCode", required = true) String warehouseCode);
 
     /**
@@ -223,7 +227,7 @@ public interface WarehouseRemoteService {
      */
     @GetMapping("/{organizationId}/warehouse-internal/active/{onlineShopCode}")
     ResponseEntity<String> listActiveWarehouse(@PathVariable @ApiParam(value = "网店编码", required = true) String onlineShopCode,
-                                               @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+                                               @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 分页查询仓库
@@ -233,7 +237,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity<String>
      */
     @PostMapping("/{organizationId}/warehouse-internal/page")
-    ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> pageWarehouses(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestBody WarehousePageQueryInnerDTO innerDTO);
 
     /**
@@ -243,5 +247,6 @@ public interface WarehouseRemoteService {
      * @return 仓库
      */
     @PostMapping("/{organizationId}/warehouse-internal/list-warehouse")
-    ResponseEntity<String> listWarehousesByPosCode(@RequestParam(value = "posCodes", required = true) List<String> posCodes, @PathVariable @ApiParam(value = "租户ID", required = true) final  Long organizationId);
+    ResponseEntity<String> listWarehousesByPosCode(@RequestParam(value = "posCodes", required = true) List<String> posCodes,
+                                                   @PathVariable @ApiParam(value = "租户ID", required = true)  Long organizationId);
 }

@@ -37,12 +37,12 @@ public class PublicLovQueryController {
         this.publicLovQueryRepository = publicLovQueryRepository;
     }
 
-
     @ApiOperation("集值 - 查询")
     @Permission(permissionPublic = true)
     @GetMapping({"/search-by-code"})
     public ResponseEntity<List<LovValueDTO>> searchLov(@RequestParam @ApiParam(value = "值集编码", required = true) final String lovCode,
-                                                       @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN") final String lang) {
+                                                       @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言",
+                                                               defaultValue = "zh_CN") final String lang) {
         try {
             DetailsHelper.getAnonymousDetails().setLanguage(lang);
             return publicLovQueryRepository.queryLovInfo(lovCode, UserHelper.getTenantId());
@@ -55,7 +55,8 @@ public class PublicLovQueryController {
     @Permission(permissionPublic = true)
     @GetMapping({"/batch/search-by-code"})
     public ResponseEntity<Map<String, List<LovValueDTO>>> batchSearchLov(@RequestParam final Map<String, String> queryMap,
-                                                                         @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value = "语言", defaultValue = "zh_CN") final String lang) {
+                                                                         @RequestParam(required = false, defaultValue = "zh_CN") @ApiParam(value =
+                                                                                 "语言", defaultValue = "zh_CN") final String lang) {
         try {
             DetailsHelper.getAnonymousDetails().setLanguage(lang);
             return publicLovQueryRepository.batchQueryLovInfo(queryMap, UserHelper.getTenantId());

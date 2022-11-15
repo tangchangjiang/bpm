@@ -8,7 +8,6 @@ import org.o2.metadata.client.infra.feign.LovAdapterRemoteService;
 import java.util.List;
 
 /**
- *
  * IDPLovClient
  *
  * @author yipeng.zhu@hand-china.com 2021-11-15
@@ -32,15 +31,16 @@ public class IDPLovClient {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, lovValue), String.class);
     }
 
-
     /**
      * 通过值集编码查询值集信息
+     *
      * @param tenantId 租户ID
      * @param lovCodes 编码集合
      * @return LovValuesCO
      */
     public List<LovValuesCO> queryLov(Long tenantId, List<String> lovCodes) {
-        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLov(tenantId, lovCodes), new TypeReference<List<LovValuesCO>>(){});
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLov(tenantId, lovCodes), new TypeReference<List<LovValuesCO>>() {
+        });
 
     }
 }

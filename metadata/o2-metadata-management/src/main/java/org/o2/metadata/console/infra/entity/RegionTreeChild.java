@@ -56,7 +56,7 @@ public class RegionTreeChild extends AddressMapping implements Comparable<Region
 
     @Override
     public int compareTo(final RegionTreeChild o) {
-        if (null == this.getRegionId()){
+        if (null == this.getRegionId()) {
             return 0;
         }
         return this.getRegionId().intValue() - o.getRegionId().intValue();

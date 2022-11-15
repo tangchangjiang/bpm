@@ -4,7 +4,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
 /**
- *
  * 系统参数常量
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
@@ -14,8 +13,9 @@ public interface SystemParameterConstants {
     interface ErrorCode {
 
         String BASIC_DATA_MAP_KEY_IS_NULL = "error.basic_data.system_param_value.key.not_null";
-        String ERROR_SYSTEM_PARAM_CODE_UNIQUE ="o2md.error.system_param_code.not.unique";
+        String ERROR_SYSTEM_PARAM_CODE_UNIQUE = "o2md.error.system_param_code.not.unique";
     }
+
     /**
      * 提示信息
      */
@@ -31,6 +31,7 @@ public interface SystemParameterConstants {
         String SYSTEM_PARAMETER_NOT_FOUND = "system_parameter.not_found";
 
     }
+
     /**
      * 系统参数类型
      */
@@ -60,7 +61,7 @@ public interface SystemParameterConstants {
 
     /**
      * Redis Hash 系统参数
-     *
+     * <p>
      * o2ext:parameter:[tenantId]:[parameterType]
      */
     interface Redis {
@@ -70,14 +71,13 @@ public interface SystemParameterConstants {
     }
 
     interface Parameter {
-       String DEFAULT_WH_UPLOAD_RATIO = "DEFAULT_WH_UPLOAD_RATIO";
-       String DEFAULT_WH_SAFETY_STOCK = "DEFAULT_WH_SAFETY_STOCK";
-       String DEFAULT_SHOP_UPLOAD_RATIO = "DEFAULT_SHOP_UPLOAD_RATIO";
-       String DEFAULT_SHOP_SAFETY_STOCK = "DEFAULT_SHOP_SAFETY_STOCK";
+        String DEFAULT_WH_UPLOAD_RATIO = "DEFAULT_WH_UPLOAD_RATIO";
+        String DEFAULT_WH_SAFETY_STOCK = "DEFAULT_WH_SAFETY_STOCK";
+        String DEFAULT_SHOP_UPLOAD_RATIO = "DEFAULT_SHOP_UPLOAD_RATIO";
+        String DEFAULT_SHOP_SAFETY_STOCK = "DEFAULT_SHOP_SAFETY_STOCK";
     }
 
-
-    interface FileConfig{
+    interface FileConfig {
         String FILE_SUFFIX_JSON = ".json";
 
         String FILE_JSON_TYPE = "application/json";
@@ -86,6 +86,7 @@ public interface SystemParameterConstants {
          */
         String FILE_PREFIX = "FILE_PREFIX";
     }
+
     ResourceScriptSource INIT_DATA_REDIS_HASH_VALUE_LUA =
             new ResourceScriptSource(new ClassPathResource("script/lua/systemParameter/init_data_redis_hash_value.lua"));
 }

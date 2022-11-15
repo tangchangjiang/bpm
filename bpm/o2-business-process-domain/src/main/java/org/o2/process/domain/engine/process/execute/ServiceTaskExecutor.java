@@ -4,7 +4,7 @@ import io.choerodon.core.convertor.ApplicationContextHelper;
 import io.choerodon.core.exception.CommonException;
 import org.hzero.core.base.BaseConstants;
 import org.o2.process.domain.engine.BusinessProcessExecParam;
-import org.o2.process.domain.engine.definition.Activity.ServiceTask;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.runtime.ProcessRuntimeContext;
 import org.o2.process.domain.engine.runtime.ServiceAction;
 import org.o2.process.domain.infra.ProcessEngineConstants;
@@ -23,7 +23,7 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
 
         ServiceTask serviceTask = (ServiceTask) runtimeContext.getCurrentElement();
 
-        if(BaseConstants.Flag.YES.equals(serviceTask.getEnabledFlag())){
+        if (BaseConstants.Flag.YES.equals(serviceTask.getEnabledFlag())) {
 
             ServiceAction<T> action = getServiceAction(serviceTask.getBeanId());
             // 设置当前参数
@@ -35,8 +35,8 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
 
             action.afterExecution(runtimeContext.getBusinessParam());
 
-            if(Boolean.FALSE.equals(runtimeContext.getBusinessParam().getNextFlag())){
-                if(runtimeContext.getBusinessParam().getException() != null){
+            if (Boolean.FALSE.equals(runtimeContext.getBusinessParam().getNextFlag())) {
+                if (runtimeContext.getBusinessParam().getException() != null) {
                     throw new CommonException(runtimeContext.getBusinessParam().getException());
                 }
                 throw new CommonException(ProcessEngineConstants.ErrorCode.BUSINESS_PROCESS_INTERRUPTED);
@@ -47,7 +47,7 @@ public class ServiceTaskExecutor<T extends BusinessProcessExecParam> extends Bas
     }
 
     @SuppressWarnings("unchecked")
-    protected ServiceAction<T> getServiceAction(String beanId){
+    protected ServiceAction<T> getServiceAction(String beanId) {
         return ApplicationContextHelper.getContext().getBean(beanId, ServiceAction.class);
     }
 

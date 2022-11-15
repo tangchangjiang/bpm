@@ -38,10 +38,9 @@ public class ProcessExecutor<T extends BusinessProcessExecParam> implements Proc
         postExecute(runtimeContext);
     }
 
-
     protected void preData(ProcessRuntimeContext<T> runtimeContext, T businessParam, BpmnModel bpmnModel) {
         Map<String, BaseElement> elementMap = new HashMap<>();
-        for(BaseElement flowElement : bpmnModel.getFlowElements()) {
+        for (BaseElement flowElement : bpmnModel.getFlowElements()) {
             elementMap.put(flowElement.getId(), BpmnModelUtil.CLASS_MAP.get(flowElement.getType()).cast(flowElement));
         }
         runtimeContext.setBpmnModel(bpmnModel);
@@ -51,8 +50,7 @@ public class ProcessExecutor<T extends BusinessProcessExecParam> implements Proc
         initCurrentFlowElement(runtimeContext);
     }
 
-
-    protected void initCurrentFlowElement(ProcessRuntimeContext<T> runtimeContext){
+    protected void initCurrentFlowElement(ProcessRuntimeContext<T> runtimeContext) {
         BaseElement startElement = runtimeContext.getBpmnModel().getAllNodes()
                 .stream().filter(e -> ProcessEngineConstants.FlowElementType.START_EVENT.equals(e.getType())).findFirst()
                 .orElseThrow(() -> new CommonException(ProcessEngineConstants.ErrorCode.START_NODE_INVALID));
@@ -63,12 +61,11 @@ public class ProcessExecutor<T extends BusinessProcessExecParam> implements Proc
         BaseElementExecutor<T> runtimeExecutor = executorProvider.getElementExecutor(runtimeContext.getCurrentElement());
         while (runtimeExecutor != null) {
             runtimeExecutor.execute(runtimeContext);
-            // todo 在哪流转？
             runtimeExecutor = executorProvider.getElementExecutor(runtimeContext.getCurrentElement());
         }
     }
 
-    protected void postExecute(ProcessRuntimeContext<T> runtimeContext){
+    protected void postExecute(ProcessRuntimeContext<T> runtimeContext) {
 
     }
 }

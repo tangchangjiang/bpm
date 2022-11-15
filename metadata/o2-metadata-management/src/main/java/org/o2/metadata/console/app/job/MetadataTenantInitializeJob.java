@@ -20,8 +20,6 @@ public class MetadataTenantInitializeJob extends O2AbstractTenantInitializeJob {
     private final MetadataTenantInitService metadataTenantInitService;
     private final MetadataBusinessTenantInitService metadataBusinessTenantInitService;
 
-
-
     public MetadataTenantInitializeJob(MetadataTenantInitService metadataTenantInitService,
                                        MetadataBusinessTenantInitService metadataBusinessTenantInitService) {
         this.metadataTenantInitService = metadataTenantInitService;

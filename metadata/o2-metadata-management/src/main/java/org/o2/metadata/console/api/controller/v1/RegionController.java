@@ -59,10 +59,10 @@ public class RegionController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<RegionVO>> treeRegionWithParent(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                  @RequestParam(value = "countryCode")final String countryCode,
-                                                  @RequestParam(required = false) final String condition,
-                                                  @RequestParam(required = false) final Integer enabledFlag) {
-        return Results.success(regionService.treeRegionWithParent(countryCode, condition, enabledFlag,organizationId));
+                                                               @RequestParam(value = "countryCode") final String countryCode,
+                                                               @RequestParam(required = false) final String condition,
+                                                               @RequestParam(required = false) final Integer enabledFlag) {
+        return Results.success(regionService.treeRegionWithParent(countryCode, condition, enabledFlag, organizationId));
     }
 
     @ApiOperation("查询国家/地区下的有效地区列表")
@@ -70,31 +70,30 @@ public class RegionController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<RegionVO>> listValidRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                           @RequestParam(required = false,value = "countryCode") final String countryCode,
-                                                           @RequestParam(required = false,value = "regionCode") final String regionCode) {
+                                                           @RequestParam(required = false, value = "countryCode") final String countryCode,
+                                                           @RequestParam(required = false, value = "regionCode") final String regionCode) {
         if (countryCode == null && regionCode == null) {
             return Results.success(Collections.emptyList());
         }
-        RegionQueryDTO queryDTO =  new  RegionQueryDTO();
-        if (StringUtils.isNotEmpty(countryCode)){
+        RegionQueryDTO queryDTO = new RegionQueryDTO();
+        if (StringUtils.isNotEmpty(countryCode)) {
             queryDTO.setCountryCode(countryCode);
             queryDTO.setLevelNumber(1);
         }
         queryDTO.setParentRegionCode(regionCode);
         queryDTO.setEnabledFlag(1);
 
-        return Results.success(regionService.listChildren(queryDTO,organizationId));
+        return Results.success(regionService.listChildren(queryDTO, organizationId));
     }
-
 
     @ApiOperation("查询大区下的省份")
     @GetMapping("/area")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
-    @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     public ResponseEntity<List<AreaRegionVO>> listAreaRegions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                               @RequestParam final String countryCode,
                                                               @RequestParam(required = false) final Integer enabledFlag) {
-        return Results.success(regionService.listAreaRegion(countryCode, enabledFlag,organizationId));
+        return Results.success(regionService.listAreaRegion(countryCode, enabledFlag, organizationId));
     }
 
     @ApiOperation("地区静态资源发布")
@@ -127,7 +126,6 @@ public class RegionController extends BaseController {
             return Results.success(getPage(resultList, pageRequest));
         }
     }
-
 
     protected Page<RegionVO> getPage(List<RegionVO> regionVOList, PageRequest pageRequest) {
         if (pageRequest.getPage() >= 0 && pageRequest.getSize() > 0) {

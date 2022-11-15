@@ -39,16 +39,16 @@ public class CarrierInternalController extends BaseController {
         this.carrierService = carrierService;
     }
 
-
     @ApiOperation(value = "承运商")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
-    public ResponseEntity<Map<String, CarrierCO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
+    public ResponseEntity<Map<String, CarrierCO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                       @RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO) {
         return Results.success(carrierService.listCarriers(carrierQueryInnerDTO, organizationId));
     }
 
     @ApiOperation(value = "承运商匹配")
-    @Permission(permissionWithin =  true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/mapping")
     public ResponseEntity<Map<String, CarrierMappingCO>> listCarrierMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CarrierMappingQueryInnerDTO queryInnerDTO) {
         return Results.success(carrierService.listCarrierMappings(queryInnerDTO, organizationId));
@@ -73,7 +73,6 @@ public class CarrierInternalController extends BaseController {
 
     }
 
-
     @ApiOperation(value = "查询收货地址是否在承运商的送达范围内")
 //    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @Permission(permissionPublic = true)
@@ -85,6 +84,5 @@ public class CarrierInternalController extends BaseController {
         return Results.success(carrierService.checkDeliveryRange(carrierDeliveryRangeDTO));
 
     }
-
 
 }

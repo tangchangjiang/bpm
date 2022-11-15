@@ -48,11 +48,14 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "目录版本列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<Page<CatalogVersion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
+    public ResponseEntity<Page<CatalogVersion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                     CatalogVersion catalogVersion, @ApiIgnore @SortDefault(value =
+            CatalogVersion.FIELD_CATALOG_VERSION_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         catalogVersion.setTenantId(organizationId);
         if (null != catalogVersion.getCatalogCode()) {
-            Catalog catalog = catalogRepository.selectOne(Catalog.builder().catalogCode(catalogVersion.getCatalogCode()).tenantId(organizationId).build());
+            Catalog catalog =
+                    catalogRepository.selectOne(Catalog.builder().catalogCode(catalogVersion.getCatalogCode()).tenantId(organizationId).build());
             Preconditions.checkArgument(null != catalog, "illegal combination catalogCode && organizationId");
             catalogVersion.setCatalogId(catalog.getCatalogId());
         }
@@ -71,7 +74,8 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "创建目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<CatalogVersion> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<CatalogVersion> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                 @RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
         validObject(catalogVersion);
         catalogVersionService.insert(catalogVersion);
@@ -81,7 +85,8 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "修改目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<CatalogVersion> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersion catalogVersion) {
+    public ResponseEntity<CatalogVersion> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                 @RequestBody CatalogVersion catalogVersion) {
         catalogVersion.setTenantId(organizationId);
         catalogVersionService.update(catalogVersion);
         return Results.success(catalogVersion);
@@ -99,10 +104,11 @@ public class CatalogVersionController extends BaseController {
     @ApiOperation(value = "目录&目录版本")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/catalog-version")
-    public ResponseEntity<Page<CatalogVersion>> catalogRelVersion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, CatalogRelVersionQueryDTO queryDTO,
-                                                            @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
-            direction = Sort.Direction.DESC) PageRequest pageRequest) {
-          queryDTO.setTenantId(organizationId);
+    public ResponseEntity<Page<CatalogVersion>> catalogRelVersion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                  CatalogRelVersionQueryDTO queryDTO,
+                                                                  @ApiIgnore @SortDefault(value = CatalogVersion.FIELD_CATALOG_VERSION_ID,
+                                                                          direction = Sort.Direction.DESC) PageRequest pageRequest) {
+        queryDTO.setTenantId(organizationId);
         final Page<CatalogVersion> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> catalogVersionService.catalogRelVersion(queryDTO));
         return Results.success(list);

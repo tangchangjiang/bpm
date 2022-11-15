@@ -1,9 +1,7 @@
 package org.o2.metadata.console.infra.repository;
 
-
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.infra.entity.PostTime;
-
 
 /**
  * 服务点接单和派单时间资源库

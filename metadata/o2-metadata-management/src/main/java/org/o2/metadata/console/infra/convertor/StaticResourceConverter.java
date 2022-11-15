@@ -20,7 +20,7 @@ public class StaticResourceConverter {
 
     }
 
-    public static org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO toB2CStaticResourceSaveDTO(StaticResourceSaveDO staticResourceSaveDO){
+    public static org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO toB2CStaticResourceSaveDTO(StaticResourceSaveDO staticResourceSaveDO) {
 
         if (staticResourceSaveDO == null) {
             return null;
@@ -38,7 +38,7 @@ public class StaticResourceConverter {
         return staticResourceSaveDTO;
     }
 
-    public static List<org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO> toB2CStaticResourceSaveDTOList(List<StaticResourceSaveDO> staticResourceSaveDOList){
+    public static List<org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO> toB2CStaticResourceSaveDTOList(List<StaticResourceSaveDO> staticResourceSaveDOList) {
 
         if (staticResourceSaveDOList == null) {
             return Collections.emptyList();
@@ -50,7 +50,7 @@ public class StaticResourceConverter {
         return staticResourceSaveDTOList;
     }
 
-    public static StaticResourceConfigDO toStaticResourceConfigDO(StaticResourceConfigCO staticResourceConfigCO){
+    public static StaticResourceConfigDO toStaticResourceConfigDO(StaticResourceConfigCO staticResourceConfigCO) {
 
         if (staticResourceConfigCO == null) {
             return null;
@@ -69,7 +69,7 @@ public class StaticResourceConverter {
         return staticResourceConfigDO;
     }
 
-    public static org.o2.cms.management.client.b2b.domain.dto.StaticResourceSaveDTO toB2BStaticResourceSaveDTO(StaticResourceSaveDO staticResourceSaveDO){
+    public static org.o2.cms.management.client.b2b.domain.dto.StaticResourceSaveDTO toB2BStaticResourceSaveDTO(StaticResourceSaveDO staticResourceSaveDO) {
 
         if (staticResourceSaveDO == null) {
             return null;
@@ -87,7 +87,7 @@ public class StaticResourceConverter {
         return staticResourceSaveDTO;
     }
 
-    public static List<org.o2.cms.management.client.b2b.domain.dto.StaticResourceSaveDTO> toB2BStaticResourceSaveDTOList(List<StaticResourceSaveDO> staticResourceSaveDOList){
+    public static List<org.o2.cms.management.client.b2b.domain.dto.StaticResourceSaveDTO> toB2BStaticResourceSaveDTOList(List<StaticResourceSaveDO> staticResourceSaveDOList) {
 
         if (staticResourceSaveDOList == null) {
             return Collections.emptyList();
@@ -99,7 +99,7 @@ public class StaticResourceConverter {
         return staticResourceSaveDTOList;
     }
 
-    public static StaticResourceConfigDO toStaticResourceConfigDO(org.o2.cms.management.client.b2b.domain.co.StaticResourceConfigCO staticResourceConfigCO){
+    public static StaticResourceConfigDO toStaticResourceConfigDO(org.o2.cms.management.client.b2b.domain.co.StaticResourceConfigCO staticResourceConfigCO) {
 
         if (staticResourceConfigCO == null) {
             return null;

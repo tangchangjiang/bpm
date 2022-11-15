@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-
 import io.choerodon.core.domain.Page;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.mybatis.pagehelper.PageHelper;
@@ -45,7 +43,7 @@ public class OnlineShopController extends BaseController {
     private final OnlineShopRepository onlineShopRepository;
     private final OnlineShopService onlineShopService;
 
-    public OnlineShopController(OnlineShopRepository onlineShopRepository,OnlineShopService onlineShopService) {
+    public OnlineShopController(OnlineShopRepository onlineShopRepository, OnlineShopService onlineShopService) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopService = onlineShopService;
     }
@@ -55,7 +53,8 @@ public class OnlineShopController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<Page<OnlineShop>> listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
+    public ResponseEntity<Page<OnlineShop>> listOnlineShopsByOptions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                     final OnlineShop condition, @ApiIgnore PageRequest pageRequest) {
         condition.setTenantId(organizationId);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopService.selectByCondition(condition)));
     }
@@ -63,7 +62,9 @@ public class OnlineShopController extends BaseController {
     @ApiOperation("查询所有active的网点列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/all-active")
-    public ResponseEntity<Page<OnlineShop>> listAllActiveShops(OnlineShop onlineShop, @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @ApiIgnore PageRequest pageRequest) {
+    public ResponseEntity<Page<OnlineShop>> listAllActiveShops(OnlineShop onlineShop,
+                                                               @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @ApiIgnore PageRequest pageRequest) {
         onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
@@ -82,7 +83,8 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{shopId}")
-    public ResponseEntity<OnlineShop> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long shopId) {
+    public ResponseEntity<OnlineShop> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                             @PathVariable final Long shopId) {
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.setTenantId(organizationId);
         onlineShop.setOnlineShopId(shopId);
@@ -94,7 +96,7 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<OnlineShop> createOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                   @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
+                                                       @ApiParam("网店信息数据") @RequestBody final OnlineShop onlineShop) {
         // 初始化部分值，否则通不过验证
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();
@@ -108,7 +110,7 @@ public class OnlineShopController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<OnlineShop> updateOnlineShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                              @RequestBody final OnlineShop onlineShop) {
+                                                       @RequestBody final OnlineShop onlineShop) {
         SecurityTokenHelper.validToken(onlineShop);
         onlineShop.setTenantId(organizationId);
         onlineShop.initDefaultProperties();

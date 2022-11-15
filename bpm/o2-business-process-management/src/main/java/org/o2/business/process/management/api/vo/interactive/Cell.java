@@ -19,7 +19,7 @@ import lombok.Data;
         @JsonSubTypes.Type(value = NotationNode.class, name = "flow-node"),
 })
 @Data
-public class Cell implements NotationCell{
+public class Cell implements NotationCell {
 
     private String id;
 

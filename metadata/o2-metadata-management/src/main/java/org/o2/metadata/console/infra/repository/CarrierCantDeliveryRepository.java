@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface CarrierCantDeliveryRepository extends BaseRepository<CarrierCantDelivery> {
 
-
     /**
      * 查询承运商不可送达范围
      *
@@ -20,6 +19,5 @@ public interface CarrierCantDeliveryRepository extends BaseRepository<CarrierCan
      * @return 结果
      */
     List<CarrierCantDelivery> list(CarrierCantDelivery query);
-
 
 }

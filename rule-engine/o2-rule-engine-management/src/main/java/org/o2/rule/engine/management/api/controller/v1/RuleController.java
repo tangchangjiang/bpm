@@ -1,5 +1,12 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
@@ -15,19 +22,20 @@ import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.PageHelper;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 规则 管理 API
@@ -90,7 +98,7 @@ public class RuleController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/rule-detail")
     public ResponseEntity<Rule> detailByCode(@PathVariable(value = "organizationId") Long organizationId,
-                                       @ApiParam(value = "规则编码", required = true) @RequestParam String ruleCode) {
+                                             @ApiParam(value = "规则编码", required = true) @RequestParam String ruleCode) {
         return Results.success(ruleService.detail(organizationId, null, ruleCode));
     }
 

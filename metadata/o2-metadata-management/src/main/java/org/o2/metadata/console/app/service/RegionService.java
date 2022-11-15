@@ -22,13 +22,12 @@ public interface RegionService {
     List<RegionVO> treeRegionWithParent(String countryIdOrCode, String condition, Integer enabledFlag, Long tenantId);
 
 
-
     /**
      * 查询各个大区下的省份
      *
      * @param countryCode 国家编码
      * @param enabledFlag 是否启用
-     * @param tenantId 租户ID
+     * @param tenantId    租户ID
      * @return list
      */
     List<AreaRegionVO> listAreaRegion(String countryCode, Integer enabledFlag, Long tenantId);
@@ -38,10 +37,10 @@ public interface RegionService {
      * 查询地区
      *
      * @param regionQueryDTO 查询条件
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      * @return 地区列表
      */
-    List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO,Long tenantId);
+    List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO, Long tenantId);
 
 }
 

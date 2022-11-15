@@ -21,7 +21,6 @@ public class BusinessFeignClientConfiguration {
         return new BusinessProcessRemoteServiceImpl();
     }
 
-
     @Bean
     @ConditionalOnMissingBean
     public <T extends BusinessProcessExecParam> DefaultProcessErrorHandler<T> defaultProcessErrorHandler() {

@@ -2,7 +2,6 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.app.bo.TenantInitBO;
 
-
 /**
  * 网店多租户初始化
  *

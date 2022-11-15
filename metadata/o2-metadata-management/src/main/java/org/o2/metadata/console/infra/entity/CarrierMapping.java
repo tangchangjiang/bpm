@@ -62,7 +62,7 @@ public class CarrierMapping extends AuditDomain {
         if (null != this.platformCode) {
             sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CODE, this.getPlatformCode());
         }
-        if (null != this.platformCarrierCode ) {
+        if (null != this.platformCarrierCode) {
             sqls.andEqualTo(CarrierMapping.FIELD_PLATFORM_CARRIER_CODE, this.getPlatformCarrierCode());
         }
         return carrierMappingRepository.selectCountByCondition(
@@ -80,12 +80,10 @@ public class CarrierMapping extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("表ID，主键")
     @Id
     @GeneratedValue
     private Long carrierMappingId;
-
 
     @ApiModelProperty(value = "承运商id")
     @NotNull
@@ -99,7 +97,6 @@ public class CarrierMapping extends AuditDomain {
     @NotBlank
     private String platformCarrierName;
 
-
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
@@ -110,7 +107,6 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "归属电商平台含义")
     @Transient
     private String platformTypeMeaning;
-
 
     @ApiModelProperty(value = "版本编码")
     private String platformCode;
@@ -135,10 +131,8 @@ public class CarrierMapping extends AuditDomain {
     @ApiModelProperty(value = "承运商名称")
     private String carrierName;
 
-
     @Transient
     @ApiModelProperty(value = "平台id")
     private Long platformId;
-
 
 }

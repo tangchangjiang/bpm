@@ -6,7 +6,6 @@ import org.o2.business.process.management.app.service.ProcessTenantInitService;
 import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.initialize.infra.job.O2AbstractTenantInitializeJob;
 
-
 /**
  * description
  *
@@ -25,7 +24,7 @@ public class BusinessProcessTenantInitializeJob extends O2AbstractTenantInitiali
 
     @Override
     public void initializeBasicData(TenantInitContext context) {
-        processTenantInitService.tenantInitialize(context.getSourceTenantId(),context.getTargetTenantId());
+        processTenantInitService.tenantInitialize(context.getSourceTenantId(), context.getTargetTenantId());
     }
 
     @Override

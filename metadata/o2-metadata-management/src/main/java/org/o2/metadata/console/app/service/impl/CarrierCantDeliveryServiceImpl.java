@@ -34,7 +34,6 @@ public class CarrierCantDeliveryServiceImpl implements CarrierCantDeliveryServic
 
     private final RegionRepository regionRepository;
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CarrierCantDelivery save(CarrierCantDelivery carrierCantDelivery) {
@@ -92,7 +91,6 @@ public class CarrierCantDeliveryServiceImpl implements CarrierCantDeliveryServic
         return list;
     }
 
-
     /**
      * @param carrierCantDelivery 参数
      * @param length              1:市，2:区
@@ -128,7 +126,8 @@ public class CarrierCantDeliveryServiceImpl implements CarrierCantDeliveryServic
                                 .andEqualTo(CarrierCantDelivery.FIELD_COUNTRY_CODE, carrierCantDelivery.getCountryCode())
                                 .andEqualTo(CarrierCantDelivery.FIELD_REGION_CODE, carrierCantDelivery.getRegionCode())
                                 .andEqualTo(CarrierCantDelivery.FIELD_CITY_CODE, carrierCantDelivery.getCityCode())
-                                .andNotEqualTo(CarrierCantDelivery.FIELD_CARRIER_CANT_DELIVERY_ID, carrierCantDelivery.getCarrierCantDeliveryId(), true)
+                                .andNotEqualTo(CarrierCantDelivery.FIELD_CARRIER_CANT_DELIVERY_ID, carrierCantDelivery.getCarrierCantDeliveryId(),
+                                        true)
                         ).build());
                 if (result > 0) {
                     // 存在，不允许新建

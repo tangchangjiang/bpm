@@ -1,6 +1,5 @@
 package org.o2.metadata.management.client.domain.co;
 
-
 import lombok.Data;
 
 /**

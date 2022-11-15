@@ -23,10 +23,10 @@ public class DefaultFlow extends BaseFlow {
         return ProcessEngineConstants.FlowElementType.DEFAULT_FLOW;
     }
 
-
     @Override
     protected void checkTerminal(Map<String, BaseElement> elementMap) {
-        checkElement(elementMap, getIncoming(), Collections.singletonList(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY), ProcessEngineConstants.ErrorCode.DEFAULT_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE);
+        checkElement(elementMap, getIncoming(), Collections.singletonList(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY),
+                ProcessEngineConstants.ErrorCode.DEFAULT_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE);
         super.checkTerminal(elementMap);
     }
 }

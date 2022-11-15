@@ -48,7 +48,8 @@ public class NeighboringRegionController extends BaseController {
     private final SourcingCacheUpdateService sourcingCacheUpdateService;
 
     public NeighboringRegionController(final NeighboringRegionRepository neighboringRegionRepository,
-                                       final NeighboringRegionService neighboringRegionService, SourcingCacheUpdateService sourcingCacheUpdateService) {
+                                       final NeighboringRegionService neighboringRegionService,
+                                       SourcingCacheUpdateService sourcingCacheUpdateService) {
         this.neighboringRegionRepository = neighboringRegionRepository;
         this.neighboringRegionService = neighboringRegionService;
         this.sourcingCacheUpdateService = sourcingCacheUpdateService;
@@ -58,9 +59,10 @@ public class NeighboringRegionController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<Page<NeighboringRegion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,final NeighboringRegionQueryDTO neighboringRegion,
-                                  @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_CODE,
-                                          direction = Sort.Direction.ASC) final PageRequest pageRequest) {
+    public ResponseEntity<Page<NeighboringRegion>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                        final NeighboringRegionQueryDTO neighboringRegion,
+                                                        @ApiIgnore @SortDefault(value = NeighboringRegion.FIELD_SOURCE_REGION_CODE,
+                                                                direction = Sort.Direction.ASC) final PageRequest pageRequest) {
         neighboringRegion.setTenantId(organizationId);
         final Page<NeighboringRegion> result = PageHelper.doPageAndSort(pageRequest,
                 () -> neighboringRegionService.findNeighboringRegions(neighboringRegion));
@@ -70,7 +72,8 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "创建临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<List<NeighboringRegion>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<NeighboringRegion> neighboringRegion) {
+    public ResponseEntity<List<NeighboringRegion>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                          @RequestBody final List<NeighboringRegion> neighboringRegion) {
         List<NeighboringRegion> result = neighboringRegionService.batchInsert(organizationId, neighboringRegion);
         sourcingCacheUpdateService.refreshSourcingNearRegion(organizationId, this.getClass().getSimpleName());
         return Results.success(result);
@@ -79,7 +82,8 @@ public class NeighboringRegionController extends BaseController {
     @ApiOperation(value = "批量删除临近省")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<OperateResponse> remove(@RequestBody final List<NeighboringRegion> neighboringRegions, @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+    public ResponseEntity<OperateResponse> remove(@RequestBody final List<NeighboringRegion> neighboringRegions, @PathVariable @ApiParam(value =
+            "租户ID", required = true) Long organizationId) {
         SecurityTokenHelper.validToken(neighboringRegions);
         neighboringRegionRepository.batchDeleteByPrimaryKey(neighboringRegions);
         sourcingCacheUpdateService.refreshSourcingNearRegion(organizationId, this.getClass().getSimpleName());

@@ -4,8 +4,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
 /**
- *
- *  运费常量
+ * 运费常量
  *
  * @author yipeng.zhu@hand-china.com 2021-07-14
  **/
@@ -28,8 +27,9 @@ public interface FreightConstants {
         String BASIC_DATA_FREIGHT_DETAIL_NEXT_PRICE_IS_NULL = "error.basic_data.freight_template_detail.next_price.not_null";
         String BASIC_DATA_FREIGHT_DETAIL_TEMPLATE_ID_IS_NULL = "error.basic_data.freight_template_detail.template_id.not_null";
         String BASIC_DATA_FREIGHT_DETAIL_DUNPLICATE = "error.basic_data.freight_template_detail.duplicate";
-        String FREIGHT_NAME_DUPLICATE= "error.freight_template_name.duplicate";
+        String FREIGHT_NAME_DUPLICATE = "error.freight_template_name.duplicate";
     }
+
     interface Redis {
 
         /**
@@ -59,6 +59,7 @@ public interface FreightConstants {
         static String getFreightDetailKey(Long tenantId, String freightCode) {
             return String.format(FREIGHT_DETAIL_KEY, tenantId, freightCode);
         }
+
         ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
 
@@ -76,32 +77,32 @@ public interface FreightConstants {
         /**
          * 计价方式
          */
-        String LOV_VALUATION_TYPE = "O2MD.VALUATION_TYPE" ;
+        String LOV_VALUATION_TYPE = "O2MD.VALUATION_TYPE";
         /**
          * 计价单位
          */
-        String LOV_VALUATION_UOM = "O2MD.VALUATION_UOM" ;
+        String LOV_VALUATION_UOM = "O2MD.VALUATION_UOM";
         /**
          * 运送方式
          */
-        String LOV_TRANSPORT_TYPE = "O2MD.TRANSPORT_TYPE" ;
+        String LOV_TRANSPORT_TYPE = "O2MD.TRANSPORT_TYPE";
         /**
-         *是否标识
+         * 是否标识
          */
-        String LOV_HPFM_FLAG = "HPFM.FLAG" ;
-
+        String LOV_HPFM_FLAG = "HPFM.FLAG";
 
         /**
          * 计价方式
          */
-        String LOV_VALUATION_TYPE_NEW = "O2MD.UOM_TYPE" ;
+        String LOV_VALUATION_TYPE_NEW = "O2MD.UOM_TYPE";
 
         /**
          * 计价单位
          */
-        String LOV_VALUATION_UOM_NEW = "O2MD.UOM" ;
+        String LOV_VALUATION_UOM_NEW = "O2MD.UOM";
 
     }
+
     /**
      * 计价方式
      */

@@ -47,7 +47,8 @@ public class AddressMapping extends AuditDomain {
         if (this.addressMappingId != null) {
             return addressMappingRepository.existsWithPrimaryKey(this);
         } else {
-            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.platformCode,this.regionCode,this.tenantId);
+            List<AddressMapping> addressMappings = addressMappingRepository.queryAddressByCondition(this.platformCode, this.regionCode,
+                    this.tenantId);
             return !addressMappings.isEmpty();
         }
     }
@@ -68,8 +69,6 @@ public class AddressMapping extends AuditDomain {
     @LovValue(lovCode = O2CoreConstants.AddressType.LOV_CODE)
     private String addressTypeCode;
 
-
-
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;
 
@@ -81,7 +80,6 @@ public class AddressMapping extends AuditDomain {
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
-
 
     //
     // 非数据库字段
@@ -97,7 +95,6 @@ public class AddressMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "地址类型含义", hidden = true)
     private String addressTypeMeaning;
-
 
     /**
      * 显示region的层级目录结构，只在详情里展示
@@ -115,7 +112,7 @@ public class AddressMapping extends AuditDomain {
     @ApiModelProperty(value = "版本编码")
     private String platformCode;
 
-    @ApiModelProperty(value = "版本名称",required = true)
+    @ApiModelProperty(value = "版本名称", required = true)
     @Transient
     private String platformName;
 }

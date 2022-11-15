@@ -36,7 +36,7 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
     @Override
     public List<OnlineShopRelWarehouse> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         String hashKey = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, onlineShopCode);
-        Map<Object,Object> map = redisCacheClient.opsForHash().entries(hashKey);
+        Map<Object, Object> map = redisCacheClient.opsForHash().entries(hashKey);
         List<OnlineShopRelWarehouse> list = new ArrayList<>();
         if (map.isEmpty()) {
             return list;

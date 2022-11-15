@@ -5,10 +5,10 @@ import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
 
 import java.util.List;
 
-public interface StaticResourceBusinessService extends BaseBusinessTypeInterface{
+public interface StaticResourceBusinessService extends BaseBusinessTypeInterface {
 
     @Override
-    default Class<? extends BaseBusinessTypeInterface> getHandlerClass(){
+    default Class<? extends BaseBusinessTypeInterface> getHandlerClass() {
         return StaticResourceBusinessService.class;
     }
 

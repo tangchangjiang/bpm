@@ -73,7 +73,7 @@ public interface ProcessEngineConstants {
 
     }
 
-    interface FlowElementType{
+    interface FlowElementType {
         String END_EVENT = "END_EVENT";
         String EXCLUSIVE_GATEWAY = "EXCLUSIVE_GATEWAY";
         String START_EVENT = "START_EVENT";
@@ -88,7 +88,7 @@ public interface ProcessEngineConstants {
         ImmutableList<String> UN_GATEWAY_NODE = ImmutableList.of(END_EVENT, START_EVENT, SERVICE_TASK);
     }
 
-    interface ExpressType{
+    interface ExpressType {
         String QL_EXPRESS = "QL_Express";
         String GROOVY = "Groovy";
     }

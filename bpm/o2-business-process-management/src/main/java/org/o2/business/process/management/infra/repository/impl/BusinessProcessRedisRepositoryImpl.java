@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author zhilin.ren@hand-china.com 2022/08/10 15:01
  */
@@ -42,7 +41,8 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.LIST_PROCESS_NODE_STATUS);
         redisScript.setResultType(String.class);
-        String result = redisCacheClient.execute(redisScript, Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), keys.toArray());
+        String result = redisCacheClient.execute(redisScript,
+                Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), keys.toArray());
         if (StringUtils.isBlank(result) || BusinessProcessRedisConstants.LUA_NULL_MAP.equals(result)) {
             return Collections.emptyMap();
         }
@@ -69,7 +69,6 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
     public void batchUpdateNodeStatus(Long tenantId, Map<String, String> detailMap) {
         redisCacheClient.opsForHash().putAll(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId), detailMap);
     }
-
 
     @Override
     public void batchUpdateProcessConfig(Long tenantId, Map<String, String> detailMap) {

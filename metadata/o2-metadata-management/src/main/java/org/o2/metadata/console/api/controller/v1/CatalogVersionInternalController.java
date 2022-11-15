@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController("catalogVersionInternalController.v1")
 @RequestMapping("/v1/{organizationId}/catalogVersion-internal")
-public class CatalogVersionInternalController{
+public class CatalogVersionInternalController {
 
     private final CatalogVersionService catalogVersionService;
 
@@ -34,15 +34,17 @@ public class CatalogVersionInternalController{
     @ApiOperation(value = "目录版本")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/select-name")
-    public ResponseEntity<Map<String,String>> listCatalogVersions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO) {
-        return Results.success(catalogVersionService.listCatalogVersions(catalogVersionQueryInnerDTO,organizationId));
+    public ResponseEntity<Map<String, String>> listCatalogVersions(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                   @RequestBody CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO) {
+        return Results.success(catalogVersionService.listCatalogVersions(catalogVersionQueryInnerDTO, organizationId));
     }
 
     @ApiOperation(value = "目录&目录版本 父子结构")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/catalog-and-version")
-    public ResponseEntity<List<CatalogCO>> listCatalogAndVersion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody CatalogQueryInnerDTO queryInner) {
-        return Results.success(catalogVersionService.listCatalogAndVersion(queryInner,organizationId));
+    public ResponseEntity<List<CatalogCO>> listCatalogAndVersion(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @RequestBody CatalogQueryInnerDTO queryInner) {
+        return Results.success(catalogVersionService.listCatalogAndVersion(queryInner, organizationId));
     }
 
 }

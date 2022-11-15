@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * 服务点
+ *
  * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
 @Component
@@ -19,13 +19,13 @@ import org.springframework.stereotype.Component;
 public class PosRemoteServiceImpl implements PosRemoteService {
     @Override
     public ResponseEntity<String> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long organizationId) {
-        log.error("Error listPosAddress, params[posAddressDTO = {}, organizationId = {}]", posAddressQueryInnerDTO,organizationId);
+        log.error("Error listPosAddress, params[posAddressDTO = {}, organizationId = {}]", posAddressQueryInnerDTO, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> listPoseName(Long organizationId, PosQueryInnerDTO posQueryInnerDTO) {
-        log.error("Error listPoseName, params[posQueryInnerDTO = {}, organizationId = {}]", posQueryInnerDTO,organizationId);
+        log.error("Error listPoseName, params[posQueryInnerDTO = {}, organizationId = {}]", posQueryInnerDTO, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

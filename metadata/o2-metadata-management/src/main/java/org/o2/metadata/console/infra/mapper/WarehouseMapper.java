@@ -4,7 +4,11 @@ import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
-import org.o2.metadata.console.api.dto.*;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelPosDTO;
 import org.o2.metadata.console.api.vo.WarehouseRelPosVO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -51,7 +55,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @param tenantId 租户ID
      * @return list
      */
-    List<Warehouse> queryAllWarehouseByTenantId(@Param("tenantId") final Long tenantId);
+    List<Warehouse> queryAllWarehouseByTenantId(@Param("tenantId") Long tenantId);
 
     /**
      * 查询有效的仓库
@@ -111,7 +115,7 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
      * @param tenantId 租户ID
      * @return 仓库
      */
-    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(@Param(value = "tenantId") final Long tenantId);
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(@Param(value = "tenantId") Long tenantId);
 
 
     /**

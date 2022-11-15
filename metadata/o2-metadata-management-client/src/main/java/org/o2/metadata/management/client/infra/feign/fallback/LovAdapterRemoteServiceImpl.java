@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 值集查询
+ *
  * @author yipeng.zhu@hand-china.com 2021-08-30
  **/
 @Component("lovAdapterRemoteManagementService")
@@ -44,37 +44,41 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
 
     @Override
     public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, String lovValue) {
-        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, lovValue= {}]", lovCode, organizationId,lovValue);
+        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, lovValue= {}]", lovCode, organizationId, lovValue);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> queryLovValueMeaning(Long organizationId, String lovCode, Map<String, String> queryLovValueMap) {
-        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, map = {} ]", lovCode, organizationId,queryLovValueMap);
+        log.error("Error queryLovValueMeaning, params[lovCode = {}, organizationId = {}, map = {} ]", lovCode, organizationId, queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
-    public ResponseEntity<String> queryLovValueMeaningPage(Long organizationId, String lovCode, Map<String, String> queryLovValueMap, Integer page, Integer size) {
-        log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page, size,queryLovValueMap);
+    public ResponseEntity<String> queryLovValueMeaningPage(Long organizationId, String lovCode, Map<String, String> queryLovValueMap, Integer page,
+                                                           Integer size) {
+        log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page,
+                size, queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
-    public ResponseEntity<String> queryLovPage(Long organizationId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
-        log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page, size,queryLovValueMap);
+    public ResponseEntity<String> queryLovPage(Long organizationId, String lovCode, Integer page, Integer size,
+                                               Map<String, String> queryLovValueMap) {
+        log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page,
+                size, queryLovValueMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> queryRegion(Long organizationId, RegionQueryLovInnerDTO innerDTO) {
-        log.error("Error queryRegion, params[ organizationId = {},innerDTO = {}]", organizationId,innerDTO);
+        log.error("Error queryRegion, params[ organizationId = {},innerDTO = {}]", organizationId, innerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> queryRegionPage(Long organizationId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
-        log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, innerDTO = {} ]",  organizationId, page, size,innerDTO);
+        log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, innerDTO = {} ]", organizationId, page, size, innerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

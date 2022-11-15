@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -31,21 +30,22 @@ public class LovAdapterController {
     }
 
     @ApiOperation(value = "通过编码查询货币(批量)")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/value/batch")
-    public ResponseEntity<Map<String, List<LovValueDTO>>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public ResponseEntity<Map<String, List<LovValueDTO>>> findCurrencyByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID",
+            required = true) Long organizationId,
                                                                               @RequestParam Map<String, String> queryMap) {
-        return lovAdapterService.batchQueryLovInfo(queryMap,organizationId);
+        return lovAdapterService.batchQueryLovInfo(queryMap, organizationId);
     }
 
     @ApiOperation("")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/url/{lovCode}")
     public ResponseEntity<String> listCurrency(@PathVariable Long organizationId,
-                                                     @RequestParam(required = false) Map<String, String> queryParams,
-                                                     @PathVariable String lovCode,
-                                                     PageRequest pageRequest) {
-        return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode,organizationId));
+                                               @RequestParam(required = false) Map<String, String> queryParams,
+                                               @PathVariable String lovCode,
+                                               PageRequest pageRequest) {
+        return Results.success(lovAdapterService.queryLovPage(queryParams, pageRequest, lovCode, organizationId));
     }
 
 }

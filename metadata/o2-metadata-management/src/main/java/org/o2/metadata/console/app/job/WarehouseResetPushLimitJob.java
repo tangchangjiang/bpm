@@ -24,7 +24,6 @@ public class WarehouseResetPushLimitJob extends AbstractThreadJob<WarehouseRelAd
         this.warehouseService = warehouseService;
     }
 
-
     @Override
     protected void doExecute(WarehouseRelAddressCO prepareData,
                              final ThreadJobPojo threadJobPojo) {

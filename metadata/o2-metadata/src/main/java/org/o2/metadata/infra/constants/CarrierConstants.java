@@ -8,6 +8,9 @@ package org.o2.metadata.infra.constants;
  **/
 public interface CarrierConstants {
 
+    /**
+     * Redis key
+     */
     interface Redis {
         /**
          * redis key(hash): o2md:carrier:{tenantId}

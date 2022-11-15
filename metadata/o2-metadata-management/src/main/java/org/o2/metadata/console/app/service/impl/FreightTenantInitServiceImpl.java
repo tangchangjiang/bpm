@@ -22,11 +22,10 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
         this.freightTemplateRepository = freightTemplateRepository;
     }
 
-
     @Override
     public void tenantInitializeBusiness(long sourceTenantId, Long targetTenantId) {
         // 1. 查询源租户
-       List<FreightTemplate> sourceFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
+        List<FreightTemplate> sourceFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(FreightTemplate.FIELD_TENANT_ID, sourceTenantId)
                         .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, TenantInitConstants.FreightBusiness.FREIGHT_CODE))
@@ -42,9 +41,9 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
                         .andEqualTo(FreightTemplate.FIELD_TEMPLATE_CODE, TenantInitConstants.FreightBusiness.FREIGHT_CODE))
                 .build());
 
-       if (CollectionUtils.isNotEmpty(targetFreightTemplate)) {
-           freightTemplateRepository.batchDeleteByPrimaryKey(targetFreightTemplate);
-       }
+        if (CollectionUtils.isNotEmpty(targetFreightTemplate)) {
+            freightTemplateRepository.batchDeleteByPrimaryKey(targetFreightTemplate);
+        }
         for (FreightTemplate freightTemplate : sourceFreightTemplate) {
             freightTemplate.setTemplateId(null);
             freightTemplate.setTenantId(targetTenantId);

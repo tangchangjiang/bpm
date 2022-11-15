@@ -68,7 +68,6 @@ public class MetadataManagementClientConfiguration {
         return new PlatformRemoteServiceImpl();
     }
 
-
     @Bean("onlineShopRemoteManagementService")
     @ConditionalOnMissingBean
     public OnlineShopRemoteServiceImpl onlineShopRemoteServiceFallback() {
@@ -83,47 +82,56 @@ public class MetadataManagementClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AddressClient addressClient(AddressMappingRemoteService addressMappingService) { return new AddressClient( addressMappingService);
+    public AddressClient addressClient(AddressMappingRemoteService addressMappingService) {
+        return new AddressClient(addressMappingService);
     }
 
     @Bean("systemParameterManagementClient")
     @ConditionalOnMissingBean
-    public SystemParameterClient systemParameterClient(SysParameterRemoteService sysParameterRemoteService) { return new SystemParameterClient( sysParameterRemoteService);
+    public SystemParameterClient systemParameterClient(SysParameterRemoteService sysParameterRemoteService) {
+        return new SystemParameterClient(sysParameterRemoteService);
     }
 
     @Bean("warehouseManagementClient")
     @ConditionalOnMissingBean
-    public WarehouseClient warehousesClient(WarehouseRemoteService warehouseRemoteService) { return new WarehouseClient( warehouseRemoteService);
+    public WarehouseClient warehousesClient(WarehouseRemoteService warehouseRemoteService) {
+        return new WarehouseClient(warehouseRemoteService);
     }
 
     @Bean("freightManagementClient")
     @ConditionalOnMissingBean
-    public FreightClient freightClient(FreightRemoteService freightRemoteService) { return new FreightClient( freightRemoteService);
+    public FreightClient freightClient(FreightRemoteService freightRemoteService) {
+        return new FreightClient(freightRemoteService);
     }
 
     @Bean("onlineShopManagementClient")
     @ConditionalOnMissingBean
-    public OnlineShopClient onlineShopClient(OnlineShopRemoteService onlineShopRemoteService) { return new OnlineShopClient( onlineShopRemoteService);
+    public OnlineShopClient onlineShopClient(OnlineShopRemoteService onlineShopRemoteService) {
+        return new OnlineShopClient(onlineShopRemoteService);
     }
 
     @Bean("carrierManagementClient")
     @ConditionalOnMissingBean
-    public CarrierClient carrierClient(CarrierRemoteService carrierRemoteService) { return new CarrierClient( carrierRemoteService);
+    public CarrierClient carrierClient(CarrierRemoteService carrierRemoteService) {
+        return new CarrierClient(carrierRemoteService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public CatalogClient catalogClient(CatalogVersionRemoteService catalogVersionRemoteService) { return new CatalogClient( catalogVersionRemoteService);
+    public CatalogClient catalogClient(CatalogVersionRemoteService catalogVersionRemoteService) {
+        return new CatalogClient(catalogVersionRemoteService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public PosClient posClient(PosRemoteService posRemoteService) { return new PosClient( posRemoteService);
+    public PosClient posClient(PosRemoteService posRemoteService) {
+        return new PosClient(posRemoteService);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public PlatformClient platformClient(PlatformRemoteService platformRemoteService) { return new PlatformClient( platformRemoteService);
+    public PlatformClient platformClient(PlatformRemoteService platformRemoteService) {
+        return new PlatformClient(platformRemoteService);
     }
 
 }

@@ -5,11 +5,11 @@ import lombok.Data;
 
 /**
  * 业务节点查询参数
+ *
  * @author zhilin.ren@hand-china.com 2022/08/10 15:04
  */
 @Data
 public class BusinessNodeQueryDTO {
-
 
     @ApiModelProperty(value = "业务流程节点bean")
     private String beanId;

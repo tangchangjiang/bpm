@@ -67,7 +67,6 @@ public class CarrierServiceImpl implements CarrierService {
 
     private final CarrierCantDeliveryRepository carrierCantDeliveryRepository;
 
-
     public CarrierServiceImpl(final CarrierRepository carrierRepository,
                               final CarrierDeliveryRangeRepository carrierDeliveryRangeRepository,
                               final PosRelCarrierRepository posRelCarrierRepository,
@@ -114,7 +113,8 @@ public class CarrierServiceImpl implements CarrierService {
                         validCarrierNameUnique(carrier);
                     }
                     if (!original.getCarrierCode().equals(carrier.getCarrierCode())) {
-                        throw new O2CommonException(null, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE);
+                        throw new O2CommonException(null, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE,
+                                CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_NOT_UPDATE);
                     }
                     updateList.add(carrier);
                 }
@@ -130,30 +130,36 @@ public class CarrierServiceImpl implements CarrierService {
 
     /**
      * 验证承运商名称唯一性
+     *
      * @param carrier 承运商
      */
-    private void validCarrierNameUnique(Carrier carrier){
+    private void validCarrierNameUnique(Carrier carrier) {
         Carrier query = new Carrier();
         query.setCarrierName(carrier.getCarrierName());
         query.setTenantId(carrier.getTenantId());
         List<Carrier> list = carrierRepository.select(query);
         if (!list.isEmpty()) {
-            throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE);
+            throw new O2CommonException(null, CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE,
+                    CarrierConstants.ErrorCode.ERROR_CARRIER_NAME_DUPLICATE);
         }
     }
+
     /**
      * 验证承运商编码唯一性
+     *
      * @param carrier 承运商
      */
-    private void validCarrierCodeUnique(Carrier carrier){
+    private void validCarrierCodeUnique(Carrier carrier) {
         Carrier query = new Carrier();
         query.setCarrierCode(carrier.getCarrierCode());
         query.setTenantId(carrier.getTenantId());
         List<Carrier> list = carrierRepository.select(query);
         if (!list.isEmpty()) {
-            throw new O2CommonException(null,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE,CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE);
+            throw new O2CommonException(null, CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE,
+                    CarrierConstants.ErrorCode.ERROR_CARRIER_CODE_DUPLICATE);
         }
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void batchDelete(Long organizationId, List<Carrier> carrierList) {
@@ -169,20 +175,21 @@ public class CarrierServiceImpl implements CarrierService {
                                 .andEqualTo(CarrierDeliveryRange.FIELD_CARRIER_ID, carrierId)).build());
                 carrierDeliveryRangeRepository.batchDeleteByPrimaryKey(list);
                 //删除服务点关联承运商
-                final List<PosRelCarrier> posRelCarrierList = posRelCarrierRepository.selectByCondition(Condition.builder(PosRelCarrier.class).andWhere(Sqls.custom()
+                final List<PosRelCarrier> posRelCarrierList =
+                        posRelCarrierRepository.selectByCondition(Condition.builder(PosRelCarrier.class).andWhere(Sqls.custom()
                         .andEqualTo(PosRelCarrier.FIELD_TENANT_ID, organizationId).andEqualTo(PosRelCarrier.FIELD_CARRIER_ID, carrierId)).build());
                 posRelCarrierRepository.batchDeleteByPrimaryKey(posRelCarrierList);
             }
         }
         List<Carrier> carriers = carrierRepository.selectByIds(StringUtils.join(ids, ","));
         carrierRepository.batchDeleteByPrimaryKey(carrierList);
-        carrierRedis.deleteRedis(carriers,organizationId);
+        carrierRedis.deleteRedis(carriers, organizationId);
     }
 
     @Override
     public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
         Map<String, CarrierCO> map = new HashMap<>(16);
-        List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO,organizationId);
+        List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO, organizationId);
         if (carriers.isEmpty()) {
             return map;
         }
@@ -203,12 +210,12 @@ public class CarrierServiceImpl implements CarrierService {
         queryInnerDTO.setTenantId(organizationId);
         Map<String, CarrierMappingCO> map = new HashMap<>(16);
         List<CarrierMapping> list = carrierMappingRepository.listCarrierMappings(queryInnerDTO);
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             return map;
         }
         List<CarrierMappingCO> cos = CarrierConverter.poToCoListObjects(list);
         for (CarrierMappingCO carrier : cos) {
-            map.put(carrier.getCarrierCode(),  carrier);
+            map.put(carrier.getCarrierCode(), carrier);
         }
         return map;
     }
@@ -282,7 +289,6 @@ public class CarrierServiceImpl implements CarrierService {
         return carrierLogisticsCostList;
     }
 
-
     @Override
     public List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO) {
         List<CarrierDeliveryRangeCO> carrierDeliveryRangeList = new ArrayList<>();
@@ -333,7 +339,6 @@ public class CarrierServiceImpl implements CarrierService {
         return customCheckDeliveryFlag(tempAddress, carrier, --count);
     }
 
-
     protected int checkAddressRange(ReceiveAddressDTO tempAddress, Carrier carrier) {
 
         int result = carrierCantDeliveryRepository.selectCountByCondition(Condition.builder(CarrierCantDelivery.class)
@@ -353,7 +358,6 @@ public class CarrierServiceImpl implements CarrierService {
         // 可送
         return 1;
     }
-
 
     protected void preProcess(CarrierLogisticsCostBO carrierLogisticsCostBO, String regionCode) {
         Optional<CarrierLogisticsCostDetailBO> costDetailOptional = carrierLogisticsCostBO.getCarrierLogisticsCostDetailList()
@@ -380,7 +384,9 @@ public class CarrierServiceImpl implements CarrierService {
 
         if (weight.compareTo(carrierLogisticsCostDetailBO.getFirstPieceWeight()) > 0) {
             // 大于首重
-            BigDecimal nextCost = weight.subtract(carrierLogisticsCostDetailBO.getFirstPieceWeight()).divide(carrierLogisticsCostDetailBO.getNextPieceWeight(), 2, RoundingMode.UP)
+            BigDecimal nextCost =
+                    weight.subtract(carrierLogisticsCostDetailBO.getFirstPieceWeight()).divide(carrierLogisticsCostDetailBO.getNextPieceWeight(),
+                                    2, RoundingMode.UP)
                     .multiply(carrierLogisticsCostDetailBO.getNextPrice()).setScale(2, RoundingMode.UP);
             cost = carrierLogisticsCostDetailBO.getFirstPrice().add(nextCost);
         } else {
@@ -391,7 +397,8 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     protected BigDecimal volumeCostCalculate(CarrierLogisticsCostBO carrierLogisticsCostBO, CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
-        BigDecimal weight = carrierLogisticsCostDTO.getSkuTotalVolume().divide(BigDecimal.valueOf(carrierLogisticsCostBO.getVolumeConversion()), 2, RoundingMode.UP);
+        BigDecimal weight = carrierLogisticsCostDTO.getSkuTotalVolume().divide(BigDecimal.valueOf(carrierLogisticsCostBO.getVolumeConversion()), 2,
+                RoundingMode.UP);
         return weightCostCalculate(carrierLogisticsCostBO, weight);
 
     }

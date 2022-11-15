@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 服务点地址
  *
  * @author yipeng.zhu@hand-china.com 2021-08-02
@@ -19,9 +18,10 @@ public class PosAddressConverter {
 
     /**
      * po 转 vo
-     * @date 2021-08-05
+     *
      * @param posAddress 服务点地址
-     * @return  vo
+     * @return vo
+     * @date 2021-08-05
      */
     public static PosAddressVO poToVoObject(PosAddress posAddress) {
 
@@ -57,8 +57,9 @@ public class PosAddressConverter {
 
     /**
      * PO 转 VO
+     *
      * @param posAddressList 地址
-     * @return  list
+     * @return list
      */
     public static List<PosAddressVO> poToVoListObjects(List<PosAddress> posAddressList) {
         List<PosAddressVO> posAddressVOList = new ArrayList<>();
@@ -73,12 +74,12 @@ public class PosAddressConverter {
 
     /**
      * po 转 CO
-     * @date 2021-08-05
+     *
      * @param posAddress 服务点地址
-     * @return  vo
+     * @return vo
+     * @date 2021-08-05
      */
     private static PosAddressCO poToCoObject(PosAddress posAddress) {
-
 
         if (posAddress == null) {
             return null;
@@ -109,8 +110,9 @@ public class PosAddressConverter {
 
     /**
      * PO 转 CO
+     *
      * @param posAddressList 地址
-     * @return  list
+     * @return list
      */
     public static List<PosAddressCO> poToCoListObjects(List<PosAddress> posAddressList) {
         List<PosAddressCO> cos = new ArrayList<>();

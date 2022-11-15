@@ -18,7 +18,7 @@ public abstract class BaseFlow extends BaseElement {
     @Override
     protected void checkIncoming(Map<String, BaseElement> elementMap) {
         super.checkIncoming(elementMap);
-        if(getIncoming().size() > 1){
+        if (getIncoming().size() > 1) {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_TOO_MUCH_INCOMING);
         }
     }
@@ -30,7 +30,8 @@ public abstract class BaseFlow extends BaseElement {
         checkTerminal(elementMap);
     }
 
-    protected void checkTerminal(Map<String, BaseElement> elementMap){
-        checkElement(elementMap, getOutgoing(), ProcessEngineConstants.FlowElementType.NODE, ProcessEngineConstants.ErrorCode.FLOW_OUTGOING_MUST_BE_NODE_TYPE);
+    protected void checkTerminal(Map<String, BaseElement> elementMap) {
+        checkElement(elementMap, getOutgoing(), ProcessEngineConstants.FlowElementType.NODE,
+                ProcessEngineConstants.ErrorCode.FLOW_OUTGOING_MUST_BE_NODE_TYPE);
     }
 }

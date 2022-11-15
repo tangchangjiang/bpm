@@ -1,5 +1,8 @@
 package org.o2.rule.engine.management.domain.entity;
 
+import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,6 +11,7 @@ import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.helper.JsonHelper;
 import org.o2.rule.engine.management.domain.dto.RuleConditionDTO;
 import org.o2.rule.engine.management.infra.constants.RuleEngineConstants;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,10 +19,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
-import io.choerodon.mybatis.annotation.ModifyAudit;
-import io.choerodon.mybatis.annotation.VersionAudit;
-import io.choerodon.mybatis.domain.AuditDomain;
 
 /**
  * 规则
@@ -45,44 +45,6 @@ public class Rule extends AuditDomain {
     public static final String FIELD_END_TIME = "endTime";
     public static final String FIELD_TENANT_ID = "tenantId";
     public static final String O2RE_RULE_U1 = "o2re_rule_u1";
-
-    //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    /**
-     * 构建Rule Json
-     */
-    public void buildRule() {
-        if (null != this.getConditionDTO()) {
-            final String qlExpress = this.getConditionDTO().build(this, null);
-            final String rule = JsonHelper.objectToString(this.getConditionDTO());
-            this.setRuleJson(rule);
-            this.setConditionExpression(qlExpress);
-        }
-    }
-
-    /**
-     * 校验规则参数合法性
-     */
-    public void validRule() {
-        if (null != this.getConditionDTO()) {
-            this.getConditionDTO().valid();
-        }
-    }
-
-    /**
-     * 校验规则参数合法性
-     */
-    public void init() {
-        this.ruleId = null;
-        this.ruleCode = null;
-        this.setObjectVersionNumber(null);
-        this.setCreatedBy(null);
-        this.setLastUpdatedBy(null);
-        this.setCreationDate(null);
-        this.setLastUpdateDate(null);
-    }
 
     //
     // 数据库字段
@@ -151,5 +113,43 @@ public class Rule extends AuditDomain {
     @NotNull
     @ApiModelProperty(value = "规则条件")
     private RuleConditionDTO conditionDTO;
+
+    //
+    // 业务方法(按public protected private顺序排列)
+    // ------------------------------------------------------------------------------
+
+    /**
+     * 构建Rule Json
+     */
+    public void buildRule() {
+        if (null != this.getConditionDTO()) {
+            final String qlExpress = this.getConditionDTO().build(this, null);
+            final String rule = JsonHelper.objectToString(this.getConditionDTO());
+            this.setRuleJson(rule);
+            this.setConditionExpression(qlExpress);
+        }
+    }
+
+    /**
+     * 校验规则参数合法性
+     */
+    public void validRule() {
+        if (null != this.getConditionDTO()) {
+            this.getConditionDTO().valid();
+        }
+    }
+
+    /**
+     * 校验规则参数合法性
+     */
+    public void init() {
+        this.ruleId = null;
+        this.ruleCode = null;
+        this.setObjectVersionNumber(null);
+        this.setCreatedBy(null);
+        this.setLastUpdatedBy(null);
+        this.setCreationDate(null);
+        this.setLastUpdateDate(null);
+    }
 }
 

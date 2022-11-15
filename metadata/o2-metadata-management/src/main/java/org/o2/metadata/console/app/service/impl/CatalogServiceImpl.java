@@ -26,7 +26,6 @@ import java.util.Objects;
 @Service
 public class CatalogServiceImpl implements CatalogService {
 
-
     private CatalogRepository catalogRepository;
     private CatalogVersionRepository catalogVersionRepository;
 
@@ -37,14 +36,15 @@ public class CatalogServiceImpl implements CatalogService {
 
     /**
      * 版本Excel导出
+     *
      * @param exportParam 版本主键字符拼接
-     * @param tenantId 租户ID
+     * @param tenantId    租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogVO> export(final ExportParam exportParam,final Long tenantId) {
-        return catalogRepository.batchFindByIds(new HashSet<>(2),tenantId);
+    public List<CatalogVO> export(final ExportParam exportParam, final Long tenantId) {
+        return catalogRepository.batchFindByIds(new HashSet<>(2), tenantId);
     }
 
     @Override
@@ -55,7 +55,8 @@ public class CatalogServiceImpl implements CatalogService {
             validCatalogName(catalog);
         }
         if (!original.getCatalogCode().equals(catalog.getCatalogCode())) {
-            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE);
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE,
+                    CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_NOT_UPDATE);
         }
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             List<CatalogVersion> versions = catalogVersionRepository.select(CatalogVersion.builder()
@@ -77,26 +78,31 @@ public class CatalogServiceImpl implements CatalogService {
 
     /**
      * 校验目录名称唯一性
+     *
      * @param catalog 目录
      */
     private void validCatalogName(Catalog catalog) {
-        List<Catalog> catalogs =catalogRepository.select(Catalog.builder().
+        List<Catalog> catalogs = catalogRepository.select(Catalog.builder().
                 tenantId(catalog.getTenantId()).
                 catalogName(catalog.getCatalogName()).build());
         if (CollectionUtils.isNotEmpty(catalogs)) {
-            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE, CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE);
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE,
+                    CatalogConstants.ErrorCode.O2MD_CATALOG_NAME_UNIQUE);
         }
     }
+
     /**
      * 校验目录名称唯一性
+     *
      * @param catalog 目录
      */
     private void validCatalogCode(Catalog catalog) {
-        List<Catalog> catalogs =catalogRepository.select(Catalog.builder().
+        List<Catalog> catalogs = catalogRepository.select(Catalog.builder().
                 tenantId(catalog.getTenantId()).
                 catalogCode(catalog.getCatalogCode()).build());
         if (CollectionUtils.isNotEmpty(catalogs)) {
-            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE);
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE,
+                    CatalogConstants.ErrorCode.O2MD_CATALOG_CODE_UNIQUE);
         }
     }
 }

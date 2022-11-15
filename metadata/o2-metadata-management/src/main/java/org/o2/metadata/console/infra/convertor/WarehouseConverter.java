@@ -53,6 +53,7 @@ public class WarehouseConverter {
         warehouseDO.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         return warehouseDO;
     }
+
    /**
     * do 转 CO
     * @param warehouse 仓库
@@ -87,6 +88,7 @@ public class WarehouseConverter {
         co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         return co;
     }
+
     private static WarehouseVO poToVoObject(Warehouse warehouse) {
 
         if (warehouse == null) {
@@ -118,6 +120,7 @@ public class WarehouseConverter {
         warehouseVO.setWarehouseStatus(warehouse.getWarehouseStatus());
         return warehouseVO;
     }
+
     /**
      * PO 转 vO
      * @param warehouses 仓库
@@ -165,6 +168,7 @@ public class WarehouseConverter {
         }
         return warehouseVOList;
     }
+
     /**
      * PO 转 CO
      * @param warehouses 仓库

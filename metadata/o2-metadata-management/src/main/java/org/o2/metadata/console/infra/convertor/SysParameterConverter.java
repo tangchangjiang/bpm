@@ -28,7 +28,7 @@ public class SysParameterConverter {
      * @param systemParameterDO 系统参数
      * @return  bean
      */
-    public static SystemParameterCO doToCoObject(SystemParameterDO systemParameterDO){
+    public static SystemParameterCO doToCoObject(SystemParameterDO systemParameterDO) {
         if (systemParameterDO == null) {
             return null;
         }
@@ -52,12 +52,13 @@ public class SysParameterConverter {
         co.setSetSystemParamValue(valueCos);
         return co;
     }
+
     /**
      * PO 转 DO
      * @param systemParameter 系统参数
      * @return  bean
      */
-    public static SystemParameterDO  poToDoObject(SystemParameter systemParameter){
+    public static SystemParameterDO  poToDoObject(SystemParameter systemParameter) {
         if (systemParameter == null) {
             return null;
         }
@@ -81,6 +82,7 @@ public class SysParameterConverter {
         systemParameterDO.setSetSystemParamValue(systemParamValueDos);
         return systemParameterDO;
     }
+
     /**
      * DO 转 CO
      * @param systemParameterDOList 系统参数集合
@@ -96,6 +98,7 @@ public class SysParameterConverter {
         }
         return cos;
     }
+
     /**
      * PO 转 DO
      * @param systemParameterList 系统参数集合

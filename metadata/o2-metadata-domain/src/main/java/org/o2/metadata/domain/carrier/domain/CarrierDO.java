@@ -1,11 +1,8 @@
 package org.o2.metadata.domain.carrier.domain;
 
-
 import io.swagger.annotations.ApiModelProperty;
 
-
 /**
- *
  * 承运商
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -18,14 +15,13 @@ public class CarrierDO {
     private String carrierCode;
 
     @ApiModelProperty(value = "承运商名称")
-     private String carrierName;
+    private String carrierName;
 
     @ApiModelProperty(value = "承运商类型.值集:O2MD.CARRIER_TYPE")
-     private String carrierTypeCode;
+    private String carrierTypeCode;
 
     @ApiModelProperty(value = "是否有效")
-      private Integer activeFlag;
-
+    private Integer activeFlag;
 
     @ApiModelProperty(value = "组织ID")
     private Long tenantId;

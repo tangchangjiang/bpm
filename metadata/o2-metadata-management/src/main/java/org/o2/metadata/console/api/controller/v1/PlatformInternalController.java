@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author zhilin.ren@hand-china.com 2021/08/02 21:19
  */
-@Api(tags= MetadataManagementAutoConfiguration.PLATFORM)
+@Api(tags = MetadataManagementAutoConfiguration.PLATFORM)
 @RestController("platformInternalController.v1")
 @RequestMapping("/v1/{organizationId}/platform-internal")
 public class PlatformInternalController extends BaseController {
@@ -32,7 +32,7 @@ public class PlatformInternalController extends BaseController {
     }
 
     @ApiOperation(value = "查询平台信息匹配结果")
-    @Permission(level = ResourceLevel.ORGANIZATION,permissionPublic = true)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionPublic = true)
     @PostMapping("/list")
     public ResponseEntity<Map<String, PlatformCO>> getPlatformInfMappings(@PathVariable(value = "organizationId") Long organizationId,
                                                                           @RequestBody PlatformQueryInnerDTO queryInnerDTO) {

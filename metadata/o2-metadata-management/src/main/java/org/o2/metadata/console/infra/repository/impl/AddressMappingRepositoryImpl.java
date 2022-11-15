@@ -7,6 +7,7 @@ import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 /**
@@ -25,20 +26,21 @@ public class AddressMappingRepositoryImpl extends BaseRepositoryImpl<AddressMapp
 
     /**
      * 更据catalogCode和regionId查询地址匹配数量
+     *
      * @param platformCode 目录编码
-     * @param regionCode 地区编码
-     * @param tenantId 租户ID
+     * @param regionCode   地区编码
+     * @param tenantId     租户ID
      * @return the list
      * @throws RuntimeException exception description
      */
     @Override
-    public List<AddressMapping> queryAddressByCondition(String platformCode, String regionCode,Long tenantId) {
-        return addressMappingMapper.queryAddressByCondition(platformCode,regionCode,tenantId);
+    public List<AddressMapping> queryAddressByCondition(String platformCode, String regionCode, Long tenantId) {
+        return addressMappingMapper.queryAddressByCondition(platformCode, regionCode, tenantId);
     }
 
     @Override
     public List<AddressMapping> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
-        return addressMappingMapper.listAddressMappings(addressMappingQueryInts,tenantId);
+        return addressMappingMapper.listAddressMappings(addressMappingQueryInts, tenantId);
     }
 
     @Override

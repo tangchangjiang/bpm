@@ -25,6 +25,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 
 /**
@@ -32,12 +33,11 @@ import java.util.List;
  *
  * @author zhilin.ren@hand-china.com 2021-08-02 11:11:28
  */
-@Api(tags=MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING)
+@Api(tags = MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING)
 @RestController("platformInfMappingController.v1")
 @RequestMapping("/v1/{organizationId}/platform-inf-mappings")
 @RequiredArgsConstructor
 public class PlatformInfoMappingController extends BaseController {
-
 
     private final PlatformInfoMappingRepository platformInfoMappingRepository;
     private final PlatformInfoMappingService platformInfoMappingService;
@@ -49,7 +49,7 @@ public class PlatformInfoMappingController extends BaseController {
     public ResponseEntity<Page<PlatformInfoMapping>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                           InfMappingDTO platformInfMapping,
                                                           @ApiIgnore @SortDefault(value = PlatformInfoMapping.FIELD_PLATFORM_INF_MAPPING_ID,
-                                                                     direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                                  direction = Sort.Direction.DESC) PageRequest pageRequest) {
         platformInfMapping.setTenantId(organizationId);
         Page<PlatformInfoMapping> list = platformInfoMappingService.page(platformInfMapping, pageRequest);
         return Results.success(list);
@@ -104,7 +104,7 @@ public class PlatformInfoMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<OperateResponse> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody List<PlatformInfoMapping> platformInfoMapping) {
+                                                  @RequestBody List<PlatformInfoMapping> platformInfoMapping) {
         for (PlatformInfoMapping infMapping : platformInfoMapping) {
             infMapping.setTenantId(organizationId);
         }

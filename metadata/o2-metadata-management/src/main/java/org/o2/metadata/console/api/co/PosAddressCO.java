@@ -54,7 +54,6 @@ public class PosAddressCO {
     @ApiModelProperty("纬度")
     private BigDecimal latitude;
 
-
     @ApiModelProperty(value = "国家")
 
     private String country;

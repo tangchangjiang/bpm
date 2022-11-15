@@ -4,14 +4,12 @@ import org.o2.business.process.management.domain.entity.BizNodeParameter;
 
 import java.util.List;
 
-
 /**
  * 业务节点参数表应用服务
  *
  * @author zhilin.ren@hand-china.com 2022-08-10 14:31:01
  */
 public interface BizNodeParameterService {
-
 
     /**
      * 批量保存业务节点参数表
@@ -21,7 +19,6 @@ public interface BizNodeParameterService {
      */
     List<BizNodeParameter> batchSave(List<BizNodeParameter> bizNodeParameterList, boolean insertFlag);
 
-
     /**
      * 保存业务节点参数表
      *
@@ -29,7 +26,6 @@ public interface BizNodeParameterService {
      * @return 业务节点参数表对象
      */
     BizNodeParameter save(BizNodeParameter bizNodeParameter);
-
 
     /**
      * 根据beanIdList 查询参数信息
@@ -40,9 +36,9 @@ public interface BizNodeParameterService {
      */
     List<BizNodeParameter> getBizNodeParameterList(List<String> beanIdList, Long tenantId);
 
-
     /**
      * 根据beanId, paramCode 查询参数定义
+     *
      * @param beanId
      * @param paramCode
      * @param organizationId

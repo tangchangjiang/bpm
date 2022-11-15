@@ -49,19 +49,22 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @ApiOperation(value = "批量创建网店关联仓库关系")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-warehouse/batch-create")
-    public ResponseEntity<List<OnlineShopRelWarehouse>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
+    public ResponseEntity<List<OnlineShopRelWarehouse>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
         this.validList(onlineShopRelWarehouseList);
-        final List<OnlineShopRelWarehouse> relationShips = onlineShopRelWarehouseService.batchInsertSelective(organizationId,onlineShopRelWarehouseList);
+        final List<OnlineShopRelWarehouse> relationShips = onlineShopRelWarehouseService.batchInsertSelective(organizationId,
+                onlineShopRelWarehouseList);
         return Results.success(relationShips);
     }
 
     @ApiOperation("批量更新网点关联仓库状态")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop-rel-warehouse/batch-update")
-    public ResponseEntity<List<OnlineShopRelWarehouse>>  batchUpdateActived(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
+    public ResponseEntity<List<OnlineShopRelWarehouse>> batchUpdateActived(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
         this.validList(onlineShopRelWarehouseList);
         SecurityTokenHelper.validToken(onlineShopRelWarehouseList);
-        final List<OnlineShopRelWarehouse> relationships = onlineShopRelWarehouseService.batchUpdateByPrimaryKey(organizationId,onlineShopRelWarehouseList);
+        final List<OnlineShopRelWarehouse> relationships = onlineShopRelWarehouseService.batchUpdateByPrimaryKey(organizationId,
+                onlineShopRelWarehouseList);
         return Results.success(relationships);
     }
 
@@ -84,10 +87,10 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/{onlineShopId}/shop-warehouse-relationships")
-    public ResponseEntity<Page<OnlineShopRelWarehouseVO>>  list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                               @PathVariable("onlineShopId") final Long onlineShopId,
-                               final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO,
-                               @ApiIgnore final PageRequest pageRequest) {
+    public ResponseEntity<Page<OnlineShopRelWarehouseVO>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @PathVariable("onlineShopId") final Long onlineShopId,
+                                                               final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO,
+                                                               @ApiIgnore final PageRequest pageRequest) {
         onlineShopRelWarehouseDTO.setTenantId(organizationId);
         final Page<OnlineShopRelWarehouseVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> onlineShopRelWarehouseService.listShopPosRelsByOption(onlineShopId, onlineShopRelWarehouseDTO));
@@ -98,9 +101,9 @@ public class OnlineShopRelWarehouseController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/online-shops/shop-warehouse-relationships")
-    public ResponseEntity<Page<OnlineShopRelWarehouseVO>>  listWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO,
-                                                                @ApiIgnore final PageRequest pageRequest) {
+    public ResponseEntity<Page<OnlineShopRelWarehouseVO>> listWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                        final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO,
+                                                                        @ApiIgnore final PageRequest pageRequest) {
         onlineShopRelWarehouseDTO.setTenantId(organizationId);
         final Page<OnlineShopRelWarehouseVO> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> onlineShopRelWarehouseService.listShopRelWarehouse(onlineShopRelWarehouseDTO));

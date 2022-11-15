@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
  * 值集
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -47,6 +46,7 @@ public class LovAdapterClientConfiguration {
     public UomLovClient o2UomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new UomLovClient(lovAdapterRemoteService);
     }
+
     @Bean
     @ConditionalOnMissingBean
     public UomTypeLovClient o2UomTypeLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
@@ -58,6 +58,7 @@ public class LovAdapterClientConfiguration {
     public IDPLovClient o2DuLiLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new IDPLovClient(lovAdapterRemoteService);
     }
+
     @Bean
     @ConditionalOnMissingBean
     public SQLLovClient sqlLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
@@ -75,6 +76,5 @@ public class LovAdapterClientConfiguration {
     public IamUserClient iamUserClient(IamUserRemoteService iamUserRemoteService) {
         return new IamUserClient(iamUserRemoteService);
     }
-
 
 }

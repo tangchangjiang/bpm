@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicLovReleaseController extends BaseController {
 
     private final O2PublicLovService publicLovService;
-    public PublicLovReleaseController(O2PublicLovService publicLovService){
+
+    public PublicLovReleaseController(O2PublicLovService publicLovService) {
         this.publicLovService = publicLovService;
     }
 
@@ -32,10 +33,10 @@ public class PublicLovReleaseController extends BaseController {
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                    @RequestParam(required = false) String lovCode,
                                                    @RequestParam(required = false) String resourceOwner,
-                                                   @RequestParam(required = false) String businessTypeCode){
+                                                   @RequestParam(required = false) String businessTypeCode) {
         PublicLovVO publicLovVO = new PublicLovVO();
         publicLovVO.setTenantId(organizationId);
-        publicLovVO.setLovCode(lovCode!=null?lovCode:MetadataConstants.PublicLov.PUB_LOV_CODE);
+        publicLovVO.setLovCode(lovCode != null ? lovCode : MetadataConstants.PublicLov.PUB_LOV_CODE);
         publicLovService.createPublicLovFile(publicLovVO, resourceOwner, businessTypeCode);
         return Results.success(OperateResponse.success());
     }

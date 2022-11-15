@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- *
  * 独立值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-09-23
@@ -38,10 +37,10 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
 
     @Override
     public String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue) {
-        List<LovValueDTO> list = this.queryLovValue(tenantId,lovCode);
+        List<LovValueDTO> list = this.queryLovValue(tenantId, lovCode);
         if (!list.isEmpty()) {
             for (LovValueDTO dto : list) {
-                if (dto.getValue().equals(lovValue)){
+                if (dto.getValue().equals(lovValue)) {
                     return dto.getMeaning();
                 }
             }

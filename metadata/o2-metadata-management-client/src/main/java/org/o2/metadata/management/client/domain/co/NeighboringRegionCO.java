@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-
 /**
  * 临近省
  *
@@ -13,7 +12,6 @@ import lombok.Data;
 @Data
 @ApiModel("临近省")
 public class NeighboringRegionCO {
-
 
     @ApiModelProperty(value = "服务点类型,值集: O2MD.POS_TYPE")
 

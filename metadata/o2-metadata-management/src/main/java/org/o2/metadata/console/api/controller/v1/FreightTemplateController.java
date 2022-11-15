@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 /**
  * 运费模板管理API
  *
@@ -46,13 +45,14 @@ public class FreightTemplateController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
-    public ResponseEntity<Page<FreightTemplate>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final FreightTemplate freightTemplate, final PageRequest pageRequest) {
+    public ResponseEntity<Page<FreightTemplate>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      final FreightTemplate freightTemplate, final PageRequest pageRequest) {
         //默认查询生效的
         freightTemplate.setActiveFlag(1);
 
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
-        freightTemplateService.tranLov(list.getContent(),organizationId);
+        freightTemplateService.tranLov(list.getContent(), organizationId);
         return Results.success(list);
     }
 
@@ -63,15 +63,17 @@ public class FreightTemplateController extends BaseController {
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_DETAIL_DISPLAY_LIST,
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_TEMPLATE_DETAILS})
     @GetMapping("/{templateId}")
-    public ResponseEntity<FreightTemplateManagementVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final Long templateId) {
-        final FreightTemplateManagementVO freightTemplate = freightTemplateService.queryTemplateAndDetails(templateId,organizationId);
+    public ResponseEntity<FreightTemplateManagementVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                              @PathVariable final Long templateId) {
+        final FreightTemplateManagementVO freightTemplate = freightTemplateService.queryTemplateAndDetails(templateId, organizationId);
         return Results.success(freightTemplate);
     }
 
     @ApiOperation(value = "新增运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<FreightTemplate> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
+    public ResponseEntity<FreightTemplate> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
         final FreightTemplate insert = freightTemplateService.createTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(insert);
     }
@@ -79,7 +81,8 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "修改运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<FreightTemplate> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
+    public ResponseEntity<FreightTemplate> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
         SecurityTokenHelper.validToken(freightTemplateManagementVO);
         final FreightTemplate update = freightTemplateService.updateTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(update);
@@ -88,16 +91,18 @@ public class FreightTemplateController extends BaseController {
     @ApiOperation(value = "删除运费模板和运费模板明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<FreightTemplate> freightTemplateList) {
-        freightTemplateService.removeTemplateAndDetails(freightTemplateList,organizationId);
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final List<FreightTemplate> freightTemplateList) {
+        freightTemplateService.removeTemplateAndDetails(freightTemplateList, organizationId);
         return Results.success(OperateResponse.success());
     }
 
     @ApiOperation(value = "设置默认模板")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping("/setDefaultTemp")
-    public ResponseEntity<OperateResponse> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final FreightTemplate freightTemplate) {
-        freightTemplateService.setDefaultTemp(organizationId,freightTemplate.getTemplateId());
+    public ResponseEntity<OperateResponse> setDefaultTemp(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                          @RequestBody final FreightTemplate freightTemplate) {
+        freightTemplateService.setDefaultTemp(organizationId, freightTemplate.getTemplateId());
         return Results.success(OperateResponse.success());
     }
 

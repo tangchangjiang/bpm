@@ -1,7 +1,5 @@
 package org.o2.metadata.console.infra.mapper;
 
-
-
 /**
  * 平台值集Mapper
  *

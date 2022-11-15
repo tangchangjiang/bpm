@@ -6,7 +6,11 @@ import org.o2.metadata.management.client.domain.dto.SystemParameterQueryInnerDTO
 import org.o2.metadata.management.client.infra.feign.fallback.SysParameterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -49,5 +53,5 @@ public interface SysParameterRemoteService {
      */
     @PostMapping({"/{organizationId}/sysParameter-internal/update"})
     ResponseEntity<String> updateSysParameter(@RequestBody SystemParameterQueryInnerDTO systemParameterQueryInnerDTO,
-                                              @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+                                              @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

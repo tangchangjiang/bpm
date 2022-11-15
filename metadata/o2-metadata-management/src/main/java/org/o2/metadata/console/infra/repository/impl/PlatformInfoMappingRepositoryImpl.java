@@ -24,6 +24,7 @@ import java.util.List;
 public class PlatformInfoMappingRepositoryImpl extends BaseRepositoryImpl<PlatformInfoMapping> implements PlatformInfoMappingRepository {
 
     private final PlatformInfoMappingMapper platformInfoMappingMapper;
+
     @Override
     public List<PlatformInfoMapping> listInfMapping(InfMappingDTO platformInfMapping) {
         return platformInfoMappingMapper.listInfMapping(platformInfMapping);
@@ -42,7 +43,7 @@ public class PlatformInfoMappingRepositoryImpl extends BaseRepositoryImpl<Platfo
     @Override
     public List<PlatformInfoMapping> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
         List<PlatformInfoMapping> list = platformInfoMappingMapper.selectCondition(queryInnerDTO);
-        if (CollectionUtils.isEmpty(list)){
+        if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>(4);
         }
         return list;

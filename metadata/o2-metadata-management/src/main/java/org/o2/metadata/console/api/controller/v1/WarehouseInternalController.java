@@ -19,9 +19,19 @@ import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -71,18 +81,17 @@ public class WarehouseInternalController extends BaseController {
             return Results.success(map);
         }
         //寻源查询出多个网店关联仓库，需要特殊处理
-        if(Boolean.TRUE.equals(queryInnerDTO.getSourcingFlag())){
+        if (Boolean.TRUE.equals(queryInnerDTO.getSourcingFlag())) {
             for (WarehouseCO co : cos) {
                 map.put(co.getWarehouseCode() + BaseConstants.Symbol.COLON + co.getOnlineShopCode(), co);
             }
-        }else{
+        } else {
             for (WarehouseCO co : cos) {
                 map.put(co.getWarehouseCode(), co);
             }
         }
         return Results.success(map);
     }
-
 
     @ApiOperation("仓库快递配送接单量增量更新(内部调用)")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
@@ -168,7 +177,7 @@ public class WarehouseInternalController extends BaseController {
             return Results.success(map);
         }
         for (WarehouseCO co : cos) {
-            map.computeIfAbsent(co.getPosCode(),key -> new ArrayList<>()).add(co);
+            map.computeIfAbsent(co.getPosCode(), key -> new ArrayList<>()).add(co);
         }
         return Results.success(map);
     }

@@ -26,22 +26,22 @@ public interface PosRemoteService {
     /**
      * 获取自提点信息
      *
-     * @param posCode 服务点编码
+     * @param posCode        服务点编码
      * @param organizationId 租户Id
      * @return 自提点信息
      */
     @GetMapping("/{organizationId}/pos-internal/pickup-info")
-    ResponseEntity<String> getPosPickUpInfo(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> getPosPickUpInfo(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                             @RequestParam(value = "posCode") String posCode);
 
     /**
      * 条件批量查询门店信息
      *
-     * @param storeQueryDTO 查询条件
+     * @param storeQueryDTO  查询条件
      * @param organizationId 租户Id
      * @return 门店信息
      */
     @GetMapping("/{organizationId}/pos-internal/store-list")
     ResponseEntity<String> getStoreInfoList(@RequestBody StoreQueryDTO storeQueryDTO,
-                                            @PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId);
+                                            @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
 }

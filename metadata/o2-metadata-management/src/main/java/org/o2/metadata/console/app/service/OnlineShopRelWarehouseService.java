@@ -23,12 +23,11 @@ public interface OnlineShopRelWarehouseService {
      * 数据库必须存在对应的网店和仓库
      * </p>
      *
-     * @param relationships 待创建关联关系
+     * @param relationships  待创建关联关系
      * @param organizationId 租户ID
      * @return 成功后返回新列表
      */
     List<OnlineShopRelWarehouse> batchInsertSelective(Long organizationId, List<OnlineShopRelWarehouse> relationships);
-
 
     /**
      * 校验后批量更新
@@ -37,7 +36,7 @@ public interface OnlineShopRelWarehouseService {
      * 数据库必须存在对应的网店和仓库
      * </p>
      *
-     * @param relationships 待更新关联关系
+     * @param relationships  待更新关联关系
      * @param organizationId 租户ID
      * @return 更新后的列表
      */
@@ -45,13 +44,16 @@ public interface OnlineShopRelWarehouseService {
 
     /**
      * 查询网店关联有效仓库
+     *
      * @param onlineShopCode 网店编码
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      * @return list
      */
     List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId);
+
     /**
      * 查询网店关联有效仓库
+     *
      * @param innerDTO 查询参数
      * @param tenantId 租户ID
      * @return list
@@ -61,14 +63,15 @@ public interface OnlineShopRelWarehouseService {
     /**
      * 条件查询
      *
-     * @param onlineShopId 网店 id
-     * @param onlineShopRelWarehouseDTO          服务点查询条件，可为空
+     * @param onlineShopId              网店 id
+     * @param onlineShopRelWarehouseDTO 服务点查询条件，可为空
      * @return 查询列表
      */
     List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(Long onlineShopId, OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO);
 
     /**
      * 条件查询
+     *
      * @param query 服务点查询条件，可为空
      * @return 查询列表
      */

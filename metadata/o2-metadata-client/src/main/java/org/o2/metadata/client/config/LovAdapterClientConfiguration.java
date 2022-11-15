@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
  * 值集
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableFeignClients(
         basePackageClasses = {
-               LovAdapterRemoteService.class
+                LovAdapterRemoteService.class
         }
 )
 public class LovAdapterClientConfiguration {
@@ -45,11 +44,13 @@ public class LovAdapterClientConfiguration {
     public UomLovClient uomLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new UomLovClient(lovAdapterRemoteService);
     }
+
     @Bean
     @ConditionalOnMissingBean
     public IDPLovClient idpLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         return new IDPLovClient(lovAdapterRemoteService);
     }
+
     @Bean
     @ConditionalOnMissingBean
     public RoleClient RoleClient(LovAdapterRemoteService lovAdapterRemoteService) {

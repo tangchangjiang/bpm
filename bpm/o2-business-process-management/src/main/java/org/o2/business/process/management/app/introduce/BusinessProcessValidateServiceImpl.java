@@ -24,7 +24,7 @@ public class BusinessProcessValidateServiceImpl extends ValidatorHandler {
     public boolean validate(String data) {
         BusinessProcess bp = JsonHelper.stringToObject(data, BusinessProcess.class);
 
-        if(StringUtils.isNotBlank(bp.getProcessJson())){
+        if (StringUtils.isNotBlank(bp.getProcessJson())) {
             BpmnModel bpmnModel = ViewJsonConvert.processJsonConvert(bp.getProcessJson());
             BpmnModelValidator.validate(bpmnModel);
         }

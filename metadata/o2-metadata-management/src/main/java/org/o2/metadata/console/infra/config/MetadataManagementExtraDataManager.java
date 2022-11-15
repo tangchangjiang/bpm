@@ -12,8 +12,8 @@ public class MetadataManagementExtraDataManager implements ExtraDataManager {
 
     private final Environment environment;
 
-    public MetadataManagementExtraDataManager(final Environment environment){
-        this.environment=environment;
+    public MetadataManagementExtraDataManager(final Environment environment) {
+        this.environment = environment;
     }
 
     @Override

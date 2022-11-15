@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-
 /**
  * 服务点信息 管理 API
  *
@@ -50,8 +49,8 @@ public class PosController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<Page<Pos>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                            final PosDTO pos,
-                                            @ApiIgnore final PageRequest pageRequest) {
+                                          final PosDTO pos,
+                                          @ApiIgnore final PageRequest pageRequest) {
         pos.setTenantId(organizationId);
         final Page<Pos> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> posRepository.listPosWithAddressByCondition(pos));
@@ -64,7 +63,7 @@ public class PosController extends BaseController {
     @GetMapping("/{posId}")
     public ResponseEntity<PosVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                         @PathVariable final Long posId) {
-        return Results.success(posService.getPosWithPropertiesInRedisByPosId(organizationId,posId));
+        return Results.success(posService.getPosWithPropertiesInRedisByPosId(organizationId, posId));
     }
 
     @ApiOperation(value = "创建服务点信息")
@@ -74,7 +73,7 @@ public class PosController extends BaseController {
         pos.setTenantId(organizationId);
         validObject(pos);
         if (!UniqueHelper.valid(pos)) {
-            throw  new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
+            throw new CommonException(BaseConstants.ErrorCode.DATA_EXISTS);
         }
         posService.create(pos);
         return Results.success();
@@ -96,7 +95,8 @@ public class PosController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/by/{posCode}")
-    public ResponseEntity<Pos> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @PathVariable final String posCode) {
+    public ResponseEntity<Pos> detailByPosCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                               @PathVariable final String posCode) {
         final Pos pos = posRepository.getPosByCode(organizationId, posCode);
         return Results.success(pos);
     }

@@ -39,8 +39,8 @@ public interface HzeroLovQueryRepository {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId 租户ID
-     * @param lovCode 值编码
+     * @param tenantId         租户ID
+     * @param lovCode          值编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -52,10 +52,10 @@ public interface HzeroLovQueryRepository {
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId 租户ID
-     * @param lovCode 值集编码
-     * @param page 页码
-     * @param size 大小
+     * @param tenantId         租户ID
+     * @param lovCode          值集编码
+     * @param page             页码
+     * @param size             大小
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -66,22 +66,23 @@ public interface HzeroLovQueryRepository {
                                                    Integer size,
                                                    Map<String, String> queryLovValueMap);
 
-
     /**
      * 分页查询url值集
-     * @param queryParam 查询参数
+     *
+     * @param queryParam  查询参数
      * @param pageRequest 分页
-     * @param lovCode 值集编码
-     * @param tenantId 租户ID
-     * @return  page
+     * @param lovCode     值集编码
+     * @param tenantId    租户ID
+     * @return page
      */
-    String queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    String queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 
     /**
      * 获取缓存key
-     * @param tenantId 租户ID
+     *
+     * @param tenantId   租户ID
      * @param queryParam 查询参数
-     * @return  str
+     * @return str
      */
-    String getQueryParamStr(Long tenantId,Map<String, String> queryParam);
+    String getQueryParamStr(Long tenantId, Map<String, String> queryParam);
 }
