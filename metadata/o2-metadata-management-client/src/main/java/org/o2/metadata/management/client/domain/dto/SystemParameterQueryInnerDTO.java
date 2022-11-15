@@ -19,5 +19,5 @@ public class SystemParameterQueryInnerDTO {
     /**
      * hashMap
      */
-    private Map<String,String> hashMap;
+    private Map<String, String> hashMap;
 }

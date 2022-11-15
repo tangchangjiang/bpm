@@ -23,6 +23,6 @@ public class RegionAreaRepositoryImpl extends BaseRepositoryImpl<RegionArea> imp
 
     @Override
     public List<RegionArea> batchSelectByCode(List<String> regionCodes, Long tenantId) {
-        return regionAreaMapper.batchSelectByCode(regionCodes,tenantId);
+        return regionAreaMapper.batchSelectByCode(regionCodes, tenantId);
     }
 }

@@ -52,7 +52,6 @@ public class BusinessNode extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("表ID,主键")
     @Id
     @GeneratedValue
@@ -85,7 +84,7 @@ public class BusinessNode extends AuditDomain {
     @Unique(O2BPM_BUSINESS_NODE_U1)
     private Long tenantId;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 

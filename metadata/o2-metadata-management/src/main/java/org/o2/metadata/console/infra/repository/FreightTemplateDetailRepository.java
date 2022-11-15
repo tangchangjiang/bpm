@@ -19,7 +19,7 @@ public interface FreightTemplateDetailRepository extends BaseRepository<FreightT
      * @param templateId 运费模板ID
      * @return 运费模板明细列表
      */
-    List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(final Long templateId);
+    List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId);
 
     /**
      * 根据运费模板ID，查询指定地区运费模板明细
@@ -27,20 +27,19 @@ public interface FreightTemplateDetailRepository extends BaseRepository<FreightT
      * @param templateId 运费模板ID
      * @return 地区运费模板明细列表
      */
-    List<FreightTemplateDetail> queryRegionFreightTemplateDetail(final Long templateId);
-
-
+    List<FreightTemplateDetail> queryRegionFreightTemplateDetail(Long templateId);
 
     /**
-     *  通过租户ID查询所有
+     * 通过租户ID查询所有
+     *
      * @param tenantId 租户ID
      * @return list
      */
     List<FreightTemplateDetail> selectAllByTenantId(@Param("tenantId") Long tenantId);
 
-
     /**
-     *  条件查询
+     * 条件查询
+     *
      * @param freightTemplateDetail 查询
      * @return 运费模版详情
      */

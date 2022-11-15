@@ -15,7 +15,6 @@ import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +64,10 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
                         .andEqualTo(Warehouse.FIELD_TENANT_ID, targetTenantId)
                         .andEqualTo(Warehouse.FIELD_WAREHOUSE_CODE, O2CoreConstants.VirtualWarehouse.VIRTUAL_CODE)
                 ).build());
-        handleData(targetWarehouses,sourceWarehouses,targetTenantId);
+        handleData(targetWarehouses, sourceWarehouses, targetTenantId);
         log.info("initializeWarehouse finish");
     }
+
     /**
      *  更新目标库已存在的数据 插入需要初始化的数据
      * @param oldWarehouses  目标库已存在的数据
@@ -81,7 +81,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         List<Warehouse> updateList = new ArrayList<>(4);
         // 获取源服务点编码
         List<String> posCodes = new ArrayList<>(initializeWarehouses.size());
-        for (Warehouse warehouse : initializeWarehouses){
+        for (Warehouse warehouse : initializeWarehouses) {
             posCodes.add(warehouse.getPosCode());
         }
         // 获目标租户服务点
@@ -90,7 +90,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         query.setPosCodes(posCodes);
         List<Pos> targetPosList = posService.selectByCondition(query);
         // 目标租户服务点 编码和id 对应关系
-        Map<String,Long> targetPosMap = new HashMap<>(targetPosList.size());
+        Map<String, Long> targetPosMap = new HashMap<>(targetPosList.size());
         for (Pos pos : targetPosList) {
             targetPosMap.put(pos.getPosCode(), pos.getPosId());
         }
@@ -136,7 +136,7 @@ public class WarehouseTenantInitServiceImpl implements WarehouseTenantInitServic
         warehouseRepository.batchInsert(addList);
 
         // 4. 更新目标数据缓存
-        warehouseRedis.batchUpdateWarehouse(warehouseCodeList,targetTenantId);
+        warehouseRedis.batchUpdateWarehouse(warehouseCodeList, targetTenantId);
     }
 
 }

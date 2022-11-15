@@ -35,7 +35,7 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
     }
 
     @Override
-    public List<NeighboringRegion> batchInsert(Long organizationId,final List<NeighboringRegion> neighboringRegions) {
+    public List<NeighboringRegion> batchInsert(Long organizationId, final List<NeighboringRegion> neighboringRegions) {
 
         final boolean isRepeat = neighboringRegions.size() == new HashSet<>(neighboringRegions).size();
         Assert.isTrue(isRepeat, "多条数据【服务点类型、发货省、收货省】不能重复");
@@ -46,7 +46,6 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
         }
         return neighboringRegionRepository.batchInsertSelective(neighboringRegions);
     }
-
 
     @Override
     public List<NeighboringRegion> findNeighboringRegions(final NeighboringRegionQueryDTO neighboringRegion) {
@@ -60,14 +59,14 @@ public class NeighboringRegionServiceImpl implements NeighboringRegionService {
         dto.setTenantId(neighboringRegion.getTenantId());
         dto.setRegionCodes(regionCodes);
         List<Region> regionList = regionRepository.listRegionLov(dto, neighboringRegion.getTenantId());
-        Map<String,Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
         for (Region region : regionList) {
             regionMap.put(region.getRegionCode(), region);
         }
         for (NeighboringRegion bean : list) {
             String sourceCode = bean.getSourceRegionCode();
             Region sourceRegion = regionMap.get(sourceCode);
-            String targetCode  = bean.getTargetRegionCode();
+            String targetCode = bean.getTargetRegionCode();
             Region targetRegion = regionMap.get(targetCode);
             if (null != targetRegion) {
                 bean.setTargetCountryCode(targetRegion.getCountryCode());

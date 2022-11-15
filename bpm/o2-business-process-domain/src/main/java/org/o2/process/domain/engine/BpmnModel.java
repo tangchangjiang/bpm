@@ -3,7 +3,7 @@ package org.o2.process.domain.engine;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
-import org.o2.process.domain.engine.definition.Activity.ServiceTask;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
 import org.o2.process.domain.infra.ProcessEngineConstants;
 
@@ -31,15 +31,15 @@ public class BpmnModel {
 
     @JsonIgnore
     public List<BaseElement> getAllNodes() {
-        if(CollectionUtils.isEmpty(flowElements)){
+        if (CollectionUtils.isEmpty(flowElements)) {
             return Collections.emptyList();
         }
         return flowElements.stream().filter(e -> ProcessEngineConstants.FlowElementType.NODE.contains(e.getType())).collect(Collectors.toList());
     }
 
     @JsonIgnore
-    public List<ServiceTask> getServiceTask(){
-        if(CollectionUtils.isEmpty(flowElements)){
+    public List<ServiceTask> getServiceTask() {
+        if (CollectionUtils.isEmpty(flowElements)) {
             return Collections.emptyList();
         }
         return flowElements.stream().filter(e -> ProcessEngineConstants.FlowElementType.SERVICE_TASK.equals(e.getType())).map(ServiceTask.class::cast).collect(Collectors.toList());

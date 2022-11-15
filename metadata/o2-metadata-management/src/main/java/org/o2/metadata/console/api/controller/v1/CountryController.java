@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 /**
  * 国家API
  *
@@ -35,26 +34,27 @@ public class CountryController extends BaseController {
         this.countryRepository = countryRepository;
     }
 
-
     @ApiOperation("获取所有有效国家")
     @GetMapping("/valid")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    public ResponseEntity<List<CountryVO>> listValidCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CountryDTO country) {
+    public ResponseEntity<List<CountryVO>> listValidCountries(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                              final CountryDTO country) {
         country.setTenantId(organizationId);
         country.setEnabledFlag(1);
         CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
         queryLovDTO.setTenantId(organizationId);
-        return ResponseEntity.ok(CountryConverter.poToVoListObjects(countryRepository.listCountryLov(queryLovDTO,organizationId)));
+        return ResponseEntity.ok(CountryConverter.poToVoListObjects(countryRepository.listCountryLov(queryLovDTO, organizationId)));
     }
 
     @ApiOperation("根据CODE查询指定国家")
     @GetMapping("/query-by-code")
     @Permission(level = ResourceLevel.ORGANIZATION, permissionLogin = true)
-    public ResponseEntity<CountryVO> getCountryByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestParam final String countryCode) {
+    public ResponseEntity<CountryVO> getCountryByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      @RequestParam final String countryCode) {
         CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
         queryLovDTO.setTenantId(organizationId);
         queryLovDTO.setCountryCode(countryCode);
-        return Results.success(CountryConverter.poToVoObject(countryRepository.listCountryLov(queryLovDTO,organizationId).get(0)));
+        return Results.success(CountryConverter.poToVoObject(countryRepository.listCountryLov(queryLovDTO, organizationId).get(0)));
     }
 
 }

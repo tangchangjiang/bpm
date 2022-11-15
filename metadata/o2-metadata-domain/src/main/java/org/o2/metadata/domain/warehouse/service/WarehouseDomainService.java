@@ -17,5 +17,5 @@ public interface WarehouseDomainService {
      * @param tenantId 租户ID
      * @return 仓库
      */
-    List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId );
+    List<WarehouseDO> listWarehouses(List<String> warehouseCodes, Long tenantId);
 }

@@ -26,6 +26,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 
 /**
@@ -47,23 +48,21 @@ public class PlatformController extends BaseController {
     @GetMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Page<Platform>> page(@PathVariable(value = "organizationId") Long organizationId,
-                                                            PlatformDTO platform,
-                                                            @ApiIgnore @SortDefault(value = Platform.FIELD_CREATION_DATE,
-                                                                     direction = Sort.Direction.ASC) PageRequest pageRequest) {
+                                               PlatformDTO platform,
+                                               @ApiIgnore @SortDefault(value = Platform.FIELD_CREATION_DATE,
+                                                       direction = Sort.Direction.ASC) PageRequest pageRequest) {
         platform.setTenantId(organizationId);
         Page<Platform> list = PageHelper.doPageAndSort(pageRequest,
-                ()-> platformRepository.listPlatform(platform));
+                () -> platformRepository.listPlatform(platform));
         return Results.success(list);
     }
-
-
 
     @ApiOperation(value = "平台定义表维护-查询平台定义表明细")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{platformId}")
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Platform> detail(@PathVariable(value = "organizationId") Long organizationId,
-                                                        @ApiParam(value = "平台定义表ID", required = true) @PathVariable Long platformId) {
+                                           @ApiParam(value = "平台定义表ID", required = true) @PathVariable Long platformId) {
         Platform platform = platformRepository.selectByPrimaryKey(platformId);
         return Results.success(platform);
     }
@@ -73,7 +72,7 @@ public class PlatformController extends BaseController {
     @PostMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Platform> create(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody Platform platform) {
+                                           @RequestBody Platform platform) {
         platform.setTenantId(organizationId);
         validObject(platform);
         platformService.save(platform);
@@ -85,7 +84,7 @@ public class PlatformController extends BaseController {
     @PutMapping
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     public ResponseEntity<Platform> update(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody Platform platform) {
+                                           @RequestBody Platform platform) {
         platform.setTenantId(organizationId);
         SecurityTokenHelper.validToken(platform);
         platformService.save(platform);
@@ -96,7 +95,7 @@ public class PlatformController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<OperateResponse> remove(@PathVariable(value = "organizationId") Long organizationId,
-                                       @RequestBody List<Platform> platforms) {
+                                                  @RequestBody List<Platform> platforms) {
 
         SecurityTokenHelper.validToken(platforms);
         for (Platform platform : platforms) {

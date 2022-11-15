@@ -49,7 +49,7 @@ public class PosRedisImpl implements PosRedis {
         List<PosInfo> pickUpInfoList = posInfos.stream()
                 .filter(pos -> pos.getLongitude() != null && pos.getLatitude() != null)
                 .collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(pickUpInfoList)) {
+        if (CollectionUtils.isEmpty(pickUpInfoList)) {
             return;
         }
         // 设置服务点省市区名称
@@ -71,7 +71,8 @@ public class PosRedisImpl implements PosRedis {
                         operations.opsForSet().add(cityStoreKey, pos.getPosCode());
                     }
                     if (StringUtils.isNotBlank(pos.getDistrictCode())) {
-                        String districtStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, pos.getRegionCode(), pos.getCityCode(), pos.getDistrictCode());
+                        String districtStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, pos.getRegionCode(), pos.getCityCode(),
+                                pos.getDistrictCode());
                         operations.opsForSet().add(districtStoreKey, pos.getPosCode());
                     }
                 }
@@ -88,7 +89,7 @@ public class PosRedisImpl implements PosRedis {
         List<PosInfo> pickUpInfoList = posInfos.stream()
                 .filter(pos -> pos.getLongitude() != null && pos.getLatitude() != null)
                 .collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(pickUpInfoList)) {
+        if (CollectionUtils.isEmpty(pickUpInfoList)) {
             return;
         }
         // 设置门店地址名称
@@ -105,7 +106,7 @@ public class PosRedisImpl implements PosRedis {
      * 设置服务点地址名称
      *
      * @param pickUpInfoList 服务点
-     * @param tenantId 租户Id
+     * @param tenantId       租户Id
      */
     private void setPosAddress(List<PosInfo> pickUpInfoList, Long tenantId) {
         List<String> regionCodes = new ArrayList<>();
@@ -116,10 +117,10 @@ public class PosRedisImpl implements PosRedis {
         }
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
-        Map<String,Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
+        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
         for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(),region);
+            regionMap.put(region.getRegionCode(), region);
         }
         for (PosInfo posInfo : pickUpInfoList) {
             //市

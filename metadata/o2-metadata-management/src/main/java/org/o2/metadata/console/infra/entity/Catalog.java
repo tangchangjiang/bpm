@@ -47,7 +47,6 @@ public class Catalog extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("主键")
     @Id
     @GeneratedValue

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 国家
  *
  * @author yipeng.zhu@hand-china.com 2021-08-04
@@ -19,10 +18,11 @@ public class CountryConverter {
 
     /**
      * po -> vo
+     *
      * @param country 国家
      * @return vo
      */
-    public static CountryVO poToVoObject(Country country){
+    public static CountryVO poToVoObject(Country country) {
 
         if (country == null) {
             return null;
@@ -35,8 +35,9 @@ public class CountryConverter {
 
     /**
      * PO 转 VO
+     *
      * @param countryList 国家
-     * @return  list
+     * @return list
      */
     public static List<CountryVO> poToVoListObjects(List<Country> countryList) {
         List<CountryVO> countryVOList = new ArrayList<>();

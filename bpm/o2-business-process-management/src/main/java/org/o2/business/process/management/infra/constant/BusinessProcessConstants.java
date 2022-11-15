@@ -5,7 +5,7 @@ package org.o2.business.process.management.infra.constant;
  */
 public interface BusinessProcessConstants {
 
-    interface ErrorCode{
+    interface ErrorCode {
         /**
          * 业务流程节点不能为空
          */
@@ -17,14 +17,13 @@ public interface BusinessProcessConstants {
 
     }
 
-    interface ErrorMessage{
+    interface ErrorMessage {
         String PARAM_CODE_NOT_EXISTS = "current beanId:%s, paramCode:%s not exists paramCodes:%s";
 
         String BEAN_NETWORK_REQUEST_ERROR = "current beanId[%s] request metadata error";
 
         String PARAM_PARSING_ERROR = "current beanId:%s, paramCode:%s, paramValue:%s";
     }
-
 
     interface LovCode {
 
@@ -49,7 +48,7 @@ public interface BusinessProcessConstants {
         String PARAM_EDIT_TYPE = "O2BPM.PARAM_EDIT_TYPE";
     }
 
-    interface CellType{
+    interface CellType {
         String FLOW_EDGE = "flow-edge";
         String BRANCH_NODE = "branch-node";
         String END_NODE = "end-node";
@@ -57,13 +56,13 @@ public interface BusinessProcessConstants {
         String START_NODE = "start-node";
     }
 
-    interface CacheParam{
+    interface CacheParam {
         String CACHE_NAME = "O2MD_USER";
         String PROCESS_CACHE_KEY = "%d_%s";
         String NODE_PARAM_DEFINITION_CACHE = "biz_param_definition_%d_%s";
     }
 
-    interface BizParam{
+    interface BizParam {
         /**
          * 日期选择框
          */

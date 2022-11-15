@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 网店
  *
  * @author yipeng.zhu@hand-china.com 2021-09-23
@@ -32,11 +31,12 @@ public class OnlineShopClient {
      * 查询单个网店关联有效的仓库
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId        租户ID
+     * @param tenantId       租户ID
      * @return map<warehouseCode, OnlineShopRelWarehouseCO>
      */
     public Map<String, OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId), new TypeReference<Map<String, OnlineShopRelWarehouseCO>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId),
+                new TypeReference<Map<String, OnlineShopRelWarehouseCO>>() {
         });
     }
 
@@ -44,14 +44,14 @@ public class OnlineShopClient {
      * 查询多个网店关联有效的仓库
      *
      * @param innerDTO 网店编码
-     * @param tenantId        租户ID
+     * @param tenantId 租户ID
      * @return map<warehouseCode, OnlineShopRelWarehouseCO>
      */
     public Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(innerDTO, tenantId), new TypeReference<Map<String, List<OnlineShopRelWarehouseCO>>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(innerDTO, tenantId), new TypeReference<Map<String,
+                List<OnlineShopRelWarehouseCO>>>() {
         });
     }
-
 
     /**
      * 批量查询网店
@@ -60,7 +60,8 @@ public class OnlineShopClient {
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String, OnlineShopCO>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String,
+                OnlineShopCO>>() {
         });
     }
 
@@ -71,14 +72,16 @@ public class OnlineShopClient {
      * @return map key:catalogCode-catalogVersionCode
      */
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId), new TypeReference<Map<String,  List<OnlineShopCO>>>() {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId),
+                new TypeReference<Map<String, List<OnlineShopCO>>>() {
         });
     }
 
     /**
      * 保存网店
+     *
      * @param onlineShopDTO 网店
-     * @param tenantId 租户id
+     * @param tenantId      租户id
      * @return 网店
      */
     public OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO, Long tenantId) {

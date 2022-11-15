@@ -9,6 +9,9 @@ import java.util.Map;
  */
 public class CollectionOperator {
 
+    private CollectionOperator() {
+    }
+
     public static final Map<String, String> MAP = Maps.newHashMapWithExpectedSize(5);
 
     static {

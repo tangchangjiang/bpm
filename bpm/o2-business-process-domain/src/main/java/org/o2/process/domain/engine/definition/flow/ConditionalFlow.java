@@ -31,18 +31,19 @@ public class ConditionalFlow extends BaseFlow {
     @Override
     public void validate(Map<String, BaseElement> elementMap) {
         super.validate(elementMap);
-        if(StringUtils.isBlank(ruleCode)){
+        if (StringUtils.isBlank(ruleCode)) {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_CONDITION);
         }
 
-        if(null == priority){
+        if (null == priority) {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.CONDITION_FLOW_LACK_PRIORITY);
         }
     }
 
     @Override
-    protected void checkTerminal(Map<String, BaseElement> elementMap){
-        checkElement(elementMap, getIncoming(), Collections.singletonList(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY), ProcessEngineConstants.ErrorCode.CONDITIONAL_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE);
+    protected void checkTerminal(Map<String, BaseElement> elementMap) {
+        checkElement(elementMap, getIncoming(), Collections.singletonList(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY),
+                ProcessEngineConstants.ErrorCode.CONDITIONAL_FLOW_INCOMING_MUST_BE_GATEWAY_TYPE);
         super.checkTerminal(elementMap);
     }
 }

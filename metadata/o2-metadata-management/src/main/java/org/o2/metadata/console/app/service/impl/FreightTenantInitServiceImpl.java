@@ -29,7 +29,6 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
         this.redis = redis;
     }
 
-
     @Override
     public void tenantInitializeBusiness(TenantInitContext context) {
         String freight = context.getParamMap().get(TenantInitConstants.InitBusinessParam.BUSINESS_FREIGHT);
@@ -38,7 +37,7 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
             return;
         }
         // 1. 查询源租户
-       List<FreightTemplate> sourceFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
+        List<FreightTemplate> sourceFreightTemplate = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(FreightTemplate.FIELD_TENANT_ID, context.getSourceTenantId())
                         .andIn(FreightTemplate.FIELD_TEMPLATE_CODE, Arrays.asList(freight.split(","))))
@@ -54,9 +53,9 @@ public class FreightTenantInitServiceImpl implements FreightTenantInitService {
                         .andIn(FreightTemplate.FIELD_TEMPLATE_CODE, Arrays.asList(freight.split(","))))
                 .build());
 
-       if (CollectionUtils.isNotEmpty(targetFreightTemplate)) {
-           freightTemplateRepository.batchDeleteByPrimaryKey(targetFreightTemplate);
-       }
+        if (CollectionUtils.isNotEmpty(targetFreightTemplate)) {
+            freightTemplateRepository.batchDeleteByPrimaryKey(targetFreightTemplate);
+        }
         for (FreightTemplate freightTemplate : sourceFreightTemplate) {
             freightTemplate.setTemplateId(null);
             freightTemplate.setTenantId(context.getTargetTenantId());

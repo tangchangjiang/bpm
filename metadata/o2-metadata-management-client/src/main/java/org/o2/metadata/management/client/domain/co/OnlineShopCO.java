@@ -40,14 +40,13 @@ public class OnlineShopCO {
     private Integer activeFlag;
 
     @ApiModelProperty("平台编码")
-    private String  platformCode;
+    private String platformCode;
 
     @ApiModelProperty("平台网店编码")
     private String platformShopCode;
 
     @ApiModelProperty("平台名称")
     private String platformName;
-
 
     @ApiModelProperty(value = "是否支持寻源")
     private Integer sourcedFlag;

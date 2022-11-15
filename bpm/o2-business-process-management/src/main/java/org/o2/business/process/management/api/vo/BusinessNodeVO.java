@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 业务节点列表查询结果展示
+ *
  * @author zhilin.ren@hand-china.com 2022/08/10 15:17
  */
 @Data
@@ -41,7 +42,6 @@ public class BusinessNodeVO {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
-
     @ApiModelProperty(value = "业务节点参数列表,lovFlag=1时才用数据")
     private List<BizNodeParameter> paramList;
 
@@ -49,7 +49,5 @@ public class BusinessNodeVO {
     private String businessTypeMeaning;
     @ApiModelProperty(value = "二级业务类型含义")
     private String subBusinessTypeMeaning;
-
-
 
 }

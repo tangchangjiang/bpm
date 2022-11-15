@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -7,8 +8,6 @@ import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.util.List;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * redis util
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SystemParameterRedisUtil {
 
-    private SystemParameterRedisUtil() {}
+    private SystemParameterRedisUtil() { }
 
     /**
      * redis execute

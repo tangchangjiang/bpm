@@ -65,7 +65,6 @@ public class BizNodeParameterController extends BaseController {
         return Results.success(bizNodeParameter);
     }
 
-
     @ApiOperation(value = "业务节点参数表维护-根据beanId查询节点参数信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})

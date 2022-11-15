@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.Objects;
 
-
 /**
  * 运费模板
  *
@@ -38,7 +37,9 @@ public class FreightTemplateCO {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {return false;}
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FreightTemplateCO that = (FreightTemplateCO) o;
         return templateId.equals(that.templateId) &&
                 templateCode.equals(that.templateCode) &&

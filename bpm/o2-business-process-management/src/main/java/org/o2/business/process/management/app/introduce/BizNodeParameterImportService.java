@@ -42,22 +42,26 @@ public class BizNodeParameterImportService extends BatchImportHandler implements
             CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
             Long tenantId = customUserDetails.getTenantId();
             List<BizNodeParameter> dataList = new ArrayList<>(data.size());
-            data.forEach(d ->{
+            data.forEach(d -> {
                 BizNodeParameter bp = JsonHelper.stringToObject(d, BizNodeParameter.class);
                 bp.setTenantId(tenantId);
                 dataList.add(bp);
             });
             // 去重
-            List<BizNodeParameter> importList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(np -> getMapKey(np.getBeanId(), np.getParamCode()), Function.identity(), (a,b) -> a)).values());
+            List<BizNodeParameter> importList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(np -> getMapKey(np.getBeanId(),
+                    np.getParamCode()), Function.identity(), (a, b) -> a)).values());
             // 是否已经存在业务流程节点参数
             List<BizNodeParameter> nodeParameters = bizNodeParameterRepository.selectByCondition(Condition.builder(BizNodeParameter.class)
                     .andWhere(Sqls.custom().andEqualTo(BizNodeParameter.FIELD_TENANT_ID, tenantId)
                             .andIn(BizNodeParameter.FIELD_BEAN_ID, importList.stream().map(BizNodeParameter::getBeanId).collect(Collectors.toList()))
-                    .andIn(BizNodeParameter.FIELD_PARAM_CODE, importList.stream().map(BizNodeParameter::getParamCode).collect(Collectors.toList()))).build());
+                            .andIn(BizNodeParameter.FIELD_PARAM_CODE,
+                                    importList.stream().map(BizNodeParameter::getParamCode).collect(Collectors.toList()))).build());
 
-            Map<String, BizNodeParameter> nodeParamMap = nodeParameters.stream().collect(Collectors.toMap(p -> getMapKey(p.getBeanId(), p.getParamCode()), Function.identity()));
+            Map<String, BizNodeParameter> nodeParamMap = nodeParameters.stream().collect(Collectors.toMap(p -> getMapKey(p.getBeanId(),
+                    p.getParamCode()), Function.identity()));
             // 筛选更新数据
-            List<BizNodeParameter> updateList = importList.stream().filter(p -> nodeParamMap.containsKey(getMapKey(p.getBeanId(), p.getParamCode()))).peek(p -> {
+            List<BizNodeParameter> updateList =
+                    importList.stream().filter(p -> nodeParamMap.containsKey(getMapKey(p.getBeanId(), p.getParamCode()))).peek(p -> {
                 p.setObjectVersionNumber(nodeParamMap.get(getMapKey(p.getBeanId(), p.getParamCode())).getObjectVersionNumber());
                 p.setBizNodeParameterId(nodeParamMap.get(getMapKey(p.getBeanId(), p.getParamCode())).getBizNodeParameterId());
             }).collect(Collectors.toList());
@@ -72,11 +76,10 @@ public class BizNodeParameterImportService extends BatchImportHandler implements
         return true;
     }
 
-
-    protected String getMapKey(String... keys){
+    protected String getMapKey(String... keys) {
         StringBuilder sb = new StringBuilder();
-        if(StringUtils.isNoneBlank(keys)){
-            for(String key : keys){
+        if (StringUtils.isNoneBlank(keys)) {
+            for (String key : keys) {
                 sb.append(key).append(BaseConstants.Symbol.COLON);
             }
             return sb.substring(0, sb.length() - 1);

@@ -2,6 +2,7 @@ package org.o2.metadata.domain.onlineshop.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 网店关联仓库
  *

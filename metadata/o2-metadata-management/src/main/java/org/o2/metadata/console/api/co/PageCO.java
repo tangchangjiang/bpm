@@ -24,7 +24,7 @@ public class PageCO<E> {
         this.content = emptyList;
     }
 
-    public PageCO(List<E> content, Integer page,Integer size, Integer total) {
+    public PageCO(List<E> content, Integer page, Integer size, Integer total) {
         this.content = content;
         this.number = page;
         this.size = size;

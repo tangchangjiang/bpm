@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- *
  * 运费
  *
  * @author yipeng.zhu@hand-china.com 2021-07-14
@@ -19,10 +18,9 @@ import java.util.List;
 @Slf4j
 public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
 
-
     @Override
-    public ResponseEntity<String> getOnlineShop(String onlineShopCode,String tenantId) {
-        log.error("Error getOnlineShop, params[onlineShopCode = {},tenantId = {}]", onlineShopCode,tenantId);
+    public ResponseEntity<String> getOnlineShop(String onlineShopCode, String tenantId) {
+        log.error("Error getOnlineShop, params[onlineShopCode = {},tenantId = {}]", onlineShopCode, tenantId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

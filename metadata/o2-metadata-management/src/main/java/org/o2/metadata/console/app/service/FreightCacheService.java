@@ -1,11 +1,9 @@
 package org.o2.metadata.console.app.service;
 
-
 import org.o2.metadata.console.app.bo.FreightDetailBO;
 import org.o2.metadata.console.app.bo.FreightTemplateBO;
 
 import java.util.List;
-
 
 /**
  * 运费模板缓存服务
@@ -31,14 +29,14 @@ public interface FreightCacheService {
     /**
      * 清除运费模板redis缓存
      *
-     * @param freightTemplate  运费模板传输对象(包含运费模板和明细)
+     * @param freightTemplate 运费模板传输对象(包含运费模板和明细)
      */
     void deleteFreight(FreightTemplateBO freightTemplate);
 
     /**
      * 批量清除运费模板redis缓存
      *
-     * @param freightTemplates  运费模板传输对象(包含运费模板和明细)
+     * @param freightTemplates 运费模板传输对象(包含运费模板和明细)
      */
     void deleteFreight(List<FreightTemplateBO> freightTemplates);
 

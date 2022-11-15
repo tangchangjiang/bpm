@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class PosRemoteServiceImpl implements PosRemoteService {
     @Override
     public ResponseEntity<String> getPosPickUpInfo(Long organizationId, String posCode) {
-        log.error("Error getPosPickUpInfo, params[posCode = {},tenantId = {}]", posCode,organizationId);
+        log.error("Error getPosPickUpInfo, params[posCode = {},tenantId = {}]", posCode, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

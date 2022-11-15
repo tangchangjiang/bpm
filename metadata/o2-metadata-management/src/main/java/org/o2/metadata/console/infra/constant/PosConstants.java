@@ -1,7 +1,6 @@
 package org.o2.metadata.console.infra.constant;
 
 /**
- *
  * 服务点常量
  *
  * @author yipeng.zhu@hand-china.com 2021-11-08
@@ -9,8 +8,8 @@ package org.o2.metadata.console.infra.constant;
 public interface PosConstants {
 
     interface ErrorCode {
-        String ERROR_POS_NAME_DUPLICATE= "o2md.error.pos_name.duplicate";
-        String ERROR_POS_CODE_DUPLICATE= "o2md.error.pos_code.duplicate";
+        String ERROR_POS_NAME_DUPLICATE = "o2md.error.pos_name.duplicate";
+        String ERROR_POS_CODE_DUPLICATE = "o2md.error.pos_code.duplicate";
         String ERROR_POS_CODE_NOT_UPDATE = "o2md.error.pos_code.forbidden.update";
     }
 
@@ -41,6 +40,7 @@ public interface PosConstants {
 
         /**
          * 获取所有门店信息key
+         *
          * @param tenantId 租户Id
          * @return key
          */
@@ -50,9 +50,10 @@ public interface PosConstants {
 
         /**
          * 获取市下所有门店key
-         * @param tenantId 租户Id
+         *
+         * @param tenantId   租户Id
          * @param regionCode 省code
-         * @param cityCode 市code
+         * @param cityCode   市code
          * @return key
          */
         static String getPosCityStoreKey(Long tenantId, String regionCode, String cityCode) {
@@ -61,9 +62,10 @@ public interface PosConstants {
 
         /**
          * 获取区下的所有key
-         * @param tenantId 租户Id
-         * @param regionCode 省code
-         * @param cityCode 市code
+         *
+         * @param tenantId     租户Id
+         * @param regionCode   省code
+         * @param cityCode     市code
          * @param districtCode 区code
          * @return key
          */
@@ -73,6 +75,7 @@ public interface PosConstants {
 
         /**
          * 获取服务点详情key
+         *
          * @param tenantId 租户Id
          * @return key
          */

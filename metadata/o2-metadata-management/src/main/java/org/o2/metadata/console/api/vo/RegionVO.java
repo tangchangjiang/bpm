@@ -17,21 +17,17 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegionVO {
 
-
     @ApiModelProperty("地区编码")
     private String regionCode;
 
     @ApiModelProperty("地区名称")
     private String regionName;
 
-
     private String parentRegionCode;
     private String parentRegionName;
 
-
     @ApiModelProperty(value = "子类", hidden = true)
     private List<RegionVO> children;
-
 
     private String areaCode;
 

@@ -18,7 +18,6 @@ import java.util.Set;
 @Component
 public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implements CatalogRepository {
 
-
     private final CatalogMapper catalogMapper;
 
     public CatalogRepositoryImpl(CatalogMapper catalogMapper) {
@@ -27,15 +26,16 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
 
     /**
      * 更据版本目录主键集合批量查询ExcelDTO
+     *
      * @param catalogIds 版本主键集合
-     * @param tenantId 租户ID
+     * @param tenantId   租户ID
      * @return the return
      * @throws RuntimeException exception description
      */
     @Override
-    public List<CatalogVO> batchFindByIds(final Set<Long> catalogIds,final Long tenantId) {
+    public List<CatalogVO> batchFindByIds(final Set<Long> catalogIds, final Long tenantId) {
 
-        return catalogMapper.batchFindByIds(catalogIds,tenantId);
+        return catalogMapper.batchFindByIds(catalogIds, tenantId);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class CatalogRepositoryImpl extends BaseRepositoryImpl<Catalog> implement
 
     @Override
     public List<Catalog> batchSelectByCodes(List<String> catalogCodes, Long tenantId) {
-        return catalogMapper.batchSelectByCodes(catalogCodes,tenantId);
+        return catalogMapper.batchSelectByCodes(catalogCodes, tenantId);
     }
 }

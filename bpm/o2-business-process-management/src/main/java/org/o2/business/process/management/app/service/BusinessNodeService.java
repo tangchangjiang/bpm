@@ -2,7 +2,6 @@ package org.o2.business.process.management.app.service;
 
 import org.o2.business.process.management.domain.entity.BusinessNode;
 
-
 /**
  * 业务流程节点表应用服务
  *
@@ -10,15 +9,13 @@ import org.o2.business.process.management.domain.entity.BusinessNode;
  */
 public interface BusinessNodeService {
 
-
     /**
      * 根据ID查询业务节点与参数
+     *
      * @param bizNodeId 主键
      * @return 结果
      */
     BusinessNode detail(Long bizNodeId);
-
-
 
     /**
      * 保存业务流程节点表

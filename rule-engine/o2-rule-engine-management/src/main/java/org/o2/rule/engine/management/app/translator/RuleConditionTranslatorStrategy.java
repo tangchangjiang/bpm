@@ -21,5 +21,4 @@ public interface RuleConditionTranslatorStrategy {
      */
     String translate(Rule rule, String code, String conditionCodeAlias, List<RuleMiniConditionParameterDTO> parameters);
 
-
 }

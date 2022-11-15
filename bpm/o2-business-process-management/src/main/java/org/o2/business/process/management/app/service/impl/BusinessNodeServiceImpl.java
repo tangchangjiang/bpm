@@ -36,14 +36,13 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
 
     private final BusinessProcessRedisRepository businessProcessRedisRepository;
 
-
     @Override
     public BusinessNode detail(Long bizNodeId) {
         // 查询节点信息
         BusinessNode businessNode = businessNodeRepository.selectByPrimaryKey(bizNodeId);
 
         if (Objects.isNull(businessNode)) {
-            log.error("BusinessNodeService->detail result is null,bizNodeId:{}",bizNodeId);
+            log.error("BusinessNodeService->detail result is null,bizNodeId:{}", bizNodeId);
             throw new CommonException(BaseConstants.ErrorCode.DATA_NOT_EXISTS);
         }
         // 查询对应节点的参数信息
@@ -55,12 +54,11 @@ public class BusinessNodeServiceImpl implements BusinessNodeService {
         return businessNode;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BusinessNode save(BusinessNode businessNode) {
         //保存业务流程节点表&参数
-        UniqueHelper.isUnique(businessNode,BusinessNode.O2BPM_BUSINESS_NODE_U1);
+        UniqueHelper.isUnique(businessNode, BusinessNode.O2BPM_BUSINESS_NODE_U1);
         if (businessNode.getBizNodeId() == null) {
             businessNodeRepository.insertSelective(businessNode);
         } else {

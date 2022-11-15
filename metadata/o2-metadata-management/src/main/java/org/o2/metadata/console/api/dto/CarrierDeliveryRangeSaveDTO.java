@@ -21,7 +21,6 @@ public class CarrierDeliveryRangeSaveDTO {
     @ApiModelProperty(value = "国家编码")
     private String countryCode;
 
-
     @ApiModelProperty(value = "省,id")
     @NotNull
     private String regionCode;
@@ -35,7 +34,6 @@ public class CarrierDeliveryRangeSaveDTO {
     @ApiModelProperty(value = "承运商id")
     @NotNull
     private Long carrierId;
-
 
     public void baseValidate() {
         log.info("CarrierDeliveryRangeSaveDTO#baseValidate start");

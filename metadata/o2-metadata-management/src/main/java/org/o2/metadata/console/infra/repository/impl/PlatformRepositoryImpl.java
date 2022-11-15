@@ -20,6 +20,7 @@ import java.util.List;
 public class PlatformRepositoryImpl extends BaseRepositoryImpl<Platform> implements PlatformRepository {
 
     private final PlatformMapper platformMapper;
+
     @Override
     public List<Platform> listPlatform(PlatformDTO platform) {
         return platformMapper.listPlatform(platform);

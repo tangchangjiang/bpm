@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.o2.core.O2CoreConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,6 @@ public class AddressMappingVO extends AuditDomain {
     @LovValue(lovCode = O2CoreConstants.AddressType.LOV_CODE)
     private String addressTypeCode;
 
-
-
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;
 
@@ -47,8 +46,6 @@ public class AddressMappingVO extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
-
-
     @ApiModelProperty(value = "查询条件 内部区域名称")
     private String regionName;
 
@@ -57,7 +54,6 @@ public class AddressMappingVO extends AuditDomain {
 
     @ApiModelProperty(value = "地址类型含义", hidden = true)
     private String addressTypeMeaning;
-
 
     /**
      * 显示region的层级目录结构，只在详情里展示
@@ -72,6 +68,6 @@ public class AddressMappingVO extends AuditDomain {
     @ApiModelProperty(value = "版本编码")
     private String platformCode;
 
-    @ApiModelProperty(value = "版本名称",required = true)
+    @ApiModelProperty(value = "版本名称", required = true)
     private String platformName;
 }

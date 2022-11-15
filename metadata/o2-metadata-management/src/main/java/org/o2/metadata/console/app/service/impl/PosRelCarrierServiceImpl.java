@@ -29,7 +29,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<PosRelCarrier> batchMerge(Long organizationId,final List<PosRelCarrier> posRelCarriers) {
+    public List<PosRelCarrier> batchMerge(Long organizationId, final List<PosRelCarrier> posRelCarriers) {
         final Map<String, Object> map = new HashMap<>(posRelCarriers.size());
         final List<PosRelCarrier> updateList = new ArrayList<>();
         final List<PosRelCarrier> insertList = new ArrayList<>();
@@ -69,7 +69,7 @@ public class PosRelCarrierServiceImpl implements PosRelCarrierService {
         }
         if (updateIndex != null) {
             final PosRelCarrier posRelCarrier = posRelCarriers.get(updateIndex);
-            posRelCarrierRepository.updateIsDefault(posRelCarrier.getPosRelCarrierId(), posRelCarrier.getPosId(),0,posRelCarrier.getTenantId());
+            posRelCarrierRepository.updateIsDefault(posRelCarrier.getPosRelCarrierId(), posRelCarrier.getPosId(), 0, posRelCarrier.getTenantId());
         }
         return resultList;
     }

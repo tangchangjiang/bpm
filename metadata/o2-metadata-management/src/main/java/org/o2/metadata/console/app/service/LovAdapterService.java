@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -23,7 +22,8 @@ import java.util.Map;
 public interface LovAdapterService {
     /**
      * 通过编码查询货币(批量)
-     * @param tenantId 租户ID
+     *
+     * @param tenantId      租户ID
      * @param currencyCodes 货币编码
      * @return 返回信息MAP
      */
@@ -31,6 +31,7 @@ public interface LovAdapterService {
 
     /**
      * 通过编码查询单位(批量)
+     *
      * @param tenantId 租户ID
      * @param uomCodes 单位编码
      * @return 单位信息MAP
@@ -39,26 +40,28 @@ public interface LovAdapterService {
 
     /**
      * 通过编码查询单位类型(批量)
-     * @param tenantId 租户ID
+     *
+     * @param tenantId     租户ID
      * @param uomTypeCodes 单位类型编码
      * @return 单位类型信息MAP
      */
     Map<String, UomTypeBO> findUomTypeByCodes(Long tenantId, List<String> uomTypeCodes);
 
-
     /**
      * 查询地区值集
+     *
      * @param tenantId 租户ID
      * @param innerDTO 查询条件
-     * @return  list
+     * @return list
      */
     List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
+     *
      * @param tenantId 租户ID
-     * @param page page 页码
-     * @param size 大小
+     * @param page     page 页码
+     * @param size     大小
      * @param innerDTO 查询参数
      * @return page
      */
@@ -66,6 +69,7 @@ public interface LovAdapterService {
 
     /**
      * 根据编码以及租户ID批量查集值
+     *
      * @param queryMap 查询条件
      * @param tenantId 租户ID
      * @return 值集集合
@@ -74,13 +78,14 @@ public interface LovAdapterService {
 
     /**
      * 分页查询url值集
-     * @param queryParam 查询参数
+     *
+     * @param queryParam  查询参数
      * @param pageRequest 分页
-     * @param lovCode 值集编码
-     * @param tenantId 租户ID
-     * @return  page
+     * @param lovCode     值集编码
+     * @param tenantId    租户ID
+     * @return page
      */
-    String queryLovPage(Map<String,String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
+    String queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId);
 
     /**
      * 查询独立值集详细信息
@@ -89,7 +94,7 @@ public interface LovAdapterService {
      * @param tenantId 租户id
      * @return List<LovValueDTO>
      */
-    List<LovValueDTO>queryLovValue (Long tenantId,  String lovCode);
+    List<LovValueDTO> queryLovValue(Long tenantId, String lovCode);
 
     /**
      * 查询独立值集中指定值的 描述信息（meaning）
@@ -101,12 +106,11 @@ public interface LovAdapterService {
      */
     String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue);
 
-
     /**
      * 批量查询指定值集内容
      *
-     * @param tenantId 租户ID
-     * @param lovCode  值集编码
+     * @param tenantId         租户ID
+     * @param lovCode          值集编码
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
@@ -115,14 +119,13 @@ public interface LovAdapterService {
                                                    String lovCode,
                                                    Map<String, String> queryLovValueMap);
 
-
     /**
      * 分页查询指定值集内容
      *
-     * @param tenantId 租户ID
-     * @param lovCode  值集编码
-     * @param page  页码
-     * @param size  大小
+     * @param tenantId         租户ID
+     * @param lovCode          值集编码
+     * @param page             页码
+     * @param size             大小
      * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>

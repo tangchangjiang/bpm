@@ -35,15 +35,16 @@ public class MdRedisCacheRefreshJob implements IJobHandler {
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
         if (map != null && !map.isEmpty()) {
-            final Long tenantId = Long.valueOf(map.getOrDefault(MetadataConstants.CacheJob.TENANT_ID,MetadataConstants.CacheJob.DEFAULT_TENANT_ID));
+            final Long tenantId = Long.valueOf(map.getOrDefault(MetadataConstants.CacheJob.TENANT_ID, MetadataConstants.CacheJob.DEFAULT_TENANT_ID));
             // 判断缓存操作
             final String warehouse = map.getOrDefault(MetadataConstants.CacheJob.CACHE_WAREHOUSE, MetadataConstants.CacheJob.DEFAULT_ACTION);
-            final String onlineShopRelWarehouse = map.getOrDefault(MetadataConstants.CacheJob.CACHE_ONLINE_SHOP_REL_WAREHOUSE, MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String onlineShopRelWarehouse = map.getOrDefault(MetadataConstants.CacheJob.CACHE_ONLINE_SHOP_REL_WAREHOUSE,
+                    MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String sysParameter = map.getOrDefault(MetadataConstants.CacheJob.CACHE_SYS_PARAMETER, MetadataConstants.CacheJob.DEFAULT_ACTION);
             final String carrier = map.getOrDefault(MetadataConstants.CacheJob.CARRIER, MetadataConstants.CacheJob.DEFAULT_ACTION);
-            final String freight = map.getOrDefault(MetadataConstants.CacheJob.FREIGHT,MetadataConstants.CacheJob.DEFAULT_ACTION);
-            final String onlinShop = map.getOrDefault(MetadataConstants.CacheJob.ONLINE_SHOP,MetadataConstants.CacheJob.DEFAULT_ACTION);
-            final String pos = map.getOrDefault(MetadataConstants.CacheJob.POS,MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String freight = map.getOrDefault(MetadataConstants.CacheJob.FREIGHT, MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String onlinShop = map.getOrDefault(MetadataConstants.CacheJob.ONLINE_SHOP, MetadataConstants.CacheJob.DEFAULT_ACTION);
+            final String pos = map.getOrDefault(MetadataConstants.CacheJob.POS, MetadataConstants.CacheJob.DEFAULT_ACTION);
 
             if (MetadataConstants.CacheJob.REFRESH.equals(warehouse)) {
                 // 全量同步 仓库 数据到Redis，判断失效时间

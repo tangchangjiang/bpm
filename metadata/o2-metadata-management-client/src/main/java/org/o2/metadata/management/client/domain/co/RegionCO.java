@@ -1,6 +1,6 @@
 package org.o2.metadata.management.client.domain.co;
 
- import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -31,8 +31,6 @@ public class RegionCO {
 
     @ApiModelProperty("是否启用")
     private Integer enabledFlag;
-
-
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;

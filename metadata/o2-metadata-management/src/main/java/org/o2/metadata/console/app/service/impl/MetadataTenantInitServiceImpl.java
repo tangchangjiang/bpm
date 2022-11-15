@@ -5,7 +5,6 @@ import org.o2.business.process.management.app.service.ProcessTenantInitService;
 import org.o2.metadata.console.app.service.*;
 import org.springframework.stereotype.Service;
 
-
 /**
  * description
  *
@@ -23,7 +22,6 @@ public class MetadataTenantInitServiceImpl implements MetadataTenantInitService 
     private final WarehouseTenantInitService warehouseTenantInitService;
 
     private final ProcessTenantInitService processTenantInitService;
-
 
     public MetadataTenantInitServiceImpl(SysParamTenantInitService sysParamTenantInitService,
                                          PlatformDefineTenantInitServiceImpl platformDefineTenantInitService,

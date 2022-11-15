@@ -15,7 +15,7 @@ import org.o2.business.process.management.domain.repository.BizNodeParameterRepo
 import org.o2.business.process.management.infra.constant.BusinessProcessConstants;
 import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.core.helper.JsonHelper;
-import org.o2.process.domain.engine.definition.Activity.ServiceTask;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseNode;
 import org.o2.process.domain.engine.definition.event.EndEvent;
 import org.o2.process.domain.engine.definition.event.StartEvent;
@@ -36,12 +36,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BaseNodeFactory {
 
-    private BaseNodeFactory(){
+    private BaseNodeFactory() {
 
     }
 
-    public static BaseNode createBaseNode(NotationNode node, Long tenantId){
-        switch (node.getShape()){
+    public static BaseNode createBaseNode(NotationNode node, Long tenantId) {
+        switch (node.getShape()) {
             case BusinessProcessConstants.CellType.START_NODE:
                 return buildStartEvent(node);
             case BusinessProcessConstants.CellType.FLOW_NODE:
@@ -55,7 +55,7 @@ public class BaseNodeFactory {
         }
     }
 
-    public static BaseNode buildStartEvent(NotationNode node){
+    public static BaseNode buildStartEvent(NotationNode node) {
         StartEvent startEvent = new StartEvent();
         startEvent.setId(node.getId());
         startEvent.setIncoming(new ArrayList<>());
@@ -63,7 +63,7 @@ public class BaseNodeFactory {
         return startEvent;
     }
 
-    public static BaseNode buildServiceTask(NotationNode node, Long tenantId){
+    public static BaseNode buildServiceTask(NotationNode node, Long tenantId) {
         ServiceTask serviceTask = new ServiceTask();
         serviceTask.setId(node.getId());
         serviceTask.setEnabledFlag(node.getData().getEnabledFlag());
@@ -74,7 +74,7 @@ public class BaseNodeFactory {
         return serviceTask;
     }
 
-    public static BaseNode buildExclusiveGateway(NotationNode node){
+    public static BaseNode buildExclusiveGateway(NotationNode node) {
         ExclusiveGateway exclusiveGateway = new ExclusiveGateway();
         exclusiveGateway.setId(node.getId());
         exclusiveGateway.setIncoming(new ArrayList<>());
@@ -82,7 +82,7 @@ public class BaseNodeFactory {
         return exclusiveGateway;
     }
 
-    public static BaseNode buildEndEvent(NotationNode node){
+    public static BaseNode buildEndEvent(NotationNode node) {
         EndEvent endEvent = new EndEvent();
         endEvent.setId(node.getId());
         endEvent.setIncoming(new ArrayList<>());
@@ -91,16 +91,16 @@ public class BaseNodeFactory {
     }
 
     // 可扩展，节点拿到参数的类型可在这里处理好
-    public static void dealArgs(ServiceTask serviceTask, Map<String, Object> argMap, Long tenantId){
-        if(MapUtils.isEmpty(argMap)) {
+    public static void dealArgs(ServiceTask serviceTask, Map<String, Object> argMap, Long tenantId) {
+        if (MapUtils.isEmpty(argMap)) {
             serviceTask.setArgs(new HashMap<>());
             return;
         }
         Map<String, String> result = Maps.newHashMapWithExpectedSize(argMap.size());
         Map<String, BizNodeParameter> paramDefinitionMap = getBizNodeParameterDefinition(serviceTask, tenantId, argMap);
-        for(Map.Entry<String, Object> entry : argMap.entrySet()){
+        for (Map.Entry<String, Object> entry : argMap.entrySet()) {
             BizNodeParameter bizNodeParameter = paramDefinitionMap.get(entry.getKey());
-            if(null != bizNodeParameter){
+            if (null != bizNodeParameter) {
                 result.put(entry.getKey(), parseArgs(bizNodeParameter, entry.getValue()));
             }
         }
@@ -124,16 +124,17 @@ public class BaseNodeFactory {
                     });
         } catch (Exception e) {
             log.error("metadata->PipelineDriver->getPipelineByRemote error:{}", e.getMessage());
-            CommonException processException = new CommonException(String.format(BusinessProcessConstants.ErrorMessage.BEAN_NETWORK_REQUEST_ERROR, serviceTask.getBeanId()));
+            CommonException processException = new CommonException(String.format(BusinessProcessConstants.ErrorMessage.BEAN_NETWORK_REQUEST_ERROR,
+                    serviceTask.getBeanId()));
             processException.setStackTrace(e.getStackTrace());
             throw processException;
         }
         return paramDefinitionMap;
     }
 
-    protected static String parseArgs(BizNodeParameter bizNodeParameter, Object paramValue){
+    protected static String parseArgs(BizNodeParameter bizNodeParameter, Object paramValue) {
         String result = null;
-        try{
+        try {
             switch (bizNodeParameter.getParamEditTypeCode()) {
                 case BusinessProcessConstants.BizParam.DATE_PICKER:
                 case BusinessProcessConstants.BizParam.DATE_TIME_PICKER:
@@ -143,7 +144,7 @@ public class BaseNodeFactory {
                     break;
                 case BusinessProcessConstants.BizParam.LOV:
                     List<LovViewDO> lovViewList = JsonHelper.stringToArray((String) paramValue, LovViewDO.class);
-                    if(BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
+                    if (BaseConstants.Flag.YES.equals(bizNodeParameter.getMultiFlag())) {
                         result = lovViewList.stream().map(LovViewDO::getCode).collect(Collectors.joining(BaseConstants.Symbol.COMMA));
                         break;
                     }
@@ -154,8 +155,9 @@ public class BaseNodeFactory {
                     break;
                 default:
             }
-        }catch (Exception e){
-            CommonException processException = new CommonException(String.format(BusinessProcessConstants.ErrorMessage.PARAM_PARSING_ERROR, bizNodeParameter.getBeanId(), bizNodeParameter.getParamCode(), JsonHelper.objectToString(paramValue)));
+        } catch (Exception e) {
+            CommonException processException = new CommonException(String.format(BusinessProcessConstants.ErrorMessage.PARAM_PARSING_ERROR,
+                    bizNodeParameter.getBeanId(), bizNodeParameter.getParamCode(), JsonHelper.objectToString(paramValue)));
             processException.setStackTrace(e.getStackTrace());
             throw processException;
         }

@@ -31,5 +31,4 @@ public class SystemParamValueRepositoryImpl extends BaseRepositoryImpl<SystemPar
         return systemParamValueMapper.getSysListByParam(paramCode, tenantId);
     }
 
-
 }

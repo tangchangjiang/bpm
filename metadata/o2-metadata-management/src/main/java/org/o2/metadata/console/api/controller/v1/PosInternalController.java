@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * 服务点信息 管理 API
  *
@@ -35,7 +34,7 @@ public class PosInternalController extends BaseController {
 
     private final PosService posService;
 
-    public PosInternalController( final PosService posService) {
+    public PosInternalController(final PosService posService) {
         this.posService = posService;
     }
 
@@ -48,7 +47,7 @@ public class PosInternalController extends BaseController {
         if (null == posAddressQueryInnerDTO) {
             return Results.success(map);
         }
-        List<PosAddressCO> voList = posService.listPosAddress(posAddressQueryInnerDTO,organizationId);
+        List<PosAddressCO> voList = posService.listPosAddress(posAddressQueryInnerDTO, organizationId);
         for (PosAddressCO co : voList) {
             map.put(co.getPosCode(), co);
         }

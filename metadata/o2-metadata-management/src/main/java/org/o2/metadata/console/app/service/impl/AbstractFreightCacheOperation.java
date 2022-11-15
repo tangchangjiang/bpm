@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-
 import io.choerodon.core.oauth.DetailsHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.app.bo.FreightBO;
@@ -41,11 +40,12 @@ public abstract class AbstractFreightCacheOperation {
     protected List<FreightDetailBO> convertToFreightDetail(List<FreightTemplateDetail> freightTemplateDetailList) {
         List<FreightDetailBO> freightDetailList = new ArrayList<>();
         Long tenantId = DetailsHelper.getUserDetails().getTenantId();
-        if (CollectionUtils.isEmpty(freightTemplateDetailList)){return freightDetailList;}
+        if (CollectionUtils.isEmpty(freightTemplateDetailList)) {
+            return freightDetailList;
+        }
 
         for (FreightTemplateDetail detail : freightTemplateDetailList) {
             FreightDetailBO bo = new FreightDetailBO();
-
 
             bo.setRegionCode(detail.getRegionCode());
             if (detail.getTemplateId() != null) {
@@ -58,8 +58,7 @@ public abstract class AbstractFreightCacheOperation {
             bo.setFirstPrice(detail.getFirstPrice());
             bo.setNextPieceWeight(detail.getNextPieceWeight());
             bo.setNextPrice(detail.getNextPrice());
-            bo.setTenantId(detail.getTenantId() !=null?detail.getTenantId() :tenantId);
-
+            bo.setTenantId(detail.getTenantId() != null ? detail.getTenantId() : tenantId);
 
             freightDetailList.add(bo);
         }
@@ -88,9 +87,8 @@ public abstract class AbstractFreightCacheOperation {
         freight.setValuationUom(freightTemplate.getValuationUom());
         freight.setDeliveryFreeFlag(freightTemplate.getDeliveryFreeFlag());
         freight.setTemplateCode(freightTemplate.getTemplateCode());
-        freight.setTenantId(freightTemplate.getTenantId() !=null ? freightTemplate.getTenantId() :tenantId );
+        freight.setTenantId(freightTemplate.getTenantId() != null ? freightTemplate.getTenantId() : tenantId);
         freight.setDafaultFlag(freightTemplate.getDafaultFlag());
-
 
         return freight;
     }

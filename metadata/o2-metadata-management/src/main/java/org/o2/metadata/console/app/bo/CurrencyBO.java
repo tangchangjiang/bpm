@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.bo;
 
-
 import lombok.Data;
 
 /**

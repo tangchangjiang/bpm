@@ -22,37 +22,41 @@ public interface AddressMappingService {
      * 地址匹配逆向递归 树状数据结构（根据parent id 分组 减少没必要的递归）
      *
      * @param addressMappingQueryDTO 查询条件
-     * @param countryCode 国家编码
+     * @param countryCode            国家编码
      * @return 查询结果集
      */
 
     List<RegionTreeChildVO> findAddressMappingGroupByCondition(AddressMappingQueryDTO addressMappingQueryDTO, String countryCode);
-   
+
     /**
      * 详情
+     *
      * @param addressMappingId 主键
-     * @param countryCode 国家编码
-     * @param tenantId 租户ID
+     * @param countryCode      国家编码
+     * @param tenantId         租户ID
      * @return 地址匹配
      */
-    AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode,Long tenantId);
+    AddressMappingVO addressMappingDetail(Long addressMappingId, String countryCode, Long tenantId);
 
     /**
      * 内部方法 批量查询地址匹配
+     *
      * @param addressMappingDTO 入参
-     * @param tenantId 租户ID
-     * @return  map key: externalName
+     * @param tenantId          租户ID
+     * @return map key: externalName
      */
     Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingDTO, Long tenantId);
 
     /**
      * 创建
+     *
      * @param addressMapping 地址匹配
      */
     void createAddressMapping(AddressMapping addressMapping);
 
     /**
      * 地区匹配发布
+     *
      * @param addressReleaseDTO 发布信息
      */
     void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO);

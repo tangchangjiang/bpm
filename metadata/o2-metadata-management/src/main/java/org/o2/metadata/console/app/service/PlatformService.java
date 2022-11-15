@@ -3,8 +3,8 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.api.co.PlatformCO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.Platform;
-import java.util.Map;
 
+import java.util.Map;
 
 /**
  * 平台定义表应用服务
@@ -23,8 +23,9 @@ public interface PlatformService {
 
     /**
      * 查询平台信息
+     *
      * @param queryInnerDTO 入参
-     * @return  map
+     * @return map
      */
     Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO);
 }

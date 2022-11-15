@@ -3,7 +3,6 @@ package org.o2.metadata.console.infra.constant;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +30,6 @@ public interface MetadataConstants {
         String BASIC_DATA_ONLINE_AND_WAREHOUSE_CODE_IS_NULL = "error.basic_data.online_and_warehouse_code_is_null";
         String BASIC_DATA_PARENT_NOT_ENABLED = "error.basic_data.parent_disable";
 
-
         String BASIC_DATA_TENANT_ID_IS_NULL = "error.basic_data.tenantId.should.is.not.null";
         String BASIC_DATA_CATALOG_CODE_IS_NULL = "error.basic_data.catalogCode.should.is.not.null";
         String BASIC_DATA_PLATFORM_CODE_IS_NULL = "error.basic_data.platformCode.should.is.not.null";
@@ -40,7 +38,7 @@ public interface MetadataConstants {
         String O2MD_ERROR_CHECK_ERROR = "o2md.error.check.error";
         String STATIC_FILE_UPLOAD_FAIL = "o2md.error.static_file_upload_fail";
 
-        String O2MD_RESOURCE_OWNER_IS_NULL="o2md.resource_owner.should.is.not.null";
+        String O2MD_RESOURCE_OWNER_IS_NULL = "o2md.resource_owner.should.is.not.null";
 
         /**
          * 静态资源配置查询失败
@@ -62,9 +60,11 @@ public interface MetadataConstants {
          */
         String BUSINESS_SERVICE_STRATEGY_FAILED = "o2md.error.service_handle_failed";
     }
-    interface  MappingCacheName {
+
+    interface MappingCacheName {
         String METADATA_CACHE_NAME = "O2_METADATA";
     }
+
     /**
      * 公共值集
      */
@@ -80,9 +80,9 @@ public interface MetadataConstants {
      * 地区静态文件同步
      */
     interface O2SiteRegionFile {
-         String JSON_TYPE = "application/json";
-           String ZH_CN = "zh_CN";
-          String EN_US = "en_US";
+        String JSON_TYPE = "application/json";
+        String ZH_CN = "zh_CN";
+        String EN_US = "en_US";
     }
 
     /**
@@ -121,7 +121,6 @@ public interface MetadataConstants {
         String ONLINE_SHOP = "OnlineShop";
         String POS = "Pos";
     }
-
 
     /**
      * 大区定义
@@ -172,7 +171,7 @@ public interface MetadataConstants {
 
     }
 
-     interface FileSuffix {
+    interface FileSuffix {
         String JSON = ".json";
     }
 
@@ -206,7 +205,6 @@ public interface MetadataConstants {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         }
     }
-
 
     /**
      * 服务点类型
@@ -243,7 +241,6 @@ public interface MetadataConstants {
 
         String LOV_CODE = "O2MD.POS_STATUS";
     }
-
 
     /**
      * 来源系统
@@ -289,11 +286,9 @@ public interface MetadataConstants {
         String LOV_CODE = "O2MD.TERMINAL_TYPE";
     }
 
-
     interface PosCacheCode {
         String CACHE_SERVICE_NAME_POS = "pos";
     }
-
 
     /**
      * 编码规则
@@ -322,13 +317,12 @@ public interface MetadataConstants {
          */
         String O2MD_PUB_LOV = "O2MD_PUB_LOV";
 
-        String O2MD_IDP_LOV= "O2MD_IDP_LOV";
+        String O2MD_IDP_LOV = "O2MD_IDP_LOV";
 
         /**
          * 元数据 - 地区数据文件描述
          */
         String O2MD_REGION_DESCRIPTION = "省市区数据文件";
-
 
         /**
          * 元数据 - 值集数据文件
@@ -340,33 +334,32 @@ public interface MetadataConstants {
          */
         String O2MD_PUBLIC_LOV = "O2MD_PUB_LOV";
 
-
         static String buildMetadataRegionCode() {
             return String.format("%s", O2MD_REGION);
         }
 
     }
 
-    interface StaticResourceConstants{
-        Integer ENABLE_FLAG=1;
+    interface StaticResourceConstants {
+        Integer ENABLE_FLAG = 1;
 
-        String LEVEL_PUBLIC="PUBLIC";
+        String LEVEL_PUBLIC = "PUBLIC";
 
-        String LEVEL_SITE="SITE";
+        String LEVEL_SITE = "SITE";
 
-        Integer CONFIG_DIFFERENT_LANG_FLAG=1;
+        Integer CONFIG_DIFFERENT_LANG_FLAG = 1;
     }
 
-    interface RefreshJobConstants{
+    interface RefreshJobConstants {
         String TENANT_ID = "tenantId";
 
         String COUNTRY_CODE = "countryCode";
 
         String LOV_CODE = "lovCode";
 
-        String IDP_LOV_OWNER="idpLovOwner";
+        String IDP_LOV_OWNER = "idpLovOwner";
 
-        String REGION_OWNER="regionOwner";
+        String REGION_OWNER = "regionOwner";
 
         String BUSINESS_TYPE_CODE = "businessTypeCode";
     }

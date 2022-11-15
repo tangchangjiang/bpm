@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.constant;
 
-
 /**
  * 组件枚举、使用全局变量
  *
@@ -8,7 +7,7 @@ package org.o2.metadata.console.infra.constant;
  */
 public interface O2LovConstants {
 
-    interface  RequestParam {
+    interface RequestParam {
         String POST = "POST";
 
         String URL_PREFIX = "http://";
@@ -16,9 +15,10 @@ public interface O2LovConstants {
         String ORGANIZATIONID = "organizationId";
 
     }
+
     interface LovTypeCode {
-         String SQL = "SQL";
-         String URL = "URL";
+        String SQL = "SQL";
+        String URL = "URL";
     }
 
     interface RegionLov {
@@ -51,7 +51,6 @@ public interface O2LovConstants {
         String TENANT_ID = "tenantId";
         String REAL_NAME = "realName";
         String idList = "idList";
-
 
     }
 

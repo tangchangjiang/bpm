@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class RuleExpressCalculator implements ExpressionCalculator{
+public class RuleExpressCalculator implements ExpressionCalculator {
 
     private final RuleEngineClient ruleEngineClient;
 

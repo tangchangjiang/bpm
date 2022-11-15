@@ -56,7 +56,8 @@ public class BusinessNodeController extends BaseController {
     private final BizNodeParameterService bizNodeParameterService;
     public static final String FIELD = "body.paramList";
 
-    public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService, BizNodeParameterService bizNodeParameterService) {
+    public BusinessNodeController(BusinessNodeRepository businessNodeRepository, BusinessNodeService businessNodeService,
+                                  BizNodeParameterService bizNodeParameterService) {
         this.businessNodeRepository = businessNodeRepository;
         this.businessNodeService = businessNodeService;
         this.bizNodeParameterService = bizNodeParameterService;
@@ -69,7 +70,7 @@ public class BusinessNodeController extends BaseController {
     public ResponseEntity<Page<BusinessNodeVO>> page(@PathVariable(value = "organizationId") Long organizationId,
                                                      BusinessNodeQueryDTO businessNodeQueryDTO,
                                                      @ApiIgnore @SortDefault(value = BusinessNode.FIELD_BIZ_NODE_ID,
-                                                                     direction = Sort.Direction.DESC) PageRequest pageRequest) {
+                                                             direction = Sort.Direction.DESC) PageRequest pageRequest) {
 
         businessNodeQueryDTO.setTenantId(organizationId);
         Page<BusinessNodeVO> page = PageHelper.doPageAndSort(pageRequest, () -> businessNodeRepository.listBusinessNode(businessNodeQueryDTO));
@@ -113,7 +114,6 @@ public class BusinessNodeController extends BaseController {
         return Results.success(businessNodeList);
     }
 
-
     @ApiOperation(value = "业务流程节点表维护-根据beanId查询业务流程节点表列表&节点参数信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
@@ -129,7 +129,8 @@ public class BusinessNodeController extends BaseController {
                 .build());
         // 获取节点参数信息
         if (CollectionUtils.isNotEmpty(businessNodes)) {
-            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(), organizationId);
+            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(),
+                    organizationId);
             if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
                 Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
                         .sorted(BizNodeParameter.defaultComparator())
@@ -146,7 +147,7 @@ public class BusinessNodeController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/{bizNodeId}")
     public ResponseEntity<BusinessNode> detail(@PathVariable(value = "organizationId") Long organizationId,
-                                                        @ApiParam(value = "业务流程节点表ID", required = true) @PathVariable Long bizNodeId) {
+                                               @ApiParam(value = "业务流程节点表ID", required = true) @PathVariable Long bizNodeId) {
         BusinessNode businessNode = businessNodeService.detail(bizNodeId);
         return Results.success(businessNode);
     }
@@ -155,7 +156,7 @@ public class BusinessNodeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
     public ResponseEntity<BusinessNode> create(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody BusinessNode businessNode) {
+                                               @RequestBody BusinessNode businessNode) {
         businessNode.setTenantId(organizationId);
         validObject(businessNode);
         return Results.success(businessNodeService.save(businessNode));
@@ -165,7 +166,7 @@ public class BusinessNodeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<BusinessNode> update(@PathVariable(value = "organizationId") Long organizationId,
-                                                       @RequestBody BusinessNode businessNode) {
+                                               @RequestBody BusinessNode businessNode) {
         SecurityTokenHelper.validToken(businessNode);
         return Results.success(businessNodeService.save(businessNode));
     }

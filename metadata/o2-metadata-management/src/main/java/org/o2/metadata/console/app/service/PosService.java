@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service;
 
-
 import org.o2.metadata.console.api.co.PosAddressCO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
@@ -37,22 +36,25 @@ public interface PosService {
 
     /**
      * 查询服务点信息，并获取 redis 中的热数据
+     *
      * @param organizationId Long
-     * @param posId Long
+     * @param posId          Long
      * @return Pos
      */
     PosVO getPosWithPropertiesInRedisByPosId(Long organizationId, Long posId);
-    
+
     /**
      * 查询服务地址
+     *
      * @param posAddressQueryInnerDTO 服务点地址
-     * @param tenantId 租户ID
-     * @return  list
+     * @param tenantId                租户ID
+     * @return list
      */
     List<PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId);
 
     /**
      * 条件查询服务点
+     *
      * @param query 查询条件
      * @return 仓库
      */
@@ -60,9 +62,10 @@ public interface PosService {
 
     /**
      * 查询服务点名称
+     *
      * @param posQueryInnerDTO 服务点DTO
-     * @param tenantId 租户ID
-     * @return  map
+     * @param tenantId         租户ID
+     * @return map
      */
     Map<String, String> listPosName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO);
 

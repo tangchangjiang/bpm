@@ -7,7 +7,6 @@ import org.o2.metadata.console.infra.entity.OnlineShopInfAuth;
 
 import java.util.List;
 
-
 /**
  * 网店接口表Mapper
  *

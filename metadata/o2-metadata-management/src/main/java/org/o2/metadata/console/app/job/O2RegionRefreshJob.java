@@ -24,7 +24,6 @@ public class O2RegionRefreshJob implements IJobHandler {
 
     private final O2SiteRegionFileService o2SiteRegionFileService;
 
-
     public O2RegionRefreshJob(O2SiteRegionFileService o2SiteRegionFileService) {
         this.o2SiteRegionFileService = o2SiteRegionFileService;
     }
@@ -33,7 +32,7 @@ public class O2RegionRefreshJob implements IJobHandler {
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
         final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
         final String countryCode = map.get(MetadataConstants.RefreshJobConstants.COUNTRY_CODE);
-        final String regionOwner=map.get(MetadataConstants.RefreshJobConstants.REGION_OWNER);
+        final String regionOwner = map.get(MetadataConstants.RefreshJobConstants.REGION_OWNER);
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (!StringUtils.hasText(tenantId) || !StringUtils.hasText(countryCode)) {

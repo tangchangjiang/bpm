@@ -22,13 +22,13 @@ public interface BusinessProcessConstants {
         String PARAM_TYPE_NOT_SUPPORTED = "current beanId:%s, paramCode:%s unsupported param Type";
     }
 
-    interface CacheParam{
+    interface CacheParam {
         String CACHE_NAME = "O2MD_USER";
         String PROCESS_CACHE_KEY = "%d_%s";
         String NODE_PARAM_DEFINITION_CACHE = "biz_param_definition_%d_%s";
     }
 
-    interface BizParam{
+    interface BizParam {
         /**
          * 日期选择框
          */

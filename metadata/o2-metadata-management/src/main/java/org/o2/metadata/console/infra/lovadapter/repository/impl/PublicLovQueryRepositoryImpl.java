@@ -53,7 +53,6 @@ public class PublicLovQueryRepositoryImpl implements PublicLovQueryRepository {
         }
     }
 
-
     /**
      * 查询值集值
      *

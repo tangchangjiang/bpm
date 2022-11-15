@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +49,6 @@ public class SysParamServiceImpl implements SysParamService {
         this.systemParamValueRepository = systemParamValueRepository;
     }
 
-
     @Override
     public SystemParameterCO getSystemParameter(String paramCode, Long tenantId) {
         SystemParameterDO systemParameterDO = systemParameterDomainService.getSystemParameter(paramCode, tenantId);
@@ -71,7 +69,7 @@ public class SysParamServiceImpl implements SysParamService {
         sqls.andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId);
         int number = systemParameterRepository.selectCountByCondition(
                 Condition.builder(SystemParameter.class).andWhere(sqls).build());
-        if (number > 0){
+        if (number > 0) {
             throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_CODE_UNIQUE, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_CODE_UNIQUE);
         }
         systemParameterRepository.insertSelective(systemParameter);
@@ -109,7 +107,7 @@ public class SysParamServiceImpl implements SysParamService {
             return co;
         }
 
-        Map<String,String> map = systemParameterQueryInnerDTO.getHashMap();
+        Map<String, String> map = systemParameterQueryInnerDTO.getHashMap();
         for (SystemParamValue value : systemParamValueList) {
             String  paramValue = map.get(value.getParamKey());
             if (StringUtils.isEmpty(paramValue)) {
@@ -119,7 +117,7 @@ public class SysParamServiceImpl implements SysParamService {
         }
 
         systemParamValueRepository.batchUpdateByPrimaryKeySelective(systemParamValueList);
-        systemParameterRedis.updateToRedis(systemParameter,tenantId);
+        systemParameterRedis.updateToRedis(systemParameter, tenantId);
         co.setSuccess(BaseConstants.FIELD_SUCCESS);
         return co;
     }

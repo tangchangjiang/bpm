@@ -20,15 +20,14 @@ public class RegionRepositoryImpl implements RegionRepository {
         this.regionLovQueryRepository = regionLovQueryRepository;
     }
 
-
     @Override
-    public List<Region> listRegionWithParent(final String countryCode, final String condition, final Integer enabledFlag,Long tenantId) {
+    public List<Region> listRegionWithParent(final String countryCode, final String condition, final Integer enabledFlag, Long tenantId) {
         //1.查询地区
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(tenantId);
         dto.setCountryCode(countryCode);
         dto.setRegionCode(condition);
-        List<Region>  regionList  = this.listRegionLov(dto,tenantId);
+        List<Region> regionList = this.listRegionLov(dto, tenantId);
         List<Region> regionTree = new ArrayList<>();
         for (Region region : regionList) {
             if (StringUtils.isEmpty(region.getParentRegionCode())) {
@@ -40,10 +39,10 @@ public class RegionRepositoryImpl implements RegionRepository {
         return regionTree;
     }
 
-
     /**
      * 递归查找指定分类的所有子分类( 所有菜单的子菜单)
-     * @param current 一级分类
+     *
+     * @param current  一级分类
      * @param entities 地区数据
      * @return list
      */
@@ -59,9 +58,10 @@ public class RegionRepositoryImpl implements RegionRepository {
 
         return children;
     }
+
     @Override
     public List<Region> listRegionLov(RegionQueryLovInnerDTO regionQueryLov, Long tenantId) {
-        return regionLovQueryRepository.queryRegion(tenantId,regionQueryLov);
+        return regionLovQueryRepository.queryRegion(tenantId, regionQueryLov);
     }
 }
 

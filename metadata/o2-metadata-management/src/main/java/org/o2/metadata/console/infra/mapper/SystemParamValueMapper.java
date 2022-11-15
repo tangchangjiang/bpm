@@ -31,14 +31,6 @@ public interface SystemParamValueMapper extends BaseMapper<SystemParamValue> {
     List<String> getSysListByParam(@Param("paramCode") String paramCode, @Param("tenantId") Long tenantId);
 
     /**
-     * 获取参数类型为set的参数值
-     *
-     * @param paramCode 参数code
-     * @param tenantId  租户id
-     * @return Set<String>
-     */
-
-    /**
      * 获取参数类型为set的参数值以及扩展字段
      *
      * @param paramCode 参数code

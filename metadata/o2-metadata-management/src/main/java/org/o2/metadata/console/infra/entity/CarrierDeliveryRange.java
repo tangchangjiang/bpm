@@ -115,7 +115,6 @@ public class CarrierDeliveryRange extends AuditDomain {
     @NotNull
     private Long carrierId;
 
-
     @ApiModelProperty(value = "国家,名称", hidden = true)
     @Transient
     private String countryName;

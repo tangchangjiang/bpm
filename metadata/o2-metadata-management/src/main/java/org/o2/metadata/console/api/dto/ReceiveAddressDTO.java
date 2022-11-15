@@ -29,7 +29,6 @@ public class ReceiveAddressDTO {
     @NotBlank
     private String districtCode;
 
-
     public ReceiveAddressDTO copy() {
         ReceiveAddressDTO tempAddress = new ReceiveAddressDTO();
         tempAddress.setCountryCode(this.getCountryCode());
@@ -38,6 +37,5 @@ public class ReceiveAddressDTO {
         tempAddress.setDistrictCode(this.getDistrictCode());
         return tempAddress;
     }
-
 
 }

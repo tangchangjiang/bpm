@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 承运商=
  *
  * @author yipeng.zhu@hand-china.com 2021-09-23
@@ -32,11 +31,12 @@ public class CarrierClient {
      * 批量查询承运商
      *
      * @param carrierQueryInnerDTO 承运商
-     * @param tenantId   租户ID
+     * @param tenantId             租户ID
      * @return map key:carrierCode
      */
     public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierCO>>() {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(carrierQueryInnerDTO, tenantId), new TypeReference<Map<String,
+                CarrierCO>>() {
         });
     }
 
@@ -44,14 +44,14 @@ public class CarrierClient {
      * 批量查询承运商匹配规则
      *
      * @param carrierMappingQueryInnerDTO 承运商
-     * @param tenantId   租户ID
+     * @param tenantId                    租户ID
      * @return map key:carrierCode
      */
     public Map<String, CarrierMappingCO> listCarrierMappings(CarrierMappingQueryInnerDTO carrierMappingQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarrierMappings(carrierMappingQueryInnerDTO, tenantId), new TypeReference<Map<String, CarrierMappingCO>>() {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarrierMappings(carrierMappingQueryInnerDTO, tenantId),
+                new TypeReference<Map<String, CarrierMappingCO>>() {
         });
     }
-
 
     /**
      * 租户id查询所有承运商数据
@@ -64,7 +64,6 @@ public class CarrierClient {
         });
     }
 
-
     /**
      * 承运商物流成本计算
      *
@@ -72,7 +71,8 @@ public class CarrierClient {
      * @return 计算结果
      */
     public List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO), new TypeReference<List<CarrierLogisticsCostCO>>() {
+        return ResponseUtils.getResponse(carrierRemoteService.calculateLogisticsCost(tenantId, carrierLogisticsCostDTO),
+                new TypeReference<List<CarrierLogisticsCostCO>>() {
         });
     }
 
@@ -83,7 +83,8 @@ public class CarrierClient {
      * @return 结果
      */
     public List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO, Long tenantId) {
-        return ResponseUtils.getResponse(carrierRemoteService.checkDeliveryRange(tenantId, carrierDeliveryRangeDTO), new TypeReference<List<CarrierDeliveryRangeCO>>() {
+        return ResponseUtils.getResponse(carrierRemoteService.checkDeliveryRange(tenantId, carrierDeliveryRangeDTO),
+                new TypeReference<List<CarrierDeliveryRangeCO>>() {
         });
 
     }

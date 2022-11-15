@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.lovadapter.address;
 
-
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 
 /**

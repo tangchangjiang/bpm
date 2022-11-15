@@ -40,7 +40,7 @@ public class BpmnModelValidator {
 
     public static final String MODEL_DEFINITION_ERROR_MSG_FORMAT = "message={%s}, elementId={%s}";
 
-    public static void validate(BpmnModel flowModel){
+    public static void validate(BpmnModel flowModel) {
 
         if (flowModel == null || CollectionUtils.isEmpty(flowModel.getFlowElements())) {
             log.info("message={}", ProcessEngineConstants.ErrorCode.MODEL_EMPTY);
@@ -59,9 +59,9 @@ public class BpmnModelValidator {
     protected static Map<String, BaseElement> getFlowElementMap(List<BaseElement> flowElementList) {
         Map<String, BaseElement> flowElementMap = Maps.newHashMap();
 
-        for(BaseElement flowElement : flowElementList) {
-            if(!FlowElementType.FLOW.contains(flowElement.getType())
-                    && !FlowElementType.NODE.contains(flowElement.getType())){
+        for (BaseElement flowElement : flowElementList) {
+            if (!FlowElementType.FLOW.contains(flowElement.getType())
+                    && !FlowElementType.NODE.contains(flowElement.getType())) {
                 throw new CommonException(ProcessEngineConstants.ErrorCode.INVALID_ELEMENT_TYPE);
             }
 
@@ -78,8 +78,9 @@ public class BpmnModelValidator {
 
     /**
      * 对每个元素进行校验，并且校验起始节点和结束节点的数量
+     *
      * @param flowElementList 所有元素
-     * @param flowElementMap 元素集合
+     * @param flowElementMap  元素集合
      */
     protected static void checkElement(List<BaseElement> flowElementList, Map<String, BaseElement> flowElementMap) {
         int startEventCount = 0;
@@ -110,10 +111,10 @@ public class BpmnModelValidator {
         }
     }
 
-
     /**
      * 死循环校验
-     * @param flowModel 流程模型
+     *
+     * @param flowModel      流程模型
      * @param flowElementMap 元素集合
      */
     private static void checkCycle(BpmnModel flowModel, Map<String, BaseElement> flowElementMap) {

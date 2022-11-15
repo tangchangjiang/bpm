@@ -61,9 +61,9 @@ public class AddressMappingController extends BaseController {
         if (MetadataConstants.Constants.COUNTRY_ALL.equals(countryCode)) {
             final List<RegionTreeChildVO> results = new ArrayList<>();
             // 获得所有国家
-            CountryQueryLovDTO dto= new CountryQueryLovDTO();
+            CountryQueryLovDTO dto = new CountryQueryLovDTO();
             dto.setTenantId(organizationId);
-            final List<Country> countryList = countryRepository.listCountryLov(dto,organizationId);
+            final List<Country> countryList = countryRepository.listCountryLov(dto, organizationId);
             for (final Country country : countryList) {
                 final RegionTreeChildVO treeChildVO = new RegionTreeChildVO();
                 //负数，防止与regionId重复
@@ -87,15 +87,16 @@ public class AddressMappingController extends BaseController {
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/detail")
     public ResponseEntity<AddressMappingVO> detail(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                 final Long addressMappingId,
-                                                 final String countryCode) {
-        return Results.success(addressMappingService.addressMappingDetail(addressMappingId,countryCode,organizationId));
+                                                   final Long addressMappingId,
+                                                   final String countryCode) {
+        return Results.success(addressMappingService.addressMappingDetail(addressMappingId, countryCode, organizationId));
     }
 
     @ApiOperation(value = "创建地址匹配")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<AddressMapping> createAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody AddressMapping addressMapping) {
+    public ResponseEntity<AddressMapping> createAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @RequestBody AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         addressMappingService.createAddressMapping(addressMapping);
         return Results.success(addressMapping);
@@ -105,7 +106,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
     public ResponseEntity<AddressMapping> updateAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                  @RequestBody final AddressMapping addressMapping) {
+                                                               @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         if (!addressMapping.exist(addressMappingRepository)) {
@@ -119,7 +120,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
     public ResponseEntity<OperateResponse> deleteAddressMapping(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                     @RequestBody final AddressMapping addressMapping) {
+                                                                @RequestBody final AddressMapping addressMapping) {
         addressMapping.setTenantId(organizationId);
         SecurityTokenHelper.validToken(addressMapping);
         addressMappingRepository.delete(addressMapping);
@@ -130,7 +131,7 @@ public class AddressMappingController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping("/release")
     public ResponseEntity<OperateResponse> release(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                     @RequestBody AddressReleaseDTO addressRelease){
+                                                   @RequestBody AddressReleaseDTO addressRelease) {
         addressRelease.setTenantId(organizationId);
         addressMappingService.releaseAddressMapping(addressRelease);
         return Results.success(OperateResponse.success());

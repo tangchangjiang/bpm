@@ -57,7 +57,6 @@ public class PosAddressVO extends AuditDomain {
     @ApiModelProperty("纬度")
     private BigDecimal latitude;
 
-
     @ApiModelProperty(value = "国家")
 
     private String countryName;

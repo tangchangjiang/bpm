@@ -4,7 +4,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
-import org.o2.metadata.console.api.dto.*;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
+import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.api.dto.WarehouseRelPosDTO;
 import org.o2.metadata.console.api.vo.WarehouseRelPosVO;
 import org.o2.metadata.console.app.bo.WarehouseCacheBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
@@ -48,7 +53,7 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
 
     @Override
     public List<Warehouse> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long tenantId) {
-        return warehouseMapper.listWarehouses(innerDTO,tenantId);
+        return warehouseMapper.listWarehouses(innerDTO, tenantId);
     }
 
     @Override
@@ -58,12 +63,12 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
 
     @Override
     public List<Warehouse> listActiveWarehouseByShopCode(String onlineShopCode, Long organizationId) {
-        return warehouseMapper.listActiveWarehouseByShopCode(onlineShopCode,organizationId);
+        return warehouseMapper.listActiveWarehouseByShopCode(onlineShopCode, organizationId);
     }
 
     @Override
     public List<WarehouseCacheBO> listWarehouseByCode(List<String> warehouseCodes, Long tenantId) {
-        return warehouseMapper.listWarehouseByCode(warehouseCodes,tenantId);
+        return warehouseMapper.listWarehouseByCode(warehouseCodes, tenantId);
     }
 
     @Override
@@ -109,6 +114,6 @@ public class WarehouseRepositoryImpl extends BaseRepositoryImpl<Warehouse> imple
 
     @Override
     public List<Warehouse> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
-        return warehouseMapper.listWarehousesByPosCode(posCodes,tenantId);
+        return warehouseMapper.listWarehousesByPosCode(posCodes, tenantId);
     }
 }
