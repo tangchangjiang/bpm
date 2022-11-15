@@ -15,5 +15,5 @@ public interface O2SiteRegionFileService {
      * @param resourceOwner 资源所属
      * @date 2020-05-20
      */
-    void createRegionStaticFile(final RegionCacheVO regionCacheVO, final String resourceOwner, final String businessTypeCode);
+    void createRegionStaticFile(RegionCacheVO regionCacheVO, String resourceOwner, String businessTypeCode);
 }

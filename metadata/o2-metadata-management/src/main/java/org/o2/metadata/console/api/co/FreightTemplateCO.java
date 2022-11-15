@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.Objects;
 
-
 /**
  * 运费模板
  *
@@ -33,11 +32,14 @@ public class FreightTemplateCO {
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {return true;}
-        if (o == null || getClass() != o.getClass()) {return false;}
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FreightTemplateCO that = (FreightTemplateCO) o;
         return templateId.equals(that.templateId) &&
                 templateCode.equals(that.templateCode) &&

@@ -35,11 +35,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BpmnDriver {
 
-    private BpmnDriver(){
+    private static final Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
+
+    private BpmnDriver() {
         // 禁止构造该类
     }
-
-    private static final Map<String, Long> PROCESS_LAST_UPDATE_TIME = new HashMap<>();
 
     public static <T extends BusinessProcessExecParam> void start(final Long tenantId, final String pipelineCode, final T pipelineNodeParams) {
         final BpmnModel bpmnModel = getPipelineDetail(tenantId, pipelineCode);
@@ -53,7 +53,7 @@ public class BpmnDriver {
             throw new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_EXEC_PARAM_NULL, processCode);
         }
 
-        if(null == processBO.getEnabledFlag() || O2CoreConstants.BooleanFlag.NOT_ENABLE == processBO.getEnabledFlag()){
+        if (null == processBO.getEnabledFlag() || O2CoreConstants.BooleanFlag.NOT_ENABLE == processBO.getEnabledFlag()) {
             log.info("business process:{}, tenantId:{} not enabled", processCode, processBO.getTenantId());
             return;
         }
@@ -64,12 +64,13 @@ public class BpmnDriver {
         try {
             ProcessEngine<T> processEngine = applicationContext.getBean(ProcessEngine.class);
             processEngine.startProcess(processBO, processExecParam);
-        }catch (Exception e){
+        } catch (Exception e) {
             processExecParam.setException(e);
             processErrorHandel(processExecParam, processCode, applicationContext);
         }
         if (log.isDebugEnabled()) {
-            log.debug("[processConfig]:Business Process :total time millis:{}, time consuming:{}", stopWatch.getTotalTimeMillis(), JsonHelper.objectToString(stopWatch.getTaskInfo()));
+            log.debug("[processConfig]:Business Process :total time millis:{}, time consuming:{}", stopWatch.getTotalTimeMillis(),
+                    JsonHelper.objectToString(stopWatch.getTaskInfo()));
         }
     }
 
@@ -101,11 +102,12 @@ public class BpmnDriver {
         return bpmnModel;
     }
 
-    private static BpmnModel getPipelineByRemote(String processCode, Long tenantId){
+    private static BpmnModel getPipelineByRemote(String processCode, Long tenantId) {
         Map<String, BpmnModel> result;
         try {
             BusinessProcessRemoteService pipelineRemoteService = ApplicationContextHelper.getContext().getBean(BusinessProcessRemoteService.class);
-            final long currentLastModifiedTime = ResponseUtils.getResponse(pipelineRemoteService.getProcessLastModifiedTime(tenantId, processCode), Long.class);
+            final long currentLastModifiedTime = ResponseUtils.getResponse(pipelineRemoteService.getProcessLastModifiedTime(tenantId, processCode),
+                    Long.class);
 
             if (!PROCESS_LAST_UPDATE_TIME.containsKey(processCode) || currentLastModifiedTime != PROCESS_LAST_UPDATE_TIME.get(processCode)) {
                 updateMemoryCacheTime(processCode, tenantId, currentLastModifiedTime);
@@ -113,14 +115,15 @@ public class BpmnDriver {
 
             result = CollectionCacheHelper.getCache(BusinessProcessConstants.CacheParam.CACHE_NAME, tenantId.toString(),
                     Collections.singletonList(processCode), pipelines -> {
-                        BpmnModel bpmnModel = ResponseUtils.getResponse(pipelineRemoteService.getProcessConfigByCode(tenantId, processCode), BpmnModel.class);
+                        BpmnModel bpmnModel = ResponseUtils.getResponse(pipelineRemoteService.getProcessConfigByCode(tenantId, processCode),
+                                BpmnModel.class);
                         Map<String, BpmnModel> modelMap = new HashMap<>(1);
                         modelMap.put(processCode, bpmnModel);
                         // 存入内存之前先进行合法校验
                         BpmnModelValidator.validate(bpmnModel);
                         return modelMap;
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("metadata->PipelineDriver->getPipelineByRemote error:{}", e.getMessage());
             BusinessProcessRuntimeException processException = new BusinessProcessRuntimeException(BusinessProcessConstants.ErrorMessage.PIPELINE_NETWORK_REQUEST_ERROR, processCode);
             processException.setStackTrace(e.getStackTrace());
@@ -130,9 +133,9 @@ public class BpmnDriver {
     }
 
     private static void updateMemoryCacheTime(String processCode, Long tenantId, long currentLastModifiedTime) {
-        synchronized (PROCESS_LAST_UPDATE_TIME){
+        synchronized (PROCESS_LAST_UPDATE_TIME) {
             // 当存在缓存更新时间且 缓存更新时间小于当前更新时间时
-            if(PROCESS_LAST_UPDATE_TIME.computeIfAbsent(processCode, a -> currentLastModifiedTime).compareTo(currentLastModifiedTime) < 0){
+            if (PROCESS_LAST_UPDATE_TIME.computeIfAbsent(processCode, a -> currentLastModifiedTime).compareTo(currentLastModifiedTime) < 0) {
                 // 更新缓存更新时间并清空缓存
                 PROCESS_LAST_UPDATE_TIME.put(processCode, currentLastModifiedTime);
                 CacheManager cacheManager = ApplicationContextHelper.getContext().getBean(CacheManager.class);

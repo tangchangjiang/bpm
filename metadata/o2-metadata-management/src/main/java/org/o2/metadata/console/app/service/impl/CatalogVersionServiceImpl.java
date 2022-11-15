@@ -42,11 +42,11 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
 
         CatalogVersion original = catalogVersionRepository.selectByPrimaryKey(catalogVersion);
         if (!original.getCatalogVersionName().equals(catalogVersion.getCatalogVersionName())) {
-            validCatalogVersionName(catalogVersion,tenantId);
+            validCatalogVersionName(catalogVersion, tenantId);
         }
         // 禁止目录版本编码更新
         if (!original.getCatalogVersionCode().equals(catalogVersion.getCatalogVersionCode())) {
-            throw new O2CommonException(null,CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_FORBIDDEN_UPDATE,
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_FORBIDDEN_UPDATE,
                     CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_FORBIDDEN_UPDATE);
         }
         catalogVersionRepository.updateByPrimaryKeySelective(catalogVersion);
@@ -56,48 +56,53 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
     public void insert(CatalogVersion catalogVersion) {
         Long catalogId = catalogVersion.getCatalogId();
         Long tenantId = catalogVersion.getTenantId();
-        Catalog catalog =  catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
+        Catalog catalog = catalogRepository.selectOne(Catalog.builder().tenantId(tenantId).catalogId(catalogId).build());
         if (MetadataConstants.ActiveFlag.FORBIDDEN.equals(catalog.getActiveFlag())) {
             catalogVersion.setActiveFlag(MetadataConstants.ActiveFlag.FORBIDDEN);
         }
-        validCatalogVersionCode(catalogVersion,tenantId);
-        validCatalogVersionName(catalogVersion,tenantId);
+        validCatalogVersionCode(catalogVersion, tenantId);
+        validCatalogVersionName(catalogVersion, tenantId);
         catalogVersionRepository.insertSelective(catalogVersion);
     }
 
     /**
      * 验证目录版本编码唯一性
+     *
      * @param catalogVersion 目录版本
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      */
     private void validCatalogVersionCode(CatalogVersion catalogVersion, Long tenantId) {
-        CatalogVersion code = catalogVersionRepository.selectOne(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionCode()).build());
+        CatalogVersion code =
+                catalogVersionRepository.selectOne(CatalogVersion.builder().tenantId(tenantId).catalogVersionCode(catalogVersion.getCatalogVersionCode()).build());
         if (null != code) {
-            throw new O2CommonException(null,CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_UNIQUE,
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_UNIQUE,
                     CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_CODE_UNIQUE);
         }
     }
 
     /**
      * 验证目录版本名称唯一性
+     *
      * @param catalogVersion 目录版本
-     * @param tenantId 租户ID
+     * @param tenantId       租户ID
      */
     private void validCatalogVersionName(CatalogVersion catalogVersion, Long tenantId) {
-        List<CatalogVersion> name = catalogVersionRepository.select(CatalogVersion.builder().tenantId(tenantId).catalogVersionName(catalogVersion.getCatalogVersionName()).build());
+        List<CatalogVersion> name =
+                catalogVersionRepository.select(CatalogVersion.builder().tenantId(tenantId).catalogVersionName(catalogVersion.getCatalogVersionName()).build());
         if (CollectionUtils.isNotEmpty(name)) {
-            throw new O2CommonException(null,CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_NAME_UNIQUE,
+            throw new O2CommonException(null, CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_NAME_UNIQUE,
                     CatalogConstants.ErrorCode.O2MD_CATALOG_VERSION_NAME_UNIQUE);
         }
     }
+
     @Override
     public Map<String, String> listCatalogVersions(CatalogVersionQueryInnerDTO catalogVersionQueryInnerDTO, Long organizationId) {
-        Map<String,String> map = new HashMap<>(16);
+        Map<String, String> map = new HashMap<>(16);
         if (null == catalogVersionQueryInnerDTO) {
             return map;
         }
         if (CollectionUtils.isNotEmpty(catalogVersionQueryInnerDTO.getCatalogCodes())) {
-            List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodes(),organizationId);
+            List<Catalog> catalogList = catalogRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodes(), organizationId);
             if (CollectionUtils.isNotEmpty(catalogList)) {
                 for (Catalog catalog : catalogList) {
                     map.put(catalog.getCatalogCode(), catalog.getCatalogName());
@@ -106,7 +111,8 @@ public class CatalogVersionServiceImpl implements CatalogVersionService {
         }
 
         if (CollectionUtils.isNotEmpty(catalogVersionQueryInnerDTO.getCatalogCodeVersionCodes())) {
-            List<CatalogVersion> catalogVersions =catalogVersionRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodeVersionCodes(),organizationId);
+            List<CatalogVersion> catalogVersions =
+                    catalogVersionRepository.batchSelectByCodes(catalogVersionQueryInnerDTO.getCatalogCodeVersionCodes(), organizationId);
             if (CollectionUtils.isNotEmpty(catalogVersions)) {
                 for (CatalogVersion catalogVersion : catalogVersions) {
                     map.put(catalogVersion.getCatalogVersionCode(), catalogVersion.getCatalogVersionName());

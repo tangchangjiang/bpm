@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * 地区
  *
  * @author yipeng.zhu@hand-china.com 2021-08-03
@@ -21,13 +20,14 @@ import java.util.List;
 public class RegionConverter {
     private RegionConverter() {
     }
+
     /**
      * po 转 vo
+     *
      * @param region 地区
-     * @return  vo
+     * @return vo
      */
-    public static RegionVO poToVoObject(Region region){
-
+    public static RegionVO poToVoObject(Region region) {
 
         if (region == null) {
             return null;
@@ -65,17 +65,19 @@ public class RegionConverter {
     public static List<RegionCacheBO> poToBoListObjects(List<Region> regions) {
         List<RegionCacheBO> regionCacheBOList = new ArrayList<>();
         if (regions.isEmpty()) {
-            return  regionCacheBOList;
+            return regionCacheBOList;
         }
         for (Region region : regions) {
             regionCacheBOList.add(poToBoObject(region));
         }
         return regionCacheBOList;
     }
+
     /**
      * PO 转 VO
+     *
      * @param regionList 地址
-     * @return  list
+     * @return list
      */
     public static List<RegionVO> poToVoListObjects(List<Region> regionList) {
         List<RegionVO> regionVOList = new ArrayList<>();
@@ -116,8 +118,9 @@ public class RegionConverter {
 
     /**
      * PO 转 VO
+     *
      * @param regionTreeChildrenList 地区树
-     * @return  list
+     * @return list
      */
     public static List<RegionTreeChildVO> poToVoChildObjects(List<RegionTreeChild> regionTreeChildrenList) {
         List<RegionTreeChildVO> regionTreeChildVOList = new ArrayList<>();
@@ -132,9 +135,10 @@ public class RegionConverter {
 
     /**
      * vo ->bo
-     * @date 2021-08-13
+     *
      * @param regionVO sql值集地区
-     * @return  bo
+     * @return bo
+     * @date 2021-08-13
      */
     private static RegionBO voToBoObject(RegionVO regionVO) {
 
@@ -150,8 +154,9 @@ public class RegionConverter {
 
     /**
      * vO 转 vbo
+     *
      * @param regionList 地区树
-     * @return  list
+     * @return list
      */
 
     public static List<RegionBO> voToBoListObjects(List<RegionVO> regionList) {
@@ -164,8 +169,6 @@ public class RegionConverter {
         }
         return regionBOList;
     }
-
-
 
     private static List<RegionVO> toRegionVOList(List<Region> regionList) {
         if (regionList == null) {

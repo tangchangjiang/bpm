@@ -83,7 +83,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         this.transactionalHelper = transactionalHelper;
     }
 
-
     @Override
     public List<Warehouse> createBatch(final Long tenantId, final List<Warehouse> warehouses) {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
@@ -158,17 +157,17 @@ public class WarehouseServiceImpl implements WarehouseService {
         Pos pos = posRepository.selectByPrimaryKey(posId);
         String posTypeCode = pos.getPosTypeCode();
         String posStatusCode = pos.getPosStatusCode();
-        if(PosConstants.PosTypeCode.STORE.equals(posTypeCode) &&
-                !PosConstants.PosStatusCode.CLOSE.equals(posStatusCode)){
+        if (PosConstants.PosTypeCode.STORE.equals(posTypeCode) &&
+                !PosConstants.PosStatusCode.CLOSE.equals(posStatusCode)) {
             List<Warehouse> query = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
                             .andWhere(Sqls.custom()
-                            .andEqualTo(Warehouse.FIELD_TENANT_ID,warehouse.getTenantId())
-                            .andEqualTo(Warehouse.FIELD_POS_ID,posId))
+                            .andEqualTo(Warehouse.FIELD_TENANT_ID, warehouse.getTenantId())
+                            .andEqualTo(Warehouse.FIELD_POS_ID, posId))
                             .build());
-            if(null == warehouse.getWarehouseId() && !query.isEmpty()) {
+            if (null == warehouse.getWarehouseId() && !query.isEmpty()) {
                 throw new CommonException(WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_REL_POS_NOT_UNIQUE);
             }
-            if(null != warehouse.getWarehouseId() && query.size() > BaseConstants.Digital.ONE) {
+            if (null != warehouse.getWarehouseId() && query.size() > BaseConstants.Digital.ONE) {
                 throw new CommonException(WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_REL_POS_NOT_UNIQUE);
             }
         }
@@ -257,7 +256,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRedis.updatePickUpValue(warehouseCode, increment, tenantId);
     }
 
-
     @Override
     public String warehouseLimitCacheKey(String limit, Long tenantId) {
         if (tenantId == null) {
@@ -327,7 +325,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
         this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCode);
     }
-
 
     @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {

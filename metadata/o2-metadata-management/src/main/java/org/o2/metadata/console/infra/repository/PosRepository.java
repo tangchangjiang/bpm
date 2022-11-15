@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.repository;
 
-
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.PosDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
@@ -32,8 +31,9 @@ public interface PosRepository extends BaseRepository<Pos> {
 
     /**
      * 主键查询
+     *
      * @param tenantId 租户id
-     * @param posId 服务点 id
+     * @param posId    服务点 id
      * @return 带详细地址和接派单时间的服务点信息
      */
     Pos getPosWithAddressAndPostTimeByPosId(Long tenantId, Long posId);
@@ -60,17 +60,19 @@ public interface PosRepository extends BaseRepository<Pos> {
 
     /**
      * 多条件查询服务点
+     *
      * @param pos 服务点
-     * @return  list
+     * @return list
      */
     List<Pos> listPosByCondition(Pos pos);
 
     /**
      * 查询服务点信息（提货信息）
-     * @param posIds 服务点id
-     * @param posCodes 服务点code
+     *
+     * @param posIds      服务点id
+     * @param posCodes    服务点code
      * @param posTypeCode 服务店类型
-     * @param tenantId 租户Id
+     * @param tenantId    租户Id
      * @return list
      */
     List<PosInfo> listPosInfoByCode(List<Long> posIds, List<String> posCodes, String posTypeCode, Long tenantId);
@@ -78,8 +80,8 @@ public interface PosRepository extends BaseRepository<Pos> {
     /**
      * 根据服务点编码批量查询
      *
-     * @param posQueryInnerDTO  服务点DTO
-     * @param tenantId 租户ID
+     * @param posQueryInnerDTO 服务点DTO
+     * @param tenantId         租户ID
      * @return 服务点信息
      */
     List<Pos> listPosByCode(Long tenantId, PosQueryInnerDTO posQueryInnerDTO);

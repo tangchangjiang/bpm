@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 货币值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
@@ -21,14 +20,17 @@ public class CurrencyLovClient {
     public CurrencyLovClient(LovAdapterRemoteService lovAdapterRemoteService) {
         this.lovAdapterRemoteService = lovAdapterRemoteService;
     }
+
     /**
      * 通过编码查询货币(批量)
-     * @param tenantId 租户ID
+     *
+     * @param tenantId      租户ID
      * @param currencyCodes 货币编码
      * @return 返回信息MAP key:货币编码 value:货币
      */
     public Map<String, CurrencyCO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
-        return ResponseUtils.getResponse(lovAdapterRemoteService.findCurrencyByCodes(tenantId, currencyCodes), new TypeReference<Map<String, CurrencyCO>>() {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.findCurrencyByCodes(tenantId, currencyCodes), new TypeReference<Map<String,
+                CurrencyCO>>() {
         });
     }
 }

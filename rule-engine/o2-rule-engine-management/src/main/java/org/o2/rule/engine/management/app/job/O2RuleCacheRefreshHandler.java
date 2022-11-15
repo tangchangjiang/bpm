@@ -45,7 +45,7 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
     private final RuleEntityRepository ruleEntityRepository;
 
     public O2RuleCacheRefreshHandler(RuleRepository ruleRepository,
-                                RuleEntityRepository ruleEntityRepository) {
+                                     RuleEntityRepository ruleEntityRepository) {
         this.ruleRepository = ruleRepository;
         this.ruleEntityRepository = ruleEntityRepository;
     }
@@ -59,7 +59,8 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
 
         Long tenantId = Long.parseLong(map.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID));
         String ruleCodes = map.getOrDefault(RULE_CODE, null);
-        final List<String> ruleCodeList = StringUtils.isEmpty(ruleCodes) ? Collections.emptyList() : Arrays.asList(ruleCodes.split(BaseConstants.Symbol.COMMA));
+        final List<String> ruleCodeList = StringUtils.isEmpty(ruleCodes) ? Collections.emptyList() :
+                Arrays.asList(ruleCodes.split(BaseConstants.Symbol.COMMA));
         log.info("Rule cache refresh, tenantId : {}", tenantId);
         log.info("Rule cache refresh, ruleCodes :{}", ruleCodeList);
 
@@ -73,7 +74,7 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
                         .andIn(Rule.FIELD_RULE_CODE, ruleCodeList, true)
                         .andEqualTo(Rule.FIELD_RULE_STATUS, RuleEngineConstants.RuleStatus.ENABLE)).build());
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("rule entity : {}", ruleEntities);
             log.debug("rule : {}", ruleList);
         }

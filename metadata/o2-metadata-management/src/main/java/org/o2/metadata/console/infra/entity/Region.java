@@ -2,13 +2,14 @@ package org.o2.metadata.console.infra.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.util.List;
 
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Data
-public class Region  {
+public class Region {
 
     @ApiModelProperty("地区ID")
     private Long regionId;
@@ -34,14 +35,12 @@ public class Region  {
     @ApiModelProperty("是否启用")
     private Integer enabledFlag;
 
-
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
     @ApiModelProperty(value = "子类", hidden = true)
     private List<Region> children;
-
 
     @ApiModelProperty("大区，值集O2MD.AREA_CODE")
     private String areaCode;
@@ -58,13 +57,13 @@ public class Region  {
 
     private Integer levelNumber;
     /**
-     *  级别
+     * 级别
      */
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;
 
     /**
-     *  外部区域名称
+     * 外部区域名称
      */
     @ApiModelProperty(value = "外部区域名称")
     private String externalName;

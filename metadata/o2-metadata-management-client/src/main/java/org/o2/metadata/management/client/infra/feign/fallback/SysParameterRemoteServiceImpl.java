@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 public class SysParameterRemoteServiceImpl implements SysParameterRemoteService {
 
-
     @Override
     public ResponseEntity<String> getSystemParameter(Long organizationId, String paramCode) {
         log.error("Error getSystemParameter, params[tenantId = {}, code = {}]", organizationId, paramCode);

@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * 网店关联仓库 管理 API
  *
@@ -42,7 +41,8 @@ public class OnlineShopRelWarehouseInternalController {
     @GetMapping("/{onlineShopCode}")
     public ResponseEntity<Map<String, OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                              @PathVariable(value = "onlineShopCode") @ApiParam(value = "参数code", required = true) String onlineShopCode) {
-        List<OnlineShopRelWarehouseCO> systemParameterVOList = onlineShopRelWarehouseService.listOnlineShopRelWarehouses(onlineShopCode, organizationId);
+        List<OnlineShopRelWarehouseCO> systemParameterVOList = onlineShopRelWarehouseService.listOnlineShopRelWarehouses(onlineShopCode,
+                organizationId);
         Map<String, OnlineShopRelWarehouseCO> map = new HashMap<>(4);
         if (CollectionUtils.isEmpty(systemParameterVOList)) {
             Results.success(map);
@@ -57,9 +57,8 @@ public class OnlineShopRelWarehouseInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/rel-warehouse/list")
     public ResponseEntity<Map<String, List<OnlineShopRelWarehouseCO>>> onlineShopRelWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                                             @RequestBody OnlineShopRelWarehouseInnerDTO innerDTO) {
+                                                                                               @RequestBody OnlineShopRelWarehouseInnerDTO innerDTO) {
         return Results.success(onlineShopRelWarehouseService.listOnlineShopRelWarehouses(innerDTO, organizationId));
     }
-
 
 }

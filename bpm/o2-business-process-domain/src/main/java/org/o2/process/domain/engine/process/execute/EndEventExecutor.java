@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @date 2022/9/30 16:53
  */
 @Service
-public class EndEventExecutor<T extends BusinessProcessExecParam> extends BaseNodeExecutor<T>{
+public class EndEventExecutor<T extends BusinessProcessExecParam> extends BaseNodeExecutor<T> {
 
     @Override
     protected void doExecute(ProcessRuntimeContext<T> runtimeContext) {

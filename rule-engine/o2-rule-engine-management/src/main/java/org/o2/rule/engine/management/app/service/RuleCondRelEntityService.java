@@ -3,7 +3,6 @@ package org.o2.rule.engine.management.app.service;
 import org.o2.rule.engine.management.domain.entity.RuleCondRelEntity;
 import java.util.List;
 
-
 /**
  * 规则关联条件应用服务
  *

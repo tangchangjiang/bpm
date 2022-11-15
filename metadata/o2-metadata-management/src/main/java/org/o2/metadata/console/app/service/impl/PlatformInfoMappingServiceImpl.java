@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 /**
  * 平台信息匹配表应用服务默认实现
  *
@@ -35,11 +34,12 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
 
     private final PlatformInfoMappingRepository platformInfoMappingRepository;
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
-    
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<PlatformInfoMapping> batchSave(List<PlatformInfoMapping> platformInfoMappingList) {
-        Map<AuditDomain.RecordStatus, List<PlatformInfoMapping>> statusMap = platformInfoMappingList.stream().collect(Collectors.groupingBy(PlatformInfoMapping::get_status));
+        Map<AuditDomain.RecordStatus, List<PlatformInfoMapping>> statusMap =
+                platformInfoMappingList.stream().collect(Collectors.groupingBy(PlatformInfoMapping::get_status));
         // 删除
         if (statusMap.containsKey(AuditDomain.RecordStatus.delete)) {
             List<PlatformInfoMapping> deleteList = statusMap.get(AuditDomain.RecordStatus.delete);
@@ -62,33 +62,34 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
         return platformInfoMappingList;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PlatformInfoMapping save(PlatformInfoMapping platformInfoMapping) {
 
         // 唯一性校验
         Condition condition = Condition.builder(PlatformInfoMapping.class).andWhere(Sqls.custom()
-                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, platformInfoMapping.getPlatformCode())
-                .andEqualTo(PlatformInfoMapping.FIELD_INF_TYPE_CODE, platformInfoMapping.getInfTypeCode())
-                .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode())
-                .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, platformInfoMapping.getTenantId()))
+                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_CODE, platformInfoMapping.getPlatformCode())
+                        .andEqualTo(PlatformInfoMapping.FIELD_INF_TYPE_CODE, platformInfoMapping.getInfTypeCode())
+                        .andEqualTo(PlatformInfoMapping.FIELD_PLATFORM_INF_CODE, platformInfoMapping.getPlatformInfCode())
+                        .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, platformInfoMapping.getTenantId()))
                 .build();
         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectByCondition(condition);
         //保存平台信息匹配表
         if (platformInfoMapping.getPlatformInfMappingId() == null) {
             //判断是否重复
-            if (CollectionUtils.isNotEmpty(list)){
-                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR, MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
+            if (CollectionUtils.isNotEmpty(list)) {
+                throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR,
+                        MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
             }
             setLovMeaning(platformInfoMapping);
             platformInfoMappingRepository.insertSelective(platformInfoMapping);
         } else {
-            if (CollectionUtils.isNotEmpty(list)){
+            if (CollectionUtils.isNotEmpty(list)) {
                 // 判断是否重复
                 PlatformInfoMapping result = list.get(0);
                 if (!result.getPlatformInfMappingId().equals(platformInfoMapping.getPlatformInfMappingId())) {
-                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR,MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
+                    throw new CommonException(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR,
+                            MessageAccessor.getMessage(MetadataConstants.ErrorCode.O2MD_ERROR_CHECK_ERROR).desc());
                 }
             }
             setLovMeaning(platformInfoMapping);
@@ -113,12 +114,13 @@ public class PlatformInfoMappingServiceImpl implements PlatformInfoMappingServic
 
     /**
      * 动态查询值集
+     *
      * @param platformInfoMapping 参数
      */
     private void setLovMeaning(PlatformInfoMapping platformInfoMapping) {
         String lovValue = platformInfoMapping.getInfTypeCode();
         String lovMeaning = hzeroLovQueryRepository.queryLovValueMeaning(
-                platformInfoMapping.getTenantId(), lovValue,platformInfoMapping.getInfCode());
+                platformInfoMapping.getTenantId(), lovValue, platformInfoMapping.getInfCode());
         platformInfoMapping.setInfName(lovMeaning);
 
     }

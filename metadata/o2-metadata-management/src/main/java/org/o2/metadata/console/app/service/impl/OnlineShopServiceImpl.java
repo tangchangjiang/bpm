@@ -32,6 +32,7 @@ import java.util.*;
 
 /**
  * 网店应用服务默认实现
+ *
  * @author yipeng.zhu@hand-china.com 2020-06-03 09:53
  **/
 @Slf4j
@@ -85,7 +86,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
-        String code  = onlineShop.getOnlineShopCode();
+        String code = onlineShop.getOnlineShopCode();
         String name = onlineShop.getOnlineShopName();
         Integer activeFlag = onlineShop.getActiveFlag();
         Long tenantId = onlineShop.getTenantId();
@@ -95,11 +96,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         catalog.setCatalogName(name);
         catalog.setActiveFlag(activeFlag);
         catalog.setTenantId(tenantId);
-        Map<String, Map<String, String>>  catalogLanguage = new HashMap<>(2);
+        Map<String, Map<String, String>> catalogLanguage = new HashMap<>(2);
         Map<String, String> catalogMap = new HashMap<>(2);
-        catalogMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
-        catalogMap.put(OnlineShopConstants.Language.ZH_CN,catalog.getCatalogName());
-        catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME,catalogMap);
+        catalogMap.put(OnlineShopConstants.Language.EN_US, catalog.getCatalogName());
+        catalogMap.put(OnlineShopConstants.Language.ZH_CN, catalog.getCatalogName());
+        catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME, catalogMap);
         catalog.set_tls(catalogLanguage);
         // 目录版本
         CatalogVersion catalogVersion = new CatalogVersion();
@@ -107,11 +108,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         catalogVersion.setCatalogVersionName(name);
         catalogVersion.setActiveFlag(activeFlag);
         catalogVersion.setTenantId(tenantId);
-        Map<String, Map<String, String>>  catalogVersionLanguage = new HashMap<>(2);
+        Map<String, Map<String, String>> catalogVersionLanguage = new HashMap<>(2);
         Map<String, String> catalogVersionMap = new HashMap<>(2);
-        catalogVersionMap.put(OnlineShopConstants.Language.EN_US,catalog.getCatalogName());
-        catalogVersionMap.put(OnlineShopConstants.Language.ZH_CN,catalog.getCatalogName());
-        catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME,catalogVersionMap);
+        catalogVersionMap.put(OnlineShopConstants.Language.EN_US, catalog.getCatalogName());
+        catalogVersionMap.put(OnlineShopConstants.Language.ZH_CN, catalog.getCatalogName());
+        catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME, catalogVersionMap);
         catalog.set_tls(catalogVersionLanguage);
 
         onlineShop.setCatalogCode(code);
@@ -133,10 +134,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
     @Override
     public OnlineShop updateOnlineShop(OnlineShop onlineShop) {
-         OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
+        OnlineShop origin = onlineShopRepository.selectByPrimaryKey(onlineShop);
         // 网店编码变动
         if (!origin.getOnlineShopCode().equals(onlineShop.getOnlineShopCode())) {
-            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE);
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE,
+                    OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UPDATE);
         }
         if (!origin.getOnlineShopName().equals(onlineShop.getOnlineShopName())) {
             validateOnlineShopName(onlineShop);
@@ -158,7 +160,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         queryVersionBean.setActiveFlag(onlineShop.getActiveFlag());
         queryVersionBean.setCatalogVersionName(onlineShop.getOnlineShopName());
 
-        boolean flag = (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
+        boolean flag =
+                (MetadataConstants.DefaultShop.DEFAULT.equals(onlineShop.getIsDefault())) && (!onlineShop.getIsDefault().equals(origin.getIsDefault()));
         transactionalHelper.transactionOperation(() -> {
             onlineShopRepository.updateByPrimaryKeySelective(onlineShop);
             catalogRepository.updateByPrimaryKeySelective(catalogBean);
@@ -174,10 +177,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
     /**
      * 校验网店编码唯一性
+     *
      * @param onlineShop 网店
      */
     private void validateOnlineShopCode(OnlineShop onlineShop) {
-        if(null == onlineShop.getPlatformShopCode()){
+        if (null == onlineShop.getPlatformShopCode()) {
             return;
         }
         // 租户id+平台编码+平台网店编码
@@ -187,12 +191,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE, onlineShop.getPlatformShopCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
-            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE,
+                    OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
         }
     }
 
     /**
      * 校验网店名称唯一性
+     *
      * @param onlineShop 网店
      */
     private void validateOnlineShopName(OnlineShop onlineShop) {
@@ -203,7 +209,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShop.getOnlineShopName());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
-            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE);
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE,
+                    OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_NAME_UNIQUE);
         }
     }
 
@@ -223,7 +230,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
         Map<String, List<OnlineShopCO>> map = new HashMap<>(16);
-        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList, tenantId));
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopCatalogVersionList,
+                tenantId));
         if (voList.isEmpty()) {
             return map;
         }

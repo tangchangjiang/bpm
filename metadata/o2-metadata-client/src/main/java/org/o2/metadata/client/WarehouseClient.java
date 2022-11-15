@@ -29,7 +29,7 @@ public class WarehouseClient {
      * @param tenantId 租户ID
      * @return key:仓库编码 value:仓库
      */
-    public Map<String, WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId){
+    public Map<String, WarehouseCO> listWarehouses(List<String> warehouseCodes, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehouses(tenantId, warehouseCodes), new TypeReference<Map<String, WarehouseCO>>() {
         });
     }
@@ -42,7 +42,7 @@ public class WarehouseClient {
      * @return key:仓库编码 value:仓库已自提量
      */
     public Map<String, WarehousePickupLimitCO> listWarehousePickupLimit(List<String> warehouseCodes, Long tenantId) {
-        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<Map<String, WarehousePickupLimitCO>>(){});
+        return ResponseUtils.getResponse(warehouseRemoteService.listWarehousePickupLimit(tenantId, warehouseCodes), new TypeReference<Map<String, WarehousePickupLimitCO>>() { });
     }
 
     /**
@@ -51,7 +51,7 @@ public class WarehouseClient {
      * @param tenantId 租户id
      * @return key:仓库编码 value:仓库
      */
-    public Map<String, List<WarehouseCO>> listWarehousesByPosCode(List<String> posCodes, Long tenantId){
+    public Map<String, List<WarehouseCO>> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(tenantId, posCodes), new TypeReference<Map<String, List<WarehouseCO>>>() {
         });
     }

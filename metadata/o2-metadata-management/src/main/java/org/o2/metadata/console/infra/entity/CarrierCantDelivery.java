@@ -46,7 +46,6 @@ public class CarrierCantDelivery extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("表ID，主键，供其他表做外键")
     @Id
     @GeneratedValue

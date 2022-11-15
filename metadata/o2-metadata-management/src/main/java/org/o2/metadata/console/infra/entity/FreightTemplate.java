@@ -85,12 +85,12 @@ public class FreightTemplate extends AuditDomain {
     @Id
     @GeneratedValue
     private Long templateId;
-    @ApiModelProperty(value = "运费模板编码",required = true)
+    @ApiModelProperty(value = "运费模板编码", required = true)
     @NotBlank
     private String templateCode;
     @ApiModelProperty(value = "运费模板名称")
     private String templateName;
-    @ApiModelProperty(value = "是否包邮",required = true)
+    @ApiModelProperty(value = "是否包邮", required = true)
     @NotNull
     @Max(1)
     @Min(0)
@@ -100,12 +100,12 @@ public class FreightTemplate extends AuditDomain {
     private String valuationType;
     @ApiModelProperty(value = "计价单位，值集视图O2MD.UOM")
     private String valuationUom;
-    @ApiModelProperty(value = "默认运费模板标记，新建的时候默认为0",required = true)
+    @ApiModelProperty(value = "默认运费模板标记，新建的时候默认为0", required = true)
     @NotNull
     private Integer dafaultFlag;
     @ApiModelProperty(value = "是否启用标记,默认是启用")
     private Integer activeFlag;
-    @ApiModelProperty(value = "租户ID",required = true)
+    @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     private Long tenantId;
 
@@ -124,7 +124,5 @@ public class FreightTemplate extends AuditDomain {
     @ApiModelProperty(value = "是否包邮")
     @Transient
     private String deliveryFreeFlagMeaning;
-
-
 
 }

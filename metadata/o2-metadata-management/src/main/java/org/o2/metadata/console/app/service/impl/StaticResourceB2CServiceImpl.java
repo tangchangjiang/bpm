@@ -15,7 +15,8 @@ import java.util.List;
 @Service
 public class StaticResourceB2CServiceImpl implements StaticResourceBusinessService {
     private final O2CmsManagementClient cmsManagementClient;
-    public StaticResourceB2CServiceImpl(O2CmsManagementClient cmsManagementClient){
+
+    public StaticResourceB2CServiceImpl(O2CmsManagementClient cmsManagementClient) {
         this.cmsManagementClient = cmsManagementClient;
     }
 
@@ -23,7 +24,7 @@ public class StaticResourceB2CServiceImpl implements StaticResourceBusinessServi
     public void saveStaticResource(Long tenantId, List<StaticResourceSaveDO> staticResourceSaveDOList) {
         try {
             cmsManagementClient.saveResource(tenantId, StaticResourceConverter.toB2CStaticResourceSaveDTOList(staticResourceSaveDOList));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(MetadataConstants.ErrorCode.SAVE_STATIC_RESOURCE_FAIL);
         }
     }
@@ -33,7 +34,7 @@ public class StaticResourceB2CServiceImpl implements StaticResourceBusinessServi
         StaticResourceConfigDO staticResourceConfigDO;
         try {
             staticResourceConfigDO = StaticResourceConverter.toStaticResourceConfigDO(cmsManagementClient.getStaticResourceConfig(tenantId, resourceCode));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(MetadataConstants.ErrorCode.QUERY_STATIC_RESOURCE_CONFIG_FAIL);
         }
         return staticResourceConfigDO;

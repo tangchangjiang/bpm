@@ -1,6 +1,5 @@
 package org.o2.process.domain.engine.runtime;
 
-
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.DateUtil;
 import org.o2.process.domain.engine.BusinessProcessExecParam;
@@ -21,40 +20,41 @@ public interface ServiceAction<T extends BusinessProcessExecParam> {
 
     /**
      * 节点执行前
+     *
      * @param dataObject
      */
-    default void beforeExecution(final T dataObject){
+    default void beforeExecution(final T dataObject) {
 
     }
-
 
     /**
      * 流水线节点执行实体
      *
      * @param dataObject 执行流转数据参数(已序列化)
      */
-    void run(final T dataObject);
-
+    void run(T dataObject);
 
     /**
      * 节点执行后
+     *
      * @param dataObject
      */
-    default void afterExecution(final T dataObject){
+    default void afterExecution(final T dataObject) {
 
     }
 
     /**
      * 节点参数转换
-     * @param paramCode 参数编码
+     *
+     * @param paramCode  参数编码
      * @param dataObject 流程上下文
      * @return
      */
-    default List<String> paramParsingList(String paramCode, T dataObject){
+    default List<String> paramParsingList(String paramCode, T dataObject) {
         return Arrays.stream(dataObject.getCurrentParam().get(paramCode).split(BaseConstants.Symbol.COMMA)).collect(Collectors.toList());
     }
 
-    default String paramParsing(String paramCode, T dataObject){
+    default String paramParsing(String paramCode, T dataObject) {
         return dataObject.getCurrentParam().get(paramCode);
     }
 
@@ -62,15 +62,15 @@ public interface ServiceAction<T extends BusinessProcessExecParam> {
         return DateUtil.parseToDateTime(dataObject.getCurrentParam().get(paramCode));
     }
 
-    default Integer paramParsingInteger(String paramCode, T dataObject){
+    default Integer paramParsingInteger(String paramCode, T dataObject) {
         return Integer.valueOf(dataObject.getCurrentParam().get(paramCode));
     }
 
-    default Long paramParsingLong(String paramCode, T dataObject){
+    default Long paramParsingLong(String paramCode, T dataObject) {
         return Long.valueOf(dataObject.getCurrentParam().get(paramCode));
     }
 
-    default BigDecimal paramParsingBigDecimal(String paramCode, T dataObject){
+    default BigDecimal paramParsingBigDecimal(String paramCode, T dataObject) {
         return new BigDecimal(dataObject.getCurrentParam().get(paramCode));
     }
 }

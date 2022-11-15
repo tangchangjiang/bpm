@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- *
  * 值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-08-30
@@ -33,7 +32,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     private IdpLovQueryRepository idpLovQueryRepository;
     private LovGeneralQueryRepository lovGeneralQueryRepository;
 
-
     public LovAdapterServiceImpl(BaseLovQueryRepository baseLovQueryRepository,
                                  PublicLovQueryRepository publicLovQueryRepository,
                                  HzeroLovQueryRepository hzeroLovQueryRepository,
@@ -47,7 +45,6 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         this.idpLovQueryRepository = idpLovQueryRepository;
         this.lovGeneralQueryRepository = lovGeneralQueryRepository;
     }
-
 
     @Override
     public Map<String, CurrencyBO> findCurrencyByCodes(Long tenantId, List<String> currencyCodes) {
@@ -79,12 +76,10 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         return publicLovQueryRepository.batchQueryLovInfo(queryMap, tenantId);
     }
 
-
     @Override
     public String queryLovPage(Map<String, String> queryParam, PageRequest pageRequest, String lovCode, Long tenantId) {
         return hzeroLovQueryRepository.queryLovPage(queryParam, pageRequest, lovCode, tenantId);
     }
-
 
     @Override
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
@@ -102,9 +97,9 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     }
 
     @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap) {
-        return lovGeneralQueryRepository.queryLovValueMeaning(tenantId,lovCode,page,size,queryLovValueMap);
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size,
+                                                          Map<String, String> queryLovValueMap) {
+        return lovGeneralQueryRepository.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap);
     }
-
 
 }

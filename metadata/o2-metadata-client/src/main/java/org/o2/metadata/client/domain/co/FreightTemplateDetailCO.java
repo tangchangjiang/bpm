@@ -38,8 +38,12 @@ public class FreightTemplateDetailCO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {return true;}
-        if (o == null || getClass() != o.getClass()) {return false;}
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FreightTemplateDetailCO that = (FreightTemplateDetailCO) o;
         return templateDetailId.equals(that.templateDetailId) &&
                 transportTypeCode.equals(that.transportTypeCode) &&

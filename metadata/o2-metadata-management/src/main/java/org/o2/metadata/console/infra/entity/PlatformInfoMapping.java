@@ -1,20 +1,20 @@
 package org.o2.metadata.console.infra.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import javax.validation.constraints.NotBlank;
-import io.choerodon.mybatis.domain.AuditDomain;
 import io.choerodon.mybatis.annotation.ModifyAudit;
 import io.choerodon.mybatis.annotation.VersionAudit;
+import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 平台信息匹配表
@@ -46,7 +46,6 @@ public class PlatformInfoMapping extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("表主键")
     @Id
     @GeneratedValue
@@ -74,7 +73,7 @@ public class PlatformInfoMapping extends AuditDomain {
     @NotNull
     private Long tenantId;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
@@ -85,7 +84,6 @@ public class PlatformInfoMapping extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "信息类型")
     private String infTypeMeaning;
-
 
     //
     // getter/setter

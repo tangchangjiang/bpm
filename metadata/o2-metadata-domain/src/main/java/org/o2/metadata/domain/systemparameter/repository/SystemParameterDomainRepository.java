@@ -1,6 +1,5 @@
 package org.o2.metadata.domain.systemparameter.repository;
 
-
 import org.o2.metadata.domain.systemparameter.domain.SystemParameterDO;
 
 import java.util.List;

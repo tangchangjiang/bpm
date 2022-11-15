@@ -1,7 +1,7 @@
 package org.o2.metadata.console.api.co;
 
- import com.fasterxml.jackson.annotation.JsonInclude;
- import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegionCO{
+public class RegionCO {
     @ApiModelProperty("地区ID")
     private Long regionId;
 
@@ -33,8 +33,6 @@ public class RegionCO{
 
     @ApiModelProperty("是否启用")
     private Integer enabledFlag;
-
-
 
     @ApiModelProperty(value = "租户ID")
     private Long tenantId;

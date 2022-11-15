@@ -3,7 +3,6 @@ package org.o2.metadata.console.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-
 import java.util.List;
 
 /**

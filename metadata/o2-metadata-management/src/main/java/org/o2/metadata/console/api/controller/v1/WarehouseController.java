@@ -6,7 +6,11 @@ import io.choerodon.mybatis.pagehelper.PageHelper;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.CustomPageRequest;
 import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
@@ -27,7 +31,13 @@ import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
@@ -104,7 +114,7 @@ public class WarehouseController extends BaseController {
         List<Warehouse> oldWarehouse =  getOldWarehouse(warehouses);
         // 更后数据
         List<Warehouse> newList = warehouseService.updateBatch(organizationId, warehouses);
-        warehouseService.triggerWhStockCalWithWh(organizationId,newList, oldWarehouse);
+        warehouseService.triggerWhStockCalWithWh(organizationId, newList, oldWarehouse);
         // 更新Pos的redis信息
         List<Long> posIds = new ArrayList<>();
         posIds.addAll(warehouses.stream().map(Warehouse::getPosId).collect(Collectors.toList()));
@@ -112,6 +122,7 @@ public class WarehouseController extends BaseController {
         posRedis.updatePosDetail(posIds, null, organizationId);
         return Results.success(newList);
     }
+
     /**
      *  更新前数据
      * @param warehouses 仓库
@@ -126,7 +137,7 @@ public class WarehouseController extends BaseController {
             return  new ArrayList<>();
         }
         // 更新前数据
-        return warehouseRepository.selectByIds(StringUtils.join(ids,BaseConstants.Symbol.COMMA));
+        return warehouseRepository.selectByIds(StringUtils.join(ids, BaseConstants.Symbol.COMMA));
     }
 
     @ApiOperation(value = "服务点查询")
@@ -178,7 +189,7 @@ public class WarehouseController extends BaseController {
                                                                        final PageRequest pageRequest) {
 
         warehouseRelPosDTO.setTenantId(organizationId);
-        final Page<WarehouseRelPosVO> warehouseRelPosVOS = PageHelper.doPageAndSort(pageRequest,() -> warehouseRepository.listWarehouseRelPos(warehouseRelPosDTO));
+        final Page<WarehouseRelPosVO> warehouseRelPosVOS = PageHelper.doPageAndSort(pageRequest, () -> warehouseRepository.listWarehouseRelPos(warehouseRelPosDTO));
         return Results.success(warehouseRelPosVOS);
     }
 }

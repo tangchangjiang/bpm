@@ -21,9 +21,7 @@ import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
 import org.o2.metadata.domain.staticresource.service.StaticResourceBusinessService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.*;
-
 
 /**
  * 地区静态文件
@@ -33,7 +31,6 @@ import java.util.*;
 @Service
 @Slf4j
 public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
-
 
     private final RegionRepository regionRepository;
 
@@ -48,9 +45,11 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         log.info("static params are : {},{}", tenantId, countryCode);
 
         // 根据业务类型+目标class获取处理方法
-        StaticResourceBusinessService staticResourceBusinessService = BusinessTypeStrategyDispatcher.getService(businessTypeCode, StaticResourceBusinessService.class);
+        StaticResourceBusinessService staticResourceBusinessService = BusinessTypeStrategyDispatcher.getService(businessTypeCode,
+                StaticResourceBusinessService.class);
         // 查询静态资源配置信息
-        final StaticResourceConfigDO staticResourceConfigDO = staticResourceBusinessService.getStaticResourceConfig(tenantId,MetadataConstants.StaticResourceCode.O2MD_REGION);
+        final StaticResourceConfigDO staticResourceConfigDO = staticResourceBusinessService.getStaticResourceConfig(tenantId,
+                MetadataConstants.StaticResourceCode.O2MD_REGION);
         String uploadFolder = staticResourceConfigDO.getUploadFolder();
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
@@ -68,18 +67,20 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
             return;
         }
 
-        resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId, countryCode));
+        resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(zhList), uploadFolder, dto.getLang(), tenantId,
+                countryCode));
 
         if (staticResourceConfigDO.getDifferentLangFlag()
                 .equals(MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG)) {
             dto.setLang(MetadataConstants.Path.EN_US);
             final List<Region> enList = regionRepository.listRegionLov(dto, tenantId);
-            resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(enList), uploadFolder, dto.getLang(), tenantId, countryCode));
+            resourceUrlMap.put(dto.getLang(), this.staticFile(RegionConverter.poToBoListObjects(enList), uploadFolder, dto.getLang(), tenantId,
+                    countryCode));
         }
 
         //  更新静态文件资源表
         List<StaticResourceSaveDO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap, resourceOwner, staticResourceConfigDO);
-        staticResourceBusinessService.saveStaticResource(tenantId,saveDTOList);
+        staticResourceBusinessService.saveStaticResource(tenantId, saveDTOList);
     }
 
     /**
@@ -107,9 +108,9 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
     }
 
     private List<StaticResourceSaveDO> buildStaticResourceSaveDTO(Long tenantId,
-                                                                   Map<String, String> resourceUrlMap,
-                                                                   String resourceOwner,
-                                                                   StaticResourceConfigDO staticResourceConfigDO) {
+                                                                  Map<String, String> resourceUrlMap,
+                                                                  String resourceOwner,
+                                                                  StaticResourceConfigDO staticResourceConfigDO) {
         List<StaticResourceSaveDO> staticResourceSaveDOList = new ArrayList<>();
         for (Map.Entry<String, String> entry : resourceUrlMap.entrySet()) {
             staticResourceSaveDOList.add(fillCommonFields(tenantId, entry.getValue(), entry.getKey(), resourceOwner, staticResourceConfigDO));

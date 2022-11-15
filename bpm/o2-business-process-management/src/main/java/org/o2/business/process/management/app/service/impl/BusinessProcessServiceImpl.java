@@ -19,7 +19,7 @@ import org.o2.business.process.management.domain.repository.BusinessProcessRepos
 import org.o2.business.process.management.infra.convert.ViewJsonConvert;
 import org.o2.core.helper.JsonHelper;
 import org.o2.process.domain.engine.BpmnModel;
-import org.o2.process.domain.engine.definition.Activity.ServiceTask;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
 import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
 import org.o2.process.domain.engine.process.preruntime.validator.BpmnModelValidator;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class BusinessProcessServiceImpl implements BusinessProcessService {
-                                                                                
+
     private final BusinessProcessRepository businessProcessRepository;
 
     private final BusinessNodeRepository businessNodeRepository;
@@ -55,15 +55,14 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     private final RuleEngineManagementClient ruleEngineManagementClient;
 
-
     public BusinessProcessServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessNodeRepository businessNodeRepository,
-                                      BusinessProcessRedisRepository businessProcessRedisRepository, RuleEngineManagementClient ruleEngineManagementClient) {
+                                      BusinessProcessRedisRepository businessProcessRedisRepository,
+                                      RuleEngineManagementClient ruleEngineManagementClient) {
         this.businessProcessRepository = businessProcessRepository;
         this.businessNodeRepository = businessNodeRepository;
         this.businessProcessRedisRepository = businessProcessRedisRepository;
         this.ruleEngineManagementClient = ruleEngineManagementClient;
     }
-
 
     @Override
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
@@ -73,7 +72,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
                 .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode(), true)
                 .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag(), true)).build());
-        for(BusinessProcess process : result){
+        for (BusinessProcess process : result) {
             process.setCreatedOperator(IamUserHelper.getRealName(process.getCreatedBy().toString()));
             process.setUpdatedOperator(IamUserHelper.getRealName(process.getLastUpdatedBy().toString()));
         }
@@ -84,7 +83,8 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Deprecated()
     @Transactional(rollbackFor = Exception.class)
     public List<BusinessProcess> batchSave(List<BusinessProcess> businessProcessList) {
-        Map<AuditDomain.RecordStatus, List<BusinessProcess>> statusMap = businessProcessList.stream().collect(Collectors.groupingBy(BusinessProcess::get_status));
+        Map<AuditDomain.RecordStatus, List<BusinessProcess>> statusMap =
+                businessProcessList.stream().collect(Collectors.groupingBy(BusinessProcess::get_status));
         // 删除
         if (statusMap.containsKey(AuditDomain.RecordStatus.delete)) {
             List<BusinessProcess> deleteList = statusMap.get(AuditDomain.RecordStatus.delete);
@@ -95,7 +95,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
             List<BusinessProcess> updateList = statusMap.get(AuditDomain.RecordStatus.update);
             updateList.forEach(item -> {
                 // TODO: 唯一性校验
-                UniqueHelper.valid(item,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
+                UniqueHelper.valid(item, BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
                 businessProcessRepository.updateByPrimaryKeySelective(item);
             });
         }
@@ -104,13 +104,12 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
             List<BusinessProcess> createList = statusMap.get(AuditDomain.RecordStatus.create);
             createList.forEach(item -> {
                 // TODO: 唯一性校验
-                UniqueHelper.valid(item,BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
+                UniqueHelper.valid(item, BusinessProcess.O2BPM_BUSINESS_PROCESS_U1);
                 businessProcessRepository.insertSelective(item);
             });
         }
         return businessProcessList;
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -118,7 +117,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
         Set<String> ruleCodes = new HashSet<>();
 
-        if(businessProcess.getBizProcessId() != null){
+        if (businessProcess.getBizProcessId() != null) {
             // 通过viewJson转换成processJson
             buildProcessJson(businessProcess, ruleCodes);
         }
@@ -140,14 +139,16 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
         }
 
         // 加载到缓存中
-        businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(), businessProcess.getTenantId());
+        businessProcessRedisRepository.updateProcessConfig(businessProcess.getProcessCode(), businessProcess.getProcessJson(),
+                businessProcess.getTenantId());
         // 发布规则
-        if (CollectionUtils.isNotEmpty(ruleCodes)){
-            try{
+        if (CollectionUtils.isNotEmpty(ruleCodes)) {
+            try {
                 // todo 事务不能保持一致,因此只能让规则不要影响流程数据的一致性
                 ruleEngineManagementClient.useRule(businessProcess.getTenantId(), new ArrayList<>(ruleCodes));
-            }catch (Exception e){
-                log.error("update useRule error: processCode:{}, ruleCodes:{}", businessProcess.getProcessCode(), JsonHelper.collectionToString(ruleCodes));
+            } catch (Exception e) {
+                log.error("update useRule error: processCode:{}, ruleCodes:{}", businessProcess.getProcessCode(),
+                        JsonHelper.collectionToString(ruleCodes));
             }
         }
         return businessProcess;
@@ -174,7 +175,8 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
     @Override
     public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
         List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
-        businessExportList.forEach(e -> e.setBpmnModel(StringUtils.isBlank(e.getProcessJson()) ? new BpmnModel() : ViewJsonConvert.processJsonConvert(e.getProcessJson())));
+        businessExportList.forEach(e -> e.setBpmnModel(StringUtils.isBlank(e.getProcessJson()) ? new BpmnModel() :
+                ViewJsonConvert.processJsonConvert(e.getProcessJson())));
         Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBpmnModel().getServiceTask().stream())
                 .map(ServiceTask::getBeanId).collect(Collectors.toSet());
         Map<String, BusinessNodeExportVO> nodeExportMap = businessNodeRepository.listNodeForExport(beanIds, businessExportDTO.getTenantId())

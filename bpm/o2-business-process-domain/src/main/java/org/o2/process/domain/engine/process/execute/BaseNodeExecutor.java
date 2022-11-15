@@ -1,6 +1,5 @@
 package org.o2.process.domain.engine.process.execute;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.o2.process.domain.engine.BusinessProcessExecParam;
 import org.o2.process.domain.engine.definition.BaseElement;

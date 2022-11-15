@@ -1,6 +1,5 @@
 package org.o2.metadata.domain.systemparameter.domain;
 
-
 import java.util.Set;
 
 /**

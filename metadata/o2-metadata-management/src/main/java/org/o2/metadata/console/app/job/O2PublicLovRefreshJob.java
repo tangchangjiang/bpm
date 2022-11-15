@@ -28,12 +28,11 @@ public class O2PublicLovRefreshJob implements IJobHandler {
         this.o2PublicLovService = o2PublicLovService;
     }
 
-
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
         final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
         final String lovCode = map.get(MetadataConstants.RefreshJobConstants.LOV_CODE);
-        final String idpLovOwner=map.get(MetadataConstants.RefreshJobConstants.IDP_LOV_OWNER);
+        final String idpLovOwner = map.get(MetadataConstants.RefreshJobConstants.IDP_LOV_OWNER);
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (!StringUtils.hasText(tenantId)) {
@@ -47,6 +46,5 @@ public class O2PublicLovRefreshJob implements IJobHandler {
 
         return ReturnT.SUCCESS;
     }
-
 
 }

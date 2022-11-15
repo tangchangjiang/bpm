@@ -9,10 +9,9 @@ import lombok.Data;
  */
 @ApiModel("承运商匹配表视图")
 @Data
-public class CarrierMappingQueryDTO{
+public class CarrierMappingQueryDTO {
 
     private Long carrierMappingId;
-
 
     @ApiModelProperty(value = "平台id")
     private Long platformId;

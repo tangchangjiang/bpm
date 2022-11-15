@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service;
 
-
 import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;

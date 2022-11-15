@@ -35,7 +35,7 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
 
     @Override
     public List<CarrierDeliveryRange> listCarrierDeliveryRanges(CarrierDeliveryRange carrierDeliveryRange) {
-        List<CarrierDeliveryRange> list =  carrierDeliveryRangeRepository.list(carrierDeliveryRange);
+        List<CarrierDeliveryRange> list = carrierDeliveryRangeRepository.list(carrierDeliveryRange);
         if (list.isEmpty()) {
             return list;
         }
@@ -49,15 +49,15 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
         dto.setTenantId(carrierDeliveryRange.getTenantId());
-        List<Region> regionList = regionRepository.listRegionLov(dto,carrierDeliveryRange.getTenantId());
+        List<Region> regionList = regionRepository.listRegionLov(dto, carrierDeliveryRange.getTenantId());
         if (regionList.isEmpty()) {
             return list;
         }
-        Map<String,String> map = Maps.newHashMapWithExpectedSize(regionCodes.size());
+        Map<String, String> map = Maps.newHashMapWithExpectedSize(regionCodes.size());
         for (Region region : regionList) {
-            map.put(region.getRegionCode(),region.getRegionName());
+            map.put(region.getRegionCode(), region.getRegionName());
         }
-        map.put(regionList.get(0).getCountryCode(),regionList.get(0).getCountryName());
+        map.put(regionList.get(0).getCountryCode(), regionList.get(0).getCountryName());
         for (CarrierDeliveryRange bean : list) {
             bean.setRegionName(map.get(bean.getRegionCode()));
             bean.setCityName(map.get(bean.getCityCode()));
@@ -69,7 +69,7 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
     }
 
     @Override
-    public List<CarrierDeliveryRange> batchMerge(Long organizationId,final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public List<CarrierDeliveryRange> batchMerge(Long organizationId, final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         final Map<String, Object> map = new HashMap<>(carrierDeliveryRanges.size());
         final List<CarrierDeliveryRange> updateList = new ArrayList<>();
         final List<CarrierDeliveryRange> insertList = new ArrayList<>();
@@ -107,6 +107,6 @@ public class CarrierDeliveryRangeServiceImpl implements CarrierDeliveryRangeServ
         query.setDeliveryRangeId(deliveryRangeId);
         query.setTenantId(tenantId);
         List<CarrierDeliveryRange> list = this.listCarrierDeliveryRanges(query);
-        return list.isEmpty()  ? null : list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 }

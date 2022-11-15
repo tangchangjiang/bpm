@@ -29,7 +29,6 @@ public class FreightTemplateManagementVO extends FreightTemplate {
     public static final String FIELD_REGION_FREIGHT_TEMPLATE_DETAILS = "regionFreightTemplateDetails";
     public static final String FIELD_REGION_FREIGHT_DETAIL_DISPLAY_LIST = "regionFreightDetailDisplayList";
 
-
     @ApiModelProperty(value = "默认运费模板明细")
     @Transient
     private List<FreightTemplateDetail> defaultFreightTemplateDetails;
@@ -41,7 +40,6 @@ public class FreightTemplateManagementVO extends FreightTemplate {
     @ApiModelProperty(value = "指定地区运费模板明细-中台前端显示")
     @Transient
     private List<FreightTemplateDetail> regionFreightDetailDisplayList;
-
 
     public FreightTemplateManagementVO() {
     }
@@ -56,46 +54,47 @@ public class FreightTemplateManagementVO extends FreightTemplate {
      * @param regionDetailDisplayList
      * @return
      */
-    public  List<FreightTemplateDetail>  exchangeRegionDetailDisplay2DBlist(List<FreightTemplateDetail> regionDetailDisplayList){
+    public List<FreightTemplateDetail> exchangeRegionDetailDisplay2DBlist(List<FreightTemplateDetail> regionDetailDisplayList) {
 
         List<FreightTemplateDetail> regionDetailList = new ArrayList<>();
-        if (CollectionUtils.isEmpty(regionDetailDisplayList)){ return  regionDetailList; }
+        if (CollectionUtils.isEmpty(regionDetailDisplayList)) {
+            return regionDetailList;
+        }
         Long tenantId = DetailsHelper.getUserDetails().getTenantId();
 
-        regionDetailDisplayList.forEach(old ->{
-             for (int i = 0; i  < old.getRegionIdArr().size() ; i++) {
-                 FreightTemplateDetail detail =  new FreightTemplateDetail();
-                 detail.setFirstPieceWeight(old.getFirstPieceWeight());
-                 detail.setFirstPrice(old.getFirstPrice());
-                 detail.setNextPieceWeight(old.getNextPieceWeight());
-                 detail.setNextPrice(old.getNextPrice());
-                 detail.setTransportTypeCode(old.getTransportTypeCode());
-                 detail.setTransportTypeMeaning(old.getTransportTypeMeaning());
-                 detail.setTemplateId(old.getTemplateId());
-                 detail.setDefaultFlag(old.getDefaultFlag());
-                 detail.setTenantId(old.getTenantId()==null?tenantId:old.getTenantId());
+        regionDetailDisplayList.forEach(old -> {
+            for (int i = 0; i < old.getRegionIdArr().size(); i++) {
+                FreightTemplateDetail detail = new FreightTemplateDetail();
+                detail.setFirstPieceWeight(old.getFirstPieceWeight());
+                detail.setFirstPrice(old.getFirstPrice());
+                detail.setNextPieceWeight(old.getNextPieceWeight());
+                detail.setNextPrice(old.getNextPrice());
+                detail.setTransportTypeCode(old.getTransportTypeCode());
+                detail.setTransportTypeMeaning(old.getTransportTypeMeaning());
+                detail.setTemplateId(old.getTemplateId());
+                detail.setDefaultFlag(old.getDefaultFlag());
+                detail.setTenantId(old.getTenantId() == null ? tenantId : old.getTenantId());
 
-                 detail.setRegionCode(old.getRegionIdArr().get(i));
-                 List<String> regionNameArr =  old.getRegionNameArr();
-                 if (CollectionUtils.isNotEmpty(regionNameArr)){
-                     detail.setRegionName( i<regionNameArr.size()?regionNameArr.get(i):null );
-                 }
-                 List<Long> templateDetailIdArr =  old.getTemplateDetailIdArr();
-                 if (CollectionUtils.isNotEmpty(templateDetailIdArr)){
-                     detail.setTemplateDetailId( i<(templateDetailIdArr.size())? templateDetailIdArr.get(i):null);
-                 }
-                 List<Long> objectVersionNumberArr =  old.getObjectVersionNumberArr();
-                 if (CollectionUtils.isNotEmpty(objectVersionNumberArr)){
-                     detail.setObjectVersionNumber(i<objectVersionNumberArr.size()?objectVersionNumberArr.get(i):null);
-                 }
-                 regionDetailList.add(detail);
+                detail.setRegionCode(old.getRegionIdArr().get(i));
+                List<String> regionNameArr = old.getRegionNameArr();
+                if (CollectionUtils.isNotEmpty(regionNameArr)) {
+                    detail.setRegionName(i < regionNameArr.size() ? regionNameArr.get(i) : null);
+                }
+                List<Long> templateDetailIdArr = old.getTemplateDetailIdArr();
+                if (CollectionUtils.isNotEmpty(templateDetailIdArr)) {
+                    detail.setTemplateDetailId(i < (templateDetailIdArr.size()) ? templateDetailIdArr.get(i) : null);
+                }
+                List<Long> objectVersionNumberArr = old.getObjectVersionNumberArr();
+                if (CollectionUtils.isNotEmpty(objectVersionNumberArr)) {
+                    detail.setObjectVersionNumber(i < objectVersionNumberArr.size() ? objectVersionNumberArr.get(i) : null);
+                }
+                regionDetailList.add(detail);
             }
         });
 
-        return  regionDetailList ;
+        return regionDetailList;
 
     }
-
 
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {

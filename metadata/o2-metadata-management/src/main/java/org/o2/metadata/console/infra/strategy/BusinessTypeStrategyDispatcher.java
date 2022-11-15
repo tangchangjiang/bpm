@@ -21,12 +21,16 @@ public class BusinessTypeStrategyDispatcher {
     }
 
     public static void init() {
-        final Map<String, BaseBusinessTypeInterface> interfaceMap = ApplicationContextHelper.getContext().getBeansOfType(BaseBusinessTypeInterface.class);
+        final Map<String, BaseBusinessTypeInterface> interfaceMap =
+                ApplicationContextHelper.getContext().getBeansOfType(BaseBusinessTypeInterface.class);
         Collection<BaseBusinessTypeInterface> businessTypeInterfaceList = interfaceMap.values();
-        final Map<Class<? extends BaseBusinessTypeInterface>, List<BaseBusinessTypeInterface>> classListMap = businessTypeInterfaceList.stream().collect(Collectors.groupingBy(BaseBusinessTypeInterface::getHandlerClass));
+        final Map<Class<? extends BaseBusinessTypeInterface>, List<BaseBusinessTypeInterface>> classListMap =
+                businessTypeInterfaceList.stream().collect(Collectors.groupingBy(BaseBusinessTypeInterface::getHandlerClass));
         baseMap = Maps.newHashMapWithExpectedSize(classListMap.size());
         classListMap.forEach((clazz, businessClassList) -> {
-            final Map<String, BaseBusinessTypeInterface> businessStrategyMap = businessClassList.stream().collect(Collectors.toMap(BaseBusinessTypeInterface::getBusinessTypeCode, Function.identity(), (k1, k2) -> k1));
+            final Map<String, BaseBusinessTypeInterface> businessStrategyMap =
+                    businessClassList.stream().collect(Collectors.toMap(BaseBusinessTypeInterface::getBusinessTypeCode, Function.identity(), (k1,
+                                                                                                                                              k2) -> k1));
             baseMap.put(clazz, businessStrategyMap);
         });
     }
@@ -42,6 +46,5 @@ public class BusinessTypeStrategyDispatcher {
         }
         return serviceImpl;
     }
-
 
 }

@@ -50,7 +50,6 @@ public class CatalogVersion extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("主键")
     @Id
     @GeneratedValue
@@ -86,7 +85,6 @@ public class CatalogVersion extends AuditDomain {
     @ApiModelProperty(value = "目录编码")
     @Transient
     private List<String> catalogCodes;
-
 
     @Transient
     private String catalogName;

@@ -20,17 +20,17 @@ public class ExecutorProvider<T extends BusinessProcessExecParam> {
 
     private final Map<String, BaseElementExecutor<T>> EXECUTOR_MAP = new HashMap<>();
 
-    public ExecutorProvider(List<BaseElementExecutor<T>> baseRuntimeExecutors){
-         init(baseRuntimeExecutors);
+    public ExecutorProvider(List<BaseElementExecutor<T>> baseRuntimeExecutors) {
+        init(baseRuntimeExecutors);
     }
 
-    protected void init(List<BaseElementExecutor<T>> baseRuntimeExecutors){
+    protected void init(List<BaseElementExecutor<T>> baseRuntimeExecutors) {
         baseRuntimeExecutors.forEach(executor -> EXECUTOR_MAP.put(executor.getType(), executor));
     }
 
     public BaseElementExecutor<T> getElementExecutor(BaseElement flowElement) {
         // 结束节点执行完为空，断开循环
-        if(flowElement == null){
+        if (flowElement == null) {
             return null;
         }
 
@@ -44,9 +44,8 @@ public class ExecutorProvider<T extends BusinessProcessExecParam> {
         return elementExecutor;
     }
 
-
     public BaseElementExecutor<T> getNextNodeExecutor(ProcessRuntimeContext<T> runtimeContext) {
-        if(ProcessEngineConstants.FlowElementType.END_EVENT.equals(runtimeContext.getCurrentElement().getType())){
+        if (ProcessEngineConstants.FlowElementType.END_EVENT.equals(runtimeContext.getCurrentElement().getType())) {
             return null;
         }
         BaseElement flowElement = BpmnModelUtil.getUniqueNextNode(runtimeContext.getCurrentElement(), runtimeContext.getElementMap());

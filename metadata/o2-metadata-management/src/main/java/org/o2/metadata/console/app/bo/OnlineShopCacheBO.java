@@ -45,7 +45,6 @@ public class OnlineShopCacheBO {
      */
     private String onlineShopType;
 
-
     private Integer pickedUpFlag;
     private Integer returnedFlag;
     private Integer exchangedFlag;

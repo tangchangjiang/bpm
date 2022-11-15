@@ -9,7 +9,6 @@ import org.o2.metadata.management.client.infra.feign.PlatformRemoteService;
 import java.util.Map;
 
 /**
- *
  * 平台
  *
  * @author yipeng.zhu@hand-china.com 2021-09-23
@@ -24,11 +23,14 @@ public class PlatformClient {
 
     /**
      * 查询平台信息 1
-     * @param tenantId 租户id
+     *
+     * @param tenantId              租户id
      * @param platformQueryInnerDTO 平台入参
      * @return key : platformCode（平台编码）
      */
     public Map<String, PlatformCO> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO,tenantId),new TypeReference<Map<String,PlatformCO>>(){});
+        return ResponseUtils.getResponse(platformRemoteService.listPlatforms(platformQueryInnerDTO, tenantId), new TypeReference<Map<String,
+                PlatformCO>>() {
+        });
     }
 }

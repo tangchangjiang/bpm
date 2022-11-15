@@ -26,7 +26,7 @@ public class ViewJsonConvert {
 
     private static volatile ObjectMapper objectMapper;
 
-    private ViewJsonConvert(){
+    private ViewJsonConvert() {
     }
 
     static {
@@ -54,10 +54,10 @@ public class ViewJsonConvert {
 
         List<BaseElement> result = new ArrayList<>();
         Map<String, BaseElement> elementMap = baseElements.stream().collect(Collectors.toMap(BaseElement::getId, Function.identity()));
-        for (NotationEdge edge : notationEdges){
+        for (NotationEdge edge : notationEdges) {
             BaseElement source = elementMap.get(edge.getSource().getCell());
             BaseElement target = elementMap.get(edge.getTarget().getCell());
-            if(null == source || null == target){
+            if (null == source || null == target) {
                 throw new CommonException(BusinessProcessConstants.ErrorCode.NO_CORRESPONDING_NODE_FOUND);
             }
             result.add(BaseFlowFactory.dealEdge(source, target, edge));
@@ -68,23 +68,22 @@ public class ViewJsonConvert {
 
     public static String bpmnToJson(BpmnModel bpmnModel) {
         String result;
-        try{
+        try {
             result = objectMapper.writeValueAsString(bpmnModel);
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             throw new CommonException(e);
         }
         return result;
     }
 
-    public static BpmnModel processJsonConvert(String processJson){
+    public static BpmnModel processJsonConvert(String processJson) {
         BpmnModel result;
-        try{
+        try {
             result = objectMapper.readValue(processJson, BpmnModel.class);
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             throw new CommonException(e);
         }
         return result;
     }
-
 
 }

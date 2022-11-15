@@ -19,6 +19,7 @@ public interface SystemParameterRedis {
      * @return 系统参数
      */
     SystemParameter getSystemParameter(String paramCode, Long tenantId);
+
     /**
      * 批量 redis 查询系统参数
      * @param paramCodeList 编码集合
@@ -33,7 +34,7 @@ public interface SystemParameterRedis {
      * @param ts 待同步的系统参数数据
      * @param tenantId 租户ID
      **/
-    void synToRedis(List<SystemParameter> ts,Long tenantId);
+    void synToRedis(List<SystemParameter> ts, Long tenantId);
 
     /**
      * 单条更新系统参数
@@ -41,7 +42,7 @@ public interface SystemParameterRedis {
      * @param systemParameter 待同步的系统参数数据
      * @param tenantId 租户ID
      **/
-    void updateToRedis(SystemParameter systemParameter,Long tenantId);
+    void updateToRedis(SystemParameter systemParameter, Long tenantId);
 
     /**
      * 触发全量网店库存计算
@@ -55,5 +56,5 @@ public interface SystemParameterRedis {
      * @param  systemParameter 系统参数头
      * @param  systemParamValue 系统参数行
      */
-    void deleteSystemParamValue(SystemParameter systemParameter,SystemParamValue systemParamValue);
+    void deleteSystemParamValue(SystemParameter systemParameter, SystemParamValue systemParamValue);
 }

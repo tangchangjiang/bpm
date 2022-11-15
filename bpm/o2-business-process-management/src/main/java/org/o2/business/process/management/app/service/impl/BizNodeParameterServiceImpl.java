@@ -41,7 +41,6 @@ public class BizNodeParameterServiceImpl implements BizNodeParameterService {
         return bizNodeParameterList;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public BizNodeParameter save(BizNodeParameter bizNodeParameter) {
@@ -72,7 +71,6 @@ public class BizNodeParameterServiceImpl implements BizNodeParameterService {
 
         return bizNodeParameter;
     }
-
 
     @Override
     public List<BizNodeParameter> getBizNodeParameterList(List<String> beanIdList, Long tenantId) {

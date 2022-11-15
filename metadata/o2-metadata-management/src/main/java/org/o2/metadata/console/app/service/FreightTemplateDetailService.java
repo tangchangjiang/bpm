@@ -18,16 +18,14 @@ public interface FreightTemplateDetailService {
      * @param isRegion                  是否属于指定区域的运费模板明细列表
      * @return 插入成功的运费模板明细列表
      */
-    List<FreightTemplateDetail> batchInsert(final List<FreightTemplateDetail> freightTemplateDetailList, final boolean isRegion);
-
-
+    List<FreightTemplateDetail> batchInsert(List<FreightTemplateDetail> freightTemplateDetailList, boolean isRegion);
 
     /**
      * 删除运费模板明细
      *
      * @param freightTemplateDetailList 待删除的运费模板明细列表
      */
-    void batchDelete(final List<FreightTemplateDetail> freightTemplateDetailList);
+    void batchDelete(List<FreightTemplateDetail> freightTemplateDetailList);
 
     /**
      * 根据运费模板ID，查询默认运费模板明细
@@ -36,7 +34,6 @@ public interface FreightTemplateDetailService {
      * @return 运费模板明细列表
      */
     List<FreightTemplateDetail> queryDefaultFreightTemplateDetail(Long templateId);
-
 
     /**
      * 根据运费模板ID，查询指定地区运费模板明细

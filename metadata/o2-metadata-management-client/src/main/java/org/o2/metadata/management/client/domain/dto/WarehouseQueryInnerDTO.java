@@ -33,7 +33,6 @@ public class WarehouseQueryInnerDTO {
      */
     private Integer activeFlag;
 
-
     private String warehouseTypeCode;
 
     private String warehouseName;

@@ -33,7 +33,8 @@ public class BusinessProcessImportServiceImpl extends BatchImportHandler impleme
     private final BusinessProcessRepository businessProcessRepository;
     private final BusinessProcessRedisService businessProcessRedisService;
 
-    public BusinessProcessImportServiceImpl(BusinessProcessRepository businessProcessRepository, BusinessProcessRedisService businessProcessRedisService) {
+    public BusinessProcessImportServiceImpl(BusinessProcessRepository businessProcessRepository,
+                                            BusinessProcessRedisService businessProcessRedisService) {
         this.businessProcessRepository = businessProcessRepository;
         this.businessProcessRedisService = businessProcessRedisService;
     }
@@ -44,7 +45,7 @@ public class BusinessProcessImportServiceImpl extends BatchImportHandler impleme
             CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
             Long tenantId = customUserDetails.getTenantId();
             List<BusinessProcess> importList = new ArrayList<>(data.size());
-            data.forEach(d ->{
+            data.forEach(d -> {
                 BusinessProcess bp = JsonHelper.stringToObject(d, BusinessProcess.class);
                 bp.setTenantId(tenantId);
                 importList.add(bp);
@@ -52,9 +53,11 @@ public class BusinessProcessImportServiceImpl extends BatchImportHandler impleme
             // 是否已经存在业务流程
             List<BusinessProcess> processList = businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class)
                     .andWhere(Sqls.custom().andEqualTo(BusinessProcess.FIELD_TENANT_ID, tenantId)
-                    .andIn(BusinessProcess.FIELD_PROCESS_CODE, importList.stream().map(BusinessProcess::getProcessCode).collect(Collectors.toList()))).build());
+                            .andIn(BusinessProcess.FIELD_PROCESS_CODE,
+                                    importList.stream().map(BusinessProcess::getProcessCode).collect(Collectors.toList()))).build());
 
-            Map<String, BusinessProcess> processMap = processList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode, Function.identity()));
+            Map<String, BusinessProcess> processMap = processList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode,
+                    Function.identity()));
             //筛选更新数据
             List<BusinessProcess> updateList = importList.stream().filter(b -> processMap.containsKey(b.getProcessCode())).peek(b -> {
                 b.setObjectVersionNumber(processMap.get(b.getProcessCode()).getObjectVersionNumber());

@@ -22,10 +22,10 @@ public class SequenceFlow extends BaseFlow {
         return ProcessEngineConstants.FlowElementType.SEQUENCE_FLOW;
     }
 
-
     @Override
     protected void checkTerminal(Map<String, BaseElement> elementMap) {
-        checkElement(elementMap, getIncoming(), ProcessEngineConstants.FlowElementType.UN_GATEWAY_NODE, ProcessEngineConstants.ErrorCode.SEQUENCE_FLOW_INCOMING_CANNOT_BE_GATEWAY_TYPE);
+        checkElement(elementMap, getIncoming(), ProcessEngineConstants.FlowElementType.UN_GATEWAY_NODE,
+                ProcessEngineConstants.ErrorCode.SEQUENCE_FLOW_INCOMING_CANNOT_BE_GATEWAY_TYPE);
         super.checkTerminal(elementMap);
     }
 }

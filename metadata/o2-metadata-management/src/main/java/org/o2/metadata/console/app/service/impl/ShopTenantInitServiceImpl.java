@@ -19,8 +19,12 @@ import org.o2.metadata.console.infra.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +51,6 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
     private final CarrierMappingRepository carrierMappingRepository;
     private final RedisCacheClient redisCacheClient;
     private final CacheJobService cacheJobService;
-
 
     public ShopTenantInitServiceImpl(OnlineShopRepository onlineShopRepository,
                                      PlatformRepository platformRepository,
@@ -77,7 +80,6 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         this.redisCacheClient = redisCacheClient;
     }
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void tenantInitializeBusiness(TenantInitBO bo) {
@@ -96,7 +98,7 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         handleCatalog(sourceTenantId, targetTenantId, sourceOnlineShop.getCatalogCode(), sourceOnlineShop.getCatalogVersionCode());
         // 3.处理主数据目录
         if (!TenantInitConstants.InitCatalog.MASTER.equals(sourceOnlineShop.getCatalogCode())) {
-            handleCatalog(sourceTenantId, targetTenantId,TenantInitConstants.InitCatalog.MASTER, TenantInitConstants.InitCatalog.MASTER);
+            handleCatalog(sourceTenantId, targetTenantId, TenantInitConstants.InitCatalog.MASTER, TenantInitConstants.InitCatalog.MASTER);
         }
         // 4
         // 4.处理服务点

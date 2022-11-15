@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 public class BatchBusinessNodeQueryDTO {
 
-
     @ApiModelProperty(value = "beanIdList")
     @NotEmpty
     private List<String> beanIdList;

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 地址匹配
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -18,10 +17,12 @@ import java.util.List;
 public class AddressMappingConverter {
     private AddressMappingConverter() {
     }
+
     /**
      * po -> vo
+     *
      * @param addressMapping 地址匹配
-     * @return  vo
+     * @return vo
      */
     public static AddressMappingVO poToVoObject(AddressMapping addressMapping) {
 
@@ -53,11 +54,11 @@ public class AddressMappingConverter {
         return addressMappingVO;
     }
 
-
     /**
      * PO 转 VO
+     *
      * @param addressMappings 地址匹配
-     * @return  list
+     * @return list
      */
     public static List<AddressMappingVO> poToVoListObjects(List<AddressMapping> addressMappings) {
         List<AddressMappingVO> addressMappingVOList = new ArrayList<>();
@@ -72,8 +73,9 @@ public class AddressMappingConverter {
 
     /**
      * po -> CO
+     *
      * @param addressMapping 地址匹配
-     * @return  CO
+     * @return CO
      */
     private static AddressMappingCO poToCoObject(AddressMapping addressMapping) {
 
@@ -93,8 +95,9 @@ public class AddressMappingConverter {
 
     /**
      * PO 转 CO
+     *
      * @param addressMappings 地址匹配
-     * @return  list
+     * @return list
      */
     public static List<AddressMappingCO> poToCoListObjects(List<AddressMapping> addressMappings) {
         List<AddressMappingCO> cos = new ArrayList<>();
@@ -109,13 +112,14 @@ public class AddressMappingConverter {
 
     /**
      * regions -> AddressMappingBO
+     *
      * @param regions regions
      * @return AddressMappingBO
      */
-    public static List<AddressMappingBO> toAddressMappingBO(List<Region> regions){
+    public static List<AddressMappingBO> toAddressMappingBO(List<Region> regions) {
         List<AddressMappingBO> addressMappingBOList = new ArrayList<>();
         if (regions.isEmpty()) {
-            return  addressMappingBOList;
+            return addressMappingBOList;
         }
         for (Region region : regions) {
             AddressMappingBO addressMappingBO = new AddressMappingBO();

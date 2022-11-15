@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.convertor;
 
-
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
 import org.o2.metadata.console.api.co.FreightTemplateDetailCO;
@@ -13,9 +12,7 @@ import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
 import org.o2.metadata.domain.freight.domain.FreightTemplateDetailDO;
 
-
 /**
- *
  * 运费模版转换
  *
  * @author yipeng.zhu@hand-china.com 2021-07-19
@@ -26,8 +23,9 @@ public class FreightConverter {
 
     /**
      * po转do
+     *
      * @param freightInfo 运费模版头
-     * @return  do 运费模版头
+     * @return do 运费模版头
      */
     public static FreightInfoDO poToDoObject(FreightInfo freightInfo) {
 
@@ -43,8 +41,9 @@ public class FreightConverter {
 
     /**
      * do转CO
+     *
      * @param freightInfoDO 运费模版头
-     * @return  CO 运费模版头
+     * @return CO 运费模版头
      */
     public static FreightInfoCO doToCoObject(FreightInfoDO freightInfoDO) {
 
@@ -60,8 +59,9 @@ public class FreightConverter {
 
     /**
      * do转CO
+     *
      * @param freightTemplateDO 运费模详情
-     * @return  vo 运费模版详情
+     * @return vo 运费模版详情
      */
     public static FreightTemplateCO toFreightTemplateCo(FreightTemplateDO freightTemplateDO) {
         if (freightTemplateDO == null) {
@@ -78,10 +78,12 @@ public class FreightConverter {
         co.setTenantId(freightTemplateDO.getTenantId());
         return co;
     }
+
     /**
      * do转CO
+     *
      * @param freightTemplateDetailDO 运费模详情
-     * @return  vo 运费模版详情
+     * @return vo 运费模版详情
      */
     private static FreightTemplateDetailCO toFreightTemplateDetailCo(FreightTemplateDetailDO freightTemplateDetailDO) {
         if (freightTemplateDetailDO == null) {
@@ -105,6 +107,7 @@ public class FreightConverter {
 
     /**
      * 运费模版头 po转do
+     *
      * @param freightTemplate 运费模版头
      * @return do
      */
@@ -128,6 +131,7 @@ public class FreightConverter {
 
     /**
      * 运费模详情 po转do
+     *
      * @param freightTemplateDetail 运费模详情
      * @return do
      */
@@ -152,6 +156,7 @@ public class FreightConverter {
 
     /**
      * 运费模版头 po转CO
+     *
      * @param freightTemplate 运费模版头
      * @return do
      */
@@ -174,10 +179,11 @@ public class FreightConverter {
 
     /**
      * po -> bo
-     * @param  freightTemplate 运费模版
+     *
+     * @param freightTemplate 运费模版
      * @return FreightDetailBO
      */
-    public static FreightBO poToBoObject(FreightTemplate freightTemplate){
+    public static FreightBO poToBoObject(FreightTemplate freightTemplate) {
 
         if (freightTemplate == null) {
             return null;
@@ -196,10 +202,11 @@ public class FreightConverter {
 
     /**
      * po -> bo
-     * @param  freightTemplateDetail 运费模版详情
+     *
+     * @param freightTemplateDetail 运费模版详情
      * @return FreightDetailBO
      */
-    public static FreightDetailBO poToBoObject(FreightTemplateDetail freightTemplateDetail){
+    public static FreightDetailBO poToBoObject(FreightTemplateDetail freightTemplateDetail) {
 
         if (freightTemplateDetail == null) {
             return null;

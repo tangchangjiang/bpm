@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- *
  * 网店关联仓库
  *
  * @author yipeng.zhu@hand-china.com 2021-07-13
@@ -24,6 +23,6 @@ public class OnlineShopRelWarehouseDomainRepositoryImpl implements OnlineShopRel
 
     @Override
     public List<OnlineShopRelWarehouseDO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
-        return OnlineShopRelWarehouseConverter.poToDoListObjects(onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCode,tenantId));
+        return OnlineShopRelWarehouseConverter.poToDoListObjects(onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCode, tenantId));
     }
 }

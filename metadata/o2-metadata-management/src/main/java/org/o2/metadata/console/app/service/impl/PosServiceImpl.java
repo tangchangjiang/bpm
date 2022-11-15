@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * 服务点信息应用服务默认实现
  *
@@ -53,7 +52,6 @@ public class PosServiceImpl implements PosService {
     private final TransactionalHelper transactionalHelper;
     private final SourcingCacheUpdateService sourcingCacheService;
 
-
     public PosServiceImpl(PosRepository posRepository,
                           PostTimeRepository postTimeRepository,
                           PosAddressRepository posAddressRepository,
@@ -61,7 +59,8 @@ public class PosServiceImpl implements PosService {
                           PosRelCarrierRepository posRelCarrierRepository,
                           CarrierRepository carrierRepository,
                           PosRedis posRedis,
-                          RedisCacheClient redisCacheClient, TransactionalHelper transactionalHelper, SourcingCacheUpdateService sourcingCacheService) {
+                          RedisCacheClient redisCacheClient, TransactionalHelper transactionalHelper,
+                          SourcingCacheUpdateService sourcingCacheService) {
         this.posRepository = posRepository;
         this.postTimeRepository = postTimeRepository;
         this.posAddressRepository = posAddressRepository;
@@ -82,7 +81,7 @@ public class PosServiceImpl implements PosService {
         PosAddress address = pos.getAddress();
         transactionalHelper.transactionOperation(() -> {
             if (address != null && address.getRegionCode() != null) {
-                updatePosAddress(address,pos.getTenantId());
+                updatePosAddress(address, pos.getTenantId());
                 address.setTenantId(pos.getTenantId());
                 posAddressRepository.insertSelective(address);
                 pos.setAddressId(address.getPosAddressId());
@@ -113,7 +112,7 @@ public class PosServiceImpl implements PosService {
     public Pos update(final Pos pos) {
         validPosNameUnique(pos);
         validatePosCode(pos);
-        transactionalHelper.transactionOperation(() ->{
+        transactionalHelper.transactionOperation(() -> {
             PosAddress oldAddress = null;
             final PosAddress address;
             if ((address = pos.getAddress()) != null) {
@@ -127,7 +126,7 @@ public class PosServiceImpl implements PosService {
                     oldAddress = oldAddressList.get(0);
                 }
 
-                updatePosAddress(address,pos.getTenantId());
+                updatePosAddress(address, pos.getTenantId());
                 address.setTenantId(pos.getTenantId());
                 posAddressRepository.updateByPrimaryKey(address);
             }
@@ -157,13 +156,14 @@ public class PosServiceImpl implements PosService {
 
     /**
      * 服务点是否存在
+     *
      * @param pos 服务点调用
      */
     private void validatePosCode(Pos pos) {
         if (null != pos.getPosId()) {
             Pos original = posRepository.selectByPrimaryKey(pos);
             if (!original.getPosCode().equals(pos.getPosCode())) {
-                throw new O2CommonException(null,PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE, PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE);
+                throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE, PosConstants.ErrorCode.ERROR_POS_CODE_NOT_UPDATE);
             }
             return;
         }
@@ -172,12 +172,13 @@ public class PosServiceImpl implements PosService {
         query.setPosCode(pos.getPosCode());
         final List<Pos> mayEmpty = posRepository.select(query);
         if (CollectionUtils.isNotEmpty(mayEmpty)) {
-            throw new O2CommonException(null,PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE, PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE);
+            throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE, PosConstants.ErrorCode.ERROR_POS_CODE_DUPLICATE);
         }
     }
 
     /**
      * 名称唯一性校验
+     *
      * @param pos 服务点
      */
     private void validPosNameUnique(Pos pos) {
@@ -190,22 +191,24 @@ public class PosServiceImpl implements PosService {
         Pos query = new Pos();
         query.setPosName(pos.getPosName());
         query.setTenantId(pos.getTenantId());
-       List<Pos> list = posRepository.select(query);
-       if (!list.isEmpty()) {
-           throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE,PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE);
-       }
+        List<Pos> list = posRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE, PosConstants.ErrorCode.ERROR_POS_NAME_DUPLICATE);
+        }
     }
+
     /**
      * 更新服务点地址
-     * @param address 服务点地址
+     *
+     * @param address  服务点地址
      * @param tenantId 租户ID
      */
-    private void updatePosAddress(PosAddress address,Long tenantId) {
+    private void updatePosAddress(PosAddress address, Long tenantId) {
         List<String> regionCodes = new ArrayList<>();
         regionCodes.add(address.getRegionCode());
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
+        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
         if (!regionList.isEmpty()) {
             address.setCountryCode(regionList.get(0).getCountryCode());
         }
@@ -213,8 +216,8 @@ public class PosServiceImpl implements PosService {
 
     @Override
     public PosVO getPosWithPropertiesInRedisByPosId(final Long organizationId, final Long posId) {
-        final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(organizationId,posId);
-        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,1);
+        final Pos pos = posRepository.getPosWithAddressAndPostTimeByPosId(organizationId, posId);
+        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository, 1);
         if (CollectionUtils.isNotEmpty(posRelCarriers)) {
             final Carrier carrier = carrierRepository.selectByPrimaryKey(posRelCarriers.get(0).getCarrierId());
             pos.setCarrierId(carrier.getCarrierId());
@@ -225,7 +228,7 @@ public class PosServiceImpl implements PosService {
 
     @Override
     public List<PosAddressCO> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
-        List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressQueryInnerDTO,tenantId);
+        List<PosAddress> addresses = posAddressRepository.listPosAddress(posAddressQueryInnerDTO, tenantId);
         List<String> regionCodes = new ArrayList<>();
         for (PosAddress address : addresses) {
             regionCodes.add(address.getCityCode());
@@ -234,10 +237,10 @@ public class PosServiceImpl implements PosService {
         }
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
-        List<Region> regionList =  regionRepository.listRegionLov(dto,tenantId);
-        Map<String,Region> regionMap =  Maps.newHashMapWithExpectedSize(regionList.size());
+        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
+        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
         for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(),region);
+            regionMap.put(region.getRegionCode(), region);
         }
         for (PosAddress address : addresses) {
             //市
@@ -273,7 +276,7 @@ public class PosServiceImpl implements PosService {
     public Map<String, String> listPosName(Long tenantId, PosQueryInnerDTO posQueryInnerDTO) {
         Map<String, String> resultMap = new HashMap<>();
         List<Pos> posList = posRepository.listPosByCode(tenantId, posQueryInnerDTO);
-        for(Pos pos : posList){
+        for (Pos pos : posList) {
             resultMap.put(pos.getPosCode(), pos.getPosName());
         }
         return resultMap;
@@ -324,21 +327,22 @@ public class PosServiceImpl implements PosService {
 
     /**
      * 更新默认承运商
+     *
      * @param pos pos
      */
-    private void updateCarryIsDefault (Pos pos) {
-        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository,null);
+    private void updateCarryIsDefault(Pos pos) {
+        List<PosRelCarrier> posRelCarriers = pos.posRelCarrier(posRelCarrierRepository, null);
         posRelCarriers.stream()
-                .filter( c -> c.getDefaultFlag() == 1)
+                .filter(c -> c.getDefaultFlag() == 1)
                 .forEach(c -> {
                     c.setDefaultFlag(0);
                     posRelCarrierRepository.updateByPrimaryKeySelective(c);
-                } );
+                });
 
         if (null != pos.getCarrierId()) {
             posRelCarriers.stream()
-                    .filter( c -> c.getCarrierId().equals(pos.getCarrierId()))
-                    .forEach(c -> posRelCarrierRepository.updateIsDefault(c.getPosRelCarrierId(), c.getPosId(),1,c.getTenantId()));
+                    .filter(c -> c.getCarrierId().equals(pos.getCarrierId()))
+                    .forEach(c -> posRelCarrierRepository.updateIsDefault(c.getPosRelCarrierId(), c.getPosId(), 1, c.getTenantId()));
         }
     }
 
@@ -346,8 +350,8 @@ public class PosServiceImpl implements PosService {
      * 更新门店信息
      *
      * @param oldPosAddress 门店旧地址
-     * @param posCode 门店编码
-     * @param tenantId 租户Id
+     * @param posCode       门店编码
+     * @param tenantId      租户Id
      */
     private void updatePosToRedis(PosAddress oldPosAddress, String posCode, Long tenantId) {
         List<String> posCodes = new ArrayList<>();
@@ -366,10 +370,13 @@ public class PosServiceImpl implements PosService {
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
                 StringRedisConnection stringConnection = (StringRedisConnection) connection;
 
-                String oldCityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, oldPosAddress.getRegionCode(), oldPosAddress.getCityCode());
-                String oldDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, oldPosAddress.getRegionCode(), oldPosAddress.getCityCode(), oldPosAddress.getDistrictCode());
+                String oldCityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, oldPosAddress.getRegionCode(),
+                        oldPosAddress.getCityCode());
+                String oldDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, oldPosAddress.getRegionCode(),
+                        oldPosAddress.getCityCode(), oldPosAddress.getDistrictCode());
                 String newCityStoreKey = PosConstants.RedisKey.getPosCityStoreKey(tenantId, posInfo.getRegionCode(), posInfo.getCityCode());
-                String newDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, posInfo.getRegionCode(), posInfo.getCityCode(), posInfo.getDistrictCode());
+                String newDistrictStoreKey = PosConstants.RedisKey.getPosDistrictStoreKey(tenantId, posInfo.getRegionCode(), posInfo.getCityCode(),
+                        posInfo.getDistrictCode());
                 String posDetailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
 
                 // 删除旧的门店地址信息
@@ -387,7 +394,7 @@ public class PosServiceImpl implements PosService {
     /**
      * 设置服务点地址名称
      *
-     * @param posInfo 服务点
+     * @param posInfo  服务点
      * @param tenantId 租户Id
      */
     private void setPosAddress(PosInfo posInfo, Long tenantId) {
@@ -397,10 +404,10 @@ public class PosServiceImpl implements PosService {
         regionCodes.add(posInfo.getRegionCode());
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
-        Map<String,Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
+        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
+        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
         for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(),region);
+            regionMap.put(region.getRegionCode(), region);
         }
         //市
         String cityCode = posInfo.getCityCode();

@@ -32,8 +32,8 @@ public class PosRelCarrierRepositoryImpl extends BaseRepositoryImpl<PosRelCarrie
     }
 
     @Override
-    public int updateIsDefault(final Long relId, final Long posId,final Integer defaultFlag, Long tenantId) {
-        return posRelCarrierMapper.updateIsDefault(relId, posId,defaultFlag,tenantId);
+    public int updateIsDefault(final Long relId, final Long posId, final Integer defaultFlag, Long tenantId) {
+        return posRelCarrierMapper.updateIsDefault(relId, posId, defaultFlag, tenantId);
     }
 
 }

@@ -34,6 +34,7 @@ public class SystemParamValueDTO extends AuditDomain {
     private String paramKey;
     @ApiModelProperty(value = "描述")
     private String description;
+
     @Override
     public Class<? extends SecurityToken> associateEntityClass() {
         return SystemParamValue.class;

@@ -11,7 +11,13 @@ import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +64,6 @@ public class SysParameterMetadataInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/update")
     public ResponseEntity<ResponseCO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterQueryInnerDTO systemParameterQueryInnerDTO) {
-        return Results.success(sysParamService.updateSysParameter(systemParameterQueryInnerDTO,organizationId));
+        return Results.success(sysParamService.updateSysParameter(systemParameterQueryInnerDTO, organizationId));
     }
 }

@@ -4,14 +4,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- *
  * 承运商匹配
  *
  * @author yipeng.zhu@hand-china.com 2021-08-18
  **/
 @Data
 public class CarrierMappingCO {
-
 
     @ApiModelProperty(value = "平台承运商编码")
     private String platformCarrierCode;
@@ -30,6 +28,5 @@ public class CarrierMappingCO {
 
     @ApiModelProperty(value = "承运商名称")
     private String carrierName;
-
 
 }

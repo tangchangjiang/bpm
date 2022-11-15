@@ -7,14 +7,14 @@ import org.o2.initialize.domain.context.TenantInitContext;
 import org.o2.metadata.console.app.bo.TenantInitBO;
 import org.o2.metadata.console.app.service.*;
 import org.springframework.stereotype.Service;
+
 @Service
 public class MetadataBusinessTenantInitServiceImpl implements MetadataBusinessTenantInitService {
 
     private final ShopTenantInitService shopTenantInitService;
 
-
     public MetadataBusinessTenantInitServiceImpl(
-                                                 ShopTenantInitService shopTenantInitService) {
+            ShopTenantInitService shopTenantInitService) {
 
         this.shopTenantInitService = shopTenantInitService;
     }
@@ -26,8 +26,8 @@ public class MetadataBusinessTenantInitServiceImpl implements MetadataBusinessTe
         String warehouseCode = context.getParamMap().get("warehouseCode");
         String onlineShopCode = context.getParamMap().get("onlineShopCode");
         String carrierCode = context.getParamMap().get("carrierCode");
-        boolean flag  = (Strings.isBlank(warehouseCode) || Strings.isBlank(onlineShopCode) || Strings.isBlank(carrierCode));
-        if (flag){
+        boolean flag = (Strings.isBlank(warehouseCode) || Strings.isBlank(onlineShopCode) || Strings.isBlank(carrierCode));
+        if (flag) {
             throw new CommonException("job param is null");
         }
         String[] onlineShops = onlineShopCode.split(BaseConstants.Symbol.COMMA);

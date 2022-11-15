@@ -13,7 +13,6 @@ import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 
 /**
@@ -29,7 +28,6 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
     private final PlatformRepository platformRepository;
 
     private final PlatformInfoMappingRepository platformInfoMappingRepository;
-
 
     public PlatformDefineTenantInitServiceImpl(PlatformRepository platformRepository, PlatformInfoMappingRepository platformInfoMappingRepository) {
         this.platformRepository = platformRepository;
@@ -56,7 +54,7 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         final List<Platform> targetPlatforms = platformRepository.selectByCondition(Condition.builder(Platform.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(Platform.FIELD_TENANT_ID, targetTenantId)
-                .andIn(Platform.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
+                        .andIn(Platform.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
                 .build());
 
         // 删除目标租户存在的数据
@@ -69,7 +67,8 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         platformRepository.batchInsert(sourcePlatforms);
 
         // 1. 查询源租户平台信息匹配
-        final List<PlatformInfoMapping> sourcePlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
+        final List<PlatformInfoMapping> sourcePlatformInfoMappings =
+                platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, sourceTenantId)
                         .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST)
@@ -82,7 +81,8 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         }
 
         // 2. 查询目标租户平台信息匹配
-        final List<PlatformInfoMapping> targetPlatformInfoMappings = platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
+        final List<PlatformInfoMapping> targetPlatformInfoMappings =
+                platformInfoMappingRepository.selectByCondition(Condition.builder(PlatformInfoMapping.class)
                 .andWhere(Sqls.custom()
                         .andEqualTo(PlatformInfoMapping.FIELD_TENANT_ID, targetTenantId)
                         .andIn(PlatformInfoMapping.FIELD_PLATFORM_CODE, O2CoreConstants.PlatformFrom.PLATFORM_FROM_LIST))
@@ -95,8 +95,5 @@ public class PlatformDefineTenantInitServiceImpl implements PlatformDefineTenant
         platformInfoMappingRepository.batchInsert(sourcePlatformInfoMappings);
         log.info("initializePlatforms finish, tenantId[{}]", targetTenantId);
     }
-
-
-
 
 }

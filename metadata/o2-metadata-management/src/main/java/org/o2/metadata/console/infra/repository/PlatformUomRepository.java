@@ -1,7 +1,5 @@
 package org.o2.metadata.console.infra.repository;
 
-
-
 /**
  * PlatformUomRepository
  *

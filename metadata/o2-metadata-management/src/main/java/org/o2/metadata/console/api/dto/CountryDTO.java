@@ -3,12 +3,11 @@ package org.o2.metadata.console.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-
 /**
  * @author tingting.wang@hand-china.com 2019-3-25
  */
 @Data
-public class CountryDTO{
+public class CountryDTO {
 
     @ApiModelProperty("国家ID")
     private Long countryId;

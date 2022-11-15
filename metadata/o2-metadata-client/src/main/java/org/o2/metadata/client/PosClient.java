@@ -23,7 +23,7 @@ public class PosClient {
     /**
      * 查询自提点信息
      *
-     * @param posCode 服务点编码
+     * @param posCode  服务点编码
      * @param tenantId 租户Id
      * @return 服务点信息
      */
@@ -35,10 +35,11 @@ public class PosClient {
      * 条件批量查询门店信息
      *
      * @param storeQueryDTO 查询条件
-     * @param tenantId 租户Id
+     * @param tenantId      租户Id
      * @return 门店信息
      */
     public List<PosStoreInfoCO> getStoreInfoList(StoreQueryDTO storeQueryDTO, Long tenantId) {
-        return ResponseUtils.getResponse(posRemoteService.getStoreInfoList(storeQueryDTO, tenantId), new TypeReference<List<PosStoreInfoCO>>(){});
+        return ResponseUtils.getResponse(posRemoteService.getStoreInfoList(storeQueryDTO, tenantId), new TypeReference<List<PosStoreInfoCO>>() {
+        });
     }
 }

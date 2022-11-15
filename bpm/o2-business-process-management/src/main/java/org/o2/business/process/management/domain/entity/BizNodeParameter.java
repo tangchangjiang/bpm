@@ -53,17 +53,8 @@ public class BizNodeParameter extends AuditDomain {
     public static final String O2BPM_BIZ_NODE_PARAMETER_U1 = "o2bpm_biz_node_parameter_u1";
 
     //
-    // 业务方法(按public protected private顺序排列)
-    // ------------------------------------------------------------------------------
-
-    public static Comparator<BizNodeParameter> defaultComparator(){
-        return Comparator.comparing(BizNodeParameter::getCreationDate);
-    }
-
-    //
     // 数据库字段
     // ------------------------------------------------------------------------------
-
 
     @ApiModelProperty("表ID,主键")
     @Id
@@ -117,7 +108,7 @@ public class BizNodeParameter extends AuditDomain {
     @Unique(O2BPM_BIZ_NODE_PARAMETER_U1)
     private Long tenantId;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
     //
@@ -128,6 +119,14 @@ public class BizNodeParameter extends AuditDomain {
     @ApiModelProperty(value = "编辑类型含义")
     @Transient
     private String paramEditTypeMeaning;
+
+    //
+    // 业务方法(按public protected private顺序排列)
+    // ------------------------------------------------------------------------------
+
+    public static Comparator<BizNodeParameter> defaultComparator() {
+        return Comparator.comparing(BizNodeParameter::getCreationDate);
+    }
 
 }
 

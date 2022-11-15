@@ -29,11 +29,10 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<RegionVO> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag,final Long tenantId) {
+    public List<RegionVO> treeRegionWithParent(final String countryIdOrCode, final String condition, final Integer enabledFlag, final Long tenantId) {
         List<Region> regionList = regionRepository.listRegionWithParent(countryIdOrCode, condition, enabledFlag, tenantId);
         return RegionConverter.poToVoListObjects(regionList);
     }
-
 
     @Override
     public List<AreaRegionVO> listAreaRegion(final String countryCode, final Integer enabledFlag, final Long tenantId) {
@@ -42,13 +41,13 @@ public class RegionServiceImpl implements RegionService {
         queryDTO.setCountryCode(countryCode);
         queryDTO.setEnabledFlag(enabledFlag);
         queryDTO.setLevelNumber(1);
-        List<RegionVO> list = this.listChildren(queryDTO,tenantId);
+        List<RegionVO> list = this.listChildren(queryDTO, tenantId);
         List<RegionBO> regionList = RegionConverter.voToBoListObjects(list);
 
         //市
         queryDTO.setLevelNumber(2);
-        List<RegionBO> cityList = RegionConverter.voToBoListObjects(this.listChildren(queryDTO,tenantId));
-        Map<String,List<RegionBO>> cityMap = cityList.stream().collect(Collectors.groupingBy(RegionBO::getParentRegionCode));
+        List<RegionBO> cityList = RegionConverter.voToBoListObjects(this.listChildren(queryDTO, tenantId));
+        Map<String, List<RegionBO>> cityMap = cityList.stream().collect(Collectors.groupingBy(RegionBO::getParentRegionCode));
 
         for (RegionBO vo : regionList) {
             String code = vo.getRegionCode();
@@ -60,7 +59,6 @@ public class RegionServiceImpl implements RegionService {
         vo.setRegionList(regionList);
         return Collections.singletonList(vo);
     }
-
 
     @Override
     public List<RegionVO> listChildren(RegionQueryDTO regionQueryDTO, Long organizationId) {

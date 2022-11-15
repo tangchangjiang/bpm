@@ -45,7 +45,8 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "服务点关联承运商列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping
-    public ResponseEntity<Page<PosRelCarrier>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
+    public ResponseEntity<Page<PosRelCarrier>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                    final PosRelCarrier posRelCarrier, @ApiIgnore @SortDefault(value = PosRelCarrier.FIELD_PRIORITY,
             direction = Sort.Direction.ASC) final PageRequest pageRequest) {
         posRelCarrier.setTenantId(organizationId);
         final Page<PosRelCarrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
@@ -64,15 +65,17 @@ public class PosRelCarrierController extends BaseController {
     @ApiOperation(value = "批量创建或更新服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<List<PosRelCarrier>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final List<PosRelCarrier> posRelCarriers) {
-        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(organizationId,posRelCarriers);
+    public ResponseEntity<List<PosRelCarrier>> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                      @RequestBody final List<PosRelCarrier> posRelCarriers) {
+        final List<PosRelCarrier> resultList = posRelCarrierService.batchMerge(organizationId, posRelCarriers);
         return Results.success(resultList);
     }
 
     @ApiOperation(value = "修改服务点关联承运商")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<PosRelCarrier> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,@RequestBody final PosRelCarrier posRelCarrier) {
+    public ResponseEntity<PosRelCarrier> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                @RequestBody final PosRelCarrier posRelCarrier) {
         SecurityTokenHelper.validToken(posRelCarrier);
         posRelCarrier.setTenantId(organizationId);
         posRelCarrierRepository.updateByPrimaryKeySelective(posRelCarrier);

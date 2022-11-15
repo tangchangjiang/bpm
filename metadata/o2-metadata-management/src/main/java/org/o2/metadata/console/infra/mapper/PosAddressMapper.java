@@ -7,7 +7,6 @@ import org.o2.metadata.console.infra.entity.PosAddress;
 
 import java.util.List;
 
-
 /**
  * 详细地址Mapper
  *
@@ -25,9 +24,10 @@ public interface PosAddressMapper extends BaseMapper<PosAddress> {
 
     /**
      * 查询服务地址
+     *
      * @param posAddressQueryInnerDTO 服务点地址
-     * @param tenantId 租户ID
-     * @return  list
+     * @param tenantId                租户ID
+     * @return list
      */
     List<PosAddress> listPosAddress(@Param("posAddressDTO") PosAddressQueryInnerDTO posAddressQueryInnerDTO, @Param("tenantId") Long tenantId);
 }

@@ -42,7 +42,7 @@ public interface WarehouseService {
      * @param  newWarehouses 仓库更新后
      * @param  tenantId 租户id
      */
-    void triggerWhStockCalWithWh(Long tenantId,List<Warehouse> oldWarehouses,List<Warehouse> newWarehouses);
+    void triggerWhStockCalWithWh(Long tenantId, List<Warehouse> oldWarehouses, List<Warehouse> newWarehouses);
 
 
     /**
@@ -159,7 +159,7 @@ public interface WarehouseService {
      * @param tenantId 租户id
      * @return 仓库
      */
-    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(final Long tenantId);
+    List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(Long tenantId);
 
     /**
      * 条件查询仓库
