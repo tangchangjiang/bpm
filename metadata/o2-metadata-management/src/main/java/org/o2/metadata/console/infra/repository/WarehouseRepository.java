@@ -25,10 +25,11 @@ public interface WarehouseRepository extends BaseRepository<Warehouse> {
      * @param shopId        网店 id
      * @param warehouseCode 仓库编码
      * @param warehouseName 仓库名称
+     * @param warehouseStatusCode 仓库状态
      * @param tenantId      租户id
      * @return 仓库列表
      */
-    List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, Long tenantId);
+    List<Warehouse> listUnbindWarehouseList(Long shopId, String warehouseCode, String warehouseName, String warehouseStatusCode, Long tenantId);
 
     /**
      * 条件查询仓促

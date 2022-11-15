@@ -73,9 +73,10 @@ public class OnlineShopRelWarehouseController extends BaseController {
                                            @PathVariable("onlineShopId") final Long onlineShopId,
                                            @RequestParam(required = false) final String warehouseCode,
                                            @RequestParam(required = false) final String warehouseName,
+                                           @RequestParam(required = false) final String warehouseStatusCode,
                                            @ApiIgnore final PageRequest pageRequest) {
         final Page<Warehouse> posList = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> warehouseRepository.listUnbindWarehouseList(onlineShopId, warehouseCode, warehouseName,organizationId));
+                () -> warehouseRepository.listUnbindWarehouseList(onlineShopId, warehouseCode, warehouseName,warehouseStatusCode,organizationId));
         return Results.success(posList);
     }
 

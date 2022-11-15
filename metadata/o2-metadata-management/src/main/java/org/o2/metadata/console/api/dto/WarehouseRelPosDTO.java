@@ -22,6 +22,9 @@ public class WarehouseRelPosDTO {
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
+    @ApiModelProperty(value = "仓库状态")
+    private String warehouseStatusCode;
+
     /**
      * 租户ID
      */
