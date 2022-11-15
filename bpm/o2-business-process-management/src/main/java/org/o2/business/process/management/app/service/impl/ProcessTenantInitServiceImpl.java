@@ -87,11 +87,11 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
             p.setBizProcessId(null);
             p.setTenantId(targetTenantId);
         });
-        platformNodes.forEach(n ->{
+        platformNodes.forEach(n -> {
             n.setTenantId(targetTenantId);
             n.setBizNodeId(null);
         });
-        platformParameters.forEach(p ->{
+        platformParameters.forEach(p -> {
             p.setTenantId(targetTenantId);
             p.setBizNodeParameterId(null);
         });
@@ -105,8 +105,10 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
         keys.add(BusinessProcessRedisConstants.BusinessProcess.getProcessLastModifiedTimeKey(targetTenantId));
 
         String[] params = new String[3];
-        params[0] = JsonHelper.objectToString(platformProcessList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode, BusinessProcess::getProcessJson)));
-        params[1] = JsonHelper.objectToString(platformNodes.stream().collect(Collectors.toMap(BusinessNode::getBeanId, a -> String.valueOf(a.getEnabledFlag()))));
+        params[0] = JsonHelper.objectToString(platformProcessList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode,
+                BusinessProcess::getProcessJson)));
+        params[1] = JsonHelper.objectToString(platformNodes.stream().collect(Collectors.toMap(BusinessNode::getBeanId,
+                a -> String.valueOf(a.getEnabledFlag()))));
         params[2] = String.valueOf(System.currentTimeMillis());
 
         DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();

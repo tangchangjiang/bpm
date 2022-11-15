@@ -43,27 +43,27 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     @Override
     public List<Pos> listPosWithAddressByCondition(PosDTO pos) {
         Preconditions.checkArgument(null != pos.getTenantId(), "pos must contains tenantId");
-        List<Pos> posList =  posMapper.listPosWithAddressByCondition(pos);
+        List<Pos> posList = posMapper.listPosWithAddressByCondition(pos);
         List<String> regionCodes = new ArrayList<>();
-        if (posList.isEmpty()){
+        if (posList.isEmpty()) {
             return posList;
         }
-        posList.forEach(bean->{
-            if (StringUtils.isNotEmpty(bean.getRegionCode())){
+        posList.forEach(bean -> {
+            if (StringUtils.isNotEmpty(bean.getRegionCode())) {
                 regionCodes.add(bean.getRegionCode());
             }
-            if (StringUtils.isNotEmpty(bean.getCityCode())){
+            if (StringUtils.isNotEmpty(bean.getCityCode())) {
                 regionCodes.add(bean.getCityCode());
             }
-            if (StringUtils.isNotEmpty(bean.getDistrictCode())){
+            if (StringUtils.isNotEmpty(bean.getDistrictCode())) {
                 regionCodes.add(bean.getDistrictCode());
             }
         });
         RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
         dto.setTenantId(pos.getTenantId());
         dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto,pos.getTenantId());
-        Map<String,String> map = new HashMap<>();
+        List<Region> regionList = regionRepository.listRegionLov(dto, pos.getTenantId());
+        Map<String, String> map = new HashMap<>();
         for (Region region : regionList) {
             map.put(region.getRegionCode(), region.getRegionName());
         }
@@ -79,30 +79,30 @@ public class PosRepositoryImpl extends BaseRepositoryImpl<Pos> implements PosRep
     }
 
     @Override
-    public Pos getPosWithAddressAndPostTimeByPosId(final Long tenantId,final Long posId) {
-        final Pos pos = posMapper.getPosWithCarrierNameById(tenantId,posId);
+    public Pos getPosWithAddressAndPostTimeByPosId(final Long tenantId, final Long posId) {
+        final Pos pos = posMapper.getPosWithCarrierNameById(tenantId, posId);
 
         if (pos.getAddressId() != null) {
             PosAddress posAddress = posAddressMapper.selectByPrimaryKey(pos.getAddressId());
             pos.setAddress(posAddress);
             List<String> regionCodes = new ArrayList<>(3);
             String cityCode = posAddress.getRegionCode();
-            if (StringUtils.isNotEmpty(cityCode)){
+            if (StringUtils.isNotEmpty(cityCode)) {
                 regionCodes.add(cityCode);
             }
             String districtCode = posAddress.getDistrictCode();
-            if (StringUtils.isNotEmpty(districtCode)){
+            if (StringUtils.isNotEmpty(districtCode)) {
                 regionCodes.add(districtCode);
             }
-            String regionCode =   posAddress.getRegionCode();
-            if (StringUtils.isNotEmpty(regionCode)){
+            String regionCode = posAddress.getRegionCode();
+            if (StringUtils.isNotEmpty(regionCode)) {
                 regionCodes.add(regionCode);
             }
             RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
             dto.setRegionCodes(regionCodes);
             dto.setTenantId(tenantId);
-            Map<String,String> map = new HashMap<>();
-            List<Region> regionList = regionRepository.listRegionLov(dto,tenantId);
+            Map<String, String> map = new HashMap<>();
+            List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
             if (!regionList.isEmpty()) {
                 for (Region region : regionList) {
                     map.put(region.getRegionCode(), region.getRegionName());

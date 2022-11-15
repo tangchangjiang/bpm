@@ -1,6 +1,5 @@
 package org.o2.metadata.console.api.controller.v1;
 
-
 import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
@@ -31,13 +30,12 @@ public class AddressMappingInternalController {
         this.addressMappingService = addressMappingService;
     }
 
-
     @ApiOperation(value = "批量查询地址批量表")
-    @Permission(permissionPublic = true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, AddressMappingCO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                             @RequestBody AddressMappingQueryInnerDTO queryInnerDTO){
-        return  Results.success(addressMappingService.listAddressMappings(queryInnerDTO,organizationId));
+                                                                             @RequestBody AddressMappingQueryInnerDTO queryInnerDTO) {
+        return Results.success(addressMappingService.listAddressMappings(queryInnerDTO, organizationId));
     }
 
 }

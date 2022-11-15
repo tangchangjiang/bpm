@@ -32,7 +32,6 @@ public class FreightTemplateRepositoryImpl extends BaseRepositoryImpl<FreightTem
         return freightTemplateMapper.queryFreightTemplateById(templateId);
     }
 
-
     @Override
     public FreightTemplate getDefaultTemplate(Long organizationId) {
         return freightTemplateMapper.getDefaultTemplate(organizationId);

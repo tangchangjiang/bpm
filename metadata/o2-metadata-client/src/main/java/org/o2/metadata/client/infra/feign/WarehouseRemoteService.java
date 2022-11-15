@@ -33,7 +33,7 @@ public interface WarehouseRemoteService {
      * @return string
      */
     @PostMapping({"/{organizationId}/warehouse-internal/saveWarehouse"})
-    ResponseEntity<String> saveWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> saveWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                          @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
                                          @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap);
 
@@ -45,7 +45,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/updateWarehouse"})
-    ResponseEntity<String> updateWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> updateWarehouse(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCode", required = true) String warehouseCode,
                                            @RequestParam(value = "hashMap", required = false) Map<String, Object> hashMap);
 
@@ -60,6 +60,7 @@ public interface WarehouseRemoteService {
     @GetMapping("/{organizationId}/warehouse-internal/list")
     ResponseEntity<String>  listWarehouses(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                            @RequestParam(value = "warehouseCodes") List<String> warehouseCodes);
+
     /**
      * 仓库快递配送接单量增量更新
      * @param organizationId 租户ID
@@ -68,7 +69,7 @@ public interface WarehouseRemoteService {
      * @return ResponseEntity
      */
     @PostMapping({"/{organizationId}/warehouse-internal/updateExpressValue"})
-    ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> updateExpressValue(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestParam(value = "warehouseCode") String warehouseCode,
                                               @RequestParam(value = "increment") String increment);
 
@@ -80,7 +81,7 @@ public interface WarehouseRemoteService {
      * @return list
      */
     @GetMapping("/{organizationId}/warehouse-internal/limit-list")
-    ResponseEntity<String> listWarehousePickupLimit(@PathVariable @ApiParam(value = "租户ID", required = true) final Long organizationId,
+    ResponseEntity<String> listWarehousePickupLimit(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                     @RequestParam List<String> warehouseCodes);
 
     /**

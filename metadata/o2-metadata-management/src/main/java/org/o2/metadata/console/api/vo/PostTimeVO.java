@@ -25,9 +25,7 @@ import java.time.LocalTime;
 @VersionAudit
 @ModifyAudit
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PostTimeVO  extends AuditDomain {
-
-
+public class PostTimeVO extends AuditDomain {
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long postTimeId;

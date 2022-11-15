@@ -44,7 +44,6 @@ public class BusinessProcess extends AuditDomain {
     // 数据库字段
     // ------------------------------------------------------------------------------
 
-
     @ApiModelProperty("表ID，主键")
     @Id
     @GeneratedValue
@@ -65,7 +64,7 @@ public class BusinessProcess extends AuditDomain {
     @ApiModelProperty(value = "画布渲染json")
     private String viewJson;
     @ApiModelProperty(value = "业务类型", required = true)
-	@LovValue(lovCode = "O2BPM.BUSINESS_TYPE")
+    @LovValue(lovCode = "O2BPM.BUSINESS_TYPE")
     @NotBlank
     private String businessTypeCode;
     @ApiModelProperty(value = "租户ID", required = true)
@@ -73,21 +72,21 @@ public class BusinessProcess extends AuditDomain {
     @Unique(O2BPM_BUSINESS_PROCESS_U1)
     private Long tenantId;
 
-	//
+    //
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
-	@Transient
-	@ApiModelProperty("业务类型含义")
-	private String businessTypeMeaning;
+    @Transient
+    @ApiModelProperty("业务类型含义")
+    private String businessTypeMeaning;
 
-	@Transient
-	@ApiModelProperty("创建人")
-	private String createdOperator;
+    @Transient
+    @ApiModelProperty("创建人")
+    private String createdOperator;
 
-	@Transient
-	@ApiModelProperty("更新人")
-	private String updatedOperator;
+    @Transient
+    @ApiModelProperty("更新人")
+    private String updatedOperator;
     //
     // getter/setter
     // ------------------------------------------------------------------------------
@@ -95,115 +94,121 @@ public class BusinessProcess extends AuditDomain {
     /**
      * @return 表ID，主键
      */
-	public Long getBizProcessId() {
-		return bizProcessId;
-	}
+    public Long getBizProcessId() {
+        return bizProcessId;
+    }
 
-	public void setBizProcessId(Long bizProcessId) {
-		this.bizProcessId = bizProcessId;
-	}
+    public void setBizProcessId(Long bizProcessId) {
+        this.bizProcessId = bizProcessId;
+    }
+
     /**
      * @return 业务流程编码
      */
-	public String getProcessCode() {
-		return processCode;
-	}
+    public String getProcessCode() {
+        return processCode;
+    }
 
-	public void setProcessCode(String processCode) {
-		this.processCode = processCode;
-	}
+    public void setProcessCode(String processCode) {
+        this.processCode = processCode;
+    }
+
     /**
      * @return 业务流程描述
      */
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     /**
      * @return 1-启用/0-禁用
      */
-	public Integer getEnabledFlag() {
-		return enabledFlag;
-	}
+    public Integer getEnabledFlag() {
+        return enabledFlag;
+    }
 
-	public void setEnabledFlag(Integer enabledFlag) {
-		this.enabledFlag = enabledFlag;
-	}
+    public void setEnabledFlag(Integer enabledFlag) {
+        this.enabledFlag = enabledFlag;
+    }
+
     /**
      * @return 业务流程json
      */
-	public String getProcessJson() {
-		return processJson;
-	}
+    public String getProcessJson() {
+        return processJson;
+    }
 
-	public void setProcessJson(String processJson) {
-		this.processJson = processJson;
-	}
+    public void setProcessJson(String processJson) {
+        this.processJson = processJson;
+    }
+
     /**
      * @return 画布渲染json
      */
-	public String getViewJson() {
-		return viewJson;
-	}
+    public String getViewJson() {
+        return viewJson;
+    }
 
-	public void setViewJson(String viewJson) {
-		this.viewJson = viewJson;
-	}
+    public void setViewJson(String viewJson) {
+        this.viewJson = viewJson;
+    }
+
     /**
      * @return 业务类型
      */
-	public String getBusinessTypeCode() {
-		return businessTypeCode;
-	}
+    public String getBusinessTypeCode() {
+        return businessTypeCode;
+    }
 
-	public void setBusinessTypeCode(String businessTypeCode) {
-		this.businessTypeCode = businessTypeCode;
-	}
+    public void setBusinessTypeCode(String businessTypeCode) {
+        this.businessTypeCode = businessTypeCode;
+    }
+
     /**
      * @return 租户ID
      */
-	public Long getTenantId() {
-		return tenantId;
-	}
+    public Long getTenantId() {
+        return tenantId;
+    }
 
-	public void setTenantId(Long tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public String getBusinessTypeMeaning() {
-		return businessTypeMeaning;
-	}
+    public String getBusinessTypeMeaning() {
+        return businessTypeMeaning;
+    }
 
-	public void setBusinessTypeMeaning(String businessTypeMeaning) {
-		this.businessTypeMeaning = businessTypeMeaning;
-	}
+    public void setBusinessTypeMeaning(String businessTypeMeaning) {
+        this.businessTypeMeaning = businessTypeMeaning;
+    }
 
+    public String getCreatedOperator() {
+        return createdOperator;
+    }
 
-	public String getCreatedOperator() {
-		return createdOperator;
-	}
+    public void setCreatedOperator(String createdOperator) {
+        this.createdOperator = createdOperator;
+    }
 
-	public void setCreatedOperator(String createdOperator) {
-		this.createdOperator = createdOperator;
-	}
+    public String getUpdatedOperator() {
+        return updatedOperator;
+    }
 
-	public String getUpdatedOperator() {
-		return updatedOperator;
-	}
+    public void setUpdatedOperator(String updatedOperator) {
+        this.updatedOperator = updatedOperator;
+    }
 
-	public void setUpdatedOperator(String updatedOperator) {
-		this.updatedOperator = updatedOperator;
-	}
+    public String getEntityCode() {
+        return entityCode;
+    }
 
-	public String getEntityCode() {
-		return entityCode;
-	}
-
-	public void setEntityCode(String entityCode) {
-		this.entityCode = entityCode;
-	}
+    public void setEntityCode(String entityCode) {
+        this.entityCode = entityCode;
+    }
 }
 

@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.service.impl;
 
-
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,6 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
         this.systemParameterRedis = systemParameterRedis;
     }
 
-
     @Override
     public String getSysValueByParam(String paramCode, Long tenantId) {
         if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
@@ -53,7 +51,6 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
         return new ArrayList<>();
 
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -76,13 +73,13 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
     public void removeSystemParamValue(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
         systemParamValueRepository.deleteByPrimaryKey(systemParamValue);
-        systemParameterRedis.deleteSystemParamValue(systemParameter,systemParamValue);
+        systemParameterRedis.deleteSystemParamValue(systemParameter, systemParamValue);
     }
 
     @Override
     public void systemParamValueValidate(SystemParamValue systemParamValue) {
         SystemParameter systemParameter = getSystemParameter(systemParamValue);
-        if (SystemParameterConstants.ParamType.MAP.equals(systemParameter.getParamTypeCode())){
+        if (SystemParameterConstants.ParamType.MAP.equals(systemParameter.getParamTypeCode())) {
            String key =  systemParamValue.getParamKey();
            if (StringUtils.isEmpty(key)) {
                throw new CommonException(SystemParameterConstants.ErrorCode.BASIC_DATA_MAP_KEY_IS_NULL);

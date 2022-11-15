@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-
 /**
  * description 平台信息匹配
  *
@@ -19,7 +18,7 @@ public class PlatformRemoteServiceImpl implements PlatformRemoteService {
 
     @Override
     public ResponseEntity<String> listPlatforms(PlatformQueryInnerDTO platformQueryInnerDTO, Long organizationId) {
-        log.error("Error listPlatforms, params[tenantId = {}, platformDTO = {}]",organizationId, platformQueryInnerDTO);
+        log.error("Error listPlatforms, params[tenantId = {}, platformDTO = {}]", organizationId, platformQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

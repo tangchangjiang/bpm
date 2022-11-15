@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 承运商
  *
  * @author yipeng.zhu@hand-china.com 2021-08-18
@@ -17,8 +16,10 @@ import java.util.List;
 public class CarrierConverter {
     private CarrierConverter() {
     }
+
     /**
      * PO 转 CO
+     *
      * @param carrierMapping 匹配规则
      * @return co
      */
@@ -39,6 +40,7 @@ public class CarrierConverter {
 
     /**
      * PO 转 CO
+     *
      * @param carrierMappings 匹配规则
      * @return list
      */

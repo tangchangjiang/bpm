@@ -1,8 +1,6 @@
 package org.o2.metadata.domain.freight.domain;
 
-
 /**
- *
  * 运费模版信息
  *
  * @author yipeng.zhu@hand-china.com 2021-07-16
@@ -12,11 +10,11 @@ public class FreightInfoDO {
     /**
      * 运费模版编码
      */
-    private  String freightTemplateCode;
+    private String freightTemplateCode;
 
-    private  FreightTemplateDO headTemplate;
+    private FreightTemplateDO headTemplate;
 
-    private  FreightTemplateDetailDO regionTemplate;
+    private FreightTemplateDetailDO regionTemplate;
 
     public String getFreightTemplateCode() {
         return freightTemplateCode;

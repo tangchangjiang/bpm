@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- *
  * 服务点
+ *
  * @author yipeng.zhu@hand-china.com 2021-08-02
  **/
 @FeignClient(
@@ -26,30 +26,34 @@ public interface PosRemoteService {
 
     /**
      * 批量查询服务点地址
+     *
      * @param posAddressQueryInnerDTO 服务点地址
-     * @param organizationId 租户ID
+     * @param organizationId          租户ID
      * @return string
      */
     @PostMapping("/{organizationId}/pos-internal/select-address")
     ResponseEntity<String> listPosAddress(@RequestBody PosAddressQueryInnerDTO posAddressQueryInnerDTO,
-                                          @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
+                                          @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
     /**
      * 批量查询服务点名称
+     *
      * @param posQueryInnerDTO 服务点编码
-     * @param organizationId 租户ID
+     * @param organizationId   租户ID
      * @return string
      */
     @PostMapping("/{organizationId}/pos-internal/select-name")
-    ResponseEntity<String> listPoseName(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId,
+    ResponseEntity<String> listPoseName(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                         @RequestBody PosQueryInnerDTO posQueryInnerDTO);
 
     /**
      * 新建或修改服务点
-     * @param posDTO 服务点
+     *
+     * @param posDTO         服务点
      * @param organizationId 租户ID
      * @return string
      */
     @PostMapping("/{organizationId}/pos-internal/save-pos")
-    ResponseEntity<String> savePos(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId,
-                                        @RequestBody PosDTO posDTO);
+    ResponseEntity<String> savePos(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                   @RequestBody PosDTO posDTO);
 }

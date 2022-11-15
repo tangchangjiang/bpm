@@ -17,7 +17,6 @@ import java.util.Map;
 public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     private static final Logger logger = LoggerFactory.getLogger(WarehouseRemoteServiceImpl.class);
 
-
     @Override
     public ResponseEntity<String> saveWarehouse(Long organizationId, String warehouseCode, Map<String, Object> hashMap) {
         logger.error("Error saveWarehouse, params[tenantId = {}, warehouseCode = {},hashMap = {}]", organizationId, warehouseCode, hashMap);
@@ -53,6 +52,5 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
         logger.error("Error listWarehousesByPosCode, params[tenantId = {}, posCodes = {}]", organizationId, posCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
 
 }

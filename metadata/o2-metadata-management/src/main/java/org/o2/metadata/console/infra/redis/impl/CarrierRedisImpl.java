@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 承运商
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -50,12 +49,13 @@ public class CarrierRedisImpl implements CarrierRedis {
             hashMap.put(carrier.getCarrierCode(), JsonHelper.objectToString(bo));
         }
         for (Carrier carrier : deletes) {
-            deleteMap.put(carrier.getCarrierCode(),String.valueOf(tenantId));
+            deleteMap.put(carrier.getCarrierCode(), String.valueOf(tenantId));
         }
         String key = CarrierConstants.Redis.getCarrierKey(tenantId);
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(CarrierConstants.Redis.CARRIER_CACHE_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), JsonHelper.objectToString(hashMap),JsonHelper.objectToString(deleteMap));
+        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), JsonHelper.objectToString(hashMap),
+                JsonHelper.objectToString(deleteMap));
     }
 
     @Override
@@ -63,11 +63,11 @@ public class CarrierRedisImpl implements CarrierRedis {
         if (list.isEmpty()) {
             return;
         }
-       List<String> deleteList = new ArrayList<>(list.size());
+        List<String> deleteList = new ArrayList<>(list.size());
         for (Carrier carrier : list) {
             deleteList.add(carrier.getCarrierCode());
         }
         String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-        redisCacheClient.opsForHash().delete(key,deleteList.toArray());
+        redisCacheClient.opsForHash().delete(key, deleteList.toArray());
     }
 }

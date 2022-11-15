@@ -37,7 +37,6 @@ public class MetadataFeignClientAutoConfiguration {
         return new FreightRemoteServiceImpl();
     }
 
-
     @Bean
     @ConditionalOnMissingBean
     public OnlineShopRemoteServiceImpl onlineShopRemoteServiceFallback() {

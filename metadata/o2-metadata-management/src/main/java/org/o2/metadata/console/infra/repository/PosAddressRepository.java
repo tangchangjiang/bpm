@@ -7,7 +7,6 @@ import org.o2.metadata.console.infra.entity.PosAddress;
 
 import java.util.List;
 
-
 /**
  * 详细地址资源库
  *
@@ -24,9 +23,10 @@ public interface PosAddressRepository extends BaseRepository<PosAddress> {
 
     /**
      * 查询服务地址
+     *
      * @param posAddressQueryInnerDTO 服务点地址
-     * @param tenantId 租户ID
-     * @return  list
+     * @param tenantId                租户ID
+     * @return list
      */
     List<PosAddress> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId);
 }

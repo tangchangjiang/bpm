@@ -37,9 +37,9 @@ public class SourcingCacheUpdateServiceImpl implements SourcingCacheUpdateServic
         refreshSourcingCache(tenantId, className, Collections.singletonList(WarehouseConstants.WarehouseEventManagement.NEAR_REGION_CACHE_NAME));
     }
 
-    private void refreshSourcingCache(Long tenantId, String className, List<String> cacheNames){
+    private void refreshSourcingCache(Long tenantId, String className, List<String> cacheNames) {
         // 寻源弃用，kafka不支持多pod实时更新
-        if(false){
+        if (false) {
             final ProducerContext<SourcingConfigUpdateBO> context = new ProducerContext<>();
             SourcingConfigUpdateBO data = new SourcingConfigUpdateBO();
             data.setCacheNames(cacheNames);
@@ -51,6 +51,5 @@ public class SourcingCacheUpdateServiceImpl implements SourcingCacheUpdateServic
             producerService.produce(tenantId, context);
         }
     }
-
 
 }

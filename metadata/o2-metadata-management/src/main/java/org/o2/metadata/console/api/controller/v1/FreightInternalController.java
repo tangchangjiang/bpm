@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- *
  * 运费
  *
  * @author yipeng.zhu@hand-china.com 2021-07-14
@@ -33,13 +31,12 @@ public class FreightInternalController {
     }
 
     @ApiOperation(value = "查询模版信息")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/template")
     public ResponseEntity<FreightInfoCO> getFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody FreightDTO freight) {
         freight.setTenantId(organizationId);
         return Results.success(freightService.getFreightTemplate(freight));
     }
-
 
     @ApiOperation(value = "查询默认模版信息")
     @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
@@ -49,10 +46,11 @@ public class FreightInternalController {
     }
 
     @ApiOperation(value = "批量查询运费模版信息")
-    @Permission(permissionPublic = true , level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/templates")
-    public ResponseEntity<Map<String, FreightTemplateCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                          @RequestBody List<String> templateCodes) {
+    public ResponseEntity<Map<String, FreightTemplateCO>> listFreightTemplate(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID",
+            required = true) Long organizationId,
+                                                                              @RequestBody List<String> templateCodes) {
         return Results.success(freightService.listFreightTemplate(organizationId, templateCodes));
     }
 }

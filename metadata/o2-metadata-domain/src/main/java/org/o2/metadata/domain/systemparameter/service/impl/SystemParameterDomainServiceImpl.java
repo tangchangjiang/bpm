@@ -5,7 +5,6 @@ import org.o2.metadata.domain.systemparameter.repository.SystemParameterDomainRe
 import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainService;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 
 /**
@@ -24,11 +23,11 @@ public class SystemParameterDomainServiceImpl implements SystemParameterDomainSe
 
     @Override
     public SystemParameterDO getSystemParameter(String paramCode, Long tenantId) {
-        return systemParameterDomainRepository.getSystemParameter(paramCode,tenantId);
+        return systemParameterDomainRepository.getSystemParameter(paramCode, tenantId);
     }
 
     @Override
     public List<SystemParameterDO> listSystemParameters(List<String> paramCodes, Long tenantId) {
-        return  systemParameterDomainRepository.listSystemParameters(paramCodes,tenantId);
+        return  systemParameterDomainRepository.listSystemParameters(paramCodes, tenantId);
     }
 }

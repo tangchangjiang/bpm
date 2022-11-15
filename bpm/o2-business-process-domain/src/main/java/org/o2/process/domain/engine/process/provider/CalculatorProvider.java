@@ -22,16 +22,15 @@ public class CalculatorProvider {
 
     public Map<String, ExpressionCalculator> calculatorMap = new HashMap<>();
 
-   public CalculatorProvider(List<ExpressionCalculator> expressionCalculatorList){
+    public CalculatorProvider(List<ExpressionCalculator> expressionCalculatorList) {
 //       expressionCalculatorList.forEach(calculator -> calculatorMap.put(calculator.getExpressType(), calculator));
-   }
+    }
 
-
-   public boolean calculate(String expressType, String expression, RuleObject dataMap, Long tenantId){
-       ExpressionCalculator expressionCalculator = calculatorMap.get(expressType);
-       if(null == expressionCalculator){
-           throw new CommonException(ProcessEngineConstants.ErrorCode.UNSUPPORTED_EXPRESS_TYPE);
-       }
-       return expressionCalculator.calculate(expression, dataMap, tenantId);
-   }
+    public boolean calculate(String expressType, String expression, RuleObject dataMap, Long tenantId) {
+        ExpressionCalculator expressionCalculator = calculatorMap.get(expressType);
+        if (null == expressionCalculator) {
+            throw new CommonException(ProcessEngineConstants.ErrorCode.UNSUPPORTED_EXPRESS_TYPE);
+        }
+        return expressionCalculator.calculate(expression, dataMap, tenantId);
+    }
 }

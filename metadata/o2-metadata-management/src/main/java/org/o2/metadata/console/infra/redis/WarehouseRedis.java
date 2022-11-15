@@ -18,7 +18,7 @@ public interface WarehouseRedis {
      * @param tenantId 租户ID
      * @return 仓库
      */
-    List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId );
+    List<Warehouse> listWarehouses(List<String> warehouseCodes, Long tenantId);
 
     /**
      * 批量更新
@@ -46,7 +46,5 @@ public interface WarehouseRedis {
      * @return 1 成功 -1 失败
      */
     Long updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId);
-
-
 
 }

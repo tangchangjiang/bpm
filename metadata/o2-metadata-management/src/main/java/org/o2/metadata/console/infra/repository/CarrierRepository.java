@@ -1,6 +1,5 @@
 package org.o2.metadata.console.infra.repository;
 
-
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.CarrierFreightDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;

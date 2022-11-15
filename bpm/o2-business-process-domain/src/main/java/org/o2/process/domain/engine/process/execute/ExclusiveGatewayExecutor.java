@@ -53,7 +53,7 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
 
         for (String outgoingKey : outgoingList) {
             BaseElement outgoingFlow = runtimeContext.getElementMap().get(outgoingKey);
-            if(ProcessEngineConstants.FlowElementType.CONDITIONAL_FLOW.equals(outgoingFlow.getType())){
+            if (ProcessEngineConstants.FlowElementType.CONDITIONAL_FLOW.equals(outgoingFlow.getType())) {
                 conditionalFlows.add((ConditionalFlow) outgoingFlow);
             }
 
@@ -68,14 +68,14 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
                 .sorted(Comparator.comparing(ConditionalFlow::getPriority))
                 .collect(Collectors.toList());
 
-        for (ConditionalFlow condition : sortFlows){
-            if(processCondition(condition, runtimeContext.getBusinessParam(), runtimeContext.getTenantId())){
+        for (ConditionalFlow condition : sortFlows) {
+            if (processCondition(condition, runtimeContext.getBusinessParam(), runtimeContext.getTenantId())) {
                 hitElement = condition;
                 break;
             }
         }
 
-        if(null != hitElement){
+        if (null != hitElement) {
             return hitElement;
         }
         //case2 return default while it has is configured
@@ -84,7 +84,8 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
             return defaultElement;
         }
 
-        log.error("calculateOutgoing failed.||nodeId={}, processDetail:{}", baseGateway.getId(), JsonHelper.objectToString(runtimeContext.getBpmnModel()));
+        log.error("calculateOutgoing failed.||nodeId={}, processDetail:{}", baseGateway.getId(),
+                JsonHelper.objectToString(runtimeContext.getBpmnModel()));
         throw new CommonException(ProcessEngineConstants.ErrorCode.GET_OUTGOING_FAILED);
     }
 
@@ -92,13 +93,13 @@ public class ExclusiveGatewayExecutor<T extends BusinessProcessExecParam> extend
 
         boolean hitFlag = ruleExpressCalculator.calculate(conditionalFlow.getRuleCode(), businessParam.getRuleObject(), tenantId);
 
-        if(hitFlag){
+        if (hitFlag) {
             afterHit(conditionalFlow, businessParam);
         }
         return hitFlag;
     }
 
-    protected void afterHit(ConditionalFlow conditionalFlow, T businessParam){
+    protected void afterHit(ConditionalFlow conditionalFlow, T businessParam) {
         // 命中之后额外操作
     }
 }

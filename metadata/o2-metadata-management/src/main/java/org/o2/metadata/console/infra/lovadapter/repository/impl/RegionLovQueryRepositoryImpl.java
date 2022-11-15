@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- *
  * 地址值集
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
@@ -46,13 +45,13 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
 
     @Override
     public List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO) {
-       return  queryRegionCondition(tenantId,innerDTO);
+        return queryRegionCondition(tenantId, innerDTO);
     }
 
     /**
      * @param tenantId 租户ID
-     * @param page page 页码
-     * @param size 大小
+     * @param page     page 页码
+     * @param size     大小
      * @param innerDTO 查询参数
      * @return 分页
      */
@@ -76,7 +75,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
-        if (regionList.isEmpty()|| queryList.isEmpty()) {
+        if (regionList.isEmpty() || queryList.isEmpty()) {
             return new ArrayList<>();
         }
         Iterator<Region> iteratorRegion = regionList.iterator();
@@ -111,19 +110,19 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         return result;
     }
 
-
     /**
      * 查询地区值集缓存
-     * @param tenantId 租户ID
+     *
+     * @param tenantId    租户ID
      * @param countryCode 国家编码
      * @return list 地区信息
      */
-    public List<Region> queryRegionCache(Long tenantId, String countryCode,String lang) {
-        Map<String,String> queryParam = Maps.newHashMapWithExpectedSize(2);
+    public List<Region> queryRegionCache(Long tenantId, String countryCode, String lang) {
+        Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(2);
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
-        queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE,O2LovConstants.RegionLov.DEFAULT_DATA);
-        queryParam.put(O2LovConstants.RegionLov.LANG,lang);
-        queryParam.put(O2LovConstants.RegionLov.TENANT_ID,String.valueOf(tenantId));
+        queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE, O2LovConstants.RegionLov.DEFAULT_DATA);
+        queryParam.put(O2LovConstants.RegionLov.LANG, lang);
+        queryParam.put(O2LovConstants.RegionLov.TENANT_ID, String.valueOf(tenantId));
 
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
@@ -141,7 +140,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      * @param queryParam 查询参数
      * @return 地区值集
      */
-    protected List<Region> getRegionByCountryAndLang(Long tenantId, Map<String,String> queryParam) {
+    protected List<Region> getRegionByCountryAndLang(Long tenantId, Map<String, String> queryParam) {
         List<Map<String, Object>> maps = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.AddressType.CODE, queryParam);
 
         List<Region> list = null;
@@ -156,10 +155,11 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
 
     /**
      * 条件查询地址
+     *
      * @param queryLov 查询条件
-     * @return  地区
+     * @return 地区
      */
-    private List<Region> queryRegionCondition(Long tenantId,RegionQueryLovInnerDTO queryLov){
+    private List<Region> queryRegionCondition(Long tenantId, RegionQueryLovInnerDTO queryLov) {
         String countryCode = queryLov.getCountryCode();
         if (StringUtils.isEmpty(countryCode)) {
             countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
@@ -168,46 +168,46 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
-        List<Region> regionList = this.queryRegionCache(tenantId,countryCode,lang);
+        List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
         String regionName = queryLov.getRegionName();
         // 地区名称
         if (StringUtils.isNotEmpty(regionName)) {
-            regionList = regionList.stream().filter(region ->  regionName.equals(region.getRegionName())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> regionName.equals(region.getRegionName())).collect(Collectors.toList());
         }
         // 地址编码
         String regionCode = queryLov.getRegionCode();
         if (StringUtils.isNotEmpty(regionCode)) {
-            regionList = regionList.stream().filter(region ->  regionCode.equals(region.getRegionCode())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> regionCode.equals(region.getRegionCode())).collect(Collectors.toList());
         }
         // 父地区
         List<String> parentRegionCodes = queryLov.getParentRegionCodes();
         if (CollectionUtils.isNotEmpty(parentRegionCodes)) {
-            regionList = regionList.stream().filter(region ->  parentRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> parentRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
         }
         // 不包含地区的编码
         List<String> notInRegionCodes = queryLov.getNotInRegionCodes();
-        if (CollectionUtils.isNotEmpty(notInRegionCodes)){
-            regionList = regionList.stream().filter(region ->  !notInRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(notInRegionCodes)) {
+            regionList = regionList.stream().filter(region -> !notInRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
         }
         // 级别
         Integer levelNumber = queryLov.getLevelNumber();
         if (null != levelNumber) {
-            regionList = regionList.stream().filter(region ->  levelNumber.equals(region.getLevelNumber())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> levelNumber.equals(region.getLevelNumber())).collect(Collectors.toList());
         }
         List<String> regionCodes = queryLov.getRegionCodes();
         if (CollectionUtils.isNotEmpty(regionCodes)) {
-            regionList = regionList.stream().filter(region ->  regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
 
         }
         // 地区的上一级为
         String parentRegionCode = queryLov.getParentRegionCode();
         if (StringUtils.isNotEmpty(parentRegionCode)) {
-            regionList = regionList.stream().filter(region ->  parentRegionCode.equals(region.getParentRegionCode())).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> parentRegionCode.equals(region.getParentRegionCode())).collect(Collectors.toList());
         }
         // 等级路径
         String levelPath = queryLov.getLevelPath();
         if (StringUtils.isNotEmpty(levelPath)) {
-            regionList = regionList.stream().filter(region ->  region.getLevelPath().startsWith(levelPath)).collect(Collectors.toList());
+            regionList = regionList.stream().filter(region -> region.getLevelPath().startsWith(levelPath)).collect(Collectors.toList());
         }
         return regionList;
     }

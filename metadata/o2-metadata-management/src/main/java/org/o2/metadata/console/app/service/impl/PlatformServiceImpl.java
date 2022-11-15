@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 /**
  * 平台定义表应用服务默认实现
  *
@@ -41,7 +40,6 @@ public class PlatformServiceImpl implements PlatformService {
         this.platformInfoMappingRepository = platformInfoMappingRepository;
     }
 
-
     @Override
     public Platform save(Platform platform) {
         //保存平台定义表
@@ -52,7 +50,8 @@ public class PlatformServiceImpl implements PlatformService {
         } else {
             Platform original = platformRepository.selectByPrimaryKey(platform);
             if (!original.getPlatformCode().equals(platform.getPlatformCode())) {
-                throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE);
+                throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE,
+                        PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UPDATE);
             }
             if (!original.getPlatformName().equals(platform.getPlatformName())) {
                 validNameUnique(platform);
@@ -72,12 +71,13 @@ public class PlatformServiceImpl implements PlatformService {
     public Map<String, PlatformCO> selectCondition(PlatformQueryInnerDTO queryInnerDTO) {
         Map<String, PlatformCO> map = new HashMap<>(16);
         Map<String, List<PlatformInfoMapping>> result = CollectionCacheHelper.getCache(MetadataConstants.MappingCacheName.METADATA_CACHE_NAME,
-                String.format(PlatformConstants.CacheKeyPrefix.PLATFORM_CACHE_MAPPING_KEY_PREFIX,queryInnerDTO.getTenantId(),queryInnerDTO.getInfTypeCode()),
-                         queryInnerDTO.getPlatformCodes(),k->{
-                         queryInnerDTO.setPlatformCodes(new ArrayList<>(k));
-                         List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
-                         return list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
-                        });
+                String.format(PlatformConstants.CacheKeyPrefix.PLATFORM_CACHE_MAPPING_KEY_PREFIX, queryInnerDTO.getTenantId(),
+                        queryInnerDTO.getInfTypeCode()),
+                queryInnerDTO.getPlatformCodes(), k -> {
+                    queryInnerDTO.setPlatformCodes(new ArrayList<>(k));
+                    List<PlatformInfoMapping> list = platformInfoMappingRepository.selectCondition(queryInnerDTO);
+                    return list.stream().collect(Collectors.groupingBy(PlatformInfoMapping::getPlatformCode));
+                });
         for (Map.Entry<String, List<PlatformInfoMapping>> entry : result.entrySet()) {
             String k = entry.getKey();
             List<PlatformInfoMapping> value = entry.getValue();
@@ -98,7 +98,8 @@ public class PlatformServiceImpl implements PlatformService {
         ).build();
         List<Platform> platforms = platformRepository.selectByCondition(condition);
         if (CollectionUtils.isNotEmpty(platforms)) {
-            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE);
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE,
+                    PlatformConstants.ErrorCode.ERROR_PLATFORM_NAME_UNIQUE);
         }
     }
 
@@ -110,7 +111,8 @@ public class PlatformServiceImpl implements PlatformService {
         ).build();
         List<Platform> platforms = platformRepository.selectByCondition(condition);
         if (CollectionUtils.isNotEmpty(platforms)) {
-            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE);
+            throw new O2CommonException(null, PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE,
+                    PlatformConstants.ErrorCode.ERROR_PLATFORM_CODE_UNIQUE);
         }
     }
 }

@@ -17,12 +17,10 @@ import java.util.List;
 @ApiModel("地址匹配")
 public class AddressMappingCO {
 
-
     @ApiModelProperty(value = "region 关联")
     private String regionCode;
 
     private String regionName;
-
 
     @ApiModelProperty(value = "外部区域代码")
     private String externalCode;

@@ -29,6 +29,6 @@ public class PosAddressRepositoryImpl extends BaseRepositoryImpl<PosAddress> imp
 
     @Override
     public List<PosAddress> listPosAddress(PosAddressQueryInnerDTO posAddressQueryInnerDTO, Long tenantId) {
-        return posAddressMapper.listPosAddress(posAddressQueryInnerDTO,tenantId);
+        return posAddressMapper.listPosAddress(posAddressQueryInnerDTO, tenantId);
     }
 }

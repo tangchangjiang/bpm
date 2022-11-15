@@ -16,7 +16,6 @@ import java.util.List;
 public class SysParameterRemoteServiceImpl implements SysParameterRemoteService {
     private static final Logger logger = LoggerFactory.getLogger(SysParameterRemoteServiceImpl.class);
 
-
     @Override
     public ResponseEntity<String> getSystemParameter(Long organizationId, String paramCode) {
         logger.error("Error saveSysParameter, params[tenantId = {}, code = {}]", organizationId, paramCode);

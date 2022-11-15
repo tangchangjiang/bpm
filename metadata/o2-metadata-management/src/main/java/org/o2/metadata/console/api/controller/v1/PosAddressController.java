@@ -31,7 +31,6 @@ import springfox.documentation.annotations.ApiIgnore;
 public class PosAddressController extends BaseController {
     private final PosAddressRepository posAddressRepository;
 
-
     public PosAddressController(final PosAddressRepository posAddressRepository) {
         this.posAddressRepository = posAddressRepository;
     }
@@ -56,7 +55,8 @@ public class PosAddressController extends BaseController {
     @ApiOperation(value = "创建详细地址")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<PosAddress> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
+    public ResponseEntity<PosAddress> create(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                             @RequestBody final PosAddress posAddress) {
         posAddress.setTenantId(organizationId);
         posAddressRepository.insertSelective(posAddress);
         return Results.success(posAddress);
@@ -65,7 +65,8 @@ public class PosAddressController extends BaseController {
     @ApiOperation(value = "修改详细地址")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @PutMapping
-    public ResponseEntity<PosAddress> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
+    public ResponseEntity<PosAddress> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                             @RequestBody final PosAddress posAddress) {
         SecurityTokenHelper.validToken(posAddress);
         posAddress.setTenantId(organizationId);
         posAddressRepository.updateByPrimaryKeySelective(posAddress);
@@ -75,12 +76,12 @@ public class PosAddressController extends BaseController {
     @ApiOperation(value = "删除详细地址")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @DeleteMapping
-    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final PosAddress posAddress) {
+    public ResponseEntity<OperateResponse> remove(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final PosAddress posAddress) {
         SecurityTokenHelper.validToken(posAddress);
         posAddress.setTenantId(organizationId);
         posAddressRepository.deleteByPrimaryKey(posAddress);
         return Results.success(OperateResponse.success());
     }
-
 
 }

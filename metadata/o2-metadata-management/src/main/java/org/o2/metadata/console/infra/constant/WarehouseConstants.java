@@ -12,12 +12,13 @@ import org.springframework.scripting.support.ResourceScriptSource;
 public interface WarehouseConstants {
 
     interface ErrorCode {
-        String ERROR_WAREHOUSE_NAME_DUPLICATE= "error.warehouse_name.duplicate";
+        String ERROR_WAREHOUSE_NAME_DUPLICATE = "error.warehouse_name.duplicate";
         /**
          * 一个门店服务点只能关联一个仓库，不能重复
          */
         String ERROR_WAREHOUSE_REL_POS_NOT_UNIQUE = "error.warehouse_rel_pos_not_unique";
     }
+
     /**
      * 仓库类型
      */
@@ -32,6 +33,7 @@ public interface WarehouseConstants {
 
         String LOV_CODE = "O2MD.WAREHOUSE_STATUS";
     }
+
     /**
      * Redis Warehouse
      * o2md:warehouse:[tenantId]:[warehouseCode]
@@ -44,7 +46,8 @@ public interface WarehouseConstants {
          */
         String EXPRESS_LIMIT_KEY = "o2md:warehouse:express:{%d}:limit";
         String PICK_UP_LIMIT_KEY = "o2md:warehouse:pick_up:{%d}:limit";
-        String FLAG= "limitFlag";
+        String FLAG = "limitFlag";
+
         /**
          * 格式化的字符串
          *
@@ -66,7 +69,6 @@ public interface WarehouseConstants {
             return String.format(key, tenantId);
         }
 
-
          ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
          ResourceScriptSource PICK_UP_LIMIT_CACHE_LUA =
@@ -77,7 +79,7 @@ public interface WarehouseConstants {
 
     }
 
-    interface WarehouseEventManagement{
+    interface WarehouseEventManagement {
         String O2SE_CONFIG_CACHE_UPDATE_EVT = "O2SE_CONFIG_CACHE_UPDATE_EVT";
         String WAREHOUSE_CACHE_NAME = "warehouseCacheImpl";
         String SHOP_REL_WAREHOUSE_CACHE_NAME = "shopRelWarehouseCacheImpl";

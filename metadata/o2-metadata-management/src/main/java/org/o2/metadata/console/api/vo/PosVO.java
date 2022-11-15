@@ -90,7 +90,6 @@ public class PosVO extends AuditDomain {
     @ApiModelProperty(value = "组织ID", hidden = true)
     private Long tenantId;
 
-
     @ApiModelProperty("省id")
     private String regionCode;
 

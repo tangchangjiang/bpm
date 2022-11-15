@@ -4,7 +4,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
 /**
- *
  * 承运商
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -26,7 +25,6 @@ public interface CarrierConstants {
 
         String LOV_CODE = "O2MD.CARRIER_TYPE";
     }
-
 
     interface CarrierDeliveryRegionType {
         /**
@@ -61,6 +59,7 @@ public interface CarrierConstants {
          * redis key(hash): o2md:carrier:{tenantId}
          */
         String CARRIER_KEY = "o2md:carrier:{%s}:all";
+
         /**
          * GetFreightDefaultKey
          *
@@ -70,7 +69,6 @@ public interface CarrierConstants {
         static String getCarrierKey(Long tenantId) {
             return String.format(CARRIER_KEY, tenantId);
         }
-
 
         ResourceScriptSource CARRIER_CACHE_LUA =
                 new ResourceScriptSource(new ClassPathResource("script/lua/carrier/batch_update_redis_hash_value.lua"));

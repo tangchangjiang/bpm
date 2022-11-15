@@ -7,7 +7,6 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 
 import java.util.List;
 
-
 /**
  * 业务流程定义表应用服务
  *
@@ -18,10 +17,12 @@ public interface BusinessProcessService {
 
     /**
      * 批量查询业务流程
+     *
      * @param queryDTO
      * @return
      */
     List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO);
+
     /**
      * 批量保存业务流程定义表
      *
@@ -29,7 +30,6 @@ public interface BusinessProcessService {
      * @return 业务流程定义表对象列表
      */
     List<BusinessProcess> batchSave(List<BusinessProcess> businessProcessList);
-
 
     /**
      * 保存业务流程定义表
@@ -41,6 +41,7 @@ public interface BusinessProcessService {
 
     /**
      * 导出接口查询
+     *
      * @param businessExportDTO
      * @return
      */

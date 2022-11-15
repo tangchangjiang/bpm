@@ -4,8 +4,8 @@ import io.choerodon.core.domain.Page;
 import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import org.o2.metadata.console.api.dto.InfMappingDTO;
 import org.o2.metadata.console.infra.entity.PlatformInfoMapping;
-import java.util.List;
 
+import java.util.List;
 
 /**
  * 平台信息匹配表应用服务
@@ -14,7 +14,6 @@ import java.util.List;
  */
 public interface PlatformInfoMappingService {
 
-    
     /**
      * 批量保存平台信息匹配表
      *
@@ -22,7 +21,6 @@ public interface PlatformInfoMappingService {
      * @return 平台信息匹配表对象列表
      */
     List<PlatformInfoMapping> batchSave(List<PlatformInfoMapping> platformInfoMappingList);
-
 
     /**
      * 保存平台信息匹配表
@@ -32,11 +30,11 @@ public interface PlatformInfoMappingService {
      */
     PlatformInfoMapping save(PlatformInfoMapping platformInfoMapping);
 
-
     /**
      * 分页查询信息匹配
+     *
      * @param platformInfMapping 条件
-     * @param pageRequest 分页
+     * @param pageRequest        分页
      * @return Page<PlatformInfMapping> 结果
      */
     Page<PlatformInfoMapping> page(InfMappingDTO platformInfMapping, PageRequest pageRequest);

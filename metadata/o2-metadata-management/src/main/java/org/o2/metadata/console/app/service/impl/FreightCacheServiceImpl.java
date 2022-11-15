@@ -32,12 +32,12 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final FreightBO freight = freightTemplate.getFreight();
         final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
         final String freightStr = JsonHelper.objectToString(freight);
-        final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(),freight.getTemplateCode());
-        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY ,freightStr);
+        final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(), freight.getTemplateCode());
+        this.redisCacheClient.opsForHash().put(freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY, freightStr);
         saveFreightDetails(freightDetailList);
 
         //更新默认模板
-        if( freight.getDafaultFlag()==1 ) {
+        if (freight.getDafaultFlag() == 1) {
             saveFreightDefault(freightTemplate);
         }
     }
@@ -48,14 +48,16 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      */
     private void saveFreightDefault(final FreightTemplateBO freightTemplate) {
         final FreightBO freight = freightTemplate.getFreight();
-        if (freight.getDafaultFlag()==1 ) {return;}
+        if (freight.getDafaultFlag() == 1) {
+            return;
+        }
 
         final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
         final String freightStr = JsonHelper.objectToString(freight);
-        String templateCode =  FreightConstants.Redis.FREIGHT_DEFAULT_KEY;
-        final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(),templateCode);
+        String templateCode = FreightConstants.Redis.FREIGHT_DEFAULT_KEY;
+        final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(), templateCode);
         this.redisCacheClient.delete(freightInforKey);
-        this.redisCacheClient.opsForHash().put (freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY ,freightStr);
+        this.redisCacheClient.opsForHash().put(freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY, freightStr);
         saveFreightDetails(freightDetailList);
     }
 
@@ -64,7 +66,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         if (freightDetailList != null && !freightDetailList.isEmpty()) {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
-            final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
+            final String freightDetailKey = getFreightInforCacheKey(tenantId, freightCode);
             final Map<String, String> freightDetailMap = convertToFreightDetailMap(freightDetailList);
 
             executeSaveFreightInforScript(freightDetailKey, freightDetailMap);
@@ -76,17 +78,18 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final FreightBO freight = freightTemplate.getFreight();
         final long tenantId = freight.getTenantId();
         final String freightCode = freight.getTemplateCode();
-        final String freightKey = getFreightInforCacheKey( tenantId,freightCode);
+        final String freightKey = getFreightInforCacheKey(tenantId, freightCode);
         this.redisCacheClient.delete(freightKey);
     }
+
     @Override
     public void deleteFreight(final List<FreightTemplateBO> freightTemplates) {
-        List<String> keys  = new ArrayList<>(freightTemplates.size());
+        List<String> keys = new ArrayList<>(freightTemplates.size());
         for (FreightTemplateBO freightTemplate : freightTemplates) {
             final FreightBO freight = freightTemplate.getFreight();
             final long tenantId = freight.getTenantId();
             final String freightCode = freight.getTemplateCode();
-            final String freightKey = getFreightInforCacheKey( tenantId,freightCode);
+            final String freightKey = getFreightInforCacheKey(tenantId, freightCode);
             keys.add(freightKey);
         }
         this.redisCacheClient.delete(keys);
@@ -94,10 +97,10 @@ public class FreightCacheServiceImpl implements FreightCacheService {
 
     @Override
     public void deleteFreightDetails(final List<FreightDetailBO> freightDetailList) {
-        if (freightDetailList != null &&  !freightDetailList.isEmpty()) {
+        if (freightDetailList != null && !freightDetailList.isEmpty()) {
             final String freightCode = freightDetailList.get(0).getTemplateCode();
             final long tenantId = freightDetailList.get(0).getTenantId();
-            final String freightDetailKey = getFreightInforCacheKey(tenantId,freightCode);
+            final String freightDetailKey = getFreightInforCacheKey(tenantId, freightCode);
             final List<String> tmpDetailIdList = getTemplateDetailRegionCodeList(freightDetailList);
 
             executeDeleteFreightDetailScript(freightDetailKey, tmpDetailIdList);
@@ -111,9 +114,8 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      * @return 运费模板明细redis缓存key
      */
     private String getFreightInforCacheKey(final Long tenantId, final String freightCode) {
-        return String.format(FreightConstants.Redis.FREIGHT_DETAIL_KEY,tenantId, freightCode);
+        return String.format(FreightConstants.Redis.FREIGHT_DETAIL_KEY, tenantId, freightCode);
     }
-
 
     /**
      * 将运费模板明细列表转换成Map(key为运费模板明细的地区${region}；默认的为 DEFAULT, value为运费模板明细json字符串)
@@ -124,12 +126,10 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private Map<String, String> convertToFreightDetailMap(final List<FreightDetailBO> freightDetailList) {
         final Map<String, String> freightDetailMap = new HashMap<>(freightDetailList.size());
         for (FreightDetailBO freightDetail : freightDetailList) {
-            if (freightDetail.getDefaultFlag()!=null&&freightDetail.getDefaultFlag()==1){
-                freightDetailMap.put
-                        (FreightConstants.Redis.FREIGHT_DEFAULT_KEY, JsonHelper.objectToString(freightDetail));
-            }else{
-                freightDetailMap.put
-                        (freightDetail.getRegionCode(), JsonHelper.objectToString(freightDetail));
+            if (freightDetail.getDefaultFlag() != null && freightDetail.getDefaultFlag() == 1) {
+                freightDetailMap.put(FreightConstants.Redis.FREIGHT_DEFAULT_KEY, JsonHelper.objectToString(freightDetail));
+            } else {
+                freightDetailMap.put(freightDetail.getRegionCode(), JsonHelper.objectToString(freightDetail));
             }
 
         }
@@ -146,11 +146,11 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     private List<String> getTemplateDetailRegionCodeList(final List<FreightDetailBO> freightDetailList) {
         final List<String> tmpDetailIdRegionCodeList = new ArrayList<>();
         for (FreightDetailBO freightDetail : freightDetailList) {
-            tmpDetailIdRegionCodeList.add(freightDetail.getDefaultFlag()==1?FreightConstants.Redis.FREIGHT_DEFAULT_KEY:freightDetail.getRegionCode());
+            tmpDetailIdRegionCodeList.add(freightDetail.getDefaultFlag() == 1 ? FreightConstants.Redis.FREIGHT_DEFAULT_KEY :
+                    freightDetail.getRegionCode());
         }
         return tmpDetailIdRegionCodeList;
     }
-
 
     /**
      * 更新运费模板redis缓存
@@ -168,8 +168,8 @@ public class FreightCacheServiceImpl implements FreightCacheService {
     /**
      * 清除运费模板明细redis缓存
      *
-     * @param freightDetailKey 运费模板明细redis key
-     * @param templateRegionCodeList  运费模板明细ID列表
+     * @param freightDetailKey       运费模板明细redis key
+     * @param templateRegionCodeList 运费模板明细ID列表
      */
     private void executeDeleteFreightDetailScript(final String freightDetailKey,
                                                   final List<String> templateRegionCodeList) {

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 运费
  *
  * @author yipeng.zhu@hand-china.com 2021-09-23
@@ -40,17 +39,19 @@ public class FreightClient {
      * @return 模版
      */
     public FreightTemplateCO getDefaultTemplate(Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate( tenantId), FreightTemplateCO.class);
+        return ResponseUtils.getResponse(freightRemoteService.getDefaultTemplate(tenantId), FreightTemplateCO.class);
     }
 
     /**
      * 批量获取模版
-     * @param tenantId 租户ID
+     *
+     * @param tenantId      租户ID
      * @param templateCodes 模板编码
      * @return 运费结果
      */
     public Map<String, FreightTemplateCO> listFreightTemplate(List<String> templateCodes, Long tenantId) {
-        return ResponseUtils.getResponse(freightRemoteService.listFreightTemplate(templateCodes, tenantId), new TypeReference<Map<String, FreightTemplateCO>>() {
+        return ResponseUtils.getResponse(freightRemoteService.listFreightTemplate(templateCodes, tenantId), new TypeReference<Map<String,
+                FreightTemplateCO>>() {
         });
     }
 }

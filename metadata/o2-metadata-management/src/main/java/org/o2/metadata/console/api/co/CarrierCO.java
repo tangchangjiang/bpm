@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-
 /**
  * 承运商
  *
@@ -15,7 +14,6 @@ import lombok.Data;
 @ApiModel("承运商")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarrierCO {
-
 
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long carrierId;

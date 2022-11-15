@@ -6,13 +6,14 @@ import org.o2.metadata.console.infra.entity.RegionTreeChild;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 /**
- *
  * 地区
  *
  * @author yipeng.zhu@hand-china.com 2021-08-04
  **/
-class RegionTreeChildConverter{
+class RegionTreeChildConverter {
+
     private RegionTreeChildConverter() {
         // 无需实现
     }
@@ -47,7 +48,7 @@ class RegionTreeChildConverter{
         regionTreeChild.setPlatformCode(regionTreeChildVO.getPlatformCode());
         regionTreeChild.setPlatformName(regionTreeChildVO.getPlatformName());
 
-        List<RegionTreeChild> children =  RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren());
+        List<RegionTreeChild> children = RegionTreeChildConverter.toRegionTreeChildList(regionTreeChildVO.getChildren());
         if (!children.isEmpty()) {
             regionTreeChild.setChildren(children);
         }
@@ -86,7 +87,7 @@ class RegionTreeChildConverter{
         regionTreeChildVO.setParentRegionCode(regionTreeChild.getParentRegionCode());
         regionTreeChildVO.setLevelPath(regionTreeChild.getLevelPath());
         regionTreeChildVO.set_token(regionTreeChild.get_token());
-        List<RegionTreeChildVO> children =  RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren());
+        List<RegionTreeChildVO> children = RegionTreeChildConverter.toRegionTreeChildVOList(regionTreeChild.getChildren());
         if (!children.isEmpty()) {
             regionTreeChildVO.setChildren(children);
         }

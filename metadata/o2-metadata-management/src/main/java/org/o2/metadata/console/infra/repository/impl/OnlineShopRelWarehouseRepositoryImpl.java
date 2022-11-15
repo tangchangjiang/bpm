@@ -26,12 +26,13 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
     }
 
     @Override
-    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(final Long onlineShopId, final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO) {
+    public List<OnlineShopRelWarehouseVO> listShopPosRelsByOption(final Long onlineShopId,
+                                                                  final OnlineShopRelWarehouseDTO onlineShopRelWarehouseDTO) {
         Assert.notNull(onlineShopId, "online shop id could not be null");
         final Optional<OnlineShopRelWarehouseDTO> posOptional = Optional.ofNullable(onlineShopRelWarehouseDTO);
         return onlineShopRelWarehouseMapper.listShopWarehouseRelsByOption(onlineShopId,
                 posOptional.map(OnlineShopRelWarehouseDTO::getWarehouseCode).orElse(null),
-                posOptional.map(OnlineShopRelWarehouseDTO::getWarehouseName).orElse(null),onlineShopRelWarehouseDTO.getTenantId());
+                posOptional.map(OnlineShopRelWarehouseDTO::getWarehouseName).orElse(null), onlineShopRelWarehouseDTO.getTenantId());
     }
 
     @Override
@@ -41,7 +42,7 @@ public class OnlineShopRelWarehouseRepositoryImpl extends BaseRepositoryImpl<Onl
 
     @Override
     public List<OnlineShopRelWarehouse> selectByShopIdAndWareIdAndPosId(List<OnlineShopRelWarehouse> query, Long tenantId) {
-        return onlineShopRelWarehouseMapper.selectByShopIdAndWareId(query,tenantId);
+        return onlineShopRelWarehouseMapper.selectByShopIdAndWareId(query, tenantId);
     }
 
     @Override

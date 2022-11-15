@@ -8,7 +8,6 @@ import org.o2.metadata.console.infra.entity.Region;
 import java.util.List;
 
 /**
- *
  * 地区值集查询
  *
  * @author yipeng.zhu@hand-china.com 2021-09-22
@@ -17,17 +16,19 @@ public interface RegionLovQueryRepository {
 
     /**
      * 查询地区值集
+     *
      * @param tenantId 租户ID
      * @param innerDTO 查询条件
-     * @return  list
+     * @return list
      */
     List<Region> queryRegion(Long tenantId, RegionQueryLovInnerDTO innerDTO);
 
     /**
      * 分页查询地区值集
+     *
      * @param tenantId 租户ID
-     * @param page page 页码
-     * @param size 大小
+     * @param page     page 页码
+     * @param size     大小
      * @param innerDTO 查询参数
      * @return page
      */
@@ -35,14 +36,13 @@ public interface RegionLovQueryRepository {
 
     /**
      * 地区名称模糊查询
-     * @param tenantId 租户ID
+     *
+     * @param tenantId    租户ID
      * @param countryCode 国家编码
-     * @param queryList 查询
-     * @param lang 多语言
-     * @return  list
+     * @param queryList   查询
+     * @param lang        多语言
+     * @return list
      */
     List<Region> fuzzyMatching(Long tenantId, String countryCode, String lang, List<RegionNameMatchBO> queryList);
-
-
 
 }

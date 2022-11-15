@@ -40,20 +40,20 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         String key = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
         List<String> warehouseStr = new ArrayList<>();
         if (null == warehouseCodes) {
-          Map<String,String> map  = redisCacheClient.<String,String>opsForHash().entries(key);
+          Map<String, String> map  = redisCacheClient.<String, String>opsForHash().entries(key);
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 String v = entry.getValue();
                 warehouseStr.add(v);
             }
         } else {
-            warehouseStr = redisCacheClient.<String,String>opsForHash().multiGet(key,warehouseCodes);
+            warehouseStr = redisCacheClient.<String, String>opsForHash().multiGet(key, warehouseCodes);
         }
         List<Warehouse> list = new ArrayList<>();
         for (String str : warehouseStr) {
             if (null == str) {
                 continue;
             }
-            Warehouse warehouse  = JsonHelper.stringToObject(str,Warehouse.class);
+            Warehouse warehouse  = JsonHelper.stringToObject(str, Warehouse.class);
             list.add(warehouse);
         }
         return list;
@@ -74,10 +74,10 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
         keyList.add(warehouseCacheKey);
         // 仓库快递配送接单量限制 key
-        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
         keyList.add(expressLimitKey);
         // 仓库自提单量限制 key
-        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
         keyList.add(pickUpLimitKey);
         final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
@@ -87,27 +87,26 @@ public class WarehouseRedisImpl implements WarehouseRedis {
     @Override
     public Long updateExpressQuantity(String warehouseCode, String expressQuantity, Long tenantId) {
         // 仓库快递配送接单量限制 key
-        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY,tenantId);
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
         // 库存缓存key
         String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
         List<String> keyList = new ArrayList<>(2);
         keyList.add(expressLimitKey);
         keyList.add(warehouseCacheKey);
-        return executeScript(keyList,warehouseCode, expressQuantity,WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_CACHE_LUA);
+        return executeScript(keyList, warehouseCode, expressQuantity, WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_CACHE_LUA);
     }
 
     @Override
     public Long updatePickUpValue(String warehouseCode, String pickUpQuantity, Long tenantId) {
         // 仓库自提单量限制 key
-        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY,tenantId);
+        String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
         // 库存缓存key
         String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
         List<String> keyList = new ArrayList<>(2);
         keyList.add(pickUpLimitKey);
         keyList.add(warehouseCacheKey);
-        return executeScript(keyList,warehouseCode, pickUpQuantity,WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_CACHE_LUA);
+        return executeScript(keyList, warehouseCode, pickUpQuantity, WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_CACHE_LUA);
     }
-
 
     /**
      * 执行lua 脚本

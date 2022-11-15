@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * 运费模版
  *
  * @author yipeng.zhu@hand-china.com 2021-07-19
@@ -37,7 +36,7 @@ public class FreightRedisImpl implements FreightRedis {
         FreightInfo freightInfo = new FreightInfo();
         freightInfo.setFreightTemplateCode(templateCode);
         String freightDetailKey = FreightConstants.Redis.getFreightDetailKey(tenantId, templateCode);
-        List<String>  paramCodes = new ArrayList<>(3);
+        List<String> paramCodes = new ArrayList<>(3);
         paramCodes.add(FreightConstants.Redis.FREIGHT_HEAD_KEY);
         paramCodes.add(FreightConstants.Redis.FREIGHT_DEFAULT_KEY);
         if (StringUtils.isEmpty(regionCode)) {
@@ -46,12 +45,12 @@ public class FreightRedisImpl implements FreightRedis {
             paramCodes.add(regionCode);
         }
         List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
-        String headTemplate =  freightTemplates.get(0);
+        String headTemplate = freightTemplates.get(0);
         freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
 
-
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
-        freightInfo.setRegionTemplate(StringUtils.isEmpty(cityTemplate)?null :JsonHelper.stringToObject(cityTemplate, FreightTemplateDetail.class));
+        freightInfo.setRegionTemplate(StringUtils.isEmpty(cityTemplate) ? null : JsonHelper.stringToObject(cityTemplate,
+                FreightTemplateDetail.class));
         return freightInfo;
     }
 
@@ -60,7 +59,7 @@ public class FreightRedisImpl implements FreightRedis {
         Map<String, Map<String, String>> groupMap = new HashMap<>(16);
         Map<String, String> defaultMap = new HashMap<>(16);
         Map<String, FreightTemplate> templateMap = templateList.stream().collect(Collectors.toMap(FreightTemplate::getTemplateCode, v -> v));
-        Map<String,Map<String,String>> regionMap = new HashMap<>();
+        Map<String, Map<String, String>> regionMap = new HashMap<>();
 
         for (FreightTemplateDetail detail : detailList) {
 
@@ -69,7 +68,7 @@ public class FreightRedisImpl implements FreightRedis {
                 continue;
             }
             Map<String, String> map = regionMap.computeIfAbsent(detail.getTemplateCode(), k -> new HashMap<>(16));
-            map.put(detail.getRegionCode(),JsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
+            map.put(detail.getRegionCode(), JsonHelper.objectToString(FreightConverter.poToBoObject(detail)));
 
         }
         List<String> key = new ArrayList<>();
@@ -78,14 +77,14 @@ public class FreightRedisImpl implements FreightRedis {
             FreightTemplate v = entry.getValue();
             hashMap.put(FreightConstants.Redis.FREIGHT_HEAD_KEY, JsonHelper.objectToString(FreightConverter.poToBoObject(v)));
             String k = entry.getKey();
-            hashMap.put(FreightConstants.Redis.FREIGHT_DEFAULT_KEY,defaultMap.get(k));
-            Map<String,String> map = regionMap.get(k);
+            hashMap.put(FreightConstants.Redis.FREIGHT_DEFAULT_KEY, defaultMap.get(k));
+            Map<String, String> map = regionMap.get(k);
             if (null != map && !map.isEmpty()) {
                 hashMap.putAll(regionMap.get(k));
             }
             String redisKey = FreightConstants.Redis.getFreightDetailKey(tenantId, k);
             key.add(redisKey);
-            groupMap.put(redisKey,hashMap);
+            groupMap.put(redisKey, hashMap);
         }
         final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
         defaultRedisScript.setScriptSource(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA);
@@ -96,15 +95,16 @@ public class FreightRedisImpl implements FreightRedis {
     public List<FreightInfo> listFreightTemplate(Long tenantId, List<String> templateCodes) {
         List<FreightInfo> freightInfos = new ArrayList<>();
         redisCacheClient.executePipelined((RedisCallback<FreightInfo>) redisConnection -> {
-            for(String templateCode : templateCodes){
+            for (String templateCode : templateCodes) {
                 FreightInfo freightInfo = new FreightInfo();
                 freightInfo.setFreightTemplateCode(templateCode);
                 String freightDetailKey = FreightConstants.Redis.getFreightDetailKey(tenantId, templateCode);
                 List<String> paramCodes = new ArrayList<>(2);
                 paramCodes.add(FreightConstants.Redis.FREIGHT_HEAD_KEY);
                 List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
-                String headTemplate =  freightTemplates.get(0);
-                freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
+                String headTemplate = freightTemplates.get(0);
+                freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate,
+                        FreightTemplate.class));
                 freightInfos.add(freightInfo);
             }
             return null;

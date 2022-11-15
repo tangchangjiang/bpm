@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Component
 public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVersion> implements CatalogVersionRepository {
-    private  final CatalogVersionMapper catalogVersionMapper;
+    private final CatalogVersionMapper catalogVersionMapper;
 
     public CatalogVersionRepositoryImpl(CatalogVersionMapper catalogVersionMapper) {
         this.catalogVersionMapper = catalogVersionMapper;
@@ -26,7 +26,7 @@ public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVers
 
     @Override
     public List<CatalogVersion> batchSelectByCodes(List<String> catalogVersionCodes, Long organizationId) {
-        return catalogVersionMapper.batchSelectByCodes(catalogVersionCodes,organizationId);
+        return catalogVersionMapper.batchSelectByCodes(catalogVersionCodes, organizationId);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CatalogVersionRepositoryImpl extends BaseRepositoryImpl<CatalogVers
 
     @Override
     public List<CatalogCO> listCatalogAndVersion(CatalogQueryInnerDTO queryInner, Long organizationId) {
-        return catalogVersionMapper.listCatalogAndVersion(queryInner,organizationId);
+        return catalogVersionMapper.listCatalogAndVersion(queryInner, organizationId);
     }
 
     @Override

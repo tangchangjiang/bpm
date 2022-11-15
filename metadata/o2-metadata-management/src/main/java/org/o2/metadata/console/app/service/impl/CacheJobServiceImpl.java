@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
  * job
  *
  * @author yipeng.zhu@hand-china.com 2021-08-12
@@ -68,7 +67,7 @@ public class CacheJobServiceImpl implements CacheJobService {
     @Override
     public void refreshOnlineShopRelWarehouse(Long tenantId) {
         List<OnlineShopRelWarehouse> list = onlineShopRelWarehouseRepository.queryAllShopRelWarehouseByTenantId(tenantId);
-        onlineShopRedis.batchUpdateShopRelWh(list,tenantId, OnlineShopConstants.Redis.UPDATE);
+        onlineShopRedis.batchUpdateShopRelWh(list, tenantId, OnlineShopConstants.Redis.UPDATE);
     }
 
     @Override
@@ -99,9 +98,9 @@ public class CacheJobServiceImpl implements CacheJobService {
 
     @Override
     public void refreshFreight(Long tenantId) {
-       List<FreightTemplate> freightTemplateList = freightTemplateRepository.selectAllByTenantId(tenantId);
-       List<FreightTemplateDetail> details = freightTemplateDetailRepository.selectAllByTenantId(tenantId);
-       freightRedis.batchUpdateRedis(freightTemplateList,details,tenantId);
+        List<FreightTemplate> freightTemplateList = freightTemplateRepository.selectAllByTenantId(tenantId);
+        List<FreightTemplateDetail> details = freightTemplateDetailRepository.selectAllByTenantId(tenantId);
+        freightRedis.batchUpdateRedis(freightTemplateList, details, tenantId);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class CacheJobServiceImpl implements CacheJobService {
         query.setTenantId(tenantId);
         query.setActiveFlag(BaseConstants.Flag.YES);
         List<OnlineShop> onlineShops = onlineShopRepository.select(query);
-        onlineShopRedis.batchUpdateRedis(onlineShops,tenantId);
+        onlineShopRedis.batchUpdateRedis(onlineShops, tenantId);
     }
 
     @Override

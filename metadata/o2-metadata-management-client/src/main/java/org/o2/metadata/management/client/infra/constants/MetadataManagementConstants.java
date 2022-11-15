@@ -39,7 +39,6 @@ public interface MetadataManagementConstants {
          */
         String O2CMS_SITE_CONFIG = "O2CMS_SITE_CONFIG";
 
-
         /**
          * 构造CMS装修配置文件资源编码，需要用siteCode作为后缀区分不同站点的cms配置文件
          *

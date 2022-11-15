@@ -18,15 +18,15 @@ import java.util.Collections;
  */
 public class BaseFlowFactory {
 
-    private BaseFlowFactory(){
+    private BaseFlowFactory() {
 
     }
 
-    public static BaseFlow dealEdge(BaseElement source, BaseElement target, NotationEdge edge){
+    public static BaseFlow dealEdge(BaseElement source, BaseElement target, NotationEdge edge) {
         source.getOutgoing().add(edge.getId());
         target.getIncoming().add(edge.getId());
-        if(ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY.equals(source.getType())){
-            if(null == edge.getData() || StringUtils.isBlank(edge.getData().getRuleCode())){
+        if (ProcessEngineConstants.FlowElementType.EXCLUSIVE_GATEWAY.equals(source.getType())) {
+            if (null == edge.getData() || StringUtils.isBlank(edge.getData().getRuleCode())) {
                 return buildDefaultFlow(edge);
             }
             return buildConditionalFlow(edge);
@@ -34,7 +34,7 @@ public class BaseFlowFactory {
         return buildSequenceFlow(edge);
     }
 
-    protected static BaseFlow buildSequenceFlow(NotationEdge edge){
+    protected static BaseFlow buildSequenceFlow(NotationEdge edge) {
         SequenceFlow sequenceFlow = new SequenceFlow();
         sequenceFlow.setId(edge.getId());
         sequenceFlow.setIncoming(Collections.singletonList(edge.getSource().getCell()));
@@ -42,7 +42,7 @@ public class BaseFlowFactory {
         return sequenceFlow;
     }
 
-    protected static BaseFlow buildDefaultFlow(NotationEdge edge){
+    protected static BaseFlow buildDefaultFlow(NotationEdge edge) {
         DefaultFlow sequenceFlow = new DefaultFlow();
         sequenceFlow.setId(edge.getId());
         sequenceFlow.setIncoming(Collections.singletonList(edge.getSource().getCell()));
@@ -50,7 +50,7 @@ public class BaseFlowFactory {
         return sequenceFlow;
     }
 
-    protected static BaseFlow buildConditionalFlow(NotationEdge edge){
+    protected static BaseFlow buildConditionalFlow(NotationEdge edge) {
         ConditionalFlow conditionalFlow = new ConditionalFlow();
         conditionalFlow.setId(edge.getId());
         conditionalFlow.setIncoming(Collections.singletonList(edge.getSource().getCell()));

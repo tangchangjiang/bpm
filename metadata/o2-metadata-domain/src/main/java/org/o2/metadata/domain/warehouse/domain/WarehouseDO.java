@@ -16,7 +16,6 @@ public class WarehouseDO  {
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
 
-
     @ApiModelProperty(value = "服务点id，关联到 o2md_pos.pos_id")
     private Long posId;
 
@@ -64,7 +63,6 @@ public class WarehouseDO  {
 
     @ApiModelProperty(value = "仓库到店退标示")
     private Integer storeReturnFlag;
-
 
     private String posCode;
 

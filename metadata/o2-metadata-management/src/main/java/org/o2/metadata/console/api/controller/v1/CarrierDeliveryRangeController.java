@@ -1,5 +1,12 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.mybatis.pagehelper.domain.Sort;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -12,20 +19,17 @@ import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.CarrierDeliveryRange;
 import org.o2.metadata.console.infra.repository.CarrierDeliveryRangeRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-
 import java.util.List;
-
-import io.choerodon.core.domain.Page;
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.PageHelper;
-import io.choerodon.mybatis.pagehelper.annotation.SortDefault;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.mybatis.pagehelper.domain.Sort;
-import io.choerodon.swagger.annotation.Permission;
-
 
 /**
  * 承运商送达范围 管理 API
@@ -49,9 +53,10 @@ public class CarrierDeliveryRangeController extends BaseController {
     @ApiOperation(value = "承运商送达范围列表")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/page-list")
-    public ResponseEntity<Page<CarrierDeliveryRange>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, final CarrierDeliveryRange carrierDeliveryRange,
-                                  @ApiIgnore @SortDefault(value = CarrierDeliveryRange.FIELD_DELIVERY_RANGE_ID,
-                                          direction = Sort.Direction.DESC) final PageRequest pageRequest) {
+    public ResponseEntity<Page<CarrierDeliveryRange>> list(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                           final CarrierDeliveryRange carrierDeliveryRange,
+                                                           @ApiIgnore @SortDefault(value = CarrierDeliveryRange.FIELD_DELIVERY_RANGE_ID,
+                                                                   direction = Sort.Direction.DESC) final PageRequest pageRequest) {
         carrierDeliveryRange.setTenantId(organizationId);
         final Page<CarrierDeliveryRange> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierDeliveryRangeService.listCarrierDeliveryRanges(carrierDeliveryRange));
@@ -62,14 +67,15 @@ public class CarrierDeliveryRangeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/detail")
     public ResponseEntity<CarrierDeliveryRange> detail(@RequestParam final Long deliveryRangeId,
-                                    @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
-        return Results.success(carrierDeliveryRangeService.carrierDeliveryRangeDetail(deliveryRangeId,organizationId));
+                                                       @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId) {
+        return Results.success(carrierDeliveryRangeService.carrierDeliveryRangeDetail(deliveryRangeId, organizationId));
     }
 
     @ApiOperation(value = "批量创建或新增承运商送达范围")
-    @Permission(permissionPublic =true,level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping
-    public ResponseEntity<List<CarrierDeliveryRange>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
+    public ResponseEntity<List<CarrierDeliveryRange>> batchMerge(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                 @RequestBody final List<CarrierDeliveryRange> carrierDeliveryRanges) {
         final List<CarrierDeliveryRange> resultList = carrierDeliveryRangeService.batchMerge(organizationId, carrierDeliveryRanges);
         return Results.success(resultList);
     }

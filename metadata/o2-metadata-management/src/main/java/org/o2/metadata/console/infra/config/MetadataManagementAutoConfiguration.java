@@ -80,7 +80,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    public MetadataManagementExtraDataManager metadataManagementExtraDataManager(final Environment environment){
+    public MetadataManagementExtraDataManager metadataManagementExtraDataManager(final Environment environment) {
         return new MetadataManagementExtraDataManager(environment);
     }
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 
 /**
  * 业务流程缓存刷新job
+ *
  * @author tangcj
  * @version V1.0
  * @date 2022/8/15 10:40
@@ -33,7 +34,8 @@ public class BusinessProcessCacheRefreshJob implements IJobHandler {
 
     private final BusinessProcessRedisService businessProcessRedisService;
 
-    public BusinessProcessCacheRefreshJob(BusinessNodeRepository businessNodeRepository, BusinessProcessRepository businessProcessRepository, BusinessProcessRedisService businessProcessRedisService) {
+    public BusinessProcessCacheRefreshJob(BusinessNodeRepository businessNodeRepository, BusinessProcessRepository businessProcessRepository,
+                                          BusinessProcessRedisService businessProcessRedisService) {
         this.businessNodeRepository = businessNodeRepository;
         this.businessProcessRepository = businessProcessRepository;
         this.businessProcessRedisService = businessProcessRedisService;
@@ -41,7 +43,7 @@ public class BusinessProcessCacheRefreshJob implements IJobHandler {
 
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        if(!map.containsKey(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)){
+        if (!map.containsKey(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)) {
             tool.info("tenantId do not be null");
             return ReturnT.FAILURE;
         }
@@ -49,7 +51,8 @@ public class BusinessProcessCacheRefreshJob implements IJobHandler {
         List<BusinessNode> nodeList = businessNodeRepository.selectByCondition(Condition.builder(BusinessNode.class).andWhere(Sqls.custom()
                 .andEqualTo(BusinessNode.FIELD_TENANT_ID, tenantId)).build());
 
-        List<BusinessProcess> businessProcessList = businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
+        List<BusinessProcess> businessProcessList =
+                businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
                 .andEqualTo(BusinessProcess.FIELD_TENANT_ID, tenantId)).build());
 
         businessProcessRedisService.batchUpdateNodeStatus(nodeList, tenantId);

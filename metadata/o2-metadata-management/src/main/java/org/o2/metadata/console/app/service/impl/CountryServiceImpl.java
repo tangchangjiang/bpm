@@ -44,7 +44,7 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<Country> batchDisableCountry(Long organizationId,final List<Country> countryList) {
+    public List<Country> batchDisableCountry(Long organizationId, final List<Country> countryList) {
         for (final Country country : countryList) {
             country.setTenantId(organizationId);
             country.setCountryCode(null);
@@ -56,7 +56,8 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     private void validateCountryCodeRepeat(final Country country) {
         // 验证国家Code是否重复
-        final List<Country> countryList = countryRepository.select(Country.builder().countryCode(country.getCountryCode()).tenantId(country.getTenantId()).build());
+        final List<Country> countryList =
+                countryRepository.select(Country.builder().countryCode(country.getCountryCode()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_CODE, "Country(" + country.getCountryCode() + ")");
         }
@@ -64,7 +65,8 @@ public class CountryServiceImpl extends BaseServiceImpl<Country> implements Coun
 
     private void validateCountryNameRepeat(final Country country) {
         // 验证国家名称是否重复
-        final List<Country> countryList = countryRepository.select(Country.builder().countryName(country.getCountryName()).tenantId(country.getTenantId()).build());
+        final List<Country> countryList =
+                countryRepository.select(Country.builder().countryName(country.getCountryName()).tenantId(country.getTenantId()).build());
         if (!countryList.isEmpty()) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_DUPLICATE_NAME, "Country(" + country.getCountryCode() + ")");
         }

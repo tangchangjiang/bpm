@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @ImportService(templateCode = "O2BPM_BUSINESS_PROCESS", sheetIndex = 1)
 @Slf4j
 public class BusinessNodeImportServiceImpl extends BatchImportHandler implements IBatchImportService {
-    
+
     private final BusinessNodeRepository businessNodeRepository;
     private final BusinessProcessRedisService businessProcessRedisService;
 
@@ -43,13 +43,14 @@ public class BusinessNodeImportServiceImpl extends BatchImportHandler implements
             CustomUserDetails customUserDetails = DetailsHelper.getUserDetails();
             Long tenantId = customUserDetails.getTenantId();
             List<BusinessNode> dataList = new ArrayList<>(data.size());
-            data.forEach(d ->{
+            data.forEach(d -> {
                 BusinessNode bp = JsonHelper.stringToObject(d, BusinessNode.class);
                 bp.setTenantId(tenantId);
                 dataList.add(bp);
             });
             // 去重
-            List<BusinessNode> importList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(BusinessNode::getBeanId, Function.identity(), (a, b) -> a)).values());
+            List<BusinessNode> importList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(BusinessNode::getBeanId, Function.identity(),
+                    (a, b) -> a)).values());
             // 是否已经存在业务流程
             List<BusinessNode> businessNodes = businessNodeRepository.selectByCondition(Condition.builder(BusinessNode.class)
                     .andWhere(Sqls.custom().andEqualTo(BusinessNode.FIELD_TENANT_ID, tenantId)

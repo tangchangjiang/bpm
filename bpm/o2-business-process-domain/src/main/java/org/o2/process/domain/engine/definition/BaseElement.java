@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.o2.core.helper.JsonHelper;
-import org.o2.process.domain.engine.definition.Activity.ServiceTask;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.event.EndEvent;
 import org.o2.process.domain.engine.definition.event.StartEvent;
 import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
@@ -54,21 +54,20 @@ public abstract class BaseElement implements Element {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_LACK_OUTGOING);
         }
 
-        if(this.outgoing.size() > 1){
+        if (this.outgoing.size() > 1) {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_TOO_MUCH_OUTGOING);
         }
     }
 
-
-    protected void checkElement(Map<String, BaseElement> elementMap, List<String> nodes, List<String> validateType, String errorCode){
-        if(MapUtils.isEmpty(elementMap)){
+    protected void checkElement(Map<String, BaseElement> elementMap, List<String> nodes, List<String> validateType, String errorCode) {
+        if (MapUtils.isEmpty(elementMap)) {
             throwElementValidatorException(ProcessEngineConstants.ErrorCode.ELEMENT_ILLEGAL_VERIFICATION_PARAMETERS);
         }
-        for(String node : nodes){
-            if(!elementMap.containsKey(node)){
+        for (String node : nodes) {
+            if (!elementMap.containsKey(node)) {
                 throwElementValidatorException(ProcessEngineConstants.ErrorCode.MODEL_UNKNOWN_ELEMENT_KEY);
             }
-            if(!validateType.contains(elementMap.get(node).getType())){
+            if (!validateType.contains(elementMap.get(node).getType())) {
                 throwElementValidatorException(errorCode);
             }
         }
@@ -79,7 +78,7 @@ public abstract class BaseElement implements Element {
         checkOutgoing(elementMap);
     }
 
-    protected void throwElementValidatorException(String errorCode){
+    protected void throwElementValidatorException(String errorCode) {
         String exceptionMsg = getElementValidatorExceptionMsg(errorCode);
         log.info(exceptionMsg);
         throw new CommonException(errorCode, exceptionMsg);
@@ -87,6 +86,7 @@ public abstract class BaseElement implements Element {
 
     /**
      * 二开入口，可以对出错的数据进行一些处理
+     *
      * @param errorCode 错误编码
      */
     protected void recordElementValidatorException(String errorCode) {
@@ -94,7 +94,7 @@ public abstract class BaseElement implements Element {
         log.warn(exceptionMsg);
     }
 
-    protected String getElementValidatorExceptionMsg(String errorCode){
+    protected String getElementValidatorExceptionMsg(String errorCode) {
         return String.format(MODEL_DEFINITION_ERROR_MSG_FORMAT, errorCode, JsonHelper.objectToString(this));
     }
 

@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * 网店
  *
  * @author yipeng.zhu@hand-china.com 2021-08-06
@@ -122,13 +121,14 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             }
             return onlineShops;
         }
-      return selectAll(key);
+        return selectAll(key);
     }
 
     /**
-     *  查所有网店
-     * @param  key redis key
-     * @return  list
+     * 查所有网店
+     *
+     * @param key redis key
+     * @return list
      */
     private List<OnlineShop> selectAll(String key) {
         List<OnlineShop> onlineShops = new ArrayList<>();

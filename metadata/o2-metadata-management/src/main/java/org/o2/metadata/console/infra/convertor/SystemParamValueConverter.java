@@ -18,8 +18,7 @@ public class SystemParamValueConverter {
      * @param systemParamValueDTO 系统参数
      * @return  po
      */
-    public static SystemParamValue dtoToPoObject(SystemParamValueDTO systemParamValueDTO){
-
+    public static SystemParamValue dtoToPoObject(SystemParamValueDTO systemParamValueDTO) {
 
         if (systemParamValueDTO == null) {
             return null;

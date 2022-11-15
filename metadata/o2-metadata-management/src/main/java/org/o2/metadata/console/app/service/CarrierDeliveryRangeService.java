@@ -29,9 +29,10 @@ public interface CarrierDeliveryRangeService {
 
     /**
      * 承运商送达范围明细获取
+     *
      * @param deliveryRangeId meaning
-     * @param tenantId 租户ID
+     * @param tenantId        租户ID
      * @return the return
      */
-    CarrierDeliveryRange carrierDeliveryRangeDetail(Long deliveryRangeId,Long tenantId);
+    CarrierDeliveryRange carrierDeliveryRangeDetail(Long deliveryRangeId, Long tenantId);
 }

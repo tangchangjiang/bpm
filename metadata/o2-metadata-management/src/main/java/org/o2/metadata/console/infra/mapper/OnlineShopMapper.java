@@ -22,9 +22,9 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      */
     List<OnlineShop> findByCondition(OnlineShop onlineShop);
 
-
     /**
      * 校验网店是否已存在
+     *
      * @param condition 查询条件
      * @return the return
      * @throws RuntimeException exception description
@@ -33,31 +33,37 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
 
     /**
      * 查询网店(多语言)
-     * @date 2020-04-26
-     * @param  condition 查询条件
+     *
+     * @param condition 查询条件
      * @return 网店列表
+     * @date 2020-04-26
      */
-    List<OnlineShop> selectShop(final OnlineShop condition);
+    List<OnlineShop> selectShop(OnlineShop condition);
+
     /**
      * 更新默认网店值为空
-     * @date 2020-06-03
+     *
      * @param tenantId 租户ID
+     * @date 2020-06-03
      */
-    void updateDefaultShop(@Param("tenantId") final Long tenantId);
+    void updateDefaultShop(@Param("tenantId") Long tenantId);
 
     /**
      * 批量查询网店
-     * @param  onlineShopQueryInnerDTO 网店
-     * @param tenantId 租户ID
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @param tenantId                租户ID
      * @return list
      */
     List<OnlineShop> listOnlineShops(@Param("onlineShopDTO") OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, @Param("tenantId") Long tenantId);
 
     /**
      * 批量查询网店
-     * @param  onlineShopCatalogVersions 网店
-     * @param tenantId 租户ID
+     *
+     * @param onlineShopCatalogVersions 网店
+     * @param tenantId                  租户ID
      * @return list
      */
-    List<OnlineShop> listOnlineShopByCatalogCodes(@Param("onlineShopCatalogVersions") List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersions, @Param("tenantId") Long tenantId);
+    List<OnlineShop> listOnlineShopByCatalogCodes(@Param("onlineShopCatalogVersions") List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersions,
+                                                  @Param("tenantId") Long tenantId);
 }

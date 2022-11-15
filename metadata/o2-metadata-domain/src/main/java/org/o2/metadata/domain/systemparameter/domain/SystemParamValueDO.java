@@ -1,7 +1,5 @@
 package org.o2.metadata.domain.systemparameter.domain;
 
-
-
 import java.util.Objects;
 
 /**
@@ -122,8 +120,12 @@ public class SystemParamValueDO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {return true;}
-        if (o == null || getClass() != o.getClass()){ return false;}
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SystemParamValueDO valueDO = (SystemParamValueDO) o;
         return Objects.equals(valueId, valueDO.valueId) &&
                 Objects.equals(paramId, valueDO.paramId) &&
@@ -131,7 +133,7 @@ public class SystemParamValueDO {
                 Objects.equals(param1, valueDO.param1) &&
                 Objects.equals(param2, valueDO.param2) &&
                 Objects.equals(param3, valueDO.param3) &&
-                Objects.equals(paramKey,valueDO.paramKey)&&
+                Objects.equals(paramKey, valueDO.paramKey) &&
                 Objects.equals(tenantId, valueDO.tenantId);
     }
 

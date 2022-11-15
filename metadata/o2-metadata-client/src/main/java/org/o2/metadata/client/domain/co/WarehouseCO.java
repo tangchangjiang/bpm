@@ -18,7 +18,6 @@ public class WarehouseCO {
     @ApiModelProperty("表ID，主键，供其他表做外键")
     private Long warehouseId;
 
-
     @ApiModelProperty(value = "服务点id，关联到 o2md_pos.pos_id")
     private Long posId;
 

@@ -51,14 +51,15 @@ public class PosTenantInitServiceImpl implements PosTenantInitService {
         query.setTenantId(targetTenantId);
         List<Pos> targetPos = posService.selectByCondition(query);
         // 3. 操作数据
-        handleData(targetPos,sourcePos,targetTenantId);
+        handleData(targetPos, sourcePos, targetTenantId);
         log.info("Business: initializePos finish");
     }
 
     /**
      * 处理网网店：更新已存在的，插入未存在的目标数据
-     * @param oldPos  已存在的数据
-     * @param initPos 初始化的数据
+     *
+     * @param oldPos         已存在的数据
+     * @param initPos        初始化的数据
      * @param targetTenantId 目标租户ID
      */
     private void handleData(List<Pos> oldPos, List<Pos> initPos, Long targetTenantId) {

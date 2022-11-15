@@ -1,4 +1,4 @@
-package org.o2.process.domain.engine.definition.Activity;
+package org.o2.process.domain.engine.definition.activity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

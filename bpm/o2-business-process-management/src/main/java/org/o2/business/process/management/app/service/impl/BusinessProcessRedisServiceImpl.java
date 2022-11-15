@@ -37,11 +37,11 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
     public BpmnModel getBusinessProcessConfig(String processCode, Long tenantId) {
         String processConfigStr = businessProcessRedisRepository.getBusinessProcessConfig(processCode, tenantId);
         // 0租户兜底逻辑
-        if(StringUtils.isBlank(processConfigStr)){
+        if (StringUtils.isBlank(processConfigStr)) {
             tenantId = O2CoreConstants.tenantId;
             processConfigStr = businessProcessRedisRepository.getBusinessProcessConfig(processCode, tenantId);
 
-            if(StringUtils.isBlank(processConfigStr)){
+            if (StringUtils.isBlank(processConfigStr)) {
                 return null;
             }
         }
@@ -57,13 +57,15 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
 
     @Override
     public void batchUpdateNodeStatus(List<BusinessNode> businessNodes, Long tenantId) {
-        Map<String, String> detailMap = businessNodes.stream().collect(Collectors.toMap(BusinessNode::getBeanId, a -> String.valueOf(a.getEnabledFlag())));
+        Map<String, String> detailMap = businessNodes.stream().collect(Collectors.toMap(BusinessNode::getBeanId,
+                a -> String.valueOf(a.getEnabledFlag())));
         businessProcessRedisRepository.batchUpdateNodeStatus(tenantId, detailMap);
     }
 
     @Override
     public void batchUpdateProcessConfig(List<BusinessProcess> processList, Long tenantId) {
-        Map<String, String> detailMap = processList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode, BusinessProcess::getProcessJson));
+        Map<String, String> detailMap = processList.stream().collect(Collectors.toMap(BusinessProcess::getProcessCode,
+                BusinessProcess::getProcessJson));
         businessProcessRedisRepository.batchUpdateProcessConfig(tenantId, detailMap);
     }
 
@@ -72,6 +74,5 @@ public class BusinessProcessRedisServiceImpl implements BusinessProcessRedisServ
         String lastModifiedTimeValue = businessProcessRedisRepository.getProcessLastUpdateTime(processCode, tenantId);
         return StringUtils.isEmpty(lastModifiedTimeValue) ? System.currentTimeMillis() : Long.parseLong(lastModifiedTimeValue);
     }
-
 
 }
