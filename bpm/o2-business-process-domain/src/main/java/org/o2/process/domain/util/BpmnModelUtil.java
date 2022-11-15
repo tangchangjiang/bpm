@@ -8,7 +8,6 @@ import org.o2.process.domain.engine.definition.event.EndEvent;
 import org.o2.process.domain.engine.definition.event.StartEvent;
 import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
 import org.o2.process.domain.engine.definition.flow.DefaultFlow;
-import org.o2.process.domain.engine.definition.flow.RuleConditionVO;
 import org.o2.process.domain.engine.definition.flow.SequenceFlow;
 import org.o2.process.domain.engine.definition.gateway.ExclusiveGateway;
 import org.o2.process.domain.infra.ProcessEngineConstants;
@@ -51,10 +50,5 @@ public class BpmnModelUtil {
             nextFlowElement = getUniqueNextNode(nextFlowElement, elementMap);
         }
         return nextFlowElement;
-    }
-
-    // todo
-    public static String buildExpress(RuleConditionVO ruleConditionVO){
-        return "";
     }
 }

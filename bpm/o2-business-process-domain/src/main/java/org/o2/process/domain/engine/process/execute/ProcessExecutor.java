@@ -63,7 +63,6 @@ public class ProcessExecutor<T extends BusinessProcessExecParam> implements Proc
         BaseElementExecutor<T> runtimeExecutor = executorProvider.getElementExecutor(runtimeContext.getCurrentElement());
         while (runtimeExecutor != null) {
             runtimeExecutor.execute(runtimeContext);
-            // todo 在哪流转？
             runtimeExecutor = executorProvider.getElementExecutor(runtimeContext.getCurrentElement());
         }
     }
