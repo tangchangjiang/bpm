@@ -76,6 +76,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (OnlineShopConstants.Redis.UPDATE.equals(handleType)) {
             defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.UPDATE_CACHE_LUA);
         } else {
+            // 删除key
             defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.DELETE_CACHE_LUA);
         }
         this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
