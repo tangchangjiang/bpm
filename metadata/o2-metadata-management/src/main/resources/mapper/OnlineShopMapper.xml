@@ -196,6 +196,12 @@
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code LIKE upper(#{onlineShopCodeLike})
             </if>
+            <if test="onlineShopCodes != null and onlineShopCodes.size > 0">
+                AND os.online_shop_code IN
+                <foreach collection="onlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
             <if test="onlineShopName!=null and onlineShopName!=''">
                 <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
                 AND os.online_shop_name LIKE #{onlineShopName}
