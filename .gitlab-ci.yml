@@ -31,6 +31,7 @@ maven_deploy:
     - dev
     - master
     - prod
+    - 1.6.2.BETA
 
 before_script:
   - |
