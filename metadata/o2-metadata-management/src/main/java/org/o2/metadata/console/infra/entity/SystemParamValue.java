@@ -33,6 +33,7 @@ public class SystemParamValue extends AuditDomain {
     public static final String FIELD_PARAM2 = "param2";
     public static final String FIELD_PARAM3 = "param3";
     public static final String FIELD_TENANT_ID = "tenantId";
+    public static final String FIELD_PARAM_KEY = "paramKey";
 
     //
     // 业务方法(按public protected private顺序排列)

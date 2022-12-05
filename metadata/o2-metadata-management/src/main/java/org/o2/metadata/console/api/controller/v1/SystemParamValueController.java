@@ -59,6 +59,7 @@ public class SystemParamValueController extends BaseController {
         Page<SystemParamValue> page = PageHelper.doPage(pageRequest, () -> systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class)
                 .andWhere(Sqls.custom().andEqualTo(SystemParamValue.FIELD_TENANT_ID, systemParamValue.getTenantId())
                         .andLike(SystemParamValue.FIELD_PARAM_VALUE, systemParamValue.getParamValue(), true)
+                        .andLike(SystemParamValue.FIELD_PARAM_KEY, systemParamValue.getParamKey(), true)
                         .andEqualTo(SystemParamValue.FIELD_PARAM_ID, systemParamValue.getParamId(), true)).build()));
         return Results.success(page);
     }
