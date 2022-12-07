@@ -58,6 +58,8 @@ public class PosConverter {
         posVO.set_token(pos.get_token());
         posVO.setAddress(PosAddressConverter.poToVoObject(pos.getAddress()));
         posVO.setPostTimes(PostTimeConverter.toPostTimeVOList(pos.getPostTimes()));
+        posVO.setPlatformCode(pos.getPlatformCode());
+        posVO.setPlatformName(pos.getPlatformName());
         return posVO;
     }
 

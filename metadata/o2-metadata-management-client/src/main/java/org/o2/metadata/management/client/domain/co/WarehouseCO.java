@@ -79,4 +79,10 @@ public class WarehouseCO {
     private String pickUpLimitValue;
 
     private String onlineShopCode;
+
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
+
+    @ApiModelProperty(value = "平台名称")
+    private String platformName;
 }

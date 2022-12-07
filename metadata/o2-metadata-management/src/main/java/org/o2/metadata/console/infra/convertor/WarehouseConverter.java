@@ -219,6 +219,8 @@ public class WarehouseConverter {
         co.setPickUpLimitValue(warehouse.getPickUpLimitValue());
         co.setStoreReturnFlag(warehouse.getStoreReturnFlag());
         co.setOnlineShopCode(warehouse.getOnlineShopCode());
+        co.setPlatformCode(warehouse.getPlatformCode());
+        co.setPlatformName(warehouse.getPlatformName());
         return co;
     }
 }

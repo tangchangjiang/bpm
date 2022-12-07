@@ -188,4 +188,12 @@ public class Warehouse extends AuditDomain {
     @Transient
     private String onlineShopCode;
 
+    @ApiModelProperty(value = "平台编码")
+    @Transient
+    private String platformCode;
+
+    @ApiModelProperty(value = "平台名称")
+    @Transient
+    private String platformName;
+
 }

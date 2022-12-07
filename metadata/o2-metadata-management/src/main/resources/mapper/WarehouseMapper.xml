@@ -271,7 +271,9 @@
         wtl.warehouse_name,
         w.active_flag,
         w.store_return_flag,
-        p.pos_name
+        p.pos_name,
+        p.platform_code,
+        platformtl.platform_name
         FROM
         o2md_warehouse w
         JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id
@@ -279,6 +281,10 @@
         <if test="innerDTO.onlineShopCode != null">
             JOIN o2md_shop_rel_warehouse osrw ON osrw.warehouse_id = w.warehouse_id
             JOIN o2md_online_shop os ON os.online_shop_id = osrw.online_shop_id
+        </if>
+        <if test="innerDTO.platformCode != null and innerDTO.platformCode != '' ">
+            join o2md_platform platform on p.platform_code = platform.platform_code and platform.tenant_id = #{tenantId}
+            join o2md_platform_tl platformtl on platform.platform_id = platformtl.platform_id and platformtl.lang = #{lang} and platformtl.tenant_id = #{tenantId}
         </if>
         <where>
             <choose>
@@ -316,6 +322,9 @@
             </if>
             <if test="innerDTO.posCode != null">
                 AND p.pos_code = #{innerDTO.posCode}
+            </if>
+            <if test="innerDTO.platformCode != null and innerDTO.platformCode != '' ">
+                AND p.platfrom_code = #{innerDTO.platformCode}
             </if>
         </where>
     </select>
