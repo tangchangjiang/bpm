@@ -17,6 +17,7 @@
         <result column="actived_date_from" property="activedDateFrom" jdbcType="DATE"/>
         <result column="actived_date_to" property="activedDateTo" jdbcType="DATE"/>
         <result column="inv_organization_code" property="invOrganizationCode" jdbcType="VARCHAR"/>
+        <result column="wms_warehouse_code" property="wmsWarehouseCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -93,7 +94,8 @@
         w.LAST_UPDATED_BY,
         w.LAST_UPDATE_DATE,
         w.tenant_id,
-        w.store_return_flag
+        w.store_return_flag,
+        w.wms_warehouse_code
         FROM
         o2md_warehouse w
         left JOIN o2md_pos p ON p.pos_id = w.pos_id AND p.tenant_id = w.tenant_id and p.tenant_id = #{tenantId}
@@ -272,7 +274,8 @@
         w.active_flag,
         w.store_return_flag,
         p.pos_name,
-        p.platform_code
+        p.platform_code,
+        w.wms_warehouse_code
         <if test="innerDTO.platformCode != null and innerDTO.platformCode != '' ">
             ,platformtl.platform_name
         </if>

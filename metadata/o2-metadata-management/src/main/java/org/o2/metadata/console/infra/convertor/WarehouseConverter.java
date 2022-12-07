@@ -221,6 +221,7 @@ public class WarehouseConverter {
         co.setOnlineShopCode(warehouse.getOnlineShopCode());
         co.setPlatformCode(warehouse.getPlatformCode());
         co.setPlatformName(warehouse.getPlatformName());
+        co.setWmsWarehouseCode(warehouse.getWmsWarehouseCode());
         return co;
     }
 }
