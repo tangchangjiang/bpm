@@ -116,6 +116,9 @@ public class Pos extends AuditDomain {
     @Size(max = 255)
     private String notice;
 
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------

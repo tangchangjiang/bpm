@@ -13,6 +13,7 @@
         <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
         <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
         <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
+        <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
