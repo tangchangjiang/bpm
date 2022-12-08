@@ -140,6 +140,9 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "仓库到店退标示")
     private Integer storeReturnFlag;
 
+    @ApiModelProperty(value = "外部仓储编码")
+    private String wmsWarehouseCode;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -187,5 +190,13 @@ public class Warehouse extends AuditDomain {
 
     @Transient
     private String onlineShopCode;
+
+    @ApiModelProperty(value = "平台编码")
+    @Transient
+    private String platformCode;
+
+    @ApiModelProperty(value = "平台名称")
+    @Transient
+    private String platformName;
 
 }

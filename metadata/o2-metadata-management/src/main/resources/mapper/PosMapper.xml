@@ -13,6 +13,7 @@
         <result column="address_id" property="addressId" jdbcType="DECIMAL"/>
         <result column="business_time" property="businessTime" jdbcType="VARCHAR"/>
         <result column="carrier_name" property="carrierName" jdbcType="VARCHAR"/>
+        <result column="platform_code" property="platformCode" jdbcType="VARCHAR"/>
         <result column="OBJECT_VERSION_NUMBER" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
@@ -41,10 +42,14 @@
         address.district_code,
         address.city_code,
         address.street_name,
-        pos.business_type_code
+        pos.business_type_code,
+        pos.platform_code,
+        platformtl.platform_name
         from o2md_pos pos
         left join o2md_pos_tl post on pos.pos_id = post.pos_id and post.lang = #{lang} and post.tenant_id = #{tenantId}
         left join o2md_pos_address address on pos.address_id = address.pos_address_id and address.tenant_id = #{tenantId}
+        left join o2md_platform platform on pos.platform_code = platform.platform_code and platform.tenant_id = #{tenantId}
+        left join o2md_platform_tl platformtl on platform.platform_id = platformtl.platform_id and platformtl.lang = #{lang} and platformtl.tenant_id = #{tenantId}
 
         where 1=1
         <choose>
@@ -78,6 +83,10 @@
 
         <if test="districtCode != null and districtCode != ''">
             and address.district_code = #{districtCode}
+        </if>
+
+        <if test="platformCode != null and platformCode != ''">
+            and pos.platform_code = #{platformCode}
         </if>
         order by pos.pos_code
     </select>
@@ -131,10 +140,14 @@
         p.LAST_UPDATED_BY,
         p.LAST_UPDATE_DATE,
         p.tenant_id,
-        p.notice
+        p.notice,
+        p.platform_code,
+        platformtl.platform_name
         FROM
         o2md_pos p
         left join o2md_pos_tl tl on tl.pos_id = p.pos_id and tl.lang = #{lang} and tl.tenant_id = #{tenantId}
+        left join o2md_platform platform on p.platform_code = platform.platform_code and platform.tenant_id = #{tenantId}
+        left join o2md_platform_tl platformtl on platform.platform_id = platformtl.platform_id and platformtl.lang = #{lang} and platformtl.tenant_id = #{tenantId}
         where p.pos_id = #{posId}
         <choose>
             <when test="tenantId != null">

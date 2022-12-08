@@ -116,6 +116,9 @@ public class Pos extends AuditDomain {
     @Size(max = 255)
     private String notice;
 
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
+
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
@@ -185,6 +188,9 @@ public class Pos extends AuditDomain {
     private String streetName;
     @Transient
     private String countryCode;
+
+    @Transient
+    private String platformName;
 
     @ApiModelProperty(value = "服务点编码", hidden = true)
     @Transient

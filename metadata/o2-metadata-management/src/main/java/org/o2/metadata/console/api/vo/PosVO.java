@@ -110,4 +110,10 @@ public class PosVO extends AuditDomain {
 
     @ApiModelProperty(value = "街道地址", hidden = true)
     private String streetName;
+
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
+
+    @ApiModelProperty(value = "平台名称")
+    private String platformName;
 }

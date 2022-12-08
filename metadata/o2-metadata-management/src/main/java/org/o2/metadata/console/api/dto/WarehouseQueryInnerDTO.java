@@ -41,4 +41,9 @@ public class WarehouseQueryInnerDTO {
      * 寻源查询标志
      */
     private Boolean sourcingFlag;
+
+    /**
+     * wms仓储平台
+     */
+    private String platformCode;
 }
