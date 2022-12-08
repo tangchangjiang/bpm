@@ -1,5 +1,6 @@
 package org.o2.metadata.management.client.domain.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -43,4 +44,7 @@ public class WarehouseQueryInnerDTO {
      * 寻源查询标志
      */
     private Boolean sourcingFlag;
+
+    @ApiModelProperty(value = "平台编码")
+    private String platformCode;
 }
