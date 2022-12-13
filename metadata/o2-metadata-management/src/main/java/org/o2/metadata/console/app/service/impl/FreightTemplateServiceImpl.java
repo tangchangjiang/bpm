@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.hzero.core.message.MessageAccessor;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
@@ -495,9 +496,9 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
             }
             freightTemplate.validate();
             // 数据库查重
-            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(!freightTemplate.exist(freightTemplateRepository), MessageAccessor.getMessage(FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE).desc());
             // list查重
-            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE);
+            Assert.isTrue(map.get(freightTemplate.getTemplateCode()) == null, MessageAccessor.getMessage(FreightConstants.ErrorCode.BASIC_DATA_FREIGHT_DUPLICATE_CODE).desc());
             map.put(freightTemplate.getTemplateCode(), i);
         }
     }
