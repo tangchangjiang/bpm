@@ -15,4 +15,10 @@ import java.util.List;
 public class OnlineShopRelWarehouseInnerDTO {
     @ApiModelProperty(value = "网店编码")
     private List<String> onlineShopCodes;
+
+    /**
+     * 是否查询门店类型的仓库，默认不查询
+     */
+    @ApiModelProperty(value = "是否查询门店类型的仓库，默认不查询")
+    private Boolean posQueryFlag;
 }

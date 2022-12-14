@@ -39,6 +39,16 @@ public class OnlineShopRelWarehouseCO {
     private String onlineShopCode;
     private Date activedDateTo;
 
+    /**
+     * 仓库详情(storeTypeFlag=true时才会查询详情）
+     */
+    private WarehouseCO warehouseDetail;
+
+    /**
+     * 是否为门店类型的仓库
+     */
+    private Boolean storeTypeFlag;
+
     public Date getActivedDateTo() {
         return activedDateTo;
     }
@@ -117,6 +127,22 @@ public class OnlineShopRelWarehouseCO {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public Boolean getStoreTypeFlag() {
+        return storeTypeFlag;
+    }
+
+    public void setStoreTypeFlag(Boolean storeTypeFlag) {
+        this.storeTypeFlag = storeTypeFlag;
+    }
+
+    public WarehouseCO getWarehouseDetail() {
+        return warehouseDetail;
+    }
+
+    public void setWarehouseDetail(WarehouseCO warehouseDetail) {
+        this.warehouseDetail = warehouseDetail;
     }
 
     @Override

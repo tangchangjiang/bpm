@@ -2,10 +2,17 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.co.PosRedisCO;
+import org.o2.metadata.console.api.co.WarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.PosConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRelWarehouseRedis;
 import org.springframework.dao.DataAccessException;
@@ -18,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 网店关联仓库
@@ -43,7 +52,7 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
         }
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
             OnlineShopRelWarehouse onlineShopRelWarehouse = new OnlineShopRelWarehouse();
-            String key  = String.valueOf(entry.getKey());
+            String key = String.valueOf(entry.getKey());
             Integer value = Integer.parseInt(String.valueOf(entry.getValue()));
             onlineShopRelWarehouse.setActiveFlag(value);
             onlineShopRelWarehouse.setWarehouseCode(key);
@@ -53,7 +62,8 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
     }
 
     @Override
-    public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(List<String> onlineShopCodes, Long tenantId) {
+    public List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
+        List<String> onlineShopCodes = innerDTO.getOnlineShopCodes();
         List<String> keys = new ArrayList<>(onlineShopCodes.size());
         for (String code : onlineShopCodes) {
             String hashKey = String.format(OnlineShopConstants.Redis.KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, code);
@@ -88,6 +98,54 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
                 coList.add(co);
             }
         }
+        posQuery(innerDTO, tenantId, coList);
+        // 批量查询
         return coList;
+    }
+
+
+    /**
+     * 当PosQueryFlag时，查询门店
+     *
+     * @param innerDTO innerDTO
+     * @param tenantId tenantId
+     * @param coList   coList
+     */
+    protected void posQuery(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId, List<OnlineShopRelWarehouseCO> coList) {
+        if (innerDTO.posQueryOrNot()) {
+            return;
+        }
+        if (CollectionUtils.isEmpty(coList)) {
+            return;
+        }
+        List<String> warehouseCodes = coList.stream().map(OnlineShopRelWarehouseCO::getWarehouseCode).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(warehouseCodes)) {
+            return;
+        }
+
+        String warehouseRedisKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(tenantId);
+        String posDetailRedisKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
+        List<String> warehouseDetailList = redisCacheClient.<String, String>opsForHash().multiGet(warehouseRedisKey, warehouseCodes);
+        Map<String, WarehouseCO> warehouseByWhCode = warehouseDetailList.stream()
+                .map(warehouseJson -> JsonHelper.stringToObject(warehouseJson, WarehouseCO.class))
+                .collect(Collectors.toMap(WarehouseCO::getWarehouseCode, Function.identity(), (a1, a2) -> a1));
+        List<String> posCodes = warehouseByWhCode.values().stream().map(WarehouseCO::getPosCode).collect(Collectors.toList());
+        List<String> posDetailList = redisCacheClient.<String, String>opsForHash().multiGet(posDetailRedisKey, posCodes);
+        Map<String, PosRedisCO> posDetailByPosCode = posDetailList.stream()
+                .map(posJson -> JsonHelper.stringToObject(posJson, PosRedisCO.class))
+                .collect(Collectors.toMap(PosRedisCO::getPosCode, Function.identity(), (a1, a2) -> a1));
+
+        for (OnlineShopRelWarehouseCO onlineShopRelWarehouse : coList) {
+            WarehouseCO warehouse = warehouseByWhCode.get(onlineShopRelWarehouse.getWarehouseCode());
+            if (warehouse != null) {
+                onlineShopRelWarehouse.setWarehouseDetail(warehouse);
+                String posCode = warehouse.getPosCode();
+                PosRedisCO posRedis = posDetailByPosCode.get(posCode);
+                if (posRedis != null) {
+                    warehouse.setPosDetail(posRedis);
+                    onlineShopRelWarehouse.setStoreTypeFlag(Objects.equals(MetadataConstants.PosType.STORE, posRedis.getPosTypeCode()));
+                }
+            }
+        }
     }
 }

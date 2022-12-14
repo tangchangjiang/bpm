@@ -145,8 +145,7 @@ public class OnlineShopRelWarehouseServiceImpl implements OnlineShopRelWarehouse
 
     @Override
     public Map<String, List<OnlineShopRelWarehouseCO>> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId) {
-        List<String> onlineShopCodes = innerDTO.getOnlineShopCodes();
-        List<OnlineShopRelWarehouseCO> onlineShopRelWarehouseList = onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(onlineShopCodes,
+        List<OnlineShopRelWarehouseCO> onlineShopRelWarehouseList = onlineShopRelWarehouseRedis.listOnlineShopRelWarehouses(innerDTO,
                 tenantId);
         return onlineShopRelWarehouseList.stream().collect(Collectors.groupingBy(OnlineShopRelWarehouseCO::getOnlineShopCode));
     }

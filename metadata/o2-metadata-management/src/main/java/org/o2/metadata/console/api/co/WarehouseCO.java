@@ -93,4 +93,7 @@ public class WarehouseCO {
     @ApiModelProperty(value = "外部仓储编码")
     private String wmsWarehouseCode;
 
+    @ApiModelProperty(value = "服务点详情")
+    private PosRedisCO posDetail;
+
 }
