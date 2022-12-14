@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 /**
- *
  * 网店管理仓库
  *
  * @author yipeng.zhu@hand-china.com 2021-11-18
@@ -15,4 +14,18 @@ import java.util.List;
 public class OnlineShopRelWarehouseInnerDTO {
     @ApiModelProperty(value = "网店编码")
     private List<String> onlineShopCodes;
+
+    /**
+     * 是否查询门店类型的仓库，默认不查询
+     */
+    private Boolean posQueryFlag;
+
+    /**
+     * 是否查询门店类型的仓库&服务点
+     *
+     * @return true: 需要查询; false: 不查询
+     */
+    public boolean posQueryOrNot() {
+        return Boolean.TRUE.equals(posQueryFlag);
+    }
 }

@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.redis;
 
 import org.o2.metadata.console.api.co.OnlineShopRelWarehouseCO;
+import org.o2.metadata.console.api.dto.OnlineShopRelWarehouseInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface OnlineShopRelWarehouseRedis {
     /**
      * 批量查询网店关联库存
      *
-     * @param onlineShopCode 网店编码
-     * @param tenantId       租户ID
+     * @param innerDTO innerDTO
+     * @param tenantId 租户ID
      * @return list
      */
-    List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(List<String> onlineShopCode, Long tenantId);
+    List<OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId);
 }
