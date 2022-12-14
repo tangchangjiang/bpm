@@ -131,19 +131,24 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
                 .collect(Collectors.toMap(WarehouseCO::getWarehouseCode, Function.identity(), (a1, a2) -> a1));
         List<String> posCodes = warehouseByWhCode.values().stream().map(WarehouseCO::getPosCode).collect(Collectors.toList());
         List<String> posDetailList = redisCacheClient.<String, String>opsForHash().multiGet(posDetailRedisKey, posCodes);
-        Map<String, PosRedisCO> posDetailByPosCode = posDetailList.stream()
-                .map(posJson -> JsonHelper.stringToObject(posJson, PosRedisCO.class))
-                .collect(Collectors.toMap(PosRedisCO::getPosCode, Function.identity(), (a1, a2) -> a1));
+        log.info("posDetailRedisKey: {}, posDetailList: {}", JsonHelper.objectToString(posDetailRedisKey), JsonHelper.objectToString(posDetailList));
 
-        for (OnlineShopRelWarehouseCO onlineShopRelWarehouse : coList) {
-            WarehouseCO warehouse = warehouseByWhCode.get(onlineShopRelWarehouse.getWarehouseCode());
-            if (warehouse != null) {
-                onlineShopRelWarehouse.setWarehouseDetail(warehouse);
-                String posCode = warehouse.getPosCode();
-                PosRedisCO posRedis = posDetailByPosCode.get(posCode);
-                if (posRedis != null) {
-                    warehouse.setPosDetail(posRedis);
-                    onlineShopRelWarehouse.setStoreTypeFlag(Objects.equals(MetadataConstants.PosType.STORE, posRedis.getPosTypeCode()));
+        if (CollectionUtils.isNotEmpty(posDetailList)) {
+            Map<String, PosRedisCO> posDetailByPosCode = posDetailList.stream()
+                    .filter(Objects::nonNull)
+                    .map(posJson -> JsonHelper.stringToObject(posJson, PosRedisCO.class))
+                    .collect(Collectors.toMap(PosRedisCO::getPosCode, Function.identity(), (a1, a2) -> a1));
+
+            for (OnlineShopRelWarehouseCO onlineShopRelWarehouse : coList) {
+                WarehouseCO warehouse = warehouseByWhCode.get(onlineShopRelWarehouse.getWarehouseCode());
+                if (warehouse != null) {
+                    onlineShopRelWarehouse.setWarehouseDetail(warehouse);
+                    String posCode = warehouse.getPosCode();
+                    PosRedisCO posRedis = posDetailByPosCode.get(posCode);
+                    if (posRedis != null) {
+                        warehouse.setPosDetail(posRedis);
+                        onlineShopRelWarehouse.setStoreTypeFlag(Objects.equals(MetadataConstants.PosType.STORE, posRedis.getPosTypeCode()));
+                    }
                 }
             }
         }
