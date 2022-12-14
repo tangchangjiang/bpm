@@ -94,6 +94,7 @@ public class OnlineShopConverter {
         onlineShopCacheBO.setSourcedFlag(onlineShop.getSourcedFlag());
         onlineShopCacheBO.setOnlineShopType(onlineShop.getOnlineShopType());
         onlineShopCacheBO.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
+        onlineShopCacheBO.setActiveFlag(onlineShop.getActiveFlag());
         return onlineShopCacheBO;
     }
 
