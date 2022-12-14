@@ -112,7 +112,7 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
      * @param coList   coList
      */
     protected void posQuery(OnlineShopRelWarehouseInnerDTO innerDTO, Long tenantId, List<OnlineShopRelWarehouseCO> coList) {
-        if (innerDTO.posQueryOrNot()) {
+        if (!innerDTO.posQueryOrNot()) {
             return;
         }
         if (CollectionUtils.isEmpty(coList)) {
