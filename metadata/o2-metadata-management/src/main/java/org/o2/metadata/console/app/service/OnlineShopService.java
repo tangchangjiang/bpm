@@ -64,4 +64,11 @@ public interface OnlineShopService {
      * @return 网店
      */
     OnlineShopCO saveOnlineShop(OnlineShopDTO onlineShopDTO);
+
+    /**
+     * 批量更新网店状态
+     * @param onlineShopDTOList 网店信息
+     * @return 网店
+     */
+    List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList);
 }

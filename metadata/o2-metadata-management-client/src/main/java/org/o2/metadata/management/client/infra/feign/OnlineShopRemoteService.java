@@ -81,4 +81,14 @@ public interface OnlineShopRemoteService {
     ResponseEntity<String> saveOnlineShop(@RequestBody OnlineShopDTO onlineShopDTO,
                                           @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
 
+    /**
+     * 批量更新网店状态
+     * @param onlineShopDTOList 网店信息
+     * @param organizationId 租户id
+     * @return 网店
+     */
+    @PostMapping("/{organizationId}/online-shops-internal/batch-update-status")
+    ResponseEntity<String> batchUpdateShopStatus(@RequestBody List<OnlineShopDTO> onlineShopDTOList,
+                                          @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
+
 }

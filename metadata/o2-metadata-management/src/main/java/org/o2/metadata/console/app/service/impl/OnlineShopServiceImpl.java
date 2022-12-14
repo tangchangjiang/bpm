@@ -279,4 +279,43 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
 
+    @Override
+    public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList) {
+        if (CollectionUtils.isEmpty(onlineShopDTOList)) {
+            return  new ArrayList<>();
+        }
+        List<String> shopCodeList = new ArrayList<>(onlineShopDTOList.size());
+        Long tenantId = 0L;
+        // 记录 网店编码对应网店状态
+        Map<String,Integer> shopStatus = new HashMap<>(onlineShopDTOList.size());
+        for (OnlineShopDTO onlineShopDTO : onlineShopDTOList) {
+            shopCodeList.add(onlineShopDTO.getOnlineShopCode());
+            tenantId = onlineShopDTO.getTenantId();
+            shopStatus.put(onlineShopDTO.getOnlineShopCode(), onlineShopDTO.getActiveFlag());
+
+        }
+        // 查询网店信息
+        List<OnlineShop>  result = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(Sqls.custom()
+                .andEqualTo(OnlineShop.FIELD_TENANT_ID,tenantId)
+                .andIn(OnlineShop.FIELD_ONLINE_SHOP_CODE, shopCodeList)).build());
+        if (CollectionUtils.isEmpty(result)) {
+            return  new ArrayList<>();
+        }
+        // 更新网店状态
+        List<OnlineShop> updateShops = new ArrayList<>(result.size());
+        for (OnlineShop onlineShop : result) {
+            OnlineShop update = new OnlineShop();
+            int activeFlag = shopStatus.getOrDefault(onlineShop.getOnlineShopCode(),onlineShop.getActiveFlag());
+            update.setOnlineShopId(onlineShop.getOnlineShopId());
+            update.setObjectVersionNumber(onlineShop.getObjectVersionNumber());
+            update.setActiveFlag(activeFlag);
+            onlineShop.setActiveFlag(activeFlag);
+            updateShops.add(update);
+        }
+        transactionalHelper.transactionOperation(() -> {
+            onlineShopRepository.batchUpdateByPrimaryKeySelective(updateShops);
+            onlineShopRedis.batchUpdateRedis(result, result.get(0).getTenantId());
+        });
+        return OnlineShopConverter.poToCoListObjects(result);
+    }
 }

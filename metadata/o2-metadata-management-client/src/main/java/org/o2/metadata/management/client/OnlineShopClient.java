@@ -88,4 +88,15 @@ public class OnlineShopClient {
         return O2ResponseUtils.getResponse(onlineShopRemoteService.saveOnlineShop(onlineShopDTO, tenantId), new TypeReference<OnlineShopCO>() {
         });
     }
+
+    /**
+     * 批量更新网店状态
+     * @param onlineShopDTOList 网店信息
+     * @param tenantId 租户id
+     * @return 网店
+     */
+    public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.batchUpdateShopStatus(onlineShopDTOList, tenantId), new TypeReference<List<OnlineShopCO>>() {
+        });
+    }
 }

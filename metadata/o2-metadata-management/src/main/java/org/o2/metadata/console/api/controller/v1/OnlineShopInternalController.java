@@ -62,4 +62,15 @@ public class OnlineShopInternalController {
         onlineShopDTO.setTenantId(organizationId);
         return Results.success(onlineShopService.saveOnlineShop(onlineShopDTO));
     }
+
+    @ApiOperation(value = "批量更新网店状态")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/batch-update-status")
+    public ResponseEntity<List<OnlineShopCO>> batchUpdateShopStatus(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                       @RequestBody List<OnlineShopDTO> onlineShopDTOList) {
+        for (OnlineShopDTO onlineShopDTO : onlineShopDTOList) {
+            onlineShopDTO.setTenantId(organizationId);
+        }
+        return Results.success(onlineShopService.batchUpdateShopStatus(onlineShopDTOList));
+    }
 }
