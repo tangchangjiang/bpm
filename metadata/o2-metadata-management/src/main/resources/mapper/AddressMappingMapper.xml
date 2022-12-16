@@ -134,10 +134,19 @@
         </choose>
           <if test="query.addressMappingInnerList !=null ">
             and
+              <foreach collection="query.addressMappingInnerList" item="item" open="(" separator="or" close=")">
+                  <choose>
+                      <when test="item.externalName !=null">
+                          (ad.external_name LIKE concat('%',concat(#{item.externalName}),'%') and ad.address_type_code =
+                          #{item.addressTypeCode} and ad.platform_code = #{item.platformCode} )
+                      </when>
+                      <otherwise>
+                          (ad.external_code = #{item.externalCode} and ad.address_type_code = #{item.addressTypeCode}
+                          and ad.platform_code = #{item.platformCode} )
+                      </otherwise>
+                  </choose>
 
-            <foreach collection="query.addressMappingInnerList" item="item" open="(" separator="or"  close=")">
-                (ad.external_name   LIKE concat('%',concat(#{item.externalName}),'%')  and  ad.address_type_code = #{item.addressTypeCode} and ad.platform_code = #{item.platformCode} )
-            </foreach>
+              </foreach>
 
           </if>
         <if test="query.platformCode !=null ">

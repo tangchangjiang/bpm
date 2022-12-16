@@ -34,6 +34,17 @@ public class AddressClient {
         return ResponseUtils.getResponse(addressMappingRemoteService.listAllAddressMappings(queryInnerDTO, tenantId), new TypeReference<Map<String, AddressMappingCO>>() {
         });
     }
+    /**
+     * 批量查询地址匹配
+     *
+     * @param queryInnerDTO 地址匹配
+     * @param tenantId   租户ID
+     * @return  map key: externalName
+     */
+    public List<AddressMappingCO> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(addressMappingRemoteService.listAddressMappingByCode(queryInnerDTO, tenantId), new TypeReference<List<AddressMappingCO>>() {
+        });
+    }
 
     /**
      * 查询临近省

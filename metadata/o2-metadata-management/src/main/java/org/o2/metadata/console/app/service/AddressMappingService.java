@@ -61,4 +61,12 @@ public interface AddressMappingService {
      */
     void releaseAddressMapping(AddressReleaseDTO addressReleaseDTO);
 
+    /**
+     * 内部方法 批量查询地址匹配
+     *
+     * @param queryInnerDTO 入参
+     * @param tenantId          租户ID
+     * @return map key: externalName
+     */
+    List<AddressMappingCO> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId);
 }
