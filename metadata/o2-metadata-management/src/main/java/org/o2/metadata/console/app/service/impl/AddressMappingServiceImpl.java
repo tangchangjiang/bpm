@@ -11,6 +11,7 @@ import org.hzero.core.base.BaseConstants;
 import org.o2.cms.management.client.O2CmsManagementClient;
 import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
 import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
+import org.o2.core.helper.JsonHelper;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
@@ -36,6 +37,7 @@ import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -389,6 +391,59 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         saveDTO.setResourceUrl(url);
         saveDTO.setTenantId(addressReleaseDTO.getTenantId());
         cmsManagementClient.saveResource(tenantId, Collections.singletonList(saveDTO));
+    }
+
+    @Override
+    public List<AddressMappingCO> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
+        List<Region> result = new ArrayList<>(4);
+        List<AddressMappingInnerDTO> addressMappingInnerList = queryInnerDTO.getAddressMappingInnerList();
+        // 1.通过外部编码 查询本地缓存基础地址数据(for循环)
+        for (AddressMappingInnerDTO addressMappingInnerDTO : addressMappingInnerList) {
+            addressMappingInnerDTO.setExternalName(null);
+            RegionQueryLovInnerDTO select = new RegionQueryLovInnerDTO();
+            select.setRegionCode(addressMappingInnerDTO.getExternalCode());
+            result.addAll(regionLovQueryRepository.queryRegion(tenantId, select));
+        }
+        for (Region region : result) {
+            region.setExternalCode(region.getRegionCode());
+            region.setExternalName(region.getExternalName());
+        }
+        Map<String, Region> regionMap = result.stream().collect(Collectors.toMap(Region::getRegionCode, Function.identity(), (a1, a2) -> a1));
+        // 2.通过外部编码 查询地址匹配
+        List<AddressMappingCO> listMapping = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(queryInnerDTO, tenantId));
+
+        for (AddressMappingCO addressMappingCO : listMapping) {
+            Region region = regionMap.get(addressMappingCO.getExternalCode());
+            // 3.外部编码和地区编码相同 移除基础地址数据
+            if (null != region) {
+                addressMappingCO.setRegionName(region.getRegionName());
+                regionMap.remove(addressMappingCO.getRegionCode());
+                continue;
+            }
+            // 4.外部编码和地区编码不相同 填充地址匹配中地区名称
+            RegionQueryLovInnerDTO select = new RegionQueryLovInnerDTO();
+            select.setRegionCode(addressMappingCO.getRegionCode());
+            List<Region> regions = regionLovQueryRepository.queryRegion(tenantId, select);
+            if (CollectionUtils.isNotEmpty(regions)) {
+                addressMappingCO.setRegionName(regions.get(0).getRegionName());
+            }
+        }
+        for (Map.Entry<String, Region> entry : regionMap.entrySet()) {
+            Region region = entry.getValue();
+            AddressMappingCO co = JsonHelper.stringToObject(JsonHelper.objectToString(region), AddressMappingCO.class);
+            // 5.等级编码转换
+            if (AddressConstants.AddressMapping.LEVEL_NUMBER_1.equals(region.getLevelNumber())) {
+                co.setAddressTypeCode(AddressConstants.AddressMapping.REGION);
+            }
+            if (AddressConstants.AddressMapping.LEVEL_NUMBER_2.equals(region.getLevelNumber())) {
+                co.setAddressTypeCode(AddressConstants.AddressMapping.CITY);
+            }
+            if (AddressConstants.AddressMapping.LEVEL_NUMBER_3.equals(region.getLevelNumber())) {
+                co.setAddressTypeCode(AddressConstants.AddressMapping.DISTRICT);
+            }
+            listMapping.add(co);
+        }
+        return listMapping;
     }
 
     /**

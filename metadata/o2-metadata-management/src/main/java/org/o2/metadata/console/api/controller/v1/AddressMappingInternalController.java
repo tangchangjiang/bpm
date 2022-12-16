@@ -13,6 +13,7 @@ import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,11 +32,18 @@ public class AddressMappingInternalController {
     }
 
     @ApiOperation(value = "批量查询地址批量表")
-    @Permission(permissionPublic = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list")
     public ResponseEntity<Map<String, AddressMappingCO>> listAddressMappings(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                              @RequestBody AddressMappingQueryInnerDTO queryInnerDTO) {
         return Results.success(addressMappingService.listAddressMappings(queryInnerDTO, organizationId));
     }
 
+    @ApiOperation(value = "通过外部编码查询地址匹配")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/list-address-by-code")
+    public ResponseEntity<List<AddressMappingCO>> listAddressMappingByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+    @RequestBody AddressMappingQueryInnerDTO queryInnerDTO) {
+        return Results.success(addressMappingService.listAddressMappingByCode(queryInnerDTO, organizationId));
+    }
 }

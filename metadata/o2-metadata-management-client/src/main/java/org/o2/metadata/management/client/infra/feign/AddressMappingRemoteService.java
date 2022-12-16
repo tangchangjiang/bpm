@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 )
 public interface AddressMappingRemoteService {
     /**
-     * 查询地址匹配
+     * 通过外部地区名称查询地址匹配
      *
      * @param queryInnerDTO  查地址匹配
      * @param organizationId 租户ID
@@ -41,4 +41,14 @@ public interface AddressMappingRemoteService {
      */
     @GetMapping("/{organizationId}/neighboring-regions-internal")
     ResponseEntity<String> listNeighboringRegions(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 通过外部编码查询地址匹配
+     * @param queryInnerDTO  查地址匹配
+     * @param organizationId 租户ID
+     * @return String
+     */
+    @GetMapping("/{organizationId}/address-mappings-internal/list-address-by-code")
+    ResponseEntity<String> listAddressMappingByCode(@RequestBody AddressMappingQueryInnerDTO queryInnerDTO,
+                                                  @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 }
