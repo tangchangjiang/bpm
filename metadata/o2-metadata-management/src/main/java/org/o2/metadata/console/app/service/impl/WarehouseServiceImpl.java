@@ -112,7 +112,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         } else {
             updateBatch(tenantId, warehouses);
         }
-        return null;
+        return warehouses;
     }
 
     @Override

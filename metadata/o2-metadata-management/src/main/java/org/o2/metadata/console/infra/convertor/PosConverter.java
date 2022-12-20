@@ -8,7 +8,6 @@ import org.o2.metadata.management.client.domain.dto.PosAddressDTO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 
 /**
- *
  * 服务点
  *
  * @author yipeng.zhu@hand-china.com 2021-08-04
@@ -18,10 +17,11 @@ public class PosConverter {
     }
 
     /**
-     *  po 转 vo
-     * @date 2021-08-05
+     * po 转 vo
+     *
      * @param pos 服务点
-     * @return  vo
+     * @return vo
+     * @date 2021-08-05
      */
     public static PosVO poToVoObject(Pos pos) {
 
@@ -106,6 +106,7 @@ public class PosConverter {
             return null;
         }
         PosCO posCO = new PosCO();
+        posCO.setPosId(pos.getPosId());
         posCO.setTenantId(pos.getTenantId());
         posCO.setAddressId(pos.getAddressId());
         posCO.setPosName(pos.getPosName());
