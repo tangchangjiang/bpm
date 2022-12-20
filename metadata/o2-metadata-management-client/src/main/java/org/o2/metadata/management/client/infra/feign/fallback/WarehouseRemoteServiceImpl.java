@@ -1,6 +1,9 @@
 package org.o2.metadata.management.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.core.helper.JsonHelper;
+import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseDTO;
+import org.o2.metadata.management.client.domain.dto.WarehouseDTO;
 import org.o2.metadata.management.client.domain.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.WarehouseRemoteService;
@@ -136,6 +139,20 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     @Override
     public ResponseEntity<String> listWarehousesByPosCode(List<String> posCodes, Long organizationId) {
         log.error("Error pageWarehouses, params[tenantId = {}, WarehousePageQueryInnerDTO = {}]", organizationId, posCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> batchSaveWarehouses(Long organizationId, List<WarehouseDTO> warehouses) {
+        log.error("Error batchSaveWarehouses, params[tenantId = {}, batchSaveWarehouses = {}]", organizationId,
+                JsonHelper.collectionToString(warehouses));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> createWarehouseRelShop(Long organizationId, List<OnlineShopRelWarehouseDTO> onlineShopRelWarehouseList) {
+        log.error("Error createWarehouseRelShop, params[tenantId = {}, createWarehouseRelShop = {}]", organizationId,
+                JsonHelper.collectionToString(onlineShopRelWarehouseList));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

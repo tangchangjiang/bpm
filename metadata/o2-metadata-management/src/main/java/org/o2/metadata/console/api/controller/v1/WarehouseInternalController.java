@@ -16,8 +16,11 @@ import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
+import org.o2.metadata.console.app.service.OnlineShopRelWarehouseService;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,10 +45,13 @@ import java.util.Set;
 @Api(tags = MetadataManagementAutoConfiguration.WAREHOUSE)
 public class WarehouseInternalController extends BaseController {
 
-    private WarehouseService warehouseService;
+    private final WarehouseService warehouseService;
 
-    public WarehouseInternalController(WarehouseService warehouseService) {
+    private final OnlineShopRelWarehouseService onlineShopRelWarehouseService;
+
+    public WarehouseInternalController(WarehouseService warehouseService, OnlineShopRelWarehouseService onlineShopRelWarehouseService) {
         this.warehouseService = warehouseService;
+        this.onlineShopRelWarehouseService = onlineShopRelWarehouseService;
     }
 
     @ApiOperation(value = "仓库信息列表 wms调用")
@@ -170,7 +176,7 @@ public class WarehouseInternalController extends BaseController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list-warehouse")
     public ResponseEntity<Map<String, List<WarehouseCO>>> listWarehousesByPosCode(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                   @RequestParam(value = "posCodes") List<String> posCodes) {
+                                                                                  @RequestParam(value = "posCodes") List<String> posCodes) {
         Map<String, List<WarehouseCO>> map = new HashMap<>(16);
         List<WarehouseCO> cos = warehouseService.listWarehousesByPosCode(posCodes, organizationId);
         if (cos.isEmpty()) {
@@ -180,5 +186,32 @@ public class WarehouseInternalController extends BaseController {
             map.computeIfAbsent(co.getPosCode(), key -> new ArrayList<>()).add(co);
         }
         return Results.success(map);
+    }
+
+    @ApiOperation(value = "批量保存门店(内部调用)")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/warehouses")
+    public ResponseEntity<List<Warehouse>> batchSaveWarehouses(@PathVariable(value = "organizationId")
+                                                               @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                               @RequestBody final List<Warehouse> warehouses) {
+        warehouses.forEach(w -> {
+            w.setTenantId(organizationId);
+            w.setActiveFlag(BaseConstants.Flag.YES);
+            this.validObject(w);
+        });
+        List<Warehouse> warehouseList = warehouseService.batchSave(organizationId, warehouses);
+        return Results.success(warehouseList);
+    }
+
+
+    @ApiOperation(value = "网店关联仓库(内部调用)")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/warehouse/shop")
+    public ResponseEntity<List<OnlineShopRelWarehouse>> createWarehouseRelShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                               @RequestBody final List<OnlineShopRelWarehouse> onlineShopRelWarehouseList) {
+        this.validList(onlineShopRelWarehouseList);
+        final List<OnlineShopRelWarehouse> relationShips = onlineShopRelWarehouseService.batchInsertSelective(organizationId,
+                onlineShopRelWarehouseList);
+        return Results.success(relationShips);
     }
 }

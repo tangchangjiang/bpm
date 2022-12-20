@@ -26,6 +26,13 @@ public interface WarehouseService {
      * @return list
      */
     List<Warehouse> createBatch(Long tenantId, List<Warehouse> warehouses);
+    /**
+     * 批量插入仓库信息
+     * @param warehouses 仓库集合
+     * @param tenantId 租户ID
+     * @return list
+     */
+    List<Warehouse> batchSave(Long tenantId, List<Warehouse> warehouses);
 
 
     /**
