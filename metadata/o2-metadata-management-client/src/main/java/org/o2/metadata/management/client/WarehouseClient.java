@@ -5,6 +5,8 @@ import io.choerodon.core.domain.Page;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.WarehouseCO;
 import org.o2.metadata.management.client.domain.co.WarehouseRelAddressCO;
+import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseDTO;
+import org.o2.metadata.management.client.domain.dto.WarehouseDTO;
 import org.o2.metadata.management.client.domain.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.WarehouseRemoteService;
@@ -110,5 +112,28 @@ public class WarehouseClient {
     public Map<String, List<WarehouseCO>> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesByPosCode(posCodes, tenantId), new TypeReference<Map<String, List<WarehouseCO>>>() {
         });
+    }
+
+    /**
+     * 保存仓库
+     *
+     * @param tenantId   租户id
+     * @param warehouses 仓库
+     * @return List<WarehouseCO>
+     */
+    public List<WarehouseCO> batchSaveWarehouses(Long tenantId, List<WarehouseDTO> warehouses) {
+        return ResponseUtils.getResponse(warehouseRemoteService.batchSaveWarehouses(tenantId, warehouses), new TypeReference<List<WarehouseCO>>() {
+        });
+    }
+
+    /**
+     * 保存网店关联 仓库
+     *
+     * @param tenantId                   租户
+     * @param onlineShopRelWarehouseList 网店关联仓库
+     * @return  Boolean
+     */
+    public Boolean batchOnlineRelWarehouse(Long tenantId, List<OnlineShopRelWarehouseDTO> onlineShopRelWarehouseList) {
+        return ResponseUtils.isFailed(warehouseRemoteService.createWarehouseRelShop(tenantId, onlineShopRelWarehouseList));
     }
 }

@@ -1,7 +1,12 @@
 package org.o2.metadata.management.client.infra.feign;
 
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.dto.OnlineShopRelWarehouseDTO;
+import org.o2.metadata.management.client.domain.dto.WarehouseDTO;
 import org.o2.metadata.management.client.domain.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.WarehouseRemoteServiceImpl;
@@ -242,11 +247,37 @@ public interface WarehouseRemoteService {
 
     /**
      * 通过服务点查询仓库
-     * @param posCodes 服务点编码
+     *
+     * @param posCodes       服务点编码
      * @param organizationId 租户ID
      * @return 仓库
      */
     @PostMapping("/{organizationId}/warehouse-internal/list-warehouse")
     ResponseEntity<String> listWarehousesByPosCode(@RequestParam(value = "posCodes", required = true) List<String> posCodes,
-                                                   @PathVariable @ApiParam(value = "租户ID", required = true)  Long organizationId);
+                                                   @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 批量保存仓库
+     *
+     * @param organizationId 租户id
+     * @param warehouses     仓库
+     * @return ResponseEntity<String>
+     */
+    @PostMapping("/{organizationId}/warehouse-internal/warehouses")
+    ResponseEntity<String> batchSaveWarehouses(@PathVariable(value = "organizationId")
+                                               @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                               @RequestBody final List<WarehouseDTO> warehouses);
+
+    /**
+     * 批量保存网店关联仓库
+     *
+     * @param organizationId             租户id
+     * @param onlineShopRelWarehouseList 网店仓库列表
+     * @return <List<OnlineShopRelWarehouseDTO>>
+     */
+    @ApiOperation(value = "网店关联仓库(内部调用)")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/{organizationId}/warehouse-internal/warehouse/shop")
+    ResponseEntity<String> createWarehouseRelShop(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                  @RequestBody final List<OnlineShopRelWarehouseDTO> onlineShopRelWarehouseList);
 }

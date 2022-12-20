@@ -105,6 +105,17 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public List<Warehouse> batchSave(Long tenantId, List<Warehouse> warehouses) {
+        Warehouse warehouse = warehouses.iterator().next();
+        if (warehouse.getWarehouseId() == null) {
+            createBatch(tenantId, warehouses);
+        } else {
+            updateBatch(tenantId, warehouses);
+        }
+        return null;
+    }
+
+    @Override
     public List<Warehouse> updateBatch(final Long tenantId, final List<Warehouse> warehouses) {
         List<Warehouse> list = new ArrayList<>();
         transactionalHelper.transactionOperation(() -> {
@@ -160,10 +171,10 @@ public class WarehouseServiceImpl implements WarehouseService {
         if (PosConstants.PosTypeCode.STORE.equals(posTypeCode) &&
                 !PosConstants.PosStatusCode.CLOSE.equals(posStatusCode)) {
             List<Warehouse> query = warehouseRepository.selectByCondition(Condition.builder(Warehouse.class)
-                            .andWhere(Sqls.custom()
+                    .andWhere(Sqls.custom()
                             .andEqualTo(Warehouse.FIELD_TENANT_ID, warehouse.getTenantId())
                             .andEqualTo(Warehouse.FIELD_POS_ID, posId))
-                            .build());
+                    .build());
             if (null == warehouse.getWarehouseId() && !query.isEmpty()) {
                 throw new CommonException(WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_REL_POS_NOT_UNIQUE);
             }
