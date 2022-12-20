@@ -189,7 +189,7 @@ public class WarehouseInternalController extends BaseController {
     }
 
     @ApiOperation(value = "批量保存门店(内部调用)")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.ORGANIZATION, permissionWithin = true)
     @PostMapping("/warehouses")
     public ResponseEntity<List<Warehouse>> batchSaveWarehouses(@PathVariable(value = "organizationId")
                                                                @ApiParam(value = "租户ID", required = true) Long organizationId,
@@ -197,7 +197,6 @@ public class WarehouseInternalController extends BaseController {
         warehouses.forEach(w -> {
             w.setTenantId(organizationId);
             w.setActiveFlag(BaseConstants.Flag.YES);
-            this.validObject(w);
         });
         List<Warehouse> warehouseList = warehouseService.batchSave(organizationId, warehouses);
         return Results.success(warehouseList);
