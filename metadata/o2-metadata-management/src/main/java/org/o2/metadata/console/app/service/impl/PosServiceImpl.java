@@ -299,7 +299,6 @@ public class PosServiceImpl implements PosService {
             } else {
                 return PosConverter.poToCoObject(result);
             }
-
         } else {
             posResult.setPosName(pos.getPosName());
             PosAddress posAddress = posAddressRepository.selectByPrimaryKey(posResult.getAddressId());
@@ -316,9 +315,7 @@ public class PosServiceImpl implements PosService {
             posAddress.setDistrictName(pos.getAddress().getDistrictName());
             posAddress.setTenantId(pos.getTenantId());
             posAddress.setPostcode(pos.getAddress().getPostcode());
-
             posResult.setAddress(posAddress);
-            posResult.setPosStatusCode(pos.getPosStatusCode());
             posResult.setBusinessTime(pos.getBusinessTime());
             posResult = this.update(posResult);
         }
