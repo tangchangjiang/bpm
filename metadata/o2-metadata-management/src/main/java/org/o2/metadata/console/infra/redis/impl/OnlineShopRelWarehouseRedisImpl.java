@@ -128,6 +128,7 @@ public class OnlineShopRelWarehouseRedisImpl implements OnlineShopRelWarehouseRe
         List<String> warehouseDetailList = redisCacheClient.<String, String>opsForHash().multiGet(warehouseRedisKey, warehouseCodes);
         Map<String, WarehouseCO> warehouseByWhCode = warehouseDetailList.stream()
                 .map(warehouseJson -> JsonHelper.stringToObject(warehouseJson, WarehouseCO.class))
+                .filter(warehouse -> Objects.nonNull(warehouse) && Objects.nonNull(warehouse.getWarehouseCode()))
                 .collect(Collectors.toMap(WarehouseCO::getWarehouseCode, Function.identity(), (a1, a2) -> a1));
         List<String> posCodes = warehouseByWhCode.values().stream().map(WarehouseCO::getPosCode).collect(Collectors.toList());
         List<String> posDetailList = redisCacheClient.<String, String>opsForHash().multiGet(posDetailRedisKey, posCodes);
