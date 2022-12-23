@@ -39,6 +39,9 @@ public class AddressMapping extends AuditDomain {
     public static final String FIELD_ADDRESS_MAPPING_EX_CODE = "externalCode";
     public static final String FIELD_ADDRESS_MAPPING_EX_NAME = "externalName";
     public static final String FIELD_IS_ACTIVE = "activeFlag";
+    public static final String FIELD_PLATFORM_CODE = "platformCode";
+    public static final String FIELD_REGION_CODE = "regionCode";
+    public static final String FIELD_TENANT_ID = "tenantId";
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
