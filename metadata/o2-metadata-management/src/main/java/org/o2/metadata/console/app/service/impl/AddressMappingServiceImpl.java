@@ -634,6 +634,11 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                             .andEqualTo(AddressMapping.FIELD_REGION_CODE, outAddressMappingInnerDTO.getRegionCode())
                             .andEqualTo(AddressMapping.FIELD_IS_ACTIVE,outAddressMappingInnerDTO.getActiveFlag())
                             .andEqualTo(AddressMapping.FIELD_TENANT_ID, tenantId)).build());
+
+            if(CollectionUtils.isEmpty(addressMappings)){
+                continue;
+            }
+
             AddressMapping addressMapping = addressMappings.get(0);
             addressMappingCO.setActiveFlag(addressMapping.getActiveFlag());
             addressMappingCO.setAddressTypeCode(addressMapping.getAddressTypeCode());
