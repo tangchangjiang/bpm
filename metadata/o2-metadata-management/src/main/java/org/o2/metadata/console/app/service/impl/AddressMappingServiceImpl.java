@@ -8,17 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.hzero.mybatis.domian.Condition;
+import org.hzero.mybatis.util.Sqls;
 import org.o2.cms.management.client.O2CmsManagementClient;
 import org.o2.cms.management.client.domain.co.StaticResourceConfigCO;
 import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.core.helper.JsonHelper;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.co.AddressMappingCO;
-import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
-import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
-import org.o2.metadata.console.api.dto.AddressReleaseDTO;
-import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
+import org.o2.metadata.console.api.dto.*;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
@@ -623,4 +621,29 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         return resourceUrl.substring(0, resourceUrl.indexOf(BaseConstants.Symbol.SLASH, resourceUrl.indexOf(BaseConstants.Symbol.SLASH) + 2));
     }
 
+
+    @Override
+    public List<AddressMappingCO> listOutAddress(List<OutAddressMappingInnerDTO> queryInnerDTO, Long tenantId) {
+        List<AddressMappingCO> listOutAddressList = new ArrayList<>();
+        for (OutAddressMappingInnerDTO outAddressMappingInnerDTO : queryInnerDTO) {
+            AddressMappingCO addressMappingCO = new AddressMappingCO();
+            List<AddressMapping> addressMappings = addressMappingRepository.selectByCondition(Condition.builder(AddressMapping.class)
+                    .andWhere(Sqls.custom()
+                            .andEqualTo(AddressMapping.FIELD_PLATFORM_CODE, outAddressMappingInnerDTO.getPlatformCode())
+                            .andEqualTo(AddressMapping.FIELD_ADDRESS_TYPE_CODE, outAddressMappingInnerDTO.getAddressTypeCode())
+                            .andEqualTo(AddressMapping.FIELD_REGION_CODE, outAddressMappingInnerDTO.getRegionCode())
+                            .andEqualTo(AddressMapping.FIELD_IS_ACTIVE,outAddressMappingInnerDTO.getActiveFlag())
+                            .andEqualTo(AddressMapping.FIELD_TENANT_ID, tenantId)).build());
+            AddressMapping addressMapping = addressMappings.get(0);
+            addressMappingCO.setActiveFlag(addressMapping.getActiveFlag());
+            addressMappingCO.setAddressTypeCode(addressMapping.getAddressTypeCode());
+            addressMappingCO.setTenantId(addressMapping.getTenantId());
+            addressMappingCO.setRegionCode(addressMapping.getRegionCode());
+            addressMappingCO.setExternalCode(addressMapping.getExternalCode());
+            addressMappingCO.setExternalName(addressMapping.getExternalName());
+            listOutAddressList.add(addressMappingCO);
+        }
+
+        return listOutAddressList;
+    }
 }

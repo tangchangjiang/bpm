@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.OutAddressMappingInnerDTO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
@@ -46,4 +47,14 @@ public class AddressMappingInternalController {
     @RequestBody AddressMappingQueryInnerDTO queryInnerDTO) {
         return Results.success(addressMappingService.listAddressMappingByCode(queryInnerDTO, organizationId));
     }
+
+    @ApiOperation(value = "通过内部地址编码匹配外部地址编码")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/list-out-address")
+    public ResponseEntity<List<AddressMappingCO>> listOutAddress(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                           @RequestBody List<OutAddressMappingInnerDTO> queryInnerDTO) {
+        return Results.success(addressMappingService.listOutAddress(queryInnerDTO, organizationId));
+    }
+
+
 }
