@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统参数值 管理 API
@@ -120,6 +121,14 @@ public class SystemParamValueController extends BaseController {
     public ResponseEntity<List<String>> getSysListByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
         List<String> sysListByParam = systemParamValueService.getSysListByParam(paramCode, organizationId);
         return Results.success(sysListByParam);
+    }
+
+    @ApiOperation(value = "获取Map系统参数值")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/get-map-value")
+    public ResponseEntity<Map<String, String>> getSysMapByParam(String paramCode, @PathVariable("organizationId") Long organizationId) {
+        Map<String, String> sysMapByParam = systemParamValueService.getSysMapByParam(paramCode, organizationId);
+        return Results.success(sysMapByParam);
     }
 
 }
