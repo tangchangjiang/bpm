@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统参数值应用服务
@@ -27,6 +28,15 @@ public interface SystemParamValueService {
      * @return List<String>
      */
     List<String> getSysListByParam(String paramCode, Long tenantId);
+
+    /**
+     * 获取参数类型为Map的参数值
+     *
+     * @param paramCode 参数code
+     * @param tenantId  租户id
+     * @return List<String>
+     */
+    Map<String, String> getSysMapByParam(String paramCode, Long tenantId);
 
 
     /**

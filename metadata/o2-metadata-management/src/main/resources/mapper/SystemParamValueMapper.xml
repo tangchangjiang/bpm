@@ -85,4 +85,34 @@
             </choose>
         </where>
     </select>
+    <select id="getSysMapByParam" resultType="org.o2.metadata.console.infra.entity.SystemParamValue">
+        SELECT
+        ospv.param_value,
+        ospv.param1,
+        ospv.param2,
+        ospv.param3,
+        ospv.param_key,
+        ospv.description
+        FROM
+        o2md_system_param_value ospv
+        JOIN o2md_system_parameter osp ON ospv.param_id = osp.param_id AND ospv.tenant_id = osp.tenant_id
+        <where>
+            <choose>
+                <when test="paramCode != null and paramCode != ''">
+                    AND osp.param_code = #{paramCode}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="tenantId != null">
+                    AND ospv.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
 </mapper>

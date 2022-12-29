@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统参数值应用服务默认实现
@@ -50,6 +52,21 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
         }
         return new ArrayList<>();
 
+    }
+
+    @Override
+    public Map<String, String> getSysMapByParam(String paramCode, Long tenantId) {
+        if (SystemParameterConstants.ParamType.MAP.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
+            List<SystemParamValue> systemParamValues  = systemParamValueRepository.getSysMapByParam(paramCode, tenantId);
+            Map<String, String> result = new HashMap<>();
+            if (CollectionUtils.isNotEmpty(systemParamValues)) {
+                for (SystemParamValue value : systemParamValues) {
+                    result.put(value.getParamKey(), value.getParamValue());
+                }
+            }
+            return result;
+        }
+        return new HashMap<>();
     }
 
     @Override

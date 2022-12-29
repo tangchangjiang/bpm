@@ -29,4 +29,6 @@ public interface SystemParamValueRepository extends BaseRepository<SystemParamVa
      */
     List<String> getSysListByParam(String paramCode, Long tenantId);
 
+    List<SystemParamValue> getSysMapByParam(String paramCode, Long tenantId);
+
 }
