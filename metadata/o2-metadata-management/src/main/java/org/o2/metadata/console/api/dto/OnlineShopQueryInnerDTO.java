@@ -60,4 +60,8 @@ public class OnlineShopQueryInnerDTO {
      * 有效
      */
     private Integer activeFlag;
+
+    private Integer page;
+
+    private Integer size;
 }

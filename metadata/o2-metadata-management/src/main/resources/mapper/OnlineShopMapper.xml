@@ -406,5 +406,6 @@
                 </foreach>
             </if>
         </where>
+        ORDER BY os.online_shop_code
     </select>
 </mapper>

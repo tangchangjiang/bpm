@@ -318,6 +318,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         });
         return OnlineShopConverter.poToCoListObjects(result);
     }
+
     @Override
     public List<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         return OnlineShopConverter.poToCoListObjects(onlineShopRepository.queryOnlineShops(onlineShopQueryInnerDTO, tenantId));
