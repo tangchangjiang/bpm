@@ -71,4 +71,13 @@ public interface OnlineShopService {
      * @return 网店
      */
     List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList);
+
+    /**
+     * 分页查询网店
+     *
+     * @param onlineShopQueryInnerDTO 查询条件
+     * @param tenantId 租户id
+     * @return OnlineShopCO
+     */
+    List<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 }

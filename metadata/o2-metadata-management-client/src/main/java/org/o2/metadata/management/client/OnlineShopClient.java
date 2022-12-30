@@ -1,6 +1,7 @@
 package org.o2.metadata.management.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.choerodon.core.domain.Page;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.helper.O2ResponseUtils;
 import org.o2.metadata.management.client.domain.co.OnlineShopCO;
@@ -37,7 +38,7 @@ public class OnlineShopClient {
     public Map<String, OnlineShopRelWarehouseCO> listOnlineShopRelWarehouses(String onlineShopCode, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopRelWarehouses(onlineShopCode, tenantId),
                 new TypeReference<Map<String, OnlineShopRelWarehouseCO>>() {
-        });
+                });
     }
 
     /**
@@ -74,7 +75,7 @@ public class OnlineShopClient {
     public Map<String, List<OnlineShopCO>> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopCatalogVersionList, tenantId),
                 new TypeReference<Map<String, List<OnlineShopCO>>>() {
-        });
+                });
     }
 
     /**
@@ -97,6 +98,18 @@ public class OnlineShopClient {
      */
     public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.batchUpdateShopStatus(onlineShopDTOList, tenantId), new TypeReference<List<OnlineShopCO>>() {
+        });
+    }
+
+    /**
+     * 批量查询网店
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @param tenantId                租户id
+     * @return 网店
+     */
+    public Page<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Page<OnlineShopCO>>() {
         });
     }
 }
