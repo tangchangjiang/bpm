@@ -40,4 +40,28 @@ public class OnlineShopQueryInnerDTO {
      * 业务类型
      */
     private String businessTypeCode;
+
+    /**
+     * 排除的网店编码
+     */
+    private List<String> excludeOnlineShopCodes;
+
+    /**
+     * 网店编码
+     */
+    private String onlineShopCode;
+
+    /**
+     * 网店名称
+     */
+    private String onlineShopName;
+
+    /**
+     * 有效
+     */
+    private Integer activeFlag;
+
+    private Integer page;
+
+    private Integer size;
 }

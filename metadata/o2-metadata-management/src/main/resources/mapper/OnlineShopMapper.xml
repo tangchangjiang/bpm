@@ -56,8 +56,10 @@
         FROM
         o2md_online_shop os
         left join o2md_platform pf on pf.platform_code = os.platform_code
-        left join o2md_platform_tl pftl on pf.platform_id = pftl.platform_id and  pftl.lang = #{lang} and pftl.tenant_id = #{tenantId}
-        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang}  and ost.tenant_id = #{tenantId}
+        left join o2md_platform_tl pftl on pf.platform_id = pftl.platform_id and pftl.lang = #{lang} and pftl.tenant_id
+        = #{tenantId}
+        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.lang = #{lang} and
+        ost.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -121,7 +123,7 @@
             <if test="onlineShopNames != null and onlineShopNames.size() > 0">
                 and
                 <foreach item="name" index="index" collection="onlineShopNames" open="(" separator="or" close=")">
-                    ost.online_shop_name LIKE  CONCAT('%',#{name},'%')
+                    ost.online_shop_name LIKE CONCAT('%',#{name},'%')
                 </foreach>
             </if>
         </where>
@@ -180,9 +182,11 @@
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
-        inner join  o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = #{tenantId}
-        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang}  and platl.tenant_id = #{tenantId}
-        left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang} and ost.tenant_id = #{tenantId}
+        inner join o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = #{tenantId}
+        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang} and
+        platl.tenant_id = #{tenantId}
+        left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang} and
+        ost.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -221,7 +225,7 @@
             <if test="onlineShopType != null and onlineShopType != ''">
                 AND os.online_shop_type = #{onlineShopType}
             </if>
-            <if test="businessTypeCode != null and businessTypeCode != ''" >
+            <if test="businessTypeCode != null and businessTypeCode != ''">
                 and os.business_type_code = #{businessTypeCode}
             </if>
         </where>
@@ -252,12 +256,17 @@
         online.account_number
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = #{tenantId}
-        inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id = #{tenantId} and  oc.catalog_id = ocv.catalog_id
-        left join  o2md_platform plat on plat.platform_code = online.platform_code and plat.tenant_id = #{tenantId}
-        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang}  and platl.tenant_id = #{tenantId}
-        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
-        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang}  and oct.tenant_id = #{tenantId}
-        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang = #{lang} and ocvt.tenant_id = #{tenantId}
+        inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id
+        = #{tenantId} and oc.catalog_id = ocv.catalog_id
+        left join o2md_platform plat on plat.platform_code = online.platform_code and plat.tenant_id = #{tenantId}
+        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang} and
+        platl.tenant_id = #{tenantId}
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang} and
+        tl.tenant_id = #{tenantId}
+        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang} and oct.tenant_id =
+        #{tenantId}
+        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang =
+        #{lang} and ocvt.tenant_id = #{tenantId}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -282,7 +291,7 @@
             <if test="onlineShopDTO.platformCode != null">
                 and online.platform_code = #{onlineShopDTO.platformCode}
             </if>
-            <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''" >
+            <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''">
                 and online.business_type_code = #{onlineShopDTO.businessTypeCode}
             </if>
             <if test="onlineShopDTO.onlineShopType != null">
@@ -290,8 +299,9 @@
             </if>
             <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size() > 0">
                 and
-                <foreach item="name" index="index" collection="onlineShopDTO.onlineShopNames" open="(" separator="or" close=")">
-                    online.online_shop_name LIKE  CONCAT('%',#{name},'%')
+                <foreach item="name" index="index" collection="onlineShopDTO.onlineShopNames" open="(" separator="or"
+                         close=")">
+                    online.online_shop_name LIKE CONCAT('%',#{name},'%')
                 </foreach>
             </if>
         </where>
@@ -308,7 +318,8 @@
         online.business_type_code,
         online.active_flag
         from o2md_online_shop online
-        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id  and tl.tenant_id = #{tenantId} AND tl.lang =#{lang}
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.tenant_id = #{tenantId} AND
+        tl.lang =#{lang}
         <where>
             <choose>
                 <when test="tenantId != null">
@@ -329,5 +340,72 @@
                 </foreach>
             </if>
         </where>
+    </select>
+    <select id="queryOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        os.online_shop_id,
+        os.platform_code,
+        ost.online_shop_name,
+        os.online_shop_code,
+        os.platform_shop_code,
+        os.sourced_flag,
+        os.picked_up_flag,
+        os.returned_flag,
+        os.exchanged_flag,
+        os.active_flag,
+        os.enable_split_flag,
+        os.tenant_id,
+        os.default_currency,
+        os.is_default,
+        os.online_shop_type,
+        os.business_type_code,
+        pftl.platform_name
+        FROM
+        o2md_online_shop os
+        left join o2md_platform pf on pf.platform_code = os.platform_code and os.tenant_id = pf.tenant_id
+        left join o2md_platform_tl pftl on pf.platform_id = pftl.platform_id and pftl.tenant_id = os.tenant_id and
+        pftl.lang = #{lang}
+        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.tenant_id = os.tenant_id and
+        ost.lang = #{lang}
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="onlineShopQueryInnerDTO.activeFlag != null ">
+                AND os.active_flag = #{onlineShopQueryInnerDTO.activeFlag}
+            </if>
+            <if test="onlineShopQueryInnerDTO.platformCode != null">
+                AND os.platform_code = #{onlineShopQueryInnerDTO.platformCode}
+            </if>
+            <if test="onlineShopQueryInnerDTO.onlineShopCode != null">
+                <bind name="onlineShopCodeLike" value="'%'+onlineShopQueryInnerDTO.onlineShopCode+'%'"/>
+                AND os.online_shop_code LIKE (#{onlineShopCodeLike})
+            </if>
+            <if test="onlineShopQueryInnerDTO.onlineShopName != null">
+                <bind name="onlineShopNameLike" value="'%'+onlineShopQueryInnerDTO.onlineShopName+'%'"/>
+                AND os.online_shop_name LIKE #{onlineShopNameLike}
+            </if>
+
+            <if test="onlineShopQueryInnerDTO.onlineShopCodes != null and onlineShopQueryInnerDTO.onlineShopCodes.size() > 0">
+                and os.online_shop_code in
+                <foreach collection="onlineShopQueryInnerDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+
+            <if test="onlineShopQueryInnerDTO.excludeOnlineShopCodes != null and onlineShopQueryInnerDTO.excludeOnlineShopCodes.size() > 0">
+                and os.online_shop_code not in
+                <foreach collection="onlineShopQueryInnerDTO.excludeOnlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
     </select>
 </mapper>
