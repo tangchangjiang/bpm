@@ -92,8 +92,9 @@ public class OnlineShopClient {
 
     /**
      * 批量更新网店状态
+     *
      * @param onlineShopDTOList 网店信息
-     * @param tenantId 租户id
+     * @param tenantId          租户id
      * @return 网店
      */
     public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList, Long tenantId) {
