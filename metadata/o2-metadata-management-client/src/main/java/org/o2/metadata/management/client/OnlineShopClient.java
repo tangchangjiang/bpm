@@ -92,8 +92,9 @@ public class OnlineShopClient {
 
     /**
      * 批量更新网店状态
+     *
      * @param onlineShopDTOList 网店信息
-     * @param tenantId 租户id
+     * @param tenantId          租户id
      * @return 网店
      */
     public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList, Long tenantId) {
@@ -108,8 +109,8 @@ public class OnlineShopClient {
      * @param tenantId                租户id
      * @return 网店
      */
-    public Page<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Page<OnlineShopCO>>() {
+    public Page<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(tenantId, onlineShopQueryInnerDTO), new TypeReference<Page<OnlineShopCO>>() {
         });
     }
 }

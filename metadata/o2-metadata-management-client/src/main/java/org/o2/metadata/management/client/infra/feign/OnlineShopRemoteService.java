@@ -86,22 +86,23 @@ public interface OnlineShopRemoteService {
 
     /**
      * 批量更新网店状态
+     *
      * @param onlineShopDTOList 网店信息
-     * @param organizationId 租户id
+     * @param organizationId    租户id
      * @return 网店
      */
     @PostMapping("/{organizationId}/online-shops-internal/batch-update-status")
     ResponseEntity<String> batchUpdateShopStatus(@RequestBody List<OnlineShopDTO> onlineShopDTOList,
-                                          @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true)Long organizationId);
+                                                 @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
      * 分页查询排除网店
      *
      * @param onlineShopQueryInnerDTO 查询条件
-     * @param tenantId                租户id
+     * @param organizationId                租户id
      * @return 网店列表
      */
     @PostMapping("/{organizationId}/online-shops-internal/query-exclude-onlineShops")
-    ResponseEntity<String> queryOnlineShops(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO,
-                                            @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long tenantId);
+    ResponseEntity<String> queryOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 }
