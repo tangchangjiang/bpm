@@ -57,7 +57,6 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @PostMapping("/{organizationId}/online-shops-internal/query-exclude-onlineShops")
     @Override
     public ResponseEntity<String> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.error("Error onlineShop, params[tenantId = {}, onlineShopQueryInnerDTO = {}]", tenantId, onlineShopQueryInnerDTO);
