@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -71,7 +72,7 @@ class OnlineShopRepositoryImpl extends BaseRepositoryImpl<OnlineShop> implements
     }
 
     @Override
-    public List<OnlineShop> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+    public List<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         return onlineShopMapper.queryOnlineShops(tenantId, onlineShopQueryInnerDTO);
     }
 

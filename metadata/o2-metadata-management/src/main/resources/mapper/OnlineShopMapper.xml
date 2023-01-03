@@ -341,7 +341,7 @@
             </if>
         </where>
     </select>
-    <select id="queryOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+    <select id="queryOnlineShops" resultType="org.o2.metadata.console.api.co.OnlineShopCO">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT
         os.online_shop_id,
