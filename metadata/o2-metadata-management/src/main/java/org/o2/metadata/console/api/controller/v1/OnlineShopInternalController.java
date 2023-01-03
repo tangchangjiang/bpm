@@ -85,12 +85,11 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "分页查询排除后的网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/query-exclude-onlineShops")
-    public ResponseEntity<Page<OnlineShopCO>> pageOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    public Page<OnlineShopCO> pageOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                               @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPage(onlineShopQueryInnerDTO.getPage());
         pageRequest.setSize(onlineShopQueryInnerDTO.getSize());
-        PageHelper.doPage(pageRequest, () -> onlineShopService.queryOnlineShops(organizationId, onlineShopQueryInnerDTO));
-        return Results.success();
+        return PageHelper.doPage(pageRequest, () -> onlineShopService.queryOnlineShops(organizationId, onlineShopQueryInnerDTO));
     }
 }
