@@ -9,6 +9,7 @@ import org.o2.metadata.management.client.infra.feign.OnlineShopRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -56,8 +57,9 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @PostMapping("/{organizationId}/online-shops-internal/query-exclude-onlineShops")
     @Override
-    public ResponseEntity<String> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
+    public ResponseEntity<String> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.error("Error onlineShop, params[tenantId = {}, onlineShopQueryInnerDTO = {}]", tenantId, onlineShopQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
