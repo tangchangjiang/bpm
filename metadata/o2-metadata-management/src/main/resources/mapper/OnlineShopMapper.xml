@@ -385,11 +385,11 @@
             </if>
             <if test="onlineShopQueryInnerDTO.onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopQueryInnerDTO.onlineShopCode+'%'"/>
-                AND os.online_shop_code LIKE (#{onlineShopQueryInnerDTO.onlineShopCodeLike})
+                AND os.online_shop_code LIKE (#{onlineShopCodeLike})
             </if>
             <if test="onlineShopQueryInnerDTO.onlineShopName != null">
                 <bind name="onlineShopNameLike" value="'%'+onlineShopQueryInnerDTO.onlineShopName+'%'"/>
-                AND os.online_shop_name LIKE #{onlineShopQueryInnerDTO.onlineShopNameLike}
+                AND os.online_shop_name LIKE #{onlineShopNameLike}
             </if>
 
             <if test="onlineShopQueryInnerDTO.onlineShopCodes != null and onlineShopQueryInnerDTO.onlineShopCodes.size() > 0">
