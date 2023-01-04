@@ -5,14 +5,20 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.InsideAddressMappingDTO;
 import org.o2.metadata.console.api.dto.OutAddressMappingInnerDTO;
 import org.o2.metadata.console.app.service.AddressMappingService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +31,7 @@ import java.util.Map;
 @RestController("addressMappingInternalController.v1")
 @RequestMapping("/v1/{organizationId}/address-mappings-internal")
 @Api(tags = MetadataManagementAutoConfiguration.ADDRESS_MAPPING)
-public class AddressMappingInternalController {
+public class AddressMappingInternalController extends BaseController {
     private final AddressMappingService addressMappingService;
 
     public AddressMappingInternalController(AddressMappingService addressMappingService) {
@@ -44,7 +50,8 @@ public class AddressMappingInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/list-address-by-code")
     public ResponseEntity<List<AddressMappingCO>> listAddressMappingByCode(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-    @RequestBody AddressMappingQueryInnerDTO queryInnerDTO) {
+    @RequestBody InsideAddressMappingDTO queryInnerDTO) {
+        validObject(queryInnerDTO);
         return Results.success(addressMappingService.listAddressMappingByCode(queryInnerDTO, organizationId));
     }
 

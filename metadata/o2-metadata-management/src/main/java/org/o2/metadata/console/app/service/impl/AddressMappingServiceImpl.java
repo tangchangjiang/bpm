@@ -16,7 +16,13 @@ import org.o2.cms.management.client.domain.dto.StaticResourceSaveDTO;
 import org.o2.core.helper.JsonHelper;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.co.AddressMappingCO;
-import org.o2.metadata.console.api.dto.*;
+import org.o2.metadata.console.api.dto.AddressMappingInnerDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
+import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.console.api.dto.AddressReleaseDTO;
+import org.o2.metadata.console.api.dto.InsideAddressMappingDTO;
+import org.o2.metadata.console.api.dto.OutAddressMappingInnerDTO;
+import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
@@ -26,7 +32,10 @@ import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.convertor.AddressMappingConverter;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
-import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.entity.AddressMapping;
+import org.o2.metadata.console.infra.entity.Platform;
+import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.entity.RegionTreeChild;
 import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
 import org.o2.metadata.console.infra.mapper.AddressMappingMapper;
 import org.o2.metadata.console.infra.repository.AddressMappingRepository;
@@ -34,7 +43,14 @@ import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -392,14 +408,13 @@ public class AddressMappingServiceImpl implements AddressMappingService {
     }
 
     @Override
-    public List<AddressMappingCO> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId) {
+    public List<AddressMappingCO> listAddressMappingByCode(InsideAddressMappingDTO queryInnerDTO, Long tenantId) {
         List<Region> result = new ArrayList<>(4);
-        List<AddressMappingInnerDTO> addressMappingInnerList = queryInnerDTO.getAddressMappingInnerList();
+        queryInnerDTO.setTenantId(tenantId);
         // 1.通过外部编码 查询本地缓存基础地址数据(for循环)
-        for (AddressMappingInnerDTO addressMappingInnerDTO : addressMappingInnerList) {
-            addressMappingInnerDTO.setExternalName(null);
+        for (String regionCode : queryInnerDTO.getReginCodes()) {
             RegionQueryLovInnerDTO select = new RegionQueryLovInnerDTO();
-            select.setRegionCode(addressMappingInnerDTO.getExternalCode());
+            select.setRegionCode(regionCode);
             result.addAll(regionLovQueryRepository.queryRegion(tenantId, select));
         }
         for (Region region : result) {
@@ -408,7 +423,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         }
         Map<String, Region> regionMap = result.stream().collect(Collectors.toMap(Region::getRegionCode, Function.identity(), (a1, a2) -> a1));
         // 2.通过外部编码 查询地址匹配
-        List<AddressMappingCO> listMapping = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappings(queryInnerDTO, tenantId));
+        List<AddressMappingCO> listMapping = AddressMappingConverter.poToCoListObjects(addressMappingRepository.listAddressMappingsByCode(queryInnerDTO));
 
         for (AddressMappingCO addressMappingCO : listMapping) {
             Region region = regionMap.get(addressMappingCO.getExternalCode());
