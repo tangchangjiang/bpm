@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.AddressReleaseDTO;
+import org.o2.metadata.console.api.dto.InsideAddressMappingDTO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 import org.o2.metadata.console.infra.entity.RegionTreeChild;
 
@@ -59,6 +60,8 @@ public interface AddressMappingMapper extends BaseMapper<AddressMapping> {
      */
     List<AddressMapping> listAddressMappings(@Param("query") AddressMappingQueryInnerDTO addressMappingQueryInts,
                                              @Param("tenantId") Long tenantId);
+
+    List<AddressMapping> listAddressMappingsByCode(InsideAddressMappingDTO insideAddressMappingDTO);
 
     /**
      * 根据平台编码查询地区匹配信息

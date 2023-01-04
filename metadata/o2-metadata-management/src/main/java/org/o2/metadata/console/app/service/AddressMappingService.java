@@ -4,6 +4,7 @@ import org.o2.metadata.console.api.co.AddressMappingCO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryDTO;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.AddressReleaseDTO;
+import org.o2.metadata.console.api.dto.InsideAddressMappingDTO;
 import org.o2.metadata.console.api.dto.OutAddressMappingInnerDTO;
 import org.o2.metadata.console.api.vo.AddressMappingVO;
 import org.o2.metadata.console.api.vo.RegionTreeChildVO;
@@ -69,7 +70,7 @@ public interface AddressMappingService {
      * @param tenantId          租户ID
      * @return map key: externalName
      */
-    List<AddressMappingCO> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long tenantId);
+    List<AddressMappingCO> listAddressMappingByCode(InsideAddressMappingDTO queryInnerDTO, Long tenantId);
 
     List<AddressMappingCO> listOutAddress(List<OutAddressMappingInnerDTO> queryInnerDTO, Long tenantId);
 }

@@ -1,10 +1,9 @@
 package org.o2.metadata.management.client.infra.feign.fallback;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
-import org.o2.metadata.management.client.domain.co.AddressMappingCO;
 import org.o2.metadata.management.client.domain.dto.AddressMappingQueryInnerDTO;
+import org.o2.metadata.management.client.domain.dto.InsideAddressMappingDTO;
 import org.o2.metadata.management.client.domain.dto.OutAddressMappingInnerDTO;
 import org.o2.metadata.management.client.infra.feign.AddressMappingRemoteService;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class AddressMappingRemoteServiceImpl implements AddressMappingRemoteServ
     }
 
     @Override
-    public ResponseEntity<String> listAddressMappingByCode(AddressMappingQueryInnerDTO queryInnerDTO, Long organizationId) {
+    public ResponseEntity<String> listAddressMappingByCode(InsideAddressMappingDTO queryInnerDTO, Long organizationId) {
         log.error("Error listAddressMappingByCode, params[tenantId = {},queryInnerDTO={}]", organizationId, JsonHelper.objectToString(queryInnerDTO));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

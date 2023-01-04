@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.repository;
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.metadata.console.api.dto.AddressMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.AddressReleaseDTO;
+import org.o2.metadata.console.api.dto.InsideAddressMappingDTO;
 import org.o2.metadata.console.infra.entity.AddressMapping;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public interface AddressMappingRepository extends BaseRepository<AddressMapping>
      * @return list
      */
     List<AddressMapping> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId);
+
+    List<AddressMapping> listAddressMappingsByCode(InsideAddressMappingDTO addressMappingQuery);
 
     /**
      * 查询地区匹配信息
