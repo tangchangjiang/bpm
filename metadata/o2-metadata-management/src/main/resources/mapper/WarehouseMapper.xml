@@ -125,6 +125,11 @@
                 <bind name="posNameLike" value="'%' + posName + '%'"/>
                 AND ptl.pos_name LIKE #{posNameLike}
             </if>
+
+            <if test="showVirtualPosFlag != null and showVirtualPosFlag == 0">
+                AND w.warehouse_code &lt;&gt; 'VIRTUAL_POS'
+            </if>
+
             <if test="wmsWarehouseCode != null and wmsWarehouseCode != ''">
                 <bind name="wmsWarehouseCodeLike" value="'%' + wmsWarehouseCode + '%'"/>
                 AND w.wms_warehouse_code LIKE #{wmsWarehouseCodeLike}

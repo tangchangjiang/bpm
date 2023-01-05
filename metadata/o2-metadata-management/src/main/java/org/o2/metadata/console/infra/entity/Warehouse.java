@@ -151,6 +151,10 @@ public class Warehouse extends AuditDomain {
     private String posCode;
 
     @Transient
+    @ApiModelProperty(value = "是否展示虚拟仓,默认展示,若不展示,则传参为0")
+    private Integer showVirtualPosFlag;
+
+    @Transient
     private String posName;
 
     @Transient
