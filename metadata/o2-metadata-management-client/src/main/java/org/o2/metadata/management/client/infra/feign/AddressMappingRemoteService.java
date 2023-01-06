@@ -52,7 +52,7 @@ public interface AddressMappingRemoteService {
      * @param organizationId 租户ID
      * @return String
      */
-    @GetMapping("/{organizationId}/address-mappings-internal/list-address-by-code")
+    @PostMapping("/{organizationId}/address-mappings-internal/list-address-by-code")
     ResponseEntity<String> listAddressMappingByCode(@RequestBody InsideAddressMappingDTO queryInnerDTO,
                                                   @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
