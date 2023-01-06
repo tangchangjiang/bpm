@@ -173,7 +173,7 @@
             </otherwise>
         </choose>
         <if test="reginCodes !=null and reginCodes.size > 0">
-            and ad.regionCode in
+            and ad.region_code in
             <foreach collection="reginCodes" item="item" open="(" close=")" separator="," >
                 #{item}
             </foreach>
