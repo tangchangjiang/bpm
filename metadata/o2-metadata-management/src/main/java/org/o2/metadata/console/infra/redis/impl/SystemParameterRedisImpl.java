@@ -224,7 +224,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                 value.set_token(null);
             }
             redisCacheClient.opsForHash().put(setHashKey, systemParameter.getParamCode(), JsonHelper.objectToString(voList));
+            return;
         }
+        // 如果系统参数下不存在参数值，则删除当前Redis数据
+        redisCacheClient.opsForHash().delete(setHashKey, systemParameter.getParamCode());
     }
 
     /**
@@ -248,7 +251,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                 map.put(value.getParamKey(), value.getParamValue());
             }
             redisCacheClient.opsForHash().putAll(hashMapKey, map);
+            return;
         }
+        // 如果系统参数下没有参数值，则删除当前Redis key
+        redisCacheClient.delete(hashMapKey);
     }
 
     @Override
