@@ -33,6 +33,7 @@ public class RuleEntityServiceImpl implements RuleEntityService {
             ruleEntityRepository.updateOptional(ruleEntity,
                     RuleEntity.FIELD_RULE_ENTITY_NAME,
                     RuleEntity.FIELD_RULE_ENTITY_ALIAS,
+                    RuleEntity.FIELD_ENABLE_FLAG,
                     RuleEntity.FIELD_DESCRIPTION
             );
         }
