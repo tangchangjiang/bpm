@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
+import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
@@ -50,6 +51,7 @@ public class OnlineShopInternalController {
     public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required =
             true) Long organizationId,
                                                                      @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        log.info("onlineShopQueryInnerDTO:{}", JsonHelper.objectToString(onlineShopQueryInnerDTO));
         return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO, organizationId));
     }
 
