@@ -137,7 +137,7 @@
         inf.tenant_id,
         tl.platform_name
         from o2md_platform pf
-        left join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code and inf.tenant_id = #{tenantId}
+        join o2md_platform_info_mapping inf on pf.platform_code = inf.platform_code and inf.tenant_id = #{tenantId}
         left join o2md_platform_tl tl on tl.platform_id = pf.platform_id and tl.lang = #{lang}  and tl.tenant_id = #{tenantId}
         <where>
             <choose>
