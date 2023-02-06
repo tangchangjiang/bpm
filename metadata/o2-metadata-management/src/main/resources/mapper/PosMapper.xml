@@ -42,6 +42,7 @@
         address.district_code,
         address.city_code,
         address.street_name,
+        address.contact,
         pos.business_type_code,
         pos.platform_code,
         platformtl.platform_name
