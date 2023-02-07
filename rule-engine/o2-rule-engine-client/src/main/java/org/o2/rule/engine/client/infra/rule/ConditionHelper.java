@@ -3,8 +3,16 @@ package org.o2.rule.engine.client.infra.rule;
 import com.ql.util.express.ExpressRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
-import org.o2.rule.engine.client.infra.rule.all.*;
-import org.o2.rule.engine.client.infra.rule.any.*;
+import org.o2.rule.engine.client.infra.rule.all.OperatorAllEqual;
+import org.o2.rule.engine.client.infra.rule.all.OperatorAllGreater;
+import org.o2.rule.engine.client.infra.rule.all.OperatorAllGreaterOrEqual;
+import org.o2.rule.engine.client.infra.rule.all.OperatorAllLess;
+import org.o2.rule.engine.client.infra.rule.all.OperatorAllLessOrEqual;
+import org.o2.rule.engine.client.infra.rule.any.OperatorAnyEqual;
+import org.o2.rule.engine.client.infra.rule.any.OperatorAnyGreater;
+import org.o2.rule.engine.client.infra.rule.any.OperatorAnyGreaterOrEqual;
+import org.o2.rule.engine.client.infra.rule.any.OperatorAnyLess;
+import org.o2.rule.engine.client.infra.rule.any.OperatorAnyLessOrEqual;
 
 /**
  * 条件帮助工具类
@@ -40,6 +48,7 @@ public class ConditionHelper {
             EXPRESS_RUNNER.addOperator("allLess", new OperatorAllLess("allLess"));
             EXPRESS_RUNNER.addOperator("allLessOrEqual", new OperatorAllLessOrEqual("allLessOrEqual"));
             EXPRESS_RUNNER.addOperator("allEqual", new OperatorAllEqual("allEqual"));
+            EXPRESS_RUNNER.addOperator("notBlank", new OperatorNotBlank("notBlank"));
         } catch (Exception e) {
             log.error("EXPRESS_RUNNER addOperator error", e);
         }
