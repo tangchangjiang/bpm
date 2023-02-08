@@ -179,7 +179,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isNotEmpty(regionCode)) {
             regionList = regionList.stream().filter(region -> regionCode.equals(region.getRegionCode())).collect(Collectors.toList());
         }
-        // 父地区，是指查询地区的父地区编码是parentRegionCodes中的地区
+        // 父地区
         List<String> parentRegionCodes = queryLov.getParentRegionCodes();
         if (CollectionUtils.isNotEmpty(parentRegionCodes)) {
             regionList = regionList.stream().filter(region -> parentRegionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
