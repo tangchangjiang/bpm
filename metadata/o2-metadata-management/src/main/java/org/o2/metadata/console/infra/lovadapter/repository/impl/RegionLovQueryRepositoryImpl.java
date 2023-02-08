@@ -199,7 +199,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             regionList = regionList.stream().filter(region -> regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
 
         }
-        // 地区的上一级为
+        // 地区的上一级为，是指查询编码是parentRegionCode的父地区下的所有子地区
         String parentRegionCode = queryLov.getParentRegionCode();
         if (StringUtils.isNotEmpty(parentRegionCode)) {
             regionList = regionList.stream().filter(region -> parentRegionCode.equals(region.getParentRegionCode())).collect(Collectors.toList());
