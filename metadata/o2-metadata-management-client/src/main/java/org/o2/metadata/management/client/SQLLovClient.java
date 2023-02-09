@@ -1,11 +1,12 @@
 package org.o2.metadata.management.client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.hzero.core.util.ResponseUtils;
-import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.hzero.core.util.ResponseUtils;
+import org.o2.metadata.management.client.domain.dto.QueryLovValueMeaningDTO;
+import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
 
 /**
  * SQL值集查询
@@ -31,14 +32,27 @@ public class SQLLovClient {
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaning(tenantId, lovCode, queryLovValueMap),
                 new TypeReference<List<Map<String, Object>>>() {
-        });
+                });
     }
 
     public List<Map<String, Object>> queryLovValueMeaningPage(Long tenantId, String lovCode, Map<String, String> queryLovValueMap, Integer page,
                                                               Integer size) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaningPage(tenantId, lovCode, queryLovValueMap, page, size),
                 new TypeReference<List<Map<String, Object>>>() {
-        });
+                });
+    }
+
+    /**
+     * POST方式分页查询。兼容请求参数很多的场景。并且底层不使用缓存，查询结果是实时的
+     *
+     * @param tenantId 租户id
+     * @param queryDTO 查询DTO
+     * @return 结果
+     */
+    public List<Map<String, Object>> queryLovValueMeaningPageByPost(Long tenantId, QueryLovValueMeaningDTO queryDTO) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValueMeaningPageByPost(tenantId, queryDTO),
+                new TypeReference<List<Map<String, Object>>>() {
+                });
     }
 
     /**

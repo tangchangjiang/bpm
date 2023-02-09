@@ -1,14 +1,14 @@
 package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.hzero.core.base.AopProxy;
 import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.LovGeneralQueryRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 通用方法
@@ -25,7 +25,9 @@ public class LovGeneralQueryRepositoryImpl implements LovGeneralQueryRepository,
     }
 
     @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Map<String, String> queryLovValueMap) {
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode,
+                                                          Map<String, String> queryLovValueMap) {
         StringBuilder cacheKey = new StringBuilder(lovCode).append("_");
         String queryStr = hzeroLovQueryRepository.getQueryParamStr(tenantId, queryLovValueMap);
         cacheKey.append(queryStr);
@@ -33,7 +35,10 @@ public class LovGeneralQueryRepositoryImpl implements LovGeneralQueryRepository,
     }
 
     @Override
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size,
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode,
+                                                          Integer page,
+                                                          Integer size,
                                                           Map<String, String> queryLovValueMap) {
         StringBuilder cacheKey = new StringBuilder(lovCode).append("_");
         cacheKey.append(page).append("_");
@@ -43,8 +48,24 @@ public class LovGeneralQueryRepositoryImpl implements LovGeneralQueryRepository,
         return this.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap, cacheKey.toString());
     }
 
-    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size,
-                                                          Map<String, String> queryLovValueMap, String cacheKey) {
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode,
+                                                          Integer page,
+                                                          Integer size,
+                                                          Map<String, String> queryLovValueMap,
+                                                          boolean useCache) {
+        return useCache ?
+                queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap) :
+                hzeroLovQueryRepository.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap);
+    }
+
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                          String lovCode,
+                                                          Integer page,
+                                                          Integer size,
+                                                          Map<String, String> queryLovValueMap,
+                                                          String cacheKey) {
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
                 MetadataCacheConstants.KeyPrefix.getGeneralPrefix(cacheKey),

@@ -1,14 +1,15 @@
 package org.o2.metadata.management.client.infra.feign.fallback;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
+import org.o2.metadata.management.client.domain.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.management.client.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 值集查询
@@ -59,6 +60,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
                                                            Integer size) {
         log.error("Error queryLovPage, params[lovCode = {}, organizationId = {},page = {},size = {}, map = {} ]", lovCode, organizationId, page,
                 size, queryLovValueMap);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryLovValueMeaningPageByPost(Long organizationId, QueryLovValueMeaningDTO queryDTO) {
+        log.error("Error queryLovPage, params[queryDTO = {}, organizationId = {}]", queryDTO, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

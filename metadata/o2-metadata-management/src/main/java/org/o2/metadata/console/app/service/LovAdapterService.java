@@ -1,8 +1,9 @@
 package org.o2.metadata.console.app.service;
 
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import org.hzero.boot.platform.lov.dto.LovValueDTO;
+import java.util.List;
+import java.util.Map;
 
+import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
@@ -11,8 +12,7 @@ import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.infra.entity.Region;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Map;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
 /**
  * 值集查询
@@ -130,5 +130,28 @@ public interface LovAdapterService {
      *                         * eg <countryCode,'CN'>
      * @return List<Map < String, Object>>
      */
-    List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap);
+    List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                   String lovCode,
+                                                   Integer page,
+                                                   Integer size,
+                                                   Map<String, String> queryLovValueMap);
+
+    /**
+     * 分页查询指定值集内容
+     *
+     * @param tenantId         租户ID
+     * @param lovCode          值集编码
+     * @param page             页码
+     * @param size             大小
+     * @param queryLovValueMap * queryLovValueMap is <valueCode,value>
+     *                         * eg <countryCode,'CN'>
+     * @param useCache         是否使用缓存
+     * @return List<Map < String, Object>>
+     */
+    List<Map<String, Object>> queryLovValueMeaning(Long tenantId,
+                                                   String lovCode,
+                                                   Integer page,
+                                                   Integer size,
+                                                   Map<String, String> queryLovValueMap,
+                                                   boolean useCache);
 }

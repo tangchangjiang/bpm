@@ -1,13 +1,14 @@
 package org.o2.metadata.console.api.controller.v1;
 
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
-import io.choerodon.swagger.annotation.Permission;
+import java.util.List;
+import java.util.Map;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
@@ -15,10 +16,17 @@ import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.infra.entity.Region;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 值集查询
@@ -91,12 +99,33 @@ public class LovAdapterInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/batch-page-query-lov-value-meaning")
     public ResponseEntity<List<Map<String, Object>>> batchQueryLovValueMeaningPage(@PathVariable(value = "organizationId")
-                                                                                       @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                   @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                    @RequestParam String lovCode,
                                                                                    @RequestParam(required = false) Map<String, String> queryLovValueMap,
                                                                                    @RequestParam(required = false) Integer page,
                                                                                    @RequestParam(required = false) Integer size) {
         return Results.success(lovAdapterService.queryLovValueMeaning(organizationId, lovCode, page, size, queryLovValueMap));
+    }
+
+    /**
+     * 这里添加一个Post的请求接口。是为了兼容请求参数特别多的场景。并且不使用缓存<p>
+     *
+     * @param organizationId 租户id
+     * @param queryDTO       查询dto
+     * @return 结果
+     */
+    @ApiOperation(value = " POST方式批量查询指定值集内容(sql&url)")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/batch-page-query-lov-value-meaning")
+    public ResponseEntity<List<Map<String, Object>>> batchQueryLovValueMeaningPageByPost(@PathVariable(value = "organizationId")
+                                                                                         @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                         @RequestBody QueryLovValueMeaningDTO queryDTO) {
+        return Results.success(lovAdapterService.queryLovValueMeaning(organizationId,
+                queryDTO.getLovCode(),
+                queryDTO.getPage(),
+                queryDTO.getSize(),
+                queryDTO.getQueryLovValueMap(),
+                false));
     }
 
     @ApiOperation(value = " 分页查询指定值集内容")
@@ -126,4 +155,5 @@ public class LovAdapterInternalController {
                                                           PageRequest pageRequest) {
         return Results.success(lovAdapterService.queryRegionPage(organizationId, pageRequest.getPage(), pageRequest.getSize(), innerDTO));
     }
+
 }

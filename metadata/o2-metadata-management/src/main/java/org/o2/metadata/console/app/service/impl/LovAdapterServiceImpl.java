@@ -1,9 +1,10 @@
 package org.o2.metadata.console.app.service.impl;
 
-import io.choerodon.mybatis.pagehelper.domain.PageRequest;
+import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
-
 import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
@@ -11,11 +12,16 @@ import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.infra.entity.Region;
-import org.o2.metadata.console.infra.lovadapter.repository.*;
+import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.IdpLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.LovGeneralQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.PublicLovQueryRepository;
+import org.o2.metadata.console.infra.lovadapter.repository.RegionLovQueryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 
 /**
  * 值集查询
@@ -102,4 +108,8 @@ public class LovAdapterServiceImpl implements LovAdapterService {
         return lovGeneralQueryRepository.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap);
     }
 
+    @Override
+    public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap, boolean useCache) {
+        return lovGeneralQueryRepository.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap, useCache);
+    }
 }
