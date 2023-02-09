@@ -1,15 +1,20 @@
 package org.o2.metadata.management.client.infra.feign;
 
+import java.util.List;
+import java.util.Map;
+
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.management.client.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.LovAdapterRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -103,10 +108,16 @@ public interface LovAdapterRemoteService {
      */
     @GetMapping("/{organizationId}/lov-internal/batch-page-query-lov-value-meaning")
     ResponseEntity<String> queryLovValueMeaningPage(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                @RequestParam String lovCode,
-                                                @RequestParam Map<String, String> queryLovValueMap,
+                                                    @RequestParam String lovCode,
+                                                    @RequestParam Map<String, String> queryLovValueMap,
                                                     @RequestParam(required = false) Integer page,
                                                     @RequestParam(required = false) Integer size);
+
+
+    @PostMapping("/{organizationId}/lov-internal/batch-page-query-lov-value-meaning")
+    ResponseEntity<String> queryLovValueMeaningPageByPost(@PathVariable(value = "organizationId")
+                                                          @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                          @RequestBody QueryLovValueMeaningDTO queryDTO);
 
     /**
      * 分页查询指定值集
