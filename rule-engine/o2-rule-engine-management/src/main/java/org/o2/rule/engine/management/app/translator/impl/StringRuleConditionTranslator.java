@@ -29,17 +29,21 @@ public class StringRuleConditionTranslator implements RuleConditionTranslator {
 
         final StringBuilder sb = new StringBuilder();
         // 有实体别名取实体别名，没有则取实体code，条件编码同理
-        sb.append(StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode())).append(BaseConstants.Symbol.POINT).append(conditionCode);
+        String entityName = StringUtils.defaultString(rule.getRuleEntityAlias(), rule.getEntityCode()) + BaseConstants.Symbol.POINT + conditionCode;
+        sb.append(entityName);
         for (RuleMiniConditionParameterDTO parameter : parameters) {
             if (StringUtils.isBlank(parameter.getParamValue())) {
                 return sb.toString();
             }
             String compileValue = null;
             if (RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR.equals(parameter.getParamCode())) {
-                if(RuleEngineConstants.StringOperator.NOT_BLANK.equals(parameter.getParamValue())){
-                    compileValue = parameter.getParamValue() + "\"" +  " ''" + "\"";
-                    sb.append(BaseConstants.Symbol.SPACE).append(compileValue);
-                    break;
+                if(RuleEngineConstants.StringOperator.IS_NOT_BLANK.equals(parameter.getParamValue())){
+                    final StringBuilder blankExpress = new StringBuilder();
+                    blankExpress.append(RuleEngineConstants.StringOperator.IS_NOT_BLANK)
+                            .append(BaseConstants.Symbol.LEFT_BRACE)
+                            .append(entityName)
+                            .append(BaseConstants.Symbol.RIGHT_BRACE);
+                    return blankExpress.toString().trim();
                 }
             }
 

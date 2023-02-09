@@ -59,7 +59,7 @@ public class RuleEngineConstants {
         /**
          * 不为空
          */
-        public static final String NOT_BLANK = "notBlank";
+        public static final String IS_NOT_BLANK = "isNotBlank";
     }
 
     /**
