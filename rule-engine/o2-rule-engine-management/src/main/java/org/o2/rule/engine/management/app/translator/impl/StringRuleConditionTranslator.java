@@ -37,7 +37,7 @@ public class StringRuleConditionTranslator implements RuleConditionTranslator {
             String compileValue = null;
             if (RuleEngineConstants.BasicParameter.PARAMETER_OPERATOR.equals(parameter.getParamCode())) {
                 if(RuleEngineConstants.StringOperator.NOT_BLANK.equals(parameter.getParamValue())){
-                    compileValue = parameter.getParamValue() + "\"" +  "''" + "\"";
+                    compileValue = parameter.getParamValue() + "\"" +  " ''" + "\"";
                     sb.append(BaseConstants.Symbol.SPACE).append(compileValue);
                     break;
                 }
