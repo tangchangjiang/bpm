@@ -49,7 +49,7 @@ public class ConditionHelper {
             EXPRESS_RUNNER.addOperator("allLess", new OperatorAllLess("allLess"));
             EXPRESS_RUNNER.addOperator("allLessOrEqual", new OperatorAllLessOrEqual("allLessOrEqual"));
             EXPRESS_RUNNER.addOperator("allEqual", new OperatorAllEqual("allEqual"));
-            EXPRESS_RUNNER.addFunctionOfClassMethod("isNotBlank", StringUtils.class, "isNotBlank", new Class[]{String.class}, "unSupported data type!");
+            EXPRESS_RUNNER.addFunctionOfClassMethod("isNotBlank", StringUtils.class, "isNotBlank", new Class[]{CharSequence.class}, "unSupported data type!");
         } catch (Exception e) {
             log.error("EXPRESS_RUNNER addOperator error", e);
         }
