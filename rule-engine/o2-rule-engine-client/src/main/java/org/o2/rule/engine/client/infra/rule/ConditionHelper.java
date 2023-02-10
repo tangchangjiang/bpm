@@ -3,6 +3,7 @@ package org.o2.rule.engine.client.infra.rule;
 import com.ql.util.express.ExpressRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.o2.rule.engine.client.infra.rule.all.OperatorAllEqual;
 import org.o2.rule.engine.client.infra.rule.all.OperatorAllGreater;
 import org.o2.rule.engine.client.infra.rule.all.OperatorAllGreaterOrEqual;
@@ -48,7 +49,7 @@ public class ConditionHelper {
             EXPRESS_RUNNER.addOperator("allLess", new OperatorAllLess("allLess"));
             EXPRESS_RUNNER.addOperator("allLessOrEqual", new OperatorAllLessOrEqual("allLessOrEqual"));
             EXPRESS_RUNNER.addOperator("allEqual", new OperatorAllEqual("allEqual"));
-            EXPRESS_RUNNER.addOperator("notBlank", new OperatorNotBlank("notBlank"));
+            EXPRESS_RUNNER.addFunctionOfClassMethod("isNotBlank", StringUtils.class, "isNotBlank", new Class[]{CharSequence.class}, "unSupported data type!");
         } catch (Exception e) {
             log.error("EXPRESS_RUNNER addOperator error", e);
         }

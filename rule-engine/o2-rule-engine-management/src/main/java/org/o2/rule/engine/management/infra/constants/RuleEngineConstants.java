@@ -55,6 +55,13 @@ public class RuleEngineConstants {
         public static final String NOT_IN = "notIn";
     }
 
+    public static class StringOperator {
+        /**
+         * 不为空
+         */
+        public static final String IS_NOT_BLANK = "isNotBlank";
+    }
+
     /**
      * 比较操作符
      *
@@ -99,6 +106,8 @@ public class RuleEngineConstants {
          * 集合类型
          */
         public static final String COLLECTION = "COLLECTION";
+
+        public static final String STRING = "STRING";
     }
 
     /**
