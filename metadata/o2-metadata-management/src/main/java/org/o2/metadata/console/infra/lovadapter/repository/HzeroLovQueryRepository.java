@@ -31,7 +31,7 @@ public interface HzeroLovQueryRepository {
      * @param lang 语言
      * @return List<LovValueDTO>
      */
-    List<LovValueDTO> queryLovValue(Long tenantId, String lovCode, String lang);
+    List<LovValueDTO> queryLovValue(Long tenantId, String lang, String lovCode);
 
     /**
      * 查询独立值集中指定值的 描述信息

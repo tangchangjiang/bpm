@@ -113,13 +113,8 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
         }
 
         // resourceUrl-其他语言
-        if (CollectionUtils.isEmpty(otherLanguageList)) {
-            resourceUrlMap.put(lang, this.staticFile(queryLovValue(tenantId, lang, publicLovValueDTOList),
-                    uploadFolder, tenantId, MetadataConstants.Path.ZH_CN));
-        } else {
-            otherLanguageList.forEach(language -> resourceUrlMap.put(language,
-                    this.staticFile(queryLovValue(tenantId, language, publicLovValueDTOList), uploadFolder, tenantId, language)));
-        }
+        otherLanguageList.forEach(language -> resourceUrlMap.put(language,
+                this.staticFile(queryLovValue(tenantId, language, publicLovValueDTOList), uploadFolder, tenantId, language)));
 
         return resourceUrlMap;
     }

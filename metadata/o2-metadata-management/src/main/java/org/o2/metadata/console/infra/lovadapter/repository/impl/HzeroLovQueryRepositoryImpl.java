@@ -43,7 +43,7 @@ public class HzeroLovQueryRepositoryImpl implements HzeroLovQueryRepository {
     }
 
     @Override
-    public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode, String lang) {
+    public List<LovValueDTO> queryLovValue(Long tenantId, String lang, String lovCode) {
         return lovAdapter.queryLovValue(lovCode, tenantId, lang);
     }
 
