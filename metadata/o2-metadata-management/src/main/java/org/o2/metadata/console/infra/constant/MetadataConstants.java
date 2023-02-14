@@ -363,6 +363,8 @@ public interface MetadataConstants {
         String REGION_OWNER = "regionOwner";
 
         String BUSINESS_TYPE_CODE = "businessTypeCode";
+
+        String LANG = "lang";
     }
 
     interface Lang {
