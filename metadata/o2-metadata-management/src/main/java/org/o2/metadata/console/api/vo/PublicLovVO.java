@@ -13,4 +13,6 @@ public class PublicLovVO {
     private Long tenantId;
 
     private String lovCode;
+
+    private String lang;
 }

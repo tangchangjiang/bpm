@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.constant;
 
+import com.google.common.collect.ImmutableList;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scripting.support.ResourceScriptSource;
 
@@ -362,6 +363,14 @@ public interface MetadataConstants {
         String REGION_OWNER = "regionOwner";
 
         String BUSINESS_TYPE_CODE = "businessTypeCode";
+
+        String LANG = "lang";
+    }
+
+    interface Lang {
+        String ZH_CN = "zh_CN";
+        String EN_US = "en_US";
+        ImmutableList<String> ALL_LANGUAGE = ImmutableList.of(ZH_CN, EN_US);
     }
 
 }
