@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.job;
 
+import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
@@ -31,18 +32,22 @@ public class O2PublicLovRefreshJob implements IJobHandler {
     @Override
     public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
         final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
-        final String lovCode = map.get(MetadataConstants.RefreshJobConstants.LOV_CODE);
         final String idpLovOwner = map.get(MetadataConstants.RefreshJobConstants.IDP_LOV_OWNER);
+        final String lang = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, LanguageHelper.language());
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (!StringUtils.hasText(tenantId)) {
             tool.error("Parameter [tenantId] can't be null.Please check job configuration.");
             return ReturnT.FAILURE;
         }
-        final PublicLovVO vo = new PublicLovVO();
-        vo.setTenantId(Long.parseLong(tenantId));
-        vo.setLovCode(lovCode);
-        o2PublicLovService.createPublicLovFile(vo, idpLovOwner, businessTypeCode);
+
+        // 构建参数
+        final PublicLovVO publicLovVO = new PublicLovVO();
+        publicLovVO.setTenantId(Long.parseLong(tenantId));
+        publicLovVO.setLovCode(MetadataConstants.PublicLov.PUB_LOV_CODE);
+        publicLovVO.setLang(lang);
+
+        o2PublicLovService.createPublicLovFile(publicLovVO, idpLovOwner, businessTypeCode);
 
         return ReturnT.SUCCESS;
     }
