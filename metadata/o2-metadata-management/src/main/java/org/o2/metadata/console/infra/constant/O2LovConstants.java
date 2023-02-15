@@ -51,7 +51,7 @@ public interface O2LovConstants {
         String TENANT_ID = "tenantId";
         String REAL_NAME = "realName";
         String idList = "idList";
-
+        String OPENID_LIST = "openIdList";
     }
 
     /**
