@@ -1,5 +1,6 @@
 package org.o2.metadata.console.app.job;
 
+import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.enums.ReturnT;
@@ -33,6 +34,7 @@ public class O2RegionRefreshJob implements IJobHandler {
         final String tenantId = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
         final String countryCode = map.get(MetadataConstants.RefreshJobConstants.COUNTRY_CODE);
         final String regionOwner = map.get(MetadataConstants.RefreshJobConstants.REGION_OWNER);
+        final String lang = map.getOrDefault(MetadataConstants.RefreshJobConstants.LANG, LanguageHelper.language());
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (!StringUtils.hasText(tenantId) || !StringUtils.hasText(countryCode)) {
@@ -40,10 +42,11 @@ public class O2RegionRefreshJob implements IJobHandler {
             return ReturnT.FAILURE;
         }
 
-        final RegionCacheVO vo = new RegionCacheVO();
-        vo.setTenantId(Long.parseLong(tenantId));
-        vo.setCountryCode(countryCode);
-        o2SiteRegionFileService.createRegionStaticFile(vo, regionOwner, businessTypeCode);
+        final RegionCacheVO regionCacheVO = new RegionCacheVO();
+        regionCacheVO.setTenantId(Long.parseLong(tenantId));
+        regionCacheVO.setCountryCode(countryCode);
+        regionCacheVO.setLang(lang);
+        o2SiteRegionFileService.createRegionStaticFile(regionCacheVO, regionOwner, businessTypeCode);
 
         return ReturnT.SUCCESS;
     }

@@ -11,8 +11,8 @@ import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.BaseConstants;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.vo.PublicLovVO;
-import org.o2.metadata.console.app.service.LanguageService;
 import org.o2.metadata.console.app.service.O2PublicLovService;
+import org.o2.metadata.console.app.service.lang.MultiLangService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
 import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
@@ -23,11 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * O2MD.PUBLIC_LOV  静态文件
@@ -39,12 +37,12 @@ import java.util.stream.Collectors;
 public class O2PublicLovServiceImpl implements O2PublicLovService {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
-    private final LanguageService languageService;
+    private final MultiLangService multiLangService;
 
     public O2PublicLovServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
-                                  LanguageService languageService) {
+                                  MultiLangService multiLangService) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
-        this.languageService = languageService;
+        this.multiLangService = multiLangService;
     }
 
     @Override
@@ -84,39 +82,13 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
             return Collections.emptyMap();
         }
 
-        // 使用map存储resourceUrl,key为langCode、value为resourceUrl
-        Map<String, String> resourceUrlMap = new HashMap<>(4);
-
         // 静态资源配置
         String uploadFolder = staticResourceConfigDO.getUploadFolder();
         Integer differentLangFlag = staticResourceConfigDO.getDifferentLangFlag();
 
-        // resourceUrl-入参语言
-        resourceUrlMap.put(lang, this.staticFile(queryLovValue(tenantId, lang, publicLovValueDTOList),
-                uploadFolder, tenantId, lang));
-
-        // 未开启多语言-返回
-        if (!MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG.equals(differentLangFlag)) {
-            return resourceUrlMap;
-        }
-
-        // 查询所有语言
-        List<String> allLanguageList = languageService.queryAllLanguages(tenantId);
-        if (CollectionUtils.isEmpty(allLanguageList)) {
-            return resourceUrlMap;
-        }
-
-        // 其他语言-过滤入参语言
-        List<String> otherLanguageList = allLanguageList.stream().filter(language -> !lang.equals(language)).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(otherLanguageList)) {
-            return resourceUrlMap;
-        }
-
-        // resourceUrl-其他语言
-        otherLanguageList.forEach(language -> resourceUrlMap.put(language,
-                this.staticFile(queryLovValue(tenantId, language, publicLovValueDTOList), uploadFolder, tenantId, language)));
-
-        return resourceUrlMap;
+        // 使用map存储resourceUrl,key为langCode、value为resourceUrl
+        return multiLangService.staticResourceUpload(tenantId, lang, differentLangFlag, language -> staticFile(queryLovValue(tenantId, language, publicLovValueDTOList),
+                uploadFolder, tenantId, language));
     }
 
     /**
@@ -191,10 +163,7 @@ public class O2PublicLovServiceImpl implements O2PublicLovService {
                 .equals(staticResourceSaveDO.getResourceLevel())) {
             staticResourceSaveDO.setResourceOwner(resourceOwner);
         }
-        if (MetadataConstants.StaticResourceConstants.CONFIG_DIFFERENT_LANG_FLAG
-                .equals(staticResourceConfigDO.getDifferentLangFlag())) {
-            staticResourceSaveDO.setLang(languageCode);
-        }
+        staticResourceSaveDO.setLang(languageCode);
         staticResourceSaveDO.setResourceUrl(url);
         staticResourceSaveDO.setResourceHost(host);
         staticResourceSaveDO.setTenantId(tenantId);

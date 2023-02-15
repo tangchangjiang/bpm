@@ -167,5 +167,10 @@ public interface O2LovConstants {
          */
         String REGION_NAME = "regionName";
     }
+
+    interface CountryLov{
+        String TENANT_ID = "tenantId";
+        String LANG = "lang";
+    }
 }
 
