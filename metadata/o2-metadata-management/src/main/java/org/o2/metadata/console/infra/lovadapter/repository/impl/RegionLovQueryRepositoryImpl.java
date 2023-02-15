@@ -3,6 +3,7 @@ package org.o2.metadata.console.infra.lovadapter.repository.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -166,7 +167,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         }
         String lang = queryLov.getLang();
         if (StringUtils.isEmpty(lang)) {
-            lang = O2LovConstants.RegionLov.DEFAULT_LANG;
+            lang = LanguageHelper.language();
         }
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
         String regionName = queryLov.getRegionName();

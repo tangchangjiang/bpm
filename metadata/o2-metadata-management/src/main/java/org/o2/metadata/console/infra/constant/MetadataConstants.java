@@ -168,7 +168,11 @@ public interface MetadataConstants {
 
         String LOV = "lov";
 
+        String COUNTRY = "country";
+
         String LOV_FILE_NAME = "o2-public-lov";
+
+        String COUNTRY_FILE_NAME = "o2-country";
 
     }
 
@@ -316,29 +320,12 @@ public interface MetadataConstants {
         /**
          * 元数据 - 供C端使用的Lov值集数据文件
          */
-        String O2MD_PUB_LOV = "O2MD_PUB_LOV";
-
         String O2MD_IDP_LOV = "O2MD_IDP_LOV";
 
         /**
-         * 元数据 - 地区数据文件描述
+         * 元数据-国家数据文件
          */
-        String O2MD_REGION_DESCRIPTION = "省市区数据文件";
-
-        /**
-         * 元数据 - 值集数据文件
-         */
-        String LOV_DESCRIPTION = "值集数据文件";
-
-        /**
-         * 元数据 - 商城端公共的Lov值集
-         */
-        String O2MD_PUBLIC_LOV = "O2MD_PUB_LOV";
-
-        static String buildMetadataRegionCode() {
-            return String.format("%s", O2MD_REGION);
-        }
-
+        String O2MD_COUNTRY = "O2MD_COUNTRY";
     }
 
     interface StaticResourceConstants {
@@ -365,12 +352,20 @@ public interface MetadataConstants {
         String BUSINESS_TYPE_CODE = "businessTypeCode";
 
         String LANG = "lang";
+
+        String BUCKET_PREFIX = "bucketPrefix";
+
+        String DEFAULT_BUCKET_PREFIX = "o2";
     }
 
     interface Lang {
         String ZH_CN = "zh_CN";
         String EN_US = "en_US";
         ImmutableList<String> ALL_LANGUAGE = ImmutableList.of(ZH_CN, EN_US);
+    }
+
+    interface CountryLov {
+        String LOV = "O2MD.COUNTRY";
     }
 
 }
