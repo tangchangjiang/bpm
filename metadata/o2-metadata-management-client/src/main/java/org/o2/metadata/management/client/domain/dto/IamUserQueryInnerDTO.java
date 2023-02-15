@@ -32,4 +32,8 @@ public class IamUserQueryInnerDTO {
      * 用户Name
      */
     private String realName;
+    /**
+     * 微信openID List
+     */
+    private List<String> openIdList;
 }

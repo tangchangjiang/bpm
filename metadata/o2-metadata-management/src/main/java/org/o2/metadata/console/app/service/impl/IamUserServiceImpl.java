@@ -40,7 +40,7 @@ public class IamUserServiceImpl implements IamUserService {
         queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIdList(), BaseConstants.Symbol.COMMA));
         queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
         queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
-
+        queryLovValueMap.put(O2LovConstants.IamUserLov.OPENID_LIST, StringUtils.join(queryInner.getOpenIdList(), BaseConstants.Symbol.COMMA));
         return this.getUserInfo(queryLovValueMap, queryInner.getTenantId());
     }
 
@@ -50,7 +50,7 @@ public class IamUserServiceImpl implements IamUserService {
         queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIds(), BaseConstants.Symbol.COMMA));
         queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
         queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
-
+        queryLovValueMap.put(O2LovConstants.IamUserLov.OPENID_LIST, StringUtils.join(queryInner.getOpenIdList(), BaseConstants.Symbol.COMMA));
         return this.getUserInfo(queryLovValueMap, queryInner.getTenantId());
     }
 
