@@ -8,7 +8,6 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.JsonHelper;
-import org.o2.file.config.properties.O2FileProperties;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.CountryRefreshDTO;
 import org.o2.metadata.console.app.bo.CountryRefreshBO;
@@ -43,16 +42,13 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
     private final MultiLangService multiLangService;
     private final RegionRedis regionRedis;
-    private final O2FileProperties fileProperties;
 
     public CountryRefreshServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
                                      MultiLangService multiLangService,
-                                     RegionRedis regionRedis,
-                                     O2FileProperties fileProperties) {
+                                     RegionRedis regionRedis) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.multiLangService = multiLangService;
         this.regionRedis = regionRedis;
-        this.fileProperties = fileProperties;
     }
 
     private static String trimDomainPrefix(String resourceUrl) {
@@ -134,14 +130,12 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
         // 构建查询参数
         Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(BaseConstants.Digital.TWO);
         queryParam.put(O2LovConstants.CountryLov.LANG, lang);
-        queryParam.put(O2LovConstants.CountryLov.TENANT_ID, String.valueOf(tenantId));
 
         // 查询值集-HPFM.COUNTRY
         List<Map<String, Object>> lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,
                 MetadataConstants.CountryLov.LOV, queryParam);
         if (CollectionUtils.isEmpty(lovValueMapList)) {
-            queryParam.put(O2LovConstants.CountryLov.TENANT_ID, String.valueOf(BaseConstants.DEFAULT_TENANT_ID));
-            lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,
+            lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(BaseConstants.DEFAULT_TENANT_ID,
                     MetadataConstants.CountryLov.LOV, queryParam);
         }
         if (CollectionUtils.isEmpty(lovValueMapList)) {
