@@ -17,6 +17,7 @@ import org.o2.metadata.console.app.service.lang.MultiLangService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
+import org.o2.metadata.console.infra.redis.RegionRedis;
 import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceSaveDO;
@@ -41,13 +42,16 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
 
     private final HzeroLovQueryRepository hzeroLovQueryRepository;
     private final MultiLangService multiLangService;
+    private final RegionRedis regionRedis;
     private final O2FileProperties fileProperties;
 
     public CountryRefreshServiceImpl(HzeroLovQueryRepository hzeroLovQueryRepository,
                                      MultiLangService multiLangService,
+                                     RegionRedis regionRedis,
                                      O2FileProperties fileProperties) {
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.multiLangService = multiLangService;
+        this.regionRedis = regionRedis;
         this.fileProperties = fileProperties;
     }
 
@@ -81,7 +85,6 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
         final Long tenantId = countryRefreshDTO.getTenantId();
         final String lang = countryRefreshDTO.getLang();
         final String businessTypeCode = countryRefreshDTO.getBusinessTypeCode();
-        final String bucketPrefix = countryRefreshDTO.getBucketPrefix();
 
         if (log.isDebugEnabled()) {
             log.debug("refresh country info, tenantId:[{}}, lang:[{}], businessType:[{}}", tenantId, lang, businessTypeCode);
@@ -96,7 +99,7 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
                 MetadataConstants.StaticResourceCode.O2MD_COUNTRY);
 
         // 静态资源路径map
-        Map<String, String> resourceUrlMap = buildUrlByConfig(tenantId, lang, bucketPrefix, staticResourceConfigDO);
+        Map<String, String> resourceUrlMap = buildUrlByConfig(tenantId, lang, staticResourceConfigDO);
         if (MapUtils.isEmpty(resourceUrlMap)) {
             return;
         }
@@ -108,7 +111,7 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
         staticResourceBusinessService.saveStaticResource(tenantId, staticResourceSaveDOList);
     }
 
-    private Map<String, String> buildUrlByConfig(Long tenantId, String lang, String bucketPrefix, StaticResourceConfigDO staticResourceConfigDO) {
+    private Map<String, String> buildUrlByConfig(Long tenantId, String lang, StaticResourceConfigDO staticResourceConfigDO) {
         // 静态资源配置
         String uploadFolder = staticResourceConfigDO.getUploadFolder();
         Integer differentLangFlag = staticResourceConfigDO.getDifferentLangFlag();
@@ -116,7 +119,7 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
         // 上传多语言文件
         return multiLangService.staticResourceUpload(tenantId, lang, differentLangFlag,
                 language -> uploadFile(tenantId, language, uploadFolder,
-                        buildCountryRefreshBO(tenantId, language, bucketPrefix)));
+                        buildCountryRefreshBO(tenantId, language)));
     }
 
     /**
@@ -127,8 +130,7 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
      * @return 国家刷新BO
      */
     private List<CountryRefreshBO> buildCountryRefreshBO(Long tenantId,
-                                                         String lang,
-                                                         String bucketPrefix) {
+                                                         String lang) {
         // 构建查询参数
         Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(BaseConstants.Digital.TWO);
         queryParam.put(O2LovConstants.CountryLov.LANG, lang);
@@ -138,36 +140,30 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
         List<Map<String, Object>> lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,
                 MetadataConstants.CountryLov.LOV, queryParam);
         if (CollectionUtils.isEmpty(lovValueMapList)) {
+            queryParam.put(O2LovConstants.CountryLov.TENANT_ID, String.valueOf(BaseConstants.DEFAULT_TENANT_ID));
+            lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,
+                    MetadataConstants.CountryLov.LOV, queryParam);
+        }
+        if (CollectionUtils.isEmpty(lovValueMapList)) {
             return Collections.emptyList();
         }
 
-        return lovValueMapList.stream().map(lovValueMap -> {
+        List<CountryRefreshBO> countryRefreshBOList = lovValueMapList.stream().map(lovValueMap -> {
             String json = JsonHelper.mapToString(lovValueMap);
-            CountryRefreshBO countryRefreshBO = JsonHelper.stringToObject(json, CountryRefreshBO.class);
-            countryRefreshBO.setRegionResourceUrl(buildRegionResourceUrl(tenantId, lang, countryRefreshBO.getCountryCode(), bucketPrefix));
-            return countryRefreshBO;
+            return JsonHelper.stringToObject(json, CountryRefreshBO.class);
         }).collect(Collectors.toList());
-    }
 
-    /**
-     * 拼接地区静态资源URL
-     *
-     * @param tenantId 租户ID
-     * @param lang     语言
-     * @return 地区静态资源URL
-     */
-    private String buildRegionResourceUrl(Long tenantId, String lang, String countryCode, String bucketPrefix) {
-        final String fileName = MetadataConstants.Path.FILE_NAME + "-" + countryCode.toLowerCase() + MetadataConstants.FileSuffix.JSON;
-        return Joiner.on(BaseConstants.Symbol.SLASH).skipNulls().join(
-                "",
-                bucketPrefix + BaseConstants.Symbol.MIDDLE_LINE + fileProperties.getBucketCode(),
-                fileProperties.getStoragePath().replace(BaseConstants.Symbol.SLASH, ""),
-                MetadataConstants.Path.FILE,
-                MetadataConstants.Path.REGION,
-                lang,
-                tenantId,
-                fileProperties.getStorageCode(),
-                fileName);
+        // 查询Redis 地区静态资源路径
+        List<String> countryCodeList = countryRefreshBOList.stream().map(CountryRefreshBO::getCountryCode).collect(Collectors.toList());
+        Map<String, String> regionUrlMap = regionRedis.queryRegionUrlFromRedis(tenantId, lang, countryCodeList);
+
+        // 组装地区静态资源路径
+        countryRefreshBOList.forEach(countryRefreshBO -> {
+            String countryCode = countryRefreshBO.getCountryCode();
+            countryRefreshBO.setRegionResourceUrl(regionUrlMap.get(countryCode));
+        });
+
+        return countryRefreshBOList;
     }
 
     /**

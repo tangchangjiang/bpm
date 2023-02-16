@@ -37,8 +37,6 @@ public class O2CountryRefreshJob implements IJobHandler {
         final String lang = map.getOrDefault(MetadataConstants.RefreshJobConstants.LANG, LanguageHelper.language());
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE,
                 O2CoreConstants.BusinessType.B2C);
-        final String bucketPrefix = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUCKET_PREFIX,
-                MetadataConstants.RefreshJobConstants.DEFAULT_BUCKET_PREFIX);
 
         if (StringUtils.isBlank(tenantId)) {
             tool.error("Parameter [tenantId] can't be null.Please check job configuration.");
@@ -50,7 +48,6 @@ public class O2CountryRefreshJob implements IJobHandler {
         countryRefreshDTO.setTenantId(Long.parseLong(tenantId));
         countryRefreshDTO.setLang(lang);
         countryRefreshDTO.setBusinessTypeCode(businessTypeCode);
-        countryRefreshDTO.setBucketPrefix(bucketPrefix.toLowerCase());
 
         // 刷新国家静态资源
         countryRefreshService.refreshCountryInfoFile(countryRefreshDTO);

@@ -352,10 +352,6 @@ public interface MetadataConstants {
         String BUSINESS_TYPE_CODE = "businessTypeCode";
 
         String LANG = "lang";
-
-        String BUCKET_PREFIX = "bucketPrefix";
-
-        String DEFAULT_BUCKET_PREFIX = "o2";
     }
 
     interface Lang {
