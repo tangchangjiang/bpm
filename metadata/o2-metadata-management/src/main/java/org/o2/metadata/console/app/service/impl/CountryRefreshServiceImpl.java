@@ -128,13 +128,15 @@ public class CountryRefreshServiceImpl implements CountryRefreshService {
     private List<CountryRefreshBO> buildCountryRefreshBO(Long tenantId,
                                                          String lang) {
         // 构建查询参数
-        Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(BaseConstants.Digital.TWO);
+        Map<String, String> queryParam = Maps.newHashMapWithExpectedSize(BaseConstants.Digital.EIGHT);
         queryParam.put(O2LovConstants.CountryLov.LANG, lang);
 
         // 查询值集-HPFM.COUNTRY
         List<Map<String, Object>> lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(tenantId,
                 MetadataConstants.CountryLov.LOV, queryParam);
         if (CollectionUtils.isEmpty(lovValueMapList)) {
+            queryParam = Maps.newHashMapWithExpectedSize(BaseConstants.Digital.EIGHT);
+            queryParam.put(O2LovConstants.CountryLov.LANG, lang);
             lovValueMapList = hzeroLovQueryRepository.queryLovValueMeaning(BaseConstants.DEFAULT_TENANT_ID,
                     MetadataConstants.CountryLov.LOV, queryParam);
         }
