@@ -62,11 +62,7 @@ public class MultiLangServiceImpl implements MultiLangService {
         otherLanguageList.forEach(otherLang -> resourceUrlMap.put(otherLang, multiLangOperation.execute(otherLang)));
 
         // 过滤上传失败key
-        resourceUrlMap.forEach((lang, resourceUrl) -> {
-            if (StringUtils.isBlank(resourceUrl)) {
-                resourceUrlMap.remove(lang);
-            }
-        });
+        resourceUrlMap.values().removeIf(StringUtils::isBlank);
 
         return resourceUrlMap;
     }
