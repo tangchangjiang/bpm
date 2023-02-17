@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.o2.core.helper.JsonHelper;
+import org.o2.metadata.management.client.domain.dto.LovQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.management.client.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
@@ -86,6 +88,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     @Override
     public ResponseEntity<String> queryRegionPage(Long organizationId, Integer page, Integer size, RegionQueryLovInnerDTO innerDTO) {
         log.error("Error queryRegionPage, params[ organizationId = {},page = {},size = {}, innerDTO = {} ]", organizationId, page, size, innerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> batchQueryLovValueByLang(Long organizationId, LovQueryInnerDTO lovQueryInnerDTO) {
+        log.error("Error batchQueryLovValueByLang, params[ organizationId = {}, innerDTO = {} ]", organizationId, JsonHelper.objectToString(lovQueryInnerDTO));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

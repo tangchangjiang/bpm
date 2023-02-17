@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.dto.LovQueryInnerDTO;
 import org.o2.metadata.console.api.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
@@ -156,4 +157,11 @@ public class LovAdapterInternalController {
         return Results.success(lovAdapterService.queryRegionPage(organizationId, pageRequest.getPage(), pageRequest.getSize(), innerDTO));
     }
 
+    @ApiOperation(value = "独立查询值集详细信息-批量")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/batch-query-lov-value")
+    public ResponseEntity<Map<String, List<LovValueDTO>>> batchQueryLovValueByLang(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                                   @RequestBody LovQueryInnerDTO lovQueryInnerDTO){
+        return Results.success(lovAdapterService.batchQueryLovValueByLang(organizationId, lovQueryInnerDTO));
+    }
 }

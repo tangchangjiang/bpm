@@ -5,6 +5,7 @@ import java.util.Map;
 
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.dto.LovQueryInnerDTO;
 import org.o2.metadata.management.client.domain.dto.QueryLovValueMeaningDTO;
 import org.o2.metadata.management.client.domain.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.management.client.infra.feign.fallback.LovAdapterRemoteServiceImpl;
@@ -160,5 +161,15 @@ public interface LovAdapterRemoteService {
                                            @RequestParam Integer page,
                                            @RequestParam Integer size,
                                            @RequestBody RegionQueryLovInnerDTO innerDTO);
+
+    /**
+     * 独立查询值集详细信息-批量
+     * @param organizationId 租户ID
+     * @param lovQueryInnerDTO 值集内部查询DTO
+     * @return 值集
+     */
+    @PostMapping("/{organizationId}/lov-internal/batch-query-lov-value")
+    ResponseEntity<String> batchQueryLovValueByLang(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                    @RequestBody LovQueryInnerDTO lovQueryInnerDTO);
 
 }

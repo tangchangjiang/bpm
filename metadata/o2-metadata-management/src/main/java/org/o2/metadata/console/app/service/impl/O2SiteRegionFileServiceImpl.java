@@ -7,7 +7,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
-import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
@@ -26,7 +25,6 @@ import org.o2.metadata.domain.staticresource.service.StaticResourceBusinessServi
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,7 +66,7 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
         // 使用map存储resourceUrl,key为langCode、value为resourceUrl
         Map<String, String> resourceUrlMap = buildUrlByConfig(tenantId, lang, countryCode, staticResourceConfigDO);
-        if (MapUtils.isEmpty(resourceUrlMap)){
+        if (MapUtils.isEmpty(resourceUrlMap)) {
             return;
         }
 
@@ -107,6 +105,10 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                               final String lang,
                               final Long tenantId,
                               final String countryCode) {
+        if (CollectionUtils.isEmpty(list)){
+            return null;
+        }
+
         final String jsonString = JSON.toJSONString(list);
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)
