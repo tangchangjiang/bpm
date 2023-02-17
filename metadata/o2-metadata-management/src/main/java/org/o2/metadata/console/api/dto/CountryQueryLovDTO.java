@@ -20,4 +20,9 @@ public class CountryQueryLovDTO {
 
     private Integer size;
 
+    /**
+     *  语言
+     */
+    private String lang;
+
 }
