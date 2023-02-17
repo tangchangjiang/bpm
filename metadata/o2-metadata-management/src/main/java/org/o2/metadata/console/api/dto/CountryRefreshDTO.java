@@ -14,6 +14,4 @@ public class CountryRefreshDTO {
     private String lang;
     @ApiModelProperty(value = "业务类型")
     private String businessTypeCode;
-    @ApiModelProperty(value = "文件桶前缀")
-    private String bucketPrefix;
 }

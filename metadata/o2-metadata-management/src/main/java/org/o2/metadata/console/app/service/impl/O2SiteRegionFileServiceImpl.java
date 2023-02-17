@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
+import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.file.helper.O2FileHelper;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.RegionCacheVO;
@@ -16,6 +17,7 @@ import org.o2.metadata.console.app.service.lang.MultiLangService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.convertor.RegionConverter;
 import org.o2.metadata.console.infra.entity.Region;
+import org.o2.metadata.console.infra.redis.RegionRedis;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.console.infra.strategy.BusinessTypeStrategyDispatcher;
 import org.o2.metadata.domain.staticresource.domain.StaticResourceConfigDO;
@@ -40,11 +42,14 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
 
     private final RegionRepository regionRepository;
     private final MultiLangService multiLangService;
+    private final RegionRedis regionRedis;
 
     public O2SiteRegionFileServiceImpl(RegionRepository regionRepository,
-                                       MultiLangService multiLangService) {
+                                       MultiLangService multiLangService,
+                                       RegionRedis regionRedis) {
         this.regionRepository = regionRepository;
         this.multiLangService = multiLangService;
+        this.regionRedis = regionRedis;
     }
 
     @Override
@@ -70,6 +75,9 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
         //  更新静态文件资源表
         List<StaticResourceSaveDO> saveDTOList = buildStaticResourceSaveDTO(tenantId, resourceUrlMap, resourceOwner, staticResourceConfigDO);
         staticResourceBusinessService.saveStaticResource(tenantId, saveDTOList);
+
+        // 保存Redis
+        regionRedis.saveRegionUrlToRedis(tenantId, countryCode, resourceUrlMap);
     }
 
     private Map<String, String> buildUrlByConfig(Long tenantId, String lang, String countryCode, StaticResourceConfigDO staticResourceConfigDO) {
