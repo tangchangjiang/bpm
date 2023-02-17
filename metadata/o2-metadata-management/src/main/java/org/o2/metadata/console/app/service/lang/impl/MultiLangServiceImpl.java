@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.lang.impl;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.app.service.lang.LanguageService;
 import org.o2.metadata.console.app.service.lang.MultiLangOperation;
@@ -59,6 +60,13 @@ public class MultiLangServiceImpl implements MultiLangService {
 
         // 获取资源路径url-其他语言
         otherLanguageList.forEach(otherLang -> resourceUrlMap.put(otherLang, multiLangOperation.execute(otherLang)));
+
+        // 过滤上传失败key
+        resourceUrlMap.forEach((lang, resourceUrl) -> {
+            if (StringUtils.isBlank(resourceUrl)) {
+                resourceUrlMap.remove(lang);
+            }
+        });
 
         return resourceUrlMap;
     }

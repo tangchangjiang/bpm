@@ -107,6 +107,10 @@ public class O2SiteRegionFileServiceImpl implements O2SiteRegionFileService {
                               final String lang,
                               final Long tenantId,
                               final String countryCode) {
+        if (CollectionUtils.isEmpty(list)){
+            return null;
+        }
+
         final String jsonString = JSON.toJSONString(list);
         // 上传路径全小写，多语言用中划线
         final String directory = Optional.ofNullable(uploadFolder)
