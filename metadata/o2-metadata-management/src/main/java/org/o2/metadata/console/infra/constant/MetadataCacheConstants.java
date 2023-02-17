@@ -15,17 +15,16 @@ public interface MetadataCacheConstants {
     }
 
     interface KeyPrefix {
-        String IDP_PREFIX = "idp_%s_%s";
+        String IDP_PREFIX = "idp_%s";
 
         /**
          * 获取查询独立值集缓存的keyPrefix
          *
          * @param tenantId 租户Id
-         * @param lovCode  值集编码
          * @return keyPrefix
          */
-        static String getIdpPrefix(Long tenantId, String lovCode) {
-            return String.format(IDP_PREFIX, tenantId, lovCode);
+        static String getIdpPrefix(Long tenantId) {
+            return String.format(IDP_PREFIX, tenantId);
         }
 
         String GENERAL_PREFIX = "general_%s";

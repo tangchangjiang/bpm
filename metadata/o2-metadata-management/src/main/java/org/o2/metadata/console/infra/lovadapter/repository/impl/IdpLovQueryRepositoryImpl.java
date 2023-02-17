@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.hzero.core.base.AopProxy;
+import org.hzero.core.helper.LanguageHelper;
 import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -26,11 +27,23 @@ public class IdpLovQueryRepositoryImpl implements IdpLovQueryRepository, AopProx
 
     @Override
     public List<LovValueDTO> queryLovValue(Long tenantId, String lovCode) {
+        String lang = LanguageHelper.language();
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
-                MetadataCacheConstants.KeyPrefix.getIdpPrefix(tenantId, lovCode),
-                tenantId, lovCode,
-                hzeroLovQueryRepository::queryLovValue,
+                MetadataCacheConstants.KeyPrefix.getIdpPrefix(tenantId),
+                lang, lovCode,
+                (language, lov)->hzeroLovQueryRepository.queryLovValue(tenantId, language, lov),
+                false
+        );
+    }
+
+    @Override
+    public List<LovValueDTO> queryLovValue(Long tenantId, String lang, String lovCode) {
+        return CacheHelper.getCache(
+                MetadataCacheConstants.CacheName.O2_LOV,
+                MetadataCacheConstants.KeyPrefix.getIdpPrefix(tenantId),
+                lang, lovCode,
+                (language, lov)->hzeroLovQueryRepository.queryLovValue(tenantId, language, lov),
                 false
         );
     }

@@ -19,8 +19,16 @@ public interface IdpLovQueryRepository {
      * @param tenantId 租户id
      * @return List<LovValueDTO>
      */
-    List<LovValueDTO> queryLovValue(Long tenantId,
-                                    String lovCode);
+    List<LovValueDTO> queryLovValue(Long tenantId, String lovCode);
+
+    /**
+     * 独立值集详细信息
+     *
+     * @param lovCode  值集code
+     * @param tenantId 租户id
+     * @return List<LovValueDTO>
+     */
+    List<LovValueDTO> queryLovValue(Long tenantId, String lang, String lovCode);
 
     /**
      * 查询独立值集中指定值的 描述信息
@@ -30,7 +38,5 @@ public interface IdpLovQueryRepository {
      * @param lovValue 值集value
      * @return String
      */
-    String queryLovValueMeaning(Long tenantId,
-                                String lovCode,
-                                String lovValue);
+    String queryLovValueMeaning(Long tenantId, String lovCode, String lovValue);
 }

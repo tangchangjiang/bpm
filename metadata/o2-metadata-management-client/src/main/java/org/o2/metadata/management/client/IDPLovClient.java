@@ -3,9 +3,11 @@ package org.o2.metadata.management.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.metadata.management.client.domain.co.LovValueCO;
+import org.o2.metadata.management.client.domain.dto.LovQueryInnerDTO;
 import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -41,6 +43,18 @@ public class IDPLovClient {
      */
     public List<LovValueCO> queryLovValue(Long tenantId, String lovCode) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.queryLovValue(tenantId, lovCode), new TypeReference<List<LovValueCO>>() {
+        });
+    }
+
+    /**
+     * 独立查询值集详细信息-批量
+     *
+     * @param tenantId         租户ID
+     * @param lovQueryInnerDTO 值集内部查询DTO
+     * @return 值集
+     */
+    public Map<String, List<LovValueCO>> batchQueryLovValueByLang(Long tenantId, LovQueryInnerDTO lovQueryInnerDTO) {
+        return ResponseUtils.getResponse(lovAdapterRemoteService.batchQueryLovValueByLang(tenantId, lovQueryInnerDTO), new TypeReference<Map<String, List<LovValueCO>>>() {
         });
     }
 }

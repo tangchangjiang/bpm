@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.dto.LovQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
@@ -154,4 +155,12 @@ public interface LovAdapterService {
                                                    Integer size,
                                                    Map<String, String> queryLovValueMap,
                                                    boolean useCache);
+
+    /**
+     * 独立查询值集详细信息-根据语言批量
+     * @param tenantId 租户ID
+     * @param lovQueryInnerDTO 值集内部查询DTO
+     * @return 值集
+     */
+    Map<String, List<LovValueDTO>> batchQueryLovValueByLang(Long tenantId, LovQueryInnerDTO lovQueryInnerDTO);
 }

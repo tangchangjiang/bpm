@@ -1,16 +1,20 @@
 package org.o2.metadata.console.app.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.platform.lov.dto.LovValueDTO;
 import org.o2.metadata.console.api.co.PageCO;
+import org.o2.metadata.console.api.dto.LovQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.bo.UomTypeBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.app.service.lang.MultiLangService;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.BaseLovQueryRepository;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -31,25 +35,28 @@ import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 @Service
 @Slf4j
 public class LovAdapterServiceImpl implements LovAdapterService {
-    private BaseLovQueryRepository baseLovQueryRepository;
-    private PublicLovQueryRepository publicLovQueryRepository;
-    private HzeroLovQueryRepository hzeroLovQueryRepository;
-    private RegionLovQueryRepository regionLovQueryRepository;
-    private IdpLovQueryRepository idpLovQueryRepository;
-    private LovGeneralQueryRepository lovGeneralQueryRepository;
+    private final BaseLovQueryRepository baseLovQueryRepository;
+    private final PublicLovQueryRepository publicLovQueryRepository;
+    private final HzeroLovQueryRepository hzeroLovQueryRepository;
+    private final RegionLovQueryRepository regionLovQueryRepository;
+    private final IdpLovQueryRepository idpLovQueryRepository;
+    private final LovGeneralQueryRepository lovGeneralQueryRepository;
+    private final MultiLangService multiLangService;
 
     public LovAdapterServiceImpl(BaseLovQueryRepository baseLovQueryRepository,
                                  PublicLovQueryRepository publicLovQueryRepository,
                                  HzeroLovQueryRepository hzeroLovQueryRepository,
                                  RegionLovQueryRepository regionLovQueryRepository,
                                  IdpLovQueryRepository idpLovQueryRepository,
-                                 LovGeneralQueryRepository lovGeneralQueryRepository) {
+                                 LovGeneralQueryRepository lovGeneralQueryRepository,
+                                 MultiLangService multiLangService) {
         this.baseLovQueryRepository = baseLovQueryRepository;
         this.publicLovQueryRepository = publicLovQueryRepository;
         this.hzeroLovQueryRepository = hzeroLovQueryRepository;
         this.regionLovQueryRepository = regionLovQueryRepository;
         this.idpLovQueryRepository = idpLovQueryRepository;
         this.lovGeneralQueryRepository = lovGeneralQueryRepository;
+        this.multiLangService = multiLangService;
     }
 
     @Override
@@ -111,5 +118,16 @@ public class LovAdapterServiceImpl implements LovAdapterService {
     @Override
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode, Integer page, Integer size, Map<String, String> queryLovValueMap, boolean useCache) {
         return lovGeneralQueryRepository.queryLovValueMeaning(tenantId, lovCode, page, size, queryLovValueMap, useCache);
+    }
+
+    @Override
+    public Map<String, List<LovValueDTO>> batchQueryLovValueByLang(Long tenantId, LovQueryInnerDTO lovQueryInnerDTO) {
+        String lovCode = lovQueryInnerDTO.getLovCode();
+        if (StringUtils.isBlank(lovCode)) {
+            return Collections.emptyMap();
+        }
+
+        return multiLangService.batchQueryByLang(tenantId, lovQueryInnerDTO.getLanguageList(),
+                lang -> idpLovQueryRepository.queryLovValue(tenantId, lang, lovCode));
     }
 }

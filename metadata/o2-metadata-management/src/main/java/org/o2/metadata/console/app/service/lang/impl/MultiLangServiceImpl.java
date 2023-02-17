@@ -10,6 +10,7 @@ import org.o2.metadata.console.app.service.lang.MultiLangService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -60,5 +61,26 @@ public class MultiLangServiceImpl implements MultiLangService {
         otherLanguageList.forEach(otherLang -> resourceUrlMap.put(otherLang, multiLangOperation.execute(otherLang)));
 
         return resourceUrlMap;
+    }
+
+    @Override
+    public <T> Map<String, T> batchQueryByLang(Long tenantId,
+                                               List<String> languageList,
+                                               MultiLangOperation<T> multiLangOperation) {
+        if (CollectionUtils.isEmpty(languageList)) {
+            languageList = languageService.queryAllLanguages(tenantId);
+        }
+
+        if (CollectionUtils.isEmpty(languageList)) {
+            return Collections.emptyMap();
+        }
+
+        // lang->result
+        Map<String, T> lovListByLang = Maps.newHashMapWithExpectedSize(languageList.size());
+        languageList.forEach(lang -> {
+            T lovValueDTOList = multiLangOperation.execute(lang);
+            lovListByLang.put(lang, lovValueDTOList);
+        });
+        return lovListByLang;
     }
 }
