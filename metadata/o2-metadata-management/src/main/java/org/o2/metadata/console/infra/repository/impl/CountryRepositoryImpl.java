@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
+import io.choerodon.mybatis.helper.LanguageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
@@ -31,6 +33,11 @@ public class CountryRepositoryImpl extends BaseRepositoryImpl<Country> implement
         Map<String, String> queryParams = new HashMap<>(16);
         queryParams.put(O2LovConstants.RegionLov.COUNTRY_CODE, regionQueryLov.getCountryCode());
         queryParams.put(O2LovConstants.RegionLov.TENANT_ID, String.valueOf(regionQueryLov.getTenantId()));
+        String lang = regionQueryLov.getLang();
+        if (StringUtils.isEmpty(lang)) {
+            lang = LanguageHelper.language();
+        }
+        queryParams.put(O2LovConstants.RegionLov.LANG, lang);
         List<Map<String, Object>> list = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.RegionLov.REGION_LOV_CODE,
                 regionQueryLov.getPage(), regionQueryLov.getSize(), queryParams);
         if (list.isEmpty()) {
