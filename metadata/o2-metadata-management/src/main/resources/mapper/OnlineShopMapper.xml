@@ -292,7 +292,10 @@
                 </foreach>
             </if>
             <if test="onlineShopDTO.platformCode != null">
-                and online.platform_code = #{onlineShopDTO.platformCode}
+                and online.platform_code IN
+                <foreach collection="onlineShopDTO.platformCode.split(',')" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
             </if>
             <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''">
                 and online.business_type_code = #{onlineShopDTO.businessTypeCode}
