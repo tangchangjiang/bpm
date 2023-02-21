@@ -130,7 +130,6 @@ public class RegionController extends BaseController {
     protected Page<RegionVO> getPage(List<RegionVO> regionVOList, PageRequest pageRequest) {
         if (pageRequest.getPage() >= 0 && pageRequest.getSize() > 0) {
             PageInfo page = new PageInfo(pageRequest.getPage(), pageRequest.getSize(), true);
-
             // 数据总数
             int total = regionVOList.size();
             // 开始位置(包含)
