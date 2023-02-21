@@ -162,9 +162,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
      */
     private List<Region> queryRegionCondition(Long tenantId, RegionQueryLovInnerDTO queryLov) {
         String countryCode = queryLov.getCountryCode();
-        if (StringUtils.isEmpty(countryCode)) {
-            countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
-        }
         String lang = queryLov.getLang();
         if (StringUtils.isEmpty(lang)) {
             lang = LanguageHelper.language();
