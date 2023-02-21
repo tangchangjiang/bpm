@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.core.helper.UserHelper;
 import org.o2.metadata.console.api.dto.CountryDTO;
 import org.o2.metadata.console.api.dto.CountryQueryLovDTO;
 import org.o2.metadata.console.api.vo.CountryVO;
@@ -43,6 +44,7 @@ public class CountryController extends BaseController {
         country.setEnabledFlag(1);
         CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
         queryLovDTO.setTenantId(organizationId);
+        queryLovDTO.setCountryCode(country.getCountryCode());
         return ResponseEntity.ok(CountryConverter.poToVoListObjects(countryRepository.listCountryLov(queryLovDTO, organizationId)));
     }
 
