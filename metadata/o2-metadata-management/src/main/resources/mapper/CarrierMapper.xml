@@ -16,25 +16,6 @@
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="delivery_region_type_code" property="deliveryRegionTypeCode" jdbcType="VARCHAR"/>
         <result column="priority" property="priority" jdbcType="DECIMAL"/>
-        <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
-        <result column="volume_conversion" property="volumeConversion" jdbcType="DECIMAL"/>
-    </resultMap>
-
-    <resultMap id="carrierLogisticsCostMap" type="org.o2.metadata.console.app.bo.CarrierLogisticsCostBO">
-        <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR"/>
-        <result column="volume_conversion" property="volumeConversion" jdbcType="DECIMAL"/>
-        <result column="template_code" property="templateCode" jdbcType="VARCHAR"/>
-        <result column="valuation_type" property="valuationType" jdbcType="VARCHAR"/>
-        <result column="valuation_uom" property="valuationUom" jdbcType="VARCHAR"/>
-        <collection property="carrierLogisticsCostDetailList"
-                    ofType="org.o2.metadata.console.app.bo.CarrierLogisticsCostDetailBO">
-            <id column="template_detail_id" property="templateDetailId" jdbcType="DECIMAL"/>
-            <result column="region_code" property="regionCode" jdbcType="VARCHAR"/>
-            <result column="first_piece_weight" property="firstPieceWeight" jdbcType="DECIMAL"/>
-            <result column="first_price" property="firstPrice" jdbcType="DECIMAL"/>
-            <result column="next_piece_weight" property="nextPieceWeight" jdbcType="DECIMAL"/>
-            <result column="next_price" property="nextPrice" jdbcType="DECIMAL"/>
-        </collection>
     </resultMap>
 
     <select id="listCarrier" resultType="org.o2.metadata.console.infra.entity.Carrier">
@@ -47,14 +28,10 @@
                c.active_flag,
                c.delivery_region_type_code,
                c.priority,
-               c.template_code,
-               c.volume_conversion,
-               ft.template_name,
                c.tenant_id
         FROM o2md_carrier c
                      left join o2md_carrier_tl ct
                 on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = #{tenantId}
-                 left join o2md_freight_template ft on ft.template_code = c.template_code and ft.tenant_id= c.tenant_id
                 where 1 = 1
         <choose>
             <when test="tenantId != null">
@@ -122,38 +99,5 @@
         <if test="carrierDTO.activeFlag != null">
             and c.active_flag = #{carrierDTO.activeFlag}
         </if>
-    </select>
-    <select id="listCarrierLogisticsCost" resultMap="carrierLogisticsCostMap">
-        SELECT dc.carrier_code,
-               dc.volume_conversion,
-               dc.template_code,
-               dft.valuation_type,
-               dft.valuation_uom,
-               dftd.template_detail_id,
-               dftd.region_code,
-               dftd.first_piece_weight,
-               dftd.first_price,
-               dftd.next_piece_weight,
-               dftd.next_price
-        FROM o2md_carrier dc
-                     JOIN o2md_freight_template dft
-                ON dft.template_code = dc.template_code AND dft.tenant_id = dc.tenant_id
-                     JOIN o2md_freight_tpl_detail dftd ON dftd.template_id = dft.template_id
-        <where>
-            <choose>
-                <when test="tenantId != null">
-                    AND dc.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
-            <if test="carrierCodeList != null and carrierCodeList.size() != 0">
-                AND dc.carrier_code IN
-                <foreach collection="carrierCodeList" open="(" separator="," close=")" item="item">
-                    #{item}
-                </foreach>
-            </if>
-        </where>
     </select>
 </mapper>

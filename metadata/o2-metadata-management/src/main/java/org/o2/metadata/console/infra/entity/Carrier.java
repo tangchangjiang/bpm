@@ -101,15 +101,6 @@ public class Carrier extends AuditDomain {
     @ApiModelProperty(value = "优先级")
     @NotNull
     private Long priority;
-
-    @ApiModelProperty(value = "关联运费模板，关联表o2md_freigth_template")
-    @NotBlank
-    private String templateCode;
-
-    @ApiModelProperty(value = "重泡比")
-    @NotNull
-    private Long volumeConversion;
-
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
