@@ -43,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,7 +243,10 @@ public class CarrierServiceImpl implements CarrierService {
     }
 
     @Override
+    @Deprecated
     public List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
+
+        // TODO 该方法已废弃移除
 
         // 1. 数据初始化
         List<CarrierLogisticsCostCO> carrierLogisticsCostList = new ArrayList<>();
@@ -250,7 +254,12 @@ public class CarrierServiceImpl implements CarrierService {
         CarrierFreightDTO carrierFreightDTO = new CarrierFreightDTO();
         carrierFreightDTO.setCarrierCodeList(carrierLogisticsCostDTO.getAlternateCarrierList());
         carrierFreightDTO.setTenantId(carrierLogisticsCostDTO.getTenantId());
-        List<CarrierLogisticsCostBO> carrierLogisticsCostBOList = carrierRepository.listCarrierLogisticsCost(carrierFreightDTO);
+        List<CarrierLogisticsCostBO> carrierLogisticsCostBOList = Collections.emptyList();
+
+        if (CollectionUtils.isEmpty(carrierLogisticsCostBOList)) {
+            return carrierLogisticsCostList;
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("[calculateLogisticsCost] carrierLogisticsCostBOList:{}", JsonHelper.collectionToString(carrierLogisticsCostBOList));
         }

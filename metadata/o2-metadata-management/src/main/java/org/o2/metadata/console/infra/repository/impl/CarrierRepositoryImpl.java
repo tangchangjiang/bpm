@@ -1,9 +1,7 @@
 package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
-import org.o2.metadata.console.api.dto.CarrierFreightDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.app.bo.CarrierLogisticsCostBO;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.mapper.CarrierMapper;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
@@ -33,10 +31,5 @@ public class CarrierRepositoryImpl extends BaseRepositoryImpl<Carrier> implement
     @Override
     public List<Carrier> batchSelect(CarrierQueryInnerDTO carrierQueryInnerDTO, Long tenantId) {
         return carrierMapper.batchSelect(carrierQueryInnerDTO, tenantId);
-    }
-
-    @Override
-    public List<CarrierLogisticsCostBO> listCarrierLogisticsCost(CarrierFreightDTO carrierFreightDTO) {
-        return carrierMapper.listCarrierLogisticsCost(carrierFreightDTO);
     }
 }

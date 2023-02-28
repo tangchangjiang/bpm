@@ -2,9 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.apache.ibatis.annotations.Param;
-import org.o2.metadata.console.api.dto.CarrierFreightDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
-import org.o2.metadata.console.app.bo.CarrierLogisticsCostBO;
 import org.o2.metadata.console.infra.entity.Carrier;
 
 import java.util.List;
@@ -32,13 +30,5 @@ public interface CarrierMapper extends BaseMapper<Carrier> {
      * @return list
      */
     List<Carrier> batchSelect(@Param("carrierDTO") CarrierQueryInnerDTO carrierQueryInnerDTO, @Param("tenantId") Long tenantId);
-
-    /**
-     * 获取承运商对应的运费模板信息
-     *
-     * @param carrierFreightDTO 参数
-     * @return 结果
-     */
-    List<CarrierLogisticsCostBO> listCarrierLogisticsCost(CarrierFreightDTO carrierFreightDTO);
 
 }

@@ -62,9 +62,9 @@ public class CarrierInternalController extends BaseController {
     }
 
     @ApiOperation(value = "承运商物流成本计算")
-//    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @Permission(permissionPublic = true)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/calculate-logistics-cost")
+    @Deprecated
     public ResponseEntity<List<CarrierLogisticsCostCO>> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                                @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
         carrierLogisticsCostDTO.setTenantId(organizationId);
@@ -74,8 +74,7 @@ public class CarrierInternalController extends BaseController {
     }
 
     @ApiOperation(value = "查询收货地址是否在承运商的送达范围内")
-//    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @Permission(permissionPublic = true)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/check-delivery-range")
     public ResponseEntity<List<CarrierDeliveryRangeCO>> checkDeliveryRange(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                            @RequestBody CarrierDeliveryRangeDTO carrierDeliveryRangeDTO) {
