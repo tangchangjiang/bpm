@@ -2,10 +2,8 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.api.co.CarrierDeliveryRangeCO;
-import org.o2.metadata.console.api.co.CarrierLogisticsCostCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierDeliveryRangeDTO;
-import org.o2.metadata.console.api.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.Carrier;
@@ -60,15 +58,6 @@ public interface CarrierService {
      * @return map
      */
     Map<String, CarrierCO> importListCarriers(Long organizationId);
-
-    /**
-     * 承运商物流成本计算
-     *
-     * @param carrierLogisticsCostDTO 参数
-     * @return 计算结果
-     */
-    @Deprecated
-    List<CarrierLogisticsCostCO> calculateLogisticsCost(CarrierLogisticsCostDTO carrierLogisticsCostDTO);
 
 
     /**
