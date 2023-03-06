@@ -1,5 +1,6 @@
 package org.o2.metadata.console.api.co;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -9,10 +10,18 @@ import lombok.Data;
  */
 @Data
 public class WarehouseRelAddressCO {
+    @ApiModelProperty("仓库code")
     private String warehouseCode;
+    @ApiModelProperty("仓库类型（门店仓、实体仓）")
     private String warehouseType;
+    @ApiModelProperty("仓库分数")
     private String score;
+    @ApiModelProperty("省")
     private String regionCode;
+    @ApiModelProperty("市")
     private String cityCode;
+    @ApiModelProperty("区")
     private String districtCode;
+    @ApiModelProperty("仓储平台code")
+    private String wmsCode;
 }
