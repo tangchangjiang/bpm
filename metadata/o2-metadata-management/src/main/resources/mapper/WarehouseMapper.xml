@@ -497,7 +497,7 @@
         address.region_code,
         address.city_code,
         address.district_code,
-        pos.platform_code wms_code
+        pos.platform_code
         FROM o2md_warehouse ow
         join o2md_pos pos on ow.pos_id = pos.pos_id
         LEFT JOIN o2md_pos_address address ON address.pos_address_id = pos.address_id AND address.tenant_id =
