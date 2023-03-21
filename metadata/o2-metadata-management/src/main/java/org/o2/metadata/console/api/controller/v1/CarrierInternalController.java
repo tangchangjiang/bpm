@@ -8,10 +8,8 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.co.CarrierCO;
 import org.o2.metadata.console.api.co.CarrierDeliveryRangeCO;
-import org.o2.metadata.console.api.co.CarrierLogisticsCostCO;
 import org.o2.metadata.console.api.co.CarrierMappingCO;
 import org.o2.metadata.console.api.dto.CarrierDeliveryRangeDTO;
-import org.o2.metadata.console.api.dto.CarrierLogisticsCostDTO;
 import org.o2.metadata.console.api.dto.CarrierMappingQueryInnerDTO;
 import org.o2.metadata.console.api.dto.CarrierQueryInnerDTO;
 import org.o2.metadata.console.app.service.CarrierService;
@@ -61,21 +59,8 @@ public class CarrierInternalController extends BaseController {
         return Results.success(carrierService.importListCarriers(organizationId));
     }
 
-    @ApiOperation(value = "承运商物流成本计算")
-//    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @Permission(permissionPublic = true)
-    @PostMapping("/calculate-logistics-cost")
-    public ResponseEntity<List<CarrierLogisticsCostCO>> calculateLogisticsCost(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                                               @RequestBody CarrierLogisticsCostDTO carrierLogisticsCostDTO) {
-        carrierLogisticsCostDTO.setTenantId(organizationId);
-        validObject(carrierLogisticsCostDTO);
-        return Results.success(carrierService.calculateLogisticsCost(carrierLogisticsCostDTO));
-
-    }
-
     @ApiOperation(value = "查询收货地址是否在承运商的送达范围内")
-//    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @Permission(permissionPublic = true)
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/check-delivery-range")
     public ResponseEntity<List<CarrierDeliveryRangeCO>> checkDeliveryRange(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                                            @RequestBody CarrierDeliveryRangeDTO carrierDeliveryRangeDTO) {
