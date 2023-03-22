@@ -179,6 +179,7 @@
         os.active_flag,
         os.online_shop_type,
         os.business_type_code,
+        os.account_number,
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
