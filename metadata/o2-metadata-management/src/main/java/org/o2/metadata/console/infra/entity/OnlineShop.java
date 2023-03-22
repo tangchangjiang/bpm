@@ -181,6 +181,11 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "版本目录主键")
     private Long catalogVersionId;
 
+    @Transient
+    @ApiModelProperty(value = "是否查询户号不为空的网店， 1-不查询，0/null 查询")
+    private Integer accountFlag;
+
+
     //
     // 业务方法(按public protected private顺序排列)
     // ------------------------------------------------------------------------------
