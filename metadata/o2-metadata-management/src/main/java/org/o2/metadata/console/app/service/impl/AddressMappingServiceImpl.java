@@ -43,14 +43,7 @@ import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -210,6 +203,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
+        log.info("address query -> listAddressMappings start:time:{}", System.currentTimeMillis());
         List<AddressMappingCO> list = new ArrayList<>(16);
         if (CollectionUtils.isNotEmpty(addressMappingQueryInts.getAddressMappingInnerList())) {
             list = regionBaseMapping(tenantId, addressMappingQueryInts);
@@ -327,6 +321,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         for (AddressMappingCO co : addressMappingTree) {
             result.put(co.getExternalName(), co);
         }
+        log.info("address query -> listAddressMappings end :time:{}", System.currentTimeMillis());
         return result;
     }
 
