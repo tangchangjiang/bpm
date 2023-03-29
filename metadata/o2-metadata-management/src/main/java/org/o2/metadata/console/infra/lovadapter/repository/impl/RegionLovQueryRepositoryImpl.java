@@ -75,7 +75,9 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
+        log.info("address query -> queryRegionCache start, time:{}", System.currentTimeMillis());
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
+        log.info("address query -> queryRegionCache end, time:{}", System.currentTimeMillis());
         if (regionList.isEmpty() || queryList.isEmpty()) {
             return new ArrayList<>();
         }
@@ -124,7 +126,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE, O2LovConstants.RegionLov.DEFAULT_DATA);
         queryParam.put(O2LovConstants.RegionLov.LANG, lang);
         queryParam.put(O2LovConstants.RegionLov.TENANT_ID, String.valueOf(tenantId));
-
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
                 MetadataCacheConstants.KeyPrefix.getHzeroRegionPrefix(countryCode, lang),
@@ -166,7 +167,9 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = LanguageHelper.language();
         }
+        log.info("address query -> queryRegionCache start, time:{}", System.currentTimeMillis());
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang);
+        log.info("address query -> queryRegionCache end, time:{}", System.currentTimeMillis());
         String regionName = queryLov.getRegionName();
         // 地区名称
         if (StringUtils.isNotEmpty(regionName)) {
