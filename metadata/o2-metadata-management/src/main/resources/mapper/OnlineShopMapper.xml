@@ -179,6 +179,7 @@
         os.active_flag,
         os.online_shop_type,
         os.business_type_code,
+        os.account_number,
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
@@ -231,6 +232,16 @@
             <if test="businessTypeCode != null and businessTypeCode != ''">
                 and os.business_type_code = #{businessTypeCode}
             </if>
+            <choose>
+                <when test="accountNumber != null and accountNumber != ''">
+                    AND os.account_number = #{accountNumber}
+                </when>
+                <otherwise>
+                    <if test="accountFlag != null and accountFlag == 1">
+                        and os.account_number is not null
+                    </if>
+                </otherwise>
+            </choose>
         </where>
         ORDER BY os.online_shop_code
     </select>
