@@ -49,6 +49,14 @@ public interface OnlineShopService {
     Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
     /**
+     * 批量查询全租户网店
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return list
+     */
+    Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
      * 目录版本+目录 批量查询网店
      *
      * @param onlineShopCatalogVersionList 目录版本

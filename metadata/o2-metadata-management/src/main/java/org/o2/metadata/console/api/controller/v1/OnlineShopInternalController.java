@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Map;
@@ -53,6 +52,16 @@ public class OnlineShopInternalController {
                                                                      @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.info("onlineShopQueryInnerDTO:{}", JsonHelper.objectToString(onlineShopQueryInnerDTO));
         return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO, organizationId));
+    }
+
+    @ApiOperation(value = "查询网店（全租户查询）")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/onlineShop-list-all-tenantId")
+    public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShopsAllTenant(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required =
+            true) Long organizationId,
+                                                                     @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        log.info("onlineShopQueryInnerDTO:{}", JsonHelper.objectToString(onlineShopQueryInnerDTO));
+        return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO));
     }
 
     @ApiOperation(value = "目录+目录版本批量查询网店")
