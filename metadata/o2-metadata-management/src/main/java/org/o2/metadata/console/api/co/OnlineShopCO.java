@@ -71,6 +71,9 @@ public class OnlineShopCO {
     @NotNull
     private String onlineShopType;
 
+    @ApiModelProperty(value = "租户Id")
+    private Long tenantId;
+
     /**
      * 网店业务类型
      */

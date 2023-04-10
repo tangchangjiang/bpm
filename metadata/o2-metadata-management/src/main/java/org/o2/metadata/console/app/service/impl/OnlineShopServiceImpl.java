@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
@@ -220,7 +221,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
-        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, tenantId));
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, tenantId,
+                BaseConstants.Flag.NO));
         if (voList.isEmpty()) {
             return map;
         }
@@ -233,7 +235,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
-        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO));
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, null, BaseConstants.Flag.YES));
         if (voList.isEmpty()) {
             return map;
         }

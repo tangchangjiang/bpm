@@ -41,7 +41,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         OnlineShopQueryInnerDTO query = new OnlineShopQueryInnerDTO();
         query.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
 
-        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query, tenantId);
+        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query, tenantId, BaseConstants.Flag.NO);
         if (list.isEmpty()) {
             return;
         }

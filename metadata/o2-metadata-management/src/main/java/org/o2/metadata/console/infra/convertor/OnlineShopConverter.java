@@ -49,6 +49,7 @@ public class OnlineShopConverter {
         co.setAccountNumber(onlineShop.getAccountNumber());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
         co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
+        co.setTenantId(onlineShop.getTenantId());
         return co;
     }
 
