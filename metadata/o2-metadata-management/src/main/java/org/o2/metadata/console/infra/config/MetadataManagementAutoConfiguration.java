@@ -25,6 +25,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String ADDRESS_MAPPING = "Address Mapping";
     public static final String CARRIER = "Carrier";
+    public static final String CARRIER_SITE = "Carrier Site";
     public static final String CARRIER_DELIVERY_RANGE = "Carrier Delivery Range";
     public static final String CARRIER_MAPPING = "Carrier Mapping";
     public static final String COUNTRY = "Country";
@@ -53,6 +54,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER, "承运商管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_DELIVERY_RANGE, "承运商送达范围管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_MAPPING, "承运商匹配"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_SITE, "承运商匹配（平台层）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.COUNTRY, "国家定义"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.NEIGHBORING_REGION, "临近省管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP, "网店信息管理"))

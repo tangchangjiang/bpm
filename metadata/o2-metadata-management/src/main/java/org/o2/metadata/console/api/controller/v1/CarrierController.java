@@ -48,7 +48,7 @@ public class CarrierController extends BaseController {
                                               final PageRequest pageRequest) {
         carrier.setTenantId(organizationId);
         final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
-                () -> carrierRepository.listCarrier(carrier));
+                () -> carrierRepository.listCarrier(carrier, BaseConstants.Flag.NO));
         return Results.success(list);
     }
 

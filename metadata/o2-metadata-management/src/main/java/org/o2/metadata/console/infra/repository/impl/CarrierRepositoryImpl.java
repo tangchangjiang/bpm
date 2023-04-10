@@ -24,8 +24,8 @@ public class CarrierRepositoryImpl extends BaseRepositoryImpl<Carrier> implement
     }
 
     @Override
-    public List<Carrier> listCarrier(final Carrier carrier) {
-        return carrierMapper.listCarrier(carrier);
+    public List<Carrier> listCarrier(final Carrier carrier, Integer siteFlag) {
+        return carrierMapper.listCarrier(carrier, siteFlag);
     }
 
     @Override
