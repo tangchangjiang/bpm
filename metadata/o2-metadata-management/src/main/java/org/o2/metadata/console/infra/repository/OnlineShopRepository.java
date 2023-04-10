@@ -62,6 +62,13 @@ public interface OnlineShopRepository extends BaseRepository<OnlineShop> {
      */
     List<OnlineShop> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
+    /**
+     * 批量查询网店（全租户查询）
+     * @param onlineShopQueryInnerDTO 网店
+     * @return list
+     */
+    List<OnlineShop> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
 
     /**
      * 目录+ 目录版 批量查询网店

@@ -2,6 +2,7 @@ package org.o2.metadata.management.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.choerodon.core.domain.Page;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.helper.O2ResponseUtils;
 import org.o2.metadata.management.client.domain.co.OnlineShopCO;
@@ -62,6 +63,19 @@ public class OnlineShopClient {
      */
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShops(onlineShopQueryInnerDTO, tenantId), new TypeReference<Map<String,
+                OnlineShopCO>>() {
+        });
+    }
+
+    /**
+     * 批量查询网店-全租户查询
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
+     */
+    public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        // 传递默认租户，无使用
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopsAllTenant(onlineShopQueryInnerDTO, BaseConstants.DEFAULT_TENANT_ID), new TypeReference<Map<String,
                 OnlineShopCO>>() {
         });
     }

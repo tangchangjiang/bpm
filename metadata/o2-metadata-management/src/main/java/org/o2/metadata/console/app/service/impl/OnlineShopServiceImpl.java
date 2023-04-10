@@ -28,7 +28,10 @@ import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 网店应用服务默认实现
@@ -218,6 +221,19 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId) {
         Map<String, OnlineShopCO> map = new HashMap<>(16);
         List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO, tenantId));
+        if (voList.isEmpty()) {
+            return map;
+        }
+        for (OnlineShopCO co : voList) {
+            map.put(co.getOnlineShopCode(), co);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        Map<String, OnlineShopCO> map = new HashMap<>(16);
+        List<OnlineShopCO> voList = OnlineShopConverter.poToCoListObjects(onlineShopRepository.listOnlineShops(onlineShopQueryInnerDTO));
         if (voList.isEmpty()) {
             return map;
         }

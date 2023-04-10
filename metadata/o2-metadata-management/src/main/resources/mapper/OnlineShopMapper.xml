@@ -323,6 +323,83 @@
             </if>
         </where>
     </select>
+
+    <select id="listOnlineShopsAllTenant" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        select
+        tl.online_shop_name,
+        online.online_shop_code,
+        online.catalog_code,
+        oct.catalog_name,
+        online.catalog_version_code,
+        ocvt.catalog_version_name,
+        online.active_flag,
+        online.platform_code,
+        platl.platform_name,
+        online.platform_shop_code,
+        online.picked_up_flag,
+        online.returned_flag,
+        online.online_shop_type,
+        online.exchanged_flag,
+        online.enable_split_flag,
+        online.sourced_flag,
+        online.is_default,
+        online.online_shop_type,
+        online.business_type_code,
+        online.account_number
+        from o2md_online_shop online
+        inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = online.tenant_id
+        inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id
+        = online.tenant_id and oc.catalog_id = ocv.catalog_id
+        left join o2md_platform plat on plat.platform_code = online.platform_code and plat.tenant_id = online.tenant_id
+        left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang} and
+        online.tenant_id = plat.tenant_id
+        left join o2md_online_shop_tl tl on online.online_shop_id = tl.online_shop_id and tl.lang = #{lang} and
+        tl.tenant_id = online.tenant_id
+        left join o2md_catalog_tl oct on oct.catalog_id = oc.catalog_id and oct.lang = #{lang} and oct.tenant_id =
+        online.tenant_id
+        left join o2md_catalog_version_tl ocvt on ocvt.catalog_version_id = ocv.catalog_version_id and ocvt.lang =
+        #{lang} and ocvt.tenant_id = online.tenant_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND online.tenant_id = #{tenantId}
+                </when>
+            </choose>
+            <if test="onlineShopDTO.onlineShopCodes != null and onlineShopDTO.onlineShopCodes.size > 0">
+                and
+                <foreach collection="onlineShopDTO.onlineShopCodes" item="code" open="(" separator="or" close=")">
+                    online.online_shop_code LIKE CONCAT(#{code},'%')
+                </foreach>
+            </if>
+            <if test="onlineShopDTO.platformShopCodes != null and onlineShopDTO.platformShopCodes.size > 0">
+                and online.platform_shop_code in
+                <foreach collection="onlineShopDTO.platformShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="onlineShopDTO.platformCode != null">
+                and online.platform_code IN
+                <foreach collection="onlineShopDTO.platformCode.split(',')" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''">
+                and online.business_type_code = #{onlineShopDTO.businessTypeCode}
+            </if>
+            <if test="onlineShopDTO.onlineShopType != null">
+                and online.online_shop_type = #{onlineShopDTO.onlineShopType}
+            </if>
+            <if test="onlineShopDTO.onlineShopNames != null and onlineShopDTO.onlineShopNames.size() > 0">
+                and
+                <foreach item="name" index="index" collection="onlineShopDTO.onlineShopNames" open="(" separator="or"
+                         close=")">
+                    online.online_shop_name LIKE CONCAT('%',#{name},'%')
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <select id="listOnlineShopByCatalogCodes" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select online.online_shop_id,
