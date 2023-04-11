@@ -54,10 +54,10 @@ public class OnlineShopInternalController {
         return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO, organizationId));
     }
 
-    @ApiOperation(value = "查询网店（全租户查询）")
+    @ApiOperation(value = "查询网店（平台层查询）")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/onlineShop-list-all-tenantId")
-    public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShopsAllTenant(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required =
+    @PostMapping("/platform-onlineShop-list")
+    public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShopsOfPlatform(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required =
             true) Long organizationId,
                                                                      @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.info("onlineShopQueryInnerDTO:{}", JsonHelper.objectToString(onlineShopQueryInnerDTO));

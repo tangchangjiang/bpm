@@ -68,14 +68,14 @@ public class OnlineShopClient {
     }
 
     /**
-     * 批量查询网店-全租户查询
+     * 批量查询网店-平台层查询
      *
      * @param onlineShopQueryInnerDTO 网店
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         // 传递默认租户，无使用
-        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopsAllTenant(onlineShopQueryInnerDTO, BaseConstants.DEFAULT_TENANT_ID), new TypeReference<Map<String,
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopsOfPlatform(onlineShopQueryInnerDTO, BaseConstants.DEFAULT_TENANT_ID), new TypeReference<Map<String,
                 OnlineShopCO>>() {
         });
     }
