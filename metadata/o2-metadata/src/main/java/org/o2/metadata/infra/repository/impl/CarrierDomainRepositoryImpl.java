@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.repository.impl;
 
+import org.o2.core.helper.QueryFallbackHelper;
 import org.o2.metadata.domain.carrier.domain.CarrierDO;
 import org.o2.metadata.domain.carrier.repository.CarrierDomainRepository;
 import org.o2.metadata.infra.convertor.CarrierConverter;
@@ -24,6 +25,6 @@ public class CarrierDomainRepositoryImpl implements CarrierDomainRepository {
 
     @Override
     public List<CarrierDO> listCarriers(Long tenantId) {
-        return CarrierConverter.poToDoListObjects(carrierRedis.listCarriers(tenantId));
+        return CarrierConverter.poToDoListObjects(QueryFallbackHelper.siteFallback(tenantId, carrierRedis::listCarriers));
     }
 }

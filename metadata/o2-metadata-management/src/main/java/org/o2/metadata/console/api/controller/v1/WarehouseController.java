@@ -81,6 +81,8 @@ public class WarehouseController extends BaseController {
                                   final Warehouse warehouse,
                                   @ApiIgnore final PageRequest pageRequest) {
         warehouse.setTenantId(organizationId);
+        // 租户层查询
+        warehouse.setSiteFlag(BaseConstants.Flag.NO);
         final Page<Warehouse> posList = PageHelper.doPage(pageRequest,
                 () -> warehouseRepository.listWarehouseByCondition(warehouse));
         return Results.success(posList);

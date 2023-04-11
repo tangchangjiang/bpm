@@ -306,6 +306,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         Warehouse query = new Warehouse();
         query.setTenantId(sourceTenantId);
         query.setWarehouseCodes(warehouseCodes);
+        // 租户层查询
+        query.setSiteFlag(BaseConstants.Flag.NO);
         List<Warehouse> list = warehouseRepository.listWarehouseByCondition(query);
         List<String> posCodes = new ArrayList<>();
         for (Warehouse warehouse : list) {
@@ -524,6 +526,8 @@ public class ShopTenantInitServiceImpl implements ShopTenantInitService {
         Warehouse warehouse = new Warehouse();
         warehouse.setTenantId(sourceTenantId);
         warehouse.setWarehouseCodes(warehouseCodes);
+        // 租户层查询
+        warehouse.setSiteFlag(BaseConstants.Flag.NO);
         List<Warehouse> list = warehouseRepository.listWarehouseByCondition(warehouse);
         List<String> posCodes = new ArrayList<>();
         for (Warehouse warehouse1 : list) {

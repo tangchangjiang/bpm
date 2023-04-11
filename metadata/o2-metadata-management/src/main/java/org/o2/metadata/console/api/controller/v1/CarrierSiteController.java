@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 承运商 管理 API
+ * 平台层 承运商 管理 API
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */

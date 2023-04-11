@@ -34,6 +34,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String ONLINE_SHOP_INF_AUTH = "Online Shop API Auth";
     public static final String ONLINE_SHOP_WAREHOUSE_REL = "Online Shop Warehouse Relationship";
     public static final String WAREHOUSE = "Warehouse Management";
+    public static final String WAREHOUSE_SITE = "Warehouse Management Site";
     public static final String POS_ADDRESS = "Pos Address";
     public static final String POS = "POS (Point Of Service)";
     public static final String POS_REL_CARRIER = "Pos Rel Carrier";
@@ -61,6 +62,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_INF_AUTH, "网店接口权限"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_WAREHOUSE_REL, "网店关联仓库管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.WAREHOUSE, "仓库管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.WAREHOUSE_SITE, "平台层仓库管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS_ADDRESS, "服务点地址管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS, "服务点信息管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS_REL_CARRIER, "服务点关联承运商管理"))
