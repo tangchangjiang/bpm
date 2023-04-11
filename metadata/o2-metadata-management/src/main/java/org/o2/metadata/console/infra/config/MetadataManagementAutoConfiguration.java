@@ -39,6 +39,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String POS = "POS (Point Of Service)";
     public static final String POS_REL_CARRIER = "Pos Rel Carrier";
     public static final String REGION = "Region";
+    public static final String REGION_SITE = "Region Site";
     public static final String SYSTEM_PARAMETER = "SYSTEM_PARAMETER";
     public static final String SYSTEM_PARAMETER_VALUE = "SYSTEM_PARAMETER_VALUE";
     public static final String FREIGHT_TEMPLATE = "Freight Template";
@@ -67,6 +68,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS, "服务点信息管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS_REL_CARRIER, "服务点关联承运商管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION, "区域定义"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.REGION_SITE, "区域定义平台层"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER, "系统参数"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_VALUE, "系统参数值"))
 
