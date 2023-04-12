@@ -56,7 +56,9 @@ public class SystemParamValueController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<SystemParamValue>> listSystemParamValues(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
-        systemParamValue.setTenantId(organizationId);
+        if (null == systemParamValue.getTenantId()) {
+            systemParamValue.setTenantId(organizationId);
+        }
         Page<SystemParamValue> page = PageHelper.doPage(pageRequest, () -> systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class)
                 .andWhere(Sqls.custom().andEqualTo(SystemParamValue.FIELD_TENANT_ID, systemParamValue.getTenantId())
                         .andLike(SystemParamValue.FIELD_PARAM_VALUE, systemParamValue.getParamValue(), true)
@@ -70,7 +72,6 @@ public class SystemParamValueController extends BaseController {
     @GetMapping("/{valueId}")
     public ResponseEntity<SystemParamValue> getSystemParamValue(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
         SystemParamValue condition = new SystemParamValue();
-        condition.setTenantId(organizationId);
         condition.setValueId(valueId);
         SystemParamValue systemParamValue = systemParamValueRepository.selectOne(condition);
         return Results.success(systemParamValue);
@@ -110,24 +111,33 @@ public class SystemParamValueController extends BaseController {
     @ApiOperation(value = "获取KV系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}/KV")
-    public ResponseEntity<String> getSysValueByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
-        String sysValueByParam = systemParamValueService.getSysValueByParam(paramCode, organizationId);
+    public ResponseEntity<String> getSysValueByParam(@PathVariable("paramCode") String paramCode, Long tenantId, @PathVariable("organizationId") Long organizationId) {
+        if (null == tenantId) {
+            tenantId = organizationId;
+        }
+        String sysValueByParam = systemParamValueService.getSysValueByParam(paramCode, tenantId);
         return Results.success(sysValueByParam);
     }
 
     @ApiOperation(value = "获取List系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/{paramCode}/LIST")
-    public ResponseEntity<List<String>> getSysListByParam(@PathVariable("paramCode") String paramCode, @PathVariable("organizationId") Long organizationId) {
-        List<String> sysListByParam = systemParamValueService.getSysListByParam(paramCode, organizationId);
+    public ResponseEntity<List<String>> getSysListByParam(@PathVariable("paramCode") String paramCode, Long tenantId, @PathVariable("organizationId") Long organizationId) {
+        if (null == tenantId) {
+            tenantId = organizationId;
+        }
+        List<String> sysListByParam = systemParamValueService.getSysListByParam(paramCode, tenantId);
         return Results.success(sysListByParam);
     }
 
     @ApiOperation(value = "获取Map系统参数值")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @GetMapping("/get-map-value")
-    public ResponseEntity<Map<String, String>> getSysMapByParam(String paramCode, @PathVariable("organizationId") Long organizationId) {
-        Map<String, String> sysMapByParam = systemParamValueService.getSysMapByParam(paramCode, organizationId);
+    public ResponseEntity<Map<String, String>> getSysMapByParam(String paramCode, Long tenantId, @PathVariable("organizationId") Long organizationId) {
+        if (null == tenantId) {
+            tenantId = organizationId;
+        }
+        Map<String, String> sysMapByParam = systemParamValueService.getSysMapByParam(paramCode, tenantId);
         return Results.success(sysMapByParam);
     }
 

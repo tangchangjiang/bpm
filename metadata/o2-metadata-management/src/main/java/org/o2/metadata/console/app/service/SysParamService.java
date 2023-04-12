@@ -54,11 +54,4 @@ public interface SysParamService {
      */
     ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
 
-    /**
-     * 查询系统参数
-     *
-     * @param systemParameter 查询条件
-     * @return 系统参数
-     */
-    SystemParameter findOne(SystemParameter systemParameter);
 }

@@ -25,6 +25,6 @@ public class CarrierDomainRepositoryImpl implements CarrierDomainRepository {
 
     @Override
     public List<CarrierDO> listCarriers(Long tenantId) {
-        return CarrierConverter.poToDoListObjects(QueryFallbackHelper.siteFallback(tenantId, carrierRedis::listCarriers));
+        return CarrierConverter.poToDoListObjects(QueryFallbackHelper.siteFallback(tenantId, carrierRedis::listCarriers, true));
     }
 }

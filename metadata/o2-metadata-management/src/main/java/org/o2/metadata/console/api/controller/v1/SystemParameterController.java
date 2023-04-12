@@ -67,11 +67,14 @@ public class SystemParameterController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("/{paramId}")
-    public ResponseEntity<SystemParameter> detail(@PathVariable Long paramId, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<SystemParameter> detail(@PathVariable Long paramId, Long tenantId, @PathVariable("organizationId") Long organizationId) {
         SystemParameter condition = new SystemParameter();
-        condition.setTenantId(organizationId);
+        if (null == tenantId) {
+            tenantId = organizationId;
+        }
+        condition.setTenantId(tenantId);
         condition.setParamId(paramId);
-        SystemParameter systemParameter = systemParameterRepository.selectOne(condition);
+        SystemParameter systemParameter = systemParameterRepository.findOne(condition);
         return Results.success(systemParameter);
     }
 
@@ -112,6 +115,6 @@ public class SystemParameterController extends BaseController {
     @GetMapping("find")
     public ResponseEntity<SystemParameter> findOne(SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
-        return Results.success(systemParameterRepository.selectOne(systemParameter));
+        return Results.success(systemParameterRepository.findOne(systemParameter));
     }
 }
