@@ -68,9 +68,8 @@ public interface OnlineShopRemoteService {
      * @param onlineShopQueryInnerDTO 网店
      * @return map
      */
-    @PostMapping("/{organizationId}/online-shops-internal/platform-onlineShop-list")
-    ResponseEntity<String> listOnlineShopsOfPlatform(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO,
-                                           @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+    @PostMapping("/online-shops-internal/onlineShop-list-site")
+    ResponseEntity<String> listOnlineShopsOfSite(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 
     /**
      * 批量查询网店
