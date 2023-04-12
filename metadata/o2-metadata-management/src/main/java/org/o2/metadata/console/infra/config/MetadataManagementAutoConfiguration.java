@@ -42,6 +42,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String REGION = "Region";
     public static final String REGION_SITE = "Region Site";
     public static final String SYSTEM_PARAMETER = "SYSTEM_PARAMETER";
+    public static final String SYSTEM_PARAMETER_SITE = "SYSTEM_PARAMETER_SITE";
     public static final String SYSTEM_PARAMETER_VALUE = "SYSTEM_PARAMETER_VALUE";
     public static final String FREIGHT_TEMPLATE = "Freight Template";
     public static final String FREIGHT_TEMPLATE_DETAIL = "Freight Template Detail";
@@ -72,6 +73,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION, "区域定义"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION_SITE, "区域定义平台层"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER, "系统参数"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_SITE, "系统参数（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_VALUE, "系统参数值"))
 
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE, "运费模板管理"))

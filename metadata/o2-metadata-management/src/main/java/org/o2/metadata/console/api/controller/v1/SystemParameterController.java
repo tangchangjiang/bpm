@@ -43,8 +43,8 @@ import io.choerodon.swagger.annotation.Permission;
 @Api(tags = MetadataManagementAutoConfiguration.SYSTEM_PARAMETER)
 public class SystemParameterController extends BaseController {
 
-    private SystemParameterRepository systemParameterRepository;
-    private SysParamService sysParamService;
+    private final SystemParameterRepository systemParameterRepository;
+    private final SysParamService sysParamService;
 
     public SystemParameterController(SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
         this.systemParameterRepository = systemParameterRepository;

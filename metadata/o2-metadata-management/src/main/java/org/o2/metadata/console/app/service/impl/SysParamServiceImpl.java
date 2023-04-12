@@ -122,4 +122,17 @@ public class SysParamServiceImpl implements SysParamService {
         return co;
     }
 
+    @Override
+    public SystemParameter findOne(SystemParameter systemParameter) {
+        if (null == systemParameter.getTenantId()) {
+            systemParameter.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
+        }
+        SystemParameter sysParam = systemParameterRepository.selectOne(systemParameter);
+        if (null == sysParam && !BaseConstants.DEFAULT_TENANT_ID.equals(systemParameter.getTenantId())) {
+            systemParameter.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
+            sysParam = systemParameterRepository.selectOne(systemParameter);
+        }
+        return sysParam;
+    }
+
 }
