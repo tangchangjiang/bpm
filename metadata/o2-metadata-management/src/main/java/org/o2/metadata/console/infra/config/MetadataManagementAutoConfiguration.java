@@ -31,6 +31,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String COUNTRY = "Country";
     public static final String NEIGHBORING_REGION = "Neighboring Region";
     public static final String ONLINE_SHOP = "Online Shop";
+    public static final String ONLINE_SHOP_SITE = "Online Shop Site";
     public static final String ONLINE_SHOP_INF_AUTH = "Online Shop API Auth";
     public static final String ONLINE_SHOP_WAREHOUSE_REL = "Online Shop Warehouse Relationship";
     public static final String WAREHOUSE = "Warehouse Management";
@@ -56,14 +57,15 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER, "承运商管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_DELIVERY_RANGE, "承运商送达范围管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_MAPPING, "承运商匹配"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_SITE, "承运商匹配（平台层）"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_SITE, "承运商匹配（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.COUNTRY, "国家定义"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.NEIGHBORING_REGION, "临近省管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP, "网店信息管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_SITE, "网店信息（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_INF_AUTH, "网店接口权限"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_WAREHOUSE_REL, "网店关联仓库管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.WAREHOUSE, "仓库管理"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.WAREHOUSE_SITE, "平台层仓库管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.WAREHOUSE_SITE, "仓库管理（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS_ADDRESS, "服务点地址管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS, "服务点信息管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.POS_REL_CARRIER, "服务点关联承运商管理"))

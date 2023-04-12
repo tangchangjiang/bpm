@@ -18,7 +18,7 @@ public interface CarrierMapper extends BaseMapper<Carrier> {
      * 查询承运商
      *
      * @param carrier 承运商
-     * @param siteFlag 是否平台层查询
+     * @param siteFlag 是否站点级查询
      * @return 承运商列表
      */
     List<Carrier> listCarrier(@Param("carrier") Carrier carrier, @Param("siteFlag") Integer siteFlag);

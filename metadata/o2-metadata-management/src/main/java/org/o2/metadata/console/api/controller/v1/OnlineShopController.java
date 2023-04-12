@@ -67,6 +67,8 @@ public class OnlineShopController extends BaseController {
                                                                @ApiIgnore PageRequest pageRequest) {
         onlineShop.setTenantId(organizationId);
         onlineShop.setActiveFlag(1);
+        // 租户层查询
+        onlineShop.setSiteFlag(BaseConstants.Flag.NO);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
     }
 
@@ -76,6 +78,8 @@ public class OnlineShopController extends BaseController {
     public ResponseEntity<Page<OnlineShop>> listAllShops(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                          final OnlineShop onlineShop, @ApiIgnore PageRequest pageRequest) {
         onlineShop.setTenantId(organizationId);
+        // 租户层查询
+        onlineShop.setSiteFlag(BaseConstants.Flag.NO);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
     }
 

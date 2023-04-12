@@ -15,6 +15,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2020-06-03 09:50
  **/
 public interface OnlineShopService {
+
     /**
      * 条件查询
      *

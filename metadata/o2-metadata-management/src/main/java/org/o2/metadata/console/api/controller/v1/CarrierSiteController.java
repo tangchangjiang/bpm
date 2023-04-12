@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 平台层 承运商 管理 API
+ * 站点级 承运商 管理 API
  *
  * @author tingting.wang@hand-china.com 2019-3-25
  */
@@ -35,7 +35,7 @@ public class CarrierSiteController extends BaseController {
         this.carrierRepository = carrierRepository;
     }
 
-    @ApiOperation(value = "承运商列表")
+    @ApiOperation(value = "承运商列表 站点级")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/page-list")
@@ -46,7 +46,7 @@ public class CarrierSiteController extends BaseController {
         return Results.success(list);
     }
 
-    @ApiOperation(value = "承运商明细")
+    @ApiOperation(value = "承运商明细 站点级")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/detail")
