@@ -37,7 +37,9 @@ public class SystemParameterDomainServiceImpl implements SystemParameterDomainSe
             List<String> selectedParamCodes = sysParams.stream().map(SystemParameterDO::getParamCode).collect(Collectors.toList());
             paramCodes.removeIf(selectedParamCodes::contains);
         }
-        sysParams.addAll(systemParameterDomainRepository.listSystemParameters(paramCodes, BaseConstants.DEFAULT_TENANT_ID));
+        if (CollectionUtils.isNotEmpty(paramCodes)) {
+            sysParams.addAll(systemParameterDomainRepository.listSystemParameters(paramCodes, BaseConstants.DEFAULT_TENANT_ID));
+        }
         return sysParams;
     }
 }

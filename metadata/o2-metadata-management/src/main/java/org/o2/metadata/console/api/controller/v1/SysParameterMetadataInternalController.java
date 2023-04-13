@@ -30,7 +30,7 @@ import java.util.Map;
 @RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {
 
-    private SysParamService sysParamService;
+    private final SysParamService sysParamService;
 
     public SysParameterMetadataInternalController(SysParamService sysParamService) {
         this.sysParamService = sysParamService;

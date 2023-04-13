@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.redis.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -66,41 +68,72 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         }
         //map类型
         systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId, paramCode));
+        // 没有查询到系统参数时，返回null，避免没有执行0租户兜底逻辑
+        if (CollectionUtils.isEmpty(systemParameter.getSetSystemParamValue())) {
+            return null;
+        }
         return systemParameter;
     }
 
     @Override
     public List<SystemParameter> listSystemParameters(List<String> paramCodeList, Long tenantId) {
+        // doList：查询结果，如果paramCode没有查询到对应的值，则不添加到doList，避免无法执行0租户兜底
         List<SystemParameter> doList = new ArrayList<>();
         String key = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.KV);
         List<String> list = redisCacheClient.<String, String>opsForHash().multiGet(key, paramCodeList);
-        if (CollectionUtils.isNotEmpty(list) && null != list.get(0)) {
+        if (CollectionUtils.isNotEmpty(list)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
+                String value = list.get(i);
+                if (StringUtils.isBlank(value)) {
+                    continue;
+                }
                 SystemParameter systemParameter = new SystemParameter();
                 systemParameter.setParamCode(paramCodeList.get(i));
-                systemParameter.setDefaultValue(list.get(i));
+                systemParameter.setDefaultValue(value);
                 doList.add(systemParameter);
             }
+        }
+        // 已经查询到值的系统参数
+        List<String> selectedParamCodes = doList.stream().map(SystemParameter::getParamCode).collect(Collectors.toList());
+        // 过滤出还未查询到值的系统参数，如果都已查询到对应的值，则直接返回结果
+        paramCodeList.removeIf(selectedParamCodes::contains);
+        if (CollectionUtils.isEmpty(paramCodeList)) {
             return doList;
         }
+
         String keySet = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         List<String> listSet = redisCacheClient.<String, String>opsForHash().multiGet(keySet, paramCodeList);
-        if (CollectionUtils.isNotEmpty(listSet) && null != listSet.get(0)) {
+        if (CollectionUtils.isNotEmpty(listSet)) {
             for (int i = 0; i < paramCodeList.size(); i++) {
+                String value = listSet.get(i);
+                if (StringUtils.isBlank(value)) {
+                    continue;
+                }
                 SystemParameter systemParameter = new SystemParameter();
                 systemParameter.setParamCode(paramCodeList.get(i));
-                List<SystemParamValue> values = JsonHelper.stringToArray(listSet.get(i), SystemParamValue.class);
+                List<SystemParamValue> values = JsonHelper.stringToArray(value, SystemParamValue.class);
                 Set<SystemParamValue> set = new HashSet<>(16);
                 set.addAll(values);
                 systemParameter.setSetSystemParamValue(set);
                 doList.add(systemParameter);
             }
+        }
+        // 已经查询到值的系统参数
+        selectedParamCodes = doList.stream().map(SystemParameter::getParamCode).collect(Collectors.toList());
+        // 过滤出还未查询到值的系统参数，如果都已查询到对应的值，则直接返回结果
+        paramCodeList.removeIf(selectedParamCodes::contains);
+        if (CollectionUtils.isEmpty(paramCodeList)) {
             return doList;
         }
+
         for (String paramCode : paramCodeList) {
+            Set<SystemParamValue> systemParamValues = listSystemParamValue(tenantId, paramCode);
+            if (CollectionUtils.isEmpty(systemParamValues)) {
+                continue;
+            }
             SystemParameter systemParameter = new SystemParameter();
             systemParameter.setParamCode(paramCode);
-            systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId, paramCode));
+            systemParameter.setSetSystemParamValue(systemParamValues);
             doList.add(systemParameter);
         }
         return doList;
