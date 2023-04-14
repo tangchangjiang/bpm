@@ -25,4 +25,12 @@ public interface SystemParameterRepository extends BaseRepository<SystemParamete
      * @return list
      */
     List<SystemParameter> queryInitData(Long tenantId);
+
+    /**
+     * 查询系统参数
+     *
+     * @param systemParameter 查询条件
+     * @return 系统参数
+     */
+    SystemParameter findOne(SystemParameter systemParameter);
 }

@@ -185,6 +185,13 @@ public class OnlineShop extends AuditDomain {
     @ApiModelProperty(value = "是否查询户号不为空的网店， 1-不查询，0/null 查询")
     private Integer accountFlag;
 
+    /**
+     * 是否站点级查询:0-否，1-是
+     */
+    @Transient
+    @ApiModelProperty("是否站点级查询")
+    private Integer siteFlag;
+
 
     //
     // 业务方法(按public protected private顺序排列)

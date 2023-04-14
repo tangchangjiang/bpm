@@ -387,11 +387,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<Warehouse> selectByCondition(Warehouse query) {
-        return warehouseRepository.listWarehouseByCondition(query);
-    }
-
-    @Override
     public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
         return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehousesByPosCode(posCodes, tenantId));
     }

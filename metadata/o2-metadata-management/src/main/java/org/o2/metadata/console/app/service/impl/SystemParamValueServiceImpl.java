@@ -115,7 +115,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
         SystemParameter queryParam = new SystemParameter();
         queryParam.setParamId(systemParamValue.getParamId());
         queryParam.setTenantId(tenantId);
-        return systemParameterRepository.selectOne(queryParam);
+        return systemParameterRepository.findOne(queryParam);
     }
 
     /**

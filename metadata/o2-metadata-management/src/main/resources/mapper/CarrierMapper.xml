@@ -30,39 +30,55 @@
                c.priority,
                c.tenant_id
         FROM o2md_carrier c
-                     left join o2md_carrier_tl ct
-                on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = #{tenantId}
+                left join o2md_carrier_tl ct
+                on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = c.tenant_id
                 where 1 = 1
-        <choose>
-            <when test="tenantId != null">
-                and c.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        <if test="carrierId != null">
-            and c.carrier_id = #{carrierId}
+        <if test="siteFlag != null and siteFlag == 0">
+            <choose>
+                <when test="carrier.tenantId != null">
+                    and (c.tenant_id = #{carrier.tenantId} OR c.tenant_id = 0)
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
         </if>
-        <if test="carrierCode != null and carrierCode != ''">
-            <bind name="carrierCodeLike" value="'%' + carrierCode + '%'"/>
+        <if test="carrier.carrierId != null">
+            and c.carrier_id = #{carrier.carrierId}
+        </if>
+        <if test="carrier.carrierCode != null and carrier.carrierCode != ''">
+            <bind name="carrierCodeLike" value="'%' + carrier.carrierCode + '%'"/>
             and c.carrier_code like #{carrierCodeLike}
         </if>
-        <if test="carrierName != null and carrierName != ''">
-            <bind name="carrierNameLike" value="'%' + carrierName + '%'"/>
+        <if test="carrier.carrierName != null and carrier.carrierName != ''">
+            <bind name="carrierNameLike" value="'%' + carrier.carrierName + '%'"/>
             and c.carrier_name like #{carrierNameLike}
         </if>
-        <if test="carrierTypeCode != null and carrierTypeCode != ''">
-            and c.carrier_type_code = #{carrierTypeCode}
+        <if test="carrier.carrierTypeCode != null and carrier.carrierTypeCode != ''">
+            and c.carrier_type_code = #{carrier.carrierTypeCode}
         </if>
-        <if test="carrierCodes != null and carrierCodes.size() > 0">
+        <if test="carrier.carrierCodes != null and carrier.carrierCodes.size() > 0">
             and c.carrier_code IN
             <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
                 #{code}
             </foreach>
         </if>
-        <if test="activeFlag != null">
-            and c.active_flag = #{activeFlag}
+        <if test="carrier.activeFlag != null">
+            and c.active_flag = #{carrier.activeFlag}
+        </if>
+        /* 去重 */
+        <if test="carrier.tenantId != null and carrier.tenantId != 0">
+            AND c.carrier_id NOT IN (
+                SELECT c1.carrier_id
+                FROM o2md_carrier c1
+                WHERE c1.tenant_id = 0
+                AND EXISTS(
+                    SELECT 1
+                    FROM o2md_carrier c2
+                    WHERE c1.carrier_code = c2.carrier_code
+                    AND c2.tenant_id = #{carrier.tenantId}
+                )
+            )
         </if>
     </select>
     <select id="batchSelect" resultType="org.o2.metadata.console.infra.entity.Carrier">
@@ -71,6 +87,7 @@
                c.carrier_type_code,
                c.active_flag,
                c.priority,
+               c.tenant_id,
                tl.carrier_name
         FROM o2md_carrier c
                      left join o2md_carrier_tl tl

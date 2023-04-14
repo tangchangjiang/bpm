@@ -203,4 +203,11 @@ public class Warehouse extends AuditDomain {
     @Transient
     private String platformName;
 
+    /**
+     * 是否平台层查询：0-租户层，1平台层
+     */
+    @ApiModelProperty(value = "是否平台层查询")
+    @Transient
+    private Integer siteFlag;
+
 }

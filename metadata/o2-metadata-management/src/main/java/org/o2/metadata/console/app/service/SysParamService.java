@@ -53,4 +53,5 @@ public interface SysParamService {
      * @return vo
      */
     ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
+
 }

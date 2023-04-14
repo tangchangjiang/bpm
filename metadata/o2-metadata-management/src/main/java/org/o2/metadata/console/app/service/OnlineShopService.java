@@ -15,6 +15,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2020-06-03 09:50
  **/
 public interface OnlineShopService {
+
     /**
      * 条件查询
      *
@@ -49,7 +50,7 @@ public interface OnlineShopService {
     Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
     /**
-     * 批量查询全租户网店
+     * 批量查询网店（平台层查询）
      *
      * @param onlineShopQueryInnerDTO 网店
      * @return list

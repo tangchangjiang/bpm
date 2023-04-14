@@ -183,20 +183,22 @@
         plat.tenant_id,
         platl.platform_name
         from o2md_online_shop os
-        inner join o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = #{tenantId}
+        inner join o2md_platform plat on plat.platform_code = os.platform_code and plat.tenant_id = os.tenant_id
         left join o2md_platform_tl platl on plat.platform_id = platl.platform_id and platl.lang = #{lang} and
-        platl.tenant_id = #{tenantId}
+        platl.tenant_id = os.tenant_id
         left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang} and
-        ost.tenant_id = #{tenantId}
+        ost.tenant_id = os.tenant_id
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    AND os.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
+            <if test="siteFlag != null and siteFlag == 0">
+                <choose>
+                    <when test="tenantId != null">
+                        AND os.tenant_id = #{tenantId}
+                    </when>
+                    <otherwise>
+                        AND 1 = 0
+                    </otherwise>
+                </choose>
+            </if>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code LIKE upper(#{onlineShopCodeLike})

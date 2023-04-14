@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * 承运商
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -28,12 +27,12 @@ public class CarrierRedisImpl implements CarrierRedis {
 
     @Override
     public List<Carrier> listCarriers(Long tenantId) {
-      String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-      Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
-      List<Carrier> carriers = new ArrayList<>();
-      if (map.isEmpty()) {
-          return carriers;
-      }
+        String key = CarrierConstants.Redis.getCarrierKey(tenantId);
+        Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
+        List<Carrier> carriers = new ArrayList<>();
+        if (map.isEmpty()) {
+            return carriers;
+        }
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String v = entry.getValue();
             carriers.add(JsonHelper.stringToObject(v, Carrier.class));
