@@ -49,7 +49,9 @@ public class CarrierCantDeliveryController extends BaseController {
                                                           CarrierCantDelivery carrierCantDelivery,
                                                           @ApiIgnore @SortDefault(value = CarrierCantDelivery.FIELD_CARRIER_CANT_DELIVERY_ID,
                                                                   direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        carrierCantDelivery.setTenantId(organizationId);
+        if (null == carrierCantDelivery.getTenantId()) {
+            carrierCantDelivery.setTenantId(organizationId);
+        }
         Page<CarrierCantDelivery> list = PageHelper.doPageAndSort(pageRequest, () -> carrierCantDeliveryService.list(carrierCantDelivery));
         return Results.success(list);
     }
