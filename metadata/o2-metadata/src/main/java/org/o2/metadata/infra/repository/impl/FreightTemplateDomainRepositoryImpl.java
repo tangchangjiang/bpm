@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.repository.impl;
 
+import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.domain.freight.domain.FreightInfoDO;
 import org.o2.metadata.domain.freight.domain.FreightTemplateDO;
 import org.o2.metadata.domain.freight.repository.FreightTemplateDomainRepository;
@@ -27,7 +28,16 @@ public class FreightTemplateDomainRepositoryImpl implements FreightTemplateDomai
 
     @Override
     public FreightInfoDO getFreightTemplate(String regionCode, String templateCode, Long tenantId) {
-        return FreightConverter.poToDoObject(freightRedis.getFreightTemplate(regionCode, templateCode, tenantId));
+        if (null == tenantId) {
+            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+        }
+        FreightInfo freightTemplate = freightRedis.getFreightTemplate(regionCode, templateCode, tenantId);
+        // 如果当前租户没有运费模板数据，则查询0租户作为兜底
+        if (null == freightTemplate.getHeadTemplate() && null == freightTemplate.getRegionTemplate() && !BaseConstants.DEFAULT_TENANT_ID.equals(tenantId)) {
+            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+            freightTemplate = freightRedis.getFreightTemplate(regionCode, templateCode, tenantId);
+        }
+        return FreightConverter.poToDoObject(freightTemplate);
     }
 
     @Override

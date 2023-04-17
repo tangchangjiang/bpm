@@ -24,7 +24,6 @@
 
     <select id="queryDefaultFreightTemplateDetails" resultType="org.o2.metadata.console.infra.entity.FreightTemplateDetail">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
          SELECT
              oftd.template_detail_id,
              oftd.region_code,
@@ -42,12 +41,11 @@
              oftd.last_updated_by,
              oftd.last_update_date
          FROM o2md_freight_tpl_detail oftd
-		 WHERE    oftd.default_flag =1 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
+		 WHERE oftd.default_flag =1 and oftd.template_id= #{templateId}
     </select>
 
     <select id="queryRegionFreightTemplateDetails" resultMap="freightTemplateDetailResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
            SELECT
              oftd.template_detail_id,
              oftd.region_code,
@@ -65,7 +63,7 @@
              oftd.last_updated_by,
              oftd.last_update_date
         FROM o2md_freight_tpl_detail oftd
-		 WHERE oftd.default_flag =0 and oftd.template_id= #{templateId} and   oftd.tenant_id = #{tenantId}
+		WHERE oftd.default_flag =0 and oftd.template_id= #{templateId}
     </select>
 
 

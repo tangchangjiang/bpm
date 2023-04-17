@@ -125,4 +125,11 @@ public class FreightTemplate extends AuditDomain {
     @Transient
     private String deliveryFreeFlagMeaning;
 
+    /**
+     * 是否平台层查询：0-否，1-是
+     */
+    @ApiModelProperty(value = "是否平台层查询")
+    @Transient
+    private Integer siteFlag;
+
 }
