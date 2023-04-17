@@ -47,7 +47,7 @@ public interface LovAdapterRemoteService {
      * @return map tenantId:currencyCode:CurrencyCO
      */
     @GetMapping("/lov-internal/currency-by-codes-batch-tenant")
-    ResponseEntity<String> findCurrencyByCodesBatchTenant(@RequestBody Map<String, List<String>> currencyCodes);
+    ResponseEntity<String> findCurrencyByCodesBatchTenant(@RequestBody Map<Long, List<String>> currencyCodes);
 
     /**
      * 通过编码查询单位(批量)

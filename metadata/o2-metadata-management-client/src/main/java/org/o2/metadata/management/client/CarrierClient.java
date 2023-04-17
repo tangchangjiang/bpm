@@ -44,7 +44,7 @@ public class CarrierClient {
      * @param carrierQueryInnerDTOMap 查询条件
      * @return Map tenantId:carrierCode:info
      */
-    public Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<String, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
+    public Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
         return ResponseUtils.getResponse(carrierRemoteService.listCarriersBatchTenant(carrierQueryInnerDTOMap), new TypeReference<Map<Long, Map<String, CarrierCO>>>() {
         });
     }

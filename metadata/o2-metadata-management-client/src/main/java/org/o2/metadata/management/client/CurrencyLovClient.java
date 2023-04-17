@@ -40,7 +40,7 @@ public class CurrencyLovClient {
      * @param currencyCodes 货币编码
      * @return map tenantId:currencyCode:CurrencyCO
      */
-    public Map<Long, Map<String, CurrencyCO>> findCurrencyByCodesBatchTenant(Map<String, List<String>> currencyCodes) {
+    public Map<Long, Map<String, CurrencyCO>> findCurrencyByCodesBatchTenant(Map<Long, List<String>> currencyCodes) {
         return ResponseUtils.getResponse(lovAdapterRemoteService.findCurrencyByCodesBatchTenant(currencyCodes), new TypeReference<Map<Long, Map<String, CurrencyCO>>>() {
         });
     }
