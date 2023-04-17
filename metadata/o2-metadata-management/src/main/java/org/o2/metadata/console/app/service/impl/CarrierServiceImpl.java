@@ -182,9 +182,6 @@ public class CarrierServiceImpl implements CarrierService {
             organizationId = BaseConstants.DEFAULT_TENANT_ID;
         }
         List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO, organizationId);
-        if (carriers.isEmpty() && !BaseConstants.DEFAULT_TENANT_ID.equals(organizationId)) {
-            carriers = carrierRepository.batchSelect(carrierQueryInnerDTO, BaseConstants.DEFAULT_TENANT_ID);
-        }
         if (carriers.isEmpty()) {
             return map;
         }
