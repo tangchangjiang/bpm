@@ -28,7 +28,7 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> findCurrencyByCodesBatchTenant(Map<Long, List<String>> currencyCodes) {
+    public ResponseEntity<String> findCurrencyByCodesBatchTenant(Map<String, List<String>> currencyCodes) {
         log.error("Error findCurrencyByCodesBatchTenant, params = {}", currencyCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

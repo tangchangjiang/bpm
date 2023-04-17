@@ -45,7 +45,7 @@ public class WarehouseClient {
      * @param innerDTOMap 查询条件
      * @return 仓库：Map tenantId:warehouseCode:info
      */
-    public Map<Long, Map<String, WarehouseCO>> listWarehousesBatchTenant(Map<Long,WarehouseQueryInnerDTO> innerDTOMap) {
+    public Map<Long, Map<String, WarehouseCO>> listWarehousesBatchTenant(Map<String,WarehouseQueryInnerDTO> innerDTOMap) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesBatchTenant(innerDTOMap), new TypeReference<Map<Long, Map<String, WarehouseCO>>>() {
         });
     }

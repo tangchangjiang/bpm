@@ -43,7 +43,7 @@ public interface CarrierRemoteService {
      * @return  承运商信息
      */
     @PostMapping("/carrier-internal/list-batch-tenant")
-    ResponseEntity<String> listCarriersBatchTenant(@RequestBody Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap);
+    ResponseEntity<String> listCarriersBatchTenant(@RequestBody Map<String, CarrierQueryInnerDTO> carrierQueryInnerDTOMap);
 
     /**
      * 批量查询承运商匹配规则

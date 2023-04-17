@@ -50,7 +50,7 @@ public interface WarehouseRemoteService {
      * @return 仓库信息
      */
     @PostMapping("/warehouse-internal/list-batch-tenant")
-    ResponseEntity<String> listWarehousesBatchTenant(@RequestParam Map<Long, WarehouseQueryInnerDTO> innerDTOMap);
+    ResponseEntity<String> listWarehousesBatchTenant(@RequestParam Map<String, WarehouseQueryInnerDTO> innerDTOMap);
 
     /**
      * 保存仓库快递配送接单量限制

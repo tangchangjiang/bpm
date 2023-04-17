@@ -30,7 +30,7 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> listWarehousesBatchTenant(Map<Long, WarehouseQueryInnerDTO> innerDTOMap) {
+    public ResponseEntity<String> listWarehousesBatchTenant(Map<String, WarehouseQueryInnerDTO> innerDTOMap) {
         log.error("Error listWarehousesBatchTenant, params = {}", innerDTOMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

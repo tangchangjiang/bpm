@@ -27,7 +27,7 @@ public class CarrierRemoteServiceImpl implements CarrierRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
+    public ResponseEntity<String> listCarriersBatchTenant(Map<String, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
         log.error("Error listCarriersBatchTenant, params = {}", carrierQueryInnerDTOMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
