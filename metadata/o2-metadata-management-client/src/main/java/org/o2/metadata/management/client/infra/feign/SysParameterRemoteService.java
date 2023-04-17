@@ -34,6 +34,18 @@ public interface SysParameterRemoteService {
     ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
 
+
+    /**
+     * 从redis查询系统参数
+     *
+     * @param paramCode 参数编码
+     * @param organizationId 租户ID
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/{organizationId}/sysParameter-internal/size/{paramCode}")
+    ResponseEntity<String> getSizeSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                              @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
+
     /**
      * 从redis查询系统参数
      *

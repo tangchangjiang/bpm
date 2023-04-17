@@ -33,4 +33,10 @@ public class SysParameterRemoteServiceImpl implements SysParameterRemoteService 
         log.error("Error updateSysParameter, params[tenantId = {}, systemParameterDTO = {}]", organizationId, systemParameterQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> getSizeSystemParameter(Long organizationId, String paramCode) {
+        log.error("Error getSizeSystemParameter, params[tenantId = {}, paramCode = {}]", organizationId, paramCode);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

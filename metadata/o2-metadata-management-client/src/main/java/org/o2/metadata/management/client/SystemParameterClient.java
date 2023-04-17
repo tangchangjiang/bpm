@@ -34,6 +34,18 @@ public class SystemParameterClient {
         return ResponseUtils.getResponse(sysParameterRemoteService.getSystemParameter(tenantId, paramCode), SystemParameterCO.class);
     }
 
+
+    /**
+     * 从redis查询系统参数-SIZE
+     *
+     * @param paramCode 参数编码
+     * @param tenantId  租户ID
+     */
+    public SystemParameterCO getSizeSystemParameter(String paramCode, Long tenantId) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSizeSystemParameter(tenantId, paramCode), SystemParameterCO.class);
+    }
+
+
     /**
      * 从redis查询系统参数
      *
