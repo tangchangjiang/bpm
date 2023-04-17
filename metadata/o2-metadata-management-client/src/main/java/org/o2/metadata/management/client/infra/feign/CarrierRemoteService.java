@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Map;
+
 /**
  * 承运商
  *
@@ -33,6 +35,15 @@ public interface CarrierRemoteService {
     @PostMapping("/{organizationId}/carrier-internal/list")
     ResponseEntity<String> listCarriers(@RequestBody CarrierQueryInnerDTO carrierQueryInnerDTO,
                                         @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 多租户批量查询承运商
+     *
+     * @param carrierQueryInnerDTOMap 查询条件
+     * @return  承运商信息
+     */
+    @PostMapping("/carrier-internal/list-batch-tenant")
+    ResponseEntity<String> listCarriersBatchTenant(@RequestBody Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap);
 
     /**
      * 批量查询承运商匹配规则
@@ -58,5 +69,4 @@ public interface CarrierRemoteService {
     @PostMapping("/{organizationId}/carrier-internal/check-delivery-range")
     ResponseEntity<String> checkDeliveryRange(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                               @RequestBody CarrierDeliveryRangeDTO carrierDeliveryRangeDTO);
-
 }

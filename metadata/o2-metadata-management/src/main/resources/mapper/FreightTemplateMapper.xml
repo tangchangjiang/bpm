@@ -42,8 +42,6 @@
 
     <select id="listFreightTemplates" resultMap="freightTemplateResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
-
         SELECT oft.template_id,
         oft.template_code,
         oft.template_name,
@@ -61,11 +59,18 @@
         FROM o2md_freight_template oft
         <where>
             <choose>
-                <when test="tenantId != null">
-                    AND oft.tenant_id = #{tenantId}
+                <when test="siteFlag != null and siteFlag == 1">
+                    AND 1 = 1
                 </when>
                 <otherwise>
-                    AND 1 =0
+                    <choose>
+                        <when test="tenantId != null">
+                            AND (oft.tenant_id = #{tenantId} OR oft.tenant_id = 0)
+                        </when>
+                        <otherwise>
+                            AND 1 =0
+                        </otherwise>
+                    </choose>
                 </otherwise>
             </choose>
             <if test="templateId!=null and templateId!=''">
@@ -94,14 +99,25 @@
             <if test="dafaultFlag!=null">
                 AND oft.dafault_flag = #{dafaultFlag}
             </if>
-
+            <if test="tenantId != null and tenantId != 0">
+                AND oft.template_id NOT IN (
+                    SELECT oft1.template_id
+                    FROM o2md_freight_template oft1
+                    WHERE oft1.tenant_id = 0
+                    AND EXISTS(
+                        SELECT 1
+                        FROM o2md_freight_template oft2
+                        WHERE oft1.template_code = oft2.template_code
+                        AND oft2.tenant_id = #{tenantId}
+                    )
+                )
+            </if>
         </where>
         ORDER BY oft.template_code ASC
     </select>
 
     <select id="queryFreightTemplateById" resultMap="freightTemplateVOResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
-        <bind name="tenantId" value="@org.hzero.mybatis.helper.TenantLimitedHelper@tenantId()" />
         SELECT oft.template_id,
         oft.template_code,
         oft.template_name,

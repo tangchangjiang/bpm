@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseConstants;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
@@ -25,9 +26,9 @@ import java.util.Map;
  */
 @Service
 public class SystemParamValueServiceImpl implements SystemParamValueService {
-    private SystemParamValueRepository systemParamValueRepository;
-    private SystemParameterRepository systemParameterRepository;
-    private SystemParameterRedis systemParameterRedis;
+    private final SystemParamValueRepository systemParamValueRepository;
+    private final SystemParameterRepository systemParameterRepository;
+    private final SystemParameterRedis systemParameterRedis;
 
     public SystemParamValueServiceImpl(SystemParamValueRepository systemParamValueRepository,
                                        SystemParameterRepository systemParameterRepository,
@@ -39,6 +40,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public String getSysValueByParam(String paramCode, Long tenantId) {
+        tenantId = judgeAndSetSysParamSource(paramCode, tenantId);
         if (SystemParameterConstants.ParamType.KV.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             return systemParamValueRepository.getSysValueByParam(paramCode, tenantId);
         }
@@ -47,6 +49,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public List<String> getSysListByParam(String paramCode, Long tenantId) {
+        tenantId = judgeAndSetSysParamSource(paramCode, tenantId);
         if (SystemParameterConstants.ParamType.LIST.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             return systemParamValueRepository.getSysListByParam(paramCode, tenantId);
         }
@@ -56,6 +59,7 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
 
     @Override
     public Map<String, String> getSysMapByParam(String paramCode, Long tenantId) {
+        tenantId = judgeAndSetSysParamSource(paramCode, tenantId);
         if (SystemParameterConstants.ParamType.MAP.equalsIgnoreCase(getParamTypeByCode(paramCode, tenantId))) {
             List<SystemParamValue> systemParamValues  = systemParamValueRepository.getSysMapByParam(paramCode, tenantId);
             Map<String, String> result = new HashMap<>();
@@ -130,5 +134,24 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
             return result.get(0).getParamTypeCode();
         }
         return null;
+    }
+
+    /**
+     * 判断系统参数在当前租户是否存在，即判断系统参数是否是自定义类型，如果不存在，则默认来源是预定义，将租户设置为默认租户（0租户）
+     *
+     * @param paramCode 系统参数编码
+     * @param tenantId  租户Id
+     * @return  系统参数来源租户
+     */
+    protected Long judgeAndSetSysParamSource(String paramCode, Long tenantId) {
+        // 查询系统参数在当前租户是否存在，判断是否是自定义
+        SystemParameter queryCount = new SystemParameter();
+        queryCount.setParamCode(paramCode);
+        queryCount.setTenantId(tenantId);
+        int count = systemParameterRepository.selectCount(queryCount);
+        if (count <= 0) {
+            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+        }
+        return tenantId;
     }
 }

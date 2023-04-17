@@ -44,7 +44,9 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String SYSTEM_PARAMETER = "SYSTEM_PARAMETER";
     public static final String SYSTEM_PARAMETER_SITE = "SYSTEM_PARAMETER_SITE";
     public static final String SYSTEM_PARAMETER_VALUE = "SYSTEM_PARAMETER_VALUE";
+    public static final String SYSTEM_PARAMETER_VALUE_SITE = "SYSTEM_PARAMETER_VALUE_SITE";
     public static final String FREIGHT_TEMPLATE = "Freight Template";
+    public static final String FREIGHT_TEMPLATE_SITE = "Freight Template Site";
     public static final String FREIGHT_TEMPLATE_DETAIL = "Freight Template Detail";
     public static final String PLATFORM_UOM = "Platform Uom";
     public static final String CATALOG = "Catalog";
@@ -75,8 +77,9 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER, "系统参数"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_SITE, "系统参数（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_VALUE, "系统参数值"))
-
+                .tags(new Tag(MetadataManagementAutoConfiguration.SYSTEM_PARAMETER_VALUE_SITE, "系统参数值（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE, "运费模板管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE_SITE, "运费模板管理（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.FREIGHT_TEMPLATE_DETAIL, "运费模板明细管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_UOM, "平台值集管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION_REL_POS, "区域关联服务点配置"))

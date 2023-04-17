@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-
+import java.util.Map;
 
 /**
  * 仓库
@@ -42,6 +42,15 @@ public interface WarehouseRemoteService {
     @PostMapping("/{organizationId}/warehouse-internal/list")
     ResponseEntity<String> listWarehouses(@RequestBody WarehouseQueryInnerDTO innerDTO,
                                           @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 多租户查询仓库
+     *
+     * @param innerDTOMap 查询参数
+     * @return 仓库信息
+     */
+    @PostMapping("/warehouse-internal/list-batch-tenant")
+    ResponseEntity<String> listWarehousesBatchTenant(@RequestParam Map<Long, WarehouseQueryInnerDTO> innerDTOMap);
 
     /**
      * 保存仓库快递配送接单量限制

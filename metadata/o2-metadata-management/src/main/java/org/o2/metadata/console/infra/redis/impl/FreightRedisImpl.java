@@ -96,13 +96,16 @@ public class FreightRedisImpl implements FreightRedis {
         List<FreightInfo> freightInfos = new ArrayList<>();
         redisCacheClient.executePipelined((RedisCallback<FreightInfo>) redisConnection -> {
             for (String templateCode : templateCodes) {
-                FreightInfo freightInfo = new FreightInfo();
-                freightInfo.setFreightTemplateCode(templateCode);
                 String freightDetailKey = FreightConstants.Redis.getFreightDetailKey(tenantId, templateCode);
                 List<String> paramCodes = new ArrayList<>(2);
                 paramCodes.add(FreightConstants.Redis.FREIGHT_HEAD_KEY);
                 List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
                 String headTemplate = freightTemplates.get(0);
+                if (StringUtils.isBlank(headTemplate)) {
+                    continue;
+                }
+                FreightInfo freightInfo = new FreightInfo();
+                freightInfo.setFreightTemplateCode(templateCode);
                 freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate,
                         FreightTemplate.class));
                 freightInfos.add(freightInfo);

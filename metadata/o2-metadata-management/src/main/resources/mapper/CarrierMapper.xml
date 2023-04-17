@@ -95,7 +95,7 @@
                 WHERE 1 = 1
         <choose>
             <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId}
+                AND (c.tenant_id = #{tenantId} OR c.tenant_id = 0)
             </when>
             <otherwise>
                 AND 1 = 0
@@ -115,6 +115,20 @@
         </if>
         <if test="carrierDTO.activeFlag != null">
             and c.active_flag = #{carrierDTO.activeFlag}
+        </if>
+        /* 去重 */
+        <if test="tenantId != null and tenantId != 0">
+            AND c.carrier_id NOT IN (
+                SELECT c1.carrier_id
+                FROM o2md_carrier c1
+                WHERE c1.tenant_id = 0
+                AND EXISTS(
+                    SELECT 1
+                    FROM o2md_carrier c2
+                    WHERE c1.carrier_code = c2.carrier_code
+                    AND c2.tenant_id = #{tenantId}
+                )
+            )
         </if>
     </select>
 </mapper>

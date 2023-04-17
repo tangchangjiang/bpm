@@ -1,8 +1,5 @@
 package org.o2.metadata.management.client.infra.feign.fallback;
 
-import java.util.List;
-import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
 import org.o2.metadata.management.client.domain.dto.LovQueryInnerDTO;
@@ -12,6 +9,9 @@ import org.o2.metadata.management.client.infra.feign.LovAdapterRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 值集查询
@@ -24,6 +24,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     @Override
     public ResponseEntity<String> findCurrencyByCodes(Long organizationId, List<String> currencyCodes) {
         log.error("Error batchSelectNameByCode, params[currencyCodes = {}, organizationId = {}]", currencyCodes, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> findCurrencyByCodesBatchTenant(Map<Long, List<String>> currencyCodes) {
+        log.error("Error findCurrencyByCodesBatchTenant, params = {}", currencyCodes);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

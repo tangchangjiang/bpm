@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  *
  * 承运商
@@ -21,6 +23,12 @@ public class CarrierRemoteServiceImpl implements CarrierRemoteService {
     @Override
     public ResponseEntity<String> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
         log.error("Error listCarriers, params[tenantId = {}, carrierDTO = {}]", organizationId, carrierQueryInnerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
+        log.error("Error listCarriersBatchTenant, params = {}", carrierQueryInnerDTOMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

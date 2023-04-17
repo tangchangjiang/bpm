@@ -49,6 +49,8 @@ public class FreightTemplateController extends BaseController {
                                                       final FreightTemplate freightTemplate, final PageRequest pageRequest) {
         //默认查询生效的
         freightTemplate.setActiveFlag(1);
+        freightTemplate.setTenantId(organizationId);
+        freightTemplate.setSiteFlag(BaseConstants.Flag.NO);
 
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
