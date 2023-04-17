@@ -91,7 +91,7 @@
                tl.carrier_name
         FROM o2md_carrier c
                      left join o2md_carrier_tl tl
-                on tl.carrier_id = c.carrier_id and tl.tenant_id = #{tenantId} AND tl.lang = #{lang}
+                on tl.carrier_id = c.carrier_id and tl.tenant_id = c.tenant_id AND tl.lang = #{lang}
                 WHERE 1 = 1
         <choose>
             <when test="tenantId != null">
