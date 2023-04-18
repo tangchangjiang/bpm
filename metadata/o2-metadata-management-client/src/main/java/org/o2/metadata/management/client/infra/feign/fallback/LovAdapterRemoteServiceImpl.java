@@ -40,6 +40,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     }
 
     @Override
+    public ResponseEntity<String> findUomByCodesBatchTenant(Map<Long, List<String>> uomCodesMap) {
+        log.error("Error findUomByCodesBatchTenant, params = {}", uomCodesMap);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
     public ResponseEntity<String> findUomTypeByCodes(Long organizationId, List<String> uomTypeCodes) {
         log.error("Error findUomTypeByCodes, params[uomCodes = {}, organizationId = {}]", uomTypeCodes, organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -48,6 +54,12 @@ public class LovAdapterRemoteServiceImpl implements LovAdapterRemoteService {
     @Override
     public ResponseEntity<String> queryLovValue(Long organizationId, String lovCode) {
         log.error("Error queryLovValue, params[lovCode = {}, organizationId = {}]", lovCode, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryLovValueBatchTenant(Map<Long, String> lovCodeMap) {
+        log.error("Error queryLovValueBatchTenant, params = {}", lovCodeMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

@@ -67,12 +67,4 @@ public interface CarrierService {
      * @return 结果
      */
     List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO);
-
-    /**
-     * 多租户批量查询承运商
-     *
-     * @param carrierQueryInnerDTOMap 查询条件：tenantId：queryDTO
-     * @return map tenantId:carrierCode:CarrierCO
-     */
-    Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap);
 }

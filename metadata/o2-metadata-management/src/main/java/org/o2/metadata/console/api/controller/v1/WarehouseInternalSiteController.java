@@ -12,8 +12,8 @@ import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class WarehouseInternalSiteController {
     @ApiOperation(value = "多租户查询仓库(站点级)")
     @Permission(permissionWithin = true, level = ResourceLevel.SITE)
     @PostMapping("/list-batch-tenant")
-    public ResponseEntity<Map<Long, Map<String, WarehouseCO>>> listWarehousesBatchTenant(@RequestParam Map<Long, WarehouseQueryInnerDTO> innerDTOMap) {
+    public ResponseEntity<Map<Long, Map<String, WarehouseCO>>> listWarehousesBatchTenant(@RequestBody Map<Long, WarehouseQueryInnerDTO> innerDTOMap) {
         Map<Long, Map<String, WarehouseCO>> map = new HashMap<>(16);
         List<WarehouseCO> cos = new ArrayList<>();
         innerDTOMap.forEach((tenantId, innerDTO) -> cos.addAll(warehouseService.listWarehouses(innerDTO, tenantId)));

@@ -30,7 +30,7 @@ public class SystemParamValueSiteController {
     }
 
     @ApiOperation(value = "获取KV系统参数值（站点级）")
-    @Permission(level = ResourceLevel.ORGANIZATION)
+    @Permission(level = ResourceLevel.SITE)
     @GetMapping("/{paramCode}/KV")
     public ResponseEntity<String> getSysValueByParam(@PathVariable("paramCode") String paramCode, Long tenantId) {
         String sysValueByParam = systemParamValueService.getSysValueByParam(paramCode, tenantId);
