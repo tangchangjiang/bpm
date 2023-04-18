@@ -40,7 +40,7 @@ public class SysParamInternalController {
     @ApiOperation(value = "从redis查询系统参数（多租户）")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/batch-tenant")
-    public ResponseEntity<Map<Long, SystemParameterCO>> getSystemParameter(@RequestBody Map<Long, String> paramCodeMap) {
+    public ResponseEntity<Map<Long, SystemParameterCO>> getSystemParameterBatchTenant(@RequestBody Map<Long, String> paramCodeMap) {
         Map<Long, SystemParameterCO> resultMap = new HashMap<>();
         paramCodeMap.forEach((tenant, paramCode) -> resultMap.put(tenant, sysParameterService.getSystemParameter(paramCode, tenant)));
         return Results.success(resultMap);
