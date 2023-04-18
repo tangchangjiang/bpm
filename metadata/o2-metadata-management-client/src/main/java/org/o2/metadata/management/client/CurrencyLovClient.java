@@ -37,7 +37,7 @@ public class CurrencyLovClient {
     /**
      * 多租户批量查询货币
      *
-     * @param currencyCodes 货币编码
+     * @param currencyCodes 货币编码map  tenantId:list
      * @return map tenantId:currencyCode:CurrencyCO
      */
     public Map<Long, Map<String, CurrencyCO>> findCurrencyByCodesBatchTenant(Map<Long, List<String>> currencyCodes) {
