@@ -3,7 +3,6 @@ package org.o2.metadata.console.app.service.impl;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
@@ -266,19 +265,6 @@ public class CarrierServiceImpl implements CarrierService {
             }
         }
         return carrierDeliveryRangeList;
-    }
-
-    @Override
-    public Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
-        Map<Long, Map<String, CarrierCO>> map = new HashMap<>();
-        carrierQueryInnerDTOMap.forEach((tenantId, queryDTO) -> {
-            Map<String, CarrierCO> carrierCOMap = this.listCarriers(queryDTO, tenantId);
-            if (MapUtils.isNotEmpty(carrierCOMap)) {
-                map.put(tenantId, carrierCOMap);
-            }
-
-        });
-        return map;
     }
 
     /**

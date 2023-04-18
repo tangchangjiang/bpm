@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,6 +36,8 @@ public class CarrierInternalSiteController extends BaseController {
     @Permission(permissionWithin = true, level = ResourceLevel.SITE)
     @PostMapping("/list-batch-tenant")
     public ResponseEntity<Map<Long, Map<String, CarrierCO>>> listBatchTenant(@RequestBody Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
-        return Results.success(carrierService.listCarriersBatchTenant(carrierQueryInnerDTOMap));
+        Map<Long, Map<String, CarrierCO>> map = new HashMap<>();
+        carrierQueryInnerDTOMap.forEach((tenantId, queryDTO) -> map.put(tenantId, carrierService.listCarriers(queryDTO, tenantId)));
+        return Results.success(map);
     }
 }
