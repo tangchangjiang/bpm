@@ -61,4 +61,16 @@ public class OnlineShop {
      */
     private String businessTypeCode;
 
+    /**
+     * logo
+     */
+    @ApiModelProperty(value = "logo url")
+    private String logoUrl;
+
+    /**
+     * 是否自营：1-自营，0-非自营
+     */
+    @ApiModelProperty(value = "是否自营")
+    private Integer selfSalesFlag;
+
 }

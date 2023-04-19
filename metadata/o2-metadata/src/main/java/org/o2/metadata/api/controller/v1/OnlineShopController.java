@@ -3,6 +3,7 @@ package org.o2.metadata.api.controller.v1;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
+import org.o2.core.helper.UserHelper;
 import org.o2.metadata.api.vo.OnlineShopVO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,6 @@ public class OnlineShopController {
     @Permission(permissionPublic = true)
     @GetMapping("/pub/onlineShop/{onlineShopCode}")
     public ResponseEntity<OnlineShopVO> onlineShopInfo(@PathVariable String onlineShopCode) {
-//        onlineShopService.getOnlineShop();
-        return Results.success(null);
+        return Results.success(onlineShopService.getOnlineShopInfo(onlineShopCode, UserHelper.getTenantId()));
     }
 }

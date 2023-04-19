@@ -1,6 +1,7 @@
 package org.o2.metadata.infra.convertor;
 
 import org.o2.metadata.api.co.OnlineShopCO;
+import org.o2.metadata.api.vo.OnlineShopVO;
 import org.o2.metadata.infra.entity.OnlineShop;
 
 /**
@@ -42,4 +43,21 @@ public class OnlineShopConverter {
         return co;
     }
 
+    /**
+     * 网店信息转化为VO
+     *
+     * @param onlineShop 网店信息
+     * @return vo
+     */
+    public static OnlineShopVO poToShopVO(OnlineShop onlineShop) {
+        if (onlineShop == null) {
+            return null;
+        }
+        OnlineShopVO onlineShopVO = new OnlineShopVO();
+        onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
+        onlineShopVO.setLogoUrl(onlineShop.getLogoUrl());
+        onlineShopVO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
+        return onlineShopVO;
+    }
 }
