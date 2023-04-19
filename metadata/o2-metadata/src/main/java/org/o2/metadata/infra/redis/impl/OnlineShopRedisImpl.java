@@ -42,7 +42,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for (Map.Entry<String, String> onlineShopEntry : map.entrySet()) {
             String onlineShopCodeKey = onlineShopEntry.getKey();
             if (onlineShopCode.equals(onlineShopCodeKey)) {
-                log.info("getOnlineShop onlineShopValue:{}", onlineShopEntry.getValue());
+                if (log.isDebugEnabled()) {
+                    log.debug("getOnlineShop onlineShopValue:{}", onlineShopEntry.getValue());
+                }
                 return JsonHelper.stringToObject(onlineShopEntry.getValue(), OnlineShop.class);
             }
         }

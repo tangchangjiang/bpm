@@ -44,7 +44,9 @@ public class RuleConditionFilterChainImpl implements RuleConditionFilterChain {
 
     @Override
     public List<FilterHandlerService> getHandlers(String... filterCodes) {
-        log.info("codeTypeMap:=======>{}", JsonHelper.objectToString(codeTypeListMap));
+        if (log.isDebugEnabled()) {
+            log.debug("codeTypeMap:=======>{}", JsonHelper.objectToString(codeTypeListMap));
+        }
         final List<FilterHandlerService> serviceList = new ArrayList<>();
         for (String code : filterCodes) {
             serviceList.addAll(codeTypeListMap.getOrDefault(code, Collections.emptyList()));
