@@ -36,7 +36,7 @@ public class UomLovClient {
     /**
      * 通过编码查询单位(批量-多租户)
      *
-     * @param uomCodesMap 单位编码
+     * @param uomCodesMap 单位编码 tenantId:list
      * @return 单位信息MAP  tenantId:uomCode:UomCO
      */
     public Map<Long, Map<String, UomCO>> findUomByCodesBatchTenant(Map<Long, List<String>> uomCodesMap) {

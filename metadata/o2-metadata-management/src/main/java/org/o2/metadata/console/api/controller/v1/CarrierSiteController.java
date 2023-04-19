@@ -11,6 +11,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.annotation.annotation.ProcessAnnotationValue;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
@@ -37,6 +38,7 @@ public class CarrierSiteController extends BaseController {
 
     @ApiOperation(value = "承运商列表 站点级")
     @Permission(level = ResourceLevel.SITE)
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/page-list")
     public ResponseEntity<Page<Carrier>> list(final Carrier carrier,

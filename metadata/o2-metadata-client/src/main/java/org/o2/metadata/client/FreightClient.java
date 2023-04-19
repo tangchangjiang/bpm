@@ -42,4 +42,26 @@ public class FreightClient {
                 FreightInfoCO>>() {
         });
     }
+
+    /**
+     * 获取运费模板（多租户）
+     *
+     * @param freightMap 运费参数map  tenantId:FreightDTO
+     * @return 运费结果map  tenantId:FreightInfoCO
+     */
+    public Map<Long, FreightInfoCO> getFreightTemplateBatchTenant(Map<Long, FreightDTO> freightMap) {
+        return ResponseUtils.getResponse(freightRemoteService.getFreightTemplateBatchTenant(freightMap), new TypeReference<Map<Long, FreightInfoCO>>() {
+        });
+    }
+
+    /**
+     * 批量获取运费模板（多租户）
+     *
+     * @param freightMap 运费参数map tenantId:list
+     * @return 运费结果map  tenantId:templateCode:FreightInfoCO
+     */
+    public Map<Long, Map<String, FreightInfoCO>> listFreightTemplatesBatchTenant(Map<Long, List<FreightDTO>> freightMap) {
+        return ResponseUtils.getResponse(freightRemoteService.listFreightTemplatesBatchTenant(freightMap), new TypeReference<Map<Long, Map<String, FreightInfoCO>>>() {
+        });
+    }
 }

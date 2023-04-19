@@ -49,7 +49,7 @@ public class IDPLovClient {
     /**
      * 独立值集-多租户
      *
-     * @param lovCodeMap 值集code map
+     * @param lovCodeMap 值集code map  tenantId:lovCode
      * @return map tenantId:LovValueCO(List)
      */
     public Map<Long, List<LovValueCO>> queryLovValueBatchTenant(Map<Long, String> lovCodeMap) {

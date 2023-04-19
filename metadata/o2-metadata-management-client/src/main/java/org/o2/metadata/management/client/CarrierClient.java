@@ -41,7 +41,7 @@ public class CarrierClient {
     /**
      * 多租户查询承运商
      *
-     * @param carrierQueryInnerDTOMap 查询条件
+     * @param carrierQueryInnerDTOMap 查询条件 tenantId:CarrierQueryInnerDTO
      * @return Map tenantId:carrierCode:info
      */
     public Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {

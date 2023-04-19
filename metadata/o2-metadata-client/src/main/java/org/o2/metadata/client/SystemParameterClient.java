@@ -40,4 +40,26 @@ public class SystemParameterClient {
         return ResponseUtils.getResponse(sysParameterRemoteService.listSystemParameters(paramCodes, tenantId), new TypeReference<Map<String, SystemParameterCO>>() {
         });
     }
+
+    /**
+     * 从Redis查询系统参数（多租户）
+     *
+     * @param paramCodeMap 参数编码Map tenantId:paramCode
+     * @return 系统参数map  tenantId:SystemParameterCO
+     */
+    public Map<Long, SystemParameterCO> getSysParamBatchTenant(Map<Long, String> paramCodeMap) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSysParamBatchTenant(paramCodeMap), new TypeReference<Map<Long, SystemParameterCO>>() {
+        });
+    }
+
+    /**
+     * 批量从redis查询系统参数(多租户)
+     *
+     * @param paramCodesMap 参数编码map tenantId:paramCodes
+     * @return 参数信息map tenantId:paramCode:SystemParameterCO
+     */
+    public Map<Long, Map<String, SystemParameterCO>> listSysParamBatchTenant(Map<Long, List<String>> paramCodesMap) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSysParamBatchTenant(paramCodesMap), new TypeReference<Map<Long, Map<String, SystemParameterCO>>>() {
+        });
+    }
 }

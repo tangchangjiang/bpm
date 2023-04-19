@@ -10,7 +10,7 @@ import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.bo.UomBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class LovAdapterInternalSiteController extends BaseController {
 
     @ApiOperation(value = "通过编码查询货币(批量-多租户)")
     @Permission(permissionPublic = true, level = ResourceLevel.SITE)
-    @GetMapping("/currency-by-codes-batch-tenant")
+    @PostMapping("/currency-by-codes-batch-tenant")
     public ResponseEntity<Map<Long, Map<String, CurrencyBO>>> findCurrencyByCodes(@RequestBody Map<Long, List<String>> currencyCodeMap) {
         Map<Long, Map<String, CurrencyBO>> map = new HashMap<>();
         currencyCodeMap.forEach((tenantId, currencyCodes) -> map.put(tenantId, lovAdapterService.findCurrencyByCodes(tenantId, currencyCodes)));
@@ -45,7 +45,7 @@ public class LovAdapterInternalSiteController extends BaseController {
 
     @ApiOperation(value = "通过编码查询单位(批量-多租户)")
     @Permission(permissionWithin = true, level = ResourceLevel.SITE)
-    @GetMapping("/uom-by-codes-batch-tenant")
+    @PostMapping("/uom-by-codes-batch-tenant")
     public ResponseEntity<Map<Long, Map<String, UomBO>>> findUomByCodesBatchTenant(@RequestBody Map<Long, List<String>> uomCodesMap) {
         Map<Long, Map<String, UomBO>> map = new HashMap<>();
         uomCodesMap.forEach((tenantId, uomCodes) -> map.put(tenantId, lovAdapterService.findUomByCodes(tenantId, uomCodes)));
@@ -54,7 +54,7 @@ public class LovAdapterInternalSiteController extends BaseController {
 
     @ApiOperation(value = "独立查询值集详细信息(多租户)")
     @Permission(permissionWithin = true, level = ResourceLevel.SITE)
-    @GetMapping("/query-lov-value-batch-tenant")
+    @PostMapping("/query-lov-value-batch-tenant")
     public ResponseEntity<Map<Long, List<LovValueDTO>>> queryLovValueBatchTenant(@RequestBody Map<Long, String> lovCodeMap) {
         Map<Long, List<LovValueDTO>> map = new HashMap<>();
         lovCodeMap.forEach((tenantId, lovCode) -> map.put(tenantId, lovAdapterService.queryLovValue(tenantId, lovCode)));

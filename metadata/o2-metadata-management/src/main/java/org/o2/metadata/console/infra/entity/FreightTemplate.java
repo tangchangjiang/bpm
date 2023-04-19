@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.springframework.util.Assert;
@@ -107,11 +109,16 @@ public class FreightTemplate extends AuditDomain {
     private Integer activeFlag;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
 
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @ApiModelProperty(value = "计价方式描述")
     @Transient

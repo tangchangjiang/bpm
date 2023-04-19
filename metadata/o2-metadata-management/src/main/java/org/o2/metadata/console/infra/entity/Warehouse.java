@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -131,6 +133,7 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     @NotNull
     @MultiLanguageField
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
 
     @ApiModelProperty(value = "生效状态")
@@ -146,6 +149,10 @@ public class Warehouse extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @Transient
     private String posCode;

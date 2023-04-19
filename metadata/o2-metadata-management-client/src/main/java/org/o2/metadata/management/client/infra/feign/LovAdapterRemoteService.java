@@ -46,7 +46,7 @@ public interface LovAdapterRemoteService {
      * @param currencyCodes 货币编码
      * @return map tenantId:currencyCode:CurrencyCO
      */
-    @GetMapping("/lov-internal/currency-by-codes-batch-tenant")
+    @PostMapping("/lov-internal/currency-by-codes-batch-tenant")
     ResponseEntity<String> findCurrencyByCodesBatchTenant(@RequestBody Map<Long, List<String>> currencyCodes);
 
     /**
@@ -65,7 +65,7 @@ public interface LovAdapterRemoteService {
      * @param uomCodesMap 单位编码map
      * @return 单位信息MAP
      */
-    @GetMapping("/lov-internal/uom-by-codes-batch-tenant")
+    @PostMapping("/lov-internal/uom-by-codes-batch-tenant")
     ResponseEntity<String> findUomByCodesBatchTenant(Map<Long, List<String>> uomCodesMap);
 
     /**
@@ -95,7 +95,7 @@ public interface LovAdapterRemoteService {
      * @param lovCodeMap 值集code map
      * @return 值集
      */
-    @GetMapping("/lov-internal/query-lov-value-batch-tenant")
+    @PostMapping("/lov-internal/query-lov-value-batch-tenant")
     ResponseEntity<String> queryLovValueBatchTenant(Map<Long, String> lovCodeMap);
 
     /**

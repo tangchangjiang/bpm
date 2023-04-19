@@ -40,12 +40,12 @@ public class WarehouseClient {
     }
 
     /**
-     * 批量租户条件查询仓库
+     * 条件查询仓库(多租户)
      *
-     * @param innerDTOMap 查询条件
+     * @param innerDTOMap 查询条件  tenantId:WarehouseQueryInnerDTO
      * @return 仓库：Map tenantId:warehouseCode:info
      */
-    public Map<Long, Map<String, WarehouseCO>> listWarehousesBatchTenant(Map<Long,WarehouseQueryInnerDTO> innerDTOMap) {
+    public Map<Long, Map<String, WarehouseCO>> listWarehousesBatchTenant(Map<Long, WarehouseQueryInnerDTO> innerDTOMap) {
         return ResponseUtils.getResponse(warehouseRemoteService.listWarehousesBatchTenant(innerDTOMap), new TypeReference<Map<Long, Map<String, WarehouseCO>>>() {
         });
     }
