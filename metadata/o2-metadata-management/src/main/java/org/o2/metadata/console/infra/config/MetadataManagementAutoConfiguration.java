@@ -29,6 +29,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String CARRIER_DELIVERY_RANGE = "Carrier Delivery Range";
     public static final String CARRIER_MAPPING = "Carrier Mapping";
     public static final String COUNTRY = "Country";
+    public static final String COUNTRY_SITE = "Country Site";
     public static final String NEIGHBORING_REGION = "Neighboring Region";
     public static final String ONLINE_SHOP = "Online Shop";
     public static final String ONLINE_SHOP_SITE = "Online Shop Site";
@@ -62,6 +63,7 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_MAPPING, "承运商匹配"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.CARRIER_SITE, "承运商匹配（站点级）"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.COUNTRY, "国家定义"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.COUNTRY_SITE, "国家定义(站点级)"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.NEIGHBORING_REGION, "临近省管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP, "网店信息管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.ONLINE_SHOP_SITE, "网店信息（站点级）"))
