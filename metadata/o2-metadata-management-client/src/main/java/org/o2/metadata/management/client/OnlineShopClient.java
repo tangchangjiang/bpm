@@ -73,7 +73,6 @@ public class OnlineShopClient {
      * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
      */
     public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
-        // 传递默认租户，无使用
         return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopsOfSite(onlineShopQueryInnerDTO), new TypeReference<Map<String,
                 OnlineShopCO>>() {
         });

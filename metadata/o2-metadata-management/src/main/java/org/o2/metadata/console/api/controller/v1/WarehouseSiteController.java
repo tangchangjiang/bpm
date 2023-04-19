@@ -14,6 +14,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.annotation.annotation.ProcessAnnotationValue;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
@@ -42,6 +43,7 @@ public class WarehouseSiteController extends BaseController {
     @ApiOperation(value = "仓库信息列表 站点级")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     @CustomPageRequest
     @ApiResponses(@ApiResponse(code = 200, message = "OK", response = Warehouse.class, responseContainer = "List"))

@@ -11,6 +11,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
+import org.o2.annotation.annotation.ProcessAnnotationValue;
 import org.o2.metadata.console.api.vo.FreightTemplateManagementVO;
 import org.o2.metadata.console.app.service.FreightTemplateService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -46,6 +47,7 @@ public class FreightTemplateSiteController extends BaseController {
 
     @ApiOperation(value = "运费模板列表（站点级）")
     @Permission(level = ResourceLevel.SITE)
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<Page<FreightTemplate>> list(final FreightTemplate freightTemplate, final PageRequest pageRequest) {
@@ -63,6 +65,7 @@ public class FreightTemplateSiteController extends BaseController {
 
     @ApiOperation(value = "根据主键查询运费模板和运费模板明细（站点级）")
     @Permission(level = ResourceLevel.SITE)
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY,
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_DEFAULT_FREIGHT_TEMPLATE_DETAILS,
             BaseConstants.FIELD_BODY + "." + FreightTemplateManagementVO.FIELD_REGION_FREIGHT_DETAIL_DISPLAY_LIST,
