@@ -53,6 +53,7 @@ public class FreightTemplateSiteController extends BaseController {
     public ResponseEntity<Page<FreightTemplate>> list(final FreightTemplate freightTemplate, final PageRequest pageRequest) {
         //默认查询生效的
         freightTemplate.setActiveFlag(1);
+        freightTemplate.setSiteFlag(BaseConstants.Flag.YES);
 
         final Page<FreightTemplate> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> freightTemplateRepository.listFreightTemplates(freightTemplate));
