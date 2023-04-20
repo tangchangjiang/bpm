@@ -49,8 +49,10 @@ public class WarehouseSiteController extends BaseController {
     @ApiResponses(@ApiResponse(code = 200, message = "OK", response = Warehouse.class, responseContainer = "List"))
     public ResponseEntity<Page<Warehouse>> list(final Warehouse warehouse,
                                                 @ApiIgnore final PageRequest pageRequest) {
-        // 平台层查询
         warehouse.setSiteFlag(BaseConstants.Flag.YES);
+        if (null != warehouse.getTenantId()) {
+            warehouse.setSiteFlag(BaseConstants.Flag.NO);
+        }
         final Page<Warehouse> posList = PageHelper.doPage(pageRequest,
                 () -> warehouseRepository.listWarehouseByCondition(warehouse));
         return Results.success(posList);
