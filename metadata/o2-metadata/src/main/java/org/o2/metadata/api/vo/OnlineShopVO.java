@@ -10,9 +10,28 @@ import lombok.Data;
 @Data
 public class OnlineShopVO {
 
+    /**
+     * 网店编码
+     */
     private String onlineShopCode;
 
+    /**
+     * 网店名称
+     */
     private String onlineShopName;
 
+    /**
+     * logo
+     */
     private String logoUrl;
+
+    /**
+     * 是否自营：1-自营，0-非自营
+     */
+    private Integer selfSalesFlag;
+
+    /**
+     * 租户Id
+     */
+    private Long tenantId;
 }

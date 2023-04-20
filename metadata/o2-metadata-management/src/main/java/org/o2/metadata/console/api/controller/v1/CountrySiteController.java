@@ -36,7 +36,7 @@ public class CountrySiteController extends BaseController {
     @ApiOperation("根据CODE查询指定国家(站点级)")
     @GetMapping("/query-by-code")
     @Permission(level = ResourceLevel.SITE, permissionLogin = true)
-    public ResponseEntity<CountryVO> getCountryByCode(@RequestParam Long tenantId, @RequestParam final String countryCode) {
+    public ResponseEntity<CountryVO> getCountryByCode(Long tenantId, @RequestParam final String countryCode) {
         CountryQueryLovDTO queryLovDTO = new CountryQueryLovDTO();
         queryLovDTO.setTenantId(tenantId);
         queryLovDTO.setCountryCode(countryCode);

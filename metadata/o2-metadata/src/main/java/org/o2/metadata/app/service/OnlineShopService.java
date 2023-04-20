@@ -1,6 +1,7 @@
 package org.o2.metadata.app.service;
 
 import org.o2.metadata.api.co.OnlineShopCO;
+import org.o2.metadata.api.vo.OnlineShopVO;
 
 import java.util.List;
 
@@ -18,6 +19,15 @@ public interface OnlineShopService {
      * @return 网店
      */
     OnlineShopCO getOnlineShop(String onlineShopCode, Long tenantId);
+
+    /**
+     * 查询网店信息
+     *
+     * @param onlineShopCode 网店编码
+     * @param tenantId       租户Id
+     * @return 网店信息
+     */
+    OnlineShopVO getOnlineShopInfo(String onlineShopCode, Long tenantId);
 
     /**
      * 批量查询网店
