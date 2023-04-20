@@ -58,6 +58,7 @@ public class OnlineShopConverter {
         onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
         onlineShopVO.setLogoUrl(onlineShop.getLogoUrl());
         onlineShopVO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
+        onlineShopVO.setTenantId(onlineShop.getTenantId());
         return onlineShopVO;
     }
 }

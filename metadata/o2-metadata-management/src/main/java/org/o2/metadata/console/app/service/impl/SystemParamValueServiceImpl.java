@@ -144,13 +144,16 @@ public class SystemParamValueServiceImpl implements SystemParamValueService {
      * @return  系统参数来源租户
      */
     protected Long judgeAndSetSysParamSource(String paramCode, Long tenantId) {
+        if (BaseConstants.DEFAULT_TENANT_ID.equals(tenantId)) {
+            return BaseConstants.DEFAULT_TENANT_ID;
+        }
         // 查询系统参数在当前租户是否存在，判断是否是自定义
         SystemParameter queryCount = new SystemParameter();
         queryCount.setParamCode(paramCode);
         queryCount.setTenantId(tenantId);
         int count = systemParameterRepository.selectCount(queryCount);
         if (count <= 0) {
-            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+            return BaseConstants.DEFAULT_TENANT_ID;
         }
         return tenantId;
     }

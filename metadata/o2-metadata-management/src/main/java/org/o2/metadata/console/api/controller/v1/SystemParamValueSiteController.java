@@ -4,6 +4,7 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.app.service.SystemParamValueService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -33,6 +34,9 @@ public class SystemParamValueSiteController {
     @Permission(level = ResourceLevel.SITE)
     @GetMapping("/{paramCode}/KV")
     public ResponseEntity<String> getSysValueByParam(@PathVariable("paramCode") String paramCode, Long tenantId) {
+        if (null == tenantId) {
+            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+        }
         String sysValueByParam = systemParamValueService.getSysValueByParam(paramCode, tenantId);
         return Results.success(sysValueByParam);
     }

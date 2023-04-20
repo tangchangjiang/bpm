@@ -29,4 +29,9 @@ public class OnlineShopVO {
      * 是否自营：1-自营，0-非自营
      */
     private Integer selfSalesFlag;
+
+    /**
+     * 租户Id
+     */
+    private Long tenantId;
 }
