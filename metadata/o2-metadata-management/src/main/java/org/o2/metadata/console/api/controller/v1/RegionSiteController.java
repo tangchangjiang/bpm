@@ -9,6 +9,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Results;
 import org.o2.metadata.console.api.dto.RegionQueryDTO;
+import org.o2.metadata.console.api.vo.AreaRegionVO;
 import org.o2.metadata.console.api.vo.RegionVO;
 import org.o2.metadata.console.app.service.RegionService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -55,5 +56,19 @@ public class RegionSiteController {
         queryDTO.setEnabledFlag(1);
 
         return Results.success(regionService.listChildren(queryDTO, null));
+    }
+
+    @ApiOperation("查询大区下的省份")
+    @GetMapping("/area")
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @Permission(permissionPublic = true, level = ResourceLevel.SITE)
+    public ResponseEntity<List<AreaRegionVO>> listAreaRegions(Long tenantId,
+                                                              @RequestParam final String countryCode,
+                                                              @RequestParam(required = false) final Integer enabledFlag) {
+        if (null == tenantId) {
+            tenantId = BaseConstants.DEFAULT_TENANT_ID;
+        }
+        // 这里不需要做兜底查询，因为H0接口中查询值集已经做了兜底
+        return Results.success(regionService.listAreaRegion(countryCode, enabledFlag, tenantId));
     }
 }
