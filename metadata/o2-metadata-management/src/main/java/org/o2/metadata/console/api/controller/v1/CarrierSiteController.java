@@ -43,6 +43,10 @@ public class CarrierSiteController extends BaseController {
     @GetMapping("/page-list")
     public ResponseEntity<Page<Carrier>> list(final Carrier carrier,
                                               final PageRequest pageRequest) {
+        Integer siteFlag = BaseConstants.Flag.YES;
+        if (null != carrier.getTenantId()) {
+            siteFlag = BaseConstants.Flag.NO;
+        }
         final Page<Carrier> list = PageHelper.doPage(pageRequest.getPage(), pageRequest.getSize(),
                 () -> carrierRepository.listCarrier(carrier, BaseConstants.Flag.YES));
         return Results.success(list);
