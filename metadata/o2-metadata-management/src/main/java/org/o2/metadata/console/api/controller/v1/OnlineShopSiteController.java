@@ -8,6 +8,7 @@ import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
@@ -39,9 +40,22 @@ public class OnlineShopSiteController extends BaseController {
 
     @ApiOperation("查询所有网点列表（站点级）")
     @Permission(level = ResourceLevel.SITE)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping("/all")
     public ResponseEntity<Page<OnlineShop>> listAllShops(final OnlineShop onlineShop, @ApiIgnore PageRequest pageRequest) {
         // 站点级查询
+        onlineShop.setSiteFlag(BaseConstants.Flag.YES);
+        return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
+    }
+
+    @ApiOperation("查询所有active的网点列表（站点层）")
+    @Permission(level = ResourceLevel.SITE)
+    @ProcessLovValue(targetField = BaseConstants.FIELD_BODY)
+    @GetMapping("/all-active")
+    public ResponseEntity<Page<OnlineShop>> listAllActiveShops(OnlineShop onlineShop,
+                                                               @ApiIgnore PageRequest pageRequest) {
+        onlineShop.setActiveFlag(1);
+        // 租户层查询
         onlineShop.setSiteFlag(BaseConstants.Flag.YES);
         return Results.success(PageHelper.doPageAndSort(pageRequest, () -> onlineShopRepository.selectShop(onlineShop)));
     }
