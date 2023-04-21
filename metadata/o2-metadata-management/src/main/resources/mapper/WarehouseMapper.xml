@@ -143,16 +143,16 @@
             <if test="warehouseTypeCode != null and warehouseTypeCode != ''">
                 AND w.warehouse_type_code = #{warehouseTypeCode}
             </if>
-            <if test="siteFlag != null and siteFlag == 0">
-                <choose>
-                    <when test="tenantId != null">
-                        and w.tenant_id = #{tenantId}
-                    </when>
-                    <otherwise>
+            <choose>
+                <when test="tenantId != null">
+                    and w.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    <if test="siteFlag != null and siteFlag == 0">
                         and 1 = 0
-                    </otherwise>
-                </choose>
-            </if>
+                    </if>
+                </otherwise>
+            </choose>
         </where>
     </select>
 

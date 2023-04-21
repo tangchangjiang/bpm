@@ -33,16 +33,28 @@
                 left join o2md_carrier_tl ct
                 on ct.carrier_id = c.carrier_id and ct.lang = #{lang} and ct.tenant_id = c.tenant_id
                 where 1 = 1
-        <if test="siteFlag != null and siteFlag == 0">
-            <choose>
-                <when test="carrier.tenantId != null">
-                    and (c.tenant_id = #{carrier.tenantId} OR c.tenant_id = 0)
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
-        </if>
+        <choose>
+            <when test="siteFlag != null and siteFlag == 1">
+                <choose>
+                    <when test="carrier.tenantId != null">
+                        AND c.tenant_id = #{carrier.tenantId}
+                    </when>
+                    <otherwise>
+                        AND 1 = 1
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="carrier.tenantId != null">
+                        AND (c.tenant_id = #{carrier.tenantId} OR c.tenant_id = 0)
+                    </when>
+                    <otherwise>
+                        AND 1 =0
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
         <if test="carrier.carrierId != null">
             and c.carrier_id = #{carrier.carrierId}
         </if>
