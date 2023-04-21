@@ -35,7 +35,7 @@ public interface OnlineShopService {
      * @param onlineShopCodes 网店
      * @return List<OnlineShopCO>
      */
-    List<OnlineShopCO> queryShopList(List<String> onlineShopCodes);
+    List<OnlineShopCO> queryShopList(Long tenantId, List<String> onlineShopCodes);
 
     /**
      * 批量查询网店-根据网店类型

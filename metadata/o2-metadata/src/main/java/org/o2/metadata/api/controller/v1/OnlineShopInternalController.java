@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 /**
  * 运费
@@ -45,7 +46,16 @@ public class OnlineShopInternalController {
     @PostMapping("/online-shop/list")
     public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
         UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
-        return Results.success(onlineShopService.queryShopList(onlineShopCodes));
+        return Results.success(onlineShopService.queryShopList(UserHelper.getTenantId(), onlineShopCodes));
+    }
+
+    @ApiOperation(value = "多租户查询多个网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/online-shop/batch-tenant")
+    public ResponseEntity<Map<Long, List<OnlineShopCO>>> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopCodeTenantMap) {
+        Map<Long, List<OnlineShopCO>> shopMap = new HashMap<>();
+        onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(tenantId, shopCodes)));
+        return Results.success(shopMap);
     }
 
     @ApiOperation(value = "查询多个网店-根据网店类型")

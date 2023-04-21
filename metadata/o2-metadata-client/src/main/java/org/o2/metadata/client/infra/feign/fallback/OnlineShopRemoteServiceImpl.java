@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费
@@ -39,6 +40,12 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     @Override
     public ResponseEntity<String> batchQueryOnlineShop(String tenantId, List<String> onlineShopCodes) {
         log.error("Error batchQueryOnlineShop, params[tenantId= {}, onlineShopCodes = {}]", tenantId, JsonHelper.objectToString(onlineShopCodes));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> queryOnlineShopBatchTenant(Map<Long, List<String>> onlineShopTenantMap) {
+        log.error("Error batchQueryOnlineShop, params = {}", JsonHelper.objectToString(onlineShopTenantMap));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

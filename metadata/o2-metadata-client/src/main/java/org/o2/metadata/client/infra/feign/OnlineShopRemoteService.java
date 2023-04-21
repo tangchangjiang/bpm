@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 门店
@@ -57,4 +58,13 @@ public interface OnlineShopRemoteService {
      */
     @GetMapping("/onlineShop-internal/online-shop/batch-list")
     ResponseEntity<String> batchQueryOnlineShop(@RequestParam String tenantId, @RequestParam List<String> onlineShopCodes);
+
+    /**
+     * 多租户查询网店信息
+     *
+     * @param onlineShopTenantMap 租户关联网店
+     * @return 网店信息
+     */
+    @PostMapping("/onlineShop-internal/online-shop/batch-tenant")
+    ResponseEntity<String> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopTenantMap);
 }
