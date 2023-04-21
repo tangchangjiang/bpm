@@ -3,13 +3,13 @@ package org.o2.metadata.api.controller.v1;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
-import org.o2.core.helper.UserHelper;
 import org.o2.metadata.api.vo.OnlineShopVO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,7 +36,7 @@ public class OnlineShopController {
     @ApiOperation("查询网店信息")
     @Permission(permissionPublic = true)
     @GetMapping("/pub/onlineShop/{onlineShopCode}")
-    public ResponseEntity<OnlineShopVO> onlineShopInfo(@PathVariable String onlineShopCode) {
-        return Results.success(onlineShopService.getOnlineShopInfo(onlineShopCode, UserHelper.getTenantId()));
+    public ResponseEntity<OnlineShopVO> onlineShopInfo(@PathVariable String onlineShopCode, @RequestParam Long tenantId) {
+        return Results.success(onlineShopService.getOnlineShopInfo(onlineShopCode, tenantId));
     }
 }
