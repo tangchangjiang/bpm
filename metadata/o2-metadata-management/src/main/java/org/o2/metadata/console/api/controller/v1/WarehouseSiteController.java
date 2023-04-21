@@ -50,9 +50,6 @@ public class WarehouseSiteController extends BaseController {
     public ResponseEntity<Page<Warehouse>> list(final Warehouse warehouse,
                                                 @ApiIgnore final PageRequest pageRequest) {
         warehouse.setSiteFlag(BaseConstants.Flag.YES);
-        if (null != warehouse.getTenantId()) {
-            warehouse.setSiteFlag(BaseConstants.Flag.NO);
-        }
         final Page<Warehouse> posList = PageHelper.doPage(pageRequest,
                 () -> warehouseRepository.listWarehouseByCondition(warehouse));
         return Results.success(posList);
