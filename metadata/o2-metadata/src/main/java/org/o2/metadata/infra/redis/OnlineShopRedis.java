@@ -25,7 +25,7 @@ public interface OnlineShopRedis {
      * @param onlineShopCodes 网店code
      * @return List<OnlineShop>
      */
-    List<OnlineShop> selectShopList(List<String> onlineShopCodes);
+    List<OnlineShop> selectShopList(Long tenantId, List<String> onlineShopCodes);
 
     /**
      * 批量查询网店-根据网店类型

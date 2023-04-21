@@ -34,9 +34,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public List<OnlineShopCO> queryShopList(List<String> onlineShopCodes) {
+    public List<OnlineShopCO> queryShopList(Long tenantId, List<String> onlineShopCodes) {
         // TODO 添加缓存
-        return ListConverter.toList(onlineShopRedis.selectShopList(onlineShopCodes), OnlineShopConverter::poToCoObject);
+        return ListConverter.toList(onlineShopRedis.selectShopList(tenantId, onlineShopCodes), OnlineShopConverter::poToCoObject);
     }
 
     @Override

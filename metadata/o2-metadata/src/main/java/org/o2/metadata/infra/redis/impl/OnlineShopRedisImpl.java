@@ -5,7 +5,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.o2.cache.util.CacheHelper;
 import org.o2.core.helper.JsonHelper;
-import org.o2.core.helper.UserHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
@@ -50,9 +49,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    public List<OnlineShop> selectShopList(List<String> onlineShopCodes) {
+    public List<OnlineShop> selectShopList(Long tenantId, List<String> onlineShopCodes) {
 
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(UserHelper.getTenantId());
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
         if (CollectionUtils.isEmpty(shopJsonList)) {
             return Collections.emptyList();
