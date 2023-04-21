@@ -6,6 +6,7 @@ import org.o2.metadata.client.domain.co.OnlineShopCO;
 import org.o2.metadata.client.infra.feign.OnlineShopRemoteService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网店
@@ -38,6 +39,17 @@ public class OnlineShopClient {
      */
     public List<OnlineShopCO> queryOnlineShop(List<String> onlineShopCodes) {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShop(onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
+        });
+    }
+
+    /**
+     * 多租户查询网店
+     *
+     * @param onlineShopTenantMap 租户Id关联网店 map<tenantId, List<onlineShopCodes>>
+     * @return Map<tenantId, List<OnlineShopCO>>
+     */
+    public Map<Long, List<OnlineShopCO>> queryOnlineShops(Map<Long, List<String>> onlineShopTenantMap) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopBatchTenant(onlineShopTenantMap), new TypeReference<Map<Long, List<OnlineShopCO>>>() {
         });
     }
 
