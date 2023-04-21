@@ -11,7 +11,9 @@ import org.springframework.scripting.support.ResourceScriptSource;
 public interface OnlineShopConstants {
 
     interface ErrorCode {
+        String ERROR_ONLINE_SHOP_CODE_NULL = "error.o2md.online_shop_code.is.null";
         String ERROR_ONLINE_SHOP_CODE_UNIQUE = "o2md.error.online_shop_code.is.not.unique";
+        String ERROR_PLATFORM_ONLINE_SHOP_CODE_UNIQUE = "o2md.error.platform_online_shop_code.is.not.unique";
         String ERROR_ONLINE_SHOP_NAME_UNIQUE = "o2md.error.online_shop_name.is.not.unique";
         String ERROR_ONLINE_SHOP_CODE_UPDATE = "o2md.error.online_shop_code.is.forbidden.update";
         String ERROR_ONLINE_SHOP_DATA_VERSION_ERROR = "o2md.error.online_shop_data_version_error";
