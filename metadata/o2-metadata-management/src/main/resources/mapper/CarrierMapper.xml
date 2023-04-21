@@ -37,7 +37,7 @@
             <when test="siteFlag != null and siteFlag == 1">
                 <choose>
                     <when test="carrier.tenantId != null">
-                        AND c.tenant_id = #{tenantId}
+                        AND c.tenant_id = #{carrier.tenantId}
                     </when>
                     <otherwise>
                         AND 1 = 1
@@ -47,7 +47,7 @@
             <otherwise>
                 <choose>
                     <when test="carrier.tenantId != null">
-                        AND (c.tenant_id = #{tenantId} OR c.tenant_id = 0)
+                        AND (c.tenant_id = #{carrier.tenantId} OR c.tenant_id = 0)
                     </when>
                     <otherwise>
                         AND 1 =0
