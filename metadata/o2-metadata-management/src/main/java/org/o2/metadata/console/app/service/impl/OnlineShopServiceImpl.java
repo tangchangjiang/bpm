@@ -89,6 +89,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public OnlineShop createOnlineShop(OnlineShop onlineShop) {
         validateOnlineShopCode(onlineShop);
+        validatePlatformOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
         String code = onlineShop.getOnlineShopCode();
         String name = onlineShop.getOnlineShopName();
@@ -180,11 +181,29 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     /**
-     * 校验网店编码唯一性
+     * 网店编码唯一性校验
      *
      * @param onlineShop 网店
      */
-    private void validateOnlineShopCode(OnlineShop onlineShop) {
+    protected void validateOnlineShopCode(OnlineShop onlineShop) {
+        if (null == onlineShop.getOnlineShopCode()) {
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_NULL);
+        }
+        // 网店编码唯一
+        Sqls sqls = Sqls.custom();
+        sqls.andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShop.getOnlineShopCode());
+        int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
+        if (number > 0) {
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
+        }
+    }
+
+    /**
+     * 校验平台网店编码唯一性
+     *
+     * @param onlineShop 网店
+     */
+    private void validatePlatformOnlineShopCode(OnlineShop onlineShop) {
         if (null == onlineShop.getPlatformShopCode()) {
             return;
         }
@@ -195,8 +214,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         sqls.andEqualTo(OnlineShop.FIELD_PLATFORM_SHOP_CODE, onlineShop.getPlatformShopCode());
         int number = onlineShopRepository.selectCountByCondition(Condition.builder(OnlineShop.class).andWhere(sqls).build());
         if (number > 0) {
-            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE,
-                    OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
+            throw new O2CommonException(null, OnlineShopConstants.ErrorCode.ERROR_ONLINE_SHOP_CODE_UNIQUE);
         }
     }
 
