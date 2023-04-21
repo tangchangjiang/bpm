@@ -189,16 +189,16 @@
         left join o2md_online_shop_tl ost on ost.online_shop_id = os.online_shop_id and ost.lang = #{lang} and
         ost.tenant_id = os.tenant_id
         <where>
-            <if test="siteFlag != null and siteFlag == 0">
-                <choose>
-                    <when test="tenantId != null">
-                        AND os.tenant_id = #{tenantId}
-                    </when>
-                    <otherwise>
-                        AND 1 = 0
-                    </otherwise>
-                </choose>
-            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND os.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    <if test="siteFlag != null and siteFlag == 0">
+                        and 1 = 0
+                    </if>
+                </otherwise>
+            </choose>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code LIKE upper(#{onlineShopCodeLike})
