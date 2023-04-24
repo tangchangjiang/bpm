@@ -39,7 +39,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (StringUtils.isBlank(shopJsonStr)) {
             return null;
         }
-        log.info("getOnlineShop onlineShopValue:{}", shopJsonStr);
+        if (log.isDebugEnabled()) {
+            log.info("getOnlineShop onlineShopValue:{}", shopJsonStr);
+        }
         return JsonHelper.stringToObject(shopJsonStr, OnlineShop.class);
     }
 
