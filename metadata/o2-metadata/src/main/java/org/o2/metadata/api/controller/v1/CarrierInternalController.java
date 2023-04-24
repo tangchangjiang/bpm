@@ -44,7 +44,7 @@ public class CarrierInternalController {
     @ApiOperation(value = "查询承运商信息")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/carriers-internal/list")
-    public ResponseEntity<List<CarrierCO>> listCarriers() {
+    public ResponseEntity<List<CarrierCO>> listCarrier() {
         Long tenantId = null == UserHelper.getTenantId() ? BaseConstants.DEFAULT_TENANT_ID : UserHelper.getTenantId();
         return Results.success(carrierService.listCarriers(tenantId));
     }

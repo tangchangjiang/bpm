@@ -30,10 +30,9 @@ public interface OnlineShopConstants {
         String UPDATE = "UPDATE";
         String DELETE = "DELETE";
         /**
-         * 租户关联网店key set o2md:onlineShop:[tenantId]:all
-         *
+         * 租户关联网店key set o2md:onlineShop:[tenantId]:index
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:index";
 
         /**
          * 网店详情 hash o2md:onlineShop:detail

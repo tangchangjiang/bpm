@@ -23,7 +23,7 @@ public class CarrierRemoteServiceImpl implements CarrierRemoteService {
     }
 
     @Override
-    public ResponseEntity<String> listCarriers() {
+    public ResponseEntity<String> listCarrier() {
         log.error("Error listCarriers, params[organizationId= {}]", UserHelper.getTenantId());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

@@ -41,4 +41,16 @@ public class SysParameterRemoteServiceImpl implements SysParameterRemoteService 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @Override
+    public ResponseEntity<String> getSysParameter(String paramCode) {
+        logger.error("Error getSysParameter, params = {}", paramCode);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listSysParameters(List<String> paramCodes) {
+        logger.error("Error listSysParameters, params = {}", paramCodes);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 }

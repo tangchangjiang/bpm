@@ -60,4 +60,21 @@ public interface SysParameterRemoteService {
      */
     @PostMapping("/sysParam-internal/list-param-batch-tenant")
     ResponseEntity<String> listSysParamBatchTenant(@RequestBody Map<Long, List<String>> paramCodesMap);
+
+    /**
+     * 从redis查询系统参数
+     *
+     * @param paramCode 参数编码
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/sysParameter-internal/{paramCode}")
+    ResponseEntity<String> getSysParameter(@PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
+
+    /**
+     * 批量从redis查询系统参数
+     * @param paramCodes 编码集合
+     * @return ResponseEntity<String>
+     */
+    @GetMapping("/sysParameter-internal/paramCodes")
+    ResponseEntity<String> listSysParameters(@RequestParam List<String> paramCodes);
 }

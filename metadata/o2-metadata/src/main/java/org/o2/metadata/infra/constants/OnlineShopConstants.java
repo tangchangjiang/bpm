@@ -10,10 +10,10 @@ public interface OnlineShopConstants {
 
     interface Redis {
         /**
-         *  set o2md:onlineShop:[tenantId]:all
+         *  set o2md:onlineShop:[tenantId]:index
          *  该结构暂需保留，因为C端有查询单租户下所有网店的需求
          */
-        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
+        String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:index";
 
         /**
          * 网店详情 hash o2md:onlineShop:detail
