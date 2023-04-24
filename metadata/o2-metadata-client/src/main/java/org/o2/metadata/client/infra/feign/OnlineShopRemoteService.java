@@ -24,7 +24,7 @@ import java.util.Map;
 )
 public interface OnlineShopRemoteService {
     /**
-     * 获取运费
+     * 查询网店
      *
      * @param onlineShopCode 网店编码
      * @param tenantId       租户id
@@ -32,6 +32,15 @@ public interface OnlineShopRemoteService {
      */
     @GetMapping("/onlineShop-internal/online-shop")
     ResponseEntity<String> getOnlineShop(@RequestParam String onlineShopCode, @RequestParam String tenantId);
+
+    /**
+     * 查询网店
+     *
+     * @param onlineShopCode 网店编码
+     * @return 网店
+     */
+    @GetMapping("/onlineShop-internal/online-shop-by-code")
+    ResponseEntity<String> getOnlineShopByCode(String onlineShopCode);
 
     /**
      * 批量获取门店
@@ -65,6 +74,7 @@ public interface OnlineShopRemoteService {
      * @param onlineShopTenantMap 租户关联网店
      * @return 网店信息
      */
+    @Deprecated
     @PostMapping("/onlineShop-internal/online-shop/batch-tenant")
     ResponseEntity<String> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopTenantMap);
 }

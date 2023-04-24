@@ -4,8 +4,6 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
-import org.o2.core.filter.metric.UserInfo;
-import org.o2.core.helper.UserHelper;
 import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
@@ -34,28 +32,18 @@ public class OnlineShopInternalController {
         this.onlineShopService = onlineShopService;
     }
 
-    @ApiOperation(value = "查询单个网店")
+    @ApiOperation(value = "通过编码查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/online-shop")
-    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String onlineShopCode, @RequestParam String tenantId) {
-        return Results.success(onlineShopService.getOnlineShop(onlineShopCode, Long.valueOf(tenantId)));
+    @GetMapping("/online-shop-by-code")
+    public ResponseEntity<OnlineShopCO> getOnlineShopByCode(@RequestParam String onlineShopCode) {
+        return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
     }
 
     @ApiOperation(value = "查询多个网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop/list")
     public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
-        UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
-        return Results.success(onlineShopService.queryShopList(UserHelper.getTenantId(), onlineShopCodes));
-    }
-
-    @ApiOperation(value = "多租户查询多个网店")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/online-shop/batch-tenant")
-    public ResponseEntity<Map<Long, List<OnlineShopCO>>> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopCodeTenantMap) {
-        Map<Long, List<OnlineShopCO>> shopMap = new HashMap<>();
-        onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(tenantId, shopCodes)));
-        return Results.success(shopMap);
+        return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
 
     @ApiOperation(value = "查询多个网店-根据网店类型")
@@ -65,11 +53,30 @@ public class OnlineShopInternalController {
         return Results.success(onlineShopService.queryShopListByType(Long.valueOf(tenantId), onlineShopType));
     }
 
+    @ApiOperation(value = "查询单个网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/online-shop")
+    @Deprecated
+    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String onlineShopCode, @RequestParam String tenantId) {
+        return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
+    }
+
+    @ApiOperation(value = "多租户查询多个网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @PostMapping("/online-shop/batch-tenant")
+    @Deprecated
+    public ResponseEntity<Map<Long, List<OnlineShopCO>>> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopCodeTenantMap) {
+        Map<Long, List<OnlineShopCO>> shopMap = new HashMap<>();
+        onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(shopCodes)));
+        return Results.success(shopMap);
+    }
+
     @ApiOperation(value = "查询多个网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/online-shop/batch-list")
+    @Deprecated
     public ResponseEntity<List<OnlineShopCO>> batchQueryOnlineShop(@RequestParam String tenantId, @RequestParam List<String> onlineShopCodes) {
-        return Results.success(onlineShopService.batchQueryOnlineShop(Long.valueOf(tenantId), onlineShopCodes));
+        return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
 
 }

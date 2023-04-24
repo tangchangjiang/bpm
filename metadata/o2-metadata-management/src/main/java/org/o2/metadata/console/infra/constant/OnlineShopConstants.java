@@ -30,9 +30,16 @@ public interface OnlineShopConstants {
         String UPDATE = "UPDATE";
         String DELETE = "DELETE";
         /**
-         * o2md:onlineShop:[tenantId]:all
+         * 租户关联网店key set o2md:onlineShop:[tenantId]:all
+         *
          */
         String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
+
+        /**
+         * 网店详情 hash o2md:onlineShop:detail
+         */
+        String ONLINE_SHOP_DETAIL_KEY = "o2md:onlineShop:detail";
+
         /**
          * Redis OnlineShopRelWarehouse
          * o2md:shopRelwh:[tenantId]:[shopCode]
@@ -49,6 +56,15 @@ public interface OnlineShopConstants {
          */
         static String getOnlineShopKey(Long tenantId) {
             return String.format(ONLINE_SHOP_KEY, tenantId);
+        }
+
+        /**
+         * 获取网店详情key
+         *
+         * @return 全部网店详情key
+         */
+        static String getOnlineShopDetailKey() {
+            return ONLINE_SHOP_DETAIL_KEY;
         }
 
         /**

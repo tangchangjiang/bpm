@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,7 +35,7 @@ public class OnlineShopController {
     @ApiOperation("查询网店信息")
     @Permission(permissionPublic = true)
     @GetMapping("/pub/onlineShop/{onlineShopCode}")
-    public ResponseEntity<OnlineShopVO> onlineShopInfo(@PathVariable String onlineShopCode, @RequestParam Long tenantId) {
-        return Results.success(onlineShopService.getOnlineShopInfo(onlineShopCode, tenantId));
+    public ResponseEntity<OnlineShopVO> onlineShopInfo(@PathVariable String onlineShopCode) {
+        return Results.success(onlineShopService.getOnlineShopInfo(onlineShopCode));
     }
 }

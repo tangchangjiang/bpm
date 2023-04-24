@@ -15,19 +15,17 @@ public interface OnlineShopService {
      * 查询网店
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId       租户id
      * @return 网店
      */
-    OnlineShopCO getOnlineShop(String onlineShopCode, Long tenantId);
+    OnlineShopCO getOnlineShop(String onlineShopCode);
 
     /**
      * 查询网店信息
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId       租户Id
      * @return 网店信息
      */
-    OnlineShopVO getOnlineShopInfo(String onlineShopCode, Long tenantId);
+    OnlineShopVO getOnlineShopInfo(String onlineShopCode);
 
     /**
      * 批量查询网店
@@ -35,7 +33,7 @@ public interface OnlineShopService {
      * @param onlineShopCodes 网店
      * @return List<OnlineShopCO>
      */
-    List<OnlineShopCO> queryShopList(Long tenantId, List<String> onlineShopCodes);
+    List<OnlineShopCO> queryShopList(List<String> onlineShopCodes);
 
     /**
      * 批量查询网店-根据网店类型
@@ -45,12 +43,4 @@ public interface OnlineShopService {
      * @return List<OnlineShopCO>
      */
     List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType);
-
-    /**
-     * 批量查询网店
-     * @param tenantId
-     * @param onlineShopCodes
-     * @return
-     */
-    List<OnlineShopCO> batchQueryOnlineShop(Long tenantId, List<String> onlineShopCodes);
 }

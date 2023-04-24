@@ -2,7 +2,6 @@ package org.o2.metadata.infra.redis.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.cache.util.CacheHelper;
 import org.o2.core.helper.JsonHelper;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * 网店
@@ -33,9 +32,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    public OnlineShop getOnlineShop(String onlineShopCode, Long tenantId) {
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        String shopJsonStr = (String) redisCacheClient.opsForHash().get(key, onlineShopCode);
+    public OnlineShop getOnlineShop(String onlineShopCode) {
+        String key = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+        String shopJsonStr = redisCacheClient.<String, String>opsForHash().get(key, onlineShopCode);
         if (StringUtils.isBlank(shopJsonStr)) {
             return null;
         }
@@ -46,9 +45,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
     }
 
     @Override
-    public List<OnlineShop> selectShopList(Long tenantId, List<String> onlineShopCodes) {
+    public List<OnlineShop> selectShopList(List<String> onlineShopCodes) {
 
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+        String key = OnlineShopConstants.Redis.getOnlineShopDetailKey();
         List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
         if (CollectionUtils.isEmpty(shopJsonList)) {
             return Collections.emptyList();
@@ -79,32 +78,23 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
      */
     protected List<OnlineShop> getOnlineShopByType(Long tenantId, String onlineShopType) {
         String onlineShopKey = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        Map<String, String> shopJsonMap = redisCacheClient.<String, String>opsForHash().entries(onlineShopKey);
-        if (MapUtils.isEmpty(shopJsonMap)) {
+        Set<String> onlineShopCodes = redisCacheClient.opsForSet().members(onlineShopKey);
+        if (CollectionUtils.isEmpty(onlineShopCodes)) {
+            return Collections.emptyList();
+        }
+        String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+        List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(detailKey, onlineShopCodes);
+        if (CollectionUtils.isEmpty(shopJsonList)) {
             return Collections.emptyList();
         }
 
         List<OnlineShop> shopList = new ArrayList<>();
-        shopJsonMap.forEach((onlineShopCode, shopJson) -> {
+        shopJsonList.forEach(shopJson -> {
             OnlineShop onlineShop = JsonHelper.stringToObject(shopJson, OnlineShop.class);
             if (onlineShopType.equals(onlineShop.getOnlineShopType())) {
                 shopList.add(onlineShop);
             }
         });
-        return shopList;
-    }
-
-    @Override
-    public List<OnlineShop> batchQueryShopList(Long tenantId, List<String> onlineShopCodes) {
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
-        if (CollectionUtils.isEmpty(shopJsonList)) {
-            return Collections.emptyList();
-        }
-        List<OnlineShop> shopList = new ArrayList<>();
-        for (String shopJson : shopJsonList) {
-            shopList.add(JsonHelper.stringToObject(shopJson, OnlineShop.class));
-        }
         return shopList;
     }
 }
