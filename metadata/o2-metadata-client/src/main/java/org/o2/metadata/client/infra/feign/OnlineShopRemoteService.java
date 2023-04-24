@@ -65,6 +65,7 @@ public interface OnlineShopRemoteService {
      * @param onlineShopTenantMap 租户关联网店
      * @return 网店信息
      */
+    @Deprecated
     @PostMapping("/onlineShop-internal/online-shop/batch-tenant")
     ResponseEntity<String> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopTenantMap);
 }

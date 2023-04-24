@@ -43,17 +43,6 @@ public class OnlineShopClient {
     }
 
     /**
-     * 多租户查询网店
-     *
-     * @param onlineShopTenantMap 租户Id关联网店 map<tenantId, List<onlineShopCodes>>
-     * @return Map<tenantId, List<OnlineShopCO>>
-     */
-    public Map<Long, List<OnlineShopCO>> queryOnlineShops(Map<Long, List<String>> onlineShopTenantMap) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopBatchTenant(onlineShopTenantMap), new TypeReference<Map<Long, List<OnlineShopCO>>>() {
-        });
-    }
-
-    /**
      * 批量查询网店-根据网店类型
      *
      * @param onlineShopType 网店类型
@@ -65,11 +54,24 @@ public class OnlineShopClient {
     }
 
     /**
+     * 多租户查询网店
+     *
+     * @param onlineShopTenantMap 租户Id关联网店 map<tenantId, List<onlineShopCodes>>
+     * @return Map<tenantId, List<OnlineShopCO>>
+     */
+    @Deprecated
+    public Map<Long, List<OnlineShopCO>> queryOnlineShops(Map<Long, List<String>> onlineShopTenantMap) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopBatchTenant(onlineShopTenantMap), new TypeReference<Map<Long, List<OnlineShopCO>>>() {
+        });
+    }
+
+    /**
      * 批量查询网店-传租户ID
      * @param tenantId
      * @param onlineShopCodes
      * @return
      */
+    @Deprecated
     public List<OnlineShopCO> batchQueryOnlineShop(String tenantId, List<String> onlineShopCodes) {
         return ResponseUtils.getResponse(onlineShopRemoteService.batchQueryOnlineShop(tenantId, onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
         });

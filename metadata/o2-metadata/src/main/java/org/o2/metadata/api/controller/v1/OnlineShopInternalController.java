@@ -4,8 +4,6 @@ import io.choerodon.core.iam.ResourceLevel;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
-import org.o2.core.filter.metric.UserInfo;
-import org.o2.core.helper.UserHelper;
 import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.app.service.OnlineShopService;
 import org.springframework.http.ResponseEntity;
@@ -45,16 +43,16 @@ public class OnlineShopInternalController {
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop/list")
     public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
-        UserHelper.validUserInfo(UserHelper.getUserInfo(), UserInfo.FIELD_TENANT_ID);
-        return Results.success(onlineShopService.queryShopList(UserHelper.getTenantId(), onlineShopCodes));
+        return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
 
     @ApiOperation(value = "多租户查询多个网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @PostMapping("/online-shop/batch-tenant")
+    @Deprecated
     public ResponseEntity<Map<Long, List<OnlineShopCO>>> queryOnlineShopBatchTenant(@RequestBody Map<Long, List<String>> onlineShopCodeTenantMap) {
         Map<Long, List<OnlineShopCO>> shopMap = new HashMap<>();
-        onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(tenantId, shopCodes)));
+        onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(shopCodes)));
         return Results.success(shopMap);
     }
 
@@ -68,8 +66,9 @@ public class OnlineShopInternalController {
     @ApiOperation(value = "查询多个网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
     @GetMapping("/online-shop/batch-list")
+    @Deprecated
     public ResponseEntity<List<OnlineShopCO>> batchQueryOnlineShop(@RequestParam String tenantId, @RequestParam List<String> onlineShopCodes) {
-        return Results.success(onlineShopService.batchQueryOnlineShop(Long.valueOf(tenantId), onlineShopCodes));
+        return Results.success(onlineShopService.queryShopList(onlineShopCodes));
     }
 
 }

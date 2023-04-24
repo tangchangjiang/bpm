@@ -25,28 +25,23 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
     @Override
     public OnlineShopCO getOnlineShop(String onlineShopCode, Long tenantId) {
-        return OnlineShopConverter.poToCoObject(onlineShopRedis.getOnlineShop(onlineShopCode, tenantId));
+        return OnlineShopConverter.poToCoObject(onlineShopRedis.getOnlineShop(onlineShopCode));
     }
 
     @Override
-    public OnlineShopVO getOnlineShopInfo(String onlineShopCode, Long tenantId) {
-        return OnlineShopConverter.poToShopVO(onlineShopRedis.getOnlineShop(onlineShopCode, tenantId));
+    public OnlineShopVO getOnlineShopInfo(String onlineShopCode) {
+        return OnlineShopConverter.poToShopVO(onlineShopRedis.getOnlineShop(onlineShopCode));
     }
 
     @Override
-    public List<OnlineShopCO> queryShopList(Long tenantId, List<String> onlineShopCodes) {
+    public List<OnlineShopCO> queryShopList(List<String> onlineShopCodes) {
         // TODO 添加缓存
-        return ListConverter.toList(onlineShopRedis.selectShopList(tenantId, onlineShopCodes), OnlineShopConverter::poToCoObject);
+        return ListConverter.toList(onlineShopRedis.selectShopList(onlineShopCodes), OnlineShopConverter::poToCoObject);
     }
 
     @Override
     public List<OnlineShopCO> queryShopListByType(Long tenantId, String onlineShopType) {
         return ListConverter.toList(onlineShopRedis.selectShopListByType(tenantId, onlineShopType), OnlineShopConverter::poToCoObject);
-    }
-
-    @Override
-    public List<OnlineShopCO> batchQueryOnlineShop(Long tenantId, List<String> onlineShopCodes) {
-        return ListConverter.toList(onlineShopRedis.batchQueryShopList(tenantId, onlineShopCodes), OnlineShopConverter::poToCoObject);
     }
 
 }

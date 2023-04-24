@@ -10,9 +10,15 @@ public interface OnlineShopConstants {
 
     interface Redis {
         /**
-         *  o2md:onlineShop:[tenantId]:[shopCode]
+         *  set o2md:onlineShop:[tenantId]:all
+         *  该结构暂需保留，因为C端有查询单租户下所有网店的需求
          */
         String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:all";
+
+        /**
+         * 网店详情 hash o2md:onlineShop:detail
+         */
+        String ONLINE_SHOP_DETAIL_KEY = "o2md:onlineShop:detail";
 
         /**
          *  获取key
@@ -21,6 +27,15 @@ public interface OnlineShopConstants {
          */
         static String getOnlineShopKey(Long tenantId) {
             return String.format(ONLINE_SHOP_KEY, tenantId);
+        }
+
+        /**
+         * 获取网店详情key
+         *
+         * @return 全部网店详情key
+         */
+        static String getOnlineShopDetailKey() {
+            return ONLINE_SHOP_DETAIL_KEY;
         }
     }
 }
