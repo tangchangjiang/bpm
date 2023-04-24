@@ -34,5 +34,5 @@ public interface CarrierRemoteService {
      * @return list
      */
     @GetMapping({"/carriers-internal/list"})
-    ResponseEntity<String> listCarriers();
+    ResponseEntity<String> listCarrier();
 }

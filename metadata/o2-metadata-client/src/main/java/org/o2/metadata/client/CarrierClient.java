@@ -38,7 +38,7 @@ public class CarrierClient {
      * @return 承运商
      */
     public List<CarrierCO> listCarriers() {
-        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(), new TypeReference<List<CarrierCO>>() {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarrier(), new TypeReference<List<CarrierCO>>() {
         });
     }
 }
