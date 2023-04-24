@@ -26,8 +26,19 @@ public class CarrierClient {
      * @param organizationId 租户id
      * @return list
      */
+    @Deprecated
     public List<CarrierCO> listCarriers(final Long organizationId) {
         return ResponseUtils.getResponse(carrierRemoteService.listCarriers(organizationId), new TypeReference<List<CarrierCO>>() {
+        });
+    }
+
+    /**
+     * 查询承运商
+     *
+     * @return 承运商
+     */
+    public List<CarrierCO> listCarriers() {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriers(), new TypeReference<List<CarrierCO>>() {
         });
     }
 }
