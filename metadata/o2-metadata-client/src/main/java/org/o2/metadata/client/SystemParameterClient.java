@@ -42,6 +42,25 @@ public class SystemParameterClient {
     }
 
     /**
+     * 从redis查询系统参数
+     *
+     * @param paramCode 参数编码
+     */
+    public SystemParameterCO getSysParameter(String paramCode) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.getSysParameter(paramCode), SystemParameterCO.class);
+    }
+
+    /**
+     * 批量从redis查询系统参数
+     * @param  paramCodes 参数编码
+     * @return list key:参数编码 value:系统参数
+     */
+    public Map<String, SystemParameterCO> listSysParameters(List<String> paramCodes) {
+        return ResponseUtils.getResponse(sysParameterRemoteService.listSysParameters(paramCodes), new TypeReference<Map<String, SystemParameterCO>>() {
+        });
+    }
+
+    /**
      * 从Redis查询系统参数（多租户）
      *
      * @param paramCodeMap 参数编码Map tenantId:paramCode
