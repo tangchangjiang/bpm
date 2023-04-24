@@ -37,11 +37,13 @@ public class RuleConditionDTO {
      * 构建条件字符串
      *
      * @param rule 规则
-     * @param rel 关系
+     * @param rel  关系
      * @return 字符串
      */
     public String build(Rule rule, AndOr rel) {
-        log.info("relation {}, node {}", JsonHelper.objectToString(relation), JsonHelper.objectToString(node));
+        if (log.isDebugEnabled()) {
+            log.debug("relation {}, node {}", JsonHelper.objectToString(relation), JsonHelper.objectToString(node));
+        }
         final StringJoiner sj = new StringJoiner(rel == null ? this.getRelation().getValue() : rel.getValue(), "(", ")");
         //IF All Empty, Return False
         if (node == null && CollectionUtils.isEmpty(this.getChildren())) {
@@ -68,7 +70,6 @@ public class RuleConditionDTO {
 
     /**
      * 校验规则参数合法性
-     *
      */
     public void valid() {
         if (node != null) {
@@ -86,8 +87,9 @@ public class RuleConditionDTO {
 
     /**
      * 校验规则参数合法性
+     *
      * @param conditionCodes 条件编码集合
-     * @param paramCodes 条件参数编码集合
+     * @param paramCodes     条件参数编码集合
      */
     public void allCondCodeParamCode(List<String> conditionCodes, List<String> paramCodes) {
         if (node != null) {
@@ -105,6 +107,7 @@ public class RuleConditionDTO {
 
     /**
      * 校验规则参数合法性
+     *
      * @param conditionCodes 条件编码集合
      */
     public void allConditionCode(List<String> conditionCodes) {
@@ -136,8 +139,9 @@ public class RuleConditionDTO {
 
     /**
      * 转化规则条件
+     *
      * @param conditions 条件集合
-     * @param params 条件参数集合
+     * @param params     条件参数集合
      */
     public void convertCondition(List<RuleEntityCondition> conditions, List<RuleParam> params) {
         if (CollectionUtils.isEmpty(conditions) || CollectionUtils.isEmpty(params)) {
@@ -168,7 +172,8 @@ public class RuleConditionDTO {
 
     /**
      * 转化规则参数
-     * @param param 参数
+     *
+     * @param param    参数
      * @param paramDTO 参数dto
      */
     public void convertParam(RuleParam param, RuleMiniConditionParameterDTO paramDTO) {
