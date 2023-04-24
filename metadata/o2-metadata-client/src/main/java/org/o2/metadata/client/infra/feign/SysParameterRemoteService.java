@@ -30,8 +30,8 @@ public interface SysParameterRemoteService {
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/sysParameter-internal/{paramCode}")
-    ResponseEntity<String> getSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+    @GetMapping("/sysParameter-internal/{paramCode}")
+    ResponseEntity<String> getSystemParameter(@ApiParam(value = "租户ID") Long organizationId,
                                                       @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
 
     /**
@@ -40,8 +40,8 @@ public interface SysParameterRemoteService {
      * @param organizationId 租户ID
      * @return ResponseEntity<String>
      */
-    @GetMapping("/{organizationId}/sysParameter-internal/paramCodes")
-    ResponseEntity<String> listSystemParameters(@RequestParam List<String> paramCodes, @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
+    @GetMapping("/sysParameter-internal/paramCodes")
+    ResponseEntity<String> listSystemParameters(@RequestParam List<String> paramCodes, @ApiParam(value = "租户ID") Long organizationId);
 
     /**
      * 从redis查询系统参数(多租户)
