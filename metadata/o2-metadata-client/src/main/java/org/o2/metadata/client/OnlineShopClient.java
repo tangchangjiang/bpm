@@ -25,10 +25,9 @@ public class OnlineShopClient {
      *
      * @param onlineShopCode 网店编码
      * @return 网店
-     * @date 2021-08-10
      */
-    public OnlineShopCO getOnlineShop(String onlineShopCode, String tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode, tenantId), OnlineShopCO.class);
+    public OnlineShopCO getOnlineShop(String onlineShopCode) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopByCode(onlineShopCode), OnlineShopCO.class);
     }
 
     /**
@@ -51,6 +50,17 @@ public class OnlineShopClient {
     public List<OnlineShopCO> queryOnlineShopByType(String tenantId, String onlineShopType) {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopByType(tenantId, onlineShopType), new TypeReference<List<OnlineShopCO>>() {
         });
+    }
+
+    /**
+     * 查询网店
+     *
+     * @param onlineShopCode 网店编码
+     * @return 网店
+     */
+    @Deprecated
+    public OnlineShopCO getOnlineShop(String onlineShopCode, String tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode, tenantId), OnlineShopCO.class);
     }
 
     /**

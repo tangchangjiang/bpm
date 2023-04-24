@@ -32,11 +32,11 @@ public class OnlineShopInternalController {
         this.onlineShopService = onlineShopService;
     }
 
-    @ApiOperation(value = "查询单个网店")
+    @ApiOperation(value = "通过编码查询网店")
     @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/online-shop")
-    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String onlineShopCode, @RequestParam String tenantId) {
-        return Results.success(onlineShopService.getOnlineShop(onlineShopCode, Long.valueOf(tenantId)));
+    @GetMapping("/online-shop-by-code")
+    public ResponseEntity<OnlineShopCO> getOnlineShopByCode(@RequestParam String onlineShopCode) {
+        return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
     }
 
     @ApiOperation(value = "查询多个网店")
@@ -44,6 +44,21 @@ public class OnlineShopInternalController {
     @PostMapping("/online-shop/list")
     public ResponseEntity<List<OnlineShopCO>> queryOnlineShop(@RequestBody List<String> onlineShopCodes) {
         return Results.success(onlineShopService.queryShopList(onlineShopCodes));
+    }
+
+    @ApiOperation(value = "查询多个网店-根据网店类型")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/online-shop/list-by-type")
+    public ResponseEntity<List<OnlineShopCO>> queryOnlineShopByType(@RequestParam String tenantId, @RequestParam String onlineShopType) {
+        return Results.success(onlineShopService.queryShopListByType(Long.valueOf(tenantId), onlineShopType));
+    }
+
+    @ApiOperation(value = "查询单个网店")
+    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
+    @GetMapping("/online-shop")
+    @Deprecated
+    public ResponseEntity<OnlineShopCO> getOnlineShop(@RequestParam String onlineShopCode, @RequestParam String tenantId) {
+        return Results.success(onlineShopService.getOnlineShop(onlineShopCode));
     }
 
     @ApiOperation(value = "多租户查询多个网店")
@@ -54,13 +69,6 @@ public class OnlineShopInternalController {
         Map<Long, List<OnlineShopCO>> shopMap = new HashMap<>();
         onlineShopCodeTenantMap.forEach((tenantId, shopCodes) -> shopMap.put(tenantId, onlineShopService.queryShopList(shopCodes)));
         return Results.success(shopMap);
-    }
-
-    @ApiOperation(value = "查询多个网店-根据网店类型")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @GetMapping("/online-shop/list-by-type")
-    public ResponseEntity<List<OnlineShopCO>> queryOnlineShopByType(@RequestParam String tenantId, @RequestParam String onlineShopType) {
-        return Results.success(onlineShopService.queryShopListByType(Long.valueOf(tenantId), onlineShopType));
     }
 
     @ApiOperation(value = "查询多个网店")

@@ -2,6 +2,7 @@ package org.o2.metadata.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
+import org.o2.core.helper.UserHelper;
 import org.o2.metadata.client.infra.feign.OnlineShopRemoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     @Override
     public ResponseEntity<String> getOnlineShop(String onlineShopCode, String tenantId) {
         log.error("Error getOnlineShop, params[onlineShopCode = {},tenantId = {}]", onlineShopCode, tenantId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> getOnlineShopByCode(String onlineShopCode) {
+        log.error("Error getOnlineShopByCode, params[onlineShopCode = {},tenantId = {}]", onlineShopCode, UserHelper.getTenantId());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

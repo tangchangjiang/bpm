@@ -15,10 +15,9 @@ public interface OnlineShopService {
      * 查询网店
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId       租户id
      * @return 网店
      */
-    OnlineShopCO getOnlineShop(String onlineShopCode, Long tenantId);
+    OnlineShopCO getOnlineShop(String onlineShopCode);
 
     /**
      * 查询网店信息
