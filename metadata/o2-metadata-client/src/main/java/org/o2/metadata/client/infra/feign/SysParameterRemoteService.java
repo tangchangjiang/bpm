@@ -75,6 +75,6 @@ public interface SysParameterRemoteService {
      * @param paramCodes 编码集合
      * @return ResponseEntity<String>
      */
-    @GetMapping("/sysParameter-internal/paramCodes")
+    @GetMapping("/sysParam-internal/paramCodes")
     ResponseEntity<String> listSysParameters(@RequestParam List<String> paramCodes);
 }
