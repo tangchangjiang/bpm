@@ -67,7 +67,7 @@ public interface SysParameterRemoteService {
      * @param paramCode 参数编码
      * @return ResponseEntity<String>
      */
-    @GetMapping("/sysParameter-internal/{paramCode}")
+    @GetMapping("/sysParam-internal/{paramCode}")
     ResponseEntity<String> getSysParameter(@PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode);
 
     /**
