@@ -98,7 +98,10 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for (OnlineShopCacheBO bo : bos) {
             map.put(bo.getOnlineShopCode(), JsonHelper.objectToString(bo));
         }
+        String[] shopCodes = list.stream().map(OnlineShop::getOnlineShopCode).toArray(String[]::new);
+        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
         String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+        redisCacheClient.opsForSet().add(key, shopCodes);
         redisCacheClient.opsForHash().putAll(detailKey, map);
     }
 }
