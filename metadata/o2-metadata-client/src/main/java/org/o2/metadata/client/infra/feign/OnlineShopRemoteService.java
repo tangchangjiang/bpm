@@ -40,7 +40,7 @@ public interface OnlineShopRemoteService {
      * @return 网店
      */
     @GetMapping("/onlineShop-internal/online-shop-by-code")
-    ResponseEntity<String> getOnlineShopByCode(String onlineShopCode);
+    ResponseEntity<String> getOnlineShopByCode(@RequestParam String onlineShopCode);
 
     /**
      * 批量获取门店
