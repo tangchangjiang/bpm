@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
@@ -56,7 +57,9 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         queryParam.put(O2LovConstants.RegionLov.COUNTRY_CODE, countryCode);
         queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE, O2LovConstants.RegionLov.DEFAULT_DATA);
         queryParam.put(O2LovConstants.RegionLov.LANG, lang);
-        queryParam.putAll(paramMap);
+        if (MapUtils.isNotEmpty(paramMap)) {
+            queryParam.putAll(paramMap);
+        }
 
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
@@ -124,7 +127,6 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             paramMap.put(O2LovConstants.RegionLov.LEVEL_NUMBER, String.valueOf(queryLov.getLevelNumber()));
         }
         paramMap.put(O2LovConstants.RegionLov.REGION_NAME, queryLov.getRegionName());
-        List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang, paramMap);
-        return regionList;
+        return this.queryRegionCache(tenantId, countryCode, lang, paramMap);
     }
 }
