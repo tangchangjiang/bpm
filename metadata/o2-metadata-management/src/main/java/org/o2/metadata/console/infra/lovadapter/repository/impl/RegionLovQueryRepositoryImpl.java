@@ -170,7 +170,12 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = LanguageHelper.language();
         }
+        // 设置默认国家
+        if (StringUtils.isEmpty(countryCode)) {
+            countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
+        }
         log.info("address query -> queryRegionCache start, time:{}", System.currentTimeMillis());
+        // 设置sql值集查询入参map
         Map<String, String> paramMap = new HashMap<>();
         if (StringUtils.isNotBlank(queryLov.getRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, queryLov.getRegionCode());

@@ -101,6 +101,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = O2LovConstants.RegionLov.DEFAULT_LANG;
         }
+        // 设置sql值集查询入参map
         Map<String, String> paramMap = new HashMap<>();
         if (StringUtils.isNotBlank(queryLov.getRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, queryLov.getRegionCode());
