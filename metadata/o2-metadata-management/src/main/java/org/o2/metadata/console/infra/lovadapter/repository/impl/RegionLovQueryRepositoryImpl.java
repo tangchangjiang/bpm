@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.AopProxy;
 import org.hzero.core.base.BaseConstants;
@@ -128,7 +129,9 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         queryParam.put(O2LovConstants.RegionLov.ADDRESS_TYPE, O2LovConstants.RegionLov.DEFAULT_DATA);
         queryParam.put(O2LovConstants.RegionLov.LANG, lang);
         queryParam.put(O2LovConstants.RegionLov.TENANT_ID, String.valueOf(tenantId));
-        queryParam.putAll(paramMap);
+        if (MapUtils.isNotEmpty(paramMap)) {
+            queryParam.putAll(paramMap);
+        }
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
                 MetadataCacheConstants.KeyPrefix.getHzeroRegionPrefix(countryCode, lang),
@@ -170,7 +173,12 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isEmpty(lang)) {
             lang = LanguageHelper.language();
         }
+        // 设置默认国家
+        if (StringUtils.isEmpty(countryCode)) {
+            countryCode = O2LovConstants.RegionLov.DEFAULT_COUNTRY_CODE;
+        }
         log.info("address query -> queryRegionCache start, time:{}", System.currentTimeMillis());
+        // 设置sql值集查询入参map
         Map<String, String> paramMap = new HashMap<>();
         if (StringUtils.isNotBlank(queryLov.getRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, queryLov.getRegionCode());
