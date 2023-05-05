@@ -46,7 +46,7 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND c.tenant_id = #{tenantId}
+                    AND cm.tenant_id = #{tenantId}
                 </when>
                 <otherwise>
                     AND 1 = 0
