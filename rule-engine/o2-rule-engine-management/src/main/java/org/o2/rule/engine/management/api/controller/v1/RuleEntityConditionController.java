@@ -52,7 +52,7 @@ public class RuleEntityConditionController extends BaseController {
                                                           RuleEntityCondition ruleEntityCondition,
                                                           @ApiIgnore @SortDefault(value = RuleEntityCondition.FIELD_ORDER_SEQ,
                                                                   direction = Sort.Direction.ASC) PageRequest pageRequest) {
-        ruleEntityCondition.setTenantId(organizationId);
+        // 通过规则实体Id查询（ruleEntityId）
         Page<RuleEntityCondition> list = PageHelper.doPage(pageRequest, () -> ruleEntityConditionRepository.selectList(ruleEntityCondition));
         return Results.success(list);
     }

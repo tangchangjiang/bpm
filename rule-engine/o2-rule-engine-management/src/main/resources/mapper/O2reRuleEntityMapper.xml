@@ -30,14 +30,6 @@
         FROM
         o2re_rule_entity re
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    and re.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
             <if test="ruleEntityId != null">
                 and re.rule_entity_id = #{ruleEntityId}
             </if>

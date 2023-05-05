@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.o2.rule.engine.management.app.service.RuleEntityService;
 import org.o2.rule.engine.management.domain.entity.RuleEntity;
 import org.o2.rule.engine.management.domain.repository.RuleEntityRepository;
@@ -51,7 +52,8 @@ public class RuleEntityController extends BaseController {
                                                  @ApiIgnore @SortDefault(value = RuleEntity.FIELD_RULE_ENTITY_ID,
                                                          direction = Sort.Direction.DESC) PageRequest pageRequest) {
         ruleEntity.setTenantId(organizationId);
-        Page<RuleEntity> list = PageHelper.doPageAndSort(pageRequest, () -> ruleEntityRepository.selectList(ruleEntity));
+        Page<RuleEntity> list = PageHelper.doPageAndSort(pageRequest, () -> TenantHelper.organizationLevelLimit(() ->
+                ruleEntityRepository.selectList(ruleEntity)));
         return Results.success(list);
     }
 
