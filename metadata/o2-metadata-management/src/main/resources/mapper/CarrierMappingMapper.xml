@@ -28,7 +28,7 @@
         cm.platform_code,
         oct.carrier_name,
         c.carrier_code,
-        c.tenant_id,
+        cm.tenant_id,
         cm.platform_carrier_code,
         cm.platform_carrier_Name,
         cm.object_version_number,
@@ -38,34 +38,35 @@
         cm.last_update_date,
         ptl.platform_name
         FROM
-        o2md_carrier c
-        JOIN o2md_carrier_mapping cm ON c.carrier_id = cm.carrier_id AND cm.tenant_id = #{tenantId}
-        JOIN O2md_platform plat on plat.platform_code = cm.platform_code and plat.tenant_id = #{tenantId}
-        left join O2md_platform_tl ptl on ptl.platform_id = plat.platform_id and ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
-        left join  o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang} and oct.tenant_id = #{tenantId}
-        where 1 = 1
-        <choose>
-            <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        <if test="platformCode!=null and platformCode!=''">
-            AND cm.platform_code = #{platformCode}
-        </if>
-        <if test="carrierCode!=null and carrierCode!=''">
-            <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
-            AND c.carrier_code LIKE #{carrierCode}
-        </if>
-        <if test="platformTypeCode!=null and platformTypeCode!=''">
-            AND plat.platform_type_code = #{platformTypeCode}
-        </if>
-        <if test="platformCarrierCode != null and platformCarrierCode != ''">
-            <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>
-            and cm.platform_carrier_code like #{platformCarrierCode}
-        </if>
+        o2md_carrier_mapping cm
+        LEFT JOIN o2md_carrier c ON cm.carrier_id = c.carrier_id
+        JOIN o2md_platform plat on plat.platform_code = cm.platform_code and plat.tenant_id = #{tenantId}
+        LEFT JOIN o2md_platform_tl ptl on ptl.platform_id = plat.platform_id and ptl.lang = #{lang} and ptl.tenant_id = #{tenantId}
+        LEFT JOIN o2md_carrier_tl oct on oct.carrier_id = c.carrier_id and oct.lang = #{lang} and oct.tenant_id = c.tenant_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND c.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="platformCode!=null and platformCode!=''">
+                AND cm.platform_code = #{platformCode}
+            </if>
+            <if test="carrierCode!=null and carrierCode!=''">
+                <bind name="carrierCode" value="'%' + carrierCode + '%'"/>
+                AND c.carrier_code LIKE #{carrierCode}
+            </if>
+            <if test="platformTypeCode!=null and platformTypeCode!=''">
+                AND plat.platform_type_code = #{platformTypeCode}
+            </if>
+            <if test="platformCarrierCode != null and platformCarrierCode != ''">
+                <bind name="platformCarrierCode" value="'%' + platformCarrierCode + '%'"/>
+                and cm.platform_carrier_code like #{platformCarrierCode}
+            </if>
+        </where>
         ORDER BY cm.platform_code, c.carrier_code
     </select>
     <select id="listCarrierMappings" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
@@ -76,20 +77,21 @@
                tl.carrier_name,
                cm.platform_carrier_name
         FROM o2md_carrier_mapping cm
-        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND c.tenant_id = #{tenantId}
-        left JOIN o2md_carrier_tl tl on tl.carrier_id=c.carrier_id AND tl.lang =  #{lang} and tl.tenant_id = #{tenantId}
-        where 1 = 1
-        <choose>
-            <when test="tenantId != null">
-                AND c.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        <if test="platformCode!=null and platformCode!=''">
-            AND cm.platform_code = #{platformCode}
-        </if>
+        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id
+        left JOIN o2md_carrier_tl tl on tl.carrier_id=c.carrier_id AND tl.lang =  #{lang} and tl.tenant_id = c.tenant_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND cm.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="platformCode!=null and platformCode!=''">
+                AND cm.platform_code = #{platformCode}
+            </if>
+        </where>
     </select>
     <select id="listByCondition" resultType="org.o2.metadata.console.infra.entity.CarrierMapping">
         select cm.carrier_mapping_id,
@@ -101,34 +103,35 @@
                cm.object_version_number,
                c.carrier_code
         FROM o2md_carrier_mapping cm
-        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id AND c.tenant_id = #{tenantId}
-        where 1 = 1
-        <choose>
-            <when test="tenantId != null">
-                AND cm.tenant_id = #{tenantId}
-            </when>
-            <otherwise>
-                AND 1 = 0
-            </otherwise>
-        </choose>
-        <if test="carrierCodes != null and carrierCodes.size() > 0 ">
-            and c.carrier_code IN
-            <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
-                #{code}
-            </foreach>
-        </if>
+        JOIN o2md_carrier c ON c.carrier_id = cm.carrier_id
+        <where>
+            <choose>
+                <when test="tenantId != null">
+                    AND cm.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test="carrierCodes != null and carrierCodes.size() > 0 ">
+                and c.carrier_code IN
+                <foreach collection="carrierCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
 
-        <if test="platformCodes != null and platformCodes.size() > 0 ">
-            and cm.platform_code IN
-            <foreach collection="platformCodes" item="code" open="(" separator="," close=")">
-                #{code}
-            </foreach>
-        </if>
-        <if test="platformCarrierCode != null and platformCarrierCode != ''">
-            and cm.platform_carrier_code = #{platformCarrierCode}
-        </if>
-        <if test="platformCode != null  and platformCode !=''">
-            and cm.platform_code = #{platformCode}
-        </if>
+            <if test="platformCodes != null and platformCodes.size() > 0 ">
+                and cm.platform_code IN
+                <foreach collection="platformCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="platformCarrierCode != null and platformCarrierCode != ''">
+                and cm.platform_carrier_code = #{platformCarrierCode}
+            </if>
+            <if test="platformCode != null  and platformCode !=''">
+                and cm.platform_code = #{platformCode}
+            </if>
+        </where>
     </select>
 </mapper>
