@@ -155,10 +155,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @param addressMappingQueryDTO 入参
      */
     private void checkData(AddressMappingQueryDTO addressMappingQueryDTO, String countryCode) {
-        if (addressMappingQueryDTO.getPlatformCode() == null || "".equals(addressMappingQueryDTO.getPlatformCode())) {
+        if (StringUtils.isBlank(addressMappingQueryDTO.getPlatformCode())) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         }
-        if (countryCode == null || "".equals(countryCode)) {
+        if (StringUtils.isBlank(countryCode)) {
             throw new CommonException("countryCode is null");
         }
         if (null == addressMappingQueryDTO.getTenantId()) {
@@ -524,7 +524,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         if (parentRegionCodes.isEmpty()) {
             return new ArrayList<>();
         }
-        dto.setParentRegionCodes(parentRegionCodes);
+        dto.setRegionCodes(parentRegionCodes);
         return regionRepository.listRegionLov(dto, tenantId);
     }
 
