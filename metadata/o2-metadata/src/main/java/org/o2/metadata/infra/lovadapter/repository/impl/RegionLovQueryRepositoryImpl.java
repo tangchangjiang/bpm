@@ -116,7 +116,7 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
             paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, queryLov.getParentRegionCode());
         }
         if (CollectionUtils.isNotEmpty(queryLov.getParentRegionCodes())) {
-            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getRegionCodes()));
+            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getParentRegionCodes()));
         }
         // 不包含地区的编码
         List<String> notInRegionCodes = queryLov.getNotInRegionCodes();
