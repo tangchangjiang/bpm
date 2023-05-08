@@ -1,21 +1,26 @@
 package org.o2.rule.engine.management.api.controller.v1;
 
+import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.o2.core.response.OperateResponse;
 import org.o2.rule.engine.management.app.service.RuleService;
-import org.o2.rule.engine.management.domain.repository.RuleRepository;
 import org.o2.rule.engine.management.domain.vo.RuleVO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import io.choerodon.core.iam.ResourceLevel;
-import io.choerodon.swagger.annotation.Permission;
 
 /**
  * 规则内部接口 管理 API
@@ -26,12 +31,9 @@ import io.choerodon.swagger.annotation.Permission;
 @RequestMapping("/v1/{organizationId}/o2re-rules-internal")
 public class RuleInternalController extends BaseController {
 
-    private final RuleRepository ruleRepository;
     private final RuleService ruleService;
 
-    public RuleInternalController(final RuleRepository ruleRepository,
-                                  final RuleService ruleService) {
-        this.ruleRepository = ruleRepository;
+    public RuleInternalController(final RuleService ruleService) {
         this.ruleService = ruleService;
     }
 

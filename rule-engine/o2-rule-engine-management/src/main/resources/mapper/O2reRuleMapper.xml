@@ -46,14 +46,6 @@
         FROM
         o2re_rule r left join o2re_rule_entity re on r.entity_code = re.rule_entity_code and r.tenant_id = re.tenant_id
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    AND r.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
             <if test="ruleCode != null and ruleCode != '' ">
                 <bind name="ruleCodeLike" value="'%'+ruleCode+'%'"/>
                 and r.rule_code like #{ruleCodeLike}

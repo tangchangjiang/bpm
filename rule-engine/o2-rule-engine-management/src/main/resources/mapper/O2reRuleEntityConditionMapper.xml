@@ -62,14 +62,9 @@
         FROM
         o2re_rule_entity_condition rec
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    and rec.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
+            <if test="tenantId != null">
+                and rec.tenant_id = #{tenantId}
+            </if>
             <if test="ruleEntityConditionId != null">
                 and rec.rule_entity_condition_id = #{ruleEntityConditionId}
             </if>

@@ -57,21 +57,16 @@
         FROM
         o2re_rule_param rrp
         <where>
-            <choose>
-                <when test="tenantId != null">
-                    and rrp.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
+            <if test="tenantId != null">
+                and rrp.tenant_id = #{tenantId}
+            </if>
+            <if test="paramRelEntityId != null">
+                and rrp.param_rel_entity_id = #{paramRelEntityId}
+            </if>
+            <if test="enableFlag != null">
+                rrp.enable_flag = #{enableFlag}
+            </if>
         </where>
-        <if test="paramRelEntityId != null">
-            and rrp.param_rel_entity_id = #{paramRelEntityId}
-        </if>
-        <if test="enableFlag != null">
-            rrp.enable_flag = #{enableFlag}
-        </if>
         ORDER BY
         rrp.order_seq ASC,
         rrp.last_update_date DESC
