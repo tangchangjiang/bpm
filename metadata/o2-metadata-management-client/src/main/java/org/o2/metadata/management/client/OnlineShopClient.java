@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.choerodon.core.domain.Page;
 import org.hzero.core.util.ResponseUtils;
 import org.o2.core.helper.O2ResponseUtils;
+import org.o2.core.response.SuccessResponse;
+import org.o2.metadata.management.client.domain.co.MerchantInfoCO;
 import org.o2.metadata.management.client.domain.co.OnlineShopCO;
 import org.o2.metadata.management.client.domain.co.OnlineShopRelWarehouseCO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
@@ -124,5 +126,15 @@ public class OnlineShopClient {
     public Page<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(tenantId, onlineShopQueryInnerDTO), new TypeReference<Page<OnlineShopCO>>() {
         });
+    }
+
+    /**
+     * 同步商家信息，生成网店、仓库、服务点等信息
+     *
+     * @param merchantInfoCO 商家信息
+     * @return 操作结果
+     */
+    public SuccessResponse syncMerchantInfo(Long tenantId, MerchantInfoCO merchantInfoCO) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.syncMerchantInfo(tenantId, merchantInfoCO), SuccessResponse.class);
     }
 }

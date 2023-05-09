@@ -7,6 +7,7 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
@@ -320,6 +321,19 @@ public class PosServiceImpl implements PosService {
             posResult = this.update(posResult);
         }
         return PosConverter.poToCoObject(posResult);
+    }
+
+    @Override
+    public Pos buildAndVerifyPos(MerchantInfoDTO merchantInfo) {
+        Pos pos = new Pos();
+        pos.setPosCode(merchantInfo.getOnlineShopCode());
+        pos.setPosName(merchantInfo.getOnlineShopName());
+        pos.setPosStatusCode(MetadataConstants.PosStatus.NORMAL);
+        pos.setPosTypeCode(MetadataConstants.PosType.WAREHOUSE);
+        pos.setTenantId(merchantInfo.getTenantId());
+        validPosNameUnique(pos);
+        validatePosCode(pos);
+        return pos;
     }
 
     /**

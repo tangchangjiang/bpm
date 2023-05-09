@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.hzero.core.base.BaseConstants;
 import org.o2.annotation.annotation.AnnotationValue;
 import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
@@ -216,5 +217,11 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "是否平台层查询")
     @Transient
     private Integer siteFlag;
+
+    public void initWarehouse() {
+        this.pickedUpFlag = BaseConstants.Flag.NO;
+        this.expressedFlag = BaseConstants.Flag.NO;
+        this.storeReturnFlag = BaseConstants.Flag.NO;
+    }
 
 }

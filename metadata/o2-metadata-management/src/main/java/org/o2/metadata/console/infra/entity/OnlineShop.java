@@ -141,8 +141,17 @@ public class OnlineShop extends AuditDomain {
     @LovValue(value = "O2MD.ONLINE_SHOP_BUSINESS_TYPE")
     @NotBlank
     private String businessTypeCode;
+
+    @ApiModelProperty("店铺logo")
+    private String logoUrl;
+
+    @ApiModelProperty("店铺图片")
+    private String shopMediaUrl;
+
+    @ApiModelProperty("自营标识")
+    private Integer selfSalesFlag;
     //
-    // 数据库字段
+    // 非数据库字段
     // ------------------------------------------------------------------------------
 
     @ApiModelProperty("租户名称")

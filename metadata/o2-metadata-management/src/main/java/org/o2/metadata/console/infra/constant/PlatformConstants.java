@@ -16,4 +16,14 @@ public interface PlatformConstants {
         String PLATFORM_CACHE_MAPPING_KEY_PREFIX = "PLATFORM_MAPPING_%S_%S";
 
     }
+
+    /**
+     * 平台类型
+     */
+    interface PlatformType {
+        /**
+         * 电商平台
+         */
+        String E_COMMERCE_PLATFORM = "e_commerce_platform";
+    }
 }

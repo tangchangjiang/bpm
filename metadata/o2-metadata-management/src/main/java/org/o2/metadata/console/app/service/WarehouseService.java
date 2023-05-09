@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -175,4 +176,12 @@ public interface WarehouseService {
      * @return 仓库
      */
     List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId);
+
+    /**
+     * 构建并校验仓库信息
+     *
+     * @param merchantInfo 商家信息
+     * @return 仓库信息
+     */
+    Warehouse buildAndVerifyWarehouse(MerchantInfoDTO merchantInfo);
 }

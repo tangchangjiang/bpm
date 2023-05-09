@@ -3,28 +3,43 @@ package org.o2.metadata.console.app.service.impl;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
+import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.api.co.OnlineShopCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.app.service.OnlineShopService;
+import org.o2.metadata.console.app.service.PlatformService;
+import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
+import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
 import org.o2.metadata.console.infra.entity.OnlineShop;
+import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Platform;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
+import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
+import org.o2.metadata.console.infra.repository.PlatformRepository;
+import org.o2.metadata.console.infra.repository.PosRepository;
+import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -33,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 网店应用服务默认实现
@@ -49,6 +65,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final SourcingCacheUpdateService sourcingCacheService;
     private final CatalogRepository catalogRepository;
     private final CatalogVersionRepository catalogVersionRepository;
+    private final PlatformService platformService;
+    private final PosService posService;
+    private final WarehouseService warehouseService;
+    private final PlatformRepository platformRepository;
+    private final PosRepository posRepository;
+    private final WarehouseRepository warehouseRepository;
+    private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
+    private final O2InventoryClient o2InventoryClient;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
@@ -56,7 +80,15 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  TransactionalHelper transactionalHelper,
                                  SourcingCacheUpdateService sourcingCacheService,
                                  CatalogRepository catalogRepository,
-                                 CatalogVersionRepository catalogVersionRepository) {
+                                 CatalogVersionRepository catalogVersionRepository,
+                                 PlatformService platformService,
+                                 PosService posService,
+                                 WarehouseService warehouseService,
+                                 PlatformRepository platformRepository,
+                                 PosRepository posRepository,
+                                 WarehouseRepository warehouseRepository,
+                                 OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
+                                 O2InventoryClient o2InventoryClient) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
@@ -64,6 +96,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.sourcingCacheService = sourcingCacheService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
+        this.platformService  =platformService;
+        this.posService = posService;
+        this.warehouseService = warehouseService;
+        this.platformRepository = platformRepository;
+        this.posRepository = posRepository;
+        this.warehouseRepository = warehouseRepository;
+        this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
+        this.o2InventoryClient = o2InventoryClient;
     }
 
     @Override
@@ -92,33 +132,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         validatePlatformOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
         String code = onlineShop.getOnlineShopCode();
-        String name = onlineShop.getOnlineShopName();
-        Integer activeFlag = onlineShop.getActiveFlag();
-        Long tenantId = onlineShop.getTenantId();
         // 目录
-        Catalog catalog = new Catalog();
-        catalog.setCatalogCode(code);
-        catalog.setCatalogName(name);
-        catalog.setActiveFlag(activeFlag);
-        catalog.setTenantId(tenantId);
-        Map<String, Map<String, String>> catalogLanguage = new HashMap<>(2);
-        Map<String, String> catalogMap = new HashMap<>(2);
-        catalogMap.put(OnlineShopConstants.Language.EN_US, catalog.getCatalogName());
-        catalogMap.put(OnlineShopConstants.Language.ZH_CN, catalog.getCatalogName());
-        catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME, catalogMap);
-        catalog.set_tls(catalogLanguage);
+        Catalog catalog = buildCatalog(onlineShop);
         // 目录版本
-        CatalogVersion catalogVersion = new CatalogVersion();
-        catalogVersion.setCatalogVersionCode(code);
-        catalogVersion.setCatalogVersionName(name);
-        catalogVersion.setActiveFlag(activeFlag);
-        catalogVersion.setTenantId(tenantId);
-        Map<String, Map<String, String>> catalogVersionLanguage = new HashMap<>(2);
-        Map<String, String> catalogVersionMap = new HashMap<>(2);
-        catalogVersionMap.put(OnlineShopConstants.Language.EN_US, catalog.getCatalogName());
-        catalogVersionMap.put(OnlineShopConstants.Language.ZH_CN, catalog.getCatalogName());
-        catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME, catalogVersionMap);
-        catalog.set_tls(catalogVersionLanguage);
+        CatalogVersion catalogVersion = buildCatalogVersion(onlineShop);
 
         onlineShop.setCatalogCode(code);
         onlineShop.setCatalogVersionCode(code);
@@ -178,6 +195,78 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         });
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
+    }
+
+    /**
+     * 构建并验证网店信息
+     *
+     * @param merchantInfo 商家信息
+     * @return 网店信息
+     */
+    protected OnlineShop buildAndVerifyOnlineShop(MerchantInfoDTO merchantInfo) {
+        OnlineShop onlineShop = new OnlineShop();
+        onlineShop.initDefaultProperties();
+        onlineShop.setPlatformCode(O2CoreConstants.PlatformFrom.OW);
+        onlineShop.setOnlineShopCode(merchantInfo.getOnlineShopCode());
+        onlineShop.setOnlineShopName(merchantInfo.getOnlineShopName());
+        onlineShop.setActiveFlag(merchantInfo.getActiveFlag());
+        onlineShop.setOnlineShopType(MetadataConstants.OnlineShopType.ONLINE_SHOP);
+        onlineShop.setBusinessTypeCode(O2CoreConstants.BusinessType.B2C);
+        onlineShop.setIsDefault(BaseConstants.Flag.NO);
+        onlineShop.setDefaultCurrency(MetadataConstants.Currency.CNY);
+        onlineShop.setTenantId(merchantInfo.getTenantId());
+        onlineShop.setCatalogCode(merchantInfo.getOnlineShopCode());
+        onlineShop.setCatalogVersionCode(merchantInfo.getOnlineShopCode());
+        onlineShop.setLogoUrl(merchantInfo.getLogoUrl());
+        onlineShop.setShopMediaUrl(merchantInfo.getShopMediaUrl());
+        onlineShop.setSelfSalesFlag(merchantInfo.getSelfSalesFlag());
+
+        validateOnlineShopCode(onlineShop);
+        validatePlatformOnlineShopCode(onlineShop);
+        validateOnlineShopName(onlineShop);
+        return onlineShop;
+    }
+
+    /**
+     * 构建目录信息
+     *
+     * @param onlineShop 网店信息
+     * @return 目录信息
+     */
+    protected Catalog buildCatalog(OnlineShop onlineShop) {
+        Catalog catalog = new Catalog();
+        catalog.setCatalogCode(onlineShop.getOnlineShopCode());
+        catalog.setCatalogName(onlineShop.getOnlineShopName());
+        catalog.setActiveFlag(onlineShop.getActiveFlag());
+        catalog.setTenantId(onlineShop.getTenantId());
+        Map<String, Map<String, String>> catalogLanguage = new HashMap<>(2);
+        Map<String, String> catalogMap = new HashMap<>(2);
+        catalogMap.put(OnlineShopConstants.Language.EN_US, catalog.getCatalogName());
+        catalogMap.put(OnlineShopConstants.Language.ZH_CN, catalog.getCatalogName());
+        catalogLanguage.put(OnlineShopConstants.Language.CATALOG_NAME, catalogMap);
+        catalog.set_tls(catalogLanguage);
+        return catalog;
+    }
+
+    /**
+     * 构建目录版本信息
+     *
+     * @param onlineShop 网店信息
+     * @return 目录版本信息
+     */
+    protected CatalogVersion buildCatalogVersion(OnlineShop onlineShop) {
+        CatalogVersion catalogVersion = new CatalogVersion();
+        catalogVersion.setCatalogVersionCode(onlineShop.getOnlineShopCode());
+        catalogVersion.setCatalogVersionName(onlineShop.getOnlineShopName());
+        catalogVersion.setActiveFlag(onlineShop.getActiveFlag());
+        catalogVersion.setTenantId(onlineShop.getTenantId());
+        Map<String, Map<String, String>> catalogVersionLanguage = new HashMap<>(2);
+        Map<String, String> catalogVersionMap = new HashMap<>(2);
+        catalogVersionMap.put(OnlineShopConstants.Language.EN_US, catalogVersion.getCatalogVersionName());
+        catalogVersionMap.put(OnlineShopConstants.Language.ZH_CN, catalogVersion.getCatalogVersionName());
+        catalogVersionLanguage.put(OnlineShopConstants.Language.CATALOG_VERSION_NAME, catalogVersionMap);
+        catalogVersion.set_tls(catalogVersionLanguage);
+        return catalogVersion;
     }
 
     /**
@@ -358,6 +447,109 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     @Override
     public List<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         return onlineShopRepository.queryOnlineShops(onlineShopQueryInnerDTO, tenantId);
+    }
+
+    @Override
+    public void syncMerchantInfo(MerchantInfoDTO merchantInfo) {
+        // 1. 查询网店是否已存在
+        OnlineShop existShop = queryShopByCode(merchantInfo.getOnlineShopCode());
+        // 2.如果网店已存在，则更新网店信息
+        if (Objects.nonNull(existShop)) {
+            // 只需要更新网店信息，其他信息保持不变
+            updateShopByMerchant(existShop, merchantInfo);
+            return;
+        }
+        // 3. 构建平台信息
+        Platform platform = platformService.buildAndVerifyPlatform(merchantInfo);
+        // 4. 构建服务点信息
+        Pos pos = posService.buildAndVerifyPos(merchantInfo);
+        // 5. 构建网店信息
+        OnlineShop onlineShop = buildAndVerifyOnlineShop(merchantInfo);
+        // 6. 构建目录信息
+        Catalog catalog = buildCatalog(onlineShop);
+        // 7. 构建目录版本信息
+        CatalogVersion catalogVersion = buildCatalogVersion(onlineShop);
+        // 8. 构建仓库信息
+        Warehouse warehouse = warehouseService.buildAndVerifyWarehouse(merchantInfo);
+        // 9. 保存信息（db+Redis）
+        transactionalHelper.transactionOperation(() -> {
+            // a. 保存平台db
+            platformRepository.insertSelective(platform);
+            // b. 保存服务点db
+            posRepository.insertSelective(pos);
+            // c. 保存目录
+            catalogRepository.insertSelective(catalog);
+            // d. 保存目录版本db
+            catalogVersion.setCatalogId(catalog.getCatalogId());
+            catalogVersionRepository.insertSelective(catalogVersion);
+            // e. 保存网店信息db
+            onlineShopRepository.insertSelective(onlineShop);
+            // f. 保存仓库信息db
+            warehouse.setPosId(pos.getPosId());
+            warehouseRepository.insertSelective(warehouse);
+            // g. 构建并保存网店关联仓库信息db
+            OnlineShopRelWarehouse shopRelWh = buildShopRelWh(onlineShop, warehouse);
+            onlineShopRelWarehouseRepository.insertSelective(shopRelWh);
+            // h. 同步Redis
+            onlineShopRedis.syncMerchantMetaInfo(onlineShop, warehouse, shopRelWh);
+        });
+    }
+
+    /**
+     * 根据商家信息更新网店信息
+     *
+     * @param onlineShop   网店
+     * @param merchantInfo 商家信息
+     */
+    protected void updateShopByMerchant(OnlineShop onlineShop, MerchantInfoDTO merchantInfo) {
+        if (StringUtils.isNotBlank(merchantInfo.getOnlineShopName())) {
+            onlineShop.setOnlineShopName(merchantInfo.getOnlineShopName());
+        }
+        if (StringUtils.isNotBlank(merchantInfo.getLogoUrl())) {
+            onlineShop.setLogoUrl(merchantInfo.getLogoUrl());
+        }
+        if (StringUtils.isNotBlank(merchantInfo.getShopMediaUrl())) {
+            onlineShop.setShopMediaUrl(merchantInfo.getShopMediaUrl());
+        }
+        if (null != merchantInfo.getSelfSalesFlag()) {
+            onlineShop.setSelfSalesFlag(merchantInfo.getSelfSalesFlag());
+        }
+        if (null != merchantInfo.getActiveFlag()) {
+            onlineShop.setActiveFlag(merchantInfo.getActiveFlag());
+        }
+        updateOnlineShop(onlineShop);
+    }
+
+    /**
+     * 根据编码查询网店
+     *
+     * @param onlineShopCode 网店编码
+     * @return 网店信息
+     */
+    protected OnlineShop queryShopByCode(String onlineShopCode) {
+        List<OnlineShop> onlineShops = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(
+                Sqls.custom().andEqualTo(OnlineShop.FIELD_ONLINE_SHOP_CODE, onlineShopCode)
+        ).build());
+        if (CollectionUtils.isEmpty(onlineShops)) {
+            return null;
+        }
+        return onlineShops.get(0);
+    }
+
+    /**
+     * 构建网店关联仓库
+     *
+     * @param onlineShop 网店
+     * @param warehouse  仓库
+     * @return 网店关联仓库
+     */
+    protected OnlineShopRelWarehouse buildShopRelWh(OnlineShop onlineShop, Warehouse warehouse) {
+        OnlineShopRelWarehouse shopRelWh = new OnlineShopRelWarehouse();
+        shopRelWh.setOnlineShopId(onlineShop.getOnlineShopId());
+        shopRelWh.setWarehouseId(warehouse.getWarehouseId());
+        shopRelWh.setActiveFlag(BaseConstants.Flag.YES);
+        shopRelWh.setTenantId(onlineShop.getTenantId());
+        return shopRelWh;
     }
 
 }

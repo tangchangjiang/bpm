@@ -270,7 +270,10 @@
         online.online_shop_type,
         online.business_type_code,
         online.account_number,
-        online.tenant_id
+        online.tenant_id,
+        online.logo_url,
+        online.shop_media_url,
+        online.self_sales_flag
         from o2md_online_shop online
         inner join o2md_catalog oc on online.catalog_code = oc.catalog_code AND oc.tenant_id = online.tenant_id
         inner join o2md_catalog_version ocv on ocv.catalog_version_code = online.catalog_version_code AND ocv.tenant_id
