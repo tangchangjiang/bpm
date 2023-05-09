@@ -10,7 +10,6 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
-import org.o2.inventory.management.client.O2InventoryClient;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
@@ -37,8 +36,6 @@ import org.o2.metadata.console.infra.repository.CatalogRepository;
 import org.o2.metadata.console.infra.repository.CatalogVersionRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRelWarehouseRepository;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
-import org.o2.metadata.console.infra.repository.PlatformRepository;
-import org.o2.metadata.console.infra.repository.PosRepository;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.springframework.stereotype.Service;
@@ -68,11 +65,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final PlatformService platformService;
     private final PosService posService;
     private final WarehouseService warehouseService;
-    private final PlatformRepository platformRepository;
-    private final PosRepository posRepository;
     private final WarehouseRepository warehouseRepository;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
-    private final O2InventoryClient o2InventoryClient;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
@@ -84,11 +78,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  PlatformService platformService,
                                  PosService posService,
                                  WarehouseService warehouseService,
-                                 PlatformRepository platformRepository,
-                                 PosRepository posRepository,
                                  WarehouseRepository warehouseRepository,
-                                 OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
-                                 O2InventoryClient o2InventoryClient) {
+                                 OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
@@ -99,11 +90,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.platformService  =platformService;
         this.posService = posService;
         this.warehouseService = warehouseService;
-        this.platformRepository = platformRepository;
-        this.posRepository = posRepository;
         this.warehouseRepository = warehouseRepository;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
-        this.o2InventoryClient = o2InventoryClient;
     }
 
     @Override
@@ -460,7 +448,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             return;
         }
         // 3. 构建平台信息
-        Platform platform = platformService.buildAndVerifyPlatform(merchantInfo);
+        Platform platform = platformService.buildPlatform(merchantInfo);
         // 4. 构建服务点信息
         Pos pos = posService.buildAndVerifyPos(merchantInfo);
         // 5. 构建网店信息
@@ -474,9 +462,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         // 9. 保存信息（db+Redis）
         transactionalHelper.transactionOperation(() -> {
             // a. 保存平台db
-            platformRepository.insertSelective(platform);
+            platformService.save(platform);
             // b. 保存服务点db
-            posRepository.insertSelective(pos);
+            posService.savePosDB(pos);
             // c. 保存目录
             catalogRepository.insertSelective(catalog);
             // d. 保存目录版本db

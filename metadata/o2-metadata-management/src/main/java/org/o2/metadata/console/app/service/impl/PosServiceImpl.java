@@ -79,27 +79,9 @@ public class PosServiceImpl implements PosService {
         // 名称校验
         validPosNameUnique(pos);
         validatePosCode(pos);
-        PosAddress address = pos.getAddress();
         transactionalHelper.transactionOperation(() -> {
-            if (address != null && address.getRegionCode() != null) {
-                updatePosAddress(address, pos.getTenantId());
-                address.setTenantId(pos.getTenantId());
-                posAddressRepository.insertSelective(address);
-                pos.setAddressId(address.getPosAddressId());
-            }
-            posRepository.insertSelective(pos);
-            if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
-                pos.getPostTimes().forEach(postTime -> {
-                    // 过滤无意义数据
-                    if (!postTime.initTimeRange()) {
-                        return;
-                    }
-                    postTime.setPosId(pos.getPosId());
-                    postTime.setTenantId(pos.getTenantId());
-                    postTimeRepository.insert(postTime);
-                });
-            }
-            updateCarryIsDefault(pos);
+            // 保存db
+            savePosDB(pos);
             List<String> posCodes = new ArrayList<>();
             posCodes.add(pos.getPosCode());
             // 同步Redis
@@ -107,6 +89,30 @@ public class PosServiceImpl implements PosService {
         });
         sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
+    }
+
+    @Override
+    public void savePosDB(Pos pos) {
+        PosAddress address = pos.getAddress();
+        if (address != null && address.getRegionCode() != null) {
+            updatePosAddress(address, pos.getTenantId());
+            address.setTenantId(pos.getTenantId());
+            posAddressRepository.insertSelective(address);
+            pos.setAddressId(address.getPosAddressId());
+        }
+        posRepository.insertSelective(pos);
+        if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
+            pos.getPostTimes().forEach(postTime -> {
+                // 过滤无意义数据
+                if (!postTime.initTimeRange()) {
+                    return;
+                }
+                postTime.setPosId(pos.getPosId());
+                postTime.setTenantId(pos.getTenantId());
+                postTimeRepository.insert(postTime);
+            });
+        }
+        updateCarryIsDefault(pos);
     }
 
     @Override

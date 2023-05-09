@@ -28,6 +28,13 @@ public interface PosService {
     Pos create(Pos pos);
 
     /**
+     * 保存服务点db
+     *
+     * @param pos 服务点
+     */
+    void savePosDB(Pos pos);
+
+    /**
      * 更新服务点信息
      *
      * @param pos 待更新服务点，id 不能为空

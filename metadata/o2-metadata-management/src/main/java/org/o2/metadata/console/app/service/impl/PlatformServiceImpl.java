@@ -94,16 +94,13 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
-    public Platform buildAndVerifyPlatform(MerchantInfoDTO merchantInfo) {
+    public Platform buildPlatform(MerchantInfoDTO merchantInfo) {
         Platform platform = new Platform();
         platform.setPlatformCode(O2CoreConstants.PlatformFrom.OW);
         platform.setPlatformName(merchantInfo.getOnlineShopName());
         platform.setPlatformTypeCode(PlatformConstants.PlatformType.E_COMMERCE_PLATFORM);
         platform.setActiveFlag(BaseConstants.Flag.YES);
         platform.setTenantId(merchantInfo.getTenantId());
-
-        validCodeUnique(platform);
-        validNameUnique(platform);
         return platform;
     }
 

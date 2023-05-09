@@ -36,5 +36,5 @@ public interface PlatformService {
      * @param merchantInfo 商家信息
      * @return 平台
      */
-    Platform buildAndVerifyPlatform(MerchantInfoDTO merchantInfo);
+    Platform buildPlatform(MerchantInfoDTO merchantInfo);
 }
