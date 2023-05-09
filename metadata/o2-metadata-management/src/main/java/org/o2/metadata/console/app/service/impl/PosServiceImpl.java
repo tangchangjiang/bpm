@@ -372,8 +372,6 @@ public class PosServiceImpl implements PosService {
             return;
         }
         PosInfo posInfo = posInfos.get(0);
-        // 设置服务点地址名称
-        setPosAddress(posInfo, tenantId);
         // 更新服务点门店信息
         redisCacheClient.executePipelined(new RedisCallback<Object>() {
 
@@ -401,45 +399,4 @@ public class PosServiceImpl implements PosService {
             }
         });
     }
-
-    /**
-     * 设置服务点地址名称
-     *
-     * @param posInfo  服务点
-     * @param tenantId 租户Id
-     */
-    private void setPosAddress(PosInfo posInfo, Long tenantId) {
-        List<String> regionCodes = new ArrayList<>();
-        regionCodes.add(posInfo.getCityCode());
-        regionCodes.add(posInfo.getDistrictCode());
-        regionCodes.add(posInfo.getRegionCode());
-        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
-        dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
-        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
-        for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(), region);
-        }
-        //市
-        String cityCode = posInfo.getCityCode();
-        Region city = regionMap.get(cityCode);
-        if (null != city) {
-            posInfo.setCityName(city.getRegionName());
-            posInfo.setCountryName(city.getCountryName());
-            posInfo.setCountryCode(city.getCountryCode());
-        }
-        //区
-        String districtCode = posInfo.getDistrictCode();
-        Region district = regionMap.get(districtCode);
-        if (null != district) {
-            posInfo.setDistrictName(district.getRegionName());
-        }
-        //省
-        String regionCode = posInfo.getRegionCode();
-        Region region = regionMap.get(regionCode);
-        if (null != region) {
-            posInfo.setRegionName(region.getRegionName());
-        }
-    }
-
 }
