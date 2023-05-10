@@ -33,5 +33,5 @@ public class OnlineShopVO {
     /**
      * 租户Id
      */
-    private Long tenantId;
+    private String tenantId;
 }
