@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.convertor;
 
+import org.o2.core.helper.O2TenantUtil;
 import org.o2.metadata.api.co.OnlineShopCO;
 import org.o2.metadata.api.vo.OnlineShopVO;
 import org.o2.metadata.infra.entity.OnlineShop;
@@ -58,7 +59,7 @@ public class OnlineShopConverter {
         onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
         onlineShopVO.setLogoUrl(onlineShop.getLogoUrl());
         onlineShopVO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
-        onlineShopVO.setTenantId(onlineShop.getTenantId());
+        onlineShopVO.setTenantId(O2TenantUtil.encryptedTenantId(onlineShop.getTenantId()));
         return onlineShopVO;
     }
 }
