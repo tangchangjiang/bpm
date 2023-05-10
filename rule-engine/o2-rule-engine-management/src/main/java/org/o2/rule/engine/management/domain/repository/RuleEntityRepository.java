@@ -35,4 +35,13 @@ public interface RuleEntityRepository extends BaseRepository<RuleEntity> {
      * @param ruleEntityMap 规则实体
      */
     void batchSaveRedis(Long tenantId, Map<String, String> ruleEntityMap);
+
+    /**
+     * 根据编码查询规则实体
+     *
+     * @param tenantId       租户Id
+     * @param ruleEntityCode 规则实体编码
+     * @return 规则实体
+     */
+    RuleEntity queryRuleEntityByCode(Long tenantId, String ruleEntityCode);
 }
