@@ -1,5 +1,6 @@
 package org.o2.rule.engine.management.infra.repository.impl;
 
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 规则实体 资源库实现
@@ -45,5 +47,18 @@ public class RuleEntityRepositoryImpl extends BaseRepositoryImpl<RuleEntity> imp
     public void batchSaveRedis(Long tenantId, Map<String, String> ruleEntityMap) {
         String key = String.format(RuleEntityConstants.RedisKey.RULE_ENTITY, tenantId);
         redisCacheClient.opsForHash().putAll(key, ruleEntityMap);
+    }
+
+    @Override
+    public RuleEntity queryRuleEntityByCode(Long tenantId, String ruleEntityCode) {
+        RuleEntity query = new RuleEntity();
+        query.setTenantId(tenantId);
+        query.setRuleEntityCode(ruleEntityCode);
+        RuleEntity ruleEntity = this.selectOne(query);
+        if (Objects.isNull(ruleEntity) && !Objects.equals(BaseConstants.DEFAULT_TENANT_ID, tenantId)) {
+            query.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
+            ruleEntity = this.selectOne(query);
+        }
+        return ruleEntity;
     }
 }

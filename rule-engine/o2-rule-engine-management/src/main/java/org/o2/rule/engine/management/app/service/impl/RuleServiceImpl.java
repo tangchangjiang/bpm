@@ -167,10 +167,7 @@ public class RuleServiceImpl implements RuleService {
         rule.init();
         rule.validRule();
 
-        final RuleEntity query = new RuleEntity();
-        query.setTenantId(organizationId);
-        query.setRuleEntityCode(rule.getEntityCode());
-        final RuleEntity ruleEntity = ruleEntityRepository.selectOne(query);
+        final RuleEntity ruleEntity = ruleEntityRepository.queryRuleEntityByCode(organizationId, rule.getEntityCode());
 
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
