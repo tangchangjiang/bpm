@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.PosAddressCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
@@ -25,6 +26,13 @@ public interface PosService {
      * @return 带 id 的服务点信息
      */
     Pos create(Pos pos);
+
+    /**
+     * 保存服务点db
+     *
+     * @param pos 服务点
+     */
+    void savePosDB(Pos pos);
 
     /**
      * 更新服务点信息
@@ -76,4 +84,12 @@ public interface PosService {
      * @return 服务点
      */
     PosCO savePos(PosDTO posDTO);
+
+    /**
+     * 构建并验证服务点信息
+     *
+     * @param merchantInfo 商家信息
+     * @return 服务点
+     */
+    Pos buildAndVerifyPos(MerchantInfoDTO merchantInfo);
 }

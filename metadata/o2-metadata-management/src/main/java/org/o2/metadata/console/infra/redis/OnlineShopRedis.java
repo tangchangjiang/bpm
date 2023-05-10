@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.redis;
 
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
 
@@ -35,4 +36,13 @@ public interface OnlineShopRedis {
      * @param tenantId 租户ID
      */
     void batchUpdateRedis(List<OnlineShop> list, Long tenantId);
+
+    /**
+     * 同步店铺信息（同步网店、仓库和网店关联仓库；因服务点没有维护地址和经纬度，不需要同步至Redis）
+     *
+     * @param onlineShop 网店信息
+     * @param warehouse  仓库信息
+     * @param shopRelWh  网店关联仓库信息
+     */
+    void syncMerchantMetaInfo(OnlineShop onlineShop, Warehouse warehouse, OnlineShopRelWarehouse shopRelWh);
 }

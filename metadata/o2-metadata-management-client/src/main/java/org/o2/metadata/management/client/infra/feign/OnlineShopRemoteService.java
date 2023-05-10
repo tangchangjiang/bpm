@@ -2,6 +2,7 @@ package org.o2.metadata.management.client.infra.feign;
 
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
+import org.o2.metadata.management.client.domain.co.MerchantInfoCO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopQueryInnerDTO;
@@ -114,4 +115,15 @@ public interface OnlineShopRemoteService {
     @PostMapping("/{organizationId}/online-shops-internal/query-exclude-onlineShops")
     ResponseEntity<String> queryOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                             @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
+     * 同步商家信息
+     *
+     * @param organizationId 租户Id
+     * @param merchantInfoCO 商家信息
+     * @return 操作结果
+     */
+    @PostMapping("/{organizationId}/online-shops-internal/sync-merchant")
+    ResponseEntity<String> syncMerchantInfo(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                            @RequestBody MerchantInfoCO merchantInfoCO);
 }

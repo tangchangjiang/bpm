@@ -364,4 +364,21 @@ public interface MetadataConstants {
         String LOV = "O2MD.COUNTRY";
     }
 
+    /**
+     * 货币
+     */
+    interface Currency {
+        String CNY = "CNY";
+    }
+
+    /**
+     * 网店类型
+     */
+    interface OnlineShopType {
+        /**
+         * 网店
+         */
+        String ONLINE_SHOP = "ONLINE_SHOP";
+    }
+
 }

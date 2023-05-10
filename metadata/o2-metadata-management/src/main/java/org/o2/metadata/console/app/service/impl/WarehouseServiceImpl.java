@@ -18,6 +18,7 @@ import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
@@ -38,8 +39,11 @@ import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -389,6 +393,24 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
         return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehousesByPosCode(posCodes, tenantId));
+    }
+
+    @Override
+    public Warehouse buildAndVerifyWarehouse(MerchantInfoDTO merchantInfo) {
+        Warehouse warehouse = new Warehouse();
+        warehouse.initWarehouse();
+        warehouse.setWarehouseCode(merchantInfo.getOnlineShopCode());
+        warehouse.setWarehouseName(merchantInfo.getOnlineShopName());
+        warehouse.setWarehouseStatusCode(WarehouseConstants.WarehouseStatus.NORMAL);
+        warehouse.setWarehouseTypeCode(WarehouseConstants.WarehouseType.GOOD);
+        warehouse.setActiveFlag(BaseConstants.Flag.YES);
+        warehouse.setActivedDateFrom(new Date());
+        warehouse.setActivedDateTo(Date.from(LocalDateTime.of(2099, 12, 31, 23, 59, 59)
+                .atZone(ZoneId.systemDefault()).toInstant()));
+        warehouse.setTenantId(merchantInfo.getTenantId());
+
+        validNameUnique(warehouse);
+        return warehouse;
     }
 
 }

@@ -8,11 +8,16 @@ import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
@@ -48,15 +53,22 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             return;
         }
         OnlineShop onlineShop = list.get(0);
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
-        if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
-            redisCacheClient.opsForSet().remove(key, onlineShopCode);
-            redisCacheClient.opsForHash().delete(detailKey, onlineShopCode);
-            return;
-        }
-        redisCacheClient.opsForSet().add(key, onlineShopCode);
-        redisCacheClient.opsForHash().put(detailKey, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+                String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
+                    operations.opsForSet().remove(key, onlineShopCode);
+                    operations.opsForHash().delete(detailKey, onlineShopCode);
+                } else {
+                    operations.opsForSet().add(key, onlineShopCode);
+                    operations.opsForHash().put(detailKey, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+                }
+                return null;
+            }
+        });
     }
 
     @Override
@@ -98,10 +110,40 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for (OnlineShopCacheBO bo : bos) {
             map.put(bo.getOnlineShopCode(), JsonHelper.objectToString(bo));
         }
-        String[] shopCodes = list.stream().map(OnlineShop::getOnlineShopCode).toArray(String[]::new);
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
-        redisCacheClient.opsForSet().add(key, shopCodes);
-        redisCacheClient.opsForHash().putAll(detailKey, map);
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                String[] shopCodes = list.stream().map(OnlineShop::getOnlineShopCode).toArray(String[]::new);
+                String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+                String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                operations.opsForSet().add(key, shopCodes);
+                operations.opsForHash().putAll(detailKey, map);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public void syncMerchantMetaInfo(OnlineShop onlineShop, Warehouse warehouse, OnlineShopRelWarehouse shopRelWh) {
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings({"unchecked"})
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                // 1. 同步网店
+                String onlineShopCode = onlineShop.getOnlineShopCode();
+                String shopIndexKey = OnlineShopConstants.Redis.getOnlineShopKey(onlineShop.getTenantId());
+                String shopDetailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                operations.opsForSet().add(shopIndexKey, onlineShopCode);
+                operations.opsForHash().put(shopDetailKey, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+                // 2. 同步仓库信息
+                String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(warehouse.getTenantId());
+                operations.opsForHash().put(warehouseCacheKey, warehouse.getWarehouseCode(), JsonHelper.objectToString(warehouse));
+                // 3. 同步网店关联仓库
+                String shopRelWhKey = OnlineShopConstants.Redis.getOnlineShopRelWarehouseKey(onlineShop.getOnlineShopCode(), shopRelWh.getTenantId());
+                operations.opsForHash().put(shopRelWhKey, warehouse.getWarehouseCode(), String.valueOf(shopRelWh.getActiveFlag()));
+                return null;
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
@@ -78,27 +79,9 @@ public class PosServiceImpl implements PosService {
         // 名称校验
         validPosNameUnique(pos);
         validatePosCode(pos);
-        PosAddress address = pos.getAddress();
         transactionalHelper.transactionOperation(() -> {
-            if (address != null && address.getRegionCode() != null) {
-                updatePosAddress(address, pos.getTenantId());
-                address.setTenantId(pos.getTenantId());
-                posAddressRepository.insertSelective(address);
-                pos.setAddressId(address.getPosAddressId());
-            }
-            posRepository.insertSelective(pos);
-            if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
-                pos.getPostTimes().forEach(postTime -> {
-                    // 过滤无意义数据
-                    if (!postTime.initTimeRange()) {
-                        return;
-                    }
-                    postTime.setPosId(pos.getPosId());
-                    postTime.setTenantId(pos.getTenantId());
-                    postTimeRepository.insert(postTime);
-                });
-            }
-            updateCarryIsDefault(pos);
+            // 保存db
+            savePosDB(pos);
             List<String> posCodes = new ArrayList<>();
             posCodes.add(pos.getPosCode());
             // 同步Redis
@@ -106,6 +89,30 @@ public class PosServiceImpl implements PosService {
         });
         sourcingCacheService.refreshSourcingCache(pos.getTenantId(), this.getClass().getSimpleName());
         return pos;
+    }
+
+    @Override
+    public void savePosDB(Pos pos) {
+        PosAddress address = pos.getAddress();
+        if (address != null && address.getRegionCode() != null) {
+            updatePosAddress(address, pos.getTenantId());
+            address.setTenantId(pos.getTenantId());
+            posAddressRepository.insertSelective(address);
+            pos.setAddressId(address.getPosAddressId());
+        }
+        posRepository.insertSelective(pos);
+        if (CollectionUtils.isNotEmpty(pos.getPostTimes())) {
+            pos.getPostTimes().forEach(postTime -> {
+                // 过滤无意义数据
+                if (!postTime.initTimeRange()) {
+                    return;
+                }
+                postTime.setPosId(pos.getPosId());
+                postTime.setTenantId(pos.getTenantId());
+                postTimeRepository.insert(postTime);
+            });
+        }
+        updateCarryIsDefault(pos);
     }
 
     @Override
@@ -322,6 +329,19 @@ public class PosServiceImpl implements PosService {
         return PosConverter.poToCoObject(posResult);
     }
 
+    @Override
+    public Pos buildAndVerifyPos(MerchantInfoDTO merchantInfo) {
+        Pos pos = new Pos();
+        pos.setPosCode(merchantInfo.getOnlineShopCode());
+        pos.setPosName(merchantInfo.getOnlineShopName());
+        pos.setPosStatusCode(MetadataConstants.PosStatus.NORMAL);
+        pos.setPosTypeCode(MetadataConstants.PosType.WAREHOUSE);
+        pos.setTenantId(merchantInfo.getTenantId());
+        validPosNameUnique(pos);
+        validatePosCode(pos);
+        return pos;
+    }
+
     /**
      * 更新默认承运商
      *
@@ -358,8 +378,6 @@ public class PosServiceImpl implements PosService {
             return;
         }
         PosInfo posInfo = posInfos.get(0);
-        // 设置服务点地址名称
-        setPosAddress(posInfo, tenantId);
         // 更新服务点门店信息
         redisCacheClient.executePipelined(new RedisCallback<Object>() {
 
@@ -387,45 +405,4 @@ public class PosServiceImpl implements PosService {
             }
         });
     }
-
-    /**
-     * 设置服务点地址名称
-     *
-     * @param posInfo  服务点
-     * @param tenantId 租户Id
-     */
-    private void setPosAddress(PosInfo posInfo, Long tenantId) {
-        List<String> regionCodes = new ArrayList<>();
-        regionCodes.add(posInfo.getCityCode());
-        regionCodes.add(posInfo.getDistrictCode());
-        regionCodes.add(posInfo.getRegionCode());
-        RegionQueryLovInnerDTO dto = new RegionQueryLovInnerDTO();
-        dto.setRegionCodes(regionCodes);
-        List<Region> regionList = regionRepository.listRegionLov(dto, tenantId);
-        Map<String, Region> regionMap = Maps.newHashMapWithExpectedSize(regionList.size());
-        for (Region region : regionList) {
-            regionMap.put(region.getRegionCode(), region);
-        }
-        //市
-        String cityCode = posInfo.getCityCode();
-        Region city = regionMap.get(cityCode);
-        if (null != city) {
-            posInfo.setCityName(city.getRegionName());
-            posInfo.setCountryName(city.getCountryName());
-            posInfo.setCountryCode(city.getCountryCode());
-        }
-        //区
-        String districtCode = posInfo.getDistrictCode();
-        Region district = regionMap.get(districtCode);
-        if (null != district) {
-            posInfo.setDistrictName(district.getRegionName());
-        }
-        //省
-        String regionCode = posInfo.getRegionCode();
-        Region region = regionMap.get(regionCode);
-        if (null != region) {
-            posInfo.setRegionName(region.getRegionName());
-        }
-    }
-
 }

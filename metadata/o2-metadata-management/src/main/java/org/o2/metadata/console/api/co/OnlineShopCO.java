@@ -74,6 +74,15 @@ public class OnlineShopCO {
     @ApiModelProperty(value = "租户Id")
     private Long tenantId;
 
+    @ApiModelProperty("店铺logo")
+    private String logoUrl;
+
+    @ApiModelProperty("店铺图片")
+    private String shopMediaUrl;
+
+    @ApiModelProperty("自营标识")
+    private Integer selfSalesFlag;
+
     /**
      * 网店业务类型
      */

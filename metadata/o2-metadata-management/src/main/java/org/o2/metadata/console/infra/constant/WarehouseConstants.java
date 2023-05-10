@@ -24,6 +24,11 @@ public interface WarehouseConstants {
      */
     interface WarehouseType {
         String LOV_CODE = "O2MD.WAREHOUSE_TYPE";
+
+        /**
+         * 良品仓
+         */
+        String GOOD = "GOOD";
     }
 
     /**
@@ -32,6 +37,11 @@ public interface WarehouseConstants {
     interface WarehouseStatus {
 
         String LOV_CODE = "O2MD.WAREHOUSE_STATUS";
+
+        /**
+         * 正常
+         */
+        String NORMAL = "NORMAL";
     }
 
     /**

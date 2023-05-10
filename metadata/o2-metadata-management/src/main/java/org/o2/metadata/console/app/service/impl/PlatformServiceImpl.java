@@ -1,11 +1,14 @@
 package org.o2.metadata.console.app.service.impl;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.cache.util.CollectionCacheHelper;
+import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PlatformCO;
+import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
 import org.o2.metadata.console.app.service.PlatformService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
@@ -90,7 +93,18 @@ public class PlatformServiceImpl implements PlatformService {
         return map;
     }
 
-    private void validNameUnique(Platform platform) {
+    @Override
+    public Platform buildPlatform(MerchantInfoDTO merchantInfo) {
+        Platform platform = new Platform();
+        platform.setPlatformCode(O2CoreConstants.PlatformFrom.OW);
+        platform.setPlatformName(merchantInfo.getOnlineShopName());
+        platform.setPlatformTypeCode(PlatformConstants.PlatformType.E_COMMERCE_PLATFORM);
+        platform.setActiveFlag(BaseConstants.Flag.YES);
+        platform.setTenantId(merchantInfo.getTenantId());
+        return platform;
+    }
+
+    protected void validNameUnique(Platform platform) {
         // 唯一性校验
         Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom()
                 .andEqualTo(Platform.FIELD_PLATFORM_NAME, platform.getPlatformName())
@@ -103,7 +117,7 @@ public class PlatformServiceImpl implements PlatformService {
         }
     }
 
-    private void validCodeUnique(Platform platform) {
+    protected void validCodeUnique(Platform platform) {
         // 唯一性校验
         Condition condition = Condition.builder(Platform.class).andWhere(Sqls.custom()
                 .andEqualTo(Platform.FIELD_PLATFORM_CODE, platform.getPlatformCode())
