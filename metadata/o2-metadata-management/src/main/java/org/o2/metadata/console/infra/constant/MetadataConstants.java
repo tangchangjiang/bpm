@@ -381,4 +381,35 @@ public interface MetadataConstants {
         String ONLINE_SHOP = "ONLINE_SHOP";
     }
 
+    interface RetryStatusCode {
+        /**
+         * 逻辑处理错误
+         */
+        String PROCESS_ERROR = "PROCESS_ERROR";
+        /**
+         * 数据质量问题校验错误
+         */
+        String VALIDATED_ERROR = "VALIDATED_ERROR";
+        /**
+         * 重试后处理成功
+         */
+        String SUCCESS = "SUCCESS";
+        /**
+         * 重试发现无需处理,置为跳过
+         */
+        String SKIP = "SKIP";
+    }
+
+    /**
+     * 队列编码
+     */
+    interface QueueCode {
+
+        /**
+         * 商家初始化元数据队列
+         */
+        String O2MD_MERCHANT_META_INIT_EVT = "O2MD_MERCHANT_META_INIT_EVT";
+
+    }
+
 }

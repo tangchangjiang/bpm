@@ -1,9 +1,9 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.OnlineShopCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
@@ -96,5 +96,5 @@ public interface OnlineShopService {
      *
      * @param merchantInfo 商家信息
      */
-    void syncMerchantInfo(MerchantInfoDTO merchantInfo);
+    void syncMerchantInfo(MerchantInfoBO merchantInfo);
 }

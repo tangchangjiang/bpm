@@ -1,8 +1,6 @@
 package org.o2.metadata.management.client.infra.feign.fallback;
 
 import lombok.extern.slf4j.Slf4j;
-import org.o2.core.helper.JsonHelper;
-import org.o2.metadata.management.client.domain.co.MerchantInfoCO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 import org.o2.metadata.management.client.domain.dto.OnlineShopQueryInnerDTO;
@@ -67,12 +65,6 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     @Override
     public ResponseEntity<String> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.error("Error onlineShop, params[tenantId = {}, onlineShopQueryInnerDTO = {}]", tenantId, onlineShopQueryInnerDTO);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-
-    @Override
-    public ResponseEntity<String> syncMerchantInfo(Long organizationId, MerchantInfoCO merchantInfoCO) {
-        log.error("Error syncMerchantInfo, params[tenantId = {}, merchantInfoCO = {}]", organizationId, JsonHelper.objectToString(merchantInfoCO));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

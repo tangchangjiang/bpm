@@ -2,11 +2,11 @@ package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
@@ -183,5 +183,5 @@ public interface WarehouseService {
      * @param merchantInfo 商家信息
      * @return 仓库信息
      */
-    Warehouse buildAndVerifyWarehouse(MerchantInfoDTO merchantInfo);
+    Warehouse buildAndVerifyWarehouse(MerchantInfoBO merchantInfo);
 }

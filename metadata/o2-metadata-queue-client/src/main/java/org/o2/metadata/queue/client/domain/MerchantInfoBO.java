@@ -1,17 +1,19 @@
-package org.o2.metadata.console.api.dto;
+package org.o2.metadata.queue.client.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 商家信息
  *
- * @author chao.yang05@hand-china.com 2023-05-08
+ * @author chao.yang05@hand-china.com 2023-05-10
  */
 @Data
-public class MerchantInfoDTO {
+public class MerchantInfoBO {
+
     /**
      * 网店编码
      */
@@ -53,5 +55,6 @@ public class MerchantInfoDTO {
      * 租户Id
      */
     @ApiModelProperty("租户Id")
+    @NotNull
     private Long tenantId;
 }
