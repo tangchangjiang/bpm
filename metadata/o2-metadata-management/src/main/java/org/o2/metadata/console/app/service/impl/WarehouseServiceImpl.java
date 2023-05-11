@@ -18,11 +18,11 @@ import org.o2.inventory.management.client.domain.constants.O2InventoryConstant;
 import org.o2.inventory.management.client.domain.vo.TriggerStockCalWithWhVO;
 import org.o2.metadata.console.api.co.WarehouseCO;
 import org.o2.metadata.console.api.co.WarehouseRelAddressCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.app.bo.WarehouseLimitBO;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -396,7 +396,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Warehouse buildAndVerifyWarehouse(MerchantInfoDTO merchantInfo) {
+    public Warehouse buildAndVerifyWarehouse(MerchantInfoBO merchantInfo) {
         Warehouse warehouse = new Warehouse();
         warehouse.initWarehouse();
         warehouse.setWarehouseCode(merchantInfo.getOnlineShopCode());

@@ -7,20 +7,30 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.co.PosAddressCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
-import org.o2.metadata.console.infra.entity.*;
+import org.o2.metadata.console.infra.entity.Carrier;
+import org.o2.metadata.console.infra.entity.Pos;
+import org.o2.metadata.console.infra.entity.PosAddress;
+import org.o2.metadata.console.infra.entity.PosInfo;
+import org.o2.metadata.console.infra.entity.PosRelCarrier;
+import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.redis.PosRedis;
-import org.o2.metadata.console.infra.repository.*;
+import org.o2.metadata.console.infra.repository.CarrierRepository;
+import org.o2.metadata.console.infra.repository.PosAddressRepository;
+import org.o2.metadata.console.infra.repository.PosRelCarrierRepository;
+import org.o2.metadata.console.infra.repository.PosRepository;
+import org.o2.metadata.console.infra.repository.PostTimeRepository;
+import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
 import org.springframework.dao.DataAccessException;
@@ -330,7 +340,7 @@ public class PosServiceImpl implements PosService {
     }
 
     @Override
-    public Pos buildAndVerifyPos(MerchantInfoDTO merchantInfo) {
+    public Pos buildAndVerifyPos(MerchantInfoBO merchantInfo) {
         Pos pos = new Pos();
         pos.setPosCode(merchantInfo.getOnlineShopCode());
         pos.setPosName(merchantInfo.getOnlineShopName());

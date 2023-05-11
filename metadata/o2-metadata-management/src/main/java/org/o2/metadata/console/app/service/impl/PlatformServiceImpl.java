@@ -8,8 +8,8 @@ import org.o2.cache.util.CollectionCacheHelper;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.metadata.console.api.co.PlatformCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.app.service.PlatformService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PlatformConstants;
@@ -94,7 +94,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
-    public Platform buildPlatform(MerchantInfoDTO merchantInfo) {
+    public Platform buildPlatform(MerchantInfoBO merchantInfo) {
         Platform platform = new Platform();
         platform.setPlatformCode(O2CoreConstants.PlatformFrom.OW);
         platform.setPlatformName(merchantInfo.getOnlineShopName());

@@ -1,10 +1,10 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.PosAddressCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PosAddressQueryInnerDTO;
 import org.o2.metadata.console.api.dto.PosQueryInnerDTO;
 import org.o2.metadata.console.api.vo.PosVO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
@@ -91,5 +91,5 @@ public interface PosService {
      * @param merchantInfo 商家信息
      * @return 服务点
      */
-    Pos buildAndVerifyPos(MerchantInfoDTO merchantInfo);
+    Pos buildAndVerifyPos(MerchantInfoBO merchantInfo);
 }

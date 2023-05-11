@@ -1,8 +1,8 @@
 package org.o2.metadata.console.app.service;
 
 import org.o2.metadata.console.api.co.PlatformCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.PlatformQueryInnerDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.Platform;
 
 import java.util.Map;
@@ -36,5 +36,5 @@ public interface PlatformService {
      * @param merchantInfo 商家信息
      * @return 平台
      */
-    Platform buildPlatform(MerchantInfoDTO merchantInfo);
+    Platform buildPlatform(MerchantInfoBO merchantInfo);
 }

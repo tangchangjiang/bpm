@@ -11,9 +11,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.hzero.core.util.Results;
 import org.o2.core.helper.JsonHelper;
-import org.o2.core.response.SuccessResponse;
 import org.o2.metadata.console.api.co.OnlineShopCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.service.OnlineShopService;
@@ -94,15 +92,5 @@ public class OnlineShopInternalController {
         pageRequest.setPage(onlineShopQueryInnerDTO.getPage());
         pageRequest.setSize(onlineShopQueryInnerDTO.getSize());
         return PageHelper.doPage(pageRequest, () -> onlineShopService.queryOnlineShops(organizationId, onlineShopQueryInnerDTO));
-    }
-
-    @ApiOperation(value = "同步商家信息，生成网店、仓库、服务点等信息")
-    @Permission(permissionWithin = true, level = ResourceLevel.ORGANIZATION)
-    @PostMapping("/online-shops-internal/sync-merchant")
-    public ResponseEntity<SuccessResponse> syncMerchantInfo(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
-                                                        @RequestBody MerchantInfoDTO merchantInfo) {
-        merchantInfo.setTenantId(organizationId);
-        onlineShopService.syncMerchantInfo(merchantInfo);
-        return Results.success(SuccessResponse.success());
     }
 }

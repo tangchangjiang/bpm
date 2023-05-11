@@ -7,22 +7,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
+import org.o2.cms.queue.client.O2CmsProducer;
+import org.o2.cms.queue.client.domain.SiteRelShopBO;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.console.api.co.OnlineShopCO;
-import org.o2.metadata.console.api.dto.MerchantInfoDTO;
+import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.CurrencyBO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.app.service.PlatformService;
 import org.o2.metadata.console.app.service.PosService;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
+import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.app.service.WarehouseService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.Catalog;
 import org.o2.metadata.console.infra.entity.CatalogVersion;
@@ -42,6 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +73,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final WarehouseService warehouseService;
     private final WarehouseRepository warehouseRepository;
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
+    private final O2CmsProducer o2CmsProducer;
+    private final SysParamService sysParamService;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
@@ -79,7 +87,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  PosService posService,
                                  WarehouseService warehouseService,
                                  WarehouseRepository warehouseRepository,
-                                 OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository) {
+                                 OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
+                                 O2CmsProducer o2CmsProducer,
+                                 SysParamService sysParamService) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
@@ -92,6 +102,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.warehouseService = warehouseService;
         this.warehouseRepository = warehouseRepository;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
+        this.o2CmsProducer = o2CmsProducer;
+        this.sysParamService = sysParamService;
     }
 
     @Override
@@ -191,7 +203,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param merchantInfo 商家信息
      * @return 网店信息
      */
-    protected OnlineShop buildAndVerifyOnlineShop(MerchantInfoDTO merchantInfo) {
+    protected OnlineShop buildAndVerifyOnlineShop(MerchantInfoBO merchantInfo) {
         OnlineShop onlineShop = new OnlineShop();
         onlineShop.initDefaultProperties();
         onlineShop.setPlatformCode(O2CoreConstants.PlatformFrom.OW);
@@ -438,7 +450,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
-    public void syncMerchantInfo(MerchantInfoDTO merchantInfo) {
+    public void syncMerchantInfo(MerchantInfoBO merchantInfo) {
         // 1. 查询网店是否已存在
         OnlineShop existShop = queryShopByCode(merchantInfo.getOnlineShopCode());
         // 2.如果网店已存在，则更新网店信息
@@ -481,6 +493,27 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             // h. 同步Redis
             onlineShopRedis.syncMerchantMetaInfo(onlineShop, warehouse, shopRelWh);
         });
+        // 10. 网店关联默认站点队列
+        pushDefaultSiteRelShop(merchantInfo.getOnlineShopCode());
+    }
+
+    /**
+     * 推送站点关联网店（默认站点）
+     *
+     * @param onlineShopCode 网店编码
+     */
+    protected void pushDefaultSiteRelShop(String onlineShopCode) {
+        // 查询默认站点
+        SystemParameterCO defaultSite = sysParamService.getSystemParameter(SystemParameterConstants.Parameter.DEFAULT_SITE_CODE,
+                BaseConstants.DEFAULT_TENANT_ID);
+        if (Objects.isNull(defaultSite) || StringUtils.isBlank(defaultSite.getDefaultValue())) {
+            return;
+        }
+
+        SiteRelShopBO siteRelShop = new SiteRelShopBO();
+        siteRelShop.setSiteCode(defaultSite.getDefaultValue());
+        siteRelShop.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
+        o2CmsProducer.pushSiteRelShopQueue(siteRelShop);
     }
 
     /**
@@ -489,7 +522,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShop   网店
      * @param merchantInfo 商家信息
      */
-    protected void updateShopByMerchant(OnlineShop onlineShop, MerchantInfoDTO merchantInfo) {
+    protected void updateShopByMerchant(OnlineShop onlineShop, MerchantInfoBO merchantInfo) {
         if (StringUtils.isNotBlank(merchantInfo.getOnlineShopName())) {
             onlineShop.setOnlineShopName(merchantInfo.getOnlineShopName());
         }
