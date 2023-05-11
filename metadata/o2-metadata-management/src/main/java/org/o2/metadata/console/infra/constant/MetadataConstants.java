@@ -381,7 +381,11 @@ public interface MetadataConstants {
         String ONLINE_SHOP = "ONLINE_SHOP";
     }
 
-    interface RetryStatusCode {
+    interface RetryStatus {
+        /**
+         * 默认重试次数
+         */
+        Long DEFAULT_RETRY_COUNT = 3L;
         /**
          * 逻辑处理错误
          */

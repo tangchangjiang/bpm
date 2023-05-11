@@ -2,8 +2,11 @@ package org.o2.metadata.console.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.metadata.console.infra.entity.RetryErrorLog;
+import org.o2.metadata.console.infra.mapper.RetryErrorLogMapper;
 import org.o2.metadata.console.infra.repository.RetryErrorLogRepository;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * 元数据错误日志表 资源库实现
@@ -12,4 +15,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RetryErrorLogRepositoryImpl extends BaseRepositoryImpl<RetryErrorLog> implements RetryErrorLogRepository {
+
+    private final RetryErrorLogMapper retryErrorLogMapper;
+
+    public RetryErrorLogRepositoryImpl(RetryErrorLogMapper retryErrorLogMapper) {
+        this.retryErrorLogMapper = retryErrorLogMapper;
+    }
+
+    @Override
+    public List<Long> listQueueErrorLogId(RetryErrorLog retryErrorLog) {
+        return retryErrorLogMapper.listQueueErrorLogId(retryErrorLog);
+    }
 }
