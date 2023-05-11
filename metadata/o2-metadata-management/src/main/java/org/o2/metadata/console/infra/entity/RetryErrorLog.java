@@ -5,13 +5,16 @@ import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -28,6 +31,8 @@ import java.util.Date;
 @Table(name = "o2md_retry_error_log")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RetryErrorLog extends AuditDomain {
 
     public static final String FIELD_ERROR_LOG_ID = "errorLogId";
@@ -81,5 +86,10 @@ public class RetryErrorLog extends AuditDomain {
     // 非数据库字段
     // ------------------------------------------------------------------------------
 
+    /**
+     * 处理数量
+     */
+    @Transient
+    private Long processTotal;
 }
 

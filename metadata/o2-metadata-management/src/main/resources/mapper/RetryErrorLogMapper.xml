@@ -20,4 +20,36 @@
     </resultMap>
 
 
+    <select id="listQueueErrorLogId" resultType="java.lang.Long">
+        select
+        error_log_id
+        from
+        o2md_retry_error_log qel
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(caseCode)">
+                and qel.case_code = #{caseCode}
+            </if>
+            <if test="retry != null">
+                and qel.retry &lt; #{retry}
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(processStatus)">
+                and qel.process_status = #{processStatus}
+            </if>
+            <choose>
+                <when test="tenantId != null">
+                    AND qel.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                    AND 1 = 0
+                </otherwise>
+            </choose>
+            <if test='processTotal !=null and _databaseId == "mysql" '>
+                limit #{processTotal}
+            </if>
+            <if test='processTotal !=null and _databaseId == "oracle"'>
+                rownum &lt;= #{processTotal}
+            </if>
+        </where>
+
+    </select>
 </mapper>

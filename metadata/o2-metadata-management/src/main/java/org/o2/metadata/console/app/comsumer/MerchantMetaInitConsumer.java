@@ -49,7 +49,7 @@ public class MerchantMetaInitConsumer extends AbstractWrapperConsumer<MerchantIn
         MerchantInfoBO merchantInfo = context.getData();
         log.error("init merchant meta info failed, tenantId: {}, data: {}", tenantId, JsonHelper.objectToString(merchantInfo));
         RetryErrorLog retryErrorLog = RetryErrorLog.builder().errorTime(new Date())
-                .processStatus(MetadataConstants.RetryStatusCode.PROCESS_ERROR)
+                .processStatus(MetadataConstants.RetryStatus.PROCESS_ERROR)
                 .caseCode(MetadataConstants.QueueCode.O2MD_MERCHANT_META_INIT_EVT)
                 .errorTime(new Date())
                 .requestBody(JsonHelper.objectToString(merchantInfo))
