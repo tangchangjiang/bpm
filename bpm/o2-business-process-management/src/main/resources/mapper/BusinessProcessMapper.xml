@@ -57,7 +57,9 @@
             bp.process_json,
             bp.view_json,
             bp.business_type_code,
-            bp.tenant_id
+            bp.tenant_id,
+            bp.created_by,
+            bp.last_updated_by
         FROM o2bpm_business_process bp
         <where>
             <if test="processCode != null and processCode != ''">
