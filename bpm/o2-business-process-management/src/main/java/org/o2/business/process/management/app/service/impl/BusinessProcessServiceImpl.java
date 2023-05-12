@@ -4,9 +4,7 @@ import io.choerodon.mybatis.domain.AuditDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.UniqueHelper;
-import org.hzero.mybatis.util.Sqls;
 import org.o2.business.process.management.api.dto.BusinessExportDTO;
 import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessExportVO;
@@ -18,9 +16,10 @@ import org.o2.business.process.management.domain.repository.BusinessProcessRedis
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.o2.business.process.management.infra.convert.ViewJsonConvert;
 import org.o2.core.helper.JsonHelper;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.o2.process.domain.engine.BpmnModel;
-import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.BaseElement;
+import org.o2.process.domain.engine.definition.activity.ServiceTask;
 import org.o2.process.domain.engine.definition.flow.ConditionalFlow;
 import org.o2.process.domain.engine.process.preruntime.validator.BpmnModelValidator;
 import org.o2.process.domain.infra.ProcessEngineConstants;
@@ -66,12 +65,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     @Override
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
-        List<BusinessProcess> result = businessProcessRepository.selectByCondition(Condition.builder(BusinessProcess.class).andWhere(Sqls.custom()
-                .andEqualTo(BusinessProcess.FIELD_TENANT_ID, queryDTO.getTenantId(), false)
-                .andLike(BusinessProcess.FIELD_DESCRIPTION, queryDTO.getDescription(), true)
-                .andEqualTo(BusinessProcess.FIELD_PROCESS_CODE, queryDTO.getProcessCode(), true)
-                .andEqualTo(BusinessProcess.FIELD_BUSINESS_TYPE_CODE, queryDTO.getBusinessTypeCode(), true)
-                .andEqualTo(BusinessProcess.FIELD_ENABLED_FLAG, queryDTO.getEnabledFlag(), true)).build());
+        List<BusinessProcess> result = TenantHelper.organizationLevelLimit(() -> businessProcessRepository.listBusinessProcessByCondition(queryDTO));
         for (BusinessProcess process : result) {
             process.setCreatedOperator(IamUserHelper.getRealName(process.getCreatedBy().toString()));
             process.setUpdatedOperator(IamUserHelper.getRealName(process.getLastUpdatedBy().toString()));
@@ -174,7 +168,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     @Override
     public List<BusinessExportVO> businessExport(BusinessExportDTO businessExportDTO) {
-        List<BusinessExportVO> businessExportList = businessProcessRepository.listBusinessForExport(businessExportDTO);
+        List<BusinessExportVO> businessExportList = TenantHelper.organizationLevelLimit(() -> businessProcessRepository.listBusinessForExport(businessExportDTO));
         businessExportList.forEach(e -> e.setBpmnModel(StringUtils.isBlank(e.getProcessJson()) ? new BpmnModel() :
                 ViewJsonConvert.processJsonConvert(e.getProcessJson())));
         Set<String> beanIds = businessExportList.stream().flatMap(b -> b.getBpmnModel().getServiceTask().stream())

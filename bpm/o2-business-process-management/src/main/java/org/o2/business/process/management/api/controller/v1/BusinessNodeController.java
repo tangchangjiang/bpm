@@ -15,10 +15,7 @@ import org.hzero.boot.platform.lov.annotation.ProcessLovValue;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
-import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
-import org.hzero.mybatis.util.Sqls;
-import org.o2.business.process.management.api.dto.BatchBusinessNodeQueryDTO;
 import org.o2.business.process.management.api.dto.BusinessNodeQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessNodeVO;
 import org.o2.business.process.management.app.service.BizNodeParameterService;
@@ -77,16 +74,8 @@ public class BusinessNodeController extends BaseController {
 
         // lov查询需要获取节点参数信息
         if (BaseConstants.Flag.YES.equals(businessNodeQueryDTO.getLovFlag()) && CollectionUtils.isNotEmpty(page.getContent())) {
-            List<String> beanIdList = page.getContent().stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
-            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, organizationId);
-            if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
-                        .sorted(BizNodeParameter.defaultComparator())
-                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
-                page.getContent().forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
-            }
+            fillNodeParamList(page.getContent());
         }
-
         return Results.success(page);
     }
 
@@ -102,14 +91,7 @@ public class BusinessNodeController extends BaseController {
 
         // lov查询需要获取节点参数信息
         if (CollectionUtils.isNotEmpty(businessNodeList)) {
-            List<String> beanIdList = businessNodeList.stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
-            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, organizationId);
-            if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
-                        .sorted(BizNodeParameter.defaultComparator())
-                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
-                businessNodeList.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
-            }
+            fillNodeParamList(businessNodeList);
         }
         return Results.success(businessNodeList);
     }
@@ -118,28 +100,18 @@ public class BusinessNodeController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY, FIELD})
     @PostMapping("list-by-bean-Id")
-    public ResponseEntity<List<BusinessNode>> listByBeanId(@PathVariable(value = "organizationId") Long organizationId,
-                                                           @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO
-    ) {
+    public ResponseEntity<List<BusinessNodeVO>> listByBeanId(@PathVariable(value = "organizationId") Long organizationId,
+                                                           @RequestBody List<String> beanIdList) {
 
-        validObject(batchBusinessNodeQueryDTO);
-        List<BusinessNode> businessNodes = businessNodeRepository.selectByCondition(Condition.builder(BusinessNode.class)
-                .andWhere(Sqls.custom().andIn(BusinessNode.FIELD_BEAN_ID, batchBusinessNodeQueryDTO.getBeanIdList())
-                        .andEqualTo(BusinessNode.FIELD_TENANT_ID, organizationId))
-                .build());
+        BusinessNodeQueryDTO query = new BusinessNodeQueryDTO();
+        query.setBeanIdList(beanIdList);
+        query.setTenantId(organizationId);
+        List<BusinessNodeVO> businessNodeList = businessNodeRepository.listBusinessNode(query);
         // 获取节点参数信息
-        if (CollectionUtils.isNotEmpty(businessNodes)) {
-            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(),
-                    organizationId);
-            if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
-                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
-                        .sorted(BizNodeParameter.defaultComparator())
-                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
-                businessNodes.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
-            }
-
+        if (CollectionUtils.isNotEmpty(businessNodeList)) {
+            fillNodeParamList(businessNodeList);
         }
-        return Results.success(businessNodes);
+        return Results.success(businessNodeList);
     }
 
     @ApiOperation(value = "业务流程节点表维护-查询业务流程节点表明细")
@@ -169,5 +141,27 @@ public class BusinessNodeController extends BaseController {
                                                @RequestBody BusinessNode businessNode) {
         SecurityTokenHelper.validToken(businessNode);
         return Results.success(businessNodeService.save(businessNode));
+    }
+
+    /**
+     * 设置节点参数
+     *
+     * @param businessNodeList 流程节点
+     */
+    protected void fillNodeParamList(List<BusinessNodeVO> businessNodeList) {
+        if (CollectionUtils.isEmpty(businessNodeList)) {
+            return;
+        }
+        Map<Long, List<BusinessNodeVO>> nodeGroupByTenant = businessNodeList.stream().collect(Collectors.groupingBy(BusinessNodeVO::getTenantId));
+        nodeGroupByTenant.forEach((tenantId, nodeList) -> {
+            List<String> beanIdList = nodeList.stream().map(BusinessNodeVO::getBeanId).collect(Collectors.toList());
+            List<BizNodeParameter> bizNodeParameterList = bizNodeParameterService.getBizNodeParameterList(beanIdList, tenantId);
+            if (CollectionUtils.isNotEmpty(bizNodeParameterList)) {
+                Map<String, List<BizNodeParameter>> bizNodeParameterMap = bizNodeParameterList.stream()
+                        .sorted(BizNodeParameter.defaultComparator())
+                        .collect(Collectors.groupingBy(BizNodeParameter::getBeanId));
+                nodeList.forEach(v -> v.setParamList(bizNodeParameterMap.get(v.getBeanId())));
+            }
+        });
     }
 }

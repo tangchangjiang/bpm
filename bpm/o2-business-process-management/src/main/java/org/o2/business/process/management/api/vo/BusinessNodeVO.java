@@ -25,6 +25,12 @@ public class BusinessNodeVO {
     @ApiModelProperty(value = "业务节点名称")
     private String nodeName;
 
+    @ApiModelProperty(value = "节点类型")
+    private String nodeType;
+
+    @ApiModelProperty(value = "脚本")
+    private String script;
+
     @ApiModelProperty(value = "业务类型(O2MD.BUSINESS_TYPE)")
     @LovValue(value = BusinessProcessConstants.LovCode.BUSINESS_TYPE_CODE)
     private String businessTypeCode;
