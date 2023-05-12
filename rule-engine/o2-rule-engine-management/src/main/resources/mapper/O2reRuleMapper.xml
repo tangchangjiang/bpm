@@ -45,7 +45,7 @@
         r.object_version_number
         FROM
         o2re_rule_entity re
-        left join o2re_rule r on r.entity_code = re.rule_entity_code
+        join o2re_rule r on r.entity_code = re.rule_entity_code and r.tenant_id in (#{tenantId}, 0)
         <where>
             <if test="ruleCode != null and ruleCode != '' ">
                 <bind name="ruleCodeLike" value="'%'+ruleCode+'%'"/>
