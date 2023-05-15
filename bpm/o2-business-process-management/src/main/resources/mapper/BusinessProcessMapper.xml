@@ -45,14 +45,36 @@
             <if test="enabledFlag != null">
                 and enabled_flag = #{enabledFlag}
             </if>
-            <choose>
-                <when test="tenantId != null">
-                    AND tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1=0
-                </otherwise>
-            </choose>
+        </where>
+    </select>
+    <select id="listBusinessProcessByCondition" resultType="org.o2.business.process.management.domain.entity.BusinessProcess">
+        SELECT
+            bp.biz_process_id,
+            bp.process_code,
+            bp.entity_code,
+            bp.description,
+            bp.enabled_flag,
+            bp.process_json,
+            bp.view_json,
+            bp.business_type_code,
+            bp.tenant_id,
+            bp.created_by,
+            bp.last_updated_by
+        FROM o2bpm_business_process bp
+        <where>
+            <if test="processCode != null and processCode != ''">
+                AND bp.process_code = #{processCode}
+            </if>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                AND bp.business_type_code = #{businessTypeCode}
+            </if>
+            <if test="enabledFlag != null">
+                AND bp.enabled_flag = #{enabledFlag}
+            </if>
+            <if test="description != null and description != ''">
+                <bind name="descLike" value="'%' + description + '%'"/>
+                AND bp.description LIKE #{descLike}
+            </if>
         </where>
     </select>
 

@@ -3,6 +3,8 @@ package org.o2.business.process.management.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 业务节点查询参数
  *
@@ -13,6 +15,9 @@ public class BusinessNodeQueryDTO {
 
     @ApiModelProperty(value = "业务流程节点bean")
     private String beanId;
+
+    @ApiModelProperty(value = "beanIdList")
+    private List<String> beanIdList;
 
     @ApiModelProperty(value = "业务节点名称")
     private String nodeName;

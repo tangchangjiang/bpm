@@ -8,6 +8,7 @@ import org.hzero.mybatis.util.Sqls;
 import org.o2.business.process.management.app.service.BizNodeParameterService;
 import org.o2.business.process.management.domain.entity.BizNodeParameter;
 import org.o2.business.process.management.domain.repository.BizNodeParameterRepository;
+import org.o2.core.helper.QueryFallbackHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,10 +87,12 @@ public class BizNodeParameterServiceImpl implements BizNodeParameterService {
 
     @Override
     public BizNodeParameter getParamDefinition(String beanId, String paramCode, Long organizationId) {
-        BizNodeParameter query = new BizNodeParameter();
-        query.setTenantId(organizationId);
-        query.setBeanId(beanId);
-        query.setParamCode(paramCode);
-        return bizNodeParameterRepository.selectOne(query);
+        return QueryFallbackHelper.siteFallback(organizationId, tenantId -> {
+            BizNodeParameter query = new BizNodeParameter();
+            query.setTenantId(tenantId);
+            query.setBeanId(beanId);
+            query.setParamCode(paramCode);
+            return bizNodeParameterRepository.selectOne(query);
+        });
     }
 }

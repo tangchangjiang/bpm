@@ -65,13 +65,16 @@ public class BizNodeParameterController extends BaseController {
         return Results.success(bizNodeParameter);
     }
 
+    /**
+     * @deprecated 前端没有调用
+     */
+    @Deprecated
     @ApiOperation(value = "业务节点参数表维护-根据beanId查询节点参数信息")
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @PostMapping("list-by-bean-Id")
     public ResponseEntity<List<BizNodeParameter>> listByBeanId(@PathVariable(value = "organizationId") Long organizationId,
-                                                               @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO
-    ) {
+                                                               @RequestBody BatchBusinessNodeQueryDTO batchBusinessNodeQueryDTO) {
         validObject(batchBusinessNodeQueryDTO);
         return Results.success(bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(), organizationId));
     }

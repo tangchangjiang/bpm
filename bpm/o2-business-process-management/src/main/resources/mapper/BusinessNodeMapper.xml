@@ -30,6 +30,8 @@
             bn.bean_id,
             bn.description,
             bn.node_name,
+            bn.node_type,
+            bn.script,
             bn.business_type_code,
             bn.sub_business_type_code,
             bn.enabled_flag,
@@ -38,7 +40,7 @@
         <where>
             <choose>
                 <when test="tenantId != null">
-                    AND bn.tenant_id = #{tenantId}
+                    AND (bn.tenant_id = #{tenantId} OR bn.tenant_id = 0)
                 </when>
                 <otherwise>
                     AND 1 = 0
@@ -46,6 +48,12 @@
             </choose>
             <if test="beanId != null and beanId != ''">
                 AND bn.bean_id = #{beanId}
+            </if>
+            <if test="beanIdList != null and beanIdList.size > 0">
+                AND bn.bean_id IN
+                <foreach collection="beanIdList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
             </if>
             <if test="nodeName != null and nodeName != ''">
                 <bind name="temp" value="'%' + nodeName + '%'"/>
@@ -59,6 +67,19 @@
             </if>
             <if test="enabledFlag != null">
                 AND bn.enabled_flag = #{enabledFlag}
+            </if>
+            <if test="tenantId != null and tenantId != 0">
+                AND bn.biz_node_id NOT IN (
+                    SELECT bn1.biz_node_id
+                    FROM o2bpm_business_node bn1
+                    WHERE bn1.tenant_id = 0
+                    AND EXISTS(
+                        SELECT 1
+                        FROM o2bpm_business_node bn2
+                        WHERE bn1.bean_id = bn2.bean_id
+                        AND bn2.tenant_id = #{tenantId}
+                    )
+                )
             </if>
         </where>
     </select>

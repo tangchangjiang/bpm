@@ -2,6 +2,7 @@ package org.o2.business.process.management.infra.repository.impl;
 
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.o2.business.process.management.api.dto.BusinessExportDTO;
+import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessExportVO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
@@ -27,5 +28,10 @@ public class BusinessProcessRepositoryImpl extends BaseRepositoryImpl<BusinessPr
     @Override
     public List<BusinessExportVO> listBusinessForExport(BusinessExportDTO businessExportDTO) {
         return businessProcessMapper.listBusinessForExport(businessExportDTO);
+    }
+
+    @Override
+    public List<BusinessProcess> listBusinessProcessByCondition(BusinessProcessQueryDTO queryDTO) {
+        return businessProcessMapper.listBusinessProcessByCondition(queryDTO);
     }
 }

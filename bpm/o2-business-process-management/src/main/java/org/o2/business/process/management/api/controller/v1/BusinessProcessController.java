@@ -21,6 +21,7 @@ import org.o2.business.process.management.app.service.BusinessProcessService;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
+import org.o2.core.helper.QueryFallbackHelper;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -103,7 +104,7 @@ public class BusinessProcessController extends BaseController {
     @GetMapping("/process-config/{processCode}")
     public ResponseEntity<String> getBusinessProcessConfig(@PathVariable(value = "organizationId") Long organizationId,
                                                            @PathVariable String processCode) {
-        return Results.success(businessProcessRedisRepository.getBusinessProcessConfig(processCode, organizationId));
+        return Results.success(QueryFallbackHelper.siteFallback(organizationId, tenantId -> businessProcessRedisRepository.getBusinessProcessConfig(processCode, tenantId)));
     }
 
     @ApiOperation(value = "业务流程定义表维护-批量保存业务流程定义表")

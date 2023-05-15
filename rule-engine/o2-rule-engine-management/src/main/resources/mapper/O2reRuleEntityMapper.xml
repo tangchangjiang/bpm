@@ -48,6 +48,12 @@
             <if test="enableFlag != null">
                 and re.enable_flag = #{enableFlag}
             </if>
+            <if test="ruleEntityCodes != null and ruleEntityCodes.size > 0">
+                and re.rule_entity_code in
+                <foreach collection="ruleEntityCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
         </where>
     </select>
 
