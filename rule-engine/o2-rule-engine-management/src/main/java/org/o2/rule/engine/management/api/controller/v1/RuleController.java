@@ -66,7 +66,7 @@ public class RuleController extends BaseController {
                                                    direction = Sort.Direction.DESC) PageRequest pageRequest) {
         rule.setTenantId(organizationId);
         final Page<Rule> rulePage = PageHelper.doPage(pageRequest, () -> {
-            final List<Rule> rules = TenantHelper.organizationLevelLimit(() -> ruleRepository.ruleList(rule));
+            final List<Rule> rules = TenantHelper.organizationLevelLimit(() -> ruleService.ruleList(rule));
             if (CollectionUtils.isNotEmpty(rules)) {
                 final List<String> createUserIds = rules.stream().map(r -> String.valueOf(r.getCreatedBy())).collect(Collectors.toList());
                 final Map<Long, String> realNameMap = IamUserHelper.getRealNameMap(createUserIds);

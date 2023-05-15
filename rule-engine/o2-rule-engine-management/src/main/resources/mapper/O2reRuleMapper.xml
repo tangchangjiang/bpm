@@ -32,9 +32,6 @@
         r.condition_expression,
         r.rule_name,
         r.entity_code,
-        re.rule_entity_id,
-        re.rule_entity_alias,
-        re.rule_entity_name,
         r.rule_json,
         r.start_time,
         r.end_time,
@@ -44,8 +41,7 @@
         r.last_update_date,
         r.object_version_number
         FROM
-        o2re_rule_entity re
-        join o2re_rule r on r.entity_code = re.rule_entity_code and r.tenant_id in (#{tenantId}, 0)
+        o2re_rule r
         <where>
             <if test="ruleCode != null and ruleCode != '' ">
                 <bind name="ruleCodeLike" value="'%'+ruleCode+'%'"/>

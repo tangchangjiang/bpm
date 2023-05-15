@@ -45,6 +45,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 规则应用服务默认实现
@@ -303,6 +305,38 @@ public class RuleServiceImpl implements RuleService {
         transactionalHelper.transactionOperation(() -> {
             ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
             ruleRepository.removeCache(tenantId, rules);
+        });
+    }
+
+    @Override
+    public List<Rule> ruleList(Rule rule) {
+        List<Rule> rules = ruleRepository.ruleList(rule);
+        if (CollectionUtils.isEmpty(rules)) {
+            return rules;
+        }
+        fillRuleEntity(rules);
+        return rules;
+    }
+
+    protected void fillRuleEntity(List<Rule> rules) {
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+        Map<Long, List<Rule>> ruleGroupByTenant = rules.stream().collect(Collectors.groupingBy(Rule::getTenantId));
+        ruleGroupByTenant.forEach((tenantId, ruleList) -> {
+            List<String> entityCodes = ruleList.stream().map(Rule::getEntityCode).collect(Collectors.toList());
+            RuleEntity query = new RuleEntity();
+            query.setTenantId(tenantId);
+            query.setRuleEntityCodes(entityCodes);
+            List<RuleEntity> ruleEntities = ruleEntityRepository.selectList(query);
+            Map<String, RuleEntity> ruleEntityMap = ruleEntities.stream().collect(Collectors.toMap(RuleEntity::getRuleEntityCode, Function.identity(),
+                    (s1, s2) -> s2));
+            for (Rule rule : ruleList) {
+                RuleEntity ruleEntity = ruleEntityMap.getOrDefault(rule.getEntityCode(), new RuleEntity());
+                rule.setRuleEntityName(ruleEntity.getRuleEntityName());
+                rule.setRuleEntityId(ruleEntity.getRuleEntityId());
+                rule.setRuleEntityAlias(ruleEntity.getRuleEntityAlias());
+            }
         });
     }
 

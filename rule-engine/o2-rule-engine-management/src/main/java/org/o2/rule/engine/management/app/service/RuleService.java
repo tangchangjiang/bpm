@@ -79,4 +79,12 @@ public interface RuleService {
      * @param ruleIds 规则Id
      */
     void disable(Long tenantId, List<Long> ruleIds);
+
+    /**
+     * 规则列表
+     *
+     * @param rule 查询条件
+     * @return 规则列表
+     */
+    List<Rule> ruleList(Rule rule);
 }
