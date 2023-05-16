@@ -35,4 +35,6 @@ public class IamUserQueryInnerDTO {
      * 微信openId List
      */
     private List<String> openIdList;
+
+    private Integer siteFlag;
 }
