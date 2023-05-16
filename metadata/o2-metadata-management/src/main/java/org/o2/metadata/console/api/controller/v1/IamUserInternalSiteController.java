@@ -36,6 +36,7 @@ public class IamUserInternalSiteController {
     @GetMapping("/info-list")
     public ResponseEntity<List<IamUserCO>> listIamUserInfos(@RequestBody IamUserQueryInnerDTO queryInner) {
         queryInner.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
+        queryInner.setSiteFlag(BaseConstants.Flag.YES);
         return Results.success(iamUserService.listIamUserInfo(queryInner));
     }
 }

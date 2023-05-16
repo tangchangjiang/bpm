@@ -49,6 +49,7 @@ public interface O2LovConstants {
 
     interface IamUserLov {
         String IAM_USER_LOV_CODE = "O2MD.IAM_USER";
+        String IAM_USER_SITE_LOV_CODE = "O2MD.IAM_USER_SITE_MSG";
         String TENANT_ID = "tenantId";
         String REAL_NAME = "realName";
         String idList = "idList";
