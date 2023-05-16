@@ -18,13 +18,19 @@ import org.springframework.stereotype.Service;
 public class IamUserRemoteServiceImpl implements IamUserRemoteService {
     @Override
     public ResponseEntity<String> listIamUser(Long organizationId, IamUserQueryInnerDTO queryInner) {
-        log.error("Error listOnlineShopRelWarehouses, params[tenantId = {}, queryInner = {}]", organizationId, queryInner);
+        log.error("Error listIamUser, params[tenantId = {}, queryInner = {}]", organizationId, queryInner);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @Override
     public ResponseEntity<String> listIamUserInfos(Long organizationId, IamUserQueryInnerDTO queryInner) {
-        log.error("Error listOnlineShopRelWarehouses, params[tenantId = {}, queryInner = {}]", organizationId, queryInner);
+        log.error("Error listIamUserInfos, params[tenantId = {}, queryInner = {}]", organizationId, queryInner);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listIamUserInfoOfSite(IamUserQueryInnerDTO queryInner) {
+        log.error("Error listIamUserInfoOfSite, queryInner = {}", queryInner);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

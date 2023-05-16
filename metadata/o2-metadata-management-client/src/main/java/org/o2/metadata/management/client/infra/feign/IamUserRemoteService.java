@@ -42,4 +42,13 @@ public interface IamUserRemoteService {
     @GetMapping("/{organizationId}/iam-user-internal/info-list")
     ResponseEntity<String> listIamUserInfos(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                             IamUserQueryInnerDTO queryInner);
+
+    /**
+     * 查询用户信息（平台层）
+     *
+     * @param queryInner 查询条件
+     * @return 用户信息
+     */
+    @GetMapping("/iam-user-internal/info-list")
+    ResponseEntity<String> listIamUserInfoOfSite(IamUserQueryInnerDTO queryInner);
 }
