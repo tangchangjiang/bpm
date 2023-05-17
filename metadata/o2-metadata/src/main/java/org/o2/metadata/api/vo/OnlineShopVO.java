@@ -39,4 +39,14 @@ public class OnlineShopVO {
      * 租户Id
      */
     private String tenantId;
+
+    /**
+     * 关注数量
+     */
+    private Long followNum;
+
+    /**
+     * 关注标识
+     */
+    private Integer followFlag;
 }
