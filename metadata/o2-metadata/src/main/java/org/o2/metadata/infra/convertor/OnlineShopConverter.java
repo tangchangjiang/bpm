@@ -41,6 +41,9 @@ public class OnlineShopConverter {
         co.setSourcedFlag(onlineShop.getSourcedFlag());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
         co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
+        co.setLogoUrl(onlineShop.getLogoUrl());
+        co.setShopMediaUrl(onlineShop.getShopMediaUrl());
+        co.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
         return co;
     }
 
@@ -58,6 +61,7 @@ public class OnlineShopConverter {
         onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
         onlineShopVO.setLogoUrl(onlineShop.getLogoUrl());
+        onlineShopVO.setShopMediaUrl(onlineShop.getShopMediaUrl());
         onlineShopVO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
         onlineShopVO.setTenantId(O2TenantUtil.encryptedTenantId(onlineShop.getTenantId()));
         return onlineShopVO;
