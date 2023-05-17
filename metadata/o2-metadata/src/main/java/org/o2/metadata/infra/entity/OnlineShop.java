@@ -68,6 +68,12 @@ public class OnlineShop {
     private String logoUrl;
 
     /**
+     * 店铺图片
+     */
+    @ApiModelProperty("店铺图片")
+    private String shopMediaUrl;
+
+    /**
      * 是否自营：1-自营，0-非自营
      */
     @ApiModelProperty(value = "是否自营")
