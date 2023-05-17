@@ -1,5 +1,6 @@
 package org.o2.metadata.app.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.o2.core.convert.ListConverter;
 import org.o2.customer.client.O2CustomerClient;
 import org.o2.customer.client.infra.co.CustomerFollowOnlineVO;
@@ -18,6 +19,7 @@ import java.util.Objects;
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
  **/
+@Slf4j
 @Service
 public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRedis onlineShopRedis;
@@ -58,12 +60,16 @@ public class OnlineShopServiceImpl implements OnlineShopService {
      * @param onlineShopVO 网店
      */
     protected void fillShopFollowInfo(OnlineShopVO onlineShopVO) {
-        CustomerFollowOnlineVO follow = o2CustomerClient.findOnlineFollowNum(onlineShopVO.getOnlineShopCode());
-        if (Objects.isNull(follow)) {
-            return;
+        try {
+            CustomerFollowOnlineVO follow = o2CustomerClient.findOnlineFollowNum(onlineShopVO.getOnlineShopCode());
+            if (Objects.isNull(follow)) {
+                return;
+            }
+            onlineShopVO.setFollowNum(follow.getQuantity());
+            onlineShopVO.setFollowFlag(follow.getFollowFlag());
+        } catch (Exception ex) {
+            log.error("query shop follow info failed, onlineShopCode: {}", onlineShopVO.getOnlineShopCode(), ex);
         }
-        onlineShopVO.setFollowNum(follow.getQuantity());
-        onlineShopVO.setFollowFlag(follow.getFollowFlag());
     }
 
 }
