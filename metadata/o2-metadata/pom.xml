@@ -34,6 +34,10 @@
             <artifactId>o2-cache-domain</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.o2.customer</groupId>
+            <artifactId>o2-customer-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.hzero.boot</groupId>
             <artifactId>hzero-boot-platform</artifactId>
         </dependency>
