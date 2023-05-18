@@ -286,8 +286,6 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
             redisCacheClient.opsForHash().putAll(hashMapKey, map);
             return;
         }
-        // 如果系统参数下没有参数值，则删除当前Redis key
-        redisCacheClient.delete(hashMapKey);
     }
 
     @Override
