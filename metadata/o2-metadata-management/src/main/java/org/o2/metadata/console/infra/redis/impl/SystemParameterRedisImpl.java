@@ -273,8 +273,8 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         Integer activeFlag = systemParameter.getActiveFlag();
         final String hashMapKey = String.format(SystemParameterConstants.Redis.MAP_KEY, tenantId, paramCode);
         // 删除
+        redisCacheClient.delete(hashMapKey);
         if (BaseConstants.Flag.NO.equals(activeFlag)) {
-            redisCacheClient.delete(hashMapKey);
             return;
         }
         List<SystemParamValue> list = systemParamValueMapper.getSysSetWithParams(systemParameter.getParamCode(), tenantId);
