@@ -9,6 +9,7 @@ import org.o2.core.thread.ThreadJobPojo;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.scheduler.job.AbstractBatchThreadJob;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public abstract class AbstractMetadataBatchThreadJob extends AbstractBatchThread
         String tenantId = jobParams.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID);
         // 如果设置了租户Id，则不查询所有租户
         if (StringUtils.isNotBlank(tenantId)) {
-            return new Pair<>(Boolean.TRUE, null);
+            return new Pair<>(Boolean.TRUE, Collections.singletonList(Long.parseLong(tenantId)));
         }
         int page = (times - BaseConstants.Digital.ONE);
         int size = Math.toIntExact(threadJobPojo.getBatchSize());
