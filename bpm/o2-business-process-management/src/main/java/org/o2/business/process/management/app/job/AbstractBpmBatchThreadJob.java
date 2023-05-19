@@ -40,7 +40,7 @@ public abstract class AbstractBpmBatchThreadJob extends AbstractBatchThreadJob<L
         int size = Math.toIntExact(threadJobPojo.getBatchSize());
         List<Map<String, Object>> tenantResult = sqlLovClient.queryLovValueMeaningPage(BaseConstants.DEFAULT_TENANT_ID, "O2MD.ALL_TENANT_ID",  new HashMap<>(), page, size);
         List<Long> tenantIds = tenantResult.stream().map(tenant
-                -> (Long) tenant.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)).collect(Collectors.toList());
+                -> Long.valueOf(String.valueOf(tenant.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)))).collect(Collectors.toList());
         return new Pair<>(Boolean.TRUE, tenantIds);
     }
 }
