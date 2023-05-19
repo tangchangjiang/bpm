@@ -342,6 +342,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public void batchResetWhExpressLimit(List<String> warehouseCodes, Long tenantId) {
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
+        this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCodes);
+    }
+
+    @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);

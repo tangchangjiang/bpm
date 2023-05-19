@@ -416,4 +416,11 @@ public interface MetadataConstants {
 
     }
 
+    /**
+     * 所有租户Id
+     */
+    interface AllTenant {
+        String LOV_CODE = "O2MD.ALL_TENANT_ID";
+    }
+
 }

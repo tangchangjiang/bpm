@@ -1,6 +1,7 @@
 package org.o2.metadata.console.app.job;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
@@ -49,6 +50,10 @@ public class MerchantMetaInitRetryJob extends AbstractDistributedJobHandler<Long
         Map<String, String> jobParams = Optional.ofNullable(threadJobPojo.getJobParams()).orElse(new HashMap<>(BaseConstants.Digital.FOUR));
         String retryCount = jobParams.getOrDefault(RetryErrorLog.FIELD_RETRY,
                 String.valueOf(MetadataConstants.RetryStatus.DEFAULT_RETRY_COUNT));
+        String tenantId = jobParams.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
+        if (StringUtils.isNotBlank(tenantId)) {
+            queryLog.setTenantId(Long.valueOf(tenantId));
+        }
         queryLog.setRetry(Long.parseLong(retryCount));
         return retryErrorLogRepository.listQueueErrorLogId(queryLog);
     }

@@ -54,6 +54,9 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         }
         List<OnlineShop> shopList = new ArrayList<>();
         for (String shopJson : shopJsonList) {
+            if (StringUtils.isBlank(shopJson)) {
+                continue;
+            }
             shopList.add(JsonHelper.stringToObject(shopJson, OnlineShop.class));
         }
         return shopList;

@@ -132,6 +132,14 @@ public interface WarehouseService {
     void resetWarehouseExpressLimit(String warehouseCode, Long tenantId);
 
     /**
+     * 批量重置仓库快递配送接单量值
+     *
+     * @param warehouseCodes 仓库编码
+     * @param tenantId       租户Id
+     */
+    void batchResetWhExpressLimit(List<String> warehouseCodes, Long tenantId);
+
+    /**
      * 重置仓库自提接单量限制值
      *
      * @param tenantId      租户ID

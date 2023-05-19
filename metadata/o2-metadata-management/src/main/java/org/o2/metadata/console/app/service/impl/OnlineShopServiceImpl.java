@@ -486,6 +486,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopRepository.insertSelective(onlineShop);
             // f. 保存仓库信息db
             warehouse.setPosId(pos.getPosId());
+            warehouse.setPosCode(pos.getPosCode());
             warehouseRepository.insertSelective(warehouse);
             // g. 构建并保存网店关联仓库信息db
             OnlineShopRelWarehouse shopRelWh = buildShopRelWh(onlineShop, warehouse);

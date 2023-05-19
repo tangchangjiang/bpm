@@ -35,14 +35,9 @@
             <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(processStatus)">
                 and qel.process_status = #{processStatus}
             </if>
-            <choose>
-                <when test="tenantId != null">
-                    AND qel.tenant_id = #{tenantId}
-                </when>
-                <otherwise>
-                    AND 1 = 0
-                </otherwise>
-            </choose>
+            <if test="tenantId != null">
+                AND qel.tenant_id = #{tenantId}
+            </if>
             <if test='processTotal !=null and _databaseId == "mysql" '>
                 limit #{processTotal}
             </if>

@@ -284,7 +284,6 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
                 map.put(value.getParamKey(), value.getParamValue());
             }
             redisCacheClient.opsForHash().putAll(hashMapKey, map);
-            return;
         }
     }
 
