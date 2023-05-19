@@ -2,17 +2,16 @@ package org.o2.rule.engine.management.app.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
-import org.hzero.boot.scheduler.infra.enums.ReturnT;
-import org.hzero.boot.scheduler.infra.handler.IJobHandler;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.helper.JsonHelper;
+import org.o2.core.thread.ThreadJobPojo;
+import org.o2.metadata.management.client.SQLLovClient;
 import org.o2.rule.engine.management.domain.bo.RuleEntityBO;
 import org.o2.rule.engine.management.domain.bo.RuleQueryBO;
 import org.o2.rule.engine.management.domain.entity.Rule;
@@ -27,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @JobHandler("o2RuleCacheRefreshHandler")
-public class O2RuleCacheRefreshHandler implements IJobHandler {
+public class O2RuleCacheRefreshHandler extends AbstractRuleBatchThreadJob {
 
     private static final String RULE_CODE = "ruleCodes";
 
@@ -45,19 +45,33 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
     private final RuleEntityRepository ruleEntityRepository;
 
     public O2RuleCacheRefreshHandler(RuleRepository ruleRepository,
-                                     RuleEntityRepository ruleEntityRepository) {
+                                     RuleEntityRepository ruleEntityRepository,
+                                     SQLLovClient sqlLovClient) {
+        super(sqlLovClient);
         this.ruleRepository = ruleRepository;
         this.ruleEntityRepository = ruleEntityRepository;
     }
 
     @Override
-    public ReturnT execute(Map<String, String> map, SchedulerTool tool) {
-        if (MapUtils.isEmpty(map) || !map.containsKey(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)) {
-            tool.info("tenantId do not be null");
-            return ReturnT.FAILURE;
+    public void doExecute(SchedulerTool tool, List<Long> data, ThreadJobPojo threadJobPojo) {
+        // job参数获取
+        Map<String, String> map = Optional.ofNullable(threadJobPojo.getJobParams()).orElse(new HashMap<>());
+        String tenantIdParam = map.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID);
+        // 如果设置了租户Id，则不查询所有租户
+        if (StringUtils.isNotBlank(tenantIdParam)) {
+            data = Collections.singletonList(Long.valueOf(tenantIdParam));
         }
 
-        Long tenantId = Long.parseLong(map.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID));
+        for (Long tenantId : data) {
+            try {
+                refreshRuleCache(map, tenantId);
+            } catch (Exception ex) {
+                log.error("refresh rule cache failed, param: {}, tenantId: {}", JsonHelper.objectToString(map), tenantId, ex);
+            }
+        }
+    }
+
+    protected void refreshRuleCache(Map<String, String> map, Long tenantId) {
         String ruleCodes = map.getOrDefault(RULE_CODE, null);
         final List<String> ruleCodeList = StringUtils.isEmpty(ruleCodes) ? Collections.emptyList() :
                 Arrays.asList(ruleCodes.split(BaseConstants.Symbol.COMMA));
@@ -94,6 +108,5 @@ public class O2RuleCacheRefreshHandler implements IJobHandler {
             final List<Rule> rules = ruleRepository.findRuleList(query);
             ruleRepository.loadToCache(tenantId, rules);
         }
-        return ReturnT.SUCCESS;
     }
 }
