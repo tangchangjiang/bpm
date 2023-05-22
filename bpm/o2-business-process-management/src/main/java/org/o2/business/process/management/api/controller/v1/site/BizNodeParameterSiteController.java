@@ -48,7 +48,7 @@ public class BizNodeParameterSiteController extends BaseController {
         this.bizNodeParameterService = bizNodeParameterService;
     }
 
-    @ApiOperation(value = "业务节点参数表维护-分页查询业务节点参数表列表")
+    @ApiOperation(value = "业务节点参数表维护-分页查询业务节点参数表列表（站点层）")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping
@@ -60,7 +60,7 @@ public class BizNodeParameterSiteController extends BaseController {
         return Results.success(list);
     }
 
-    @ApiOperation(value = "业务节点参数表维护-查询业务节点参数表明细")
+    @ApiOperation(value = "业务节点参数表维护-查询业务节点参数表明细（站点层）")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("/{bizNodeParameterId}")
@@ -73,7 +73,7 @@ public class BizNodeParameterSiteController extends BaseController {
      * @deprecated 前端没有调用
      */
     @Deprecated
-    @ApiOperation(value = "业务节点参数表维护-根据beanId查询节点参数信息")
+    @ApiOperation(value = "业务节点参数表维护-根据beanId查询节点参数信息（站点层）")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @PostMapping("list-by-bean-Id")
@@ -82,7 +82,7 @@ public class BizNodeParameterSiteController extends BaseController {
         return Results.success(bizNodeParameterService.getBizNodeParameterList(batchBusinessNodeQueryDTO.getBeanIdList(), BaseConstants.DEFAULT_TENANT_ID));
     }
 
-    @ApiOperation(value = "业务节点参数表维护-创建业务节点参数表")
+    @ApiOperation(value = "业务节点参数表维护-创建业务节点参数表（站点层）")
     @Permission(level = ResourceLevel.SITE)
     @PostMapping
     public ResponseEntity<List<BizNodeParameter>> batchCreate(@RequestBody List<BizNodeParameter> bizNodeParameterList) {
@@ -92,7 +92,7 @@ public class BizNodeParameterSiteController extends BaseController {
         return Results.success(bizNodeParameterList);
     }
 
-    @ApiOperation(value = "业务节点参数表维护-修改业务节点参数表")
+    @ApiOperation(value = "业务节点参数表维护-修改业务节点参数表（站点层）")
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
     public ResponseEntity<List<BizNodeParameter>> batchUpdate(@RequestBody List<BizNodeParameter> bizNodeParameterList) {
