@@ -345,7 +345,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void batchResetWhExpressLimit(List<String> warehouseCodes, Long tenantId) {
         // 仓库快递配送接单量限制 key
         String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
-        this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCodes);
+        this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCodes.toArray());
     }
 
     @Override
