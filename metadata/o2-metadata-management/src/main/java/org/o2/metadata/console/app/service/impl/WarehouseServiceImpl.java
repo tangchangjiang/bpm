@@ -406,6 +406,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public Warehouse buildAndVerifyWarehouse(MerchantInfoBO merchantInfo) {
         Warehouse warehouse = new Warehouse();
         warehouse.initWarehouse();
+        warehouse.setExpressedFlag(BaseConstants.Flag.YES);
         warehouse.setWarehouseCode(merchantInfo.getOnlineShopCode());
         warehouse.setWarehouseName(merchantInfo.getOnlineShopName());
         warehouse.setWarehouseStatusCode(WarehouseConstants.WarehouseStatus.NORMAL);
