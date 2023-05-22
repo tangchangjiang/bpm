@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @author chao.yang05@hand-china.com 2023-05-22
  */
 @RestController("businessNodeSiteController.v1")
-@Api(tags = BusinessProcessManagerAutoConfiguration.BUSINESS_PROCESS_NODE)
+@Api(tags = BusinessProcessManagerAutoConfiguration.BUSINESS_PROCESS_NODE_SITE)
 @RequestMapping("/v1/business-nodes")
 public class BusinessNodeSiteController extends BaseController {
 

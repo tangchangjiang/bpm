@@ -36,7 +36,7 @@ import java.util.List;
  * @author chao.yang05@hand-china.com 2023-05-22
  */
 @RestController("bizNodeParameterSiteController.v1")
-@Api(tags = BusinessProcessManagerAutoConfiguration.BUSINESS_PROCESS_NODE_PARAMETER)
+@Api(tags = BusinessProcessManagerAutoConfiguration.BUSINESS_PROCESS_NODE_PARAMETER_SITE)
 @RequestMapping("/v1/biz-node-parameters")
 public class BizNodeParameterSiteController extends BaseController {
 
