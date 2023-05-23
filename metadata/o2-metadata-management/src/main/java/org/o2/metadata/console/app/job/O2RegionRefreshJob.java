@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.job;
 
-import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
