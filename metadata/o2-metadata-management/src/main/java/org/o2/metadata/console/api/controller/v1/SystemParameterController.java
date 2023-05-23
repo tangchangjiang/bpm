@@ -114,7 +114,10 @@ public class SystemParameterController extends BaseController {
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("find")
     public ResponseEntity<SystemParameter> findOne(SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
-        systemParameter.setTenantId(organizationId);
+        // 以便工作流在0租户执行时，可以查询其他租户的系统参数
+        if (null == systemParameter.getTenantId()) {
+            systemParameter.setTenantId(organizationId);
+        }
         return Results.success(systemParameterRepository.findOne(systemParameter));
     }
 }
