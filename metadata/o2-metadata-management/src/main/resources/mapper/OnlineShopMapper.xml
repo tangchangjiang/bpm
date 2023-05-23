@@ -201,7 +201,7 @@
             </choose>
             <if test="onlineShopCode != null">
                 <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
-                AND os.online_shop_code LIKE upper(#{onlineShopCodeLike})
+                AND os.online_shop_code LIKE #{onlineShopCodeLike} collate 'utf8mb4_general_ci'
             </if>
             <if test="onlineShopCodes != null and onlineShopCodes.size > 0">
                 AND os.online_shop_code IN
