@@ -42,22 +42,23 @@ public class O2RegionRefreshJob extends AbstractMetadataBatchThreadJob {
         final String tenantIdParam = map.get(MetadataConstants.RefreshJobConstants.TENANT_ID);
         final String countryCode = map.get(MetadataConstants.RefreshJobConstants.COUNTRY_CODE);
         final String regionOwner = map.get(MetadataConstants.RefreshJobConstants.REGION_OWNER);
-        final String lang = map.getOrDefault(MetadataConstants.RefreshJobConstants.LANG, LanguageHelper.language());
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE, O2CoreConstants.BusinessType.B2C);
 
         if (StringUtils.isNotBlank(tenantIdParam)) {
             data = Collections.singletonList(Long.valueOf(tenantIdParam));
         }
-
+        List<String> language = this.getLang(threadJobPojo);
         for (Long tenantId : data) {
             final RegionCacheVO regionCacheVO = new RegionCacheVO();
             regionCacheVO.setTenantId(tenantId);
             regionCacheVO.setCountryCode(countryCode);
-            regionCacheVO.setLang(lang);
-            try {
-                o2SiteRegionFileService.createRegionStaticFile(regionCacheVO, regionOwner, businessTypeCode);
-            } catch (Exception ex) {
-                log.error("region refresh failed, param: {}", JsonHelper.objectToString(regionCacheVO), ex);
+            for (String lang : language) {
+                regionCacheVO.setLang(lang);
+                try {
+                    o2SiteRegionFileService.createRegionStaticFile(regionCacheVO, regionOwner, businessTypeCode);
+                } catch (Exception ex) {
+                    log.error("region refresh failed, param: {}", JsonHelper.objectToString(regionCacheVO), ex);
+                }
             }
         }
     }
