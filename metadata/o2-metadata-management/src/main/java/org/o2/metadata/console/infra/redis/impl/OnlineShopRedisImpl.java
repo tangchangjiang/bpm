@@ -7,6 +7,7 @@ import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
+import org.o2.metadata.console.app.bo.OnlineShopMultiRedisBO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
@@ -15,6 +16,7 @@ import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
 import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
+import org.o2.multi.language.management.infra.util.O2RedisMultiLanguageManagementHelper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
@@ -36,11 +38,13 @@ import java.util.stream.Collectors;
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private final OnlineShopRepository onlineShopRepository;
     private final RedisCacheClient redisCacheClient;
+    private final O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper;
 
     public OnlineShopRedisImpl(OnlineShopRepository onlineShopRepository,
-                               RedisCacheClient redisCacheClient) {
+                               RedisCacheClient redisCacheClient, O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper) {
         this.onlineShopRepository = onlineShopRepository;
         this.redisCacheClient = redisCacheClient;
+        this.o2RedisMultiLanguageManagementHelper = o2RedisMultiLanguageManagementHelper;
     }
 
     @Override
@@ -69,6 +73,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
                 return null;
             }
         });
+        insertMultiShop(onlineShop);
     }
 
     @Override
@@ -145,5 +150,14 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
                 return null;
             }
         });
+    }
+
+    @Override
+    public void insertMultiShop(OnlineShop onlineShop) {
+        OnlineShopMultiRedisBO onlineShopMultiRedis = new OnlineShopMultiRedisBO();
+        onlineShopMultiRedis.setOnlineShopId(onlineShop.getOnlineShopId());
+        onlineShopMultiRedis.setOnlineShopName(onlineShop.getOnlineShopName());
+        onlineShopMultiRedis.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        o2RedisMultiLanguageManagementHelper.saveMultiLanguage(onlineShopMultiRedis, OnlineShopConstants.Redis.getOnlineShopMutliKey(onlineShop.getTenantId(), onlineShop.getOnlineShopCode()));
     }
 }

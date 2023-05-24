@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.redis;
 
+import org.o2.metadata.console.infra.entity.PosInfo;
+
 import java.util.List;
 
 /**
@@ -25,4 +27,10 @@ public interface PosRedis {
      * @param tenantId 租户Id
      */
     void updatePosDetail(List<Long> posIds, List<String> posCodes, Long tenantId);
+
+    /**
+     * 缓存服务点多语言
+     * @param tenantId 租户id
+     */
+    void insertPosMultiRedis(Long tenantId, List<PosInfo> list);
 }

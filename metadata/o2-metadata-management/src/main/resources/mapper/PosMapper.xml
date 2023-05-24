@@ -212,6 +212,7 @@
     <select id="listPosInfoByCode" resultType="org.o2.metadata.console.infra.entity.PosInfo">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
+        pos.pos_id,
         pos.pos_code,
         post.pos_name,
         pos.pos_status_code,

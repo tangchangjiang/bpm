@@ -5,11 +5,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
+import org.o2.metadata.console.app.bo.PosMultiRedisBO;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.PosConstants;
+import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosInfo;
 import org.o2.metadata.console.infra.redis.PosRedis;
 import org.o2.metadata.console.infra.repository.PosRepository;
+import org.o2.multi.language.management.infra.util.O2RedisMultiLanguageManagementHelper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
@@ -32,11 +35,14 @@ public class PosRedisImpl implements PosRedis {
 
     private final PosRepository posRepository;
     private final RedisCacheClient redisCacheClient;
+    private final O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper;
+
 
     public PosRedisImpl(final PosRepository posRepository,
-                        final RedisCacheClient redisCacheClient) {
+                        final RedisCacheClient redisCacheClient, O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper) {
         this.posRepository = posRepository;
         this.redisCacheClient = redisCacheClient;
+        this.o2RedisMultiLanguageManagementHelper = o2RedisMultiLanguageManagementHelper;
     }
 
     @Override
@@ -74,6 +80,7 @@ public class PosRedisImpl implements PosRedis {
                 return null;
             }
         });
+        this.insertPosMultiRedis(tenantId, posInfos);
 
     }
 
@@ -92,6 +99,19 @@ public class PosRedisImpl implements PosRedis {
         }
         String posDetailKey = PosConstants.RedisKey.getPosDetailKey(tenantId);
         redisCacheClient.opsForHash().putAll(posDetailKey, posMap);
+    }
+
+    @Override
+    public void insertPosMultiRedis(Long tenantId,List<PosInfo> list) {
+        Pos select = new Pos();
+        select.setTenantId(tenantId);
+        for (PosInfo pos : list) {
+            PosMultiRedisBO multiRedis = new PosMultiRedisBO();
+            multiRedis.setPosCode(pos.getPosCode());
+            multiRedis.setPosName(pos.getPosName());
+            multiRedis.setPosId(pos.getPosId());
+            o2RedisMultiLanguageManagementHelper.saveMultiLanguage(multiRedis,PosConstants.RedisKey.getPosDetailMultiKey(tenantId,pos.getPosCode()));
+        }
     }
 
 }

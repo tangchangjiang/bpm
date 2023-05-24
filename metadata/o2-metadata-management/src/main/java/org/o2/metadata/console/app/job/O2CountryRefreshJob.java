@@ -1,6 +1,5 @@
 package org.o2.metadata.console.app.job;
 
-import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.scheduler.infra.annotation.JobHandler;
@@ -13,11 +12,7 @@ import org.o2.metadata.console.app.service.CountryRefreshService;
 import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 地区信息刷新job
@@ -45,21 +40,22 @@ public class O2CountryRefreshJob extends AbstractMetadataBatchThreadJob {
         if (StringUtils.isNotBlank(tenantIdParam)) {
             data = Collections.singletonList(Long.valueOf(tenantIdParam));
         }
-
-        final String lang = map.getOrDefault(MetadataConstants.RefreshJobConstants.LANG, LanguageHelper.language());
+        List<String> language = this.getLang(threadJobPojo);
         final String businessTypeCode = map.getOrDefault(MetadataConstants.RefreshJobConstants.BUSINESS_TYPE_CODE,
                 O2CoreConstants.BusinessType.B2C);
         for (Long tenantId : data) {
-            // 构建参数
-            CountryRefreshDTO countryRefreshDTO = new CountryRefreshDTO();
-            countryRefreshDTO.setTenantId(tenantId);
-            countryRefreshDTO.setLang(lang);
-            countryRefreshDTO.setBusinessTypeCode(businessTypeCode);
-            try {
-                // 刷新国家静态资源
-                countryRefreshService.refreshCountryInfoFile(countryRefreshDTO);
-            } catch (Exception ex) {
-                log.error("country refresh failed, param: {}", JsonHelper.objectToString(countryRefreshDTO), ex);
+            for (String lang : language) {
+                // 构建参数
+                CountryRefreshDTO countryRefreshDTO = new CountryRefreshDTO();
+                countryRefreshDTO.setTenantId(tenantId);
+                countryRefreshDTO.setLang(lang);
+                countryRefreshDTO.setBusinessTypeCode(businessTypeCode);
+                try {
+                    // 刷新国家静态资源
+                    countryRefreshService.refreshCountryInfoFile(countryRefreshDTO);
+                } catch (Exception ex) {
+                    log.error("country refresh failed, param: {}", JsonHelper.objectToString(countryRefreshDTO), ex);
+                }
             }
         }
     }
