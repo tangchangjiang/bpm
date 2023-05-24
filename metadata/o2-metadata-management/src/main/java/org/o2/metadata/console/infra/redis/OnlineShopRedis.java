@@ -45,4 +45,6 @@ public interface OnlineShopRedis {
      * @param shopRelWh  网店关联仓库信息
      */
     void syncMerchantMetaInfo(OnlineShop onlineShop, Warehouse warehouse, OnlineShopRelWarehouse shopRelWh);
+
+    void insertMultiShop(OnlineShop onlineShop);
 }

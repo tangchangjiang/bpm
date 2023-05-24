@@ -250,6 +250,7 @@
     <select id="listOnlineShops" resultType="org.o2.metadata.console.infra.entity.OnlineShop">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select
+        online.online_shop_id,
         tl.online_shop_name,
         online.online_shop_code,
         online.catalog_code,

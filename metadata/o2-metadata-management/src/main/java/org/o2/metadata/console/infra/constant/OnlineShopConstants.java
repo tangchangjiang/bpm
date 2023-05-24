@@ -33,6 +33,10 @@ public interface OnlineShopConstants {
          * 租户关联网店key set o2md:onlineShop:[tenantId]:index
          */
         String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:index";
+        /**
+         * 租户关联网店key set o2md:onlineShop:[tenantId]:onlineShopCode
+         */
+        String ONLINE_SHOP_MULTI_KEY = "o2md:onlineShop:{%d}:%s";
 
         /**
          * 网店详情 hash o2md:onlineShop:detail
@@ -55,6 +59,16 @@ public interface OnlineShopConstants {
          */
         static String getOnlineShopKey(Long tenantId) {
             return String.format(ONLINE_SHOP_KEY, tenantId);
+        }
+
+        /**
+         * 获取key
+         *
+         * @param tenantId 租户id
+         * @return key
+         */
+        static String getOnlineShopMutliKey(Long tenantId,String onlineShopCode) {
+            return String.format(ONLINE_SHOP_MULTI_KEY, tenantId, onlineShopCode);
         }
 
         /**
