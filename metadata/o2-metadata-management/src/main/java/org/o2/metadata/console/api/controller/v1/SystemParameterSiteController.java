@@ -15,6 +15,7 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.annotation.annotation.ProcessAnnotationValue;
 import org.o2.core.response.OperateResponse;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
@@ -51,7 +52,7 @@ public class SystemParameterSiteController extends BaseController {
         this.sysParamService = sysParamService;
     }
 
-    @ApiOperation(value = "系统参数（站点级）")
+    @ApiOperation(value = "系统参数（平台层）")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("/find")
@@ -62,11 +63,12 @@ public class SystemParameterSiteController extends BaseController {
     @ApiOperation(value = "系统参数列表（平台层）")
     @Permission(level = ResourceLevel.SITE)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<Page<SystemParameter>> list(SystemParameter systemParameter, @ApiIgnore @SortDefault(value = SystemParameter.FIELD_PARAM_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<SystemParameter> list = PageHelper.doPageAndSort(pageRequest,
-                () -> systemParameterRepository.fuzzyQuery(systemParameter, BaseConstants.DEFAULT_TENANT_ID));
+                () -> systemParameterRepository.fuzzyQuery(systemParameter, null, BaseConstants.Flag.YES));
         return Results.success(list);
     }
 

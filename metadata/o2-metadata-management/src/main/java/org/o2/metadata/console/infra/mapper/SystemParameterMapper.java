@@ -16,10 +16,12 @@ public interface SystemParameterMapper extends BaseMapper<SystemParameter> {
      * 批量查询系统参数
      * @param systemParameter 系统参数
      * @param tenantId 租户ID
+     * @param siteQueryFlag 平台层查询标识
      * @return list
      */
     List<SystemParameter> fuzzyQuery(@Param("systemParameter") SystemParameter systemParameter,
-                                     @Param("tenantId") Long tenantId);
+                                     @Param("tenantId") Long tenantId,
+                                     @Param("siteQueryFlag") Integer siteQueryFlag);
 
     /**
      * 系统参数初始化数据
