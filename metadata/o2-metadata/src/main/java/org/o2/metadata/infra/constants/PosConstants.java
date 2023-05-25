@@ -36,7 +36,14 @@ public interface PosConstants {
         String POS_DETAIL_KEY = "o2md:pos:store:detail:{%d}";
 
         /**
+         * 服务点多语言
+         * redis key(hash): o2md:pos:store:detail:{tenantId}
+         */
+        String POS_DETAIL_MULTI_KEY = "o2md:pos:store:detail:{%d}:%s";
+
+        /**
          * 获取所有门店信息key
+         *
          * @param tenantId 租户Id
          * @return key
          */
@@ -45,10 +52,22 @@ public interface PosConstants {
         }
 
         /**
+         * 服务点多语言
+         *
+         * @param tenantId 租户id
+         * @param posCode  服务点code
+         * @return String
+         */
+        static String getPosDetailMultiKey(Long tenantId, String posCode) {
+            return String.format(POS_DETAIL_MULTI_KEY, tenantId, posCode);
+        }
+
+        /**
          * 获取市下所有门店key
-         * @param tenantId 租户Id
+         *
+         * @param tenantId   租户Id
          * @param regionCode 省code
-         * @param cityCode 市code
+         * @param cityCode   市code
          * @return key
          */
         static String getPosCityStoreKey(Long tenantId, String regionCode, String cityCode) {
@@ -57,9 +76,10 @@ public interface PosConstants {
 
         /**
          * 获取区下的所有key
-         * @param tenantId 租户Id
-         * @param regionCode 省code
-         * @param cityCode 市code
+         *
+         * @param tenantId     租户Id
+         * @param regionCode   省code
+         * @param cityCode     市code
          * @param districtCode 区code
          * @return key
          */
@@ -69,6 +89,7 @@ public interface PosConstants {
 
         /**
          * 获取服务点详情key
+         *
          * @param tenantId 租户Id
          * @return key
          */

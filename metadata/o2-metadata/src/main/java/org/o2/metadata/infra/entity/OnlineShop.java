@@ -2,9 +2,9 @@ package org.o2.metadata.infra.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.o2.multi.language.core.annotation.O2RedisMultiLanguageField;
 
 /**
- *
  * 网店redis
  *
  * @author yipeng.zhu@hand-china.com 2021-08-06
@@ -15,6 +15,7 @@ public class OnlineShop {
     private String onlineShopCode;
 
     @ApiModelProperty(value = "网点名称")
+    @O2RedisMultiLanguageField()
     private String onlineShopName;
 
     @ApiModelProperty(value = "网店")
