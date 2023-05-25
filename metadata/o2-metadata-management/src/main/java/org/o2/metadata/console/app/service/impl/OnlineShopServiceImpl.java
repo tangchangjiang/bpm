@@ -12,6 +12,9 @@ import org.o2.cms.queue.client.domain.SiteRelShopBO;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
+import org.o2.ecp.order.b2c.management.client.O2EcpOrderB2cManagementClient;
+import org.o2.ecp.order.b2c.management.client.domain.dto.EcpInteractionContext;
+import org.o2.ecp.order.b2c.management.client.infra.constants.EcpOrderClientConstants;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
@@ -75,6 +78,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final O2CmsProducer o2CmsProducer;
     private final SysParamService sysParamService;
+    private final O2EcpOrderB2cManagementClient orderB2cManagementClient;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
@@ -89,7 +93,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  WarehouseRepository warehouseRepository,
                                  OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                  O2CmsProducer o2CmsProducer,
-                                 SysParamService sysParamService) {
+                                 SysParamService sysParamService, O2EcpOrderB2cManagementClient orderB2cManagementClient) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
@@ -104,6 +108,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.o2CmsProducer = o2CmsProducer;
         this.sysParamService = sysParamService;
+        this.orderB2cManagementClient = orderB2cManagementClient;
     }
 
     @Override
@@ -496,6 +501,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         });
         // 10. 网店关联默认站点队列
         pushDefaultSiteRelShop(merchantInfo.getOnlineShopCode());
+        // 11. 网店关联支付配置队列
+        pushPayConfigRelShop(merchantInfo.getOnlineShopCode());
     }
 
     /**
@@ -515,6 +522,12 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         siteRelShop.setSiteCode(defaultSite.getDefaultValue());
         siteRelShop.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
         o2CmsProducer.pushSiteRelShopQueue(siteRelShop);
+    }
+
+    protected void pushPayConfigRelShop(String onlineShopCode){
+        EcpInteractionContext context = new EcpInteractionContext();
+        context.setOnlineShopCode(onlineShopCode);
+        orderB2cManagementClient.sendQueueMsg(context, EcpOrderClientConstants.CaseCode.BBC_MERCHANT_PAY_CONFIG_REL);
     }
 
     /**
@@ -574,4 +587,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         return shopRelWh;
     }
 
+    public CatalogRepository getCatalogRepository() {
+
+    }
 }

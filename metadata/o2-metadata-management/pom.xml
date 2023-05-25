@@ -27,6 +27,10 @@
             <artifactId>o2-product-management-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.o2.order</groupId>
+            <artifactId>o2-ecp-order-b2c-management-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.o2.metadata</groupId>
             <artifactId>o2-metadata-domain</artifactId>
         </dependency>
