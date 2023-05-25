@@ -155,6 +155,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             this.catalogVersionRepository.insert(catalogVersion);
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
+        pushDefaultSiteRelShop(onlineShop);
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }
@@ -500,7 +501,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopRedis.syncMerchantMetaInfo(onlineShop, warehouse, shopRelWh);
         });
         // 10. 网店关联默认站点队列
-        pushDefaultSiteRelShop(merchantInfo.getOnlineShopCode());
+        pushDefaultSiteRelShop(onlineShop);
         // 11. 网店关联支付配置队列
         pushPayConfigRelShop(merchantInfo.getOnlineShopCode());
     }
@@ -508,11 +509,15 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     /**
      * 推送站点关联网店（默认站点）
      *
-     * @param onlineShopCode 网店编码
+     * @param onlineShop 网店编码
      */
-    protected void pushDefaultSiteRelShop(String onlineShopCode) {
+    protected void pushDefaultSiteRelShop(OnlineShop onlineShop) {
+        String defaultSiteCodeParam = SystemParameterConstants.Parameter.DEFAULT_SITE_CODE;
+        if (MetadataConstants.OnlineShopType.STORE.equals(onlineShop.getOnlineShopType())) {
+            defaultSiteCodeParam = SystemParameterConstants.Parameter.DEFAULT_SITE_CODE_STORE;
+        }
         // 查询默认站点
-        SystemParameterCO defaultSite = sysParamService.getSystemParameter(SystemParameterConstants.Parameter.DEFAULT_SITE_CODE,
+        SystemParameterCO defaultSite = sysParamService.getSystemParameter(defaultSiteCodeParam,
                 BaseConstants.DEFAULT_TENANT_ID);
         if (Objects.isNull(defaultSite) || StringUtils.isBlank(defaultSite.getDefaultValue())) {
             return;
@@ -520,7 +525,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
         SiteRelShopBO siteRelShop = new SiteRelShopBO();
         siteRelShop.setSiteCode(defaultSite.getDefaultValue());
-        siteRelShop.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
+        siteRelShop.setOnlineShopCodes(Collections.singletonList(onlineShop.getOnlineShopCode()));
         o2CmsProducer.pushSiteRelShopQueue(siteRelShop);
     }
 
@@ -587,7 +592,4 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         return shopRelWh;
     }
 
-    public CatalogRepository getCatalogRepository() {
-
-    }
 }

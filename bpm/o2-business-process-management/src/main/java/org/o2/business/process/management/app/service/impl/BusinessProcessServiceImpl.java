@@ -65,7 +65,7 @@ public class BusinessProcessServiceImpl implements BusinessProcessService {
 
     @Override
     public List<BusinessProcess> listBusinessProcess(BusinessProcessQueryDTO queryDTO) {
-        List<BusinessProcess> result = TenantHelper.organizationLevelLimit(() -> businessProcessRepository.listBusinessProcessByCondition(queryDTO));
+        List<BusinessProcess> result = businessProcessRepository.listBusinessProcessByCondition(queryDTO);
         for (BusinessProcess process : result) {
             process.setCreatedOperator(IamUserHelper.getRealName(process.getCreatedBy().toString()));
             process.setUpdatedOperator(IamUserHelper.getRealName(process.getLastUpdatedBy().toString()));

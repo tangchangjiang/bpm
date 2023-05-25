@@ -71,10 +71,12 @@
                     AND (osp.tenant_id = #{tenantId} OR osp.tenant_id = 0)
                 </when>
                 <otherwise>
-                    AND 1 = 0
+                    <if test="siteQueryFlag != null and siteQueryFlag == 0">
+                        and 1 = 0
+                    </if>
                 </otherwise>
             </choose>
-            <if test="tenantId != null and tenantId != 0">
+            <if test="tenantId != null and tenantId != 0 and siteQueryFlag != null and siteQueryFlag == 0">
                 AND osp.param_id NOT IN (
                     SELECT sp1.param_id
                     FROM o2md_system_parameter sp1

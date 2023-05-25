@@ -379,6 +379,11 @@ public interface MetadataConstants {
          * 网店
          */
         String ONLINE_SHOP = "ONLINE_SHOP";
+
+        /**
+         * 门店
+         */
+        String STORE = "STORE";
     }
 
     interface RetryStatus {

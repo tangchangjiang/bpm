@@ -54,8 +54,6 @@
             bp.entity_code,
             bp.description,
             bp.enabled_flag,
-            bp.process_json,
-            bp.view_json,
             bp.business_type_code,
             bp.tenant_id,
             bp.created_by,

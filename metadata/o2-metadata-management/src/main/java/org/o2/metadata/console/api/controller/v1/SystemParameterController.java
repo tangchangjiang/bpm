@@ -59,7 +59,7 @@ public class SystemParameterController extends BaseController {
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         Page<SystemParameter> list = PageHelper.doPageAndSort(pageRequest,
-                () -> systemParameterRepository.fuzzyQuery(systemParameter, organizationId));
+                () -> systemParameterRepository.fuzzyQuery(systemParameter, organizationId, BaseConstants.Flag.NO));
         return Results.success(list);
     }
 
