@@ -37,6 +37,11 @@ public interface PosConstants {
          * redis key(hash): o2md:pos:store:detail:{tenantId}
          */
         String POS_DETAIL_KEY = "o2md:pos:store:detail:{%d}";
+        /**
+         * 服务点多语言
+         * redis key(hash): o2md:pos:store:detail:{tenantId}
+         */
+        String POS_DETAIL_MULTI_KEY = "o2md:pos:store:detail:{%d}:%s";
 
         /**
          * 获取所有门店信息key
@@ -81,6 +86,16 @@ public interface PosConstants {
          */
         static String getPosDetailKey(Long tenantId) {
             return String.format(POS_DETAIL_KEY, tenantId);
+        }
+
+        /**
+         * 获取服务点详情key
+         *
+         * @param tenantId 租户Id
+         * @return key
+         */
+        static String getPosDetailMultiKey(Long tenantId, String postCode) {
+            return String.format(POS_DETAIL_MULTI_KEY, tenantId, postCode);
         }
     }
 

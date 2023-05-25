@@ -414,5 +414,6 @@ public class PosServiceImpl implements PosService {
                 return null;
             }
         });
+        posRedis.insertPosMultiRedis(tenantId,posInfos);
     }
 }

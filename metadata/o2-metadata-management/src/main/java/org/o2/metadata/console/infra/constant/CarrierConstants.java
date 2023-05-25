@@ -59,6 +59,12 @@ public interface CarrierConstants {
          * redis key(hash): o2md:carrier:{tenantId}
          */
         String CARRIER_KEY = "o2md:carrier:{%s}:all";
+        /**
+         * redis key(hash): o2md:carrier:{tenantId}:{carrierCode}
+         */
+        String CARRIER_MULTI_KEY = "o2md:carrier:{%s}:%s";
+
+        String tls ="tls";
 
         /**
          * GetFreightDefaultKey
@@ -68,6 +74,10 @@ public interface CarrierConstants {
          */
         static String getCarrierKey(Long tenantId) {
             return String.format(CARRIER_KEY, tenantId);
+        }
+
+        static String getCarrierMultiKey(Long tenantId,String carrierCode ) {
+            return String.format(CARRIER_MULTI_KEY, tenantId,carrierCode);
         }
 
         ResourceScriptSource CARRIER_CACHE_LUA =

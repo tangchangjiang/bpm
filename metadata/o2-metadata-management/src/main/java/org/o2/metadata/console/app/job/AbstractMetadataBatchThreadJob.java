@@ -1,19 +1,19 @@
 package org.o2.metadata.console.app.job;
 
+import io.choerodon.mybatis.helper.LanguageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.boot.scheduler.infra.tool.SchedulerTool;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.core.util.Pair;
+import org.hzero.mybatis.domian.Language;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.thread.ThreadJobPojo;
 import org.o2.metadata.console.app.service.LovAdapterService;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.scheduler.job.AbstractBatchThreadJob;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,5 +43,26 @@ public abstract class AbstractMetadataBatchThreadJob extends AbstractBatchThread
         List<Long> tenantIds = tenantResult.stream().map(tenant
                 -> Long.valueOf(String.valueOf(tenant.get(O2CoreConstants.EntityDomain.FIELD_TENANT_ID)))).collect(Collectors.toList());
         return new Pair<>(Boolean.TRUE, tenantIds);
+    }
+
+    /**
+     * 获取多语言
+     * @param threadJobPojo 参数job
+     * @return 多语言集合
+     */
+    public  List<String> getLang(ThreadJobPojo threadJobPojo) {
+        Map<String, String> map = Optional.ofNullable(threadJobPojo.getJobParams()).orElse(new HashMap<>());
+        String langStr = map.get(MetadataConstants.RefreshJobConstants.LANG);
+        List<String> langs = new ArrayList<>(16);
+        if(StringUtils.isNotBlank(langStr)) {
+            langs = Arrays.asList(langStr.split(BaseConstants.Symbol.COMMA));
+        }
+        if (CollectionUtils.isEmpty(langs)) {
+            List<Language> languages = LanguageHelper.languages();
+            for (Language language : languages) {
+                langs.add(language.getCode());
+            }
+        }
+        return langs;
     }
 }

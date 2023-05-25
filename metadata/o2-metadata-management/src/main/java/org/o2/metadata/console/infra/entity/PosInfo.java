@@ -77,5 +77,7 @@ public class PosInfo {
 
     @ApiModelProperty(value = "自提接单量")
     private Long pickUpQuantity;
+    @ApiModelProperty(value = "主键")
+    private Long posId;
 
 }

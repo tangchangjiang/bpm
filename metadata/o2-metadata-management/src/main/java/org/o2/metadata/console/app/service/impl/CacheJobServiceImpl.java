@@ -110,6 +110,9 @@ public class CacheJobServiceImpl implements CacheJobService {
         query.setActiveFlag(BaseConstants.Flag.YES);
         List<OnlineShop> onlineShops = onlineShopRepository.select(query);
         onlineShopRedis.batchUpdateRedis(onlineShops, tenantId);
+        for (OnlineShop onlineShop : onlineShops) {
+            onlineShopRedis.insertMultiShop(onlineShop);
+        }
     }
 
     @Override
