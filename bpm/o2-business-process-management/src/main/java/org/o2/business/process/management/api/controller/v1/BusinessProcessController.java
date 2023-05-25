@@ -22,6 +22,7 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.o2.core.helper.QueryFallbackHelper;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class BusinessProcessController extends BaseController {
                                                       @ApiIgnore @SortDefault(value = BusinessProcess.FIELD_BIZ_PROCESS_ID,
                                                               direction = Sort.Direction.DESC) PageRequest pageRequest) {
         businessProcess.setTenantId(organizationId);
-        Page<BusinessProcess> list = PageHelper.doPageAndSort(pageRequest, () -> businessProcessService.listBusinessProcess(businessProcess));
+        Page<BusinessProcess> list = PageHelper.doPageAndSort(pageRequest, () -> TenantHelper.organizationLevelLimit(() -> businessProcessService.listBusinessProcess(businessProcess)));
         return Results.success(list);
     }
 

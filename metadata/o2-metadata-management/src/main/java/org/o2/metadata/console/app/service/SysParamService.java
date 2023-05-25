@@ -18,7 +18,7 @@ public interface SysParamService {
      * 从redis查询系统参数
      *
      * @param paramCode 参数编码
-     * @param tenantId 租户ID
+     * @param tenantId  租户ID
      * @return SystemParamDetailVO
      */
     SystemParameterCO getSystemParameter(String paramCode, Long tenantId);
@@ -27,31 +27,33 @@ public interface SysParamService {
      * 批量从redis查询系统参数
      *
      * @param paramCodes 参数编码集合
-     * @param tenantId 租户ID
+     * @param tenantId   租户ID
      * @return list
      */
     List<SystemParameterCO> listSystemParameters(List<String> paramCodes, Long tenantId);
-    
+
     /**
-     *  新建系统参数
+     * 新建系统参数
+     *
      * @param systemParameter 系统参数
-     * @param tenantId 租户ID
+     * @param tenantId        租户ID
      */
     void saveSystemParameter(SystemParameter systemParameter, Long tenantId);
 
     /**
      * 更新系统参数
+     *
      * @param systemParameter 系统参数
-     * @param tenantId 租户ID
+     * @param tenantId        租户Id
      */
     void updateSystemParameter(SystemParameter systemParameter, Long tenantId);
 
     /**
      * 更新系统参数(map类型）
+     *
      * @param systemParameterQueryInnerDTO 系统参数
-     * @param tenantId 租户ID
+     * @param tenantId                     租户ID
      * @return vo
      */
     ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
-
 }

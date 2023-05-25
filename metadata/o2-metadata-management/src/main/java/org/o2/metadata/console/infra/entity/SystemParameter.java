@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 
 import javax.persistence.GeneratedValue;
@@ -69,11 +71,16 @@ public class SystemParameter extends AuditDomain {
     private String defaultValue;
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
 
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @Transient
     @ApiModelProperty("参数类型")

@@ -15,6 +15,7 @@ import org.hzero.core.util.Results;
 import org.hzero.export.annotation.ExcelExport;
 import org.hzero.export.vo.ExportParam;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
+import org.o2.annotation.annotation.ProcessAnnotationValue;
 import org.o2.business.process.management.api.dto.BusinessExportDTO;
 import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessExportVO;
@@ -23,6 +24,7 @@ import org.o2.business.process.management.domain.entity.BusinessProcess;
 import org.o2.business.process.management.domain.repository.BusinessProcessRedisRepository;
 import org.o2.business.process.management.domain.repository.BusinessProcessRepository;
 import org.o2.core.helper.QueryFallbackHelper;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.o2.user.helper.IamUserHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,12 +62,12 @@ public class BusinessProcessSiteController extends BaseController {
 
     @ApiOperation(value = "业务流程定义表维护-分页查询业务流程定义表列表（站点层）")
     @Permission(level = ResourceLevel.SITE)
+    @ProcessAnnotationValue(targetField = BaseConstants.FIELD_BODY)
     @GetMapping
     public ResponseEntity<Page<BusinessProcess>> page(BusinessProcessQueryDTO businessProcess,
                                                       @ApiIgnore @SortDefault(value = BusinessProcess.FIELD_BIZ_PROCESS_ID,
                                                               direction = Sort.Direction.DESC) PageRequest pageRequest) {
-        businessProcess.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
-        Page<BusinessProcess> list = PageHelper.doPageAndSort(pageRequest, () -> businessProcessService.listBusinessProcess(businessProcess));
+        Page<BusinessProcess> list = PageHelper.doPageAndSort(pageRequest, () -> TenantHelper.siteLevelLimit(() -> businessProcessService.listBusinessProcess(businessProcess)));
         return Results.success(list);
     }
 
