@@ -1,7 +1,6 @@
 package org.o2.metadata.infra.constants;
 
 /**
- *
  * 网店
  *
  * @author yipeng.zhu@hand-china.com 2021-08-05
@@ -10,10 +9,14 @@ public interface OnlineShopConstants {
 
     interface Redis {
         /**
-         *  set o2md:onlineShop:[tenantId]:index
-         *  该结构暂需保留，因为C端有查询单租户下所有网店的需求
+         * set o2md:onlineShop:[tenantId]:index
+         * 该结构暂需保留，因为C端有查询单租户下所有网店的需求
          */
         String ONLINE_SHOP_KEY = "o2md:onlineShop:{%d}:index";
+        /**
+         * 多语言租户关联网店key set o2md:onlineShop:[tenantId]:onlineShopCode
+         */
+        String ONLINE_SHOP_MULTI_KEY = "o2md:onlineShop:{%d}:%s";
 
         /**
          * 网店详情 hash o2md:onlineShop:detail
@@ -21,12 +24,24 @@ public interface OnlineShopConstants {
         String ONLINE_SHOP_DETAIL_KEY = "o2md:onlineShop:detail";
 
         /**
-         *  获取key
+         * 获取key
+         *
          * @param tenantId 网店编码
          * @return key
          */
         static String getOnlineShopKey(Long tenantId) {
             return String.format(ONLINE_SHOP_KEY, tenantId);
+        }
+
+        /**
+         * 获取key
+         *
+         * @param tenantId       租户id
+         * @param onlineShopCode 网店编码
+         * @return key
+         */
+        static String getOnlineShopMultiKey(Long tenantId, String onlineShopCode) {
+            return String.format(ONLINE_SHOP_MULTI_KEY, tenantId, onlineShopCode);
         }
 
         /**
