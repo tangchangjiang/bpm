@@ -79,6 +79,11 @@ public interface SystemParameterConstants {
          * 默认站点
          */
         String DEFAULT_SITE_CODE = "DEFAULT_SITE_CODE";
+
+        /**
+         * 默认站点编码（门店类型）
+         */
+        String DEFAULT_SITE_CODE_STORE = "DEFAULT_SITE_CODE_STORE";
     }
 
     interface FileConfig {
