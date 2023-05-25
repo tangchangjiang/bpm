@@ -529,9 +529,10 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         o2CmsProducer.pushSiteRelShopQueue(siteRelShop);
     }
 
-    protected void pushPayConfigRelShop(String onlineShopCode){
+    public void pushPayConfigRelShop(String onlineShopCode){
         EcpInteractionContext context = new EcpInteractionContext();
         context.setOnlineShopCode(onlineShopCode);
+        context.setTenantId(O2CoreConstants.tenantId);
         orderB2cManagementClient.sendQueueMsg(context, EcpOrderClientConstants.CaseCode.BBC_MERCHANT_PAY_CONFIG_REL);
     }
 
