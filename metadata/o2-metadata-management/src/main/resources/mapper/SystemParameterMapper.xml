@@ -78,7 +78,14 @@
                     </choose>
                 </when>
                 <otherwise>
-                    AND osp.tenant_id = #{tenantId}
+                    <choose>
+                        <when test="tenantId != null">
+                            AND osp.tenant_id = #{tenantId}
+                        </when>
+                        <otherwise>
+                            AND 1 = 1
+                        </otherwise>
+                    </choose>
                 </otherwise>
             </choose>
             <if test="tenantId != null and tenantId != 0 and siteQueryFlag != null and siteQueryFlag == 0">
