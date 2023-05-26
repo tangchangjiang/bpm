@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 库存DTO
@@ -92,4 +93,6 @@ public class WarehouseDTO {
 
     @ApiModelProperty(value = "外部仓储编码")
     private String wmsWarehouseCode;
+    @ApiModelProperty(value = "仓库多语言")
+    private Map<String,String> warehouseNameTls;
 }

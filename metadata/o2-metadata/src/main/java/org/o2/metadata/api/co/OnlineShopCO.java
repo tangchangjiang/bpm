@@ -64,7 +64,6 @@ public class OnlineShopCO {
      * 业务类型
      */
     private String businessTypeCode;
-
     /**
      * logo
      */

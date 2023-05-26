@@ -2,9 +2,11 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
@@ -111,6 +113,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> batchSave(Long tenantId, List<Warehouse> warehouses) {
         Warehouse warehouse = warehouses.iterator().next();
+        if (MapUtils.isNotEmpty(warehouse.getWarehouseNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(Warehouse.FIELD_WAREHOUSE_NAME, warehouse.getWarehouseNameTls());
+            warehouse.set_tls(tls);
+        }
         if (warehouse.getWarehouseId() == null) {
             createBatch(tenantId, warehouses);
         } else {

@@ -2,6 +2,7 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.JsonHelper;
 import org.o2.core.helper.TransactionalHelper;
@@ -19,6 +20,7 @@ import org.o2.metadata.console.infra.constant.PosConstants;
 import org.o2.metadata.console.infra.convertor.PosAddressConverter;
 import org.o2.metadata.console.infra.convertor.PosConverter;
 import org.o2.metadata.console.infra.entity.Carrier;
+import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.console.infra.entity.PosInfo;
@@ -336,6 +338,11 @@ public class PosServiceImpl implements PosService {
             posResult.setBusinessTime(pos.getBusinessTime());
             posResult = this.update(posResult);
         }
+        if (MapUtils.isNotEmpty(posDTO.getPosNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(Pos.FIELD_POS_NAME, posDTO.getPosNameTls());
+            posResult.set_tls(tls);
+        }
         return PosConverter.poToCoObject(posResult);
     }
 
@@ -414,6 +421,6 @@ public class PosServiceImpl implements PosService {
                 return null;
             }
         });
-        posRedis.insertPosMultiRedis(tenantId,posInfos);
+        posRedis.insertPosMultiRedis(tenantId, posInfos);
     }
 }

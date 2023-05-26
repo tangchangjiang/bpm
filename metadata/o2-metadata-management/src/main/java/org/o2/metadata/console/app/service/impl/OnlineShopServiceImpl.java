@@ -1,8 +1,10 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
@@ -97,7 +99,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.sourcingCacheService = sourcingCacheService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
-        this.platformService  =platformService;
+        this.platformService = platformService;
         this.posService = posService;
         this.warehouseService = warehouseService;
         this.warehouseRepository = warehouseRepository;
@@ -382,7 +384,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShopQuery.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopQuery.setTenantId(onlineShop.getTenantId());
         OnlineShop onlineShopResult = onlineShopRepository.selectOne(onlineShopQuery);
-
         if (ObjectUtils.isEmpty(onlineShopResult)) {
             OnlineShop query = new OnlineShop();
             query.setOnlineShopName(onlineShopDTO.getOnlineShopName());
@@ -401,18 +402,23 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopResult.setActiveFlag(onlineShop.getActiveFlag());
             onlineShopResult = this.updateOnlineShop(onlineShopResult);
         }
+        if (MapUtils.isNotEmpty(onlineShopDTO.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShopDTO.getOnlineShopNameTls());
+            onlineShopResult.set_tls(tls);
+        }
         return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
 
     @Override
     public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList) {
         if (CollectionUtils.isEmpty(onlineShopDTOList)) {
-            return  new ArrayList<>();
+            return new ArrayList<>();
         }
         List<String> shopCodeList = new ArrayList<>(onlineShopDTOList.size());
         Long tenantId = 0L;
         // 记录 网店编码对应网店状态
-        Map<String,Integer> shopStatus = new HashMap<>(onlineShopDTOList.size());
+        Map<String, Integer> shopStatus = new HashMap<>(onlineShopDTOList.size());
         for (OnlineShopDTO onlineShopDTO : onlineShopDTOList) {
             shopCodeList.add(onlineShopDTO.getOnlineShopCode());
             tenantId = onlineShopDTO.getTenantId();
@@ -420,17 +426,17 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
         }
         // 查询网店信息
-        List<OnlineShop>  result = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(Sqls.custom()
-                .andEqualTo(OnlineShop.FIELD_TENANT_ID,tenantId)
+        List<OnlineShop> result = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(Sqls.custom()
+                .andEqualTo(OnlineShop.FIELD_TENANT_ID, tenantId)
                 .andIn(OnlineShop.FIELD_ONLINE_SHOP_CODE, shopCodeList)).build());
         if (CollectionUtils.isEmpty(result)) {
-            return  new ArrayList<>();
+            return new ArrayList<>();
         }
         // 更新网店状态
         List<OnlineShop> updateShops = new ArrayList<>(result.size());
         for (OnlineShop onlineShop : result) {
             OnlineShop update = new OnlineShop();
-            int activeFlag = shopStatus.getOrDefault(onlineShop.getOnlineShopCode(),onlineShop.getActiveFlag());
+            int activeFlag = shopStatus.getOrDefault(onlineShop.getOnlineShopCode(), onlineShop.getActiveFlag());
             update.setOnlineShopId(onlineShop.getOnlineShopId());
             update.setObjectVersionNumber(onlineShop.getObjectVersionNumber());
             update.setActiveFlag(activeFlag);
