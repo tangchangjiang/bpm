@@ -67,13 +67,18 @@
                 AND osp.active_flag = #{systemParameter.activeFlag}
             </if>
             <choose>
-                <when test="tenantId != null">
-                    AND (osp.tenant_id = #{tenantId} OR osp.tenant_id = 0)
+                <when test="siteQueryFlag != null and siteQueryFlag == 0">
+                    <choose>
+                        <when test="tenantId != null">
+                            AND (osp.tenant_id = #{tenantId} OR osp.tenant_id = 0)
+                        </when>
+                        <otherwise>
+                            AND 1 = 0
+                        </otherwise>
+                    </choose>
                 </when>
                 <otherwise>
-                    <if test="siteQueryFlag != null and siteQueryFlag == 0">
-                        and 1 = 0
-                    </if>
+                    AND osp.tenant_id = #{tenantId}
                 </otherwise>
             </choose>
             <if test="tenantId != null and tenantId != 0 and siteQueryFlag != null and siteQueryFlag == 0">
