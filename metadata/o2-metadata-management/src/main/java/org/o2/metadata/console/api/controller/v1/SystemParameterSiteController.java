@@ -68,7 +68,7 @@ public class SystemParameterSiteController extends BaseController {
     public ResponseEntity<Page<SystemParameter>> list(SystemParameter systemParameter, @ApiIgnore @SortDefault(value = SystemParameter.FIELD_PARAM_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest) {
         Page<SystemParameter> list = PageHelper.doPageAndSort(pageRequest,
-                () -> systemParameterRepository.fuzzyQuery(systemParameter, null, BaseConstants.Flag.YES));
+                () -> systemParameterRepository.fuzzyQuery(systemParameter, systemParameter.getTenantId(), BaseConstants.Flag.YES));
         return Results.success(list);
     }
 
