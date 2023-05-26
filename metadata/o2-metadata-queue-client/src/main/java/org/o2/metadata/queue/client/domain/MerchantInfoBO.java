@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * 商家信息
@@ -57,4 +58,7 @@ public class MerchantInfoBO {
     @ApiModelProperty("租户Id")
     @NotNull
     private Long tenantId;
+
+    @ApiModelProperty("网店多语言")
+    private Map<String, String> onlineShopNameTls;
 }

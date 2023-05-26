@@ -1,5 +1,6 @@
 package org.o2.metadata.infra.redis.impl;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,12 +11,17 @@ import org.o2.metadata.infra.constants.MetadataCacheConstants;
 import org.o2.metadata.infra.constants.OnlineShopConstants;
 import org.o2.metadata.infra.entity.OnlineShop;
 import org.o2.metadata.infra.redis.OnlineShopRedis;
+import org.o2.multi.language.infra.util.O2RedisMultiLanguageHelper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 网店
@@ -26,9 +32,12 @@ import java.util.Set;
 @Slf4j
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private final RedisCacheClient redisCacheClient;
+    private final O2RedisMultiLanguageHelper o2RedisMultiLanguageHelper;
 
-    public OnlineShopRedisImpl(RedisCacheClient redisCacheClient) {
+
+    public OnlineShopRedisImpl(RedisCacheClient redisCacheClient, O2RedisMultiLanguageHelper o2RedisMultiLanguageHelper) {
         this.redisCacheClient = redisCacheClient;
+        this.o2RedisMultiLanguageHelper = o2RedisMultiLanguageHelper;
     }
 
     @Override
@@ -41,12 +50,13 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (log.isDebugEnabled()) {
             log.info("getOnlineShop onlineShopValue:{}", shopJsonStr);
         }
-        return JsonHelper.stringToObject(shopJsonStr, OnlineShop.class);
+        OnlineShop onlineShop = JsonHelper.stringToObject(shopJsonStr, OnlineShop.class);
+        o2RedisMultiLanguageHelper.getMultiLang(onlineShop, OnlineShopConstants.Redis.getOnlineShopMultiKey(onlineShop.getTenantId(), onlineShopCode));
+        return onlineShop;
     }
 
     @Override
     public List<OnlineShop> selectShopList(List<String> onlineShopCodes) {
-
         String key = OnlineShopConstants.Redis.getOnlineShopDetailKey();
         List<String> shopJsonList = redisCacheClient.<String, String>opsForHash().multiGet(key, onlineShopCodes);
         if (CollectionUtils.isEmpty(shopJsonList)) {
@@ -59,16 +69,27 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             }
             shopList.add(JsonHelper.stringToObject(shopJson, OnlineShop.class));
         }
+        if (CollectionUtils.isEmpty(shopList)) {
+            return shopList;
+        }
+        shopList.forEach(shop -> o2RedisMultiLanguageHelper.getMultiLang(shop,
+                OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode())));
         return shopList;
     }
 
     @Override
     public List<OnlineShop> selectShopListByType(Long tenantId, String onlineShopType) {
-        return CacheHelper.getCache(MetadataCacheConstants.CacheName.O2MD_METADATA,
+        List<OnlineShop> onlineShops = CacheHelper.getCache(MetadataCacheConstants.CacheName.O2MD_METADATA,
                 MetadataCacheConstants.CacheKey.getOnlineShopPrefix(tenantId, onlineShopType),
                 tenantId, onlineShopType,
                 this::getOnlineShopByType,
                 false);
+        if (CollectionUtils.isEmpty(onlineShops)) {
+            return onlineShops;
+        }
+        onlineShops.forEach(shop -> o2RedisMultiLanguageHelper.getMultiLang(shop,
+                OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode())));
+        return onlineShops;
 
     }
 

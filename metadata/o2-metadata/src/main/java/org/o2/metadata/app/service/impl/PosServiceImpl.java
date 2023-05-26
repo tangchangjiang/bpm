@@ -8,10 +8,12 @@ import org.o2.metadata.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.api.dto.StoreQueryDTO;
 import org.o2.metadata.app.service.LovAdapterService;
 import org.o2.metadata.app.service.PosService;
+import org.o2.metadata.infra.constants.PosConstants;
 import org.o2.metadata.infra.convertor.PosConverter;
 import org.o2.metadata.infra.entity.Pos;
 import org.o2.metadata.infra.entity.Region;
 import org.o2.metadata.infra.redis.PosRedis;
+import org.o2.multi.language.infra.util.O2RedisMultiLanguageHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,11 +31,14 @@ public class PosServiceImpl implements PosService {
 
     private final PosRedis posRedis;
     private final LovAdapterService lovAdapterService;
+    private final O2RedisMultiLanguageHelper o2RedisMultiLanguageHelper;
 
     public PosServiceImpl(PosRedis posRedis,
-                          LovAdapterService lovAdapterService) {
+                          LovAdapterService lovAdapterService,
+                          O2RedisMultiLanguageHelper o2RedisMultiLanguageHelper) {
         this.posRedis = posRedis;
         this.lovAdapterService = lovAdapterService;
+        this.o2RedisMultiLanguageHelper = o2RedisMultiLanguageHelper;
     }
 
     @Override
@@ -69,6 +74,7 @@ public class PosServiceImpl implements PosService {
         }
         List<String> regionCodes = new ArrayList<>();
         for (Pos pos : posList) {
+            o2RedisMultiLanguageHelper.getMultiLang(pos, PosConstants.RedisKey.getPosDetailMultiKey(tenantId, pos.getPosCode()));
             regionCodes.add(pos.getRegionCode());
             regionCodes.add(pos.getCityCode());
             regionCodes.add(pos.getDistrictCode());

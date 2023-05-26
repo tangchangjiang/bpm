@@ -1,8 +1,10 @@
 package org.o2.metadata.console.app.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
@@ -12,6 +14,9 @@ import org.o2.cms.queue.client.domain.SiteRelShopBO;
 import org.o2.core.O2CoreConstants;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
+import org.o2.ecp.order.b2c.management.client.O2EcpOrderB2cManagementClient;
+import org.o2.ecp.order.b2c.management.client.domain.dto.EcpInteractionContext;
+import org.o2.ecp.order.b2c.management.client.infra.constants.EcpOrderClientConstants;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
@@ -75,6 +80,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     private final OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository;
     private final O2CmsProducer o2CmsProducer;
     private final SysParamService sysParamService;
+    private final O2EcpOrderB2cManagementClient orderB2cManagementClient;
 
     public OnlineShopServiceImpl(OnlineShopRepository onlineShopRepository,
                                  OnlineShopRedis onlineShopRedis,
@@ -89,7 +95,7 @@ public class OnlineShopServiceImpl implements OnlineShopService {
                                  WarehouseRepository warehouseRepository,
                                  OnlineShopRelWarehouseRepository onlineShopRelWarehouseRepository,
                                  O2CmsProducer o2CmsProducer,
-                                 SysParamService sysParamService) {
+                                 SysParamService sysParamService, O2EcpOrderB2cManagementClient orderB2cManagementClient) {
         this.onlineShopRepository = onlineShopRepository;
         this.onlineShopRedis = onlineShopRedis;
         this.lovAdapterService = lovAdapterService;
@@ -97,13 +103,14 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         this.sourcingCacheService = sourcingCacheService;
         this.catalogRepository = catalogRepository;
         this.catalogVersionRepository = catalogVersionRepository;
-        this.platformService  =platformService;
+        this.platformService = platformService;
         this.posService = posService;
         this.warehouseService = warehouseService;
         this.warehouseRepository = warehouseRepository;
         this.onlineShopRelWarehouseRepository = onlineShopRelWarehouseRepository;
         this.o2CmsProducer = o2CmsProducer;
         this.sysParamService = sysParamService;
+        this.orderB2cManagementClient = orderB2cManagementClient;
     }
 
     @Override
@@ -383,7 +390,6 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShopQuery.setOnlineShopCode(onlineShop.getOnlineShopCode());
         onlineShopQuery.setTenantId(onlineShop.getTenantId());
         OnlineShop onlineShopResult = onlineShopRepository.selectOne(onlineShopQuery);
-
         if (ObjectUtils.isEmpty(onlineShopResult)) {
             OnlineShop query = new OnlineShop();
             query.setOnlineShopName(onlineShopDTO.getOnlineShopName());
@@ -402,18 +408,23 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopResult.setActiveFlag(onlineShop.getActiveFlag());
             onlineShopResult = this.updateOnlineShop(onlineShopResult);
         }
+        if (MapUtils.isNotEmpty(onlineShopDTO.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShopDTO.getOnlineShopNameTls());
+            onlineShopResult.set_tls(tls);
+        }
         return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
 
     @Override
     public List<OnlineShopCO> batchUpdateShopStatus(List<OnlineShopDTO> onlineShopDTOList) {
         if (CollectionUtils.isEmpty(onlineShopDTOList)) {
-            return  new ArrayList<>();
+            return new ArrayList<>();
         }
         List<String> shopCodeList = new ArrayList<>(onlineShopDTOList.size());
         Long tenantId = 0L;
         // 记录 网店编码对应网店状态
-        Map<String,Integer> shopStatus = new HashMap<>(onlineShopDTOList.size());
+        Map<String, Integer> shopStatus = new HashMap<>(onlineShopDTOList.size());
         for (OnlineShopDTO onlineShopDTO : onlineShopDTOList) {
             shopCodeList.add(onlineShopDTO.getOnlineShopCode());
             tenantId = onlineShopDTO.getTenantId();
@@ -421,17 +432,17 @@ public class OnlineShopServiceImpl implements OnlineShopService {
 
         }
         // 查询网店信息
-        List<OnlineShop>  result = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(Sqls.custom()
-                .andEqualTo(OnlineShop.FIELD_TENANT_ID,tenantId)
+        List<OnlineShop> result = onlineShopRepository.selectByCondition(Condition.builder(OnlineShop.class).andWhere(Sqls.custom()
+                .andEqualTo(OnlineShop.FIELD_TENANT_ID, tenantId)
                 .andIn(OnlineShop.FIELD_ONLINE_SHOP_CODE, shopCodeList)).build());
         if (CollectionUtils.isEmpty(result)) {
-            return  new ArrayList<>();
+            return new ArrayList<>();
         }
         // 更新网店状态
         List<OnlineShop> updateShops = new ArrayList<>(result.size());
         for (OnlineShop onlineShop : result) {
             OnlineShop update = new OnlineShop();
-            int activeFlag = shopStatus.getOrDefault(onlineShop.getOnlineShopCode(),onlineShop.getActiveFlag());
+            int activeFlag = shopStatus.getOrDefault(onlineShop.getOnlineShopCode(), onlineShop.getActiveFlag());
             update.setOnlineShopId(onlineShop.getOnlineShopId());
             update.setObjectVersionNumber(onlineShop.getObjectVersionNumber());
             update.setActiveFlag(activeFlag);
@@ -497,6 +508,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         });
         // 10. 网店关联默认站点队列
         pushDefaultSiteRelShop(onlineShop);
+        // 11. 网店关联支付配置队列
+        pushPayConfigRelShop(merchantInfo.getOnlineShopCode());
     }
 
     /**
@@ -520,6 +533,13 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         siteRelShop.setSiteCode(defaultSite.getDefaultValue());
         siteRelShop.setOnlineShopCodes(Collections.singletonList(onlineShop.getOnlineShopCode()));
         o2CmsProducer.pushSiteRelShopQueue(siteRelShop);
+    }
+
+    public void pushPayConfigRelShop(String onlineShopCode){
+        EcpInteractionContext context = new EcpInteractionContext();
+        context.setOnlineShopCode(onlineShopCode);
+        context.setTenantId(O2CoreConstants.tenantId);
+        orderB2cManagementClient.sendQueueMsg(context, EcpOrderClientConstants.CaseCode.BBC_MERCHANT_PAY_CONFIG_REL);
     }
 
     /**

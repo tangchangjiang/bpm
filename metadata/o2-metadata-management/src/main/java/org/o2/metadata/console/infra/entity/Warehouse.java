@@ -28,6 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库
@@ -217,6 +218,10 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "是否平台层查询")
     @Transient
     private Integer siteFlag;
+
+    @ApiModelProperty(value = "仓库多语言")
+    @Transient
+    private Map<String,String> warehouseNameTls;
 
     public void initWarehouse() {
         this.pickedUpFlag = BaseConstants.Flag.NO;

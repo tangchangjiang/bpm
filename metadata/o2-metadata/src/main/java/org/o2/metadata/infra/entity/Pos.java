@@ -2,6 +2,7 @@ package org.o2.metadata.infra.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.o2.multi.language.core.annotation.O2RedisMultiLanguageField;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,7 @@ public class Pos {
     private String posCode;
 
     @ApiModelProperty(value = "服务点名称")
+    @O2RedisMultiLanguageField
     private String posName;
 
     @ApiModelProperty(value = "服务点状态")

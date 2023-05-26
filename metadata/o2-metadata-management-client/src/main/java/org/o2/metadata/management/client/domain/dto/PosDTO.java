@@ -1,6 +1,7 @@
 package org.o2.metadata.management.client.domain.dto;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,6 +41,10 @@ public class PosDTO {
     @ApiModelProperty(value = "门店快递发货接单量", hidden = true)
     private PosAddressDTO address;
     private Long tenantId;
+
+
+    @ApiModelProperty("服务点多语言")
+    private Map<String, String> posNameTls;
 
 
 }
