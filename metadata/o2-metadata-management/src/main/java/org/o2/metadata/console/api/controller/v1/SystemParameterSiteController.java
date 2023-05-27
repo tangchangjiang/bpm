@@ -77,10 +77,7 @@ public class SystemParameterSiteController extends BaseController {
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("/{paramId}")
     public ResponseEntity<SystemParameter> detail(@PathVariable Long paramId) {
-        SystemParameter condition = new SystemParameter();
-        condition.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
-        condition.setParamId(paramId);
-        SystemParameter systemParameter = systemParameterRepository.findOne(condition);
+        SystemParameter systemParameter = systemParameterRepository.selectByPrimaryKey(paramId);
         return Results.success(systemParameter);
     }
 
