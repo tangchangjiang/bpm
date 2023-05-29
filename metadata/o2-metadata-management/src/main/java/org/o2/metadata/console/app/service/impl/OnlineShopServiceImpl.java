@@ -410,12 +410,8 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             onlineShopResult.setPlatformShopCode(onlineShop.getPlatformShopCode());
             onlineShopResult.setPlatformCode(onlineShop.getPlatformCode());
             onlineShopResult.setActiveFlag(onlineShop.getActiveFlag());
+            onlineShopResult.set_tls(onlineShop.get_tls());
             onlineShopResult = this.updateOnlineShop(onlineShopResult);
-        }
-        if (MapUtils.isNotEmpty(onlineShopDTO.getOnlineShopNameTls())) {
-            Map<String, Map<String, String>> tls = Maps.newHashMap();
-            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShopDTO.getOnlineShopNameTls());
-            onlineShopResult.set_tls(tls);
         }
         return OnlineShopConverter.poToCoObject(onlineShopResult);
     }
