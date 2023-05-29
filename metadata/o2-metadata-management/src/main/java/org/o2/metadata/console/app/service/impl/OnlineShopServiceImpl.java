@@ -222,7 +222,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         onlineShop.setLogoUrl(merchantInfo.getLogoUrl());
         onlineShop.setShopMediaUrl(merchantInfo.getShopMediaUrl());
         onlineShop.setSelfSalesFlag(merchantInfo.getSelfSalesFlag());
-
+        if (MapUtils.isNotEmpty(merchantInfo.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, merchantInfo.getOnlineShopNameTls());
+            onlineShop.set_tls(tls);
+        }
         validateOnlineShopCode(onlineShop);
         validatePlatformOnlineShopCode(onlineShop);
         validateOnlineShopName(onlineShop);
@@ -544,6 +548,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
         }
         if (null != merchantInfo.getActiveFlag()) {
             onlineShop.setActiveFlag(merchantInfo.getActiveFlag());
+        }
+        if (MapUtils.isNotEmpty(merchantInfo.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, merchantInfo.getOnlineShopNameTls());
+            onlineShop.set_tls(tls);
         }
         updateOnlineShop(onlineShop);
     }
