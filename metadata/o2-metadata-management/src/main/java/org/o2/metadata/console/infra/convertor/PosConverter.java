@@ -1,11 +1,15 @@
 package org.o2.metadata.console.infra.convertor;
 
+import com.google.common.collect.Maps;
+import org.apache.commons.collections4.MapUtils;
 import org.o2.metadata.console.api.vo.PosVO;
 import org.o2.metadata.console.infra.entity.Pos;
 import org.o2.metadata.console.infra.entity.PosAddress;
 import org.o2.metadata.management.client.domain.co.PosCO;
 import org.o2.metadata.management.client.domain.dto.PosAddressDTO;
 import org.o2.metadata.management.client.domain.dto.PosDTO;
+
+import java.util.Map;
 
 /**
  * 服务点
@@ -77,6 +81,11 @@ public class PosConverter {
         pos.setOpenDate(posDTO.getOpenDate());
         pos.setPosStatusCode(posDTO.getPosStatusCode());
         pos.setPosTypeCode(posDTO.getPosTypeCode());
+        if (MapUtils.isNotEmpty(posDTO.getPosNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(Pos.FIELD_POS_NAME, posDTO.getPosNameTls());
+            pos.set_tls(tls);
+        }
         return pos;
     }
 

@@ -339,12 +339,8 @@ public class PosServiceImpl implements PosService {
             posAddress.setPostcode(pos.getAddress().getPostcode());
             posResult.setAddress(posAddress);
             posResult.setBusinessTime(pos.getBusinessTime());
+            posResult.set_tls(pos.get_tls());
             posResult = this.update(posResult);
-        }
-        if (MapUtils.isNotEmpty(posDTO.getPosNameTls())) {
-            Map<String, Map<String, String>> tls = Maps.newHashMap();
-            tls.put(Pos.FIELD_POS_NAME, posDTO.getPosNameTls());
-            posResult.set_tls(tls);
         }
         return PosConverter.poToCoObject(posResult);
     }
