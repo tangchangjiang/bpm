@@ -86,4 +86,7 @@ public class OnlineShopCO {
      * 网店业务类型
      */
     private String businessTypeCode;
+
+    @ApiModelProperty("多语言查询使用")
+    private String _token;
 }

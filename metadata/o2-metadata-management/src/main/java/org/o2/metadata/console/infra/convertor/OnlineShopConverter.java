@@ -56,6 +56,7 @@ public class OnlineShopConverter {
         co.setLogoUrl(onlineShop.getLogoUrl());
         co.setShopMediaUrl(onlineShop.getShopMediaUrl());
         co.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
+        co.set_token(onlineShop.get_token());
         return co;
     }
 
