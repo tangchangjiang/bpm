@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
+import com.google.common.collect.Maps;
+import org.apache.commons.collections4.MapUtils;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -7,6 +9,7 @@ import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -148,6 +151,12 @@ public class OnlineShopConverter {
         onlineShop.setPlatformShopCode(onlineShopDTO.getPlatformShopCode());
         onlineShop.setOnlineShopType(onlineShopDTO.getOnlineShopType());
         onlineShop.setBusinessTypeCode(onlineShopDTO.getBusinessTypeCode());
+        // 门店多语言
+        if (MapUtils.isNotEmpty(onlineShopDTO.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShopDTO.getOnlineShopNameTls());
+            onlineShop.set_tls(tls);
+        }
 
         return onlineShop;
     }
