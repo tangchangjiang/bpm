@@ -211,7 +211,7 @@
             </if>
             <if test="onlineShopName!=null and onlineShopName!=''">
                 <bind name="onlineShopName" value="'%' + onlineShopName + '%'"/>
-                AND os.online_shop_name LIKE #{onlineShopName}
+                AND ost.online_shop_name LIKE #{onlineShopName}
             </if>
             <if test="platformShopCode!=null and platformShopCode!=''">
                 AND os.platform_shop_code = #{platformShopCode}
