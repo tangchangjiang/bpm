@@ -357,6 +357,11 @@ public class PosServiceImpl implements PosService {
         pos.setPosStatusCode(MetadataConstants.PosStatus.NORMAL);
         pos.setPosTypeCode(MetadataConstants.PosType.WAREHOUSE);
         pos.setTenantId(merchantInfo.getTenantId());
+        if (MapUtils.isNotEmpty(merchantInfo.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(Pos.FIELD_POS_NAME, merchantInfo.getOnlineShopNameTls());
+            pos.set_tls(tls);
+        }
         validPosNameUnique(pos);
         validatePosCode(pos);
         return pos;

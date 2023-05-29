@@ -150,6 +150,7 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
                 return null;
             }
         });
+        insertMultiShop(onlineShop);
     }
 
     @Override
