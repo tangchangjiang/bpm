@@ -1,6 +1,5 @@
 package org.o2.metadata.infra.redis.impl;
 
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 网店
@@ -51,7 +46,11 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             log.info("getOnlineShop onlineShopValue:{}", shopJsonStr);
         }
         OnlineShop onlineShop = JsonHelper.stringToObject(shopJsonStr, OnlineShop.class);
-        o2RedisMultiLanguageHelper.getMultiLang(onlineShop, OnlineShopConstants.Redis.getOnlineShopMultiKey(onlineShop.getTenantId(), onlineShopCode));
+        try {
+            o2RedisMultiLanguageHelper.getMultiLang(onlineShop, OnlineShopConstants.Redis.getOnlineShopMultiKey(onlineShop.getTenantId(), onlineShopCode));
+        } catch (Exception ex) {
+            log.error("online shop multi language query failed, onlineShopCode: {}", onlineShopCode, ex);
+        }
         return onlineShop;
     }
 
@@ -72,8 +71,13 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (CollectionUtils.isEmpty(shopList)) {
             return shopList;
         }
-        shopList.forEach(shop -> o2RedisMultiLanguageHelper.getMultiLang(shop,
-                OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode())));
+        shopList.forEach(shop -> {
+            try {
+                o2RedisMultiLanguageHelper.getMultiLang(shop, OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode()));
+            } catch (Exception ex) {
+                log.error("online shop multi language query failed, onlineShopCode: {}", shop.getOnlineShopCode(), ex);
+            }
+        });
         return shopList;
     }
 
@@ -87,8 +91,14 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         if (CollectionUtils.isEmpty(onlineShops)) {
             return onlineShops;
         }
-        onlineShops.forEach(shop -> o2RedisMultiLanguageHelper.getMultiLang(shop,
-                OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode())));
+        onlineShops.forEach(shop -> {
+            try {
+                o2RedisMultiLanguageHelper.getMultiLang(shop,
+                        OnlineShopConstants.Redis.getOnlineShopMultiKey(shop.getTenantId(), shop.getOnlineShopCode()));
+            } catch (Exception ex) {
+                log.error("online shop multi language query failed, onlineShopCode: {}", shop.getOnlineShopCode(), ex);
+            }
+        });
         return onlineShops;
 
     }

@@ -143,7 +143,7 @@ public class PosServiceImpl implements PosService {
                     oldAddress = oldAddressList.get(0);
                 }
 
-                if (null == address.getPosAddressId()) {
+                if (null == oldAddress) {
                     posAddressRepository.insertSelective(address);
                     pos.setAddressId(address.getPosAddressId());
                 } else {
