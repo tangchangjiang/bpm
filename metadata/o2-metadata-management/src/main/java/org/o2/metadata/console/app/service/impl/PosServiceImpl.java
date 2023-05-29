@@ -142,13 +142,12 @@ public class PosServiceImpl implements PosService {
                 if (CollectionUtils.isNotEmpty(oldAddressList)) {
                     oldAddress = oldAddressList.get(0);
                 }
-
+                updatePosAddress(address, pos.getTenantId());
+                address.setTenantId(pos.getTenantId());
                 if (null == oldAddress) {
                     posAddressRepository.insertSelective(address);
                     pos.setAddressId(address.getPosAddressId());
                 } else {
-                    updatePosAddress(address, pos.getTenantId());
-                    address.setTenantId(pos.getTenantId());
                     posAddressRepository.updateByPrimaryKey(address);
                 }
             }
