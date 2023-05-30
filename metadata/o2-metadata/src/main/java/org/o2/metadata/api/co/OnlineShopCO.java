@@ -64,4 +64,18 @@ public class OnlineShopCO {
      * 业务类型
      */
     private String businessTypeCode;
+    /**
+     * logo
+     */
+    private String logoUrl;
+
+    /**
+     * 店铺图片
+     */
+    private String shopMediaUrl;
+
+    /**
+     * 是否自营：1-自营，0-非自营
+     */
+    private Integer selfSalesFlag;
 }

@@ -63,6 +63,15 @@ public interface OnlineShopRemoteService {
                                            @PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId);
 
     /**
+     * 批量查询网店（平台层查询）
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return map
+     */
+    @PostMapping("/online-shops-internal/onlineShop-list-site")
+    ResponseEntity<String> listOnlineShopsOfSite(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
      * 批量查询网店
      *
      * @param onlineShopCatalogVersionList 目录版本

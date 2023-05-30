@@ -3,6 +3,7 @@ package org.o2.metadata.console.app.service;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopCatalogVersionDTO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author yipeng.zhu@hand-china.com 2020-06-03 09:50
  **/
 public interface OnlineShopService {
+
     /**
      * 条件查询
      *
@@ -49,6 +51,14 @@ public interface OnlineShopService {
     Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO, Long tenantId);
 
     /**
+     * 批量查询网店（平台层查询）
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return list
+     */
+    Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
      * 目录版本+目录 批量查询网店
      *
      * @param onlineShopCatalogVersionList 目录版本
@@ -80,4 +90,11 @@ public interface OnlineShopService {
      * @return OnlineShopCO
      */
     List<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
+     * 同步商家信息，生成网店、仓库、服务点等信息
+     *
+     * @param merchantInfo 商家信息
+     */
+    void syncMerchantInfo(MerchantInfoBO merchantInfo);
 }

@@ -2,9 +2,11 @@ package org.o2.metadata.console.app.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.choerodon.core.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
@@ -22,6 +24,7 @@ import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.app.bo.WarehouseLimitBO;
 import org.o2.metadata.console.app.service.SourcingCacheUpdateService;
 import org.o2.metadata.console.app.service.WarehouseService;
@@ -38,8 +41,11 @@ import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.o2.metadata.domain.warehouse.service.WarehouseDomainService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -107,6 +113,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public List<Warehouse> batchSave(Long tenantId, List<Warehouse> warehouses) {
         Warehouse warehouse = warehouses.iterator().next();
+        if (MapUtils.isNotEmpty(warehouse.getWarehouseNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(Warehouse.FIELD_WAREHOUSE_NAME, warehouse.getWarehouseNameTls());
+            warehouse.set_tls(tls);
+        }
         if (warehouse.getWarehouseId() == null) {
             createBatch(tenantId, warehouses);
         } else {
@@ -338,6 +349,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public void batchResetWhExpressLimit(List<String> warehouseCodes, Long tenantId) {
+        // 仓库快递配送接单量限制 key
+        String expressLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.EXPRESS_LIMIT_KEY, tenantId);
+        this.redisCacheClient.opsForHash().delete(expressLimitKey, warehouseCodes.toArray());
+    }
+
+    @Override
     public void resetWarehousePickUpLimit(String warehouseCode, Long tenantId) {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
@@ -387,13 +405,27 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<Warehouse> selectByCondition(Warehouse query) {
-        return warehouseRepository.listWarehouseByCondition(query);
+    public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
+        return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehousesByPosCode(posCodes, tenantId));
     }
 
     @Override
-    public List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId) {
-        return WarehouseConverter.poToCoListObjects(warehouseRepository.listWarehousesByPosCode(posCodes, tenantId));
+    public Warehouse buildAndVerifyWarehouse(MerchantInfoBO merchantInfo) {
+        Warehouse warehouse = new Warehouse();
+        warehouse.initWarehouse();
+        warehouse.setExpressedFlag(BaseConstants.Flag.YES);
+        warehouse.setWarehouseCode(merchantInfo.getOnlineShopCode());
+        warehouse.setWarehouseName(merchantInfo.getOnlineShopName());
+        warehouse.setWarehouseStatusCode(WarehouseConstants.WarehouseStatus.NORMAL);
+        warehouse.setWarehouseTypeCode(WarehouseConstants.WarehouseType.GOOD);
+        warehouse.setActiveFlag(BaseConstants.Flag.YES);
+        warehouse.setActivedDateFrom(new Date());
+        warehouse.setActivedDateTo(Date.from(LocalDateTime.of(2099, 12, 31, 23, 59, 59)
+                .atZone(ZoneId.systemDefault()).toInstant()));
+        warehouse.setTenantId(merchantInfo.getTenantId());
+
+        validNameUnique(warehouse);
+        return warehouse;
     }
 
 }

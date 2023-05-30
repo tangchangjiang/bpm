@@ -39,6 +39,17 @@ public class CarrierClient {
     }
 
     /**
+     * 多租户查询承运商
+     *
+     * @param carrierQueryInnerDTOMap 查询条件 tenantId:CarrierQueryInnerDTO
+     * @return Map tenantId:carrierCode:info
+     */
+    public Map<Long, Map<String, CarrierCO>> listCarriersBatchTenant(Map<Long, CarrierQueryInnerDTO> carrierQueryInnerDTOMap) {
+        return ResponseUtils.getResponse(carrierRemoteService.listCarriersBatchTenant(carrierQueryInnerDTOMap), new TypeReference<Map<Long, Map<String, CarrierCO>>>() {
+        });
+    }
+
+    /**
      * 批量查询承运商匹配规则
      *
      * @param carrierMappingQueryInnerDTO 承运商

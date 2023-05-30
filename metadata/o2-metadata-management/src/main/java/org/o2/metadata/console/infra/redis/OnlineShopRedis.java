@@ -1,8 +1,8 @@
 package org.o2.metadata.console.infra.redis;
 
-import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Warehouse;
 
 import java.util.List;
 
@@ -38,11 +38,13 @@ public interface OnlineShopRedis {
     void batchUpdateRedis(List<OnlineShop> list, Long tenantId);
 
     /**
-     * 查询网店
+     * 同步店铺信息（同步网店、仓库和网店关联仓库；因服务点没有维护地址和经纬度，不需要同步至Redis）
      *
-     * @param innerDTO 查询条件
-     * @param tenantId 租户ID
-     * @return 网店数据
+     * @param onlineShop 网店信息
+     * @param warehouse  仓库信息
+     * @param shopRelWh  网店关联仓库信息
      */
-    List<OnlineShop> select(OnlineShopQueryInnerDTO innerDTO, Long tenantId);
+    void syncMerchantMetaInfo(OnlineShop onlineShop, Warehouse warehouse, OnlineShopRelWarehouse shopRelWh);
+
+    void insertMultiShop(OnlineShop onlineShop);
 }

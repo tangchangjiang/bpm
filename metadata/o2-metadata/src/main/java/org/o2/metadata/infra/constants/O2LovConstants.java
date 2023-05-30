@@ -28,6 +28,7 @@ public interface O2LovConstants {
         String DEFAULT_LANG = "zh_CN";
         String DEFAULT_CODE = "-1";
         String DEFAULT_DATA = "region";
+        String REGION_CODE_LIST = "regionCodeList";
 
     }
 

@@ -70,8 +70,23 @@ public class OnlineShopCO {
     @NotNull
     private String onlineShopType;
 
+    @ApiModelProperty(value = "租户Id")
+    private Long tenantId;
+
+    @ApiModelProperty("店铺logo")
+    private String logoUrl;
+
+    @ApiModelProperty("店铺图片")
+    private String shopMediaUrl;
+
+    @ApiModelProperty("自营标识")
+    private Integer selfSalesFlag;
+
     /**
      * 网店业务类型
      */
     private String businessTypeCode;
+
+    @ApiModelProperty("多语言查询使用")
+    private String _token;
 }

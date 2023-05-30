@@ -43,8 +43,8 @@ import io.choerodon.swagger.annotation.Permission;
 @Api(tags = MetadataManagementAutoConfiguration.SYSTEM_PARAMETER)
 public class SystemParameterController extends BaseController {
 
-    private SystemParameterRepository systemParameterRepository;
-    private SysParamService sysParamService;
+    private final SystemParameterRepository systemParameterRepository;
+    private final SysParamService sysParamService;
 
     public SystemParameterController(SystemParameterRepository systemParameterRepository, SysParamService sysParamService) {
         this.systemParameterRepository = systemParameterRepository;
@@ -59,7 +59,7 @@ public class SystemParameterController extends BaseController {
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
         systemParameter.setTenantId(organizationId);
         Page<SystemParameter> list = PageHelper.doPageAndSort(pageRequest,
-                () -> systemParameterRepository.fuzzyQuery(systemParameter, organizationId));
+                () -> systemParameterRepository.fuzzyQuery(systemParameter, organizationId, BaseConstants.Flag.NO));
         return Results.success(list);
     }
 
@@ -67,11 +67,14 @@ public class SystemParameterController extends BaseController {
     @Permission(level = ResourceLevel.ORGANIZATION)
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("/{paramId}")
-    public ResponseEntity<SystemParameter> detail(@PathVariable Long paramId, @PathVariable("organizationId") Long organizationId) {
+    public ResponseEntity<SystemParameter> detail(@PathVariable Long paramId, Long tenantId, @PathVariable("organizationId") Long organizationId) {
         SystemParameter condition = new SystemParameter();
-        condition.setTenantId(organizationId);
+        if (null == tenantId) {
+            tenantId = organizationId;
+        }
+        condition.setTenantId(tenantId);
         condition.setParamId(paramId);
-        SystemParameter systemParameter = systemParameterRepository.selectOne(condition);
+        SystemParameter systemParameter = systemParameterRepository.findOne(condition);
         return Results.success(systemParameter);
     }
 
@@ -111,7 +114,10 @@ public class SystemParameterController extends BaseController {
     @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
     @GetMapping("find")
     public ResponseEntity<SystemParameter> findOne(SystemParameter systemParameter, @PathVariable("organizationId") Long organizationId) {
-        systemParameter.setTenantId(organizationId);
-        return Results.success(systemParameterRepository.selectOne(systemParameter));
+        // 以便工作流在0租户执行时，可以查询其他租户的系统参数
+        if (null == systemParameter.getTenantId()) {
+            systemParameter.setTenantId(organizationId);
+        }
+        return Results.success(systemParameterRepository.findOne(systemParameter));
     }
 }

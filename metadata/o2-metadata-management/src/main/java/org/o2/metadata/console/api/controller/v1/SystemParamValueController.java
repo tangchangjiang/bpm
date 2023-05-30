@@ -56,12 +56,10 @@ public class SystemParamValueController extends BaseController {
     @GetMapping
     public ResponseEntity<Page<SystemParamValue>> listSystemParamValues(SystemParamValue systemParamValue, @ApiIgnore @SortDefault(value = SystemParamValue.FIELD_VALUE_ID,
             direction = Sort.Direction.DESC) PageRequest pageRequest, @PathVariable("organizationId") Long organizationId) {
-        systemParamValue.setTenantId(organizationId);
         Page<SystemParamValue> page = PageHelper.doPage(pageRequest, () -> systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class)
-                .andWhere(Sqls.custom().andEqualTo(SystemParamValue.FIELD_TENANT_ID, systemParamValue.getTenantId())
-                        .andLike(SystemParamValue.FIELD_PARAM_VALUE, systemParamValue.getParamValue(), true)
+                .andWhere(Sqls.custom().andLike(SystemParamValue.FIELD_PARAM_VALUE, systemParamValue.getParamValue(), true)
                         .andLike(SystemParamValue.FIELD_PARAM_KEY, systemParamValue.getParamKey(), true)
-                        .andEqualTo(SystemParamValue.FIELD_PARAM_ID, systemParamValue.getParamId(), true)).build()));
+                        .andEqualTo(SystemParamValue.FIELD_PARAM_ID, systemParamValue.getParamId())).build()));
         return Results.success(page);
     }
 
@@ -70,7 +68,6 @@ public class SystemParamValueController extends BaseController {
     @GetMapping("/{valueId}")
     public ResponseEntity<SystemParamValue> getSystemParamValue(@PathVariable Long valueId, @PathVariable("organizationId") Long organizationId) {
         SystemParamValue condition = new SystemParamValue();
-        condition.setTenantId(organizationId);
         condition.setValueId(valueId);
         SystemParamValue systemParamValue = systemParamValueRepository.selectOne(condition);
         return Results.success(systemParamValue);

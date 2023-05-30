@@ -2,6 +2,7 @@ package org.o2.business.process.management.domain.repository;
 
 import org.hzero.mybatis.base.BaseRepository;
 import org.o2.business.process.management.api.dto.BusinessExportDTO;
+import org.o2.business.process.management.api.dto.BusinessProcessQueryDTO;
 import org.o2.business.process.management.api.vo.BusinessExportVO;
 import org.o2.business.process.management.domain.entity.BusinessProcess;
 
@@ -21,4 +22,12 @@ public interface BusinessProcessRepository extends BaseRepository<BusinessProces
      * @return
      */
     List<BusinessExportVO> listBusinessForExport(BusinessExportDTO businessExportDTO);
+
+    /**
+     * 条件查询业务流程
+     *
+     * @param queryDTO 查询条件
+     * @return 业务流程
+     */
+    List<BusinessProcess> listBusinessProcessByCondition(BusinessProcessQueryDTO queryDTO);
 }

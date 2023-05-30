@@ -6,6 +6,7 @@ import org.o2.metadata.client.domain.co.OnlineShopCO;
 import org.o2.metadata.client.infra.feign.OnlineShopRemoteService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网店
@@ -24,10 +25,9 @@ public class OnlineShopClient {
      *
      * @param onlineShopCode 网店编码
      * @return 网店
-     * @date 2021-08-10
      */
-    public OnlineShopCO getOnlineShop(String onlineShopCode, String tenantId) {
-        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode, tenantId), OnlineShopCO.class);
+    public OnlineShopCO getOnlineShop(String onlineShopCode) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShopByCode(onlineShopCode), OnlineShopCO.class);
     }
 
     /**
@@ -53,11 +53,35 @@ public class OnlineShopClient {
     }
 
     /**
+     * 查询网店
+     *
+     * @param onlineShopCode 网店编码
+     * @return 网店
+     */
+    @Deprecated
+    public OnlineShopCO getOnlineShop(String onlineShopCode, String tenantId) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.getOnlineShop(onlineShopCode, tenantId), OnlineShopCO.class);
+    }
+
+    /**
+     * 多租户查询网店
+     *
+     * @param onlineShopTenantMap 租户Id关联网店 map<tenantId, List<onlineShopCodes>>
+     * @return Map<tenantId, List<OnlineShopCO>>
+     */
+    @Deprecated
+    public Map<Long, List<OnlineShopCO>> queryOnlineShops(Map<Long, List<String>> onlineShopTenantMap) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShopBatchTenant(onlineShopTenantMap), new TypeReference<Map<Long, List<OnlineShopCO>>>() {
+        });
+    }
+
+    /**
      * 批量查询网店-传租户ID
      * @param tenantId
      * @param onlineShopCodes
      * @return
      */
+    @Deprecated
     public List<OnlineShopCO> batchQueryOnlineShop(String tenantId, List<String> onlineShopCodes) {
         return ResponseUtils.getResponse(onlineShopRemoteService.batchQueryOnlineShop(tenantId, onlineShopCodes), new TypeReference<List<OnlineShopCO>>() {
         });

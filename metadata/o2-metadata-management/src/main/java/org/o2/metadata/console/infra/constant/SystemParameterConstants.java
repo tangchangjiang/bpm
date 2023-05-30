@@ -75,6 +75,15 @@ public interface SystemParameterConstants {
         String DEFAULT_WH_SAFETY_STOCK = "DEFAULT_WH_SAFETY_STOCK";
         String DEFAULT_SHOP_UPLOAD_RATIO = "DEFAULT_SHOP_UPLOAD_RATIO";
         String DEFAULT_SHOP_SAFETY_STOCK = "DEFAULT_SHOP_SAFETY_STOCK";
+        /**
+         * 默认站点
+         */
+        String DEFAULT_SITE_CODE = "DEFAULT_SITE_CODE";
+
+        /**
+         * 默认站点编码（门店类型）
+         */
+        String DEFAULT_SITE_CODE_STORE = "DEFAULT_SITE_CODE_STORE";
     }
 
     interface FileConfig {

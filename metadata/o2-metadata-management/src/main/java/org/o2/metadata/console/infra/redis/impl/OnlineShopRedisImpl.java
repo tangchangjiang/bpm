@@ -1,23 +1,32 @@
 package org.o2.metadata.console.infra.redis.impl;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
+import org.o2.metadata.console.app.bo.OnlineShopMultiRedisBO;
 import org.o2.metadata.console.infra.constant.OnlineShopConstants;
+import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.o2.metadata.console.infra.convertor.OnlineShopConverter;
 import org.o2.metadata.console.infra.entity.OnlineShop;
 import org.o2.metadata.console.infra.entity.OnlineShopRelWarehouse;
+import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.OnlineShopRedis;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
+import org.o2.multi.language.management.infra.util.O2RedisMultiLanguageManagementHelper;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,11 +38,13 @@ import java.util.stream.Collectors;
 public class OnlineShopRedisImpl implements OnlineShopRedis {
     private final OnlineShopRepository onlineShopRepository;
     private final RedisCacheClient redisCacheClient;
+    private final O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper;
 
     public OnlineShopRedisImpl(OnlineShopRepository onlineShopRepository,
-                               RedisCacheClient redisCacheClient) {
+                               RedisCacheClient redisCacheClient, O2RedisMultiLanguageManagementHelper o2RedisMultiLanguageManagementHelper) {
         this.onlineShopRepository = onlineShopRepository;
         this.redisCacheClient = redisCacheClient;
+        this.o2RedisMultiLanguageManagementHelper = o2RedisMultiLanguageManagementHelper;
     }
 
     @Override
@@ -41,17 +52,28 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         OnlineShopQueryInnerDTO query = new OnlineShopQueryInnerDTO();
         query.setOnlineShopCodes(Collections.singletonList(onlineShopCode));
 
-        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query, tenantId);
+        List<OnlineShop> list = onlineShopRepository.listOnlineShops(query, tenantId, BaseConstants.Flag.NO);
         if (list.isEmpty()) {
             return;
         }
         OnlineShop onlineShop = list.get(0);
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
-            redisCacheClient.opsForHash().delete(key, onlineShopCode);
-            return;
-        }
-        redisCacheClient.opsForHash().put(key, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+                String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                if (onlineShop.getActiveFlag().equals(BaseConstants.Flag.NO)) {
+                    operations.opsForSet().remove(key, onlineShopCode);
+                    operations.opsForHash().delete(detailKey, onlineShopCode);
+                } else {
+                    operations.opsForSet().add(key, onlineShopCode);
+                    operations.opsForHash().put(detailKey, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+                }
+                return null;
+            }
+        });
+        insertMultiShop(onlineShop);
     }
 
     @Override
@@ -93,51 +115,50 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
         for (OnlineShopCacheBO bo : bos) {
             map.put(bo.getOnlineShopCode(), JsonHelper.objectToString(bo));
         }
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        redisCacheClient.opsForHash().putAll(key, map);
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                String[] shopCodes = list.stream().map(OnlineShop::getOnlineShopCode).toArray(String[]::new);
+                String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
+                String detailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                operations.opsForSet().add(key, shopCodes);
+                operations.opsForHash().putAll(detailKey, map);
+                return null;
+            }
+        });
     }
 
     @Override
-    public List<OnlineShop> select(OnlineShopQueryInnerDTO innerDTO, Long tenantId) {
-        String key = OnlineShopConstants.Redis.getOnlineShopKey(tenantId);
-        if (null == innerDTO) {
-            // 查所有的网店
-            return selectAll(key);
-        }
-        List<String> shopCodes = innerDTO.getOnlineShopCodes();
-        String platformCode = innerDTO.getPlatformCode();
-        // 查询某平台下所有网店
-        if (StringUtils.isNotEmpty(platformCode)) {
-            List<OnlineShop> onlineShops = selectAll(key);
-            Map<String, List<OnlineShop>> groupMap = onlineShops.stream().collect(Collectors.groupingBy(OnlineShop::getPlatformCode));
-            onlineShops = groupMap.get(platformCode);
-            return onlineShops;
-        }
-        // 根据网店编码查询
-        if (CollectionUtils.isNotEmpty(shopCodes)) {
-            List<OnlineShop> onlineShops = new ArrayList<>();
-            List<String> list = redisCacheClient.<String, String>opsForHash().multiGet(key, shopCodes);
-            for (String str : list) {
-                onlineShops.add(JsonHelper.stringToObject(str, OnlineShop.class));
+    public void syncMerchantMetaInfo(OnlineShop onlineShop, Warehouse warehouse, OnlineShopRelWarehouse shopRelWh) {
+        redisCacheClient.executePipelined(new SessionCallback<Object>() {
+            @SuppressWarnings({"unchecked"})
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                // 1. 同步网店
+                String onlineShopCode = onlineShop.getOnlineShopCode();
+                String shopIndexKey = OnlineShopConstants.Redis.getOnlineShopKey(onlineShop.getTenantId());
+                String shopDetailKey = OnlineShopConstants.Redis.getOnlineShopDetailKey();
+                operations.opsForSet().add(shopIndexKey, onlineShopCode);
+                operations.opsForHash().put(shopDetailKey, onlineShopCode, JsonHelper.objectToString(OnlineShopConverter.poToBoObject(onlineShop)));
+                // 2. 同步仓库信息
+                String warehouseCacheKey = WarehouseConstants.WarehouseCache.warehouseCacheKey(warehouse.getTenantId());
+                operations.opsForHash().put(warehouseCacheKey, warehouse.getWarehouseCode(), JsonHelper.objectToString(warehouse));
+                // 3. 同步网店关联仓库
+                String shopRelWhKey = OnlineShopConstants.Redis.getOnlineShopRelWarehouseKey(onlineShop.getOnlineShopCode(), shopRelWh.getTenantId());
+                operations.opsForHash().put(shopRelWhKey, warehouse.getWarehouseCode(), String.valueOf(shopRelWh.getActiveFlag()));
+                return null;
             }
-            return onlineShops;
-        }
-        return selectAll(key);
+        });
+        insertMultiShop(onlineShop);
     }
 
-    /**
-     * 查所有网店
-     *
-     * @param key redis key
-     * @return list
-     */
-    private List<OnlineShop> selectAll(String key) {
-        List<OnlineShop> onlineShops = new ArrayList<>();
-        Map<String, String> map = redisCacheClient.<String, String>opsForHash().entries(key);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String v = entry.getValue();
-            onlineShops.add(JsonHelper.stringToObject(v, OnlineShop.class));
-        }
-        return onlineShops;
+    @Override
+    public void insertMultiShop(OnlineShop onlineShop) {
+        OnlineShopMultiRedisBO onlineShopMultiRedis = new OnlineShopMultiRedisBO();
+        onlineShopMultiRedis.setOnlineShopId(onlineShop.getOnlineShopId());
+        onlineShopMultiRedis.setOnlineShopName(onlineShop.getOnlineShopName());
+        onlineShopMultiRedis.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        o2RedisMultiLanguageManagementHelper.saveMultiLanguage(onlineShopMultiRedis, OnlineShopConstants.Redis.getOnlineShopMutliKey(onlineShop.getTenantId(), onlineShop.getOnlineShopCode()));
     }
 }

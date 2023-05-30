@@ -1,6 +1,8 @@
 package org.o2.metadata.infra.convertor;
 
+import org.o2.core.helper.O2TenantUtil;
 import org.o2.metadata.api.co.OnlineShopCO;
+import org.o2.metadata.api.vo.OnlineShopVO;
 import org.o2.metadata.infra.entity.OnlineShop;
 
 /**
@@ -39,7 +41,29 @@ public class OnlineShopConverter {
         co.setSourcedFlag(onlineShop.getSourcedFlag());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
         co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
+        co.setLogoUrl(onlineShop.getLogoUrl());
+        co.setShopMediaUrl(onlineShop.getShopMediaUrl());
+        co.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
         return co;
     }
 
+    /**
+     * 网店信息转化为VO
+     *
+     * @param onlineShop 网店信息
+     * @return vo
+     */
+    public static OnlineShopVO poToShopVO(OnlineShop onlineShop) {
+        if (onlineShop == null) {
+            return null;
+        }
+        OnlineShopVO onlineShopVO = new OnlineShopVO();
+        onlineShopVO.setOnlineShopCode(onlineShop.getOnlineShopCode());
+        onlineShopVO.setOnlineShopName(onlineShop.getOnlineShopName());
+        onlineShopVO.setLogoUrl(onlineShop.getLogoUrl());
+        onlineShopVO.setShopMediaUrl(onlineShop.getShopMediaUrl());
+        onlineShopVO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
+        onlineShopVO.setTenantId(O2TenantUtil.encryptedTenantId(onlineShop.getTenantId()));
+        return onlineShopVO;
+    }
 }

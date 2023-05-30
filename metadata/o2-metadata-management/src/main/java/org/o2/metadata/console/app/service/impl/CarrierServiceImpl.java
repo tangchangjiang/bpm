@@ -177,6 +177,9 @@ public class CarrierServiceImpl implements CarrierService {
     @Override
     public Map<String, CarrierCO> listCarriers(CarrierQueryInnerDTO carrierQueryInnerDTO, Long organizationId) {
         Map<String, CarrierCO> map = new HashMap<>(16);
+        if (null == organizationId) {
+            organizationId = BaseConstants.DEFAULT_TENANT_ID;
+        }
         List<Carrier> carriers = carrierRepository.batchSelect(carrierQueryInnerDTO, organizationId);
         if (carriers.isEmpty()) {
             return map;
@@ -188,6 +191,7 @@ public class CarrierServiceImpl implements CarrierService {
             carrierCO.setActiveFlag(carrier.getActiveFlag());
             carrierCO.setPriority(carrier.getPriority());
             carrierCO.setCarrierTypeCode(carrier.getCarrierTypeCode());
+            carrierCO.setTenantId(carrier.getTenantId());
             map.put(carrier.getCarrierCode(), carrierCO);
         }
         return map;
@@ -210,10 +214,17 @@ public class CarrierServiceImpl implements CarrierService {
 
     @Override
     public Map<String, CarrierCO> importListCarriers(Long organizationId) {
+        if (null == organizationId) {
+            organizationId = BaseConstants.DEFAULT_TENANT_ID;
+        }
         Map<String, CarrierCO> map = new HashMap<>(16);
         Carrier carrier = new Carrier();
         carrier.setTenantId(organizationId);
-        List<Carrier> carriers = carrierRepository.listCarrier(carrier);
+        List<Carrier> carriers = carrierRepository.listCarrier(carrier, BaseConstants.Flag.NO);
+        if (carriers.isEmpty() && !BaseConstants.DEFAULT_TENANT_ID.equals(organizationId)) {
+            carrier.setTenantId(BaseConstants.DEFAULT_TENANT_ID);
+            carriers = carrierRepository.listCarrier(carrier, BaseConstants.Flag.NO);
+        }
         if (carriers.isEmpty()) {
             return map;
         }

@@ -364,4 +364,68 @@ public interface MetadataConstants {
         String LOV = "O2MD.COUNTRY";
     }
 
+    /**
+     * 货币
+     */
+    interface Currency {
+        String CNY = "CNY";
+    }
+
+    /**
+     * 网店类型
+     */
+    interface OnlineShopType {
+        /**
+         * 网店
+         */
+        String ONLINE_SHOP = "ONLINE_SHOP";
+
+        /**
+         * 门店
+         */
+        String STORE = "STORE";
+    }
+
+    interface RetryStatus {
+        /**
+         * 默认重试次数
+         */
+        Long DEFAULT_RETRY_COUNT = 3L;
+        /**
+         * 逻辑处理错误
+         */
+        String PROCESS_ERROR = "PROCESS_ERROR";
+        /**
+         * 数据质量问题校验错误
+         */
+        String VALIDATED_ERROR = "VALIDATED_ERROR";
+        /**
+         * 重试后处理成功
+         */
+        String SUCCESS = "SUCCESS";
+        /**
+         * 重试发现无需处理,置为跳过
+         */
+        String SKIP = "SKIP";
+    }
+
+    /**
+     * 队列编码
+     */
+    interface QueueCode {
+
+        /**
+         * 商家初始化元数据队列
+         */
+        String O2MD_MERCHANT_META_INIT_EVT = "O2MD_MERCHANT_META_INIT_EVT";
+
+    }
+
+    /**
+     * 所有租户Id
+     */
+    interface AllTenant {
+        String LOV_CODE = "O2MD.ALL_TENANT_ID";
+    }
+
 }

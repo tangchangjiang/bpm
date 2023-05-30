@@ -67,5 +67,4 @@ public interface CarrierService {
      * @return 结果
      */
     List<CarrierDeliveryRangeCO> checkDeliveryRange(CarrierDeliveryRangeDTO carrierDeliveryRangeDTO);
-
 }

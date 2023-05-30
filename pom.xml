@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-parent</artifactId>
-        <version>1.7.1.PROD-SNAPSHOT</version>
+        <version>1.8.0.TEST-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -21,6 +21,7 @@
         <o2-metadata-management.version>${project.version}</o2-metadata-management.version>
         <o2-metadata-management-client.version>${project.version}</o2-metadata-management-client.version>
         <o2-metadata-client.version>${project.version}</o2-metadata-client.version>
+        <o2-metadata-queue-client.version>${project.version}</o2-metadata-queue-client.version>
         <o2-business-process-client.version>${project.version}</o2-business-process-client.version>
         <o2-business-process-management.version>${project.version}</o2-business-process-management.version>
         <o2-rule-engine-management.version>${project.version}</o2-rule-engine-management.version>
@@ -35,6 +36,7 @@
         <module>metadata/o2-metadata-management</module>
         <module>metadata/o2-metadata-client</module>
         <module>metadata/o2-metadata-management-client</module>
+        <module>metadata/o2-metadata-queue-client</module>
         <module>bpm/o2-business-process-management</module>
         <module>bpm/o2-business-process-client</module>
         <module>bpm/o2-business-process-domain</module>
@@ -69,6 +71,11 @@
                 <groupId>org.o2.metadata</groupId>
                 <artifactId>o2-metadata-management-client</artifactId>
                 <version>${o2-metadata-management-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.o2.metadata</groupId>
+                <artifactId>o2-metadata-queue-client</artifactId>
+                <version>${o2-metadata-queue-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.o2.metadata</groupId>

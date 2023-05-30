@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-build-parent</artifactId>
-        <version>1.7.1.PROD-SNAPSHOT</version>
+        <version>1.8.0.TEST-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -32,6 +32,14 @@
         <dependency>
             <groupId>org.o2.cache</groupId>
             <artifactId>o2-cache-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.customer</groupId>
+            <artifactId>o2-customer-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-multi-language</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hzero.boot</groupId>

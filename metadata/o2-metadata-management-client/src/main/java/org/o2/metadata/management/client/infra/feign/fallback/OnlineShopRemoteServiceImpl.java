@@ -39,6 +39,12 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
     }
 
     @Override
+    public ResponseEntity<String> listOnlineShopsOfSite(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        log.error("Error listOnlineShopsOfSite, params = {}", onlineShopQueryInnerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
     public ResponseEntity<String> listOnlineShops(List<OnlineShopCatalogVersionDTO> onlineShopCatalogVersionList, Long organizationId) {
         log.error("Error listOnlineShops, params[tenantId = {}, onlineShopCatalogVersionList = {}]", organizationId, onlineShopCatalogVersionList);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

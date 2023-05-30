@@ -12,6 +12,7 @@ import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.copier.PropertiesCopier;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.QueryFallbackHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.console.api.co.FreightInfoCO;
 import org.o2.metadata.console.api.co.FreightTemplateCO;
@@ -78,13 +79,13 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     }
 
     @Override
-    public FreightTemplateManagementVO queryTemplateAndDetails(final Long templateId, Long organizationId) {
+    public FreightTemplateManagementVO queryTemplateAndDetails(final Long templateId, Long tenantId) {
         // 获取模板头信息
         final FreightTemplate freightTemplate = freightTemplateRepository.selectTemplateId(templateId);
         List<FreightTemplate> list = new ArrayList<>();
         list.add(freightTemplate);
         // 获取计价单位含义
-        this.tranLov(list, organizationId);
+        this.tranLov(list, freightTemplate.getTenantId());
 
         final FreightTemplateManagementVO freightTemplateManagementVO = new FreightTemplateManagementVO(freightTemplate);
         // 查询默认运费模板明细
@@ -185,7 +186,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
     @Override
     public FreightTemplateCO getDefaultTemplate(Long organizationId) {
-        return FreightConverter.poToCoObject(freightTemplateRepository.getDefaultTemplate(organizationId));
+        return FreightConverter.poToCoObject(QueryFallbackHelper.siteFallback(organizationId, tenantId -> freightTemplateRepository.getDefaultTemplate(tenantId)));
     }
 
     @Override
@@ -601,9 +602,16 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
     @Override
     public FreightTemplateManagementVO queryDefaultTemplateDetail(Long organizationId) {
         // 查询默认模板
-        final List<FreightTemplate> list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
+        List<FreightTemplate> list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
                 .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID, organizationId)
                         .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, 1)).build());
+        // 如果当前租户没有默认模板，则查询0租户的默认运费模板
+        if (CollectionUtils.isEmpty(list)) {
+            organizationId = BaseConstants.DEFAULT_TENANT_ID;
+            list = freightTemplateRepository.selectByCondition(Condition.builder(FreightTemplate.class)
+                    .andWhere(Sqls.custom().andEqualTo(FreightTemplate.FIELD_TENANT_ID, organizationId)
+                            .andEqualTo(FreightTemplate.FIELD_DAFAULT_FLAG, 1)).build());
+        }
 
         Assert.isTrue(!CollectionUtils.isEmpty(list), "Default freight template does not exist");
         Assert.isTrue(list.size() == 1, "Default freight template is not unique");

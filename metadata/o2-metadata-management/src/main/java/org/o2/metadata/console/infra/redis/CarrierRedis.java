@@ -24,4 +24,10 @@ public interface CarrierRedis {
      * @param tenantId 租户id
      */
     void deleteRedis(List<Carrier> list, Long tenantId);
+
+    /**
+     * 插入承运商多语言
+     * @param carrier 租户ID
+     */
+    void insertCarrierMultiRedis(Carrier carrier);
 }

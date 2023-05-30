@@ -67,13 +67,40 @@
                 AND osp.active_flag = #{systemParameter.activeFlag}
             </if>
             <choose>
-                <when test="tenantId != null">
-                    AND osp.tenant_id = #{tenantId}
+                <when test="siteQueryFlag != null and siteQueryFlag == 0">
+                    <choose>
+                        <when test="tenantId != null">
+                            AND (osp.tenant_id = #{tenantId} OR osp.tenant_id = 0)
+                        </when>
+                        <otherwise>
+                            AND 1 = 0
+                        </otherwise>
+                    </choose>
                 </when>
                 <otherwise>
-                    AND 1 = 0
+                    <choose>
+                        <when test="tenantId != null">
+                            AND osp.tenant_id = #{tenantId}
+                        </when>
+                        <otherwise>
+                            AND 1 = 1
+                        </otherwise>
+                    </choose>
                 </otherwise>
             </choose>
+            <if test="tenantId != null and tenantId != 0 and siteQueryFlag != null and siteQueryFlag == 0">
+                AND osp.param_id NOT IN (
+                    SELECT sp1.param_id
+                    FROM o2md_system_parameter sp1
+                    WHERE sp1.tenant_id = 0
+                    AND EXISTS(
+                        SELECT 1
+                        FROM o2md_system_parameter sp2
+                        WHERE sp1.param_code = sp2.param_code
+                        AND sp2.tenant_id = #{tenantId}
+                    )
+                )
+            </if>
         </where>
     </select>
     <select id="queryInitData" resultMap="parameterMap">

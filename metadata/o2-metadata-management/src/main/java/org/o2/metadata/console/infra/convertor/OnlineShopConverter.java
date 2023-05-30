@@ -1,5 +1,7 @@
 package org.o2.metadata.console.infra.convertor;
 
+import com.google.common.collect.Maps;
+import org.apache.commons.collections4.MapUtils;
 import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.app.bo.OnlineShopCacheBO;
 import org.o2.metadata.console.infra.entity.OnlineShop;
@@ -7,6 +9,7 @@ import org.o2.metadata.management.client.domain.dto.OnlineShopDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -49,6 +52,11 @@ public class OnlineShopConverter {
         co.setAccountNumber(onlineShop.getAccountNumber());
         co.setOnlineShopType(onlineShop.getOnlineShopType());
         co.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
+        co.setTenantId(onlineShop.getTenantId());
+        co.setLogoUrl(onlineShop.getLogoUrl());
+        co.setShopMediaUrl(onlineShop.getShopMediaUrl());
+        co.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
+        co.set_token(onlineShop.get_token());
         return co;
     }
 
@@ -95,6 +103,9 @@ public class OnlineShopConverter {
         onlineShopCacheBO.setOnlineShopType(onlineShop.getOnlineShopType());
         onlineShopCacheBO.setBusinessTypeCode(onlineShop.getBusinessTypeCode());
         onlineShopCacheBO.setActiveFlag(onlineShop.getActiveFlag());
+        onlineShopCacheBO.setLogoUrl(onlineShop.getLogoUrl());
+        onlineShopCacheBO.setShopMediaUrl(onlineShop.getShopMediaUrl());
+        onlineShopCacheBO.setSelfSalesFlag(onlineShop.getSelfSalesFlag());
         return onlineShopCacheBO;
     }
 
@@ -141,6 +152,12 @@ public class OnlineShopConverter {
         onlineShop.setPlatformShopCode(onlineShopDTO.getPlatformShopCode());
         onlineShop.setOnlineShopType(onlineShopDTO.getOnlineShopType());
         onlineShop.setBusinessTypeCode(onlineShopDTO.getBusinessTypeCode());
+        // 门店多语言
+        if (MapUtils.isNotEmpty(onlineShopDTO.getOnlineShopNameTls())) {
+            Map<String, Map<String, String>> tls = Maps.newHashMap();
+            tls.put(OnlineShop.FIELD_ONLINE_SHOP_NAME, onlineShopDTO.getOnlineShopNameTls());
+            onlineShop.set_tls(tls);
+        }
 
         return onlineShop;
     }

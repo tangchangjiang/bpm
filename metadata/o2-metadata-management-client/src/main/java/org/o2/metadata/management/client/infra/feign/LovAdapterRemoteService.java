@@ -1,8 +1,5 @@
 package org.o2.metadata.management.client.infra.feign;
 
-import java.util.List;
-import java.util.Map;
-
 import io.swagger.annotations.ApiParam;
 import org.o2.core.common.O2Service;
 import org.o2.metadata.management.client.domain.dto.LovQueryInnerDTO;
@@ -16,6 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -41,6 +41,15 @@ public interface LovAdapterRemoteService {
                                                @RequestParam(value = "currencyCodes", required = false) List<String> currencyCodes);
 
     /**
+     * 多租户批量查询货币
+     *
+     * @param currencyCodes 货币编码
+     * @return map tenantId:currencyCode:CurrencyCO
+     */
+    @PostMapping("/lov-internal/currency-by-codes-batch-tenant")
+    ResponseEntity<String> findCurrencyByCodesBatchTenant(@RequestBody Map<Long, List<String>> currencyCodes);
+
+    /**
      * 通过编码查询单位(批量)
      * @param organizationId 租户ID
      * @param uomCodes 单位编码
@@ -49,6 +58,15 @@ public interface LovAdapterRemoteService {
     @GetMapping("/{organizationId}/lov-internal/uom-by-codes")
     ResponseEntity<String> findUomByCodes(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                           @RequestParam(value = "uomCodes", required = false) List<String> uomCodes);
+
+    /**
+     * 通过编码查询单位(批量-多租户)
+     *
+     * @param uomCodesMap 单位编码map
+     * @return 单位信息MAP
+     */
+    @PostMapping("/lov-internal/uom-by-codes-batch-tenant")
+    ResponseEntity<String> findUomByCodesBatchTenant(Map<Long, List<String>> uomCodesMap);
 
     /**
      * 通过编码查询单位类型(批量)
@@ -70,6 +88,15 @@ public interface LovAdapterRemoteService {
     @GetMapping("/{organizationId}/lov-internal/query-lov-value")
     ResponseEntity<String> queryLovValue(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                          @RequestParam String lovCode);
+
+    /**
+     * 查询独立值集详细信息(多租户)
+     *
+     * @param lovCodeMap 值集code map
+     * @return 值集
+     */
+    @PostMapping("/lov-internal/query-lov-value-batch-tenant")
+    ResponseEntity<String> queryLovValueBatchTenant(Map<Long, String> lovCodeMap);
 
     /**
      * 查询值集中指定值的 描述信息（meaning）
@@ -171,5 +198,4 @@ public interface LovAdapterRemoteService {
     @PostMapping("/{organizationId}/lov-internal/batch-query-lov-value")
     ResponseEntity<String> batchQueryLovValueByLang(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                     @RequestBody LovQueryInnerDTO lovQueryInnerDTO);
-
 }

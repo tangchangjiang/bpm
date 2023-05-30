@@ -49,13 +49,28 @@ public class IamUserServiceImpl implements IamUserService {
         Map<String, String> queryLovValueMap = new HashMap<>(4);
         queryLovValueMap.put(O2LovConstants.IamUserLov.idList, StringUtils.join(queryInner.getIds(), BaseConstants.Symbol.COMMA));
         queryLovValueMap.put(O2LovConstants.IamUserLov.REAL_NAME, queryInner.getRealName());
-        queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
         queryLovValueMap.put(O2LovConstants.IamUserLov.OPENID_LIST, StringUtils.join(queryInner.getOpenIdList(), BaseConstants.Symbol.COMMA));
+        if (!BaseConstants.Flag.YES.equals(queryInner.getSiteFlag())) {
+            queryLovValueMap.put(O2LovConstants.IamUserLov.TENANT_ID, String.valueOf(queryInner.getTenantId()));
+            return this.getUserInfoForSite(queryLovValueMap, BaseConstants.DEFAULT_TENANT_ID);
+        }
         return this.getUserInfo(queryLovValueMap, queryInner.getTenantId());
     }
 
     private List<IamUserCO> getUserInfo(Map<String, String> queryLovValueMap, Long tenantId) {
         List<Map<String, Object>> result = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.IamUserLov.IAM_USER_LOV_CODE, queryLovValueMap);
+        List<IamUserCO> list = null;
+        try {
+            list = this.objectMapper.readValue(JsonHelper.objectToString(result), new TypeReference<List<IamUserCO>>() {
+            });
+        } catch (Exception e) {
+            log.error("user translation data error.");
+        }
+        return list;
+    }
+
+    private List<IamUserCO> getUserInfoForSite(Map<String, String> queryLovValueMap, Long tenantId) {
+        List<Map<String, Object>> result = hzeroLovQueryRepository.queryLovValueMeaning(tenantId, O2LovConstants.IamUserLov.IAM_USER_SITE_LOV_CODE, queryLovValueMap);
         List<IamUserCO> list = null;
         try {
             list = this.objectMapper.readValue(JsonHelper.objectToString(result), new TypeReference<List<IamUserCO>>() {

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -46,6 +47,9 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
         }
         for (String str : paramCodeList) {
             SystemParameter systemParameter = this.querySystemParameter(str, tenantId);
+            if (Objects.isNull(systemParameter)) {
+                continue;
+            }
             doList.add(systemParameter);
         }
         return doList;
@@ -105,6 +109,10 @@ public class SystemParameterRedisImpl implements SystemParameterRedis, AopProxy<
         }
         //map类型
         systemParameter.setSetSystemParamValue(listSystemParamValue(tenantId, paramCode));
+        // 没有查询到系统参数时，返回null，避免没有执行0租户兜底逻辑
+        if (CollectionUtils.isEmpty(systemParameter.getSetSystemParamValue())) {
+            return null;
+        }
         return systemParameter;
     }
 }

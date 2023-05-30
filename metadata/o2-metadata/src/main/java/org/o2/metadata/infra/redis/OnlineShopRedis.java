@@ -14,10 +14,9 @@ public interface OnlineShopRedis {
      * 查询网店
      *
      * @param onlineShopCode 网店编码
-     * @param tenantId       租户id
      * @return 网店
      */
-    OnlineShop getOnlineShop(String onlineShopCode, Long tenantId);
+    OnlineShop getOnlineShop(String onlineShopCode);
 
     /**
      * 查询网店code
@@ -35,12 +34,4 @@ public interface OnlineShopRedis {
      * @return List<OnlineShop>
      */
     List<OnlineShop> selectShopListByType(Long tenantId, String onlineShopType);
-
-    /**
-     * 批量查询网店
-     *
-     * @param onlineShopCodes 网店code
-     * @return List<OnlineShop>
-     */
-    List<OnlineShop> batchQueryShopList(Long tenantId, List<String> onlineShopCodes);
 }

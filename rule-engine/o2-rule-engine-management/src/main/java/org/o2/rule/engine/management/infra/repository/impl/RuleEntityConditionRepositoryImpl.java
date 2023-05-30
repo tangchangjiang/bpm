@@ -2,6 +2,7 @@ package org.o2.rule.engine.management.infra.repository.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
+import org.o2.core.helper.QueryFallbackHelper;
 import org.o2.rule.engine.management.domain.entity.RuleEntityCondition;
 import org.o2.rule.engine.management.domain.entity.RuleParam;
 import org.o2.rule.engine.management.domain.repository.RuleEntityConditionRepository;
@@ -32,7 +33,7 @@ public class RuleEntityConditionRepositoryImpl extends BaseRepositoryImpl<RuleEn
 
     @Override
     public List<RuleEntityCondition> selectListByRuleEntityCode(Long tenantId, String ruleEntityCode, RuleEntityCondition ruleEntityCondition) {
-        List<RuleEntityCondition> ruleEntityConditionList = o2reRuleEntityConditionMapper.selectListByRuleEntityCode(tenantId, ruleEntityCode, ruleEntityCondition);
+        List<RuleEntityCondition> ruleEntityConditionList = QueryFallbackHelper.siteFallback(tenantId, tenant -> o2reRuleEntityConditionMapper.selectListByRuleEntityCode(tenant, ruleEntityCode, ruleEntityCondition), Boolean.TRUE);
         for (RuleEntityCondition entityCondition : ruleEntityConditionList) {
             List<RuleParam> paramList = entityCondition.getRuleParams();
             if (CollectionUtils.isNotEmpty(paramList)) {

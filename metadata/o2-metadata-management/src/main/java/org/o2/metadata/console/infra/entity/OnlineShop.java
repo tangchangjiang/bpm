@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.repository.OnlineShopRepository;
 
 import javax.persistence.Column;
@@ -115,6 +117,7 @@ public class OnlineShop extends AuditDomain {
 
     @ApiModelProperty(value = "组织ID")
     @MultiLanguageField
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
 
     @ApiModelProperty(value = "是否默认网店", hidden = true)
@@ -138,9 +141,22 @@ public class OnlineShop extends AuditDomain {
     @LovValue(value = "O2MD.ONLINE_SHOP_BUSINESS_TYPE")
     @NotBlank
     private String businessTypeCode;
+
+    @ApiModelProperty("店铺logo")
+    private String logoUrl;
+
+    @ApiModelProperty("店铺图片")
+    private String shopMediaUrl;
+
+    @ApiModelProperty("自营标识")
+    private Integer selfSalesFlag;
     //
-    // 数据库字段
+    // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @ApiModelProperty(value = "网店类型编码名称")
     @Transient
@@ -184,6 +200,13 @@ public class OnlineShop extends AuditDomain {
     @Transient
     @ApiModelProperty(value = "是否查询户号不为空的网店， 1-不查询，0/null 查询")
     private Integer accountFlag;
+
+    /**
+     * 是否站点级查询:0-否，1-是
+     */
+    @Transient
+    @ApiModelProperty("是否站点级查询")
+    private Integer siteFlag;
 
 
     //

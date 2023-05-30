@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-build-parent</artifactId>
-        <version>1.7.1.PROD-SNAPSHOT</version>
+        <version>1.8.0.TEST-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -66,6 +66,14 @@
         <dependency>
             <groupId>org.o2.metadata</groupId>
             <artifactId>o2-rule-engine-management-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.o2.starter</groupId>
+            <artifactId>o2-starter-annotation</artifactId>
         </dependency>
     </dependencies>
 </project>

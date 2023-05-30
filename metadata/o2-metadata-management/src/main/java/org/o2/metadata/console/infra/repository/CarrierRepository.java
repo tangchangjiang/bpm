@@ -17,9 +17,10 @@ public interface CarrierRepository extends BaseRepository<Carrier> {
      * 承运商资源库查询
      *
      * @param carrier 承运商资源库
+     * @param siteFlag 是否站点级查询
      * @return 承运商资源库
      */
-    List<Carrier> listCarrier(Carrier carrier);
+    List<Carrier> listCarrier(Carrier carrier, Integer siteFlag);
 
     /**
      * 批量查询承运商

@@ -50,7 +50,7 @@ public class RuleParamController extends BaseController {
                                                 RuleParam ruleParam,
                                                 @ApiIgnore @SortDefault(value = RuleParam.FIELD_ORDER_SEQ,
                                                         direction = Sort.Direction.ASC) PageRequest pageRequest) {
-        ruleParam.setTenantId(organizationId);
+        // 通过参数关联实体Id查询（参数关联实体id）
         Page<RuleParam> list = PageHelper.doPage(pageRequest, () -> ruleParamRepository.selectList(ruleParam));
         return Results.success(list);
     }

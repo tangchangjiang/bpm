@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.CarrierConstants;
 import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
@@ -115,7 +117,12 @@ public class Carrier extends AuditDomain {
 
     @ApiModelProperty(value = "组织ID")
     @MultiLanguageField
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @ApiModelProperty(value = "承运商编码")
     @Transient

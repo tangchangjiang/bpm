@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库
@@ -24,7 +25,13 @@ public class WarehouseRemoteServiceImpl implements WarehouseRemoteService {
 
     @Override
     public ResponseEntity<String> listWarehouses(WarehouseQueryInnerDTO innerDTO, Long organizationId) {
-        log.error("Error saveExpressQuantity, params[tenantId = {}, innerDTO = {}]", organizationId, innerDTO);
+        log.error("Error listWarehouses, params[tenantId = {}, innerDTO = {}]", organizationId, innerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listWarehousesBatchTenant(Map<Long, WarehouseQueryInnerDTO> innerDTOMap) {
+        log.error("Error listWarehousesBatchTenant, params = {}", innerDTOMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 

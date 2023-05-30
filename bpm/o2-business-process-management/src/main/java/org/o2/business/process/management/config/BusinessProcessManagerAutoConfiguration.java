@@ -22,12 +22,16 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class BusinessProcessManagerAutoConfiguration implements InitializingBean {
     public static final String BUSINESS_PROCESS = "BUSINESS_PROCESS";
     public static final String BUSINESS_PROCESS_NODE = "BUSINESS_PROCESS_NODE";
+    public static final String BUSINESS_PROCESS_NODE_SITE = "BUSINESS_PROCESS_NODE_SITE";
     public static final String BUSINESS_PROCESS_NODE_PARAMETER = "BUSINESS_PROCESS_NODE_PARAMETER";
+    public static final String BUSINESS_PROCESS_NODE_PARAMETER_SITE = "BUSINESS_PROCESS_NODE_PARAMETER_SITE";
 
     public BusinessProcessManagerAutoConfiguration(final Docket docket) {
         docket.tags(new Tag(BUSINESS_PROCESS, "业务流程定义"))
                 .tags(new Tag(BUSINESS_PROCESS_NODE, "业务流程节点定义"))
-                .tags(new Tag(BUSINESS_PROCESS_NODE_PARAMETER, "业务流程节点参数定义"));
+                .tags(new Tag(BUSINESS_PROCESS_NODE_SITE, "业务流程节点定义（站点层）"))
+                .tags(new Tag(BUSINESS_PROCESS_NODE_PARAMETER, "业务流程节点参数定义"))
+                .tags(new Tag(BUSINESS_PROCESS_NODE_PARAMETER_SITE, "业务流程节点参数定义(站点层)"));
     }
 
     @Override

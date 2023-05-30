@@ -6,6 +6,7 @@ import org.o2.metadata.console.api.dto.WarehouseAddrQueryDTO;
 import org.o2.metadata.console.api.dto.WarehousePageQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseQueryInnerDTO;
 import org.o2.metadata.console.api.dto.WarehouseRelCarrierQueryDTO;
+import org.o2.metadata.console.app.bo.MerchantInfoBO;
 import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.entity.Warehouse;
 
@@ -131,6 +132,14 @@ public interface WarehouseService {
     void resetWarehouseExpressLimit(String warehouseCode, Long tenantId);
 
     /**
+     * 批量重置仓库快递配送接单量值
+     *
+     * @param warehouseCodes 仓库编码
+     * @param tenantId       租户Id
+     */
+    void batchResetWhExpressLimit(List<String> warehouseCodes, Long tenantId);
+
+    /**
      * 重置仓库自提接单量限制值
      *
      * @param tenantId      租户ID
@@ -169,17 +178,18 @@ public interface WarehouseService {
     List<WarehouseRelAddressCO> selectAllDeliveryWarehouse(Long tenantId);
 
     /**
-     * 条件查询仓库
-     * @param query 查询条件
-     * @return 仓库
-     */
-    List<Warehouse> selectByCondition(Warehouse query);
-
-    /**
      * 通过服务点批量查询仓库
      * @param posCodes 服务点编码
      * @param tenantId 租户id
      * @return 仓库
      */
     List<WarehouseCO> listWarehousesByPosCode(List<String> posCodes, Long tenantId);
+
+    /**
+     * 构建并校验仓库信息
+     *
+     * @param merchantInfo 商家信息
+     * @return 仓库信息
+     */
+    Warehouse buildAndVerifyWarehouse(MerchantInfoBO merchantInfo);
 }

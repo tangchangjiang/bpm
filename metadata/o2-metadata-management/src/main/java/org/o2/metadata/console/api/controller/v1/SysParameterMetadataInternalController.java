@@ -30,7 +30,7 @@ import java.util.Map;
 @RequestMapping("v1/{organizationId}/sysParameter-internal")
 public class SysParameterMetadataInternalController {
 
-    private SysParamService sysParamService;
+    private final SysParamService sysParamService;
 
     public SysParameterMetadataInternalController(SysParamService sysParamService) {
         this.sysParamService = sysParamService;
@@ -65,5 +65,13 @@ public class SysParameterMetadataInternalController {
     @PostMapping("/update")
     public ResponseEntity<ResponseCO> updateSysParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId, @RequestBody SystemParameterQueryInnerDTO systemParameterQueryInnerDTO) {
         return Results.success(sysParamService.updateSysParameter(systemParameterQueryInnerDTO, organizationId));
+    }
+
+    @ApiOperation(value = "从redis查询系统参数")
+    @Permission(permissionWithin = true, level = ResourceLevel.SITE)
+    @GetMapping("/size/{paramCode}")
+    public ResponseEntity<SystemParameterCO> getSizeSystemParameter(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
+                                                                @PathVariable(value = "paramCode") @ApiParam(value = "参数code", required = true) String paramCode) {
+        return Results.success(sysParamService.getSystemParameter(paramCode, organizationId));
     }
 }

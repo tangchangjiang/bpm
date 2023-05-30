@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费
@@ -27,6 +28,18 @@ public class FreightRemoteServiceImpl implements FreightRemoteService {
     @Override
     public ResponseEntity<String> listFreightTemplates(List<FreightDTO> freightList, Long organizationId) {
         log.error("Error listFreightTemplates, params[freight = {},organizationId= {}]", freightList, organizationId);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> getFreightTemplateBatchTenant(Map<Long, FreightDTO> freightMap) {
+        log.error("Error getFreightTemplateBatchTenant, params = {}", freightMap);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<String> listFreightTemplatesBatchTenant(Map<Long, List<FreightDTO>> freightMap) {
+        log.error("Error listFreightTemplatesBatchTenant, params = {}", freightMap);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

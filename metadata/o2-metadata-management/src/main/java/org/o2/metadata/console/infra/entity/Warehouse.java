@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hzero.boot.platform.lov.annotation.LovValue;
+import org.hzero.core.base.BaseConstants;
+import org.o2.annotation.annotation.AnnotationValue;
+import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
 import org.o2.metadata.console.infra.constant.WarehouseConstants;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库
@@ -131,6 +135,7 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "租户ID")
     @NotNull
     @MultiLanguageField
+    @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
     private Long tenantId;
 
     @ApiModelProperty(value = "生效状态")
@@ -146,6 +151,10 @@ public class Warehouse extends AuditDomain {
     //
     // 非数据库字段
     // ------------------------------------------------------------------------------
+
+    @ApiModelProperty("租户名称")
+    @Transient
+    private String tenantName;
 
     @Transient
     private String posCode;
@@ -202,5 +211,22 @@ public class Warehouse extends AuditDomain {
     @ApiModelProperty(value = "平台名称")
     @Transient
     private String platformName;
+
+    /**
+     * 是否平台层查询：0-租户层，1平台层
+     */
+    @ApiModelProperty(value = "是否平台层查询")
+    @Transient
+    private Integer siteFlag;
+
+    @ApiModelProperty(value = "仓库多语言")
+    @Transient
+    private Map<String,String> warehouseNameTls;
+
+    public void initWarehouse() {
+        this.pickedUpFlag = BaseConstants.Flag.NO;
+        this.expressedFlag = BaseConstants.Flag.NO;
+        this.storeReturnFlag = BaseConstants.Flag.NO;
+    }
 
 }

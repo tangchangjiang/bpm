@@ -77,4 +77,10 @@ public class LovAdapterClientConfiguration {
         return new IamUserClient(iamUserRemoteService);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public IamUserSiteClient iamUserSiteClient(IamUserRemoteService iamUserRemoteService) {
+        return new IamUserSiteClient(iamUserRemoteService);
+    }
+
 }

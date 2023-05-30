@@ -43,14 +43,7 @@ import org.o2.metadata.console.infra.repository.PlatformRepository;
 import org.o2.metadata.console.infra.repository.RegionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -162,10 +155,10 @@ public class AddressMappingServiceImpl implements AddressMappingService {
      * @param addressMappingQueryDTO 入参
      */
     private void checkData(AddressMappingQueryDTO addressMappingQueryDTO, String countryCode) {
-        if (addressMappingQueryDTO.getPlatformCode() == null || "".equals(addressMappingQueryDTO.getPlatformCode())) {
+        if (StringUtils.isBlank(addressMappingQueryDTO.getPlatformCode())) {
             throw new CommonException(MetadataConstants.ErrorCode.BASIC_DATA_PLATFORM_CODE_IS_NULL);
         }
-        if (countryCode == null || "".equals(countryCode)) {
+        if (StringUtils.isBlank(countryCode)) {
             throw new CommonException("countryCode is null");
         }
         if (null == addressMappingQueryDTO.getTenantId()) {
@@ -210,6 +203,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
 
     @Override
     public Map<String, AddressMappingCO> listAddressMappings(AddressMappingQueryInnerDTO addressMappingQueryInts, Long tenantId) {
+        log.info("address query -> listAddressMappings start:time:{}", System.currentTimeMillis());
         List<AddressMappingCO> list = new ArrayList<>(16);
         if (CollectionUtils.isNotEmpty(addressMappingQueryInts.getAddressMappingInnerList())) {
             list = regionBaseMapping(tenantId, addressMappingQueryInts);
@@ -327,6 +321,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         for (AddressMappingCO co : addressMappingTree) {
             result.put(co.getExternalName(), co);
         }
+        log.info("address query -> listAddressMappings end :time:{}", System.currentTimeMillis());
         return result;
     }
 
@@ -529,7 +524,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
         if (parentRegionCodes.isEmpty()) {
             return new ArrayList<>();
         }
-        dto.setParentRegionCodes(parentRegionCodes);
+        dto.setRegionCodes(parentRegionCodes);
         return regionRepository.listRegionLov(dto, tenantId);
     }
 

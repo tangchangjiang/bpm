@@ -24,6 +24,15 @@ public interface CarrierRemoteService {
      * @param organizationId 租户id
      * @return list
      */
+    @Deprecated
     @GetMapping({"/{organizationId}/carriers-internal/list"})
     ResponseEntity<String> listCarriers(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 查询承运商
+     *
+     * @return list
+     */
+    @GetMapping({"/carriers-internal/list"})
+    ResponseEntity<String> listCarrier();
 }

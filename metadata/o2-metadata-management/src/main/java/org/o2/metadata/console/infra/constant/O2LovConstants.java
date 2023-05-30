@@ -31,6 +31,7 @@ public interface O2LovConstants {
          */
         String REGION_LOV_CODE = "O2MD.REGION";
         String LEVEL_NUMBER = "levelNumber";
+        String LEVEL_PATH = "levelPath";
         String REGION_NAME = "regionName";
         String ADDRESS_TYPE = "addressType";
         String REGION_CODE = "regionCode";
@@ -43,11 +44,12 @@ public interface O2LovConstants {
         String DEFAULT_LANG = "zh_CN";
         String DEFAULT_CODE = "-1";
         String DEFAULT_DATA = "region";
-
+        String REGION_CODE_LIST = "regionCodeList";
     }
 
     interface IamUserLov {
         String IAM_USER_LOV_CODE = "O2MD.IAM_USER";
+        String IAM_USER_SITE_LOV_CODE = "O2MD.IAM_USER_SITE_MSG";
         String TENANT_ID = "tenantId";
         String REAL_NAME = "realName";
         String idList = "idList";

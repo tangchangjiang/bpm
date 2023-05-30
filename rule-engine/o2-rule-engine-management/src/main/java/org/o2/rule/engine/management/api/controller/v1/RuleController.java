@@ -17,6 +17,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.response.OperateResponse;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.o2.rule.engine.management.app.service.RuleService;
 import org.o2.rule.engine.management.domain.entity.Rule;
 import org.o2.rule.engine.management.domain.repository.RuleRepository;
@@ -65,7 +66,7 @@ public class RuleController extends BaseController {
                                                    direction = Sort.Direction.DESC) PageRequest pageRequest) {
         rule.setTenantId(organizationId);
         final Page<Rule> rulePage = PageHelper.doPage(pageRequest, () -> {
-            final List<Rule> rules = ruleRepository.ruleList(rule);
+            final List<Rule> rules = TenantHelper.organizationLevelLimit(() -> ruleService.ruleList(rule));
             if (CollectionUtils.isNotEmpty(rules)) {
                 final List<String> createUserIds = rules.stream().map(r -> String.valueOf(r.getCreatedBy())).collect(Collectors.toList());
                 final Map<Long, String> realNameMap = IamUserHelper.getRealNameMap(createUserIds);
@@ -75,9 +76,7 @@ public class RuleController extends BaseController {
                 final Map<Long, List<Rule>> ruleMap = rules.stream().collect(Collectors.groupingBy(Rule::getCreatedBy));
                 for (Map.Entry<Long, List<Rule>> entry : ruleMap.entrySet()) {
                     final String userName = realNameMap.get(entry.getKey());
-                    entry.getValue().forEach(r -> {
-                        r.setCreateUserName(userName);
-                    });
+                    entry.getValue().forEach(r -> r.setCreateUserName(userName));
                 }
             }
             return rules;

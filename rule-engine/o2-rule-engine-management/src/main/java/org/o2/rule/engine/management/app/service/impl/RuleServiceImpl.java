@@ -8,6 +8,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.code.builder.app.service.CodeBuildService;
 import org.o2.core.helper.JsonHelper;
+import org.o2.core.helper.QueryFallbackHelper;
 import org.o2.core.helper.TransactionalHelper;
 import org.o2.core.helper.UserHelper;
 import org.o2.delay.queue.service.DelayQueueService;
@@ -42,7 +43,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 规则应用服务默认实现
@@ -83,7 +87,7 @@ public class RuleServiceImpl implements RuleService {
 
     @Override
     public Rule detail(Long organizationId, Long ruleId, String ruleCode) {
-        final Rule rule = ruleRepository.getRuleDetail(organizationId, ruleId, ruleCode);
+        final Rule rule = QueryFallbackHelper.siteFallback(organizationId, tenantId -> ruleRepository.getRuleDetail(tenantId, ruleId, ruleCode));
         if (Objects.isNull(rule)) {
             throw new CommonException(BaseConstants.ErrorCode.NOT_FOUND);
         }
@@ -129,7 +133,7 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public RuleVO detailByCode(Long organizationId, String ruleCode) {
 
-        final RuleRedisBO redisRule = ruleRepository.getCacheRuleByCode(organizationId, ruleCode);
+        final RuleRedisBO redisRule = QueryFallbackHelper.siteFallback(organizationId, tenantId -> ruleRepository.getCacheRuleByCode(tenantId, ruleCode));
 
         if (redisRule == null) {
             return null;
@@ -143,8 +147,20 @@ public class RuleServiceImpl implements RuleService {
         if (StringUtils.isBlank(ruleCode) || organizationId == null) {
             return Collections.emptyMap();
         }
-
-        return ruleRepository.getEntitiesUpdateTime(organizationId, Arrays.asList(ruleCode.split(BaseConstants.Symbol.COMMA)));
+        List<String> ruleCodes = Arrays.asList(ruleCode.split(BaseConstants.Symbol.COMMA));
+        Map<String, Date> entitiesUpdateTime = ruleRepository.getEntitiesUpdateTime(organizationId, ruleCodes);
+        Set<String> existRuleCodes = entitiesUpdateTime.keySet();
+        if (existRuleCodes.size() == ruleCodes.size()) {
+            return entitiesUpdateTime;
+        }
+        // 移除已查询出的编码
+        ruleCodes.removeIf(existRuleCodes::contains);
+        // 查询0租户的数据
+        organizationId = BaseConstants.DEFAULT_TENANT_ID;
+        if (CollectionUtils.isNotEmpty(ruleCodes)) {
+            entitiesUpdateTime.putAll(ruleRepository.getEntitiesUpdateTime(organizationId, ruleCodes));
+        }
+        return entitiesUpdateTime;
     }
 
     @Override
@@ -153,10 +169,7 @@ public class RuleServiceImpl implements RuleService {
         rule.init();
         rule.validRule();
 
-        final RuleEntity query = new RuleEntity();
-        query.setTenantId(organizationId);
-        query.setRuleEntityCode(rule.getEntityCode());
-        final RuleEntity ruleEntity = ruleEntityRepository.selectOne(query);
+        final RuleEntity ruleEntity = ruleEntityRepository.queryRuleEntityByCode(organizationId, rule.getEntityCode());
 
         final RuleConditionDTO conditionDTO = rule.getConditionDTO();
 
@@ -281,6 +294,8 @@ public class RuleServiceImpl implements RuleService {
             return;
         }
         final List<Rule> rules = ruleRepository.selectByIds(StringUtils.join(ruleIds, BaseConstants.Symbol.COMMA));
+        // 如果当前租户与查询出的规则租户ID不一致，则是预定义数据，不允许修改
+        rules.removeIf(rule -> Objects.equals(tenantId, rule.getTenantId()));
         if (CollectionUtils.isEmpty(rules)) {
             return;
         }
@@ -290,6 +305,38 @@ public class RuleServiceImpl implements RuleService {
         transactionalHelper.transactionOperation(() -> {
             ruleRepository.batchUpdateOptional(rules, Rule.FIELD_RULE_STATUS);
             ruleRepository.removeCache(tenantId, rules);
+        });
+    }
+
+    @Override
+    public List<Rule> ruleList(Rule rule) {
+        List<Rule> rules = ruleRepository.ruleList(rule);
+        if (CollectionUtils.isEmpty(rules)) {
+            return rules;
+        }
+        fillRuleEntity(rules);
+        return rules;
+    }
+
+    protected void fillRuleEntity(List<Rule> rules) {
+        if (CollectionUtils.isEmpty(rules)) {
+            return;
+        }
+        Map<Long, List<Rule>> ruleGroupByTenant = rules.stream().collect(Collectors.groupingBy(Rule::getTenantId));
+        ruleGroupByTenant.forEach((tenantId, ruleList) -> {
+            List<String> entityCodes = ruleList.stream().map(Rule::getEntityCode).collect(Collectors.toList());
+            RuleEntity query = new RuleEntity();
+            query.setTenantId(tenantId);
+            query.setRuleEntityCodes(entityCodes);
+            List<RuleEntity> ruleEntities = ruleEntityRepository.selectList(query);
+            Map<String, RuleEntity> ruleEntityMap = ruleEntities.stream().collect(Collectors.toMap(RuleEntity::getRuleEntityCode, Function.identity(),
+                    (s1, s2) -> s2));
+            for (Rule rule : ruleList) {
+                RuleEntity ruleEntity = ruleEntityMap.getOrDefault(rule.getEntityCode(), new RuleEntity());
+                rule.setRuleEntityName(ruleEntity.getRuleEntityName());
+                rule.setRuleEntityId(ruleEntity.getRuleEntityId());
+                rule.setRuleEntityAlias(ruleEntity.getRuleEntityAlias());
+            }
         });
     }
 

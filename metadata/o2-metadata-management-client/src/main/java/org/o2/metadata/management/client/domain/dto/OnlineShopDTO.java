@@ -3,8 +3,11 @@ package org.o2.metadata.management.client.domain.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * 网店
+ *
  * @author yuncheng.ma@hand-china.com
  * @since 2022-06-27 11:23:17
  */
@@ -51,4 +54,7 @@ public class OnlineShopDTO {
      * 网店业务类型
      */
     private String businessTypeCode;
+
+    @ApiModelProperty("网店多语言")
+    private Map<String, String> onlineShopNameTls;
 }

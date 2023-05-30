@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费
@@ -44,4 +45,21 @@ public interface FreightRemoteService {
     @PostMapping("/{organizationId}/freight-internal/template-list")
     ResponseEntity<String> listFreightTemplates(@RequestBody List<FreightDTO> freightList,
                                                 @PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId);
+
+    /**
+     * 获取运费（多租户）
+     *
+     * @param freightMap 运费参数map tenantId:FreightDTO
+     * @return 运费
+     */
+    @PostMapping("/freight-internal/template-batch-tenant")
+    ResponseEntity<String> getFreightTemplateBatchTenant(@RequestBody Map<Long, FreightDTO> freightMap);
+
+    /**
+     * 批量获取运费（多租户）
+     * @param freightMap 运费参数map tenantId:list
+     * @return 运费结果
+     */
+    @PostMapping("/freight-internal/template-list-batch-tenant")
+    ResponseEntity<String> listFreightTemplatesBatchTenant(@RequestBody Map<Long, List<FreightDTO>> freightMap);
 }

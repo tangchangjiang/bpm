@@ -67,6 +67,18 @@ public class OnlineShopClient {
     }
 
     /**
+     * 批量查询网店-站点级
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return map 通过名称查询 key:onlineShopName ; 通过code查询 key:onlineShopCode
+     */
+    public Map<String, OnlineShopCO> listOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.listOnlineShopsOfSite(onlineShopQueryInnerDTO), new TypeReference<Map<String,
+                OnlineShopCO>>() {
+        });
+    }
+
+    /**
      * 目录版本+ 目录 批量查询网店
      *
      * @param onlineShopCatalogVersionList 网店
