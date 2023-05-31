@@ -320,6 +320,9 @@
             <if test="onlineShopDTO.businessTypeCode != null and onlineShopDTO.businessTypeCode != ''">
                 and online.business_type_code = #{onlineShopDTO.businessTypeCode}
             </if>
+            <if test="onlineShopDTO.activeFlag != null and onlineShopDTO.activeFlag != ''">
+                and online.active_flag = #{onlineShopDTO.activeFlag}
+            </if>
             <if test="onlineShopDTO.onlineShopType != null">
                 and online.online_shop_type = #{onlineShopDTO.onlineShopType}
             </if>
