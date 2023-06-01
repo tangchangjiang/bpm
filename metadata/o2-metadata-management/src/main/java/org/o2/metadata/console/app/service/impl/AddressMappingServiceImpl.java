@@ -541,7 +541,7 @@ public class AddressMappingServiceImpl implements AddressMappingService {
                            final Long tenantId) {
 
         List<Region> parentRegions = parentRegion(collect, tenantId);
-        Map<String, Region> parentRegionMap = parentRegions.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region));
+        Map<String, Region> parentRegionMap = parentRegions.stream().collect(Collectors.toMap(Region::getRegionCode, region -> region, (s1, s2) -> s2));
         Map<String, List<RegionTreeChild>> map = getParentAddressMapping(parentRegions, type, tenantId);
 
         final List<RegionTreeChild> result = new ArrayList<>();
