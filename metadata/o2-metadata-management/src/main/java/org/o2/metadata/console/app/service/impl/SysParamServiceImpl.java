@@ -166,7 +166,10 @@ public class SysParamServiceImpl implements SysParamService {
             // 保存DB
             systemParameterRepository.insertSelective(newSysParam);
             if (CollectionUtils.isNotEmpty(newSysParamValues)) {
-                newSysParamValues.forEach(item -> item.setParamId(newSysParam.getParamId()));
+                newSysParamValues.forEach(item -> {
+                    item.setParamId(newSysParam.getParamId());
+                    item.setTenantId(tenantId);
+                });
                 systemParamValueRepository.batchInsertSelective(newSysParamValues);
             }
             // 同步Redis

@@ -133,6 +133,6 @@ public class SysParameterConverter {
         sysParam.setRemark(systemParameter.getRemark());
         sysParam.setDefaultValue(systemParameter.getDefaultValue());
 
-        return systemParameter;
+        return sysParam;
     }
 }

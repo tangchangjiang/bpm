@@ -79,6 +79,6 @@ public class SystemParamValueConverter {
         sysParamValue.setParam3(systemParamValue.getParam3());
         sysParamValue.setParamKey(systemParamValue.getParamKey());
         sysParamValue.setDescription(systemParamValue.getDescription());
-        return systemParamValue;
+        return sysParamValue;
     }
 }
