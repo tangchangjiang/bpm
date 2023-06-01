@@ -1,7 +1,12 @@
 package org.o2.metadata.console.infra.convertor;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.o2.metadata.console.api.dto.SystemParamValueDTO;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -44,5 +49,36 @@ public class SystemParamValueConverter {
         systemParamValue.setFlex(systemParamValueDTO.getFlex());
         systemParamValue.set_token(systemParamValueDTO.get_token());
         return systemParamValue;
+    }
+
+    /**
+     * po转po
+     *
+     * @param systemParamValues 系统参数值
+     * @return 系统参数值
+     */
+    public static List<SystemParamValue> poToPoList(List<SystemParamValue> systemParamValues) {
+        if (CollectionUtils.isEmpty(systemParamValues)) {
+            return Collections.emptyList();
+        }
+        List<SystemParamValue> systemParamValueList = new ArrayList<>();
+        for (SystemParamValue systemParamValue : systemParamValues) {
+            systemParamValueList.add(toSystemParamValue(systemParamValue));
+        }
+        return systemParamValueList;
+    }
+
+    public static SystemParamValue toSystemParamValue(SystemParamValue systemParamValue) {
+        if (systemParamValue == null) {
+            return null;
+        }
+        SystemParamValue sysParamValue = new SystemParamValue();
+        sysParamValue.setParamValue(systemParamValue.getParamValue());
+        sysParamValue.setParam1(systemParamValue.getParam1());
+        sysParamValue.setParam2(systemParamValue.getParam2());
+        sysParamValue.setParam3(systemParamValue.getParam3());
+        sysParamValue.setParamKey(systemParamValue.getParamKey());
+        sysParamValue.setDescription(systemParamValue.getDescription());
+        return sysParamValue;
     }
 }

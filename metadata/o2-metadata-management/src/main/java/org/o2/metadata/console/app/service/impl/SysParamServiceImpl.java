@@ -7,12 +7,14 @@ import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
+import org.o2.core.helper.TransactionalHelper;
 import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
+import org.o2.metadata.console.infra.convertor.SystemParamValueConverter;
 import org.o2.metadata.console.infra.entity.SystemParamValue;
 import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yong.nie@hand-china.com
@@ -38,15 +41,18 @@ public class SysParamServiceImpl implements SysParamService {
     private final SystemParameterRepository systemParameterRepository;
     private final SystemParameterRedis systemParameterRedis;
     private final SystemParamValueRepository systemParamValueRepository;
+    private final TransactionalHelper transactionalHelper;
 
     public SysParamServiceImpl(SystemParameterDomainService systemParameterDomainService,
                                SystemParameterRepository systemParameterRepository,
-                               SystemParameterRedis systemParameterRedis, SystemParamValueRepository systemParamValueRepository) {
+                               SystemParameterRedis systemParameterRedis, SystemParamValueRepository systemParamValueRepository,
+                               TransactionalHelper transactionalHelper) {
 
         this.systemParameterDomainService = systemParameterDomainService;
         this.systemParameterRepository = systemParameterRepository;
         this.systemParameterRedis = systemParameterRedis;
         this.systemParamValueRepository = systemParamValueRepository;
+        this.transactionalHelper = transactionalHelper;
     }
 
     @Override
@@ -120,6 +126,55 @@ public class SysParamServiceImpl implements SysParamService {
         systemParameterRedis.updateToRedis(systemParameter, tenantId);
         co.setSuccess(BaseConstants.FIELD_SUCCESS);
         return co;
+    }
+
+    @Override
+    public void copySysParam(Long paramId, Long tenantId) {
+        if (null == paramId) {
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_NO_SELECT);
+        }
+        if (null == tenantId) {
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_TENANT_NO_SELECT);
+        }
+        SystemParameter sysParam = systemParameterRepository.selectByPrimaryKey(paramId);
+        if (Objects.isNull(sysParam)) {
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_NOT_EXIST);
+        }
+        // 只可复制预定义数据
+        if (!BaseConstants.DEFAULT_TENANT_ID.equals(sysParam.getTenantId())) {
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_ONLY_COPY_PREDEFINE);
+        }
+        int existCount = systemParameterRepository.selectCountByCondition(Condition.builder(SystemParameter.class).andWhere(
+                Sqls.custom().andEqualTo(SystemParameter.FIELD_PARAM_CODE, sysParam.getParamCode())
+                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)
+        ).build());
+        // 请勿重复复制
+        if (existCount > 0) {
+            throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_ALREADY_EXISTS);
+        }
+
+        SystemParameter newSysParam = SysParameterConverter.poToPoObject(sysParam);
+        newSysParam.setTenantId(tenantId);
+
+        List<SystemParamValue> sysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class).andWhere(
+                Sqls.custom().andEqualTo(SystemParamValue.FIELD_PARAM_ID, sysParam.getParamId())
+                        .andEqualTo(SystemParamValue.FIELD_TENANT_ID, sysParam.getTenantId())
+        ).build());
+        List<SystemParamValue> newSysParamValues = SystemParamValueConverter.poToPoList(sysParamValues);
+
+        transactionalHelper.transactionOperation(() -> {
+            // 保存DB
+            systemParameterRepository.insertSelective(newSysParam);
+            if (CollectionUtils.isNotEmpty(newSysParamValues)) {
+                newSysParamValues.forEach(item -> {
+                    item.setParamId(newSysParam.getParamId());
+                    item.setTenantId(tenantId);
+                });
+                systemParamValueRepository.batchInsertSelective(newSysParamValues);
+            }
+            // 同步Redis
+            systemParameterRedis.updateToRedis(newSysParam, tenantId);
+        });
     }
 
 }

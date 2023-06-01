@@ -56,4 +56,12 @@ public interface SysParamService {
      * @return vo
      */
     ResponseCO updateSysParameter(SystemParameterQueryInnerDTO systemParameterQueryInnerDTO, Long tenantId);
+
+    /**
+     * 复制系统参数
+     *
+     * @param paramId        系统参数Id
+     * @param tenantId       需要复制到的租户Id
+     */
+    void copySysParam(Long paramId, Long tenantId);
 }

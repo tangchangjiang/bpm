@@ -114,4 +114,25 @@ public class SysParameterConverter {
         }
         return systemParameterDOList;
     }
+
+    /**
+     * po转po
+     *
+     * @param systemParameter 系统参数
+     * @return 系统参数
+     */
+    public static SystemParameter poToPoObject(SystemParameter systemParameter) {
+        if (systemParameter == null) {
+            return null;
+        }
+        SystemParameter sysParam = new SystemParameter();
+        sysParam.setParamCode(systemParameter.getParamCode());
+        sysParam.setParamName(systemParameter.getParamName());
+        sysParam.setParamTypeCode(systemParameter.getParamTypeCode());
+        sysParam.setActiveFlag(systemParameter.getActiveFlag());
+        sysParam.setRemark(systemParameter.getRemark());
+        sysParam.setDefaultValue(systemParameter.getDefaultValue());
+
+        return sysParam;
+    }
 }

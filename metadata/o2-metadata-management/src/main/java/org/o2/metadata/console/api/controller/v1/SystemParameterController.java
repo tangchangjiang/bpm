@@ -9,6 +9,7 @@ import org.hzero.core.base.BaseController;
 import org.hzero.core.util.Results;
 import org.hzero.mybatis.helper.SecurityTokenHelper;
 import org.o2.core.response.OperateResponse;
+import org.o2.core.response.SuccessResponse;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
 import org.o2.metadata.console.infra.entity.SystemParameter;
@@ -119,5 +120,15 @@ public class SystemParameterController extends BaseController {
             systemParameter.setTenantId(organizationId);
         }
         return Results.success(systemParameterRepository.findOne(systemParameter));
+    }
+
+    @ApiOperation(value = "复制系统参数")
+    @Permission(level = ResourceLevel.ORGANIZATION)
+    @ProcessLovValue(targetField = {BaseConstants.FIELD_BODY})
+    @GetMapping("/copy")
+    public ResponseEntity<SuccessResponse> copySysParam(Long paramId, @PathVariable("organizationId") Long organizationId) {
+
+        sysParamService.copySysParam(paramId, organizationId);
+        return Results.success(SuccessResponse.success());
     }
 }
