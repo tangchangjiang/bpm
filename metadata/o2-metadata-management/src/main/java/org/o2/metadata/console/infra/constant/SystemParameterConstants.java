@@ -14,6 +14,30 @@ public interface SystemParameterConstants {
 
         String BASIC_DATA_MAP_KEY_IS_NULL = "error.basic_data.system_param_value.key.not_null";
         String ERROR_SYSTEM_PARAM_CODE_UNIQUE = "o2md.error.system_param_code.not.unique";
+
+        /**
+         * 系统参数不存在
+         */
+        String ERROR_SYSTEM_PARAM_NOT_EXIST = "o2md.error.system_param_not_exist";
+        /**
+         * 只可以复制预定义的系统参数
+         */
+        String ERROR_SYSTEM_PARAM_ONLY_COPY_PREDEFINE = "o2md.error.system_param_only_copy_predefine";
+
+        /**
+         * 系统参数已存在，请勿重复复制
+         */
+        String ERROR_SYSTEM_PARAM_ALREADY_EXISTS = "o2md.error.system_param_already_exists";
+
+        /**
+         * 没有选择系统参数
+         */
+        String ERROR_SYSTEM_PARAM_NO_SELECT = "o2md.error.system_param_no_select";
+
+        /**
+         * 没有选择租户
+         */
+        String ERROR_TENANT_NO_SELECT = "o2md.error.tenant_no_select";
     }
 
     /**
