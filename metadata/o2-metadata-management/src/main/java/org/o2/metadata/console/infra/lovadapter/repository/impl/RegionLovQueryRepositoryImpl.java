@@ -179,15 +179,15 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isNotBlank(queryLov.getRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, queryLov.getRegionCode());
         }
-        if (CollectionUtils.isNotEmpty(queryLov.getRegionCodes())) {
-            paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, String.join(BaseConstants.Symbol.COMMA, queryLov.getRegionCodes()));
-        }
+//        if (CollectionUtils.isNotEmpty(queryLov.getRegionCodes())) {
+//            paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, String.join(BaseConstants.Symbol.COMMA, queryLov.getRegionCodes()));
+//        }
         if (StringUtils.isNotBlank(queryLov.getParentRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, queryLov.getParentRegionCode());
         }
-        if (CollectionUtils.isNotEmpty(queryLov.getParentRegionCodes())) {
-            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getParentRegionCodes()));
-        }
+//        if (CollectionUtils.isNotEmpty(queryLov.getParentRegionCodes())) {
+//            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getParentRegionCodes()));
+//        }
         // 不包含地区的编码
         List<String> notInRegionCodes = queryLov.getNotInRegionCodes();
         if (CollectionUtils.isNotEmpty(notInRegionCodes)) {
@@ -199,6 +199,16 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         paramMap.put(O2LovConstants.RegionLov.LEVEL_PATH, queryLov.getLevelPath());
         paramMap.put(O2LovConstants.RegionLov.REGION_NAME, queryLov.getRegionName());
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang, paramMap);
+        // 父地区
+        List<String> parentRegionCodes = queryLov.getParentRegionCodes();
+        if (CollectionUtils.isNotEmpty(parentRegionCodes)) {
+            regionList = regionList.stream().filter(region -> parentRegionCodes.contains(region.getParentRegionCode())).collect(Collectors.toList());
+        }
+        List<String> regionCodes = queryLov.getRegionCodes();
+        if (CollectionUtils.isNotEmpty(regionCodes)) {
+            regionList = regionList.stream().filter(region -> regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
+
+        }
         log.info("address query -> queryRegionCache end, time:{}", System.currentTimeMillis());
 
         return regionList;
