@@ -428,4 +428,14 @@ public interface MetadataConstants {
         String LOV_CODE = "O2MD.ALL_TENANT_ID";
     }
 
+    /**
+     * 查询数量
+     */
+    interface QueryDataNum {
+        /**
+         * 地区查询数量（限制查询sql值集入参地区编码数量）
+         */
+        Integer REGION_QUERY_NUM = 50;
+    }
+
 }
