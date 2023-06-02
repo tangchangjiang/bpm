@@ -16,6 +16,7 @@ import org.o2.metadata.console.api.co.PageCO;
 import org.o2.metadata.console.api.dto.RegionQueryLovInnerDTO;
 import org.o2.metadata.console.app.bo.RegionNameMatchBO;
 import org.o2.metadata.console.infra.constant.MetadataCacheConstants;
+import org.o2.metadata.console.infra.constant.MetadataConstants;
 import org.o2.metadata.console.infra.constant.O2LovConstants;
 import org.o2.metadata.console.infra.entity.Region;
 import org.o2.metadata.console.infra.lovadapter.repository.HzeroLovQueryRepository;
@@ -179,15 +180,16 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         if (StringUtils.isNotBlank(queryLov.getRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, queryLov.getRegionCode());
         }
-//        if (CollectionUtils.isNotEmpty(queryLov.getRegionCodes())) {
-//            paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, String.join(BaseConstants.Symbol.COMMA, queryLov.getRegionCodes()));
-//        }
         if (StringUtils.isNotBlank(queryLov.getParentRegionCode())) {
             paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, queryLov.getParentRegionCode());
         }
-//        if (CollectionUtils.isNotEmpty(queryLov.getParentRegionCodes())) {
-//            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getParentRegionCodes()));
-//        }
+        // 查询地区sql值集时，限制入参中地区编码的数量：如果超过设置数量，则不作为入参，选择捞取H0的所有数据进行匹配的方式；避免入参过大，请求失败
+        if (CollectionUtils.isNotEmpty(queryLov.getRegionCodes()) && queryLov.getRegionCodes().size() < MetadataConstants.QueryDataNum.REGION_QUERY_NUM) {
+            paramMap.put(O2LovConstants.RegionLov.REGION_CODE_LIST, String.join(BaseConstants.Symbol.COMMA, queryLov.getRegionCodes()));
+        }
+        if (CollectionUtils.isNotEmpty(queryLov.getParentRegionCodes()) && queryLov.getParentRegionCodes().size() < MetadataConstants.QueryDataNum.REGION_QUERY_NUM) {
+            paramMap.put(O2LovConstants.RegionLov.PARENT_REGION_CODES, String.join(BaseConstants.Symbol.COMMA, queryLov.getParentRegionCodes()));
+        }
         // 不包含地区的编码
         List<String> notInRegionCodes = queryLov.getNotInRegionCodes();
         if (CollectionUtils.isNotEmpty(notInRegionCodes)) {
@@ -201,13 +203,13 @@ public class RegionLovQueryRepositoryImpl implements RegionLovQueryRepository, A
         List<Region> regionList = this.queryRegionCache(tenantId, countryCode, lang, paramMap);
         // 父地区
         List<String> parentRegionCodes = queryLov.getParentRegionCodes();
-        if (CollectionUtils.isNotEmpty(parentRegionCodes)) {
+        if (CollectionUtils.isNotEmpty(parentRegionCodes) && StringUtils.isBlank(paramMap.get(O2LovConstants.RegionLov.PARENT_REGION_CODES))) {
             regionList = regionList.stream().filter(region -> parentRegionCodes.contains(region.getParentRegionCode())).collect(Collectors.toList());
         }
+        // 地区匹配，如果paramMap中regionCodeList参数为空，则是直接将地区编码作为入参去查询值集进行匹配，不需要再次过滤
         List<String> regionCodes = queryLov.getRegionCodes();
-        if (CollectionUtils.isNotEmpty(regionCodes)) {
+        if (CollectionUtils.isNotEmpty(regionCodes) && StringUtils.isBlank(paramMap.get(O2LovConstants.RegionLov.REGION_CODE_LIST))) {
             regionList = regionList.stream().filter(region -> regionCodes.contains(region.getRegionCode())).collect(Collectors.toList());
-
         }
         log.info("address query -> queryRegionCache end, time:{}", System.currentTimeMillis());
 
