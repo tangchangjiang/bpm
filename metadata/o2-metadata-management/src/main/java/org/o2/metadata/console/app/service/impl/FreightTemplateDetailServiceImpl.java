@@ -83,7 +83,7 @@ public class FreightTemplateDetailServiceImpl extends AbstractFreightCacheOperat
         }
         Map<String, Region> map = getRegionMap(details);
         for (FreightTemplateDetail detail : details) {
-            Region region = map.get(detail.getRegionCode());
+            Region region = map.getOrDefault(detail.getRegionCode(), new Region());
             detail.setRegionName(region.getRegionName());
             detail.setParentRegionName(region.getParentRegionName());
         }
