@@ -2,15 +2,19 @@ package org.o2.metadata.console.app.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.base.BaseAppService;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.core.exception.O2CommonException;
 import org.o2.core.helper.TransactionalHelper;
+import org.o2.core.response.BatchOperateResponse;
 import org.o2.metadata.console.api.co.ResponseCO;
 import org.o2.metadata.console.api.co.SystemParameterCO;
 import org.o2.metadata.console.api.dto.SystemParameterQueryInnerDTO;
+import org.o2.metadata.console.app.service.LovAdapterService;
 import org.o2.metadata.console.app.service.SysParamService;
 import org.o2.metadata.console.infra.constant.SystemParameterConstants;
 import org.o2.metadata.console.infra.convertor.SysParameterConverter;
@@ -25,9 +29,13 @@ import org.o2.metadata.domain.systemparameter.service.SystemParameterDomainServi
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author yong.nie@hand-china.com
@@ -35,24 +43,27 @@ import java.util.Objects;
  **/
 @Slf4j
 @Service
-public class SysParamServiceImpl implements SysParamService {
+public class SysParamServiceImpl extends BaseAppService implements SysParamService {
 
     private final SystemParameterDomainService systemParameterDomainService;
     private final SystemParameterRepository systemParameterRepository;
     private final SystemParameterRedis systemParameterRedis;
     private final SystemParamValueRepository systemParamValueRepository;
     private final TransactionalHelper transactionalHelper;
+    private final LovAdapterService lovAdapterService;
 
     public SysParamServiceImpl(SystemParameterDomainService systemParameterDomainService,
                                SystemParameterRepository systemParameterRepository,
                                SystemParameterRedis systemParameterRedis, SystemParamValueRepository systemParamValueRepository,
-                               TransactionalHelper transactionalHelper) {
+                               TransactionalHelper transactionalHelper,
+                               LovAdapterService lovAdapterService) {
 
         this.systemParameterDomainService = systemParameterDomainService;
         this.systemParameterRepository = systemParameterRepository;
         this.systemParameterRedis = systemParameterRedis;
         this.systemParamValueRepository = systemParamValueRepository;
         this.transactionalHelper = transactionalHelper;
+        this.lovAdapterService = lovAdapterService;
     }
 
     @Override
@@ -130,10 +141,64 @@ public class SysParamServiceImpl implements SysParamService {
 
     @Override
     public void copySysParam(Long paramId, Long tenantId) {
+        SystemParameter sysParam = queryAndVerifyBeforeCopy(paramId, Collections.singletonList(tenantId));
+        copySystemParam(sysParam, tenantId);
+    }
+
+    @Override
+    public BatchOperateResponse copySysParamOfSite(Long paramId, List<Long> tenantIds) {
+        SystemParameter sysParam = queryAndVerifyBeforeCopy(paramId, tenantIds);
+        BatchOperateResponse batchOperateResponse = new BatchOperateResponse();
+        List<Long> success = new ArrayList<>(tenantIds.size());
+        Map<Long, String> errorMap = new HashMap<>();
+        for (Long tenantId : tenantIds) {
+            try {
+                copySystemParam(sysParam, tenantId);
+                success.add(tenantId);
+            } catch (Exception ex) {
+                errorMap.put(tenantId, getMessage(ex.getMessage()));
+            }
+        }
+        batchOperateResponse.generateResponse(success.size());
+        if (MapUtils.isEmpty(errorMap)) {
+            return batchOperateResponse;
+        }
+        // 设置错误信息
+        try {
+            List<String> tenant = batchOperateResponse.getErrors().stream().map(BatchOperateResponse.Error::getKey).collect(Collectors.toList());
+            Map<String, String> params = new HashMap<>();
+            params.put("tenantIdList", String.join(BaseConstants.Symbol.COMMA, tenant));
+            List<Map<String, Object>> maps = lovAdapterService.queryLovValueMeaning(BaseConstants.DEFAULT_TENANT_ID, "O2MD.TENANT", params);
+            Map<String, String> tenantMap = maps.stream().collect(Collectors.toMap(m -> String.valueOf(m.get("tenantId")), m -> String.valueOf(m.get("tenantName")), (s1, s2) -> s2));
+            errorMap.forEach((id, errMsg) -> {
+                String tenantName = tenantMap.get(id.toString());
+                // 如果查询到租户名称，则异常信息key设置为租户名称
+                if (StringUtils.isNotBlank(tenantName)) {
+                    batchOperateResponse.addErrorMessage(tenantName, errMsg);
+                } else {
+                    batchOperateResponse.addErrorMessage(id.toString(), errMsg);
+                }
+            });
+        } catch (Exception ex) {
+            log.error("query tenantName failed", ex);
+            errorMap.forEach((id, errMsg) -> batchOperateResponse.addErrorMessage(id.toString(), errMsg));
+        }
+
+        return batchOperateResponse;
+    }
+
+    /**
+     * 复制前校验
+     *
+     * @param paramId   系统参数Id
+     * @param tenantIds 租户Id
+     * @return 系统参数
+     */
+    protected SystemParameter queryAndVerifyBeforeCopy(Long paramId, List<Long> tenantIds) {
         if (null == paramId) {
             throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_NO_SELECT);
         }
-        if (null == tenantId) {
+        if (CollectionUtils.isEmpty(tenantIds)) {
             throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_TENANT_NO_SELECT);
         }
         SystemParameter sysParam = systemParameterRepository.selectByPrimaryKey(paramId);
@@ -144,17 +209,28 @@ public class SysParamServiceImpl implements SysParamService {
         if (!BaseConstants.DEFAULT_TENANT_ID.equals(sysParam.getTenantId())) {
             throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_ONLY_COPY_PREDEFINE);
         }
+        return sysParam;
+    }
+
+    /**
+     * 复制系统参数
+     *
+     * @param sysParam       系统参数
+     * @param copyToTenantId 租户Id
+     */
+    protected void copySystemParam(SystemParameter sysParam, Long copyToTenantId) {
         int existCount = systemParameterRepository.selectCountByCondition(Condition.builder(SystemParameter.class).andWhere(
                 Sqls.custom().andEqualTo(SystemParameter.FIELD_PARAM_CODE, sysParam.getParamCode())
-                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, tenantId)
+                        .andEqualTo(SystemParameter.FIELD_TENANT_ID, copyToTenantId)
         ).build());
+
         // 请勿重复复制
         if (existCount > 0) {
             throw new O2CommonException(null, SystemParameterConstants.ErrorCode.ERROR_SYSTEM_PARAM_ALREADY_EXISTS);
         }
 
         SystemParameter newSysParam = SysParameterConverter.poToPoObject(sysParam);
-        newSysParam.setTenantId(tenantId);
+        newSysParam.setTenantId(copyToTenantId);
 
         List<SystemParamValue> sysParamValues = systemParamValueRepository.selectByCondition(Condition.builder(SystemParamValue.class).andWhere(
                 Sqls.custom().andEqualTo(SystemParamValue.FIELD_PARAM_ID, sysParam.getParamId())
@@ -168,13 +244,12 @@ public class SysParamServiceImpl implements SysParamService {
             if (CollectionUtils.isNotEmpty(newSysParamValues)) {
                 newSysParamValues.forEach(item -> {
                     item.setParamId(newSysParam.getParamId());
-                    item.setTenantId(tenantId);
+                    item.setTenantId(copyToTenantId);
                 });
                 systemParamValueRepository.batchInsertSelective(newSysParamValues);
             }
             // 同步Redis
-            systemParameterRedis.updateToRedis(newSysParam, tenantId);
+            systemParameterRedis.updateToRedis(newSysParam, copyToTenantId);
         });
     }
-
 }
