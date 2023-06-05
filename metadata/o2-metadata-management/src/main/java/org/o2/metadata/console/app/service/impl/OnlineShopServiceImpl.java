@@ -157,7 +157,9 @@ public class OnlineShopServiceImpl implements OnlineShopService {
             this.catalogVersionRepository.insert(catalogVersion);
             onlineShopRedis.updateRedis(onlineShop.getOnlineShopCode(), onlineShop.getTenantId());
         });
-        pushDefaultSiteRelShop(onlineShop);
+        if (MetadataConstants.OnlineShopType.STORE.equals(onlineShop.getOnlineShopType())) {
+            pushDefaultSiteRelShop(onlineShop);
+        }
         sourcingCacheService.refreshSourcingCache(onlineShop.getTenantId(), this.getClass().getSimpleName());
         return onlineShop;
     }
