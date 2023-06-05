@@ -159,28 +159,27 @@ public class SysParamServiceImpl extends BaseAppService implements SysParamServi
                 errorMap.put(tenantId, getMessage(ex.getMessage()));
             }
         }
-        if (MapUtils.isEmpty(errorMap)) {
-            return batchOperateResponse;
-        }
-        // 设置错误信息
-        try {
-            List<String> tenant = batchOperateResponse.getErrors().stream().map(BatchOperateResponse.Error::getKey).collect(Collectors.toList());
-            Map<String, String> params = new HashMap<>();
-            params.put("tenantIdList", String.join(BaseConstants.Symbol.COMMA, tenant));
-            List<Map<String, Object>> maps = lovAdapterService.queryLovValueMeaning(BaseConstants.DEFAULT_TENANT_ID, "O2MD.TENANT", params);
-            Map<String, String> tenantMap = maps.stream().collect(Collectors.toMap(m -> String.valueOf(m.get("tenantId")), m -> String.valueOf(m.get("tenantName")), (s1, s2) -> s2));
-            errorMap.forEach((id, errMsg) -> {
-                String tenantName = tenantMap.get(id.toString());
-                // 如果查询到租户名称，则异常信息key设置为租户名称
-                if (StringUtils.isNotBlank(tenantName)) {
-                    batchOperateResponse.addErrorMessage(tenantName, errMsg);
-                } else {
-                    batchOperateResponse.addErrorMessage(id.toString(), errMsg);
-                }
-            });
-        } catch (Exception ex) {
-            log.error("query tenantName failed", ex);
-            errorMap.forEach((id, errMsg) -> batchOperateResponse.addErrorMessage(id.toString(), errMsg));
+        if (MapUtils.isNotEmpty(errorMap)) {
+            // 设置错误信息
+            try {
+                List<String> tenant = batchOperateResponse.getErrors().stream().map(BatchOperateResponse.Error::getKey).collect(Collectors.toList());
+                Map<String, String> params = new HashMap<>();
+                params.put("tenantIdList", String.join(BaseConstants.Symbol.COMMA, tenant));
+                List<Map<String, Object>> maps = lovAdapterService.queryLovValueMeaning(BaseConstants.DEFAULT_TENANT_ID, "O2MD.TENANT", params);
+                Map<String, String> tenantMap = maps.stream().collect(Collectors.toMap(m -> String.valueOf(m.get("tenantId")), m -> String.valueOf(m.get("tenantName")), (s1, s2) -> s2));
+                errorMap.forEach((id, errMsg) -> {
+                    String tenantName = tenantMap.get(id.toString());
+                    // 如果查询到租户名称，则异常信息key设置为租户名称
+                    if (StringUtils.isNotBlank(tenantName)) {
+                        batchOperateResponse.addErrorMessage(tenantName, errMsg);
+                    } else {
+                        batchOperateResponse.addErrorMessage(id.toString(), errMsg);
+                    }
+                });
+            } catch (Exception ex) {
+                log.error("query tenantName failed", ex);
+                errorMap.forEach((id, errMsg) -> batchOperateResponse.addErrorMessage(id.toString(), errMsg));
+            }
         }
         batchOperateResponse.generateResponse(success.size());
         return batchOperateResponse;
