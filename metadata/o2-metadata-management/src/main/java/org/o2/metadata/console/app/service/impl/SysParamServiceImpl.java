@@ -159,7 +159,6 @@ public class SysParamServiceImpl extends BaseAppService implements SysParamServi
                 errorMap.put(tenantId, getMessage(ex.getMessage()));
             }
         }
-        batchOperateResponse.generateResponse(success.size());
         if (MapUtils.isEmpty(errorMap)) {
             return batchOperateResponse;
         }
@@ -183,7 +182,7 @@ public class SysParamServiceImpl extends BaseAppService implements SysParamServi
             log.error("query tenantName failed", ex);
             errorMap.forEach((id, errMsg) -> batchOperateResponse.addErrorMessage(id.toString(), errMsg));
         }
-
+        batchOperateResponse.generateResponse(success.size());
         return batchOperateResponse;
     }
 
