@@ -64,7 +64,7 @@
         </if>
         <if test="carrier.carrierName != null and carrier.carrierName != ''">
             <bind name="carrierNameLike" value="'%' + carrier.carrierName + '%'"/>
-            and c.carrier_name like #{carrierNameLike}
+            and ct.carrier_name like #{carrierNameLike}
         </if>
         <if test="carrier.carrierTypeCode != null and carrier.carrierTypeCode != ''">
             and c.carrier_type_code = #{carrier.carrierTypeCode}
