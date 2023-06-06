@@ -52,7 +52,7 @@ public interface MetadataCacheConstants {
             return String.format(HZERO_REGION_PREFIX, countryCode, lang);
         }
 
-        String BASE_LOV_PREFIX = "baseLov_%s";
+        String BASE_LOV_PREFIX = "baseLov_%s_%s";
 
         /**
          * 获取查询基本单位值集缓存的keyPrefix
@@ -60,8 +60,8 @@ public interface MetadataCacheConstants {
          * @param lovCode 值集编码
          * @return keyPrefix
          */
-        static String getBaseLovPrefix(String lovCode) {
-            return String.format(BASE_LOV_PREFIX, lovCode);
+        static String getBaseLovPrefix(String lovCode, String lang) {
+            return String.format(BASE_LOV_PREFIX, lovCode, lang);
         }
     }
 }
