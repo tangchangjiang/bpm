@@ -1,6 +1,7 @@
 package org.o2.metadata.console.infra.lovadapter.repository.impl;
 
 import com.google.common.collect.Maps;
+import io.choerodon.mybatis.helper.LanguageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.cache.util.CacheHelper;
 import org.o2.metadata.console.app.bo.CurrencyBO;
@@ -165,10 +166,10 @@ public class BaseLovQueryRepositoryImpl implements BaseLovQueryRepository {
      */
     public List<Map<String, Object>> queryLovValueMeaning(Long tenantId, String lovCode) {
         final Map<String, String> queryParams = Maps.newHashMapWithExpectedSize(3);
-
+        String lang = LanguageHelper.language();
         return CacheHelper.getCache(
                 MetadataCacheConstants.CacheName.O2_LOV,
-                MetadataCacheConstants.KeyPrefix.getBaseLovPrefix(lovCode),
+                MetadataCacheConstants.KeyPrefix.getBaseLovPrefix(lovCode, lang),
                 tenantId, lovCode,
                 (tenantParam, lovCodeParam) -> hzeroLovQueryRepository.queryLovValueMeaning(tenantParam, lovCodeParam, queryParams),
                 false
