@@ -79,7 +79,7 @@
             </if>
             <if test="onlineShopName != null">
                 <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
-                AND os.online_shop_name LIKE #{onlineShopNameLike}
+                AND ost.online_shop_name LIKE #{onlineShopNameLike}
             </if>
             <if test="activeFlag != null">
                 AND os.active_flag = #{activeFlag}

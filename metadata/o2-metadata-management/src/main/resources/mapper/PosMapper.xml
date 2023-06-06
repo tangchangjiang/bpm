@@ -67,7 +67,7 @@
         </if>
         <if test="posName != null and posName != ''">
             <bind name="posNameLike" value="'%' + posName + '%'"/>
-            and pos.pos_name like #{posNameLike}
+            and post.pos_name like #{posNameLike}
         </if>
         <if test="posStatusCode != null and posStatusCode != ''">
             and pos.pos_status_code = #{posStatusCode}

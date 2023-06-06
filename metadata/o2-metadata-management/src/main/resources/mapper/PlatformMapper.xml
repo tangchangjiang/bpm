@@ -46,7 +46,7 @@
             </if>
             <if test="platformName != null and platformName != ''">
                 <bind name="platformName" value="'%'+platformName+'%'"/>
-                and pf.platform_name like #{platformName}
+                and tl.platform_name like #{platformName}
             </if>
             <if test="activeFlag != null">
                 and pf.active_flag = #{activeFlag}
