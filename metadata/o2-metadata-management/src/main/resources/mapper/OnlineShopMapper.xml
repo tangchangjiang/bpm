@@ -438,4 +438,64 @@
         </where>
         ORDER BY os.online_shop_code
     </select>
+
+    <select id="querySiteOnlineShops" resultType="org.o2.metadata.console.api.co.OnlineShopCO">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
+        SELECT
+        os.online_shop_id,
+        os.platform_code,
+        ost.online_shop_name,
+        os.online_shop_code,
+        os.platform_shop_code,
+        os.sourced_flag,
+        os.picked_up_flag,
+        os.returned_flag,
+        os.exchanged_flag,
+        os.active_flag,
+        os.enable_split_flag,
+        os.tenant_id,
+        os.default_currency,
+        os.is_default,
+        os.online_shop_type,
+        os.business_type_code,
+        pftl.platform_name
+        FROM
+        o2md_online_shop os
+        left join o2md_platform pf on pf.platform_code = os.platform_code and os.tenant_id = pf.tenant_id
+        left join o2md_platform_tl pftl on pf.platform_id = pftl.platform_id and pftl.tenant_id = os.tenant_id and
+        pftl.lang = #{lang}
+        left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.tenant_id = os.tenant_id and
+        ost.lang = #{lang}
+        <where>
+            <if test="onlineShopQueryInnerDTO.activeFlag != null ">
+                AND os.active_flag = #{onlineShopQueryInnerDTO.activeFlag}
+            </if>
+            <if test="onlineShopQueryInnerDTO.platformCode != null">
+                AND os.platform_code = #{onlineShopQueryInnerDTO.platformCode}
+            </if>
+            <if test="onlineShopQueryInnerDTO.onlineShopCode != null">
+                <bind name="onlineShopCodeLike" value="'%'+onlineShopQueryInnerDTO.onlineShopCode+'%'"/>
+                AND os.online_shop_code LIKE (#{onlineShopCodeLike})
+            </if>
+            <if test="onlineShopQueryInnerDTO.onlineShopName != null">
+                <bind name="onlineShopNameLike" value="'%'+onlineShopQueryInnerDTO.onlineShopName+'%'"/>
+                AND os.online_shop_name LIKE #{onlineShopNameLike}
+            </if>
+
+            <if test="onlineShopQueryInnerDTO.onlineShopCodes != null and onlineShopQueryInnerDTO.onlineShopCodes.size() > 0">
+                and os.online_shop_code in
+                <foreach collection="onlineShopQueryInnerDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+
+            <if test="onlineShopQueryInnerDTO.excludeOnlineShopCodes != null and onlineShopQueryInnerDTO.excludeOnlineShopCodes.size() > 0">
+                and os.online_shop_code not in
+                <foreach collection="onlineShopQueryInnerDTO.excludeOnlineShopCodes" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY os.online_shop_code
+    </select>
 </mapper>

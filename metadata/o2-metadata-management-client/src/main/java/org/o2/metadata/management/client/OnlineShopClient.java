@@ -125,4 +125,15 @@ public class OnlineShopClient {
         return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(tenantId, onlineShopQueryInnerDTO), new TypeReference<Page<OnlineShopCO>>() {
         });
     }
+
+    /**
+     * 批量查询网店（平台层查询）
+     *
+     * @param onlineShopQueryInnerDTO 网店
+     * @return 网店
+     */
+    public Page<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        return ResponseUtils.getResponse(onlineShopRemoteService.queryOnlineShops(onlineShopQueryInnerDTO), new TypeReference<Page<OnlineShopCO>>() {
+        });
+    }
 }

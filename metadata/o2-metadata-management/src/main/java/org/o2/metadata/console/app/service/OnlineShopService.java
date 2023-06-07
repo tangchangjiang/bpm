@@ -92,6 +92,14 @@ public interface OnlineShopService {
     List<OnlineShopCO> queryOnlineShops(Long tenantId, OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 
     /**
+     * 分页查询网店
+     *
+     * @param onlineShopQueryInnerDTO 查询条件
+     * @return OnlineShopCO
+     */
+    List<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
      * 同步商家信息，生成网店、仓库、服务点等信息
      *
      * @param merchantInfo 商家信息
