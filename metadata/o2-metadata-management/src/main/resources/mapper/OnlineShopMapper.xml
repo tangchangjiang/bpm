@@ -467,31 +467,31 @@
         left join o2md_online_shop_tl ost on os.online_shop_id = ost.online_shop_id and ost.tenant_id = os.tenant_id and
         ost.lang = #{lang}
         <where>
-            <if test="onlineShopQueryInnerDTO.activeFlag != null ">
-                AND os.active_flag = #{onlineShopQueryInnerDTO.activeFlag}
+            <if test="activeFlag != null ">
+                AND os.active_flag = #{activeFlag}
             </if>
-            <if test="onlineShopQueryInnerDTO.platformCode != null">
-                AND os.platform_code = #{onlineShopQueryInnerDTO.platformCode}
+            <if test="platformCode != null">
+                AND os.platform_code = #{platformCode}
             </if>
-            <if test="onlineShopQueryInnerDTO.onlineShopCode != null">
-                <bind name="onlineShopCodeLike" value="'%'+onlineShopQueryInnerDTO.onlineShopCode+'%'"/>
+            <if test="onlineShopCode != null">
+                <bind name="onlineShopCodeLike" value="'%'+onlineShopCode+'%'"/>
                 AND os.online_shop_code LIKE (#{onlineShopCodeLike})
             </if>
-            <if test="onlineShopQueryInnerDTO.onlineShopName != null">
-                <bind name="onlineShopNameLike" value="'%'+onlineShopQueryInnerDTO.onlineShopName+'%'"/>
+            <if test="onlineShopName != null">
+                <bind name="onlineShopNameLike" value="'%'+onlineShopName+'%'"/>
                 AND os.online_shop_name LIKE #{onlineShopNameLike}
             </if>
 
-            <if test="onlineShopQueryInnerDTO.onlineShopCodes != null and onlineShopQueryInnerDTO.onlineShopCodes.size() > 0">
+            <if test="onlineShopCodes != null and onlineShopCodes.size() > 0">
                 and os.online_shop_code in
-                <foreach collection="onlineShopQueryInnerDTO.onlineShopCodes" item="code" open="(" separator="," close=")">
+                <foreach collection="onlineShopCodes" item="code" open="(" separator="," close=")">
                     #{code}
                 </foreach>
             </if>
 
-            <if test="onlineShopQueryInnerDTO.excludeOnlineShopCodes != null and onlineShopQueryInnerDTO.excludeOnlineShopCodes.size() > 0">
+            <if test="excludeOnlineShopCodes != null and excludeOnlineShopCodes.size() > 0">
                 and os.online_shop_code not in
-                <foreach collection="onlineShopQueryInnerDTO.excludeOnlineShopCodes" item="code" open="(" separator="," close=")">
+                <foreach collection="excludeOnlineShopCodes" item="code" open="(" separator="," close=")">
                     #{code}
                 </foreach>
             </if>
