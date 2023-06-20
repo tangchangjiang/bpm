@@ -28,7 +28,7 @@
         t.default_flag,
         t.priority,
         t.OBJECT_VERSION_NUMBER,
-        c.carrier_name,
+        tl.carrier_name,
         c.carrier_code,
         pos.pos_code
         FROM
@@ -53,7 +53,7 @@
             </if>
             <if test="carrierName != null and carrierName != ''">
                 <bind name="carrierNameLike" value="'%' + carrierName + '%'"/>
-                and c.carrier_name like #{carrierNameLike}
+                and tl.carrier_name like #{carrierNameLike}
             </if>
         ORDER BY priority
     </select>
