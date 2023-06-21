@@ -19,7 +19,7 @@ public class RuleEngineRedisConstants {
         /**
          * 场景 延时队列过期topic
          */
-        public static final String SCENE_EXPIRE = "ruleSceneExpire";
+        public static final String SCENE_EXPIRE = "MdRuleExpire";
 
         /**
          * 规则key Hash
