@@ -174,7 +174,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         query.setTenantId(warehouse.getTenantId());
         List<Warehouse> list = warehouseRepository.select(query);
         if (!list.isEmpty()) {
-            throw new O2CommonException(null, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
+            throw new O2CommonException(null, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_CODE_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
         }
     }
 
