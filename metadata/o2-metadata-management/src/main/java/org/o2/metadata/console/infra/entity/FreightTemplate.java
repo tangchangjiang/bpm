@@ -29,6 +29,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运费模板
@@ -148,5 +149,7 @@ public class FreightTemplate extends AuditDomain {
 
     @Transient
     private List<FreightTemplateMultiLangVO> multiLangList;
+
+    private Map<String, Map<String, String>> tlsMap;
 
 }

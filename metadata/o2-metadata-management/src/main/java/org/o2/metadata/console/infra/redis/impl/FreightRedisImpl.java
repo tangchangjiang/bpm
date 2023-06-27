@@ -53,9 +53,9 @@ public class FreightRedisImpl implements FreightRedis {
         } else {
             FreightTemplate one = JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
             // 对运费模板多语言进行处理
-            if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.get_tls())
-                    && one.get_tls().containsKey("templateName")) {
-                String tlsName = one.get_tls().get("templateName").get(LanguageHelper.language());
+            if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.getTlsMap())
+                    && one.getTlsMap().containsKey("templateName")) {
+                String tlsName = one.getTlsMap().get("templateName").get(LanguageHelper.language());
                 if (StringUtils.isNotBlank(tlsName)) {
                     one.setTemplateName(tlsName);
                 }
@@ -123,9 +123,9 @@ public class FreightRedisImpl implements FreightRedis {
                 } else {
                     FreightTemplate one = JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
                     // 对运费模板多语言进行处理
-                    if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.get_tls())
-                            && one.get_tls().containsKey("templateName")) {
-                        String tlsName = one.get_tls().get("templateName").get(LanguageHelper.language());
+                    if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.getTlsMap())
+                            && one.getTlsMap().containsKey("templateName")) {
+                        String tlsName = one.getTlsMap().get("templateName").get(LanguageHelper.language());
                         if (StringUtils.isNotBlank(tlsName)) {
                             one.setTemplateName(tlsName);
                         }
