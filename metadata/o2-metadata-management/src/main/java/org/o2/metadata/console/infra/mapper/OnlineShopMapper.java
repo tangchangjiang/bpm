@@ -78,7 +78,6 @@ public interface OnlineShopMapper extends BaseMapper<OnlineShop> {
      */
     List<OnlineShopCO> queryOnlineShops(@Param("tenantId") Long tenantId, @Param("onlineShopQueryInnerDTO") OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 
-
     /**
      * 查询网店排除条件
      *
