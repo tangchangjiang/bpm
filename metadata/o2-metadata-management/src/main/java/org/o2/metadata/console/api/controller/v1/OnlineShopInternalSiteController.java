@@ -1,6 +1,9 @@
 package org.o2.metadata.console.api.controller.v1;
 
+import io.choerodon.core.domain.Page;
 import io.choerodon.core.iam.ResourceLevel;
+import io.choerodon.mybatis.pagehelper.PageHelper;
+import io.choerodon.mybatis.pagehelper.domain.PageRequest;
 import io.choerodon.swagger.annotation.Permission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +14,7 @@ import org.o2.metadata.console.api.co.OnlineShopCO;
 import org.o2.metadata.console.api.dto.OnlineShopQueryInnerDTO;
 import org.o2.metadata.console.app.service.OnlineShopService;
 import org.o2.metadata.console.infra.config.MetadataManagementAutoConfiguration;
+import org.o2.mybatis.tenanthelper.TenantHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,5 +46,16 @@ public class OnlineShopInternalSiteController {
     public ResponseEntity<Map<String, OnlineShopCO>> listOnlineShopsOfSite(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
         log.info("onlineShopQueryInnerDTO:{}", JsonHelper.objectToString(onlineShopQueryInnerDTO));
         return Results.success(onlineShopService.listOnlineShops(onlineShopQueryInnerDTO));
+    }
+
+    @ApiOperation(value = "分页查询排除后的网店（站点级）")
+    @Permission(permissionWithin = true, level = ResourceLevel.SITE)
+    @PostMapping("/query-exclude-onlineShops")
+    public Page<OnlineShopCO> pageOnlineShops(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPage(onlineShopQueryInnerDTO.getPage());
+        pageRequest.setSize(onlineShopQueryInnerDTO.getSize());
+        return PageHelper.doPage(pageRequest,
+                () -> TenantHelper.siteLevelLimit(() -> onlineShopService.queryOnlineShops(onlineShopQueryInnerDTO)));
     }
 }

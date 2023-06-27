@@ -464,6 +464,11 @@ public class OnlineShopServiceImpl implements OnlineShopService {
     }
 
     @Override
+    public List<OnlineShopCO> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        return onlineShopRepository.queryOnlineShops(onlineShopQueryInnerDTO);
+    }
+
+    @Override
     public void syncMerchantInfo(MerchantInfoBO merchantInfo) {
         // 1. 查询网店是否已存在
         OnlineShop existShop = queryShopByCode(merchantInfo.getOnlineShopCode());
