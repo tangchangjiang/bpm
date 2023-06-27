@@ -89,7 +89,7 @@ public abstract class AbstractFreightCacheOperation {
         freight.setTemplateCode(freightTemplate.getTemplateCode());
         freight.setTenantId(freightTemplate.getTenantId() != null ? freightTemplate.getTenantId() : tenantId);
         freight.setDafaultFlag(freightTemplate.getDafaultFlag());
-
+        freight.setTlsMap(freightTemplate.get_tls());
         return freight;
     }
 

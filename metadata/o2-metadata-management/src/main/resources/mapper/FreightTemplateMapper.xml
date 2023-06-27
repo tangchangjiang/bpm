@@ -19,6 +19,11 @@
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <collection property="multiLangList"
+                    ofType="org.o2.metadata.console.api.vo.FreightTemplateMultiLangVO"
+                    select="searchTemplateLanguage"
+                    column="{templateId=template_id, tenantId=tenant_id}"
+        />
     </resultMap>
     <resultMap id="freightTemplateVOResultMap" type="org.o2.metadata.console.api.vo.FreightTemplateManagementVO">
         <id column="template_id" property="templateId" jdbcType="DECIMAL"/>
@@ -38,13 +43,18 @@
         <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
         <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        <collection property="multiLangList"
+                    ofType="org.o2.metadata.console.api.vo.FreightTemplateMultiLangVO"
+                    select="searchTemplateLanguage"
+                    column="{templateId=template_id, tenantId=tenant_id}"
+        />
     </resultMap>
 
     <select id="listFreightTemplates" resultMap="freightTemplateResultMap">
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT oft.template_id,
         oft.template_code,
-        oft.template_name,
+        oftt.template_name,
         oft.delivery_free_flag,
         oft.valuation_type,
         oft.valuation_uom,
@@ -57,6 +67,7 @@
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
+        left join o2md_freight_template_tl oftt on oft.template_id = oftt.template_id and oft.tenant_id = oftt.tenant_id and oftt.lang = #{lang}
         <where>
             <choose>
                 <when test="siteFlag != null and siteFlag == 1">
@@ -89,7 +100,7 @@
             </if>
             <if test="templateName!=null and templateName!=''">
                 <bind name="templateNameLike" value="'%' + templateName + '%'"/>
-                AND oft.template_name LIKE #{templateNameLike}
+                AND oftt.template_name LIKE #{templateNameLike}
             </if>
             <if test="deliveryFreeFlag!=null">
                 AND oft.delivery_free_flag = #{deliveryFreeFlag}
@@ -127,7 +138,7 @@
         <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         SELECT oft.template_id,
         oft.template_code,
-        oft.template_name,
+        oftt.template_name,
         oft.delivery_free_flag,
         oft.valuation_type,
         oft.valuation_uom,
@@ -139,13 +150,15 @@
         oft.last_updated_by,
         oft.last_update_date
         FROM o2md_freight_template oft
+        left join o2md_freight_template_tl oftt on oft.template_id = oftt.template_id and oft.tenant_id = oftt.tenant_id and oftt.lang = #{lang}
         WHERE oft.template_id = #{templateId}
     </select>
 
     <select id="getDefaultTemplate" resultType="org.o2.metadata.console.infra.entity.FreightTemplate">
+        <bind name="lang" value="@io.choerodon.mybatis.helper.LanguageHelper@language()"/>
         select oft.template_id,
                oft.template_code,
-               oft.template_name,
+               oftt.template_name,
                oft.delivery_free_flag,
                oft.valuation_type,
                oft.valuation_uom,
@@ -153,6 +166,7 @@
                oft.tenant_id,
                oft.active_flag
         from o2md_freight_template oft
+        left join o2md_freight_template_tl oftt on oft.template_id = oftt.template_id and oft.tenant_id = oftt.tenant_id and oftt.lang = #{lang}
          where oft.dafault_flag = 1
           and oft.active_flag = 1
           and oft.tenant_id = #{tenantId}
@@ -178,4 +192,18 @@
         </choose>
        and active_flag = 1
     </select>
+
+    <select id="searchTemplateLanguage" resultType="org.o2.metadata.console.api.vo.FreightTemplateMultiLangVO">
+        SELECT
+        ftl.template_id,
+        ftl.lang,
+        ftl.template_name,
+        ftl.tenant_id
+        FROM o2md_freight_template_tl ftl
+        <where>
+            ftl.template_id = #{templateId}
+            and ftl.tenant_id = #{tenantId}
+        </where>
+    </select>
+
 </mapper>

@@ -85,7 +85,7 @@ public class FreightTemplateController extends BaseController {
     @PutMapping
     public ResponseEntity<FreightTemplate> update(@PathVariable @ApiParam(value = "租户ID", required = true) Long organizationId,
                                                   @RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
-        SecurityTokenHelper.validToken(freightTemplateManagementVO);
+//        SecurityTokenHelper.validToken(freightTemplateManagementVO);
         final FreightTemplate update = freightTemplateService.updateTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(update);
     }

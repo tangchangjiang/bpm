@@ -32,8 +32,8 @@ public class FreightCacheServiceImpl implements FreightCacheService {
         final FreightBO freight = freightTemplate.getFreight();
         final List<FreightDetailBO> freightDetailList = freightTemplate.getFreightDetailList();
         final String freightStr = JsonHelper.objectToString(freight);
-        final String freightInforKey = getFreightInforCacheKey(freight.getTenantId(), freight.getTemplateCode());
-        this.redisCacheClient.opsForHash().put(freightInforKey, FreightConstants.Redis.FREIGHT_HEAD_KEY, freightStr);
+        final String freightInfoKey = getFreightInforCacheKey(freight.getTenantId(), freight.getTemplateCode());
+        this.redisCacheClient.opsForHash().put(freightInfoKey, FreightConstants.Redis.FREIGHT_HEAD_KEY, freightStr);
         saveFreightDetails(freightDetailList);
 
         //更新默认模板

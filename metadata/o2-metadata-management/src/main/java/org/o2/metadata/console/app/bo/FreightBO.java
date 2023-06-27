@@ -2,6 +2,8 @@ package org.o2.metadata.console.app.bo;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * 运费模板业务对象
  *
@@ -48,6 +50,8 @@ public class FreightBO {
      * 默认运费模板标记，新建的时候默认为0"
      */
     private Integer dafaultFlag;
+
+    private Map<String, Map<String, String>> tlsMap;
 
 
 }

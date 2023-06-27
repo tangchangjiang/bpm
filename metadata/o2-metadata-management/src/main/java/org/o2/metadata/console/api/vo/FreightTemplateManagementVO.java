@@ -41,6 +41,8 @@ public class FreightTemplateManagementVO extends FreightTemplate {
     @Transient
     private List<FreightTemplateDetail> regionFreightDetailDisplayList;
 
+    private String defaultTemplateName;
+
     public FreightTemplateManagementVO() {
     }
 

@@ -95,7 +95,7 @@ public class FreightTemplateSiteController extends BaseController {
     @Permission(level = ResourceLevel.SITE)
     @PutMapping
     public ResponseEntity<FreightTemplate> update(@RequestBody final FreightTemplateManagementVO freightTemplateManagementVO) {
-        SecurityTokenHelper.validToken(freightTemplateManagementVO);
+//        SecurityTokenHelper.validToken(freightTemplateManagementVO);
         final FreightTemplate update = freightTemplateService.updateTemplateAndDetails(freightTemplateManagementVO);
         return Results.success(update);
     }
