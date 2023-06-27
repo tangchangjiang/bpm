@@ -149,7 +149,7 @@ public class FreightTemplate extends AuditDomain {
 
     @Transient
     private List<FreightTemplateMultiLangVO> multiLangList;
-
+    @Transient
     private Map<String, Map<String, String>> tlsMap;
 
 }
