@@ -44,4 +44,6 @@ public interface FreightTemplateRepository extends BaseRepository<FreightTemplat
      * @return list
      */
     List<FreightTemplate> selectAllByTenantId(Long tenantId);
+
+    List<FreightTemplate> selectTemplateForRefresh(Long tenantId);
 }

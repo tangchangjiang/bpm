@@ -193,6 +193,31 @@
        and active_flag = 1
     </select>
 
+    <select id="selectTemplateForRefresh" resultMap="freightTemplateResultMap">
+        select
+        oft.dafault_flag,
+        oft.active_flag,
+        oft.delivery_free_flag,
+        oft.template_code,
+        oft.template_id,
+        oft.template_name,
+        oft.tenant_id,
+        oft.valuation_type,
+        oft.valuation_uom,
+        oft.object_version_number
+        from o2md_freight_template oft
+        left join o2md_freight_template_tl oftt on oft.template_id = oftt.template_id and oft.tenant_id = oftt.tenant_id
+        WHERE 1=1
+        <choose>
+            <when test="tenantId != null">
+                AND oft.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND 1 = 1
+            </otherwise>
+        </choose>
+    </select>
+
     <select id="searchTemplateLanguage" resultType="org.o2.metadata.console.api.vo.FreightTemplateMultiLangVO">
         SELECT
         ftl.template_id,

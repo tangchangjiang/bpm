@@ -240,7 +240,7 @@ public class FreightTemplateServiceImpl extends AbstractFreightCacheOperation im
 
         final FreightTemplate result = batchMerge(list).get(0);
         FreightTemplateManagementVO resultVO = new FreightTemplateManagementVO(result);
-        resultVO.set_tls(resultVO.get_tls());
+        resultVO.set_tls(result.get_tls());
         // 先删除 再插入
         final List<FreightTemplateDetail> oldList = freightTemplateDetailRepository.selectByCondition(Condition.builder(FreightTemplateDetail.class)
                 .andWhere(Sqls.custom().andEqualTo(FreightTemplateDetail.FIELD_TENANT_ID, result.getTenantId())

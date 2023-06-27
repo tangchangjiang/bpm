@@ -55,7 +55,6 @@ public class FreightRedisImpl implements FreightRedis {
                 }
             }
             freightInfo.setHeadTemplate(one);
-
         }
         // 地区模板没有值，取默认模板
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
@@ -92,7 +91,6 @@ public class FreightRedisImpl implements FreightRedis {
                         }
                     }
                     freightInfo.setHeadTemplate(one);
-
                 }
                 freightInfos.add(freightInfo);
             }

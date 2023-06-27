@@ -41,4 +41,9 @@ public class FreightTemplateRepositoryImpl extends BaseRepositoryImpl<FreightTem
     public List<FreightTemplate> selectAllByTenantId(Long tenantId) {
         return freightTemplateMapper.selectAllByTenantId(tenantId);
     }
+
+    @Override
+    public List<FreightTemplate> selectTemplateForRefresh(Long tenantId) {
+        return freightTemplateMapper.selectTemplateForRefresh(tenantId);
+    }
 }
