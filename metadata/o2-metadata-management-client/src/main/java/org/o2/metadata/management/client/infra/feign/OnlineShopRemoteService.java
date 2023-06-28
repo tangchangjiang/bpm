@@ -114,4 +114,13 @@ public interface OnlineShopRemoteService {
     @PostMapping("/{organizationId}/online-shops-internal/query-exclude-onlineShops")
     ResponseEntity<String> queryOnlineShops(@PathVariable(value = "organizationId") @ApiParam(value = "租户ID", required = true) Long organizationId,
                                             @RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
+
+    /**
+     * 分页查询排除网店（平台层查询）
+     *
+     * @param onlineShopQueryInnerDTO 查询条件
+     * @return 网店列表
+     */
+    @PostMapping("/online-shops-internal/query-exclude-onlineShops")
+    ResponseEntity<String> queryOnlineShops(@RequestBody OnlineShopQueryInnerDTO onlineShopQueryInnerDTO);
 }

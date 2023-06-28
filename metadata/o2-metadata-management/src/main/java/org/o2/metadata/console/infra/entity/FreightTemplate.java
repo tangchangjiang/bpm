@@ -2,6 +2,8 @@ package org.o2.metadata.console.infra.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.choerodon.mybatis.annotation.ModifyAudit;
+import io.choerodon.mybatis.annotation.MultiLanguage;
+import io.choerodon.mybatis.annotation.MultiLanguageField;
 import io.choerodon.mybatis.annotation.VersionAudit;
 import io.choerodon.mybatis.domain.AuditDomain;
 import io.swagger.annotations.ApiModel;
@@ -13,6 +15,7 @@ import org.hzero.mybatis.domian.Condition;
 import org.hzero.mybatis.util.Sqls;
 import org.o2.annotation.annotation.AnnotationValue;
 import org.o2.annotation.infra.contants.O2AnnotationCoreConstants;
+import org.o2.metadata.console.api.vo.FreightTemplateMultiLangVO;
 import org.o2.metadata.console.infra.constant.FreightConstants;
 import org.o2.metadata.console.infra.repository.FreightTemplateRepository;
 import org.springframework.util.Assert;
@@ -25,6 +28,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 运费模板
@@ -36,6 +41,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel("运费模板")
 @VersionAudit
 @ModifyAudit
+@MultiLanguage
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @Table(name = "o2md_freight_template")
 public class FreightTemplate extends AuditDomain {
@@ -91,6 +97,7 @@ public class FreightTemplate extends AuditDomain {
     @NotBlank
     private String templateCode;
     @ApiModelProperty(value = "运费模板名称")
+    @MultiLanguageField
     private String templateName;
     @ApiModelProperty(value = "是否包邮", required = true)
     @NotNull
@@ -110,6 +117,7 @@ public class FreightTemplate extends AuditDomain {
     @ApiModelProperty(value = "租户ID", required = true)
     @NotNull
     @AnnotationValue(type = O2AnnotationCoreConstants.Type.TENANT,name = "tenantName")
+    @MultiLanguageField
     private Long tenantId;
 
     //
@@ -138,5 +146,10 @@ public class FreightTemplate extends AuditDomain {
     @ApiModelProperty(value = "是否平台层查询")
     @Transient
     private Integer siteFlag;
+
+    @Transient
+    private List<FreightTemplateMultiLangVO> multiLangList;
+    @Transient
+    private Map<String, Map<String, String>> tlsMap;
 
 }

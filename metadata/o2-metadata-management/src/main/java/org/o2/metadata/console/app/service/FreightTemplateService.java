@@ -138,4 +138,5 @@ public interface FreightTemplateService {
      * @return 模版信息
      */
     Map<String, FreightTemplateCO> listFreightTemplate(Long tenantId, List<String> templateCodes);
+
 }

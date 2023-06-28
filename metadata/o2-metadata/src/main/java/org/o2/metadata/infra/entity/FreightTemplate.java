@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Map;
+
 
 /**
  * 运费模板
@@ -34,5 +36,7 @@ public class FreightTemplate {
     private String valuationTypeMeaning;
     @ApiModelProperty(value = "计价单位描述")
     private String valuationUomMeaning;
-    
+
+    private Map<String, Map<String, String>> tlsMap;
+
 }

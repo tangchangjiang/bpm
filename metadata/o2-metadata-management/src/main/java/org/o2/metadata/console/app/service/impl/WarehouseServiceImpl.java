@@ -94,7 +94,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
         // 中台页面 控制了不能批量新建
         for (Warehouse warehouse : warehouses) {
-            validNameUnique(warehouse);
+            commonValid(warehouse);
             // 校验一个门店服务点只能关联一个仓库，不能重复
             checkPosMatchWarehouse(warehouse);
             warehouseCodes.add(warehouse.getWarehouseCode());
@@ -135,7 +135,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             List<String> warehouseCodes = Lists.newArrayListWithExpectedSize(warehouses.size());
             for (Warehouse warehouse : warehouses) {
                 // 中台页面 控制了不能批量更新
-                validNameUnique(warehouse);
+                commonValid(warehouse);
                 checkPosMatchWarehouse(warehouse);
                 warehouseCodes.add(warehouse.getWarehouseCode());
             }
@@ -154,18 +154,48 @@ public class WarehouseServiceImpl implements WarehouseService {
      * @param warehouse 仓库
      */
     private void validNameUnique(Warehouse warehouse) {
-        if (null != warehouse.getWarehouseId()) {
-            Warehouse original = warehouseRepository.selectByPrimaryKey(warehouse);
-            if (original.getWarehouseName().equals(warehouse.getWarehouseName())) {
-                return;
-            }
-        }
         Warehouse query = new Warehouse();
         query.setWarehouseName(warehouse.getWarehouseName());
         query.setTenantId(warehouse.getTenantId());
         List<Warehouse> list = warehouseRepository.select(query);
         if (!list.isEmpty()) {
             throw new O2CommonException(null, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
+        }
+    }
+
+    /**
+     * 名称校验唯一性
+     *
+     * @param warehouse 仓库
+     */
+    private void validCodeUnique(Warehouse warehouse) {
+        Warehouse query = new Warehouse();
+        query.setWarehouseCode(warehouse.getWarehouseCode());
+        query.setTenantId(warehouse.getTenantId());
+        List<Warehouse> list = warehouseRepository.select(query);
+        if (!list.isEmpty()) {
+            throw new O2CommonException(null, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_CODE_DUPLICATE, WarehouseConstants.ErrorCode.ERROR_WAREHOUSE_NAME_DUPLICATE);
+        }
+    }
+
+    private void commonValid(Warehouse warehouse){
+        Boolean validCodeFlag = Boolean.TRUE;
+        Boolean validNameFlag = Boolean.TRUE;
+        if (null != warehouse.getWarehouseId()) {
+            Warehouse original = warehouseRepository.selectByPrimaryKey(warehouse);
+            if (original.getWarehouseCode().equals(warehouse.getWarehouseCode())) {
+                validCodeFlag = Boolean.FALSE;
+            }
+            if (original.getWarehouseName().equals(warehouse.getWarehouseName())) {
+                validNameFlag = Boolean.FALSE;
+            }
+        }
+
+        if (Boolean.TRUE.equals(validCodeFlag)){
+            validCodeUnique(warehouse);
+        }
+        if (Boolean.TRUE.equals(validNameFlag)){
+            validNameUnique(warehouse);
         }
     }
 
@@ -424,7 +454,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .atZone(ZoneId.systemDefault()).toInstant()));
         warehouse.setTenantId(merchantInfo.getTenantId());
 
-        validNameUnique(warehouse);
+        commonValid(warehouse);
         return warehouse;
     }
 

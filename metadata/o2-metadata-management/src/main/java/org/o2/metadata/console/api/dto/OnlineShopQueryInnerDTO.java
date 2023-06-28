@@ -64,4 +64,6 @@ public class OnlineShopQueryInnerDTO {
     private Integer page;
 
     private Integer size;
+
+    private Long tenantId;
 }

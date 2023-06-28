@@ -44,4 +44,6 @@ public interface FreightTemplateMapper extends BaseMapper<FreightTemplate> {
      * @return list
      */
     List<FreightTemplate> selectAllByTenantId(@Param("tenantId") Long tenantId);
+
+    List<FreightTemplate> selectTemplateForRefresh(@Param("tenantId") Long tenantId);
 }

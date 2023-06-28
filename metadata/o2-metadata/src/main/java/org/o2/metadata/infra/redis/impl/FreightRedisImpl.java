@@ -1,7 +1,9 @@
 package org.o2.metadata.infra.redis.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hzero.core.helper.LanguageHelper;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.o2.metadata.infra.constants.FreightConstants;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -42,7 +45,16 @@ public class FreightRedisImpl implements FreightRedis {
         if (StringUtils.isEmpty(headTemplate)) {
             freightInfo.setHeadTemplate(null);
         } else {
-            freightInfo.setHeadTemplate(JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
+            FreightTemplate one = JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
+            // 对运费模板多语言进行处理
+            if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.getTlsMap())
+                    && one.getTlsMap().containsKey("templateName")) {
+                String tlsName = one.getTlsMap().get("templateName").get(LanguageHelper.language());
+                if (StringUtils.isNotBlank(tlsName)) {
+                    one.setTemplateName(tlsName);
+                }
+            }
+            freightInfo.setHeadTemplate(one);
         }
         // 地区模板没有值，取默认模板
         String cityTemplate = StringUtils.isEmpty(freightTemplates.get(2)) ? freightTemplates.get(1) : freightTemplates.get(2);
@@ -66,7 +78,20 @@ public class FreightRedisImpl implements FreightRedis {
                 paramCodes.add(FreightConstants.RedisKey.FREIGHT_HEAD_KEY);
                 List<String> freightTemplates = redisCacheClient.<String, String>opsForHash().multiGet(freightDetailKey, paramCodes);
                 String headTemplate =  freightTemplates.get(0);
-                freightInfo.setHeadTemplate(StringUtils.isEmpty(headTemplate) ? null : JsonHelper.stringToObject(headTemplate, FreightTemplate.class));
+                if (StringUtils.isEmpty(headTemplate)) {
+                    freightInfo.setHeadTemplate(null);
+                } else {
+                    FreightTemplate one = JsonHelper.stringToObject(headTemplate, FreightTemplate.class);
+                    // 对运费模板多语言进行处理
+                    if (Objects.nonNull(one) && MapUtils.isNotEmpty(one.getTlsMap())
+                            && one.getTlsMap().containsKey("templateName")) {
+                        String tlsName = one.getTlsMap().get("templateName").get(LanguageHelper.language());
+                        if (StringUtils.isNotBlank(tlsName)) {
+                            one.setTemplateName(tlsName);
+                        }
+                    }
+                    freightInfo.setHeadTemplate(one);
+                }
                 freightInfos.add(freightInfo);
             }
             return null;

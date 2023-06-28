@@ -67,4 +67,10 @@ public class OnlineShopRemoteServiceImpl implements OnlineShopRemoteService {
         log.error("Error onlineShop, params[tenantId = {}, onlineShopQueryInnerDTO = {}]", tenantId, onlineShopQueryInnerDTO);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @Override
+    public ResponseEntity<String> queryOnlineShops(OnlineShopQueryInnerDTO onlineShopQueryInnerDTO) {
+        log.error("Error onlineShop, params[onlineShopQueryInnerDTO = {}]", onlineShopQueryInnerDTO);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }
