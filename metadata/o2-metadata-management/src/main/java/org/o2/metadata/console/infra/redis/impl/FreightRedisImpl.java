@@ -14,7 +14,6 @@ import org.o2.metadata.console.infra.entity.FreightTemplate;
 import org.o2.metadata.console.infra.entity.FreightTemplateDetail;
 import org.o2.metadata.console.infra.redis.FreightRedis;
 import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -101,9 +100,7 @@ public class FreightRedisImpl implements FreightRedis {
             key.add(redisKey);
             groupMap.put(redisKey, hashMap);
         }
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
+        this.redisCacheClient.execute(FreightConstants.Redis.BATCH_UPDATE_FREIGHT_LUA, key, JsonHelper.objectToString(groupMap));
     }
 
     @Override

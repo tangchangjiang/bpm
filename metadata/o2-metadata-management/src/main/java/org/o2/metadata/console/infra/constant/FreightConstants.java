@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  * 运费常量
@@ -60,14 +60,9 @@ public interface FreightConstants {
             return String.format(FREIGHT_DETAIL_KEY, tenantId, freightCode);
         }
 
-        ResourceScriptSource SAVE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/save_freight_detail_cache.lua"));
-
-        ResourceScriptSource DELETE_FREIGHT_DETAIL_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/delete_freight_detail_cache.lua"));
-
-        ResourceScriptSource BATCH_UPDATE_FREIGHT_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/freight/batch_update_freight.lua"));
+        RedisScript<Boolean> SAVE_FREIGHT_DETAIL_CACHE_LUA = ScriptHelper.of("script/lua/freight/save_freight_detail_cache.lua", Boolean.class);
+        RedisScript<Boolean> DELETE_FREIGHT_DETAIL_CACHE_LUA = ScriptHelper.of("script/lua/freight/delete_freight_detail_cache.lua", Boolean.class);
+        RedisScript<Boolean> BATCH_UPDATE_FREIGHT_LUA = ScriptHelper.of("script/lua/freight/batch_update_freight.lua", Boolean.class);
     }
 
     /**

@@ -160,9 +160,7 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      */
     private void executeSaveFreightInforScript(final String freightDetailKey,
                                                final Map<String, String> freightDetailMap) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(FreightConstants.Redis.SAVE_FREIGHT_DETAIL_CACHE_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), JsonHelper.objectToString(freightDetailMap));
+        this.redisCacheClient.execute(FreightConstants.Redis.SAVE_FREIGHT_DETAIL_CACHE_LUA, Collections.singletonList(freightDetailKey), JsonHelper.objectToString(freightDetailMap));
     }
 
     /**
@@ -173,8 +171,6 @@ public class FreightCacheServiceImpl implements FreightCacheService {
      */
     private void executeDeleteFreightDetailScript(final String freightDetailKey,
                                                   final List<String> templateRegionCodeList) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(FreightConstants.Redis.DELETE_FREIGHT_DETAIL_CACHE_LUA);
-        this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(freightDetailKey), JsonHelper.objectToString(templateRegionCodeList));
+        this.redisCacheClient.execute(FreightConstants.Redis.DELETE_FREIGHT_DETAIL_CACHE_LUA, Collections.singletonList(freightDetailKey), JsonHelper.objectToString(templateRegionCodeList));
     }
 }
