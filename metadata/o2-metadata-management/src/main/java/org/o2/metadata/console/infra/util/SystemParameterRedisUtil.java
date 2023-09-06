@@ -3,8 +3,8 @@ package org.o2.metadata.console.infra.util;
 import lombok.extern.slf4j.Slf4j;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 import java.util.List;
 import java.util.Map;
@@ -22,17 +22,16 @@ public class SystemParameterRedisUtil {
     /**
      * redis execute
      *
-     * @param filedMaps            filedMaps
-     * @param keyList              keyList
-     * @param resourceScriptSource resourceScriptSource
-     * @param redisCacheClient     redisCacheClient
+     * @param filedMaps        filedMaps
+     * @param keyList          keyList
+     * @param luaPath          luaPath
+     * @param redisCacheClient redisCacheClient
      */
     public static <K, V> void executeScript(final Map<K, V> filedMaps,
                                             final List<String> keyList,
-                                            final ResourceScriptSource resourceScriptSource,
+                                            final String luaPath,
                                             final RedisCacheClient redisCacheClient) {
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(resourceScriptSource);
+        final RedisScript<Boolean> defaultRedisScript = ScriptHelper.of(luaPath, Boolean.class);
         redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(filedMaps));
     }
 

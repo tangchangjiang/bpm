@@ -13,6 +13,7 @@ import org.o2.metadata.console.infra.entity.SystemParameter;
 import org.o2.metadata.console.infra.mapper.SystemParamValueMapper;
 import org.o2.metadata.console.infra.redis.SystemParameterRedis;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -196,8 +197,7 @@ public class SystemParameterRedisImpl implements SystemParameterRedis {
         String setHashKey = String.format(SystemParameterConstants.Redis.KEY, tenantId, SystemParameterConstants.ParamType.SET);
         keyList.add(setHashKey);
         // 初始化数据
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(SystemParameterConstants.INIT_DATA_REDIS_HASH_VALUE_LUA);
+        final RedisScript<Boolean> defaultRedisScript = SystemParameterConstants.INIT_DATA_REDIS_HASH_VALUE_LUA;
         redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(kvHashMap), JsonHelper.mapToString(setHashMap), JsonHelper.mapToString(mapHashMap));
 
     }

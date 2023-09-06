@@ -1,7 +1,9 @@
 package org.o2.metadata.infra.constants;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
+
+import java.util.List;
 
 /**
  * 服务点常量
@@ -98,6 +100,6 @@ public interface PosConstants {
         }
     }
 
-    ResourceScriptSource SEARCH_POS_LIST_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/pos/search_pos_list.lua"));
+    RedisScript<List> SEARCH_POS_LIST_LUA =
+            ScriptHelper.of("script/lua/pos/search_pos_list.lua", List.class);
 }

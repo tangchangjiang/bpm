@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  * 网店常量
@@ -91,9 +91,9 @@ public interface OnlineShopConstants {
             return String.format(KEY_ONLINE_SHOP_REL_WAREHOUSE, tenantId, shopCode);
         }
 
-        ResourceScriptSource UPDATE_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/onlineShop/batch_update_shopRelWh_redis.lua"));
-        ResourceScriptSource DELETE_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/onlineShop/batch_delete_shopRelWh_redis.lua"));
+        RedisScript<Boolean> UPDATE_CACHE_LUA =
+                ScriptHelper.of("script/lua/onlineShop/batch_update_shopRelWh_redis.lua", Boolean.class);
+        RedisScript<Boolean> DELETE_CACHE_LUA =
+                ScriptHelper.of("script/lua/onlineShop/batch_delete_shopRelWh_redis.lua", Boolean.class);
     }
 }

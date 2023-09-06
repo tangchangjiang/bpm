@@ -1,7 +1,7 @@
 package org.o2.business.process.management.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  * redis key 管理
@@ -14,17 +14,17 @@ public interface BusinessProcessRedisConstants {
     String LUA_NULL_MAP = "{}";
 
     interface BusinessProcessLua {
-        ResourceScriptSource LIST_PROCESS_NODE_STATUS =
-                new ResourceScriptSource(new ClassPathResource("script/list_node_status.lua"));
+        RedisScript<String> LIST_PROCESS_NODE_STATUS =
+                ScriptHelper.of("script/list_node_status.lua", String.class);
 
-        ResourceScriptSource BUSINESS_PROCESS_TENANT_INITIALIZE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/business_process_tenant_init.lua"));
+        RedisScript<String> BUSINESS_PROCESS_TENANT_INITIALIZE_LUA =
+                ScriptHelper.of("script/business_process_tenant_init.lua", String.class);
 
-        ResourceScriptSource BUSINESS_PROCESS_CONFIG_UPDATE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/process_config_update.lua"));
+        RedisScript<String> BUSINESS_PROCESS_CONFIG_UPDATE_LUA =
+                ScriptHelper.of("script/process_config_update.lua", String.class);
 
-        ResourceScriptSource BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/process_config_batch_update.lua"));
+        RedisScript<String> BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA =
+                ScriptHelper.of("script/process_config_batch_update.lua", String.class);
     }
 
     interface BusinessNode {

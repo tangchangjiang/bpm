@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  *
@@ -76,23 +76,23 @@ public interface WarehouseConstants {
             return String.format(WAREHOUSE_INFO_KEY, tenantId);
         }
 
+        RedisScript<Long> EXPRESS_LIMIT_CACHE_LUA =
+                ScriptHelper.of("script/lua/warehouse/express_limit_cache.lua", Long.class);
+        RedisScript<Long> PICK_UP_LIMIT_CACHE_LUA =
+                ScriptHelper.of("script/lua/warehouse/pick_up_limit_cache.lua", Long.class);
+        RedisScript<Long> UPDATE_WAREHOUSE_CACHE_LUA =
+                ScriptHelper.of("script/lua/warehouse/update_warehouse_cache.lua", Long.class);
+
         /**
          * 格式化的字符串
-         * @param key           limit
-         * @param tenantId      租户ID
+         *
+         * @param key      limit
+         * @param tenantId 租户ID
          * @return redis key
          */
         static String getLimitCacheKey(final String key, final long tenantId) {
             return String.format(key, tenantId);
         }
-
-         ResourceScriptSource EXPRESS_LIMIT_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/express_limit_cache.lua"));
-         ResourceScriptSource PICK_UP_LIMIT_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/pick_up_limit_cache.lua"));
-
-         ResourceScriptSource UPDATE_WAREHOUSE_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/warehouse/update_warehouse_cache.lua"));
 
     }
 

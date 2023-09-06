@@ -10,6 +10,7 @@ import org.o2.metadata.console.infra.entity.Warehouse;
 import org.o2.metadata.console.infra.redis.WarehouseRedis;
 import org.o2.metadata.console.infra.repository.WarehouseRepository;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.scripting.ScriptSource;
 import org.springframework.stereotype.Component;
 
@@ -79,8 +80,7 @@ public class WarehouseRedisImpl implements WarehouseRedis {
         // 仓库自提单量限制 key
         String pickUpLimitKey = WarehouseConstants.WarehouseCache.getLimitCacheKey(WarehouseConstants.WarehouseCache.PICK_UP_LIMIT_KEY, tenantId);
         keyList.add(pickUpLimitKey);
-        final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA);
+        final RedisScript<Long> defaultRedisScript = WarehouseConstants.WarehouseCache.UPDATE_WAREHOUSE_CACHE_LUA;
         this.redisCacheClient.execute(defaultRedisScript, keyList, JsonHelper.mapToString(updateMap));
     }
 
@@ -113,15 +113,12 @@ public class WarehouseRedisImpl implements WarehouseRedis {
      * @param keyList redis key 集合
      * @param warehouseCode 仓库编码
      * @param num 数量
-     * @param scriptSource lua
+     * @param redisScript lua
      * @return integer
      */
-    private Long executeScript(List<String> keyList, final String warehouseCode, final String num, ScriptSource scriptSource) {
-        final DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(scriptSource);
-        defaultRedisScript.setResultType(Long.class);
+    private Long executeScript(List<String> keyList, final String warehouseCode, final String num, RedisScript<Long> redisScript) {
         try {
-            return this.redisCacheClient.execute(defaultRedisScript, keyList, warehouseCode, num);
+            return this.redisCacheClient.execute(redisScript, keyList, warehouseCode, num);
         } catch (Exception e) {
             log.error("execute script error", e);
             return -1L;
