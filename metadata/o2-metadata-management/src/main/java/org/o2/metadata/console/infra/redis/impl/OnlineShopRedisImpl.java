@@ -20,7 +20,7 @@ import org.o2.multi.language.management.infra.util.O2RedisMultiLanguageManagemen
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -94,12 +94,12 @@ public class OnlineShopRedisImpl implements OnlineShopRedis {
             key.add(redisKey);
             groupMap.put(redisKey, hashMap);
         }
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
+        final RedisScript<Boolean> defaultRedisScript;
         if (OnlineShopConstants.Redis.UPDATE.equals(handleType)) {
-            defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.UPDATE_CACHE_LUA);
+            defaultRedisScript = OnlineShopConstants.Redis.UPDATE_CACHE_LUA;
         } else {
             // 删除key
-            defaultRedisScript.setScriptSource(OnlineShopConstants.Redis.DELETE_CACHE_LUA);
+            defaultRedisScript = OnlineShopConstants.Redis.DELETE_CACHE_LUA;
         }
         this.redisCacheClient.execute(defaultRedisScript, key, JsonHelper.objectToString(groupMap));
 

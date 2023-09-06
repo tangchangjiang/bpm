@@ -5,7 +5,7 @@ import org.o2.business.process.management.domain.repository.BusinessProcessRedis
 import org.o2.business.process.management.infra.constant.BusinessProcessRedisConstants;
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -38,9 +38,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
 
     @Override
     public Map<String, String> listNodeStatus(List<String> keys, Long tenantId) {
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.LIST_PROCESS_NODE_STATUS);
-        redisScript.setResultType(String.class);
+        RedisScript<String> redisScript = BusinessProcessRedisConstants.BusinessProcessLua.LIST_PROCESS_NODE_STATUS;
         String result = redisCacheClient.execute(redisScript,
                 Collections.singletonList(BusinessProcessRedisConstants.BusinessNode.getNodeStatusKey(tenantId)), keys.toArray());
         if (StringUtils.isBlank(result) || BusinessProcessRedisConstants.LUA_NULL_MAP.equals(result)) {
@@ -60,8 +58,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         params.add(configJson);
         params.add(String.valueOf(System.currentTimeMillis()));
 
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_UPDATE_LUA);
+        RedisScript<String> redisScript = BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_UPDATE_LUA;
         redisCacheClient.execute(redisScript, keys, params.toArray());
     }
 
@@ -80,8 +77,7 @@ public class BusinessProcessRedisRepositoryImpl implements BusinessProcessRedisR
         params.add(JsonHelper.mapToString(detailMap));
         params.add(String.valueOf(System.currentTimeMillis()));
 
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA);
+        RedisScript<String> redisScript = BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_CONFIG_BATCH_UPDATE_LUA;
         redisCacheClient.execute(redisScript, keys, params.toArray());
     }
 

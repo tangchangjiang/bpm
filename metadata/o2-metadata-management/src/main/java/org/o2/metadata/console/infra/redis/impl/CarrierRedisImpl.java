@@ -11,7 +11,7 @@ import org.o2.metadata.console.infra.entity.Carrier;
 import org.o2.metadata.console.infra.redis.CarrierRedis;
 import org.o2.metadata.console.infra.repository.CarrierRepository;
 import org.o2.multi.language.management.infra.util.O2RedisMultiLanguageManagementHelper;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -57,8 +57,7 @@ public class CarrierRedisImpl implements CarrierRedis {
             deleteMap.put(carrier.getCarrierCode(), String.valueOf(tenantId));
         }
         String key = CarrierConstants.Redis.getCarrierKey(tenantId);
-        final DefaultRedisScript<Boolean> defaultRedisScript = new DefaultRedisScript<>();
-        defaultRedisScript.setScriptSource(CarrierConstants.Redis.CARRIER_CACHE_LUA);
+        final RedisScript<Boolean> defaultRedisScript = CarrierConstants.Redis.CARRIER_CACHE_LUA;
         this.redisCacheClient.execute(defaultRedisScript, Collections.singletonList(key), JsonHelper.objectToString(hashMap),
                 JsonHelper.objectToString(deleteMap));
         // 多语言

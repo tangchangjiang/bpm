@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  * 系统参数常量
@@ -120,6 +120,6 @@ public interface SystemParameterConstants {
         String FILE_PREFIX = "FILE_PREFIX";
     }
 
-    ResourceScriptSource INIT_DATA_REDIS_HASH_VALUE_LUA =
-            new ResourceScriptSource(new ClassPathResource("script/lua/systemParameter/init_data_redis_hash_value.lua"));
+    RedisScript<Boolean> INIT_DATA_REDIS_HASH_VALUE_LUA =
+            ScriptHelper.of("script/lua/systemParameter/init_data_redis_hash_value.lua", Boolean.class);
 }

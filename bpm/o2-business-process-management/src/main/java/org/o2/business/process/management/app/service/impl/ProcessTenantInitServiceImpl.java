@@ -16,6 +16,7 @@ import org.o2.business.process.management.infra.constant.BusinessProcessRedisCon
 import org.o2.core.helper.JsonHelper;
 import org.o2.data.redis.client.RedisCacheClient;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,8 +112,7 @@ public class ProcessTenantInitServiceImpl implements ProcessTenantInitService {
                 a -> String.valueOf(a.getEnabledFlag()))));
         params[2] = String.valueOf(System.currentTimeMillis());
 
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_TENANT_INITIALIZE_LUA);
+        RedisScript<String> redisScript = BusinessProcessRedisConstants.BusinessProcessLua.BUSINESS_PROCESS_TENANT_INITIALIZE_LUA;
         redisCacheClient.execute(redisScript, keys, params);
     }
 }

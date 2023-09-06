@@ -1,7 +1,7 @@
 package org.o2.metadata.console.infra.constant;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.o2.data.redis.helper.ScriptHelper;
+import org.springframework.data.redis.core.script.RedisScript;
 
 /**
  * 承运商
@@ -76,11 +76,11 @@ public interface CarrierConstants {
             return String.format(CARRIER_KEY, tenantId);
         }
 
-        static String getCarrierMultiKey(Long tenantId,String carrierCode ) {
-            return String.format(CARRIER_MULTI_KEY, tenantId,carrierCode);
-        }
+        RedisScript<Boolean> CARRIER_CACHE_LUA =
+                ScriptHelper.of("script/lua/carrier/batch_update_redis_hash_value.lua", Boolean.class);
 
-        ResourceScriptSource CARRIER_CACHE_LUA =
-                new ResourceScriptSource(new ClassPathResource("script/lua/carrier/batch_update_redis_hash_value.lua"));
+        static String getCarrierMultiKey(Long tenantId, String carrierCode) {
+            return String.format(CARRIER_MULTI_KEY, tenantId, carrierCode);
+        }
     }
 }

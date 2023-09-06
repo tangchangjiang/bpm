@@ -9,7 +9,7 @@ import org.o2.metadata.api.dto.StoreQueryDTO;
 import org.o2.metadata.infra.constants.PosConstants;
 import org.o2.metadata.infra.entity.Pos;
 import org.o2.metadata.infra.redis.PosRedis;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.util.CastUtils;
 import org.springframework.stereotype.Component;
 
@@ -78,9 +78,7 @@ public class PosRedisImpl implements PosRedis {
      * @return
      */
     private List<Pos> searchPosList(String indexKey, String detailKey) {
-        DefaultRedisScript<List> getRedisScript = new DefaultRedisScript();
-        getRedisScript.setScriptSource(PosConstants.SEARCH_POS_LIST_LUA);
-        getRedisScript.setResultType(List.class);
+        RedisScript<List> getRedisScript = PosConstants.SEARCH_POS_LIST_LUA;
         List<String> posKeys = new ArrayList<>();
         posKeys.add(indexKey);
         posKeys.add(detailKey);
