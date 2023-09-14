@@ -50,7 +50,8 @@ public class RegionRepositoryImpl implements RegionRepository {
         //找到子分类
         List<Region> children = new ArrayList<>();
         for (Region regionEntity : entities) {
-            if (current.getRegionCode().equals(regionEntity.getParentRegionCode())) {
+            if (current.getRegionCode().equals(regionEntity.getParentRegionCode())
+                    && !Objects.equals(current.getLevelNumber(), regionEntity.getLevelNumber())) {
                 regionEntity.setChildren(getChildren(regionEntity, entities));
                 children.add(regionEntity);
             }
