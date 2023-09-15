@@ -6,4 +6,5 @@ import lombok.Data;
 public class CurrencyVO {
     private String currencyCode;
     private String currencyName;
+    private String currencySymbol;
 }
