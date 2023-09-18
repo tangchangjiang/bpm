@@ -1,8 +1,10 @@
 package org.o2.metadata.console.infra.config;
 
 import org.hzero.core.message.MessageAccessor;
+import org.o2.metadata.console.infra.feign.CurrencyRemoteService;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
@@ -22,6 +24,7 @@ import springfox.documentation.spring.web.plugins.Docket;
         "org.o2.metadata.console.infra",
         "org.o2.metadata.console.domain",
 })
+@EnableFeignClients(basePackageClasses = CurrencyRemoteService.class)
 public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String ADDRESS_MAPPING = "Address Mapping";
     public static final String CARRIER = "Carrier";
@@ -54,6 +57,8 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
     public static final String REGION_REL_POS = "Region POS Relationship";
     public static final String PLATFORM = "PLATFORM";
     public static final String PLATFORM_INF_MAPPING = "PLATFORM INF MAPPING";
+    public static final String CURRENCY = "CURRENCY";
+    public static final String CURRENCY_SITE = "CURRENCY SITE";
 
     @Autowired
     public MetadataManagementAutoConfiguration(final Docket docket) {
@@ -86,7 +91,9 @@ public class MetadataManagementAutoConfiguration implements InitializingBean {
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_UOM, "平台值集管理"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.REGION_REL_POS, "区域关联服务点配置"))
                 .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM, "平台定义管理"))
-                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING, "平台信息匹配管理"));
+                .tags(new Tag(MetadataManagementAutoConfiguration.PLATFORM_INF_MAPPING, "平台信息匹配管理"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.CURRENCY, "币种信息"))
+                .tags(new Tag(MetadataManagementAutoConfiguration.CURRENCY_SITE, "平台币种信息"));
     }
 
     @Override
