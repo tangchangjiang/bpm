@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author chao.yang05@hand-china.com 2023-05-10 17:35:16
  */
-@Component
+@Component("o2mdRetryErrorLogRepositoryImpl")
 public class RetryErrorLogRepositoryImpl extends BaseRepositoryImpl<RetryErrorLog> implements RetryErrorLogRepository {
 
     private final RetryErrorLogMapper retryErrorLogMapper;
