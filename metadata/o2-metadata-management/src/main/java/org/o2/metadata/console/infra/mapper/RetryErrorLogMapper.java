@@ -2,6 +2,7 @@ package org.o2.metadata.console.infra.mapper;
 
 import io.choerodon.mybatis.common.BaseMapper;
 import org.o2.metadata.console.infra.entity.RetryErrorLog;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  *
  * @author chao.yang05@hand-china.com 2023-05-10 17:35:16
  */
+@Component("o2mdRetryErrorLogMapper")
 public interface RetryErrorLogMapper extends BaseMapper<RetryErrorLog> {
     /**
      * 查询queryLog
