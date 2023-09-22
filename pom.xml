@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.o2</groupId>
         <artifactId>o2-parent</artifactId>
-        <version>1.8.2.MASTER-SNAPSHOT</version>
+        <version>1.8.3.MASTER-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
