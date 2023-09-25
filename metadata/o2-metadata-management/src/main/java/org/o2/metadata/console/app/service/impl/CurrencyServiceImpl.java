@@ -36,13 +36,13 @@ public class CurrencyServiceImpl implements CurrencyService {
         currencyDTO.setPage(pageRequest.getPage());
         currencyDTO.setSize(pageRequest.getSize());
         Page<CurrencyVO> currencyVOPage = ResponseUtils.getResponse(currencyRemoteService.queryCurrency(tenantId,
-                currencyDTO.getCurrencyCode(), currencyDTO.getCurrencyName(),
+                currencyDTO.getCurrencyCode(), currencyDTO.getCurrencyName(), currencyDTO.getEnabledFlag(),
                 currencyDTO.getPage(), currencyDTO.getSize()), new TypeReference<Page<CurrencyVO>>() {
         });
         if (!BaseConstants.DEFAULT_TENANT_ID.equals(tenantId) && (Objects.isNull(currencyVOPage)
                 || (CollectionUtils.isEmpty(currencyVOPage.getContent()) && currencyVOPage.getTotalElements() == 0))) {
             currencyVOPage = ResponseUtils.getResponse(currencyRemoteService.queryCurrency(BaseConstants.DEFAULT_TENANT_ID,
-                    currencyDTO.getCurrencyCode(), currencyDTO.getCurrencyName(),
+                    currencyDTO.getCurrencyCode(), currencyDTO.getCurrencyName(), currencyDTO.getEnabledFlag(),
                     currencyDTO.getPage(), currencyDTO.getSize()), new TypeReference<Page<CurrencyVO>>() {
             });
         }

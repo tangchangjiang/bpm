@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CurrencyRemoteServiceImpl implements CurrencyRemoteService {
     @Override
-    public ResponseEntity<String> queryCurrency(Long organizationId, String currencyName, String currencyCode, Integer page, Integer size) {
+    public ResponseEntity<String> queryCurrency(Long organizationId, String currencyName, String currencyCode, Integer enabledFlag, Integer page, Integer size) {
         log.error("error query currency, params[organizationId = {}]", organizationId);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
