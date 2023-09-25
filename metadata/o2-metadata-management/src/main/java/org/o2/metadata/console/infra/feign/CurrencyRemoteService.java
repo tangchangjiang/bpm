@@ -1,5 +1,6 @@
 package org.o2.metadata.console.infra.feign;
 
+import io.swagger.models.auth.In;
 import org.hzero.common.HZeroService;
 import org.o2.metadata.console.infra.feign.impl.CurrencyRemoteServiceImpl;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,6 +20,7 @@ public interface CurrencyRemoteService {
     ResponseEntity<String> queryCurrency(@PathVariable Long organizationId,
                                          @RequestParam String currencyCode,
                                          @RequestParam String currencyName,
+                                         @RequestParam Integer enabledFlag,
                                          @RequestParam Integer page,
                                          @RequestParam Integer size);
 }
