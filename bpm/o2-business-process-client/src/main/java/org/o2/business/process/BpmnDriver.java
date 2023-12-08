@@ -139,9 +139,9 @@ public class BpmnDriver {
                 // 更新缓存更新时间并清空缓存
                 PROCESS_LAST_UPDATE_TIME.put(processCode, currentLastModifiedTime);
                 CacheManager cacheManager = ApplicationContextHelper.getContext().getBean(CacheManager.class);
-                final Cache cache = cacheManager.getCache(String.format(BusinessProcessConstants.CacheParam.PROCESS_CACHE_KEY, tenantId, processCode));
+                final Cache cache = cacheManager.getCache(BusinessProcessConstants.CacheParam.CACHE_NAME);
                 if (null != cache) {
-                    cache.clear();
+                    cache.evict(String.format(BusinessProcessConstants.CacheParam.PROCESS_CACHE_KEY, tenantId, processCode));
                 }
             }
         }
