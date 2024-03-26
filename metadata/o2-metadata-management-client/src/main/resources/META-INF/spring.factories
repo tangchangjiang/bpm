@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.metadata.management.client.config.MetadataManagementClientConfiguration,\
-org.o2.metadata.management.client.config.LovAdapterClientConfiguration

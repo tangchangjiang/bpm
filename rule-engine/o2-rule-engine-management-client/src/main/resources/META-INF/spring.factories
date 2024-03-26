@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.o2.rule.engine.client.config.RuleEngineManagementClientConfiguration
